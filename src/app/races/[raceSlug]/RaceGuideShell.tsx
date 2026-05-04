@@ -341,11 +341,13 @@ function GuidePanel() {
       style={{
         width: PANEL_WIDTH,
         pointerEvents: "auto",
-        // Theme-aware shadow: gray-1000 alpha (token flips so
-        // light=black @ 0.10, dark=white @ 0.10) gives a hairline
-        // edge + soft drop on either map style.
+        // Theme-aware edge: --ds-gray-400 is the DS standard
+        // border colour (flips with theme). Stacked under a
+        // larger drop shadow so the card reads as floating
+        // above the map even when its own bg matches the
+        // surrounding canvas tone closely.
         boxShadow:
-          "0 0 0 1px rgba(var(--ds-gray-1000-rgb), 0.08), 0 4px 24px rgba(var(--ds-gray-1000-rgb), 0.08)",
+          "0 0 0 1px var(--ds-gray-400), 0 12px 32px -8px rgba(var(--ds-gray-1000-rgb), 0.18)",
         // Temporary placeholder height so the page scrolls and we
         // can verify the sticky map / scrolling panel behaviour.
         // Comes out when real editorial content lands.
