@@ -57,6 +57,10 @@ const ROUTE_LINE_COLOR = "#FF0058";
 // with no in-flow children.
 const SHELL_HEIGHT = "calc(100vh - 59px)";
 const PANEL_WIDTH = 384;
+// Inset of the floating panel from the shell edges. Drives the
+// fitBounds left-padding too so the route never sits underneath
+// the panel when bounds are computed.
+const PANEL_INSET = 24;
 
 export default function RaceGuideShell({
   race,
@@ -268,15 +272,21 @@ function fitToRoute(
   }
 
   if (!hasPoint) return false;
-  // Generous left padding so the route doesn't sit underneath
-  // the guide panel.
+  // Left padding accounts for the floating panel's inset + width
+  // plus a bit of breathing room so the route never sits behind
+  // the panel when bounds are computed.
   map.fitBounds(
     [
       [minLng, minLat],
       [maxLng, maxLat],
     ],
     {
-      padding: { top: 64, bottom: 64, left: PANEL_WIDTH + 32, right: 64 },
+      padding: {
+        top: 64,
+        bottom: 64,
+        left: PANEL_INSET + PANEL_WIDTH + 32,
+        right: 64,
+      },
       duration: 0,
     },
   );
@@ -293,14 +303,16 @@ function fitToRoute(
 function GuidePanel() {
   return (
     <aside
-      className="absolute left-0 top-0 bottom-0 z-10 flex flex-col bg-[color:var(--ds-background-100)] p-6"
+      className="absolute z-10 flex flex-col overflow-y-auto rounded-md bg-[color:var(--ds-background-100)] p-6"
       style={{
+        top: PANEL_INSET,
+        bottom: PANEL_INSET,
+        left: PANEL_INSET,
         width: PANEL_WIDTH,
-        // Sheet-equivalent shadow: hairline + small lift + outer
-        // ring against the secondary background. Lifted from
-        // src/components/ui/Sheet.tsx so the panel reads as a
-        // proper floating surface even though we're not using
-        // the dialog primitive itself.
+        // Sheet-equivalent shadow stack: hairline + small lift +
+        // diffuse fall-off + outer ring against the secondary
+        // background. Lifted from src/components/ui/Sheet.tsx so
+        // the panel reads as a floating surface in both themes.
         boxShadow:
           "rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px 0px, rgba(0,0,0,0.04) 0px 8px 16px -4px, var(--ds-background-200) 0px 0px 0px 1px",
       }}
