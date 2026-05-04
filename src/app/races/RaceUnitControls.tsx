@@ -48,17 +48,20 @@ export default function RaceUnitControls() {
   }, []);
 
   return (
-    // self-end keeps the controls flush right in BOTH layouts:
-    // - Mobile (parent flex-col): cross axis is horizontal, so
-    //   self-end aligns right AND shrinks to natural width
-    //   (overrides the default items-stretch that would otherwise
-    //   stretch this div full-width and leave the controls
-    //   left-anchored inside it).
-    // - Desktop (parent md:flex-row md:items-end): cross axis
-    //   becomes vertical, self-end matches the parent's
+    // Right-alignment kicks in at sm: (640 px+) so the controls
+    // sit flush right on the in-between widths where the header
+    // is still stacked (parent flex-col) but the viewport is
+    // wide enough that left-anchored controls look stranded.
+    // True mobile (< 640 px) keeps the default — left-anchored
+    // under the subheading.
+    // - sm: cross axis is horizontal → sm:self-end aligns right
+    //   AND shrinks to natural width (overrides the default
+    //   items-stretch).
+    // - md+ (parent md:flex-row md:items-end): cross axis
+    //   becomes vertical, sm:self-end matches the parent's
     //   md:items-end (bottom-aligned) — no behaviour change.
     <div
-      className="flex flex-wrap items-center gap-3 self-end"
+      className="flex flex-wrap items-center gap-3 sm:self-end"
       style={{ visibility: mounted ? "visible" : "hidden" }}
     >
       <Switch
