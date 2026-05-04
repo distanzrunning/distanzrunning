@@ -15,7 +15,6 @@
 
 import {
   forwardRef,
-  useEffect,
   useImperativeHandle,
   useRef,
   useState,
@@ -89,9 +88,15 @@ export const CollapsibleInput = forwardRef<
   const expanded = focused || hasValue;
   const config = SIZE_CONFIG[size];
 
-  useEffect(() => {
-    onExpandedChange?.(expanded);
-  }, [expanded, onExpandedChange]);
+  // onExpandedChange is fired synchronously from the focus / blur
+  // handlers below — NOT from a post-commit useEffect — so the
+  // parent's state update lands in the same React batch as our
+  // own setFocused. Without this, the parent re-renders one
+  // frame later than the input, and any sibling whose layout
+  // depends on `searchExpanded` (the toggle/sort slide-out on
+  // /races) starts its transition a frame after the input has
+  // already begun expanding. That frame gap was producing chip
+  // wrap + race-card flicker on Safari narrow viewports.
 
   const handleWrapperMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     // While collapsed the only interactive target is the wrapper —
@@ -157,10 +162,14 @@ export const CollapsibleInput = forwardRef<
         }}
         onFocus={(e) => {
           setFocused(true);
+          // Expanded becomes true (focused=true → expanded=true).
+          onExpandedChange?.(true);
           onFocus?.(e);
         }}
         onBlur={(e) => {
           setFocused(false);
+          // Expanded after blur = focused || hasValue → hasValue.
+          onExpandedChange?.(hasValue);
           onBlur?.(e);
         }}
         {...rest}
