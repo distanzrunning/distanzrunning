@@ -171,14 +171,13 @@ export default function RaceCard({
           </div>
         )}
 
-        {/* Top-right pill — full date Badge (inverted variant
-            so the dark bg + white text reads against any
-            photo). Category (Marathon / Half / etc.) moves
-            inline with the title in the body. */}
-        {fullDate && (
+        {/* Top-right pill — category Badge (inverted variant
+            so the dark bg + white text reads against any photo).
+            Date pill sits inline with the title in the body. */}
+        {category && (
           <div className="absolute right-3 top-3 z-20">
             <Badge variant="inverted" size="md">
-              {fullDate}
+              {category}
             </Badge>
           </div>
         )}
@@ -222,10 +221,10 @@ export default function RaceCard({
         )}
       </div>
 
-      {/* Body — title-row carries the category pill on the
-          right (inline, top-aligned with the title's first line
-          so multi-line titles still wrap cleanly). Location sits
-          below. Date moved to the image's top-right corner. */}
+      {/* Body — title-row carries the date pill on the right
+          (inline, top-aligned with the title's first line so
+          multi-line titles still wrap cleanly). Location sits
+          below. Category moved to the image's top-right corner. */}
       <div className="flex flex-col gap-1 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
         <div className="flex items-start justify-between gap-3">
           <h3 className="line-clamp-2 min-w-0 flex-1 text-heading-20 text-[color:var(--ds-gray-1000)]">
@@ -236,7 +235,7 @@ export default function RaceCard({
               {title}
             </Link>
           </h3>
-          {category && <MetaPill>{category}</MetaPill>}
+          {fullDate && <MetaPill>{fullDate}</MetaPill>}
         </div>
         {location && (
           <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
