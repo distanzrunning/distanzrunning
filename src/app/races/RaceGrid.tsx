@@ -53,7 +53,14 @@ export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
   }
 
   return (
-    <ul className="grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3">
+    // contain: layout isolates the grid's reflow from filter-
+    // row layout shifts above (chip wrap when search expands on
+    // narrow viewports). Without it, Safari was repainting
+    // every card whenever the filter row resized.
+    <ul
+      className="grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3"
+      style={{ contain: "layout" }}
+    >
       {races.map((race, i) => (
         <li key={race._id}>
           <RaceCard

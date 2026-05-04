@@ -374,6 +374,10 @@ export default function FiltersShell({
           // room to render — without it, overflow-hidden (needed
           // for the collapse-to-0 transition) clips the ring on
           // every side.
+          // will-change hints Safari to promote this to its own
+          // compositing layer so the slide-out doesn't repaint
+          // sibling chips on every animation frame.
+          style={{ willChange: "max-width, opacity, margin-left" }}
           className={`shrink-0 self-start overflow-hidden p-px transition-[max-width,opacity,margin-left] duration-200 ease-out ${
             searchExpanded
               ? "ml-0 max-w-0 opacity-0 [pointer-events:none]"
