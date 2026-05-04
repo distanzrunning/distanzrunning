@@ -56,11 +56,15 @@ const ROUTE_LINE_COLOR = "#FF0058";
 // PageFrame doesn't propagate a definite height down to a leaf
 // with no in-flow children.
 const SHELL_HEIGHT = "calc(100vh - 59px)";
-const PANEL_WIDTH = 384;
+const PANEL_WIDTH = 480;
 // Inset of the floating panel from the shell edges. Drives the
 // fitBounds left-padding too so the route never sits underneath
 // the panel when bounds are computed.
 const PANEL_INSET = 24;
+// Extra breathing room around the route bbox so the map reads
+// slightly zoomed out — the panel ate enough of the canvas
+// width that the route would otherwise feel cramped.
+const ROUTE_BREATHING = 96;
 
 export default function RaceGuideShell({
   race,
@@ -273,8 +277,10 @@ function fitToRoute(
 
   if (!hasPoint) return false;
   // Left padding accounts for the floating panel's inset + width
-  // plus a bit of breathing room so the route never sits behind
-  // the panel when bounds are computed.
+  // plus extra breathing room so the route never sits behind the
+  // panel when bounds are computed. Other sides also get the
+  // breathing-room value so the route reads centred and slightly
+  // zoomed out, not pushed up against any edge.
   map.fitBounds(
     [
       [minLng, minLat],
@@ -282,10 +288,10 @@ function fitToRoute(
     ],
     {
       padding: {
-        top: 64,
-        bottom: 64,
-        left: PANEL_INSET + PANEL_WIDTH + 32,
-        right: 64,
+        top: ROUTE_BREATHING,
+        bottom: ROUTE_BREATHING,
+        left: PANEL_INSET + PANEL_WIDTH + ROUTE_BREATHING,
+        right: ROUTE_BREATHING,
       },
       duration: 0,
     },
@@ -303,19 +309,24 @@ function fitToRoute(
 function GuidePanel() {
   return (
     <aside
-      className="absolute z-10 flex flex-col overflow-y-auto rounded-md bg-[color:var(--ds-background-100)] p-6"
+      className="absolute z-10 flex flex-col overflow-y-auto rounded-md bg-[color:var(--ds-background-200)] p-6"
       style={{
         top: PANEL_INSET,
         bottom: PANEL_INSET,
         left: PANEL_INSET,
         width: PANEL_WIDTH,
         // Sheet-equivalent shadow stack: hairline + small lift +
-        // diffuse fall-off + outer ring against the secondary
-        // background. Lifted from src/components/ui/Sheet.tsx so
-        // the panel reads as a floating surface in both themes.
+        // diffuse fall-off + outer ring. Outer ring against
+        // bg-100 so the card edge reads against the chrome canvas
+        // colour now that the card itself is bg-200.
         boxShadow:
-          "rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px 0px, rgba(0,0,0,0.04) 0px 8px 16px -4px, var(--ds-background-200) 0px 0px 0px 1px",
+          "rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px 0px, rgba(0,0,0,0.04) 0px 8px 16px -4px, var(--ds-background-100) 0px 0px 0px 1px",
       }}
-    />
+    >
+      {/* Temporary scroll demo — replace with editorial guide
+          content. Sized > viewport so we can see the panel's
+          internal overflow scroll behave. */}
+      <div style={{ minHeight: 1200 }} />
+    </aside>
   );
 }
