@@ -13,10 +13,19 @@ import { ReactNode } from "react";
 import PageFrame from "./ui/PageFrame";
 
 // Routes that have been rebuilt against the new DS use the v0-style
-// SiteHeader. Add to this set as more pages migrate off the legacy
-// NavbarAlt; once every public route is on the new chrome, this set
-// goes away and SiteHeader becomes unconditional.
-const SITE_HEADER_ROUTES = new Set<string>(["/", "/races"]);
+// SiteHeader. Once every public route is on the new chrome, this
+// helper goes away and SiteHeader becomes unconditional.
+//
+// Race detail pages (/races/<slug>) match via prefix; the standalone
+// /races/calendar app keeps the legacy NavbarAlt for now (it has its
+// own fullscreen layout that hasn't been migrated yet).
+function shouldUseSiteHeader(pathname: string): boolean {
+  if (pathname === "/" || pathname === "/races") return true;
+  if (pathname.startsWith("/races/") && pathname !== "/races/calendar") {
+    return true;
+  }
+  return false;
+}
 
 interface LayoutContentProps {
   children: ReactNode;
@@ -50,7 +59,7 @@ export default async function LayoutContent({
   // Hide footer on calendar page (fullscreen app-like view)
   const isCalendarPage = pathname === "/races/calendar";
 
-  const usesSiteHeader = SITE_HEADER_ROUTES.has(pathname);
+  const usesSiteHeader = shouldUseSiteHeader(pathname);
 
   if (isPreviewMode || isLoginPage || isAdmin || isComingSoon) {
     return <main className="min-h-screen">{children}</main>;

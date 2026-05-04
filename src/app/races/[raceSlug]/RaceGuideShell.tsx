@@ -69,30 +69,43 @@ export default function RaceGuideShell({
       {routeGeoJsonUrl ? (
         <RaceMap geoJsonUrl={routeGeoJsonUrl} />
       ) : (
-        <NoRouteFallback />
+        <StatusOverlay text="Route map coming soon." />
       )}
     </div>
   );
 }
 
 // ============================================================================
-// Mapbox island — fills its parent. Reads the FeatureCollection from
-// `geoJsonUrl`, draws every LineString in a single source/layer,
-// fits bounds to the route, swaps style on dark-mode flips.
+// Mapbox island
 // ============================================================================
+
+type MapStatus =
+  | { kind: "loading" }
+  | { kind: "ready" }
+  | { kind: "error"; message: string };
 
 function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const geoJsonRef = useRef<GeoJSON.FeatureCollection | null>(null);
-  const { isDark, isInitialized } = useContext(DarkModeContext);
-  const [error, setError] = useState<string | null>(null);
+  const { isDark } = useContext(DarkModeContext);
+  const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
 
+  // Initial create — runs exactly once. We deliberately do NOT
+  // depend on DarkModeContext.isInitialized: in a hydration race
+  // the flag may stay false momentarily on a fresh load and stall
+  // map creation. Better to render with whatever isDark is at
+  // mount and let the second effect swap styles when the flag
+  // settles.
   useEffect(() => {
-    if (!containerRef.current || !isInitialized) return;
+    if (!containerRef.current) return;
+
     const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
     if (!token) {
-      setError("Map unavailable (token missing)");
+      setStatus({
+        kind: "error",
+        message: "Map unavailable — NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN missing.",
+      });
       return;
     }
     mapboxgl.accessToken = token;
@@ -111,17 +124,38 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
       "bottom-right",
     );
 
+    map.on("error", (e) => {
+      // Surface Mapbox-internal errors so we can see them rather
+      // than getting a silent blank canvas.
+      const msg =
+        (e?.error as Error | undefined)?.message ?? "Mapbox error";
+      // eslint-disable-next-line no-console
+      console.error("[RaceMap] mapbox error:", msg, e);
+      setStatus({ kind: "error", message: msg });
+    });
+
     map.on("load", async () => {
       try {
         const res = await fetch(geoJsonUrl);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) throw new Error(`Route fetch HTTP ${res.status}`);
         const data = (await res.json()) as GeoJSON.FeatureCollection;
         geoJsonRef.current = data;
         addRouteLayer(map, data);
-        fitToRoute(map, data);
+        const fitted = fitToRoute(map, data);
+        if (!fitted) {
+          setStatus({
+            kind: "error",
+            message: "Route GeoJSON contains no coordinates.",
+          });
+          return;
+        }
+        setStatus({ kind: "ready" });
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Failed to load route";
-        setError(msg);
+        const msg =
+          err instanceof Error ? err.message : "Failed to load route";
+        // eslint-disable-next-line no-console
+        console.error("[RaceMap] route load failed:", err);
+        setStatus({ kind: "error", message: msg });
       }
     });
 
@@ -136,24 +170,47 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
       map.remove();
       mapRef.current = null;
     };
-  }, [geoJsonUrl, isInitialized]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [geoJsonUrl]);
 
-  // Swap style when dark mode flips after init.
+  // Swap style when dark mode flips after init. Doesn't recreate
+  // the map.
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !isInitialized) return;
+    if (!map) return;
     map.setStyle(styleForMode(isDark));
-  }, [isDark, isInitialized]);
+  }, [isDark]);
 
-  if (error) {
-    return (
-      <div className="flex h-full w-full items-center justify-center bg-[color:var(--ds-gray-100)] p-6 text-center text-copy-14 text-[color:var(--ds-gray-900)]">
-        {error}
-      </div>
-    );
-  }
+  return (
+    <>
+      <div ref={containerRef} className="absolute inset-0" />
+      {status.kind === "loading" && (
+        <StatusOverlay text="Loading route…" subtle />
+      )}
+      {status.kind === "error" && <StatusOverlay text={status.message} />}
+    </>
+  );
+}
 
-  return <div ref={containerRef} className="absolute inset-0" />;
+function StatusOverlay({
+  text,
+  subtle = false,
+}: {
+  text: string;
+  subtle?: boolean;
+}) {
+  return (
+    <div
+      className={[
+        "pointer-events-none absolute inset-0 flex items-center justify-center p-6 text-center text-copy-14",
+        subtle
+          ? "bg-[color:var(--ds-background-100)]/40 text-[color:var(--ds-gray-900)]"
+          : "bg-[color:var(--ds-gray-100)] text-[color:var(--ds-gray-900)]",
+      ].join(" ")}
+    >
+      {text}
+    </div>
+  );
 }
 
 function styleForMode(isDark: boolean): string {
@@ -183,7 +240,7 @@ function addRouteLayer(
 function fitToRoute(
   map: mapboxgl.Map,
   data: GeoJSON.FeatureCollection,
-): void {
+): boolean {
   let minLng = Infinity;
   let minLat = Infinity;
   let maxLng = -Infinity;
@@ -212,7 +269,7 @@ function fitToRoute(
     }
   }
 
-  if (!hasPoint) return;
+  if (!hasPoint) return false;
   map.fitBounds(
     [
       [minLng, minLat],
@@ -220,12 +277,5 @@ function fitToRoute(
     ],
     { padding: 64, duration: 0 },
   );
-}
-
-function NoRouteFallback() {
-  return (
-    <div className="flex h-full w-full items-center justify-center bg-[color:var(--ds-gray-100)] p-6 text-center text-copy-14 text-[color:var(--ds-gray-900)]">
-      Route map coming soon.
-    </div>
-  );
+  return true;
 }
