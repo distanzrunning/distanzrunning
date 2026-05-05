@@ -5,7 +5,6 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { EB_Garamond } from "next/font/google";
 import LayoutContent from "@/components/LayoutContent";
-import NavbarAltWrapper from "@/components/NavbarAltWrapper";
 import SiteHeaderWrapper from "@/components/SiteHeaderWrapper";
 import Footer from "@/components/Footer";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
@@ -176,7 +175,6 @@ export default function RootLayout({
             <ConsentProvider>
               <ConsentSync />
               <LayoutContent
-                navbar={<NavbarAltWrapper />}
                 header={<SiteHeaderWrapper newsletterSource="homepage" />}
                 footer={<Footer />}
               >
