@@ -106,6 +106,15 @@ const nextConfig: NextConfig = {
         destination: "/races/london-marathon",
         permanent: true,
       },
+      // London raceGuide originally shipped with a typo'd slug
+      // ("london-matathon"). Slug corrected to "london-marathon"
+      // — this redirect catches any inbound links / cached
+      // search results still pointing at the old URL.
+      {
+        source: "/races/london-matathon",
+        destination: "/races/london-marathon",
+        permanent: true,
+      },
     ];
   },
 };

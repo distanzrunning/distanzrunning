@@ -62,11 +62,12 @@ const client = createClient({
 
 const dryRun = process.argv.includes("--dry-run");
 
-// Article → race mappings (by slug). London is intentionally
-// absent — its raceGuide doc doesn't exist yet.
+// Article → race mappings (by slug). All six World Marathon
+// Majors covered.
 const PAIRS = [
   { articleSlug: "tokyo-marathon-runners-guide", raceSlug: "tokyo-marathon" },
   { articleSlug: "boston-marathon-runners-guide", raceSlug: "boston-marathon" },
+  { articleSlug: "london-marathon-runners-guide", raceSlug: "london-marathon" },
   {
     articleSlug: "chicago-marathon-runners-guide",
     raceSlug: "chicago-marathon",
@@ -77,8 +78,6 @@ const PAIRS = [
     raceSlug: "new-york-city-marathon",
   },
 ];
-
-const SKIPPED = ["london-marathon-runners-guide"];
 
 const banner = dryRun ? "[DRY RUN]" : "[LIVE]";
 console.log(
@@ -159,6 +158,3 @@ for (const { articleSlug, raceSlug } of PAIRS) {
 }
 
 console.log(`\nDone. ${okCount} ok, ${failCount} failed.`);
-console.log(
-  `Skipped (no matching raceGuide): ${SKIPPED.join(", ")}.`,
-);
