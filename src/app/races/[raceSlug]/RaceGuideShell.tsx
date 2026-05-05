@@ -755,7 +755,10 @@ function StatsCard({ race }: { race: RaceGuideMeta }) {
           onChange={(next) => setUnits(next as UnitSystem)}
         />
       </header>
-      <div className="grid grid-cols-2 gap-3">
+      {/* 3-col grid drops tile size from ~234 px to ~152 px,
+          matching Runna's reference (146 px). 8 tiles → 3 rows
+          where the last row has 2 visible + 1 empty cell. */}
+      <div className="grid grid-cols-3 gap-3">
         {tiles.map(({ key, ...tile }) => (
           <StatTile key={key} {...tile} />
         ))}
@@ -859,7 +862,7 @@ function ThermometerVisual({ celsius }: { celsius: number }) {
   const ticks: number[] = [];
   for (let v = MIN_C; v <= MAX_C; v += STEP) ticks.push(v);
   return (
-    <div className="flex flex-col-reverse items-end gap-[2px]" aria-hidden>
+    <div className="flex flex-col-reverse items-end gap-[1.5px]" aria-hidden>
       {ticks.map((t) => {
         const isMajor = t % 5 === 0;
         const lit = t <= celsius;
@@ -868,8 +871,8 @@ function ThermometerVisual({ celsius }: { celsius: number }) {
             key={t}
             className="rounded-full"
             style={{
-              height: 1.5,
-              width: isMajor ? 18 : 10,
+              height: 1,
+              width: isMajor ? 16 : 8,
               background: "var(--ds-background-100)",
               opacity: lit ? 1 : 0.2,
             }}
