@@ -855,18 +855,25 @@ function BarsVisual({ level }: { level: 1 | 2 | 3 | 4 }) {
 // race temperature; the rest dim to 20 %. Right-aligned so all
 // ticks share a "spine" on the right edge.
 // Quarter-arc dial gauge for humidity. 11 ticks fan from
-// "north" (0°, 0% humidity) counterclockwise through to "west"
-// (-90°, 100%), all anchored at the bottom-right corner of the
-// container. Each tick is a 2 px-wide pill rotated and pushed
-// outward by 32 px. Only the tick closest to `percent` lights
-// up — and it renders LONGER than the others so the gauge
-// reads like a dial needle. Background ticks dim to 20%.
+// "west" (-90°, 0% humidity, the bottom of the arc) counter-
+// clockwise through to "north" (0°, 100%, the top of the arc),
+// all anchored at the bottom-right corner. Only the tick
+// closest to `percent` lights up — it renders LONGER (22 px)
+// than the dim 12 px siblings, but every tick's *outer* tip
+// terminates at the same radius so the dial's outer ring stays
+// flush; the active needle extends inward toward the anchor
+// instead of outward.
 function HumidityVisual({ percent }: { percent: number }) {
   const TICK_COUNT = 11;
   const RADIUS = 32;
   const ARC_DEG = 90;
   const TICK_HEIGHT = 12;
   const ACTIVE_HEIGHT = 22;
+  // The outer tip of every tick lands at this distance from
+  // the bottom-right anchor. Tick centres are placed so this
+  // stays constant whether the tick is dim (12 px) or lit
+  // (22 px). Active just extends further inward.
+  const OUTER_RADIUS = RADIUS + TICK_HEIGHT / 2;
   const stepPercent = 100 / (TICK_COUNT - 1);
   const activeIndex = Math.max(
     0,
@@ -875,15 +882,18 @@ function HumidityVisual({ percent }: { percent: number }) {
   return (
     <div
       className="relative"
-      style={{ width: RADIUS + ACTIVE_HEIGHT, height: RADIUS + ACTIVE_HEIGHT }}
+      style={{ width: OUTER_RADIUS + 4, height: OUTER_RADIUS + 4 }}
       aria-hidden
     >
       {Array.from({ length: TICK_COUNT }).map((_, i) => {
-        // 0° (up / north) → -90° (left / west). Negative deg
-        // = counterclockwise in CSS, so the fan opens left.
-        const angle = -(i * ARC_DEG) / (TICK_COUNT - 1);
+        // -90° (west / left, bottom of arc) → 0° (north / up,
+        // top of arc). 0% → -90, 100% → 0.
+        const angle = -90 + (i * ARC_DEG) / (TICK_COUNT - 1);
         const lit = i === activeIndex;
         const height = lit ? ACTIVE_HEIGHT : TICK_HEIGHT;
+        // Tick centre = OUTER_RADIUS minus half the tick's own
+        // height so the tip lands at the shared outer ring.
+        const centreOffset = OUTER_RADIUS - height / 2;
         return (
           <div
             key={i}
@@ -893,15 +903,7 @@ function HumidityVisual({ percent }: { percent: number }) {
               height,
               background: "var(--ds-background-100)",
               opacity: lit ? 1 : 0.2,
-              // Rotate around the tick's centre then translate
-              // up in the rotated frame so the tail ends up at
-              // the anchor and the head points outward.
-              // Subtract half the height delta so the active
-              // tick still anchors at the same inner edge as
-              // its dim siblings (extends outward, not inward).
-              transform: `rotate(${angle}deg) translateY(-${
-                RADIUS + (height - TICK_HEIGHT) / 2
-              }px)`,
+              transform: `rotate(${angle}deg) translateY(-${centreOffset}px)`,
             }}
           />
         );
