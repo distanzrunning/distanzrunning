@@ -11,18 +11,12 @@
 
 import { useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { format } from "date-fns";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
-import {
-  convertCurrencySync,
-  formatDistance,
-  formatElevation,
-  formatPrice,
-} from "@/lib/raceUtils";
-import { useUnits } from "@/contexts/UnitsContext";
 
 export interface RaceGuideMeta {
   _id: string;
@@ -413,7 +407,7 @@ function HeroCard({
         </div>
       )}
       <h1
-        className={`m-0 text-heading-32 text-[color:var(--ds-gray-1000)] ${
+        className={`m-0 text-balance text-heading-40 text-[color:var(--ds-gray-1000)] ${
           imageUrl ? "mt-5" : ""
         }`}
       >
@@ -422,15 +416,21 @@ function HeroCard({
       {(() => {
         const location = formatLocation(race);
         return location ? (
-          <p className="mt-1 text-copy-14 text-[color:var(--ds-gray-900)]">
+          <p className="mt-1 text-copy-18 text-[color:var(--ds-gray-900)]">
             {location}
           </p>
         ) : null;
       })()}
       {pills.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-wrap gap-2">
           {pills.map((p) => (
-            <MetaPill key={p.key}>{p.value}</MetaPill>
+            <MetaPill
+              key={p.key}
+              variant={p.variant ?? "subtle"}
+              href={p.href}
+            >
+              {p.value}
+            </MetaPill>
           ))}
         </div>
       )}
@@ -448,54 +448,85 @@ function formatLocation(race: RaceGuideMeta): string | null {
   return parts.length ? parts.join(", ") : null;
 }
 
-// Subtle gray pill — matches the style used on the /races
-// index card. gray-300 reads against the card's bg-200/bg-100
-// surface in both themes.
-function MetaPill({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex h-7 items-center rounded-full bg-[color:var(--ds-gray-300)] px-3 text-copy-13 font-medium text-[color:var(--ds-gray-1000)]">
-      {children}
-    </span>
-  );
+// Pill that opens a filtered /races page. Two variants:
+//   - "primary" — dark fill, used for the date pill so it
+//     reads as the headline meta on the card.
+//   - "subtle"  — gray-300 fill, used for the rest (surface,
+//     tag) so they sit quietly behind the date.
+// Pills without an `href` render as a non-interactive <span>.
+function MetaPill({
+  children,
+  href,
+  variant = "subtle",
+}: {
+  children: React.ReactNode;
+  href?: string;
+  variant?: "primary" | "subtle";
+}) {
+  const base =
+    "inline-flex h-7 items-center rounded-full px-3 text-copy-13 font-medium transition-colors";
+  const skin =
+    variant === "primary"
+      ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)] hover:bg-[color:var(--ds-gray-900)]"
+      : "bg-[color:var(--ds-gray-300)] text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-400)]";
+  const className = `${base} ${skin}`;
+  if (href) return <Link href={href} className={className}>{children}</Link>;
+  return <span className={className}>{children}</span>;
+}
+
+interface HeroPill {
+  key: string;
+  value: string;
+  href?: string;
+  variant?: "primary" | "subtle";
 }
 
 // Builds the ordered list of meta pills shown under the title.
 // Skips entries that have no underlying value so empty fields
-// don't appear as ghost pills.
-function useHeroPills(race: RaceGuideMeta): { key: string; value: string }[] {
-  const { units, currency: displayCurrency } = useUnits();
-  const pills: { key: string; value: string }[] = [];
+// don't appear as ghost pills. Each pill links to the /races
+// index pre-filtered by the matching field, except for any pill
+// whose source isn't a /races filter dimension.
+function useHeroPills(race: RaceGuideMeta): HeroPill[] {
+  const pills: HeroPill[] = [];
 
   const date = formatPillDate(race.eventDate);
-  if (date) pills.push({ key: "date", value: date });
-
-  if (race.distance != null) {
-    pills.push({ key: "distance", value: formatDistance(race.distance, units) });
-  }
-
-  if (race.price != null && race.currency) {
-    const isLocal = displayCurrency === "local";
-    const target = isLocal ? race.currency : displayCurrency;
-    const value = isLocal
-      ? race.price
-      : convertCurrencySync(race.price, race.currency, displayCurrency);
-    pills.push({ key: "price", value: formatPrice(value, target) });
-  }
-
-  if (race.elevationGain != null) {
+  if (date && race.eventDate) {
+    const iso = isoDate(race.eventDate);
     pills.push({
-      key: "elevation",
-      value: `${formatElevation(race.elevationGain, units)} gain`,
+      key: "date",
+      value: date,
+      // Filter the index to races on the same calendar day.
+      href: iso ? `/races?dateFrom=${iso}&dateTo=${iso}` : undefined,
+      variant: "primary",
     });
   }
 
-  if (race.surface) pills.push({ key: "surface", value: race.surface });
+  if (race.surface) {
+    pills.push({
+      key: "surface",
+      value: race.surface,
+      href: `/races?surface=${encodeURIComponent(race.surface)}`,
+    });
+  }
 
   for (const tag of race.tags ?? []) {
-    pills.push({ key: `tag-${tag}`, value: tag });
+    pills.push({
+      key: `tag-${tag}`,
+      value: tag,
+      href: `/races?tag=${encodeURIComponent(tag)}`,
+    });
   }
 
   return pills;
+}
+
+// "2026-07-12" from any ISO datetime — drops the time portion
+// so the /races index filter matches the entire calendar day
+// in the visitor's local timezone-ish way (the index treats
+// dateFrom / dateTo as date-only strings).
+function isoDate(iso: string): string | null {
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10);
 }
 
 function formatPillDate(iso: string | undefined): string | null {
