@@ -72,6 +72,40 @@ const nextConfig: NextConfig = {
         destination: "/nutrition/:slug",
         permanent: true,
       },
+      // Runner's Guide articles merged into their raceGuide
+      // counterparts (May 2026). Old article URLs stay
+      // permanent-redirected to the race detail page so existing
+      // links and search-engine indexing keep working.
+      {
+        source: "/articles/tokyo-marathon-runners-guide",
+        destination: "/races/tokyo-marathon",
+        permanent: true,
+      },
+      {
+        source: "/articles/boston-marathon-runners-guide",
+        destination: "/races/boston-marathon",
+        permanent: true,
+      },
+      {
+        source: "/articles/chicago-marathon-runners-guide",
+        destination: "/races/chicago-marathon",
+        permanent: true,
+      },
+      {
+        source: "/articles/berlin-marathon-runners-guide",
+        destination: "/races/berlin-marathon",
+        permanent: true,
+      },
+      {
+        source: "/articles/new-york-city-marathon-runners-guide",
+        destination: "/races/new-york-city-marathon",
+        permanent: true,
+      },
+      {
+        source: "/articles/london-marathon-runners-guide",
+        destination: "/races/london-marathon",
+        permanent: true,
+      },
     ];
   },
 };
