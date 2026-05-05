@@ -23,6 +23,7 @@ export const revalidate = 60;
 
 type RaceGuideQueryRow = RaceGuideMeta & {
   mainImage?: SanityImageSource | null;
+  portraitImage?: SanityImageSource | null;
   routeGeoJsonUrl?: string | null;
 };
 
@@ -61,6 +62,7 @@ const raceGuideQuery = /* groq */ `
     womensCourseRecordCountry,
     officialWebsite,
     mainImage,
+    portraitImage,
     "routeGeoJsonUrl": gpxFile.asset->url
   }
 `;
@@ -79,8 +81,12 @@ export default async function RaceGuidePage({
 
   if (!race) notFound();
 
-  const heroImageUrl = race.mainImage
-    ? urlFor(race.mainImage)
+  // Prefer the dedicated 3:4 portraitImage when set; fall back
+  // to mainImage so older races without a portrait upload still
+  // show the hero.
+  const heroSource = race.portraitImage ?? race.mainImage ?? null;
+  const heroImageUrl = heroSource
+    ? urlFor(heroSource)
         .width(HERO_IMAGE_RENDER_WIDTH)
         .auto("format")
         .url()
