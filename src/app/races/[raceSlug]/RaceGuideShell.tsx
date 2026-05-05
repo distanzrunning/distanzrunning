@@ -775,13 +775,13 @@ interface Tile {
   label: string;
   value: string;
   subtitle?: string;
-  /** 1–4 inclusive. Lights up the matching number of bars in
-   *  the bottom-right visual; tiles without a meaningful scale
-   *  leave this off and the visual slot collapses. */
-  visualLevel?: 1 | 2 | 3 | 4;
+  /** Optional bottom-right indicator. Each tile builds its own
+   *  shape (bars, thermometer, etc) so visuals stay distinct
+   *  per-stat rather than reusing the same primitive. */
+  visual?: React.ReactNode;
 }
 
-function StatTile({ Icon, label, value, subtitle, visualLevel }: Tile) {
+function StatTile({ Icon, label, value, subtitle, visual }: Tile) {
   return (
     <div
       className="flex flex-col gap-3 rounded-md p-4"
@@ -798,7 +798,7 @@ function StatTile({ Icon, label, value, subtitle, visualLevel }: Tile) {
         <span className="font-medium">{label}</span>
       </div>
       <div className="text-heading-24">{value}</div>
-      {(subtitle || visualLevel) && (
+      {(subtitle || visual) && (
         <div className="mt-auto flex items-end justify-between gap-3">
           {subtitle ? (
             <span
@@ -810,7 +810,7 @@ function StatTile({ Icon, label, value, subtitle, visualLevel }: Tile) {
           ) : (
             <span />
           )}
-          {visualLevel && <BarsVisual level={visualLevel} />}
+          {visual}
         </div>
       )}
     </div>
@@ -838,6 +838,41 @@ function BarsVisual({ level }: { level: 1 | 2 | 3 | 4 }) {
           }}
         />
       ))}
+    </div>
+  );
+}
+
+// Vertical thermometer-style scale. 15 horizontal pill ticks
+// stacked from 0 °C (bottom) to 35 °C (top) in 2.5 °C steps.
+// Major ticks at every 5 °C are wider (18 px) so the scale
+// reads like a thermometer's degree markings; minor 2.5 °C
+// ticks are narrower (10 px). Lit ticks are at-or-below the
+// race temperature; the rest dim to 20 %. Right-aligned so all
+// ticks share a "spine" on the right edge.
+function ThermometerVisual({ celsius }: { celsius: number }) {
+  const MIN_C = 0;
+  const MAX_C = 35;
+  const STEP = 2.5;
+  const ticks: number[] = [];
+  for (let v = MIN_C; v <= MAX_C; v += STEP) ticks.push(v);
+  return (
+    <div className="flex flex-col-reverse items-end gap-[2px]" aria-hidden>
+      {ticks.map((t) => {
+        const isMajor = t % 5 === 0;
+        const lit = t <= celsius;
+        return (
+          <div
+            key={t}
+            className="rounded-full"
+            style={{
+              height: 1.5,
+              width: isMajor ? 18 : 10,
+              background: "var(--ds-background-100)",
+              opacity: lit ? 1 : 0.2,
+            }}
+          />
+        );
+      })}
     </div>
   );
 }
@@ -879,7 +914,7 @@ function useStatTiles(race: RaceGuideMeta): Tile[] {
       subtitle: race.profile
         ? race.profile.charAt(0).toUpperCase() + race.profile.slice(1)
         : undefined,
-      visualLevel: elevationLevel(race.elevationGain),
+      visual: <BarsVisual level={elevationLevel(race.elevationGain)} />,
     });
   }
 
@@ -900,6 +935,7 @@ function useStatTiles(race: RaceGuideMeta): Tile[] {
       label: "Temperature",
       value: formatTemperature(race.averageTemperature, units),
       subtitle: temperatureLabel(race.averageTemperature),
+      visual: <ThermometerVisual celsius={race.averageTemperature} />,
     });
   }
 
