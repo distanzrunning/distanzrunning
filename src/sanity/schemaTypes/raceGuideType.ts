@@ -199,6 +199,21 @@ export const raceGuideType = defineType({
       initialValue: 'USD',
     }),
     defineField({
+      name: 'altitude',
+      title: 'Altitude (metres above sea level)',
+      type: 'number',
+      description:
+        'Course altitude in metres above sea level. Drives the "Altitude" stat tile on the race detail page; used to derive a label (Sea level / Highland / Mountain) automatically.',
+    }),
+    defineField({
+      name: 'humidity',
+      title: 'Average Humidity (%)',
+      type: 'number',
+      description:
+        'Average relative humidity at race time, 0–100. Drives the "Humidity" stat tile; auto-labelled Dry / Moderate / Humid.',
+      validation: (Rule) => Rule.min(0).max(100),
+    }),
+    defineField({
       name: 'averageTemperature',
       title: 'Average Temperature (°C)',
       type: 'number',

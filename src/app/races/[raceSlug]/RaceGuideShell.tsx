@@ -14,12 +14,27 @@ import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { PortableText, type PortableTextBlock } from "@portabletext/react";
-import { ArrowDown, ChevronRight } from "lucide-react";
+import {
+  ArrowDown,
+  ChevronRight,
+  ChevronsUp,
+  Clock,
+  Droplets,
+  Map as MapIcon,
+  Mountain,
+  Ruler,
+  Thermometer,
+  TrendingUp,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { AdSlot } from "@/components/ui/AdSlot";
+import { formatDistance, formatElevation } from "@/lib/raceUtils";
+import { useUnits, type UnitSystem } from "@/contexts/UnitsContext";
 
 export interface RaceGuideMeta {
   _id: string;
@@ -36,6 +51,8 @@ export interface RaceGuideMeta {
   profile?: string;
   elevationGain?: number;
   elevationLoss?: number;
+  altitude?: number;
+  humidity?: number;
   averageTemperature?: number;
   price?: number;
   currency?: string;
@@ -366,6 +383,7 @@ function GuidePanel({ race, heroImageUrl }: GuidePanelProps) {
       }}
     >
       <HeroCard race={race} imageUrl={heroImageUrl} />
+      <StatsCard race={race} />
       <TocCard body={race.body} />
       <AdsCard />
       {/* Temporary spacer so the page keeps scrolling while we
@@ -700,6 +718,193 @@ function AdsCard() {
       />
     </div>
   );
+}
+
+// ============================================================================
+// Stats card. 2-column grid of dark stat tiles (matches the
+// "primary" pill treatment: --ds-gray-1000 bg, --ds-background-100
+// text — both flip with theme so the tile reads as an inverted
+// surface in both modes). Each tile auto-omits when its
+// underlying field is empty so sparse races render fewer tiles
+// without leaving holes.
+// ============================================================================
+
+function StatsCard({ race }: { race: RaceGuideMeta }) {
+  const tiles = useStatTiles(race);
+  if (tiles.length === 0) return null;
+  return (
+    <section
+      className={`${CARD_CLASS} p-5`}
+      style={{ boxShadow: CARD_SHADOW }}
+    >
+      <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
+        Key stats
+      </h2>
+      <div className="grid grid-cols-2 gap-3">
+        {tiles.map(({ key, ...tile }) => (
+          <StatTile key={key} {...tile} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+interface Tile {
+  key: string;
+  Icon: LucideIcon;
+  label: string;
+  value: string;
+  subtitle?: string;
+}
+
+function StatTile({ Icon, label, value, subtitle }: Tile) {
+  return (
+    <div
+      className="flex flex-col gap-3 rounded-md p-4"
+      style={{
+        background: "var(--ds-gray-1000)",
+        color: "var(--ds-background-100)",
+      }}
+    >
+      <div className="flex items-center gap-2 text-copy-13" style={{ opacity: 0.6 }}>
+        <Icon className="size-4" aria-hidden />
+        <span className="font-medium">{label}</span>
+      </div>
+      <div className="text-heading-24">{value}</div>
+      {subtitle && (
+        <div className="text-copy-13 font-medium" style={{ opacity: 0.6 }}>
+          {subtitle}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function useStatTiles(race: RaceGuideMeta): Tile[] {
+  const { units } = useUnits();
+  const tiles: Tile[] = [];
+
+  if (race.distance != null) {
+    tiles.push({
+      key: "distance",
+      Icon: Ruler,
+      label: "Distance",
+      value: formatDistance(race.distance, units),
+    });
+  }
+
+  if (race.elevationGain != null) {
+    tiles.push({
+      key: "elevation",
+      Icon: TrendingUp,
+      label: "Elevation",
+      value: formatElevation(race.elevationGain, units),
+      subtitle: race.profile
+        ? race.profile.charAt(0).toUpperCase() + race.profile.slice(1)
+        : undefined,
+    });
+  }
+
+  if (race.surface) {
+    tiles.push({
+      key: "surface",
+      Icon: MapIcon,
+      label: "Surface",
+      value: race.surface,
+      subtitle: race.surfaceBreakdown,
+    });
+  }
+
+  if (race.averageTemperature != null) {
+    tiles.push({
+      key: "temperature",
+      Icon: Thermometer,
+      label: "Temperature",
+      value: formatTemperature(race.averageTemperature, units),
+    });
+  }
+
+  if (race.altitude != null) {
+    tiles.push({
+      key: "altitude",
+      Icon: Mountain,
+      label: "Altitude",
+      value: formatAltitude(race.altitude, units),
+      subtitle: altitudeLabel(race.altitude),
+    });
+  }
+
+  if (race.finishers != null) {
+    tiles.push({
+      key: "field-size",
+      Icon: Users,
+      label: "Field size",
+      value: race.finishers.toLocaleString(),
+      subtitle: "Finishers",
+    });
+  }
+
+  const startTime = formatStartTime(race.eventDate);
+  if (startTime) {
+    tiles.push({
+      key: "start-time",
+      Icon: Clock,
+      label: "Start time",
+      value: startTime,
+    });
+  }
+
+  if (race.humidity != null) {
+    tiles.push({
+      key: "humidity",
+      Icon: Droplets,
+      label: "Humidity",
+      value: `${Math.round(race.humidity)}%`,
+      subtitle: humidityLabel(race.humidity),
+    });
+  }
+
+  return tiles;
+}
+
+// °C → °F when the visitor prefers imperial. Source values are
+// always stored in °C in Sanity.
+function formatTemperature(c: number, units: UnitSystem): string {
+  if (units === "imperial") {
+    return `${Math.round((c * 9) / 5 + 32)}°F`;
+  }
+  return `${Math.round(c)}°C`;
+}
+
+// metres → feet conversion + thousands separator. Source values
+// are always stored in metres in Sanity.
+function formatAltitude(m: number, units: UnitSystem): string {
+  if (units === "imperial") {
+    return `${Math.round(m * 3.281).toLocaleString()} ft`;
+  }
+  return `${Math.round(m).toLocaleString()} m`;
+}
+
+function altitudeLabel(metres: number): string {
+  if (metres < 200) return "Sea level";
+  if (metres < 1000) return "Lowland";
+  if (metres < 2500) return "Highland";
+  return "Mountain";
+}
+
+function humidityLabel(percent: number): string {
+  if (percent < 30) return "Dry";
+  if (percent < 60) return "Moderate";
+  return "Humid";
+}
+
+// Pulls "HH:mm" straight from the ISO string so the time reads
+// the same on every viewer regardless of their browser
+// timezone. Editors enter the race-local start time in Studio.
+function formatStartTime(iso: string | undefined): string | null {
+  if (!iso) return null;
+  const m = iso.match(/T(\d{2}:\d{2})/);
+  return m ? m[1] : null;
 }
 
 // Plain fallback — no border / bg of its own because the parent

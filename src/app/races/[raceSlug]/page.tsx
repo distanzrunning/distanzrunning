@@ -50,6 +50,8 @@ const raceGuideQuery = /* groq */ `
     profile,
     elevationGain,
     elevationLoss,
+    altitude,
+    humidity,
     averageTemperature,
     price,
     currency,
