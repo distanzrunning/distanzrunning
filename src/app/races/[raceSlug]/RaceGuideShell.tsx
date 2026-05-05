@@ -55,7 +55,7 @@ const ROUTE_LINE_COLOR = "#FF0058";
 const MAP_STICKY_TOP = 50;
 const MAP_VIEWPORT_HEIGHT = "calc(100vh - 50px)";
 
-const PANEL_WIDTH = 560;
+const PANEL_WIDTH = 480;
 const PANEL_INSET = 24;
 // Extra breathing room around the route bbox so the map reads
 // slightly zoomed out — the panel ate enough of the canvas
