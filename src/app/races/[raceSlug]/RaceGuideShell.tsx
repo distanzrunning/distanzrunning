@@ -357,9 +357,7 @@ function GuidePanel({ race, heroImageUrl }: GuidePanelProps) {
         pointerEvents: "auto",
       }}
     >
-      {heroImageUrl && (
-        <HeroImageCard src={heroImageUrl} alt={race.title} />
-      )}
+      <HeroCard race={race} imageUrl={heroImageUrl} />
       {/* Temporary spacer so the page keeps scrolling while we
           add more cards in subsequent iterations. Remove once
           the stack is full enough to overflow on its own. */}
@@ -375,29 +373,42 @@ const CARD_CLASS =
   "overflow-hidden rounded-md bg-[color:var(--ds-background-200)] dark:bg-[color:var(--ds-background-100)]";
 const CARD_SHADOW = "var(--ds-shadow-menu)";
 
-function HeroImageCard({ src, alt }: { src: string; alt: string }) {
+function HeroCard({
+  race,
+  imageUrl,
+}: {
+  race: RaceGuideMeta;
+  imageUrl: string | null;
+}) {
   return (
     <div
       className={`${CARD_CLASS} p-5`}
       style={{ boxShadow: CARD_SHADOW }}
     >
-      {/* Image sits inset within the card surface — the card's
-          bg shows around it as a frame. Inner radius is one
-          step down from the card's so the visible margin
-          between the two reads consistently. 3:4 portrait so
-          the hero leans editorial — better suited to vertical
-          race / runner photography than the prior landscape
-          frame. */}
-      <div className="relative aspect-[3/4] w-full overflow-hidden rounded">
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          sizes={`${PANEL_WIDTH}px`}
-          priority
-          className="object-cover"
-        />
-      </div>
+      {imageUrl && (
+        // Image sits inset within the card surface — the card's
+        // bg shows around it as a frame. Inner radius is one
+        // step down from the card's so the visible margin
+        // between the two reads consistently. 3:4 portrait so
+        // the hero leans editorial.
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded">
+          <Image
+            src={imageUrl}
+            alt={race.title}
+            fill
+            sizes={`${PANEL_WIDTH}px`}
+            priority
+            className="object-cover"
+          />
+        </div>
+      )}
+      <h1
+        className={`m-0 text-heading-32 text-[color:var(--ds-gray-1000)] ${
+          imageUrl ? "mt-5" : ""
+        }`}
+      >
+        {race.title}
+      </h1>
     </div>
   );
 }
