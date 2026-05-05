@@ -814,6 +814,7 @@ function useStatTiles(race: RaceGuideMeta): Tile[] {
       Icon: Ruler,
       label: "Distance",
       value: formatDistance(race.distance, units),
+      subtitle: raceTypeLabel(race.distance) ?? undefined,
     });
   }
 
@@ -855,6 +856,7 @@ function useStatTiles(race: RaceGuideMeta): Tile[] {
       Icon: Thermometer,
       label: "Temperature",
       value: formatTemperature(race.averageTemperature, units),
+      subtitle: temperatureLabel(race.averageTemperature),
     });
   }
 
@@ -921,6 +923,33 @@ function humidityLabel(percent: number): string {
   if (percent < 30) return "Dry";
   if (percent < 60) return "Moderate";
   return "Humid";
+}
+
+// Maps a race distance (km) to the closest standard race-type
+// label per World Athletics / AIMS — the same set the /races
+// distance filter chip uses. ±0.5 km tolerance handles editor
+// rounding (42.2 vs 42.195, etc). Unknown distances return
+// null so the tile renders without a subtitle.
+function raceTypeLabel(km: number): string | null {
+  const within = (target: number, tol = 0.5) =>
+    km >= target - tol && km <= target + tol;
+  if (within(5)) return "5K";
+  if (within(10)) return "10K";
+  if (within(16.0934)) return "10 Mile";
+  if (within(21.0975)) return "Half Marathon";
+  if (within(42.195)) return "Marathon";
+  if (km >= 50) return "Ultra";
+  return null;
+}
+
+// Same buckets the /races temperature filter uses (°C-anchored,
+// regardless of viewer's display unit) so the label reads
+// consistently across surfaces.
+function temperatureLabel(c: number): string {
+  if (c < 10) return "Cold";
+  if (c < 18) return "Mild";
+  if (c < 25) return "Warm";
+  return "Hot";
 }
 
 // Plain fallback — no border / bg of its own because the parent
