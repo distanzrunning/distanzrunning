@@ -614,16 +614,16 @@ function TocCard({ body }: { body?: PortableTextBlock[] }) {
           <li key={entry.id}>
             <a
               href={`#${entry.id}`}
-              className="flex items-center justify-between gap-3 py-2 text-copy-16 text-[color:var(--ds-gray-1000)] no-underline transition-colors hover:text-[color:var(--ds-gray-700)]"
+              className="flex items-center justify-between gap-3 py-2 text-copy-16 text-[color:var(--ds-gray-1000)] no-underline underline-offset-4 hover:underline"
             >
               <span className="min-w-0">
-                <span className="text-[color:var(--ds-gray-700)]">
+                <span className="text-[color:var(--ds-gray-900)]">
                   {i + 1}
                 </span>
                 <span className="ml-3">{entry.title}</span>
               </span>
               <ArrowDown
-                className="size-4 shrink-0 text-[color:var(--ds-gray-700)]"
+                className="size-4 shrink-0 text-[color:var(--ds-gray-900)]"
                 aria-hidden
               />
             </a>
