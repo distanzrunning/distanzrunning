@@ -783,8 +783,13 @@ interface Tile {
 
 function StatTile({ Icon, label, value, subtitle, visual }: Tile) {
   return (
+    // aspect-square keeps every tile the same size regardless
+    // of which fields are populated. Visual is taken out of
+    // flow (absolute bottom-right) so it doesn't push the tile
+    // taller and is allowed to overlap the value text on tiles
+    // where the value is long.
     <div
-      className="flex flex-col gap-3 rounded-md p-4"
+      className="relative flex aspect-square flex-col gap-3 rounded-md p-4"
       style={{
         background: "var(--ds-gray-1000)",
         color: "var(--ds-background-100)",
@@ -798,18 +803,16 @@ function StatTile({ Icon, label, value, subtitle, visual }: Tile) {
         <span className="font-medium">{label}</span>
       </div>
       <div className="text-heading-24">{value}</div>
-      {(subtitle || visual) && (
-        <div className="mt-auto flex items-end justify-between gap-3">
-          {subtitle ? (
-            <span
-              className="text-copy-13 font-medium"
-              style={{ opacity: 0.6 }}
-            >
-              {subtitle}
-            </span>
-          ) : (
-            <span />
-          )}
+      {subtitle && (
+        <div
+          className="mt-auto text-copy-13 font-medium"
+          style={{ opacity: 0.6 }}
+        >
+          {subtitle}
+        </div>
+      )}
+      {visual && (
+        <div className="pointer-events-none absolute bottom-4 right-4">
           {visual}
         </div>
       )}
