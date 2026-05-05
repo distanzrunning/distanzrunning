@@ -33,6 +33,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { AdSlot } from "@/components/ui/AdSlot";
+import { Switch } from "@/components/ui/Switch";
 import { formatDistance, formatElevation } from "@/lib/raceUtils";
 import { useUnits, type UnitSystem } from "@/contexts/UnitsContext";
 
@@ -731,15 +732,28 @@ function AdsCard() {
 
 function StatsCard({ race }: { race: RaceGuideMeta }) {
   const tiles = useStatTiles(race);
+  // The Switch is bound to the same UnitsContext as
+  // /races/RaceUnitControls, so flipping it here also updates
+  // the index page (and persists via localStorage).
+  const { units, setUnits } = useUnits();
   if (tiles.length === 0) return null;
   return (
     <section
       className={`${CARD_CLASS} p-5`}
       style={{ boxShadow: CARD_SHADOW }}
     >
-      <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
-        Key stats
-      </h2>
+      <header className="mb-4 flex items-center justify-between gap-4">
+        <h2 className="m-0 text-heading-20 text-[color:var(--ds-gray-1000)]">
+          Key stats
+        </h2>
+        <Switch
+          size="small"
+          name="race-detail-units"
+          options={UNIT_TOGGLE_OPTIONS}
+          value={units}
+          onChange={(next) => setUnits(next as UnitSystem)}
+        />
+      </header>
       <div className="grid grid-cols-2 gap-3">
         {tiles.map(({ key, ...tile }) => (
           <StatTile key={key} {...tile} />
@@ -748,6 +762,11 @@ function StatsCard({ race }: { race: RaceGuideMeta }) {
     </section>
   );
 }
+
+const UNIT_TOGGLE_OPTIONS = [
+  { value: "imperial", label: "Imperial" },
+  { value: "metric", label: "Metric" },
+];
 
 interface Tile {
   key: string;
