@@ -854,6 +854,51 @@ function BarsVisual({ level }: { level: 1 | 2 | 3 | 4 }) {
 // ticks are narrower (10 px). Lit ticks are at-or-below the
 // race temperature; the rest dim to 20 %. Right-aligned so all
 // ticks share a "spine" on the right edge.
+// Quarter-arc fan gauge for humidity. 11 ticks distributed
+// evenly from "north" (0% humidity, pointing up) through to
+// "west" (100% humidity, pointing left), all anchored at the
+// container's bottom-right corner. Each tick is a 2 × 12 px
+// pill rotated and pushed outward by 32 px so the tail end
+// sits at the anchor and the head fans around it. Lit ticks
+// (% ≤ humidity) at full opacity; the rest dim to 20%.
+function HumidityVisual({ percent }: { percent: number }) {
+  const TICK_COUNT = 11;
+  const RADIUS = 32;
+  const ARC_DEG = 90;
+  return (
+    <div
+      className="relative"
+      style={{ width: RADIUS + 12, height: RADIUS + 12 }}
+      aria-hidden
+    >
+      {Array.from({ length: TICK_COUNT }).map((_, i) => {
+        // 0° (up / north) → -90° (left / west). Negative deg
+        // = counterclockwise in CSS, so the fan opens left.
+        const angle = -(i * ARC_DEG) / (TICK_COUNT - 1);
+        const tickPercent = (i / (TICK_COUNT - 1)) * 100;
+        const lit = tickPercent <= percent;
+        return (
+          <div
+            key={i}
+            className="absolute bottom-0 right-0 rounded-full"
+            style={{
+              width: 2,
+              height: 12,
+              background: "var(--ds-background-100)",
+              opacity: lit ? 1 : 0.2,
+              // Rotate first (around the tick's center), then
+              // translate up in the rotated frame so the tail
+              // ends up at the anchor and the head points
+              // outward along the rotation direction.
+              transform: `rotate(${angle}deg) translateY(-${RADIUS}px)`,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 // Ticks ascend from the tile's bottom-right corner upward.
 // Anchored to start at the bottom and extend up — the
 // silhouette can rise into the row of the value text, which
@@ -966,6 +1011,7 @@ function useStatTiles(race: RaceGuideMeta): Tile[] {
       label: "Humidity",
       value: `${Math.round(race.humidity)}%`,
       subtitle: humidityLabel(race.humidity),
+      visual: <HumidityVisual percent={race.humidity} />,
     });
   }
 
