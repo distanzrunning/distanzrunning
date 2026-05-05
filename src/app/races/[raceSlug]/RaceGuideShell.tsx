@@ -11,10 +11,18 @@
 
 import { useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { format } from "date-fns";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import {
+  convertCurrencySync,
+  formatDistance,
+  formatElevation,
+  formatPrice,
+} from "@/lib/raceUtils";
+import { useUnits } from "@/contexts/UnitsContext";
 
 export interface RaceGuideMeta {
   _id: string;
@@ -42,6 +50,7 @@ export interface RaceGuideMeta {
   womensCourseRecordAthlete?: string;
   womensCourseRecordCountry?: string;
   officialWebsite?: string;
+  tags?: string[];
 }
 
 interface RaceGuideShellProps {
@@ -380,6 +389,7 @@ function HeroCard({
   race: RaceGuideMeta;
   imageUrl: string | null;
 }) {
+  const pills = useHeroPills(race);
   return (
     <div
       className={`${CARD_CLASS} p-5`}
@@ -409,6 +419,72 @@ function HeroCard({
       >
         {race.title}
       </h1>
+      {pills.length > 0 && (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {pills.map((p) => (
+            <MetaPill key={p.key}>{p.value}</MetaPill>
+          ))}
+        </div>
+      )}
     </div>
   );
+}
+
+// Subtle gray pill — matches the style used on the /races
+// index card. gray-300 reads against the card's bg-200/bg-100
+// surface in both themes.
+function MetaPill({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex h-7 items-center rounded-full bg-[color:var(--ds-gray-300)] px-3 text-copy-13 font-medium text-[color:var(--ds-gray-1000)]">
+      {children}
+    </span>
+  );
+}
+
+// Builds the ordered list of meta pills shown under the title.
+// Skips entries that have no underlying value so empty fields
+// don't appear as ghost pills.
+function useHeroPills(race: RaceGuideMeta): { key: string; value: string }[] {
+  const { units, currency: displayCurrency } = useUnits();
+  const pills: { key: string; value: string }[] = [];
+
+  const date = formatPillDate(race.eventDate);
+  if (date) pills.push({ key: "date", value: date });
+
+  if (race.distance != null) {
+    pills.push({ key: "distance", value: formatDistance(race.distance, units) });
+  }
+
+  if (race.country) pills.push({ key: "country", value: race.country });
+  if (race.city) pills.push({ key: "city", value: race.city });
+
+  if (race.price != null && race.currency) {
+    const isLocal = displayCurrency === "local";
+    const target = isLocal ? race.currency : displayCurrency;
+    const value = isLocal
+      ? race.price
+      : convertCurrencySync(race.price, race.currency, displayCurrency);
+    pills.push({ key: "price", value: formatPrice(value, target) });
+  }
+
+  if (race.elevationGain != null) {
+    pills.push({
+      key: "elevation",
+      value: `${formatElevation(race.elevationGain, units)} gain`,
+    });
+  }
+
+  if (race.surface) pills.push({ key: "surface", value: race.surface });
+
+  for (const tag of race.tags ?? []) {
+    pills.push({ key: `tag-${tag}`, value: tag });
+  }
+
+  return pills;
+}
+
+function formatPillDate(iso: string | undefined): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? null : format(d, "d MMM, yyyy");
 }
