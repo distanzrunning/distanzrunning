@@ -48,14 +48,33 @@ export const raceGuideType = defineType({
     }),
     defineField({
       name: 'mainImage',
+      title: 'Main Image (landscape)',
       type: 'image',
       options: { hotspot: true },
+      description:
+        'Used on the homepage row, /races index card, and OG share image. Landscape (~3:2 / 16:9) framing recommended.',
+    }),
+    defineField({
+      name: 'portraitImage',
+      title: 'Portrait Image (3:4)',
+      type: 'image',
+      options: { hotspot: true },
+      description:
+        'Tall hero image rendered in the side panel of the race detail page. 3:4 portrait framing recommended; falls back to Main Image if not set.',
     }),
     defineField({
       name: 'publishedAt',
       title: 'Published At',
       type: 'datetime',
       description: 'When this race guide was published (used for sorting breaking news)',
+    }),
+    defineField({
+      name: 'author',
+      title: 'Author',
+      type: 'reference',
+      to: [{ type: 'author' }],
+      description:
+        'Editorial byline for the race guide write-up. Optional — leave empty for races without long-form content.',
     }),
     defineField({
       name: 'excerpt',
@@ -565,6 +584,13 @@ export const raceGuideType = defineType({
       type: 'boolean',
       initialValue: false,
       description: 'Show this race guide in the homepage breaking news section',
+    }),
+    defineField({
+      name: 'introduction',
+      title: 'Introduction',
+      type: 'blockContent',
+      description:
+        'Leading paragraph(s) shown above the main body on the race detail page.',
     }),
     defineField({
       name: 'body',
