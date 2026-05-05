@@ -56,6 +56,7 @@ const raceGuideQuery = /* groq */ `
     price,
     currency,
     finishers,
+    fieldSize,
     tags,
     mensCourseRecord,
     mensCourseRecordAthlete,

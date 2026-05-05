@@ -57,6 +57,7 @@ export interface RaceGuideMeta {
   price?: number;
   currency?: string;
   finishers?: number;
+  fieldSize?: number;
   mensCourseRecord?: string;
   mensCourseRecordAthlete?: string;
   mensCourseRecordCountry?: string;
@@ -834,13 +835,17 @@ function useStatTiles(race: RaceGuideMeta): Tile[] {
     });
   }
 
-  if (race.finishers != null) {
+  // Prefer the new `fieldSize` field once populated; fall back
+  // to the legacy `finishers` count during the per-race
+  // migration. Subtitle reflects which value is being shown.
+  const fieldValue = race.fieldSize ?? race.finishers;
+  if (fieldValue != null) {
     tiles.push({
       key: "field-size",
       Icon: Users,
       label: "Field size",
-      value: race.finishers.toLocaleString(),
-      subtitle: "Finishers",
+      value: fieldValue.toLocaleString(),
+      subtitle: race.fieldSize != null ? undefined : "Finishers",
     });
   }
 

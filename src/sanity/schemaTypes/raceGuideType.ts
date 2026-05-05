@@ -160,6 +160,13 @@ export const raceGuideType = defineType({
       type: 'number',
     }),
     defineField({
+      name: 'fieldSize',
+      title: 'Field Size',
+      type: 'number',
+      description:
+        'Total field size (capacity / number of runners). Drives the "Field size" stat tile on the race detail page; falls back to `finishers` until this is populated per race.',
+    }),
+    defineField({
       name: 'price',
       title: 'Entry Price',
       type: 'number',
