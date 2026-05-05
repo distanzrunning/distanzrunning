@@ -775,9 +775,13 @@ interface Tile {
   label: string;
   value: string;
   subtitle?: string;
+  /** 1–4 inclusive. Lights up the matching number of bars in
+   *  the bottom-right visual; tiles without a meaningful scale
+   *  leave this off and the visual slot collapses. */
+  visualLevel?: 1 | 2 | 3 | 4;
 }
 
-function StatTile({ Icon, label, value, subtitle }: Tile) {
+function StatTile({ Icon, label, value, subtitle, visualLevel }: Tile) {
   return (
     <div
       className="flex flex-col gap-3 rounded-md p-4"
@@ -786,16 +790,54 @@ function StatTile({ Icon, label, value, subtitle }: Tile) {
         color: "var(--ds-background-100)",
       }}
     >
-      <div className="flex items-center gap-2 text-copy-13" style={{ opacity: 0.6 }}>
+      <div
+        className="flex items-center gap-2 text-copy-13"
+        style={{ opacity: 0.6 }}
+      >
         <Icon className="size-4" aria-hidden />
         <span className="font-medium">{label}</span>
       </div>
       <div className="text-heading-24">{value}</div>
-      {subtitle && (
-        <div className="text-copy-13 font-medium" style={{ opacity: 0.6 }}>
-          {subtitle}
+      {(subtitle || visualLevel) && (
+        <div className="mt-auto flex items-end justify-between gap-3">
+          {subtitle ? (
+            <span
+              className="text-copy-13 font-medium"
+              style={{ opacity: 0.6 }}
+            >
+              {subtitle}
+            </span>
+          ) : (
+            <span />
+          )}
+          {visualLevel && <BarsVisual level={visualLevel} />}
         </div>
       )}
+    </div>
+  );
+}
+
+// Four ascending pill bars (6 / 12 / 24 / 36 px tall) inside a
+// 36 px square. The first `level` bars from the left render at
+// full opacity; the remainder dim to ~20% so the silhouette
+// still reads as a bar chart at-rest. Anchored to the same
+// foreground colour as the tile's value text so it inverts
+// cleanly with the theme.
+function BarsVisual({ level }: { level: 1 | 2 | 3 | 4 }) {
+  const HEIGHTS = [6, 12, 24, 36] as const;
+  return (
+    <div className="flex h-9 items-end gap-1" aria-hidden>
+      {HEIGHTS.map((h, i) => (
+        <div
+          key={i}
+          className="w-[6px] rounded-full"
+          style={{
+            height: h,
+            background: "var(--ds-background-100)",
+            opacity: i < level ? 1 : 0.2,
+          }}
+        />
+      ))}
     </div>
   );
 }
@@ -837,6 +879,7 @@ function useStatTiles(race: RaceGuideMeta): Tile[] {
       subtitle: race.profile
         ? race.profile.charAt(0).toUpperCase() + race.profile.slice(1)
         : undefined,
+      visualLevel: elevationLevel(race.elevationGain),
     });
   }
 
@@ -950,6 +993,16 @@ function temperatureLabel(c: number): string {
   if (c < 18) return "Mild";
   if (c < 25) return "Warm";
   return "Hot";
+}
+
+// Elevation gain (metres) → 4-bucket intensity scale that maps
+// onto the BarsVisual. Tuned for marathon-distance gains; tweak
+// thresholds when shorter/longer races need a different feel.
+function elevationLevel(metres: number): 1 | 2 | 3 | 4 {
+  if (metres < 100) return 1; // very flat (Berlin, Chicago)
+  if (metres < 300) return 2; // rolling
+  if (metres < 600) return 3; // hilly
+  return 4; // mountain
 }
 
 // Plain fallback — no border / bg of its own because the parent
