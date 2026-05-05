@@ -783,13 +783,13 @@ interface Tile {
 
 function StatTile({ Icon, label, value, subtitle, visual }: Tile) {
   return (
-    // aspect-square keeps every tile the same size regardless
-    // of which fields are populated. Visual is taken out of
-    // flow (absolute bottom-right) so it doesn't push the tile
-    // taller and is allowed to overlap the value text on tiles
-    // where the value is long.
+    // Tiles are content-sized; the grid's row-stretch keeps
+    // tiles in the same row uniform-height. Visual sits
+    // absolute bottom-right so it doesn't add to the tile's
+    // intrinsic height and can overlap the value text on
+    // tiles where the value is long.
     <div
-      className="relative flex aspect-square flex-col gap-3 rounded-md p-4"
+      className="relative flex flex-col gap-3 rounded-md p-4"
       style={{
         background: "var(--ds-gray-1000)",
         color: "var(--ds-background-100)",
