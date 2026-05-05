@@ -63,7 +63,7 @@ const MAP_STICKY_TOP = 50;
 const MAP_VIEWPORT_HEIGHT = "calc(100vh - 50px)";
 
 const PANEL_WIDTH = 520;
-const PANEL_INSET = 24;
+const PANEL_INSET = 32;
 // Extra breathing room around the route bbox so the map reads
 // slightly zoomed out — the panel ate enough of the canvas
 // width that the route would otherwise feel cramped.
