@@ -854,19 +854,19 @@ function BarsVisual({ level }: { level: 1 | 2 | 3 | 4 }) {
 // ticks are narrower (10 px). Lit ticks are at-or-below the
 // race temperature; the rest dim to 20 %. Right-aligned so all
 // ticks share a "spine" on the right edge.
-// Semicircle gauge for humidity, reading left-to-right. 11 ticks
-// distributed evenly from "west" (-90°, 0% humidity) through
-// "north" (0°, 50%) to "east" (+90°, 100% humidity), all
-// anchored at the bottom-centre of the container. Each tick is
-// a 2 × 12 px pill rotated and pushed outward by 32 px so the
-// tail sits at the anchor and the head points along the
-// rotation. Only the tick closest to `percent` lights up
-// (Tokyo's 56% → 60% tick, just past centre). Others dim to
-// 20% so the full arc reads as a scale.
+// Quarter-arc dial gauge for humidity. 11 ticks fan from
+// "north" (0°, 0% humidity) counterclockwise through to "west"
+// (-90°, 100%), all anchored at the bottom-right corner of the
+// container. Each tick is a 2 px-wide pill rotated and pushed
+// outward by 32 px. Only the tick closest to `percent` lights
+// up — and it renders LONGER than the others so the gauge
+// reads like a dial needle. Background ticks dim to 20%.
 function HumidityVisual({ percent }: { percent: number }) {
   const TICK_COUNT = 11;
   const RADIUS = 32;
-  const ARC_DEG = 180;
+  const ARC_DEG = 90;
+  const TICK_HEIGHT = 12;
+  const ACTIVE_HEIGHT = 22;
   const stepPercent = 100 / (TICK_COUNT - 1);
   const activeIndex = Math.max(
     0,
@@ -875,31 +875,33 @@ function HumidityVisual({ percent }: { percent: number }) {
   return (
     <div
       className="relative"
-      style={{ width: RADIUS * 2 + 16, height: RADIUS + 12 }}
+      style={{ width: RADIUS + ACTIVE_HEIGHT, height: RADIUS + ACTIVE_HEIGHT }}
       aria-hidden
     >
       {Array.from({ length: TICK_COUNT }).map((_, i) => {
-        // -90° (left) → 0° (up) → +90° (right). 11 ticks in
-        // 18° steps. CSS positive = clockwise.
-        const angle = -90 + (i * ARC_DEG) / (TICK_COUNT - 1);
+        // 0° (up / north) → -90° (left / west). Negative deg
+        // = counterclockwise in CSS, so the fan opens left.
+        const angle = -(i * ARC_DEG) / (TICK_COUNT - 1);
         const lit = i === activeIndex;
+        const height = lit ? ACTIVE_HEIGHT : TICK_HEIGHT;
         return (
           <div
             key={i}
-            className="absolute rounded-full"
+            className="absolute bottom-0 right-0 rounded-full"
             style={{
-              bottom: 0,
-              left: "50%",
-              marginLeft: -1,
               width: 2,
-              height: 12,
+              height,
               background: "var(--ds-background-100)",
               opacity: lit ? 1 : 0.2,
               // Rotate around the tick's centre then translate
-              // up in the rotated frame — the tick's tail ends
-              // up at the bottom-centre anchor and the head
-              // points outward along the rotation direction.
-              transform: `rotate(${angle}deg) translateY(-${RADIUS}px)`,
+              // up in the rotated frame so the tail ends up at
+              // the anchor and the head points outward.
+              // Subtract half the height delta so the active
+              // tick still anchors at the same inner edge as
+              // its dim siblings (extends outward, not inward).
+              transform: `rotate(${angle}deg) translateY(-${
+                RADIUS + (height - TICK_HEIGHT) / 2
+              }px)`,
             }}
           />
         );
