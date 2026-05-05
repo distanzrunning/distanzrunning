@@ -31,7 +31,7 @@ type RaceGuideQueryRow = RaceGuideMeta & {
 // get a sharp source. We resolve a single CDN URL on the
 // server rather than passing the raw Sanity image source down
 // to the client.
-const HERO_IMAGE_RENDER_WIDTH = 480 * 2;
+const HERO_IMAGE_RENDER_WIDTH = 520 * 2;
 
 const raceGuideQuery = /* groq */ `
   *[_type == "raceGuide" && slug.current == $slug][0]{

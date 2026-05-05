@@ -57,7 +57,7 @@ const ROUTE_LINE_COLOR = "#FF0058";
 const MAP_STICKY_TOP = 50;
 const MAP_VIEWPORT_HEIGHT = "calc(100vh - 50px)";
 
-const PANEL_WIDTH = 480;
+const PANEL_WIDTH = 520;
 const PANEL_INSET = 24;
 // Extra breathing room around the route bbox so the map reads
 // slightly zoomed out — the panel ate enough of the canvas
@@ -377,11 +377,15 @@ const CARD_SHADOW = "var(--ds-shadow-menu)";
 
 function HeroImageCard({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className={CARD_CLASS} style={{ boxShadow: CARD_SHADOW }}>
-      {/* 3:2 ratio — matches the source dimensions of most
-          mainImage uploads in Sanity. object-cover keeps the
-          frame full-bleed regardless of source aspect. */}
-      <div className="relative aspect-[3/2] w-full">
+    <div
+      className={`${CARD_CLASS} p-5`}
+      style={{ boxShadow: CARD_SHADOW }}
+    >
+      {/* Image sits inset within the card surface — the card's
+          bg shows around it as a frame. Inner radius is one
+          step down from the card's so the visible margin
+          between the two reads consistently. */}
+      <div className="relative aspect-[3/2] w-full overflow-hidden rounded">
         <Image
           src={src}
           alt={alt}
