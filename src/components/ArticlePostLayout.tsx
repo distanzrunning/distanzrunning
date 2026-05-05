@@ -12,7 +12,6 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { PortableText } from "@portabletext/react";
 import { urlFor } from "@/sanity/lib/image";
-import NewsletterSignup from "@/components/ui/NewsletterSignup";
 import SimilarArticles from "@/components/SimilarArticles";
 import TableOfContentsWidget from "@/components/TableOfContentsWidget";
 import { CustomTable } from "@/components/CustomTable";
@@ -413,9 +412,6 @@ export default function ArticlePostLayout({
         maxArticles={4}
       />
 
-      <div className="pt-16">
-        <NewsletterSignup />
-      </div>
     </div>
   );
 }

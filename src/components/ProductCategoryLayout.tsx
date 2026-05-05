@@ -6,7 +6,6 @@
 // all three section category routes render identically.
 
 import TagFilterGrid from "@/components/TagFilterGrid";
-import NewsletterSignup from "@/components/ui/NewsletterSignup";
 
 type Article = {
   slug: { current: string };
@@ -43,8 +42,6 @@ export default function ProductCategoryLayout({
 
         <TagFilterGrid articles={articles} basePath={`${sectionPath}/`} />
       </div>
-
-      <NewsletterSignup />
     </div>
   );
 }

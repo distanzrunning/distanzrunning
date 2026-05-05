@@ -11,7 +11,6 @@ import Image from "next/image";
 import { format } from "date-fns";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { urlFor } from "@/sanity/lib/image";
-import NewsletterSignup from "@/components/ui/NewsletterSignup";
 
 type Author = {
   name: string;
@@ -355,9 +354,6 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
         </div>
       </div>
 
-      <div className="pt-16">
-        <NewsletterSignup />
-      </div>
     </div>
   );
 }

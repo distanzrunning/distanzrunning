@@ -7,7 +7,6 @@
 // ArticlePostLayout based on what the slug resolves to.
 
 import TagFilterGrid from "@/components/TagFilterGrid";
-import NewsletterSignup from "@/components/ui/NewsletterSignup";
 
 type Article = {
   slug: { current: string };
@@ -44,8 +43,6 @@ export default function ArticleCategoryLayout({
         {/* basePath uses the flattened scheme — articles live at /articles/<slug> */}
         <TagFilterGrid articles={articles as never} basePath="/articles/" />
       </div>
-
-      <NewsletterSignup />
     </div>
   );
 }
