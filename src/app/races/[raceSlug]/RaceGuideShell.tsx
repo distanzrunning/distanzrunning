@@ -865,6 +865,15 @@ function HumidityVisual({ percent }: { percent: number }) {
   const TICK_COUNT = 11;
   const RADIUS = 32;
   const ARC_DEG = 90;
+  // Needle behaviour: only the tick closest to `percent`
+  // lights up. 11 ticks at 10% intervals, so 56% rounds to
+  // the 60% tick (index 6). Other ticks render at 20% so
+  // the full arc still reads as a scale.
+  const stepPercent = 100 / (TICK_COUNT - 1);
+  const activeIndex = Math.max(
+    0,
+    Math.min(TICK_COUNT - 1, Math.round(percent / stepPercent)),
+  );
   return (
     <div
       className="relative"
@@ -875,8 +884,7 @@ function HumidityVisual({ percent }: { percent: number }) {
         // 0° (up / north) → -90° (left / west). Negative deg
         // = counterclockwise in CSS, so the fan opens left.
         const angle = -(i * ARC_DEG) / (TICK_COUNT - 1);
-        const tickPercent = (i / (TICK_COUNT - 1)) * 100;
-        const lit = tickPercent <= percent;
+        const lit = i === activeIndex;
         return (
           <div
             key={i}
