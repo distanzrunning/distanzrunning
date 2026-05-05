@@ -14,6 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { PortableText, type PortableTextBlock } from "@portabletext/react";
+import { ArrowDown } from "lucide-react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -47,6 +48,7 @@ export interface RaceGuideMeta {
   officialWebsite?: string;
   tags?: string[];
   introduction?: PortableTextBlock[];
+  body?: PortableTextBlock[];
 }
 
 interface RaceGuideShellProps {
@@ -363,6 +365,7 @@ function GuidePanel({ race, heroImageUrl }: GuidePanelProps) {
       }}
     >
       <HeroCard race={race} imageUrl={heroImageUrl} />
+      <TocCard body={race.body} />
       {/* Temporary spacer so the page keeps scrolling while we
           add more cards in subsequent iterations. Remove once
           the stack is full enough to overflow on its own. */}
@@ -580,6 +583,93 @@ function useHeroPills(race: RaceGuideMeta): HeroPill[] {
 function isoDate(iso: string): string | null {
   const d = new Date(iso);
   return Number.isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10);
+}
+
+// ============================================================================
+// In-this-guide TOC card. Derives one entry per H2 block in the
+// raceGuide body. Each link points to the matching `#section-id`
+// anchor, which the body card (still to come) will stamp on its
+// rendered <h2> elements. Auto-hides when the body has no H2s
+// (e.g. the empty NYC race).
+// ============================================================================
+
+interface TocEntry {
+  id: string;
+  title: string;
+}
+
+function TocCard({ body }: { body?: PortableTextBlock[] }) {
+  const entries = deriveTocEntries(body);
+  if (entries.length === 0) return null;
+  return (
+    <aside
+      className={`${CARD_CLASS} p-5`}
+      style={{ boxShadow: CARD_SHADOW }}
+    >
+      <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
+        In this guide
+      </h2>
+      <ol className="m-0 list-none divide-y divide-[color:var(--ds-gray-400)] p-0">
+        {entries.map((entry, i) => (
+          <li key={entry.id}>
+            <a
+              href={`#${entry.id}`}
+              className="flex items-center justify-between gap-3 py-2 text-copy-16 text-[color:var(--ds-gray-1000)] no-underline transition-colors hover:text-[color:var(--ds-gray-700)]"
+            >
+              <span className="min-w-0">
+                <span className="text-[color:var(--ds-gray-700)]">
+                  {i + 1}
+                </span>
+                <span className="ml-3">{entry.title}</span>
+              </span>
+              <ArrowDown
+                className="size-4 shrink-0 text-[color:var(--ds-gray-700)]"
+                aria-hidden
+              />
+            </a>
+          </li>
+        ))}
+      </ol>
+    </aside>
+  );
+}
+
+// Walks Portable Text body blocks, picks out H2s, joins their
+// span text, and slugifies for the anchor id. Falls back to
+// `section-N` if a heading has no plain text (rare).
+function deriveTocEntries(
+  body: PortableTextBlock[] | undefined,
+): TocEntry[] {
+  if (!body) return [];
+  const out: TocEntry[] = [];
+  body.forEach((block, idx) => {
+    if (block._type !== "block") return;
+    if ((block as { style?: string }).style !== "h2") return;
+    const children = (block as { children?: { _type?: string; text?: string }[] })
+      .children;
+    const text = (children ?? [])
+      .filter((c) => c._type === "span")
+      .map((c) => c.text ?? "")
+      .join("")
+      .trim();
+    if (!text) return;
+    out.push({
+      id: slugify(text) || `section-${idx + 1}`,
+      title: text,
+    });
+  });
+  return out;
+}
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
 }
 
 function formatPillDate(iso: string | undefined): string | null {
