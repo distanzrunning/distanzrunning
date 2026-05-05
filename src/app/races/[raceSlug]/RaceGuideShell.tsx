@@ -384,8 +384,11 @@ function HeroImageCard({ src, alt }: { src: string; alt: string }) {
       {/* Image sits inset within the card surface — the card's
           bg shows around it as a frame. Inner radius is one
           step down from the card's so the visible margin
-          between the two reads consistently. */}
-      <div className="relative aspect-[3/2] w-full overflow-hidden rounded">
+          between the two reads consistently. 3:4 portrait so
+          the hero leans editorial — better suited to vertical
+          race / runner photography than the prior landscape
+          frame. */}
+      <div className="relative aspect-[3/4] w-full overflow-hidden rounded">
         <Image
           src={src}
           alt={alt}
