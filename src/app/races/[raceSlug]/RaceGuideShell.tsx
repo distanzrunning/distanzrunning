@@ -42,6 +42,7 @@ export interface RaceGuideMeta {
   title: string;
   slug?: string;
   eventDate?: string;
+  startTime?: string;
   city?: string;
   stateRegion?: string;
   country?: string;
@@ -803,12 +804,26 @@ function useStatTiles(race: RaceGuideMeta): Tile[] {
   const { units } = useUnits();
   const tiles: Tile[] = [];
 
+  // Order is curated — fastest-glance facts first (distance,
+  // surface, elevation), then environment (altitude, temp,
+  // humidity), then logistics (field size, start time).
+
   if (race.distance != null) {
     tiles.push({
       key: "distance",
       Icon: Ruler,
       label: "Distance",
       value: formatDistance(race.distance, units),
+    });
+  }
+
+  if (race.surface) {
+    tiles.push({
+      key: "surface",
+      Icon: MapIcon,
+      label: "Surface",
+      value: race.surface,
+      subtitle: race.surfaceBreakdown,
     });
   }
 
@@ -824,13 +839,13 @@ function useStatTiles(race: RaceGuideMeta): Tile[] {
     });
   }
 
-  if (race.surface) {
+  if (race.altitude != null) {
     tiles.push({
-      key: "surface",
-      Icon: MapIcon,
-      label: "Surface",
-      value: race.surface,
-      subtitle: race.surfaceBreakdown,
+      key: "altitude",
+      Icon: Mountain,
+      label: "Altitude",
+      value: formatAltitude(race.altitude, units),
+      subtitle: altitudeLabel(race.altitude),
     });
   }
 
@@ -843,13 +858,13 @@ function useStatTiles(race: RaceGuideMeta): Tile[] {
     });
   }
 
-  if (race.altitude != null) {
+  if (race.humidity != null) {
     tiles.push({
-      key: "altitude",
-      Icon: Mountain,
-      label: "Altitude",
-      value: formatAltitude(race.altitude, units),
-      subtitle: altitudeLabel(race.altitude),
+      key: "humidity",
+      Icon: Droplets,
+      label: "Humidity",
+      value: `${Math.round(race.humidity)}%`,
+      subtitle: humidityLabel(race.humidity),
     });
   }
 
@@ -862,23 +877,15 @@ function useStatTiles(race: RaceGuideMeta): Tile[] {
     });
   }
 
-  const startTime = formatStartTime(race.eventDate);
-  if (startTime) {
+  // Plain string from the schema's startTime field — editor
+  // types literal race-local time so no timezone math is
+  // needed. Falls back to nothing (tile omits) when not set.
+  if (race.startTime) {
     tiles.push({
       key: "start-time",
       Icon: Clock,
       label: "Start time",
-      value: startTime,
-    });
-  }
-
-  if (race.humidity != null) {
-    tiles.push({
-      key: "humidity",
-      Icon: Droplets,
-      label: "Humidity",
-      value: `${Math.round(race.humidity)}%`,
-      subtitle: humidityLabel(race.humidity),
+      value: race.startTime,
     });
   }
 
@@ -914,15 +921,6 @@ function humidityLabel(percent: number): string {
   if (percent < 30) return "Dry";
   if (percent < 60) return "Moderate";
   return "Humid";
-}
-
-// Pulls "HH:mm" straight from the ISO string so the time reads
-// the same on every viewer regardless of their browser
-// timezone. Editors enter the race-local start time in Studio.
-function formatStartTime(iso: string | undefined): string | null {
-  if (!iso) return null;
-  const m = iso.match(/T(\d{2}:\d{2})/);
-  return m ? m[1] : null;
 }
 
 // Plain fallback — no border / bg of its own because the parent

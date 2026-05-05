@@ -40,6 +40,7 @@ const raceGuideQuery = /* groq */ `
     title,
     "slug": slug.current,
     eventDate,
+    startTime,
     city,
     stateRegion,
     country,

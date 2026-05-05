@@ -47,6 +47,13 @@ export const raceGuideType = defineType({
       type: 'datetime',
     }),
     defineField({
+      name: 'startTime',
+      title: 'Start time (race-local)',
+      type: 'string',
+      description:
+        'Local race start time, e.g. "09:10" or "8:00 AM". Stored as a plain string so the value is timezone-stable — eventDate stores UTC and shifts based on the editor\'s timezone, which is wrong for races abroad.',
+    }),
+    defineField({
       name: 'mainImage',
       title: 'Main Image (landscape)',
       type: 'image',
