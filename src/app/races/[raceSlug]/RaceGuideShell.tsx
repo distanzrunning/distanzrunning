@@ -625,7 +625,7 @@ function TocCard({ body }: { body?: PortableTextBlock[] }) {
                 </span>
               </span>
               <ArrowDown
-                className="size-4 shrink-0 text-[color:var(--ds-gray-900)]"
+                className="size-4 shrink-0 text-[color:var(--ds-gray-900)] group-hover:text-[color:var(--ds-gray-1000)]"
                 aria-hidden
               />
             </a>
