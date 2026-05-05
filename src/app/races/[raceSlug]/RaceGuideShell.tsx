@@ -14,11 +14,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { PortableText, type PortableTextBlock } from "@portabletext/react";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ChevronRight } from "lucide-react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import { AdSlot } from "@/components/ui/AdSlot";
 
 export interface RaceGuideMeta {
   _id: string;
@@ -366,6 +367,7 @@ function GuidePanel({ race, heroImageUrl }: GuidePanelProps) {
     >
       <HeroCard race={race} imageUrl={heroImageUrl} />
       <TocCard body={race.body} />
+      <AdsCard />
       {/* Temporary spacer so the page keeps scrolling while we
           add more cards in subsequent iterations. Remove once
           the stack is full enough to overflow on its own. */}
@@ -672,6 +674,55 @@ function slugify(text: string): string {
     .trim()
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
+}
+
+// ============================================================================
+// Ad card. MPU (300×250) AdSlot inside the panel's standard card
+// surface. `preview` is on for now since this position doesn't
+// have a real AdSense slot ID — the fallback below renders in
+// its place. Wire a real `slot` ID and drop `preview` once the
+// AdSense unit is created.
+// ============================================================================
+
+function AdsCard() {
+  return (
+    <div
+      className={`${CARD_CLASS} p-5`}
+      style={{ boxShadow: CARD_SHADOW }}
+    >
+      <AdSlot
+        slot="race-detail-panel"
+        size="mpu"
+        preview
+        label={false}
+        fallback={<AdsCardFallback />}
+        className="mx-auto"
+      />
+    </div>
+  );
+}
+
+// Plain fallback — no border / bg of its own because the parent
+// panel card already supplies the surface, hairline, and
+// shadow. Just inner content.
+function AdsCardFallback() {
+  return (
+    <div className="flex h-full w-full flex-col items-center justify-center gap-3 text-center">
+      <h4 className="m-0 text-heading-16 text-[color:var(--ds-gray-1000)]">
+        Want to reach runners?
+      </h4>
+      <p className="m-0 max-w-[80%] text-copy-13 leading-snug text-[color:var(--ds-gray-900)]">
+        Feature your brand, product, or story here.
+      </p>
+      <a
+        href="mailto:brand@distanzrunning.com?subject=Advertising%20on%20Distanz%20Running"
+        className="inline-flex h-9 items-center gap-1 rounded-md bg-[color:var(--ds-gray-1000)] px-4 text-copy-13 font-semibold text-[color:var(--ds-background-100)] no-underline transition-colors hover:bg-[color:var(--ds-gray-900)]"
+      >
+        Get in touch
+        <ChevronRight className="size-4" />
+      </a>
+    </div>
+  );
 }
 
 function formatPillDate(iso: string | undefined): string | null {
