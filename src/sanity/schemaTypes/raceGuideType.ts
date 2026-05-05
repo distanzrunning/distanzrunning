@@ -155,16 +155,11 @@ export const raceGuideType = defineType({
       description: 'Add multiple tags to categorize this race (e.g., "World Athletics Gold", "Major Marathon", "Fast Course")',
     }),
     defineField({
-      name: 'finishers',
-      title: 'Number of Finishers 2025',
-      type: 'number',
-    }),
-    defineField({
       name: 'fieldSize',
       title: 'Field Size',
       type: 'number',
       description:
-        'Total field size (capacity / number of runners). Drives the "Field size" stat tile on the race detail page; falls back to `finishers` until this is populated per race.',
+        'Total field size (capacity / number of runners). Drives the "Field size" stat tile on the race detail page.',
     }),
     defineField({
       name: 'price',

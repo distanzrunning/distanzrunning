@@ -38,7 +38,7 @@ export default async function RaceCalendarPage() {
       womensCourseRecord,
       womensCourseRecordAthlete,
       womensCourseRecordCountry,
-      finishers,
+      fieldSize,
       officialWebsite,
       gpxFile {
         asset-> {

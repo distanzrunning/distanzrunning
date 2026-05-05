@@ -25,7 +25,7 @@ export type RaceIndexItem = {
   elevationGain?: number;
   price?: number;
   currency?: string;
-  finishers?: number;
+  fieldSize?: number;
 };
 
 function formatLocation(item: RaceIndexItem): string | undefined {

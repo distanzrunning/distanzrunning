@@ -446,9 +446,9 @@ export function RaceEventPopup({
                     <Users className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-pace-purple transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Finishers</p>
+                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Field size</p>
                     <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
-                      {race.finishers ? race.finishers.toLocaleString() : 'N/A'}
+                      {race.fieldSize ? race.fieldSize.toLocaleString() : 'N/A'}
                     </p>
                   </div>
                 </div>

@@ -106,7 +106,7 @@ export function buildRaceIndexQuery(sort: RaceSortKey = DEFAULT_SORT): string {
       elevationGain,
       price,
       currency,
-      finishers
+      fieldSize
     }
   `;
 }
