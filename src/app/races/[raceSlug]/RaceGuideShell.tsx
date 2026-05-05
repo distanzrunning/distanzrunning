@@ -20,7 +20,7 @@ import {
   ChevronsUp,
   Clock,
   Droplets,
-  Map as MapIcon,
+  Footprints,
   Mountain,
   Ruler,
   Thermometer,
@@ -821,7 +821,7 @@ function useStatTiles(race: RaceGuideMeta): Tile[] {
   if (race.surface) {
     tiles.push({
       key: "surface",
-      Icon: MapIcon,
+      Icon: Footprints,
       label: "Surface",
       value: race.surface,
       subtitle: race.surfaceBreakdown,
