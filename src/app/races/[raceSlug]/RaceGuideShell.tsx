@@ -863,13 +863,16 @@ function BarsVisual({ level }: { level: 1 | 2 | 3 | 4 }) {
 // render full-opacity; the rest dim to 20 %. Right-aligned so
 // every tick shares a vertical "spine" on the right edge.
 function ThermometerVisual({ celsius }: { celsius: number }) {
+  // 13 ticks covering 0–30 °C in 2.5 °C steps. Tighter overall
+  // than the previous 0–40 / 17-tick design — fits the same
+  // bottom-right slot as the BarsVisual (~37 px footprint).
   const MIN_C = 0;
-  const MAX_C = 40;
+  const MAX_C = 30;
   const STEP = 2.5;
   const ticks: number[] = [];
   for (let v = MIN_C; v <= MAX_C; v += STEP) ticks.push(v);
   return (
-    <div className="flex flex-col-reverse items-end gap-[3px]" aria-hidden>
+    <div className="flex flex-col-reverse items-end gap-[2px]" aria-hidden>
       {ticks.map((t) => {
         const isMajor = t % 5 === 0;
         const lit = t <= celsius;
@@ -878,8 +881,8 @@ function ThermometerVisual({ celsius }: { celsius: number }) {
             key={t}
             className="rounded-full"
             style={{
-              height: 2,
-              width: isMajor ? 24 : 12,
+              height: 1,
+              width: isMajor ? 16 : 8,
               background: "var(--ds-background-100)",
               opacity: lit ? 1 : 0.2,
             }}
