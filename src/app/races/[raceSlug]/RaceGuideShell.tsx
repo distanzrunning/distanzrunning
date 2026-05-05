@@ -13,6 +13,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
+import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -45,6 +46,7 @@ export interface RaceGuideMeta {
   womensCourseRecordCountry?: string;
   officialWebsite?: string;
   tags?: string[];
+  introduction?: PortableTextBlock[];
 }
 
 interface RaceGuideShellProps {
@@ -434,9 +436,60 @@ function HeroCard({
           ))}
         </div>
       )}
+      {race.introduction && race.introduction.length > 0 && (
+        <div className="mt-5">
+          <PortableText
+            value={race.introduction}
+            components={INTRODUCTION_PT_COMPONENTS}
+          />
+        </div>
+      )}
     </div>
   );
 }
+
+// Portable Text components for the lede paragraph(s) inside
+// the hero card. Single concern: each block becomes a paragraph
+// in the same copy-16 / gray-900 voice as the location line so
+// the introduction reads as a continuation of the meta header,
+// not as the body content (which gets its own card later).
+const INTRODUCTION_PT_COMPONENTS = {
+  block: {
+    normal: ({ children }: { children?: React.ReactNode }) => (
+      <p className="mb-3 text-copy-16 text-[color:var(--ds-gray-900)] last:mb-0">
+        {children}
+      </p>
+    ),
+  },
+  marks: {
+    strong: ({ children }: { children?: React.ReactNode }) => (
+      <strong className="font-semibold text-[color:var(--ds-gray-1000)]">
+        {children}
+      </strong>
+    ),
+    em: ({ children }: { children?: React.ReactNode }) => (
+      <em className="italic">{children}</em>
+    ),
+    link: ({
+      value,
+      children,
+    }: {
+      value?: { href?: string };
+      children?: React.ReactNode;
+    }) => (
+      <a
+        href={value?.href}
+        target={value?.href?.startsWith("http") ? "_blank" : undefined}
+        rel={
+          value?.href?.startsWith("http") ? "noopener noreferrer" : undefined
+        }
+        className="text-[color:var(--ds-gray-1000)] underline underline-offset-2 hover:text-[color:var(--ds-gray-700)]"
+      >
+        {children}
+      </a>
+    ),
+  },
+};
 
 // Mirrors the formatter in src/app/races/RaceGrid.tsx so the
 // location string reads identically on the index card and the

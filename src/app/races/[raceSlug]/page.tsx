@@ -62,6 +62,7 @@ const raceGuideQuery = /* groq */ `
     womensCourseRecordAthlete,
     womensCourseRecordCountry,
     officialWebsite,
+    introduction,
     mainImage,
     portraitImage,
     "routeGeoJsonUrl": gpxFile.asset->url
