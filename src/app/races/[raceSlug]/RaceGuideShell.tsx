@@ -419,6 +419,14 @@ function HeroCard({
       >
         {race.title}
       </h1>
+      {(() => {
+        const location = formatLocation(race);
+        return location ? (
+          <p className="mt-1 text-copy-14 text-[color:var(--ds-gray-900)]">
+            {location}
+          </p>
+        ) : null;
+      })()}
       {pills.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           {pills.map((p) => (
@@ -428,6 +436,16 @@ function HeroCard({
       )}
     </div>
   );
+}
+
+// Mirrors the formatter in src/app/races/RaceGrid.tsx so the
+// location string reads identically on the index card and the
+// race detail page: "City, State, Country" with state optional.
+function formatLocation(race: RaceGuideMeta): string | null {
+  const parts = [race.city, race.stateRegion, race.country].filter(
+    (p): p is string => Boolean(p),
+  );
+  return parts.length ? parts.join(", ") : null;
 }
 
 // Subtle gray pill — matches the style used on the /races
@@ -454,9 +472,6 @@ function useHeroPills(race: RaceGuideMeta): { key: string; value: string }[] {
   if (race.distance != null) {
     pills.push({ key: "distance", value: formatDistance(race.distance, units) });
   }
-
-  if (race.country) pills.push({ key: "country", value: race.country });
-  if (race.city) pills.push({ key: "city", value: race.city });
 
   if (race.price != null && race.currency) {
     const isLocal = displayCurrency === "local";
