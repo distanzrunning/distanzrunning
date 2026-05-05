@@ -865,18 +865,19 @@ function BarsVisual({ level }: { level: 1 | 2 | 3 | 4 }) {
 // render full-opacity; the rest dim to 20 %. Right-aligned so
 // every tick shares a vertical "spine" on the right edge.
 function ThermometerVisual({ celsius }: { celsius: number }) {
-  // 17 ticks covering 0–40 °C in 2.5 °C steps. Taller silhouette
-  // (~82 px) matching Runna's reference. The tile is content-
-  // sized but the visual is absolute bottom-right, so the
-  // taller scale rises up into the value row without changing
-  // the tile's own height.
+  // 1 °C step, 0–35 °C → 36 ticks. Major ticks at every 5 °C
+  // (so 1 major in every 5 ticks: 0, 5, 10, …, 35) are
+  // longer (28 px) than the minor 1 °C ticks (10 px). Tick
+  // height 1 px + 1.5 px gap → ~88 px tall silhouette,
+  // close to Runna's reference. Hotter race = more lit ticks
+  // since lit = t ≤ celsius.
   const MIN_C = 0;
-  const MAX_C = 40;
-  const STEP = 2.5;
+  const MAX_C = 35;
+  const STEP = 1;
   const ticks: number[] = [];
   for (let v = MIN_C; v <= MAX_C; v += STEP) ticks.push(v);
   return (
-    <div className="flex flex-col-reverse items-end gap-[3px]" aria-hidden>
+    <div className="flex flex-col-reverse items-end gap-[1.5px]" aria-hidden>
       {ticks.map((t) => {
         const isMajor = t % 5 === 0;
         const lit = t <= celsius;
@@ -885,8 +886,8 @@ function ThermometerVisual({ celsius }: { celsius: number }) {
             key={t}
             className="rounded-full"
             style={{
-              height: 2,
-              width: isMajor ? 24 : 12,
+              height: 1,
+              width: isMajor ? 28 : 10,
               background: "var(--ds-background-100)",
               opacity: lit ? 1 : 0.2,
             }}
