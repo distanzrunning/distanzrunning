@@ -14,6 +14,7 @@ import { notFound } from "next/navigation";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 import { sanityFetch } from "@/sanity/lib/live";
+import { urlFor } from "@/sanity/lib/image";
 import RaceGuideShell, {
   type RaceGuideMeta,
 } from "./RaceGuideShell";
@@ -24,6 +25,13 @@ type RaceGuideQueryRow = RaceGuideMeta & {
   mainImage?: SanityImageSource | null;
   routeGeoJsonUrl?: string | null;
 };
+
+// Width of the panel card the image sits inside (mirrors
+// PANEL_WIDTH in RaceGuideShell). Doubled so retina screens
+// get a sharp source. We resolve a single CDN URL on the
+// server rather than passing the raw Sanity image source down
+// to the client.
+const HERO_IMAGE_RENDER_WIDTH = 480 * 2;
 
 const raceGuideQuery = /* groq */ `
   *[_type == "raceGuide" && slug.current == $slug][0]{
@@ -71,10 +79,18 @@ export default async function RaceGuidePage({
 
   if (!race) notFound();
 
+  const heroImageUrl = race.mainImage
+    ? urlFor(race.mainImage)
+        .width(HERO_IMAGE_RENDER_WIDTH)
+        .auto("format")
+        .url()
+    : null;
+
   return (
     <RaceGuideShell
       race={race}
       routeGeoJsonUrl={race.routeGeoJsonUrl ?? null}
+      heroImageUrl={heroImageUrl}
     />
   );
 }

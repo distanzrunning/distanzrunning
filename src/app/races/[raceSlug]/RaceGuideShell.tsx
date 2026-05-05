@@ -10,6 +10,7 @@
 // map stays put.
 
 import { useContext, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -46,6 +47,7 @@ export interface RaceGuideMeta {
 interface RaceGuideShellProps {
   race: RaceGuideMeta;
   routeGeoJsonUrl: string | null;
+  heroImageUrl: string | null;
 }
 
 const ROUTE_LINE_COLOR = "#FF0058";
@@ -65,6 +67,7 @@ const ROUTE_BREATHING = 96;
 export default function RaceGuideShell({
   race,
   routeGeoJsonUrl,
+  heroImageUrl,
 }: RaceGuideShellProps) {
   return (
     // Single-cell grid: the sticky map and the editorial panel
@@ -115,7 +118,7 @@ export default function RaceGuideShell({
           zIndex: 1,
         }}
       >
-        <GuidePanel />
+        <GuidePanel race={race} heroImageUrl={heroImageUrl} />
       </div>
     </div>
   );
@@ -333,30 +336,61 @@ function fitToRoute(
 }
 
 // ============================================================================
-// Guide panel — left-aligned floating card. Background follows
-// PageFrame's flipped pattern (bg-200 light / bg-100 dark) so the
-// panel reads as the same surface as the rest of the framed page
-// content. The card grows with its content; the page (not the
-// card) scrolls.
+// Guide panel — vertical stack of editorial cards over the map.
+// The wrapper has no visual treatment of its own; each card
+// inside carries the floating-surface look (bg, rounded edge,
+// shadow-menu elevation). Cards stack with a 24 px gap and the
+// page itself scrolls; the panel never scrolls internally.
 // ============================================================================
 
-function GuidePanel() {
+interface GuidePanelProps {
+  race: RaceGuideMeta;
+  heroImageUrl: string | null;
+}
+
+function GuidePanel({ race, heroImageUrl }: GuidePanelProps) {
   return (
-    <aside
-      className="rounded-md bg-[color:var(--ds-background-200)] p-6 dark:bg-[color:var(--ds-background-100)]"
+    <div
+      className="flex flex-col gap-6"
       style={{
         width: PANEL_WIDTH,
         pointerEvents: "auto",
-        // Same elevation treatment as the login cards / DS
-        // menu + popover surfaces: faint alpha hairline + soft
-        // drop, so the panel reads as floating above the map
-        // rather than as an inline page surface.
-        boxShadow: "var(--ds-shadow-menu)",
-        // Temporary placeholder height so the page scrolls and we
-        // can verify the sticky map / scrolling panel behaviour.
-        // Comes out when real editorial content lands.
-        minHeight: 1500,
       }}
-    />
+    >
+      {heroImageUrl && (
+        <HeroImageCard src={heroImageUrl} alt={race.title} />
+      )}
+      {/* Temporary spacer so the page keeps scrolling while we
+          add more cards in subsequent iterations. Remove once
+          the stack is full enough to overflow on its own. */}
+      <div style={{ minHeight: 1500 }} />
+    </div>
+  );
+}
+
+// Reusable card surface — one of these per content section so
+// each editorial block carries its own elevated treatment over
+// the map.
+const CARD_CLASS =
+  "overflow-hidden rounded-md bg-[color:var(--ds-background-200)] dark:bg-[color:var(--ds-background-100)]";
+const CARD_SHADOW = "var(--ds-shadow-menu)";
+
+function HeroImageCard({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div className={CARD_CLASS} style={{ boxShadow: CARD_SHADOW }}>
+      {/* 3:2 ratio — matches the source dimensions of most
+          mainImage uploads in Sanity. object-cover keeps the
+          frame full-bleed regardless of source aspect. */}
+      <div className="relative aspect-[3/2] w-full">
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes={`${PANEL_WIDTH}px`}
+          priority
+          className="object-cover"
+        />
+      </div>
+    </div>
   );
 }
