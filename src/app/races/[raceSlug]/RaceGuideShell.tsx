@@ -803,14 +803,16 @@ function StatTile({ Icon, label, value, subtitle, visual }: Tile) {
         <span className="font-medium">{label}</span>
       </div>
       <div className="text-heading-24">{value}</div>
-      {subtitle && (
-        <div
-          className="mt-auto text-copy-13 font-medium"
-          style={{ opacity: 0.6 }}
-        >
-          {subtitle}
-        </div>
-      )}
+      {/* Always render the subtitle slot — even when empty —
+          so every tile lands at the same height. Tiles without
+          a real subtitle render a non-breaking space so the
+          row still occupies the full text-copy-13 line height. */}
+      <div
+        className="mt-auto text-copy-13 font-medium"
+        style={{ opacity: 0.6 }}
+      >
+        {subtitle ?? " "}
+      </div>
       {visual && (
         <div className="pointer-events-none absolute bottom-4 right-4">
           {visual}
