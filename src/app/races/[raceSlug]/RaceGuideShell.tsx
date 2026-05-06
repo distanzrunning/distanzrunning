@@ -94,13 +94,26 @@ interface RaceGuideShellProps {
   elevationSeries: ElevationPoint[] | null;
 }
 
-// Mirrors --ds-pink-700 (rgb(235, 55, 125)). Used by both the
-// Mapbox route line and the elevation chart so the two read as a
-// single brand gesture across the page. The hex is anchored to
-// the DS token by convention because Mapbox style-spec colors
-// and SVG attribute values don't resolve `var()` at runtime — if
-// --ds-pink-700 ever shifts in globals.css, update this too.
-const ROUTE_LINE_COLOR = "#EB377D";
+// Resolves the route line / elevation chart color from
+// --ds-pink-800 at runtime via its -rgb companion so the value
+// stays anchored to the DS token (rather than a parallel hex
+// constant). We use the -rgb triplet rather than the named
+// token directly because Mapbox's style-spec parser and SVG
+// presentation attributes don't accept `var()` or oklch() — but
+// they both accept an rgb(R, G, B) string assembled from the
+// triplet. --ds-pink-800 is theme-stable (same RGB in light and
+// dark modes per globals.css), so resolving once on the client
+// is sufficient. The hex fallback only fires during SSR or if
+// the token isn't loaded yet.
+const ROUTE_LINE_COLOR_FALLBACK = "#DA2D73";
+
+function getRouteLineColor(): string {
+  if (typeof document === "undefined") return ROUTE_LINE_COLOR_FALLBACK;
+  const triplet = getComputedStyle(document.documentElement)
+    .getPropertyValue("--ds-pink-800-rgb")
+    .trim();
+  return triplet ? `rgb(${triplet})` : ROUTE_LINE_COLOR_FALLBACK;
+}
 
 // Sticky map sits just below the 50 px SiteHeader, filling the
 // rest of the viewport while the page scrolls past it.
@@ -236,7 +249,7 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
         if (!res.ok) throw new Error(`Route fetch HTTP ${res.status}`);
         const data = (await res.json()) as GeoJSON.FeatureCollection;
         geoJsonRef.current = data;
-        addRouteLayer(map, data);
+        addRouteLayer(map, data, getRouteLineColor());
         const fitted = fitToRoute(map, data);
         if (!fitted) {
           setStatus({
@@ -259,7 +272,7 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
     // user-added sources/layers).
     map.on("style.load", () => {
       const data = geoJsonRef.current;
-      if (data) addRouteLayer(map, data);
+      if (data) addRouteLayer(map, data, getRouteLineColor());
     });
 
     // Resize after the first paint as a guard against the
@@ -321,6 +334,7 @@ function styleForMode(isDark: boolean): string {
 function addRouteLayer(
   map: mapboxgl.Map,
   data: GeoJSON.FeatureCollection,
+  color: string,
 ): void {
   if (map.getSource("race-route")) return;
   map.addSource("race-route", { type: "geojson", data });
@@ -330,7 +344,7 @@ function addRouteLayer(
     source: "race-route",
     layout: { "line-cap": "round", "line-join": "round" },
     paint: {
-      "line-color": ROUTE_LINE_COLOR,
+      "line-color": color,
       "line-width": 4,
     },
   });
@@ -1389,12 +1403,16 @@ function CourseRecordsCard({ race }: { race: RaceGuideMeta }) {
 // switch updates this chart too.
 // ============================================================================
 
-const ELEVATION_LINE_COLOR = ROUTE_LINE_COLOR;
 const ELEVATION_GRADIENT_ID = "race-elevation-gradient";
 
 function ElevationCard({ series }: { series: ElevationPoint[] }) {
   const { units } = useUnits();
   const useMetric = units === "metric";
+  // Resolve from --ds-pink-800 once on mount. Lazy initializer
+  // so the DOM read only fires after hydration; the value is
+  // theme-stable so we don't need to re-resolve on dark/light
+  // flips.
+  const [lineColor] = useState(() => getRouteLineColor());
 
   // Chart data + tick domains, recomputed when units or the
   // series change. Source distances are kilometres and source
@@ -1468,12 +1486,12 @@ function ElevationCard({ series }: { series: ElevationPoint[] }) {
               >
                 <stop
                   offset="0%"
-                  stopColor={ELEVATION_LINE_COLOR}
+                  stopColor={lineColor}
                   stopOpacity={0.32}
                 />
                 <stop
                   offset="100%"
-                  stopColor={ELEVATION_LINE_COLOR}
+                  stopColor={lineColor}
                   stopOpacity={0.04}
                 />
               </linearGradient>
@@ -1525,13 +1543,13 @@ function ElevationCard({ series }: { series: ElevationPoint[] }) {
             <Area
               type="monotone"
               dataKey="elevation"
-              stroke={ELEVATION_LINE_COLOR}
+              stroke={lineColor}
               strokeWidth={2}
               fill={`url(#${ELEVATION_GRADIENT_ID})`}
               isAnimationActive={false}
               activeDot={{
                 r: 3,
-                fill: ELEVATION_LINE_COLOR,
+                fill: lineColor,
                 stroke: "var(--ds-background-100)",
                 strokeWidth: 2,
               }}
