@@ -388,6 +388,7 @@ function GuidePanel({ race, heroImageUrl }: GuidePanelProps) {
       <StatsCard race={race} />
       <TocCard body={race.body} />
       <AdsCard />
+      <CourseRecordsCard race={race} />
       {/* Temporary spacer so the page keeps scrolling while we
           add more cards in subsequent iterations. Remove once
           the stack is full enough to overflow on its own. */}
@@ -1193,6 +1194,64 @@ function elevationLevel(metres: number): 1 | 2 | 3 | 4 {
   if (metres < 300) return 2; // rolling
   if (metres < 600) return 3; // hilly
   return 4; // mountain
+}
+
+// ============================================================================
+// Course records. Two-column rows (label · time + athlete /
+// country) divided by hairlines, mirroring the editorial style
+// of the trippin TOC and the original Webflow race-records
+// table. Auto-hides when no records are populated; individual
+// rows omit when their `time` field is missing.
+// ============================================================================
+
+function CourseRecordsCard({ race }: { race: RaceGuideMeta }) {
+  const rows = [
+    {
+      label: "Men",
+      time: race.mensCourseRecord,
+      athlete: race.mensCourseRecordAthlete,
+      country: race.mensCourseRecordCountry,
+    },
+    {
+      label: "Women",
+      time: race.womensCourseRecord,
+      athlete: race.womensCourseRecordAthlete,
+      country: race.womensCourseRecordCountry,
+    },
+  ].filter((r) => Boolean(r.time));
+  if (rows.length === 0) return null;
+  return (
+    <section
+      className={`${CARD_CLASS} p-5`}
+      style={{ boxShadow: CARD_SHADOW }}
+    >
+      <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
+        Course records
+      </h2>
+      <ul className="m-0 list-none divide-y divide-[color:var(--ds-gray-400)] p-0">
+        {rows.map((r) => {
+          const detail = [r.athlete, r.country].filter(Boolean).join(", ");
+          return (
+            <li
+              key={r.label}
+              className="flex items-baseline justify-between gap-4 py-3 text-copy-14 text-[color:var(--ds-gray-1000)] first:pt-0 last:pb-0"
+            >
+              <span className="font-medium">{r.label}</span>
+              <span className="text-right">
+                <span className="font-semibold tabular-nums">{r.time}</span>
+                {detail && (
+                  <span className="text-[color:var(--ds-gray-900)]">
+                    {" "}
+                    ({detail})
+                  </span>
+                )}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
 }
 
 // Plain fallback — no border / bg of its own because the parent
