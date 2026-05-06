@@ -860,6 +860,53 @@ function BarsVisual({ level }: { level: 1 | 2 | 3 | 4 }) {
 // anchored at the bottom-right corner. Only the tick closest
 // to `percent` is illuminated (full opacity); the rest dim to
 // 20% so the full arc still reads as a scale.
+// Stepped mountain silhouette for altitude. Four horizontal
+// pill bars stacked from bottom (widest, "Sea level") to top
+// (narrowest, "Mountain"), forming an abstracted peak. The bar
+// matching the race's altitude bucket is illuminated; the rest
+// dim to 20 % so the silhouette still reads as a stepped
+// mountain at-rest. Buckets mirror altitudeLabel() —
+// <200 m sea level, <1000 m lowland, <2500 m highland,
+// ≥2500 m mountain.
+function AltitudeVisual({ metres }: { metres: number }) {
+  const STEPS = [
+    { width: 28, key: "sea-level" },
+    { width: 22, key: "lowland" },
+    { width: 16, key: "highland" },
+    { width: 10, key: "mountain" },
+  ] as const;
+  const activeIndex = altitudeBucketIndex(metres);
+  return (
+    <div
+      className="flex flex-col-reverse items-end gap-[5px]"
+      aria-hidden
+    >
+      {STEPS.map((step, i) => {
+        const lit = i === activeIndex;
+        return (
+          <div
+            key={step.key}
+            className="rounded-full"
+            style={{
+              width: step.width,
+              height: 3,
+              background: "var(--ds-background-100)",
+              opacity: lit ? 1 : 0.2,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function altitudeBucketIndex(metres: number): 0 | 1 | 2 | 3 {
+  if (metres < 200) return 0; // sea level
+  if (metres < 1000) return 1; // lowland
+  if (metres < 2500) return 2; // highland
+  return 3; // mountain
+}
+
 function HumidityVisual({ percent }: { percent: number }) {
   // Runna-style two-half ticks. Each tick is a 2 × 24 px pill
   // split into an outer half (away from the anchor) and an
@@ -1023,6 +1070,7 @@ function useStatTiles(race: RaceGuideMeta): Tile[] {
       label: "Altitude",
       value: formatAltitude(race.altitude, units),
       subtitle: altitudeLabel(race.altitude),
+      visual: <AltitudeVisual metres={race.altitude} />,
     });
   }
 
