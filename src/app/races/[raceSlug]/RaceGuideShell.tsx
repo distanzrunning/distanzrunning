@@ -392,9 +392,9 @@ function GuidePanel({ race, heroImageUrl }: GuidePanelProps) {
     >
       <HeroCard race={race} imageUrl={heroImageUrl} />
       <StatsCard race={race} />
-      <TocCard body={race.body} />
-      <AdsCard />
       <CourseRecordsCard race={race} />
+      <AdsCard />
+      <TocCard body={race.body} />
       {/* Temporary spacer so the page keeps scrolling while we
           add more cards in subsequent iterations. Remove once
           the stack is full enough to overflow on its own. */}
