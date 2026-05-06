@@ -631,6 +631,30 @@ interface TocEntry {
 // the TOC entries above can scroll-link to them.
 const STATS_SECTION_ID = "key-stats";
 const RECORDS_SECTION_ID = "course-records";
+// Vertical offset baked into each anchor target so the scroll
+// destination doesn't tuck under the 50 px SiteHeader. Bit of
+// breathing room (16 px) above the section's top edge.
+const SCROLL_MARGIN_TOP = 66;
+
+// Smooth-scroll handler for TOC links. Default <a href="#id">
+// behaviour jumps instantly; this overrides it with
+// scrollIntoView({ behavior: 'smooth' }) and updates the URL
+// hash via history.replaceState so the address bar still
+// reflects the current section without triggering another
+// (instant) scroll from the browser's hash navigation.
+function smoothScrollToAnchor(
+  e: React.MouseEvent<HTMLAnchorElement>,
+  id: string,
+): void {
+  if (typeof document === "undefined") return;
+  const target = document.getElementById(id);
+  if (!target) return;
+  e.preventDefault();
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (typeof history !== "undefined") {
+    history.replaceState(null, "", `#${id}`);
+  }
+}
 
 function TocCard({ race }: { race: RaceGuideMeta }) {
   // Two top-level panel sections (Stats, Course records) sit
@@ -660,6 +684,7 @@ function TocCard({ race }: { race: RaceGuideMeta }) {
           <li key={entry.id}>
             <a
               href={`#${entry.id}`}
+              onClick={(e) => smoothScrollToAnchor(e, entry.id)}
               className="group flex items-center justify-between gap-3 py-2 text-copy-16 text-[color:var(--ds-gray-1000)] no-underline"
             >
               <span className="min-w-0">
@@ -790,7 +815,7 @@ function StatsCard({ race }: { race: RaceGuideMeta }) {
     <section
       id={STATS_SECTION_ID}
       className={`${CARD_CLASS} p-5`}
-      style={{ boxShadow: CARD_SHADOW }}
+      style={{ boxShadow: CARD_SHADOW, scrollMarginTop: SCROLL_MARGIN_TOP }}
     >
       <header className="mb-4 flex items-center justify-between gap-4">
         <h2 className="m-0 text-heading-20 text-[color:var(--ds-gray-1000)]">
@@ -1284,7 +1309,7 @@ function CourseRecordsCard({ race }: { race: RaceGuideMeta }) {
     <section
       id={RECORDS_SECTION_ID}
       className={`${CARD_CLASS} p-5`}
-      style={{ boxShadow: CARD_SHADOW }}
+      style={{ boxShadow: CARD_SHADOW, scrollMarginTop: SCROLL_MARGIN_TOP }}
     >
       <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
         Course records
