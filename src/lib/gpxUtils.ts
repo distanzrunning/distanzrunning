@@ -148,6 +148,39 @@ export function parseGeoJSONWithElevation(geoJsonText: string): {
 }
 
 /**
+ * Server-safe variant: fetch a route asset and parse its elevation
+ * series without touching DOMParser. Used by the race detail page
+ * to prefetch the elevation profile during SSR so the panel chart
+ * renders on first paint and the TOC entry can be gated on real
+ * data rather than guessed from URL presence.
+ *
+ * GPX inputs are skipped (return null) because the GPX parser
+ * relies on DOMParser, which isn't available in the Node runtime.
+ * All current race uploads are GeoJSON FeatureCollections of
+ * LineString features, so this covers the field today.
+ */
+export async function fetchElevationSeries(
+  url: string | null | undefined,
+): Promise<ElevationPoint[] | null> {
+  if (!url) return null;
+  try {
+    const res = await fetch(url, { next: { revalidate: 60 } });
+    if (!res.ok) return null;
+    const text = await res.text();
+    if (!text.trim().startsWith("{")) {
+      // GPX format — needs a DOM parser, skip on the server.
+      return null;
+    }
+    const { coordinates, elevations } = parseGeoJSONWithElevation(text);
+    if (coordinates.length === 0) return null;
+    const profile = createElevationProfile(coordinates, elevations);
+    return profile.length > 0 ? profile : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Fetch and parse a route file (GPX or GeoJSON) from a URL, returning elevation profile data
  */
 export async function fetchGPXElevationData(gpxUrl: string): Promise<ElevationPoint[]> {

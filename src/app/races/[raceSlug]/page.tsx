@@ -15,6 +15,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 import { sanityFetch } from "@/sanity/lib/live";
 import { urlFor } from "@/sanity/lib/image";
+import { fetchElevationSeries } from "@/lib/gpxUtils";
 import RaceGuideShell, {
   type RaceGuideMeta,
 } from "./RaceGuideShell";
@@ -104,11 +105,18 @@ export default async function RaceGuidePage({
         .url()
     : null;
 
+  // Prefetch the elevation series here so the panel's elevation
+  // card paints with real data on first render (no client-side
+  // skeleton flash) and the TOC gates its "Elevation profile"
+  // entry on actual elevation data rather than URL presence.
+  const elevationSeries = await fetchElevationSeries(race.routeGeoJsonUrl);
+
   return (
     <RaceGuideShell
       race={race}
       routeGeoJsonUrl={race.routeGeoJsonUrl ?? null}
       heroImageUrl={heroImageUrl}
+      elevationSeries={elevationSeries}
     />
   );
 }
