@@ -869,11 +869,14 @@ function BarsVisual({ level }: { level: 1 | 2 | 3 | 4 }) {
 // <200 m sea level, <1000 m lowland, <2500 m highland,
 // ≥2500 m mountain.
 function AltitudeVisual({ metres }: { metres: number }) {
+  // Widths grow with altitude bucket so a higher race lights
+  // a wider bar. Bars stacked bottom-up: sea level (narrow,
+  // bottom) → mountain (widest, top).
   const STEPS = [
-    { width: 28, key: "sea-level" },
-    { width: 22, key: "lowland" },
-    { width: 16, key: "highland" },
-    { width: 10, key: "mountain" },
+    { width: 10, key: "sea-level" },
+    { width: 16, key: "lowland" },
+    { width: 22, key: "highland" },
+    { width: 28, key: "mountain" },
   ] as const;
   const activeIndex = altitudeBucketIndex(metres);
   return (
