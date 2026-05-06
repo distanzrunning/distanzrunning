@@ -861,13 +861,19 @@ function BarsVisual({ level }: { level: 1 | 2 | 3 | 4 }) {
 // to `percent` is illuminated (full opacity); the rest dim to
 // 20% so the full arc still reads as a scale.
 function HumidityVisual({ percent }: { percent: number }) {
-  // 21 ticks at 5 % intervals — finer resolution than the
-  // earlier 11-tick / 10 % version so 56 % humidity actually
-  // lands on the 55 % tick instead of rounding to 60 %.
+  // Runna-style two-half ticks. Each tick is a 2 × 24 px pill
+  // split into an outer half (away from the anchor) and an
+  // inner half (toward the anchor). On dim ticks only the
+  // outer half is visible (12 px); on the active tick both
+  // halves render, making the needle 24 px long that extends
+  // inward toward the anchor.
+  //
+  // 21 ticks at 5 % intervals so 56 % lands cleanly on the 55 %
+  // mark.
   const TICK_COUNT = 21;
-  const RADIUS = 32;
+  const TRANSLATE = 36;
   const ARC_DEG = 90;
-  const TICK_HEIGHT = 12;
+  const HALF = 12;
   const stepPercent = 100 / (TICK_COUNT - 1);
   const activeIndex = Math.max(
     0,
@@ -876,7 +882,7 @@ function HumidityVisual({ percent }: { percent: number }) {
   return (
     <div
       className="relative"
-      style={{ width: RADIUS + TICK_HEIGHT, height: RADIUS + TICK_HEIGHT }}
+      style={{ width: TRANSLATE + HALF * 2, height: TRANSLATE + HALF * 2 }}
       aria-hidden
     >
       {Array.from({ length: TICK_COUNT }).map((_, i) => {
@@ -885,17 +891,41 @@ function HumidityVisual({ percent }: { percent: number }) {
         return (
           <div
             key={i}
-            className="absolute bottom-0 right-0 rounded-full"
+            className="absolute bottom-0 right-0 flex flex-col"
             style={{
-              // Active tick a hair thicker (3 px vs 2 px) so it
-              // reads as the needle against the 20 dim peers.
-              width: lit ? 3 : 2,
-              height: TICK_HEIGHT,
-              background: "var(--ds-background-100)",
-              opacity: lit ? 1 : 0.2,
-              transform: `rotate(${angle}deg) translateY(-${RADIUS}px)`,
+              width: 2,
+              height: HALF * 2,
+              transform: `rotate(${angle}deg) translateY(-${TRANSLATE}px)`,
             }}
-          />
+          >
+            {/* Outer half — always rendered. On dim ticks
+                this is the only visible part so it gets full
+                pill rounding; on the active tick it's the
+                upper end of a 24 px pill so only the outer
+                corners round. */}
+            <div
+              style={{
+                width: 2,
+                height: HALF,
+                background: "var(--ds-background-100)",
+                opacity: lit ? 1 : 0.2,
+                borderRadius: lit ? "1000px 1000px 0 0" : "1000px",
+              }}
+            />
+            {/* Inner half — only visible on the active tick.
+                Provides the inner extension that turns the
+                12 px outer-only tick into a full 24 px needle
+                pointing toward the anchor. */}
+            <div
+              style={{
+                width: 2,
+                height: HALF,
+                background: "var(--ds-background-100)",
+                opacity: lit ? 1 : 0,
+                borderRadius: "0 0 1000px 1000px",
+              }}
+            />
+          </div>
         );
       })}
     </div>
