@@ -9,7 +9,7 @@
 // the page itself scroll. The panel scrolls with the page; the
 // map stays put.
 
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -30,12 +30,22 @@ import {
 } from "lucide-react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { AdSlot } from "@/components/ui/AdSlot";
 import { Switch } from "@/components/ui/Switch";
 import { formatDistance, formatElevation } from "@/lib/raceUtils";
 import { useUnits, type UnitSystem } from "@/contexts/UnitsContext";
+import { fetchGPXElevationData, type ElevationPoint } from "@/lib/gpxUtils";
 
 export interface RaceGuideMeta {
   _id: string;
@@ -151,7 +161,11 @@ export default function RaceGuideShell({
           zIndex: 1,
         }}
       >
-        <GuidePanel race={race} heroImageUrl={heroImageUrl} />
+        <GuidePanel
+          race={race}
+          heroImageUrl={heroImageUrl}
+          routeGeoJsonUrl={routeGeoJsonUrl}
+        />
       </div>
     </div>
   );
@@ -379,9 +393,10 @@ function fitToRoute(
 interface GuidePanelProps {
   race: RaceGuideMeta;
   heroImageUrl: string | null;
+  routeGeoJsonUrl: string | null;
 }
 
-function GuidePanel({ race, heroImageUrl }: GuidePanelProps) {
+function GuidePanel({ race, heroImageUrl, routeGeoJsonUrl }: GuidePanelProps) {
   return (
     <div
       className="flex flex-col gap-6"
@@ -391,9 +406,10 @@ function GuidePanel({ race, heroImageUrl }: GuidePanelProps) {
       }}
     >
       <HeroCard race={race} imageUrl={heroImageUrl} />
-      <TocCard race={race} />
+      <TocCard race={race} routeGeoJsonUrl={routeGeoJsonUrl} />
       <AdsCard />
       <StatsCard race={race} />
+      {routeGeoJsonUrl && <ElevationCard geoJsonUrl={routeGeoJsonUrl} />}
       <CourseRecordsCard race={race} />
       {/* Temporary spacer so the page keeps scrolling while we
           add more cards in subsequent iterations. Remove once
@@ -627,9 +643,10 @@ interface TocEntry {
   title: string;
 }
 
-// Anchor IDs stamped on the Stats and Course-records cards so
-// the TOC entries above can scroll-link to them.
+// Anchor IDs stamped on the Stats, Elevation, and Course-records
+// cards so the TOC entries above can scroll-link to them.
 const STATS_SECTION_ID = "key-stats";
+const ELEVATION_SECTION_ID = "elevation";
 const RECORDS_SECTION_ID = "course-records";
 // Vertical offset baked into each anchor target so the scroll
 // destination doesn't tuck under the 50 px SiteHeader. Bit of
@@ -656,14 +673,23 @@ function smoothScrollToAnchor(
   }
 }
 
-function TocCard({ race }: { race: RaceGuideMeta }) {
-  // Two top-level panel sections (Stats, Course records) sit
-  // ahead of the body's H2-derived entries. Each is included
-  // only when its card will actually render so the link
-  // doesn't dead-end on a missing anchor.
+function TocCard({
+  race,
+  routeGeoJsonUrl,
+}: {
+  race: RaceGuideMeta;
+  routeGeoJsonUrl: string | null;
+}) {
+  // Top-level panel sections (Stats, Elevation, Course records)
+  // sit ahead of the body's H2-derived entries. Each is included
+  // only when its card will actually render so the link doesn't
+  // dead-end on a missing anchor.
   const sectionEntries: TocEntry[] = [];
   if (hasStatsData(race)) {
     sectionEntries.push({ id: STATS_SECTION_ID, title: "Key stats" });
+  }
+  if (routeGeoJsonUrl) {
+    sectionEntries.push({ id: ELEVATION_SECTION_ID, title: "Elevation profile" });
   }
   if (hasCourseRecords(race)) {
     sectionEntries.push({ id: RECORDS_SECTION_ID, title: "Course records" });
@@ -1338,6 +1364,315 @@ function CourseRecordsCard({ race }: { race: RaceGuideMeta }) {
       </ul>
     </section>
   );
+}
+
+// ============================================================================
+// Elevation card. Recharts area chart styled with DS tokens —
+// shadcn-flavoured (CSS-var driven, hairline grid, minimal axes,
+// floating tooltip) but no third-party chart wrapper. Fetches the
+// race's GeoJSON via the existing gpxUtils helper, samples it
+// into a distance/elevation series, and re-derives the chart's
+// units from the global UnitsContext so flipping the Stats card
+// switch updates this chart too.
+// ============================================================================
+
+const ELEVATION_LINE_COLOR = ROUTE_LINE_COLOR;
+const ELEVATION_GRADIENT_ID = "race-elevation-gradient";
+
+function ElevationCard({ geoJsonUrl }: { geoJsonUrl: string }) {
+  const { isDark } = useContext(DarkModeContext);
+  const { units } = useUnits();
+  const useMetric = units === "metric";
+  const [data, setData] = useState<ElevationPoint[] | null>(null);
+  const [errored, setErrored] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setData(null);
+    setErrored(false);
+    fetchGPXElevationData(geoJsonUrl)
+      .then((points) => {
+        if (cancelled) return;
+        if (points.length === 0) setErrored(true);
+        else setData(points);
+      })
+      .catch(() => {
+        if (!cancelled) setErrored(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [geoJsonUrl]);
+
+  // Chart data + tick domains, recomputed when units or the raw
+  // series change. Distances are stored as kilometres in the
+  // source; we convert to miles inline so axis ticks land on
+  // round numbers in either system.
+  const chart = useMemo(() => {
+    if (!data || data.length === 0) return null;
+    const distKm = data.map((p) => p.distance);
+    const eleM = data.map((p) => p.elevation);
+    const maxKm = Math.max(...distKm);
+    const minM = Math.min(...eleM);
+    const maxM = Math.max(...eleM);
+
+    const points = data.map((p) => ({
+      distance: useMetric ? p.distance : p.distance / 1.609344,
+      elevation: useMetric ? p.elevation : p.elevation * 3.28084,
+    }));
+
+    const distMax = useMetric ? Math.ceil(maxKm) : Math.ceil(maxKm / 1.609344);
+    const distInterval = distanceTickInterval(distMax, useMetric);
+    const distTicks: number[] = [];
+    for (let v = 0; v <= distMax; v += distInterval) distTicks.push(v);
+
+    const eleInterval = elevationTickInterval(maxM - minM, useMetric);
+    const eleStart = useMetric
+      ? Math.floor(minM / eleInterval) * eleInterval
+      : Math.floor((minM * 3.28084) / eleInterval) * eleInterval;
+    const eleEnd = useMetric
+      ? Math.ceil(maxM / eleInterval) * eleInterval
+      : Math.ceil((maxM * 3.28084) / eleInterval) * eleInterval;
+    const eleTicks: number[] = [];
+    for (let v = eleStart; v <= eleEnd; v += eleInterval) eleTicks.push(v);
+
+    return {
+      points,
+      distDomain: [0, distMax] as [number, number],
+      eleDomain: [eleStart, eleEnd] as [number, number],
+      distTicks,
+      eleTicks,
+    };
+  }, [data, useMetric]);
+
+  // Skeleton during load so the TOC anchor + section height
+  // stay stable. We don't render `null` until we know the route
+  // genuinely has no elevation data — at which point the card
+  // hides completely.
+  if (errored) return null;
+
+  const distanceUnit = useMetric ? "km" : "mi";
+  const elevationUnit = useMetric ? "m" : "ft";
+  const axisColor = isDark
+    ? "rgba(var(--ds-gray-1000-rgb), 0.6)"
+    : "rgba(var(--ds-gray-1000-rgb), 0.55)";
+  const gridColor = "var(--ds-gray-400)";
+
+  return (
+    <section
+      id={ELEVATION_SECTION_ID}
+      className={`${CARD_CLASS} p-5`}
+      style={{ boxShadow: CARD_SHADOW, scrollMarginTop: SCROLL_MARGIN_TOP }}
+    >
+      <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
+        Elevation profile
+      </h2>
+      <div style={{ height: 220 }}>
+        {!chart ? (
+          <div className="h-full w-full animate-pulse rounded bg-[color:var(--ds-gray-200)]" />
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart
+              data={chart.points}
+              margin={{ top: 8, right: 8, left: -8, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient
+                  id={ELEVATION_GRADIENT_ID}
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor={ELEVATION_LINE_COLOR}
+                    stopOpacity={0.32}
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor={ELEVATION_LINE_COLOR}
+                    stopOpacity={0.04}
+                  />
+                </linearGradient>
+              </defs>
+              <CartesianGrid
+                stroke={gridColor}
+                strokeDasharray="2 4"
+                vertical={false}
+              />
+              <XAxis
+                dataKey="distance"
+                type="number"
+                domain={chart.distDomain}
+                ticks={chart.distTicks}
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tick={{ fill: axisColor, fontSize: 11 }}
+                tickFormatter={(v: number) => `${Math.round(v)}${distanceUnit}`}
+              />
+              <YAxis
+                type="number"
+                domain={chart.eleDomain}
+                ticks={chart.eleTicks}
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                width={44}
+                tick={{ fill: axisColor, fontSize: 11 }}
+                tickFormatter={(v: number) =>
+                  `${Math.round(v).toLocaleString()}${elevationUnit}`
+                }
+              />
+              <Tooltip
+                content={
+                  <ElevationTooltip
+                    distanceUnit={distanceUnit}
+                    elevationUnit={elevationUnit}
+                    points={chart.points}
+                    useMetric={useMetric}
+                  />
+                }
+                cursor={{
+                  stroke: "var(--ds-gray-1000)",
+                  strokeWidth: 1,
+                  strokeDasharray: "2 4",
+                }}
+              />
+              <Area
+                type="monotone"
+                dataKey="elevation"
+                stroke={ELEVATION_LINE_COLOR}
+                strokeWidth={2}
+                fill={`url(#${ELEVATION_GRADIENT_ID})`}
+                isAnimationActive={false}
+                activeDot={{
+                  r: 3,
+                  fill: ELEVATION_LINE_COLOR,
+                  stroke: "var(--ds-background-100)",
+                  strokeWidth: 2,
+                }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
+      </div>
+    </section>
+  );
+}
+
+interface ElevationTooltipProps {
+  active?: boolean;
+  payload?: Array<{ payload: { distance: number; elevation: number } }>;
+  distanceUnit: string;
+  elevationUnit: string;
+  points: Array<{ distance: number; elevation: number }>;
+  useMetric: boolean;
+}
+
+function ElevationTooltip({
+  active,
+  payload,
+  distanceUnit,
+  elevationUnit,
+  points,
+  useMetric,
+}: ElevationTooltipProps) {
+  if (!active || !payload || payload.length === 0) return null;
+  const point = payload[0].payload;
+  const grade = computeGrade(points, point, useMetric);
+  return (
+    <div
+      className="rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] px-3 py-2"
+      style={{ boxShadow: "var(--ds-shadow-menu)" }}
+    >
+      <TooltipRow
+        label="Distance"
+        value={`${point.distance.toFixed(2)} ${distanceUnit}`}
+      />
+      <TooltipRow
+        label="Elevation"
+        value={`${Math.round(point.elevation).toLocaleString()} ${elevationUnit}`}
+      />
+      <TooltipRow
+        label="Grade"
+        value={`${grade >= 0 ? "+" : ""}${grade.toFixed(1)}%`}
+      />
+    </div>
+  );
+}
+
+function TooltipRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 text-copy-13">
+      <span className="text-[color:var(--ds-gray-900)]">{label}</span>
+      <span className="font-semibold tabular-nums text-[color:var(--ds-gray-1000)]">
+        {value}
+      </span>
+    </div>
+  );
+}
+
+// Slope between the points ±3 samples around the hovered index.
+// `points` already match the active unit system, so we just need
+// to convert the distance side to the same linear unit as the
+// elevation (metres / feet) before dividing.
+function computeGrade(
+  points: Array<{ distance: number; elevation: number }>,
+  current: { distance: number; elevation: number },
+  useMetric: boolean,
+): number {
+  if (points.length < 2) return 0;
+  const idx = points.findIndex(
+    (p) => p.distance === current.distance && p.elevation === current.elevation,
+  );
+  if (idx < 0) return 0;
+  const lookAhead = 3;
+  const startIdx = Math.max(0, idx - lookAhead);
+  const endIdx = Math.min(points.length - 1, idx + lookAhead);
+  if (endIdx <= startIdx) return 0;
+  const elevationChange = points[endIdx].elevation - points[startIdx].elevation;
+  const distanceChange = points[endIdx].distance - points[startIdx].distance;
+  if (distanceChange <= 0) return 0;
+  // distance is in km/mi; convert to the same linear unit as
+  // elevation so the ratio reads as percent.
+  const distanceLinear = useMetric
+    ? distanceChange * 1000
+    : distanceChange * 5280;
+  return (elevationChange / distanceLinear) * 100;
+}
+
+function distanceTickInterval(maxDist: number, useMetric: boolean): number {
+  if (useMetric) {
+    if (maxDist <= 10) return 2;
+    if (maxDist <= 25) return 5;
+    if (maxDist <= 60) return 10;
+    return 20;
+  }
+  if (maxDist <= 6) return 1;
+  if (maxDist <= 15) return 2;
+  if (maxDist <= 40) return 5;
+  return 10;
+}
+
+function elevationTickInterval(rangeMetres: number, useMetric: boolean): number {
+  if (useMetric) {
+    if (rangeMetres <= 50) return 10;
+    if (rangeMetres <= 100) return 20;
+    if (rangeMetres <= 250) return 50;
+    if (rangeMetres <= 500) return 100;
+    if (rangeMetres <= 1500) return 250;
+    return 500;
+  }
+  // Convert metric range threshold thinking into feet ticks so
+  // imperial axes land on familiar 50/100/250 ft increments.
+  const ft = rangeMetres * 3.28084;
+  if (ft <= 150) return 50;
+  if (ft <= 400) return 100;
+  if (ft <= 1000) return 250;
+  if (ft <= 2500) return 500;
+  return 1000;
 }
 
 // Plain fallback — no border / bg of its own because the parent
