@@ -861,7 +861,10 @@ function BarsVisual({ level }: { level: 1 | 2 | 3 | 4 }) {
 // to `percent` is illuminated (full opacity); the rest dim to
 // 20% so the full arc still reads as a scale.
 function HumidityVisual({ percent }: { percent: number }) {
-  const TICK_COUNT = 11;
+  // 21 ticks at 5 % intervals — finer resolution than the
+  // earlier 11-tick / 10 % version so 56 % humidity actually
+  // lands on the 55 % tick instead of rounding to 60 %.
+  const TICK_COUNT = 21;
   const RADIUS = 32;
   const ARC_DEG = 90;
   const TICK_HEIGHT = 12;
@@ -884,7 +887,9 @@ function HumidityVisual({ percent }: { percent: number }) {
             key={i}
             className="absolute bottom-0 right-0 rounded-full"
             style={{
-              width: 2,
+              // Active tick a hair thicker (3 px vs 2 px) so it
+              // reads as the needle against the 20 dim peers.
+              width: lit ? 3 : 2,
               height: TICK_HEIGHT,
               background: "var(--ds-background-100)",
               opacity: lit ? 1 : 0.2,
