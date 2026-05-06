@@ -1380,7 +1380,6 @@ const ELEVATION_LINE_COLOR = ROUTE_LINE_COLOR;
 const ELEVATION_GRADIENT_ID = "race-elevation-gradient";
 
 function ElevationCard({ geoJsonUrl }: { geoJsonUrl: string }) {
-  const { isDark } = useContext(DarkModeContext);
   const { units } = useUnits();
   const useMetric = units === "metric";
   const [data, setData] = useState<ElevationPoint[] | null>(null);
@@ -1453,9 +1452,9 @@ function ElevationCard({ geoJsonUrl }: { geoJsonUrl: string }) {
 
   const distanceUnit = useMetric ? "km" : "mi";
   const elevationUnit = useMetric ? "m" : "ft";
-  const axisColor = isDark
-    ? "rgba(var(--ds-gray-1000-rgb), 0.6)"
-    : "rgba(var(--ds-gray-1000-rgb), 0.55)";
+  // Tokens flip with theme automatically, so we don't need a
+  // light/dark branch here.
+  const axisColor = "rgba(var(--ds-gray-1000-rgb), 0.55)";
   const gridColor = "var(--ds-gray-400)";
 
   return (
@@ -1581,7 +1580,7 @@ function ElevationTooltip({
 }: ElevationTooltipProps) {
   if (!active || !payload || payload.length === 0) return null;
   const point = payload[0].payload;
-  const grade = computeGrade(points, point, useMetric);
+  const grade = computeGrade(points, point.distance, useMetric);
   return (
     <div
       className="rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] px-3 py-2"
@@ -1615,19 +1614,34 @@ function TooltipRow({ label, value }: { label: string; value: string }) {
 }
 
 // Slope between the points ±3 samples around the hovered index.
-// `points` already match the active unit system, so we just need
-// to convert the distance side to the same linear unit as the
-// elevation (metres / feet) before dividing.
+// `points` is sorted ascending by distance, so we binary-search
+// the closest index by the hovered X value rather than matching
+// payload references — that survives any future Recharts cloning
+// of the data prop. `points` already match the active unit
+// system; we only need to convert the distance side to the same
+// linear unit as the elevation (metres / feet) before dividing.
 function computeGrade(
   points: Array<{ distance: number; elevation: number }>,
-  current: { distance: number; elevation: number },
+  targetDistance: number,
   useMetric: boolean,
 ): number {
   if (points.length < 2) return 0;
-  const idx = points.findIndex(
-    (p) => p.distance === current.distance && p.elevation === current.elevation,
-  );
-  if (idx < 0) return 0;
+  let lo = 0;
+  let hi = points.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (points[mid].distance < targetDistance) lo = mid + 1;
+    else hi = mid;
+  }
+  // `lo` is the first index whose distance ≥ target. Pick the
+  // closer of (lo-1, lo) so a hover that lands between samples
+  // resolves to whichever sample is nearer.
+  const idx =
+    lo > 0 &&
+    Math.abs(points[lo - 1].distance - targetDistance) <
+      Math.abs(points[lo].distance - targetDistance)
+      ? lo - 1
+      : lo;
   const lookAhead = 3;
   const startIdx = Math.max(0, idx - lookAhead);
   const endIdx = Math.min(points.length - 1, idx + lookAhead);
@@ -1635,8 +1649,6 @@ function computeGrade(
   const elevationChange = points[endIdx].elevation - points[startIdx].elevation;
   const distanceChange = points[endIdx].distance - points[startIdx].distance;
   if (distanceChange <= 0) return 0;
-  // distance is in km/mi; convert to the same linear unit as
-  // elevation so the ratio reads as percent.
   const distanceLinear = useMetric
     ? distanceChange * 1000
     : distanceChange * 5280;
