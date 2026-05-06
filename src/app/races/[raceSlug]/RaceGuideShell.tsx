@@ -869,19 +869,23 @@ function BarsVisual({ level }: { level: 1 | 2 | 3 | 4 }) {
 // <200 m sea level, <1000 m lowland, <2500 m highland,
 // ≥2500 m mountain.
 function AltitudeVisual({ metres }: { metres: number }) {
-  // Widths grow with altitude bucket so a higher race lights
-  // a wider bar. Bars stacked bottom-up: sea level (narrow,
-  // bottom) → mountain (widest, top).
+  // Stepped mountain silhouette: bars stacked bottom-up with
+  // descending widths so they form a peaked triangle (wide
+  // base, narrow tip). Centred horizontally so the silhouette
+  // reads as a mountain rather than a staircase. The bar at
+  // the matching altitude bucket lights up — its *position*
+  // on the silhouette communicates the altitude (lit at the
+  // base = sea level, lit at the tip = mountain).
   const STEPS = [
-    { width: 10, key: "sea-level" },
-    { width: 16, key: "lowland" },
-    { width: 22, key: "highland" },
-    { width: 28, key: "mountain" },
+    { width: 28, key: "sea-level" },
+    { width: 22, key: "lowland" },
+    { width: 16, key: "highland" },
+    { width: 10, key: "mountain" },
   ] as const;
   const activeIndex = altitudeBucketIndex(metres);
   return (
     <div
-      className="flex flex-col-reverse items-end gap-[5px]"
+      className="flex flex-col-reverse items-center gap-[5px]"
       aria-hidden
     >
       {STEPS.map((step, i) => {
