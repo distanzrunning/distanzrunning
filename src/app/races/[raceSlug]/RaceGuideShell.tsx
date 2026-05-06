@@ -868,7 +868,10 @@ function HumidityVisual({ percent }: { percent: number }) {
   const RADIUS = 32;
   const ARC_DEG = 90;
   const TICK_HEIGHT = 12;
-  const ACTIVE_HEIGHT = 22;
+  // Active tick spans from near the bottom-right anchor to
+  // the outer ring — long enough to read as a dial pointer
+  // rather than a slightly-taller peer.
+  const ACTIVE_HEIGHT = 36;
   // The outer tip of every tick lands at this distance from
   // the bottom-right anchor. Tick centres are placed so this
   // stays constant whether the tick is dim (12 px) or lit
@@ -899,7 +902,7 @@ function HumidityVisual({ percent }: { percent: number }) {
             key={i}
             className="absolute bottom-0 right-0 rounded-full"
             style={{
-              width: 2,
+              width: lit ? 3 : 2,
               height,
               background: "var(--ds-background-100)",
               opacity: lit ? 1 : 0.2,
