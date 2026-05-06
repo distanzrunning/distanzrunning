@@ -854,29 +854,17 @@ function BarsVisual({ level }: { level: 1 | 2 | 3 | 4 }) {
 // ticks are narrower (10 px). Lit ticks are at-or-below the
 // race temperature; the rest dim to 20 %. Right-aligned so all
 // ticks share a "spine" on the right edge.
-// Quarter-arc dial gauge for humidity. 11 ticks fan from
-// "west" (-90°, 0% humidity, the bottom of the arc) counter-
-// clockwise through to "north" (0°, 100%, the top of the arc),
-// all anchored at the bottom-right corner. Only the tick
-// closest to `percent` lights up — it renders LONGER (22 px)
-// than the dim 12 px siblings, but every tick's *outer* tip
-// terminates at the same radius so the dial's outer ring stays
-// flush; the active needle extends inward toward the anchor
-// instead of outward.
+// Quarter-arc dial gauge for humidity. 11 identical ticks fan
+// from "west" (-90°, 0% humidity, bottom of arc) counter-
+// clockwise through to "north" (0°, 100%, top of arc), all
+// anchored at the bottom-right corner. Only the tick closest
+// to `percent` is illuminated (full opacity); the rest dim to
+// 20% so the full arc still reads as a scale.
 function HumidityVisual({ percent }: { percent: number }) {
   const TICK_COUNT = 11;
   const RADIUS = 32;
   const ARC_DEG = 90;
   const TICK_HEIGHT = 12;
-  // Active tick spans from near the bottom-right anchor to
-  // the outer ring — long enough to read as a dial pointer
-  // rather than a slightly-taller peer.
-  const ACTIVE_HEIGHT = 36;
-  // The outer tip of every tick lands at this distance from
-  // the bottom-right anchor. Tick centres are placed so this
-  // stays constant whether the tick is dim (12 px) or lit
-  // (22 px). Active just extends further inward.
-  const OUTER_RADIUS = RADIUS + TICK_HEIGHT / 2;
   const stepPercent = 100 / (TICK_COUNT - 1);
   const activeIndex = Math.max(
     0,
@@ -885,28 +873,22 @@ function HumidityVisual({ percent }: { percent: number }) {
   return (
     <div
       className="relative"
-      style={{ width: OUTER_RADIUS + 4, height: OUTER_RADIUS + 4 }}
+      style={{ width: RADIUS + TICK_HEIGHT, height: RADIUS + TICK_HEIGHT }}
       aria-hidden
     >
       {Array.from({ length: TICK_COUNT }).map((_, i) => {
-        // -90° (west / left, bottom of arc) → 0° (north / up,
-        // top of arc). 0% → -90, 100% → 0.
         const angle = -90 + (i * ARC_DEG) / (TICK_COUNT - 1);
         const lit = i === activeIndex;
-        const height = lit ? ACTIVE_HEIGHT : TICK_HEIGHT;
-        // Tick centre = OUTER_RADIUS minus half the tick's own
-        // height so the tip lands at the shared outer ring.
-        const centreOffset = OUTER_RADIUS - height / 2;
         return (
           <div
             key={i}
             className="absolute bottom-0 right-0 rounded-full"
             style={{
-              width: lit ? 3 : 2,
-              height,
+              width: 2,
+              height: TICK_HEIGHT,
               background: "var(--ds-background-100)",
               opacity: lit ? 1 : 0.2,
-              transform: `rotate(${angle}deg) translateY(-${centreOffset}px)`,
+              transform: `rotate(${angle}deg) translateY(-${RADIUS}px)`,
             }}
           />
         );
