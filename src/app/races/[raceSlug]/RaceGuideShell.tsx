@@ -65,6 +65,12 @@ export interface RaceGuideMeta {
   womensCourseRecord?: string;
   womensCourseRecordAthlete?: string;
   womensCourseRecordCountry?: string;
+  mensWheelchairCourseRecord?: string;
+  mensWheelchairCourseRecordAthlete?: string;
+  mensWheelchairCourseRecordCountry?: string;
+  womensWheelchairCourseRecord?: string;
+  womensWheelchairCourseRecordAthlete?: string;
+  womensWheelchairCourseRecordCountry?: string;
   officialWebsite?: string;
   tags?: string[];
   introduction?: PortableTextBlock[];
@@ -1217,6 +1223,18 @@ function CourseRecordsCard({ race }: { race: RaceGuideMeta }) {
       time: race.womensCourseRecord,
       athlete: race.womensCourseRecordAthlete,
       country: race.womensCourseRecordCountry,
+    },
+    {
+      label: "Men's Wheelchair",
+      time: race.mensWheelchairCourseRecord,
+      athlete: race.mensWheelchairCourseRecordAthlete,
+      country: race.mensWheelchairCourseRecordCountry,
+    },
+    {
+      label: "Women's Wheelchair",
+      time: race.womensWheelchairCourseRecord,
+      athlete: race.womensWheelchairCourseRecordAthlete,
+      country: race.womensWheelchairCourseRecordCountry,
     },
   ].filter((r) => Boolean(r.time));
   if (rows.length === 0) return null;
