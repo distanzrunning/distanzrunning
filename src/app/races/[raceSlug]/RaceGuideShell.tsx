@@ -391,10 +391,10 @@ function GuidePanel({ race, heroImageUrl }: GuidePanelProps) {
       }}
     >
       <HeroCard race={race} imageUrl={heroImageUrl} />
+      <TocCard race={race} />
+      <AdsCard />
       <StatsCard race={race} />
       <CourseRecordsCard race={race} />
-      <AdsCard />
-      <TocCard body={race.body} />
       {/* Temporary spacer so the page keeps scrolling while we
           add more cards in subsequent iterations. Remove once
           the stack is full enough to overflow on its own. */}
@@ -627,8 +627,25 @@ interface TocEntry {
   title: string;
 }
 
-function TocCard({ body }: { body?: PortableTextBlock[] }) {
-  const entries = deriveTocEntries(body);
+// Anchor IDs stamped on the Stats and Course-records cards so
+// the TOC entries above can scroll-link to them.
+const STATS_SECTION_ID = "key-stats";
+const RECORDS_SECTION_ID = "course-records";
+
+function TocCard({ race }: { race: RaceGuideMeta }) {
+  // Two top-level panel sections (Stats, Course records) sit
+  // ahead of the body's H2-derived entries. Each is included
+  // only when its card will actually render so the link
+  // doesn't dead-end on a missing anchor.
+  const sectionEntries: TocEntry[] = [];
+  if (hasStatsData(race)) {
+    sectionEntries.push({ id: STATS_SECTION_ID, title: "Key stats" });
+  }
+  if (hasCourseRecords(race)) {
+    sectionEntries.push({ id: RECORDS_SECTION_ID, title: "Course records" });
+  }
+  const bodyEntries = deriveTocEntries(race.body);
+  const entries = [...sectionEntries, ...bodyEntries];
   if (entries.length === 0) return null;
   return (
     <aside
@@ -668,6 +685,30 @@ function TocCard({ body }: { body?: PortableTextBlock[] }) {
 // Walks Portable Text body blocks, picks out H2s, joins their
 // span text, and slugifies for the anchor id. Falls back to
 // `section-N` if a heading has no plain text (rare).
+// Mirrors the populate-checks in StatsCard / CourseRecordsCard
+// so the TOC only links to sections that will actually render.
+function hasStatsData(race: RaceGuideMeta): boolean {
+  return (
+    race.distance != null ||
+    Boolean(race.surface) ||
+    race.elevationGain != null ||
+    race.altitude != null ||
+    race.averageTemperature != null ||
+    race.humidity != null ||
+    race.fieldSize != null ||
+    Boolean(race.startTime)
+  );
+}
+
+function hasCourseRecords(race: RaceGuideMeta): boolean {
+  return Boolean(
+    race.mensCourseRecord ||
+      race.womensCourseRecord ||
+      race.mensWheelchairCourseRecord ||
+      race.womensWheelchairCourseRecord,
+  );
+}
+
 function deriveTocEntries(
   body: PortableTextBlock[] | undefined,
 ): TocEntry[] {
@@ -747,6 +788,7 @@ function StatsCard({ race }: { race: RaceGuideMeta }) {
   if (tiles.length === 0) return null;
   return (
     <section
+      id={STATS_SECTION_ID}
       className={`${CARD_CLASS} p-5`}
       style={{ boxShadow: CARD_SHADOW }}
     >
@@ -1240,6 +1282,7 @@ function CourseRecordsCard({ race }: { race: RaceGuideMeta }) {
   if (rows.length === 0) return null;
   return (
     <section
+      id={RECORDS_SECTION_ID}
       className={`${CARD_CLASS} p-5`}
       style={{ boxShadow: CARD_SHADOW }}
     >
