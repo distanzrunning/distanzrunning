@@ -224,7 +224,10 @@ function RaceMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const geoJsonRef = useRef<GeoJSON.FeatureCollection | null>(null);
-  const expoMarkerRef = useRef<mapboxgl.Marker | null>(null);
+  const expoMarkerRef = useRef<{
+    marker: mapboxgl.Marker;
+    popup: mapboxgl.Popup;
+  } | null>(null);
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
 
@@ -303,7 +306,8 @@ function RaceMap({
     requestAnimationFrame(() => map.resize());
 
     return () => {
-      expoMarkerRef.current?.remove();
+      expoMarkerRef.current?.popup.remove();
+      expoMarkerRef.current?.marker.remove();
       expoMarkerRef.current = null;
       map.remove();
       mapRef.current = null;
@@ -447,7 +451,7 @@ function fitToRoute(
 function addExpoMarker(
   map: mapboxgl.Map,
   expo: ExpoLocation,
-): mapboxgl.Marker {
+): { marker: mapboxgl.Marker; popup: mapboxgl.Popup } {
   const dot = document.createElement("div");
   dot.style.cssText = [
     "width: 18px",
@@ -467,16 +471,35 @@ function addExpoMarker(
   ].join("; ");
   popupNode.textContent = "Expo";
 
+  // Hover-driven popup: we deliberately don't call setPopup on
+  // the marker (which would bind it to a click toggle). Instead
+  // we add/remove the popup on the dot's mouseenter/mouseleave.
+  // pointer-events:none on the popup wrapper means the cursor
+  // can pass through it without stealing the hover or causing
+  // an enter/leave flicker when it crosses the popup's edge.
   const popup = new mapboxgl.Popup({
     offset: 14,
     closeButton: false,
+    closeOnClick: false,
     className: "race-expo-popup",
-  }).setDOMContent(popupNode);
+  })
+    .setDOMContent(popupNode)
+    .setLngLat([expo.lng, expo.lat]);
 
-  return new mapboxgl.Marker(dot)
+  dot.addEventListener("mouseenter", () => {
+    popup.addTo(map);
+    const el = popup.getElement();
+    if (el) el.style.pointerEvents = "none";
+  });
+  dot.addEventListener("mouseleave", () => {
+    popup.remove();
+  });
+
+  const marker = new mapboxgl.Marker(dot)
     .setLngLat([expo.lng, expo.lat])
-    .setPopup(popup)
     .addTo(map);
+
+  return { marker, popup };
 }
 
 // ============================================================================
