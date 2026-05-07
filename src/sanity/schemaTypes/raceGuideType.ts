@@ -487,6 +487,20 @@ export const raceGuideType = defineType({
       },
     }),
     defineField({
+      name: 'expoVenueName',
+      title: 'Expo Venue Name',
+      type: 'string',
+      description:
+        'Display name for the expo location, e.g. "Javits Center". Shown in the marker popup on the race map.',
+    }),
+    defineField({
+      name: 'expoAddress',
+      title: 'Expo Address',
+      type: 'string',
+      description:
+        'Full street address of the race expo. Geocoded server-side via Mapbox to place the marker — give it a complete address (street, city, country) so the result is unambiguous.',
+    }),
+    defineField({
       name: 'featuredRace',
       title: 'Featured Race Guide',
       type: 'boolean',

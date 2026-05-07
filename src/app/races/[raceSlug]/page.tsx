@@ -16,6 +16,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { sanityFetch } from "@/sanity/lib/live";
 import { urlFor } from "@/sanity/lib/image";
 import { fetchElevationSeries } from "@/lib/gpxUtils";
+import { geocodeAddress } from "@/lib/geocode";
 import RaceGuideShell, {
   type RaceGuideMeta,
 } from "./RaceGuideShell";
@@ -76,6 +77,8 @@ const raceGuideQuery = /* groq */ `
     body,
     mainImage,
     portraitImage,
+    expoVenueName,
+    expoAddress,
     "routeGeoJsonUrl": gpxFile.asset->url
   }
 `;
@@ -109,7 +112,24 @@ export default async function RaceGuidePage({
   // card paints with real data on first render (no client-side
   // skeleton flash) and the TOC gates its "Elevation profile"
   // entry on actual elevation data rather than URL presence.
-  const elevationSeries = await fetchElevationSeries(race.routeGeoJsonUrl);
+  // Forward-geocode the expo address in parallel — Mapbox handles
+  // the lookup, results cache for 24h on the Next fetch cache so
+  // editor changes surface promptly without re-hitting the API
+  // on every request.
+  const [elevationSeries, expoLocation] = await Promise.all([
+    fetchElevationSeries(race.routeGeoJsonUrl),
+    geocodeAddress(race.expoAddress),
+  ]);
+
+  const expo =
+    expoLocation && (race.expoVenueName || race.expoAddress)
+      ? {
+          venueName: race.expoVenueName ?? null,
+          address: race.expoAddress ?? null,
+          lng: expoLocation.lng,
+          lat: expoLocation.lat,
+        }
+      : null;
 
   return (
     <RaceGuideShell
@@ -117,6 +137,7 @@ export default async function RaceGuidePage({
       routeGeoJsonUrl={race.routeGeoJsonUrl ?? null}
       heroImageUrl={heroImageUrl}
       elevationSeries={elevationSeries}
+      expo={expo}
     />
   );
 }

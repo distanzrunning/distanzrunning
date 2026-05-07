@@ -71,6 +71,8 @@ export interface RaceGuideMeta {
   price?: number;
   currency?: string;
   fieldSize?: number;
+  expoVenueName?: string;
+  expoAddress?: string;
   mensCourseRecord?: string;
   mensCourseRecordAthlete?: string;
   mensCourseRecordCountry?: string;
@@ -89,11 +91,19 @@ export interface RaceGuideMeta {
   body?: PortableTextBlock[];
 }
 
+export interface ExpoLocation {
+  venueName: string | null;
+  address: string | null;
+  lng: number;
+  lat: number;
+}
+
 interface RaceGuideShellProps {
   race: RaceGuideMeta;
   routeGeoJsonUrl: string | null;
   heroImageUrl: string | null;
   elevationSeries: ElevationPoint[] | null;
+  expo: ExpoLocation | null;
 }
 
 // Resolves the route line / elevation chart color from
@@ -134,6 +144,7 @@ export default function RaceGuideShell({
   routeGeoJsonUrl,
   heroImageUrl,
   elevationSeries,
+  expo,
 }: RaceGuideShellProps) {
   return (
     // Single-cell grid: the sticky map and the editorial panel
@@ -159,7 +170,7 @@ export default function RaceGuideShell({
         }}
       >
         {routeGeoJsonUrl ? (
-          <RaceMap geoJsonUrl={routeGeoJsonUrl} />
+          <RaceMap geoJsonUrl={routeGeoJsonUrl} expo={expo} />
         ) : (
           <StatusOverlay text="Route map coming soon." />
         )}
@@ -203,10 +214,17 @@ type MapStatus =
   | { kind: "ready" }
   | { kind: "error"; message: string };
 
-function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
+function RaceMap({
+  geoJsonUrl,
+  expo,
+}: {
+  geoJsonUrl: string;
+  expo: ExpoLocation | null;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const geoJsonRef = useRef<GeoJSON.FeatureCollection | null>(null);
+  const expoMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
 
@@ -252,7 +270,10 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
         const data = (await res.json()) as GeoJSON.FeatureCollection;
         geoJsonRef.current = data;
         addRouteLayer(map, data, getRouteLineColor());
-        const fitted = fitToRoute(map, data);
+        if (expo) {
+          expoMarkerRef.current = addExpoMarker(map, expo);
+        }
+        const fitted = fitToRoute(map, data, expo);
         if (!fitted) {
           setStatus({
             kind: "error",
@@ -282,11 +303,13 @@ function RaceMap({ geoJsonUrl }: { geoJsonUrl: string }) {
     requestAnimationFrame(() => map.resize());
 
     return () => {
+      expoMarkerRef.current?.remove();
+      expoMarkerRef.current = null;
       map.remove();
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geoJsonUrl]);
+  }, [geoJsonUrl, expo]);
 
   // Swap style when dark mode flips. Doesn't recreate the map.
   useEffect(() => {
@@ -355,6 +378,7 @@ function addRouteLayer(
 function fitToRoute(
   map: mapboxgl.Map,
   data: GeoJSON.FeatureCollection,
+  expo: ExpoLocation | null,
 ): boolean {
   let minLng = Infinity;
   let minLat = Infinity;
@@ -384,6 +408,11 @@ function fitToRoute(
     }
   }
 
+  // Pull the expo into the bounding box so the marker is always
+  // framed alongside the route — otherwise an expo across town
+  // could end up offscreen at the default route-only zoom.
+  if (expo) visit([expo.lng, expo.lat]);
+
   if (!hasPoint) return false;
   // Left padding accounts for the floating panel's inset + width
   // plus extra breathing room. Other sides also get the breathing
@@ -404,6 +433,68 @@ function fitToRoute(
     },
   );
   return true;
+}
+
+// Drops a circle marker at the expo coordinate with a Mapbox
+// popup that surfaces the venue name + address on click. The
+// marker DOM is built with createElement / textContent rather
+// than innerHTML so the editor-supplied strings can never escape
+// into HTML — defensive even though Sanity content is trusted.
+// Theme tokens (--ds-gray-1000 / --ds-background-100) flip with
+// dark mode automatically; no listener needed when the style
+// swaps because mapboxgl.Marker is overlaid via the DOM, not the
+// canvas, so it survives setStyle.
+function addExpoMarker(
+  map: mapboxgl.Map,
+  expo: ExpoLocation,
+): mapboxgl.Marker {
+  const dot = document.createElement("div");
+  dot.style.cssText = [
+    "width: 14px",
+    "height: 14px",
+    "border-radius: 50%",
+    "background: var(--ds-gray-1000)",
+    "border: 2px solid var(--ds-background-100)",
+    "box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3)",
+    "cursor: pointer",
+  ].join("; ");
+
+  const popupNode = document.createElement("div");
+  popupNode.style.cssText =
+    "padding: 4px 2px; min-width: 180px; max-width: 240px;";
+
+  const label = document.createElement("div");
+  label.style.cssText =
+    "font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ds-gray-700); margin-bottom: 6px;";
+  label.textContent = "Race Expo";
+  popupNode.appendChild(label);
+
+  if (expo.venueName) {
+    const name = document.createElement("div");
+    name.style.cssText =
+      "font-size: 14px; font-weight: 600; color: var(--ds-gray-1000); line-height: 1.3;";
+    name.textContent = expo.venueName;
+    popupNode.appendChild(name);
+  }
+
+  if (expo.address) {
+    const addr = document.createElement("div");
+    addr.style.cssText =
+      "font-size: 13px; color: var(--ds-gray-900); margin-top: 2px; line-height: 1.4;";
+    addr.textContent = expo.address;
+    popupNode.appendChild(addr);
+  }
+
+  const popup = new mapboxgl.Popup({
+    offset: 14,
+    closeButton: false,
+    className: "race-expo-popup",
+  }).setDOMContent(popupNode);
+
+  return new mapboxgl.Marker(dot)
+    .setLngLat([expo.lng, expo.lat])
+    .setPopup(popup)
+    .addTo(map);
 }
 
 // ============================================================================
