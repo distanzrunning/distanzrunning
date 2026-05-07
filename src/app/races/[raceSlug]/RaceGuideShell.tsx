@@ -9,7 +9,7 @@
 // the page itself scroll. The panel scrolls with the page; the
 // map stays put.
 
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useContext, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -46,6 +46,8 @@ import { Switch } from "@/components/ui/Switch";
 import { formatDistance, formatElevation } from "@/lib/raceUtils";
 import { useUnits, type UnitSystem } from "@/contexts/UnitsContext";
 import type { ElevationPoint } from "@/lib/gpxUtils";
+import { urlFor } from "@/sanity/lib/image";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 export interface RaceGuideMeta {
   _id: string;
@@ -424,6 +426,13 @@ function GuidePanel({ race, heroImageUrl, elevationSeries }: GuidePanelProps) {
   // prefetched series being non-empty, so the TOC link can
   // never dead-end.
   const hasElevation = !!elevationSeries && elevationSeries.length > 0;
+  // Split the body into H2-keyed sections once. Both the TOC and
+  // the body cards consume this list so anchor IDs are guaranteed
+  // to match.
+  const bodySections = useMemo(
+    () => splitBodyIntoSections(race.body),
+    [race.body],
+  );
   return (
     <div
       className="flex flex-col gap-6"
@@ -433,15 +442,16 @@ function GuidePanel({ race, heroImageUrl, elevationSeries }: GuidePanelProps) {
       }}
     >
       <HeroCard race={race} imageUrl={heroImageUrl} />
-      <TocCard race={race} hasElevation={hasElevation} />
+      <TocCard
+        race={race}
+        hasElevation={hasElevation}
+        bodySections={bodySections}
+      />
       <AdsCard />
       <StatsCard race={race} />
       {hasElevation && <ElevationCard series={elevationSeries!} />}
       <CourseRecordsCard race={race} />
-      {/* Temporary spacer so the page keeps scrolling while we
-          add more cards in subsequent iterations. Remove once
-          the stack is full enough to overflow on its own. */}
-      <div style={{ minHeight: 1500 }} />
+      <BodySections sections={bodySections} />
     </div>
   );
 }
@@ -703,9 +713,11 @@ function smoothScrollToAnchor(
 function TocCard({
   race,
   hasElevation,
+  bodySections,
 }: {
   race: RaceGuideMeta;
   hasElevation: boolean;
+  bodySections: BodySection[];
 }) {
   // Top-level panel sections (Stats, Elevation, Course records)
   // sit ahead of the body's H2-derived entries. Each is included
@@ -721,7 +733,7 @@ function TocCard({
   if (hasCourseRecords(race)) {
     sectionEntries.push({ id: RECORDS_SECTION_ID, title: "Course records" });
   }
-  const bodyEntries = deriveTocEntries(race.body);
+  const bodyEntries = bodySections.map((s) => ({ id: s.id, title: s.title }));
   const entries = [...sectionEntries, ...bodyEntries];
   if (entries.length === 0) return null;
   return (
@@ -787,28 +799,52 @@ function hasCourseRecords(race: RaceGuideMeta): boolean {
   );
 }
 
-function deriveTocEntries(
+interface BodySection {
+  id: string;
+  title: string;
+  blocks: PortableTextBlock[];
+}
+
+// Walks the Portable Text body once, breaking it into sections at
+// every H2. The H2 itself becomes the section's `title` (and is
+// rendered as the card heading) — it isn't included in the
+// `blocks` array so the body renderer doesn't draw a duplicate
+// inline heading. Content that appears before the first H2 is
+// dropped: the dedicated `introduction` field already handles
+// the lede and any pre-H2 leakage in a migrated body would read
+// as misplaced. Same source of truth for the TOC's body entries
+// and the body cards, so anchor IDs always match.
+function splitBodyIntoSections(
   body: PortableTextBlock[] | undefined,
-): TocEntry[] {
+): BodySection[] {
   if (!body) return [];
-  const out: TocEntry[] = [];
-  body.forEach((block, idx) => {
-    if (block._type !== "block") return;
-    if ((block as { style?: string }).style !== "h2") return;
-    const children = (block as { children?: { _type?: string; text?: string }[] })
-      .children;
-    const text = (children ?? [])
-      .filter((c) => c._type === "span")
-      .map((c) => c.text ?? "")
-      .join("")
-      .trim();
-    if (!text) return;
-    out.push({
-      id: slugify(text) || `section-${idx + 1}`,
-      title: text,
-    });
+  const sections: BodySection[] = [];
+  let current: BodySection | null = null;
+  body.forEach((block) => {
+    const isH2 =
+      block._type === "block" &&
+      (block as { style?: string }).style === "h2";
+    if (isH2) {
+      const children = (
+        block as { children?: { _type?: string; text?: string }[] }
+      ).children;
+      const text = (children ?? [])
+        .filter((c) => c._type === "span")
+        .map((c) => c.text ?? "")
+        .join("")
+        .trim();
+      if (!text) return;
+      current = {
+        id: slugify(text) || `section-${sections.length + 1}`,
+        title: text,
+        blocks: [],
+      };
+      sections.push(current);
+    } else if (current) {
+      current.blocks.push(block);
+    }
   });
-  return out;
+  return sections;
 }
 
 function slugify(text: string): string {
@@ -1730,4 +1766,169 @@ function formatPillDate(iso: string | undefined): string | null {
   if (!iso) return null;
   const d = new Date(iso);
   return Number.isNaN(d.getTime()) ? null : format(d, "d MMM, yyyy");
+}
+
+// ============================================================================
+// Body sections. Each H2 in the race body becomes its own panel
+// card with the H2 as the card heading, the section's anchor id,
+// and SCROLL_MARGIN_TOP so TOC links land below the SiteHeader.
+// AdsCard is interleaved every 3 sections so longer guides break
+// up visually without stacking ads on shorter ones.
+// ============================================================================
+
+// Inserts an ad after every 3rd body section (between sections
+// 3-4, 6-7, …). Skips entirely for short bodies (<4 sections) so
+// a quick guide doesn't end on an ad, and never inserts after the
+// last section so the body always closes on editorial content.
+const SECTIONS_PER_AD = 3;
+const MIN_SECTIONS_FOR_ADS = 4;
+
+function shouldInsertAdAfter(idx: number, total: number): boolean {
+  if (total < MIN_SECTIONS_FOR_ADS) return false;
+  const positionFromTop = idx + 1;
+  return positionFromTop % SECTIONS_PER_AD === 0 && positionFromTop < total;
+}
+
+function BodySections({ sections }: { sections: BodySection[] }) {
+  if (sections.length === 0) return null;
+  return (
+    <>
+      {sections.map((section, i) => (
+        <Fragment key={section.id}>
+          <BodySectionCard section={section} />
+          {shouldInsertAdAfter(i, sections.length) && <AdsCard />}
+        </Fragment>
+      ))}
+    </>
+  );
+}
+
+function BodySectionCard({ section }: { section: BodySection }) {
+  return (
+    <section
+      id={section.id}
+      className={`${CARD_CLASS} p-5`}
+      style={{ boxShadow: CARD_SHADOW, scrollMarginTop: SCROLL_MARGIN_TOP }}
+    >
+      <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
+        {section.title}
+      </h2>
+      <PortableText value={section.blocks} components={BODY_PT_COMPONENTS} />
+    </section>
+  );
+}
+
+// Body Portable Text renderer. DS-token-anchored typography
+// (text-copy-16 paragraphs, text-heading-* for sub-headings)
+// rather than the legacy article-layout class names. Inline
+// images render via a <figure> with an optional caption + credit.
+// We don't define an `h2` block component because H2s are
+// consumed by `splitBodyIntoSections` to split the body and never
+// reach this renderer. h1 is intentionally absent too — the page
+// title (HeroCard) is the only h1 on the page.
+const BODY_PT_COMPONENTS = {
+  block: {
+    normal: ({ children }: { children?: React.ReactNode }) => (
+      <p className="mb-4 text-copy-16 text-[color:var(--ds-gray-1000)] last:mb-0">
+        {children}
+      </p>
+    ),
+    h3: ({ children }: { children?: React.ReactNode }) => (
+      <h3 className="mb-2 mt-6 text-heading-16 text-[color:var(--ds-gray-1000)] first:mt-0">
+        {children}
+      </h3>
+    ),
+    h4: ({ children }: { children?: React.ReactNode }) => (
+      <h4 className="mb-2 mt-4 text-heading-14 text-[color:var(--ds-gray-1000)] first:mt-0">
+        {children}
+      </h4>
+    ),
+    blockquote: ({ children }: { children?: React.ReactNode }) => (
+      <blockquote className="my-5 border-l-2 border-[color:var(--ds-gray-400)] pl-4 text-copy-16 italic text-[color:var(--ds-gray-900)]">
+        {children}
+      </blockquote>
+    ),
+  },
+  marks: {
+    strong: ({ children }: { children?: React.ReactNode }) => (
+      <strong className="font-semibold">{children}</strong>
+    ),
+    em: ({ children }: { children?: React.ReactNode }) => (
+      <em className="italic">{children}</em>
+    ),
+    link: ({
+      value,
+      children,
+    }: {
+      value?: { href?: string };
+      children?: React.ReactNode;
+    }) => {
+      const isExternal = value?.href?.startsWith("http");
+      return (
+        <a
+          href={value?.href}
+          target={isExternal ? "_blank" : undefined}
+          rel={isExternal ? "noopener noreferrer" : undefined}
+          className="text-[color:var(--ds-gray-1000)] underline underline-offset-2 hover:text-[color:var(--ds-gray-700)]"
+        >
+          {children}
+        </a>
+      );
+    },
+  },
+  list: {
+    bullet: ({ children }: { children?: React.ReactNode }) => (
+      <ul className="mb-4 list-disc space-y-2 pl-6 text-copy-16 text-[color:var(--ds-gray-1000)] last:mb-0 marker:text-[color:var(--ds-gray-700)]">
+        {children}
+      </ul>
+    ),
+  },
+  listItem: {
+    bullet: ({ children }: { children?: React.ReactNode }) => (
+      <li>{children}</li>
+    ),
+  },
+  types: {
+    image: BodyImage,
+    // customCodeBlock: stripped during the post→raceGuide
+    // migration. customTable: skipped — the panel column is too
+    // narrow for the legacy table primitive, and no migrated body
+    // currently has one.
+  },
+};
+
+type BodyImageValue = SanityImageSource & {
+  alt?: string;
+  caption?: string;
+  credit?: string;
+};
+
+function BodyImage({ value }: { value: BodyImageValue }) {
+  if (!value) return null;
+  // Sanity CDN-served URL with `auto=format` for AVIF/WebP. We
+  // use a plain <img> rather than next/image because the panel
+  // body doesn't ship asset dimensions in the GROQ projection
+  // and editorial body images vary in aspect ratio. The card
+  // column is fixed at 480 px so a single 960 px request is
+  // sharp on retina without responsive sizing logic.
+  const url = urlFor(value).width(960).auto("format").url();
+  return (
+    <figure className="my-5">
+      <div className="overflow-hidden rounded">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={url} alt={value.alt ?? ""} className="block w-full" />
+      </div>
+      {(value.caption || value.credit) && (
+        <figcaption className="mt-2 text-copy-13 text-[color:var(--ds-gray-900)]">
+          {value.caption}
+          {value.caption && value.credit ? " " : ""}
+          {value.credit && (
+            <span className="text-[color:var(--ds-gray-700)]">
+              — {value.credit}
+            </span>
+          )}
+        </figcaption>
+      )}
+    </figure>
+  );
 }
