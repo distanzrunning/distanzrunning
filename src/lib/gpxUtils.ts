@@ -148,20 +148,33 @@ export function parseGeoJSONWithElevation(geoJsonText: string): {
 }
 
 /**
- * Server-safe variant: fetch a route asset and parse its elevation
- * series without touching DOMParser. Used by the race detail page
- * to prefetch the elevation profile during SSR so the panel chart
- * renders on first paint and the TOC entry can be gated on real
- * data rather than guessed from URL presence.
+ * SW [west, south] / NE [east, north] bounds box around a route's
+ * coordinates. Matches the LngLatBoundsLike shape Mapbox accepts
+ * directly via its Map constructor's `bounds` option.
+ */
+export type RouteBounds = [[number, number], [number, number]];
+
+export interface RouteAssets {
+  elevation: ElevationPoint[];
+  bounds: RouteBounds;
+}
+
+/**
+ * Server-safe variant: fetch a route asset, walk it once, and
+ * return both the elevation profile and the bounding box. Used
+ * by the race detail page to prefetch route data during SSR so
+ * (a) the panel chart renders on first paint and (b) Mapbox can
+ * initialize already framed on the route — no globe phase, no
+ * fit-jump after load. Single fetch, single parse.
  *
  * GPX inputs are skipped (return null) because the GPX parser
  * relies on DOMParser, which isn't available in the Node runtime.
  * All current race uploads are GeoJSON FeatureCollections of
  * LineString features, so this covers the field today.
  */
-export async function fetchElevationSeries(
+export async function fetchRouteAssets(
   url: string | null | undefined,
-): Promise<ElevationPoint[] | null> {
+): Promise<RouteAssets | null> {
   if (!url) return null;
   try {
     const res = await fetch(url, { next: { revalidate: 60 } });
@@ -174,10 +187,34 @@ export async function fetchElevationSeries(
     const { coordinates, elevations } = parseGeoJSONWithElevation(text);
     if (coordinates.length === 0) return null;
     const profile = createElevationProfile(coordinates, elevations);
-    return profile.length > 0 ? profile : null;
+    if (profile.length === 0) return null;
+    const bounds = computeBounds(coordinates);
+    if (!bounds) return null;
+    return { elevation: profile, bounds };
   } catch {
     return null;
   }
+}
+
+function computeBounds(
+  coordinates: [number, number][],
+): RouteBounds | null {
+  let minLng = Infinity;
+  let minLat = Infinity;
+  let maxLng = -Infinity;
+  let maxLat = -Infinity;
+  for (const [lng, lat] of coordinates) {
+    if (typeof lng !== "number" || typeof lat !== "number") continue;
+    if (lng < minLng) minLng = lng;
+    if (lat < minLat) minLat = lat;
+    if (lng > maxLng) maxLng = lng;
+    if (lat > maxLat) maxLat = lat;
+  }
+  if (minLng === Infinity) return null;
+  return [
+    [minLng, minLat],
+    [maxLng, maxLat],
+  ];
 }
 
 /**

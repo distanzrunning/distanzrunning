@@ -45,7 +45,7 @@ import { AdSlot } from "@/components/ui/AdSlot";
 import { Switch } from "@/components/ui/Switch";
 import { formatDistance, formatElevation } from "@/lib/raceUtils";
 import { useUnits, type UnitSystem } from "@/contexts/UnitsContext";
-import type { ElevationPoint } from "@/lib/gpxUtils";
+import type { ElevationPoint, RouteBounds } from "@/lib/gpxUtils";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
@@ -103,6 +103,7 @@ interface RaceGuideShellProps {
   routeGeoJsonUrl: string | null;
   heroImageUrl: string | null;
   elevationSeries: ElevationPoint[] | null;
+  routeBounds: RouteBounds | null;
   expo: ExpoLocation | null;
 }
 
@@ -144,6 +145,7 @@ export default function RaceGuideShell({
   routeGeoJsonUrl,
   heroImageUrl,
   elevationSeries,
+  routeBounds,
   expo,
 }: RaceGuideShellProps) {
   return (
@@ -170,7 +172,11 @@ export default function RaceGuideShell({
         }}
       >
         {routeGeoJsonUrl ? (
-          <RaceMap geoJsonUrl={routeGeoJsonUrl} expo={expo} />
+          <RaceMap
+            geoJsonUrl={routeGeoJsonUrl}
+            initialBounds={routeBounds}
+            expo={expo}
+          />
         ) : (
           <StatusOverlay text="Route map coming soon." />
         )}
@@ -216,9 +222,11 @@ type MapStatus =
 
 function RaceMap({
   geoJsonUrl,
+  initialBounds,
   expo,
 }: {
   geoJsonUrl: string;
+  initialBounds: RouteBounds | null;
   expo: ExpoLocation | null;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -244,13 +252,33 @@ function RaceMap({
     }
     mapboxgl.accessToken = token;
 
-    const map = new mapboxgl.Map({
+    // Initialise framed on the route bbox (computed server-side
+    // by fetchRouteAssets and passed in via initialBounds) so the
+    // map never paints the [0, 0] / zoom 1 globe before fitting.
+    // If we somehow don't have bounds (very rare edge — e.g.
+    // Sanity returned no GeoJSON URL but we still landed here),
+    // fall back to the same global default and the legacy
+    // post-load fit takes over.
+    const mapOptions: mapboxgl.MapOptions = {
       container: containerRef.current,
       style: styleForMode(isDark),
-      center: [0, 0],
-      zoom: 1,
       attributionControl: false,
-    });
+      ...(initialBounds
+        ? {
+            bounds: initialBounds,
+            fitBoundsOptions: {
+              padding: {
+                top: ROUTE_BREATHING,
+                bottom: ROUTE_BREATHING,
+                left: PANEL_INSET + PANEL_WIDTH + ROUTE_BREATHING,
+                right: ROUTE_BREATHING,
+              },
+              duration: 0,
+            },
+          }
+        : { center: [0, 0] as [number, number], zoom: 1 }),
+    };
+    const map = new mapboxgl.Map(mapOptions);
     mapRef.current = map;
 
     map.addControl(
@@ -276,13 +304,17 @@ function RaceMap({
         if (expo) {
           expoMarkerRef.current = addExpoMarker(map, expo);
         }
-        const fitted = fitToRoute(map, data, expo);
-        if (!fitted) {
-          setStatus({
-            kind: "error",
-            message: "Route GeoJSON contains no coordinates.",
-          });
-          return;
+        // Only fit post-load when we didn't get server-side
+        // bounds — the constructor already framed it otherwise.
+        if (!initialBounds) {
+          const fitted = fitToRoute(map, data, expo);
+          if (!fitted) {
+            setStatus({
+              kind: "error",
+              message: "Route GeoJSON contains no coordinates.",
+            });
+            return;
+          }
         }
         setStatus({ kind: "ready" });
       } catch (err) {
@@ -313,7 +345,7 @@ function RaceMap({
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geoJsonUrl, expo]);
+  }, [geoJsonUrl, expo, initialBounds]);
 
   // Swap style when dark mode flips. Doesn't recreate the map.
   useEffect(() => {
@@ -325,30 +357,20 @@ function RaceMap({
   return (
     <>
       <div ref={containerRef} className="h-full w-full" />
-      {status.kind === "loading" && (
-        <StatusOverlay text="Loading route…" subtle />
-      )}
+      {status.kind === "loading" && <StatusOverlay text="Loading route…" />}
       {status.kind === "error" && <StatusOverlay text={status.message} />}
     </>
   );
 }
 
-function StatusOverlay({
-  text,
-  subtle = false,
-}: {
-  text: string;
-  subtle?: boolean;
-}) {
+// Fully opaque so the user never sees the map canvas behind it
+// during the load phase — globe tiles, blank canvas, and the
+// brief gap before the route line draws all stay hidden.
+// --ds-background-100 flips with theme so the cover reads right
+// in both modes.
+function StatusOverlay({ text }: { text: string }) {
   return (
-    <div
-      className={[
-        "pointer-events-none absolute inset-0 flex items-center justify-center p-6 text-center text-copy-14",
-        subtle
-          ? "bg-[color:var(--ds-background-100)]/40 text-[color:var(--ds-gray-900)]"
-          : "bg-[color:var(--ds-gray-100)] text-[color:var(--ds-gray-900)]",
-      ].join(" ")}
-    >
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[color:var(--ds-background-100)] p-6 text-center text-copy-14 text-[color:var(--ds-gray-900)]">
       {text}
     </div>
   );

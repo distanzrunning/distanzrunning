@@ -15,7 +15,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 import { sanityFetch } from "@/sanity/lib/live";
 import { urlFor } from "@/sanity/lib/image";
-import { fetchElevationSeries } from "@/lib/gpxUtils";
+import { fetchRouteAssets, type RouteBounds } from "@/lib/gpxUtils";
 import { geocodeAddress } from "@/lib/geocode";
 import RaceGuideShell, {
   type RaceGuideMeta,
@@ -108,16 +108,14 @@ export default async function RaceGuidePage({
         .url()
     : null;
 
-  // Prefetch the elevation series here so the panel's elevation
-  // card paints with real data on first render (no client-side
-  // skeleton flash) and the TOC gates its "Elevation profile"
-  // entry on actual elevation data rather than URL presence.
-  // Forward-geocode the expo address in parallel — Mapbox handles
-  // the lookup, results cache for 24h on the Next fetch cache so
-  // editor changes surface promptly without re-hitting the API
-  // on every request.
-  const [elevationSeries, expoLocation] = await Promise.all([
-    fetchElevationSeries(race.routeGeoJsonUrl),
+  // Prefetch the route assets (elevation + bbox) and geocode the
+  // expo in parallel. Single GeoJSON fetch covers both the
+  // panel's elevation chart (renders on first paint, no skeleton
+  // flash) and the map's initial framing — Mapbox is constructed
+  // with the route bounds already known so it never shows a
+  // globe before the fit. Mapbox geocoding caches for 24h.
+  const [routeAssets, expoLocation] = await Promise.all([
+    fetchRouteAssets(race.routeGeoJsonUrl),
     geocodeAddress(race.expoAddress),
   ]);
 
@@ -131,15 +129,34 @@ export default async function RaceGuidePage({
         }
       : null;
 
+  // Pre-extend the bbox to include the expo so the initial map
+  // frame already includes both. Avoids a re-fit after load even
+  // when the expo is on the far side of town.
+  const initialBounds = expandBoundsForExpo(routeAssets?.bounds, expo);
+
   return (
     <RaceGuideShell
       race={race}
       routeGeoJsonUrl={race.routeGeoJsonUrl ?? null}
       heroImageUrl={heroImageUrl}
-      elevationSeries={elevationSeries}
+      elevationSeries={routeAssets?.elevation ?? null}
+      routeBounds={initialBounds}
       expo={expo}
     />
   );
+}
+
+function expandBoundsForExpo(
+  bounds: RouteBounds | undefined,
+  expo: { lng: number; lat: number } | null,
+): RouteBounds | null {
+  if (!bounds) return null;
+  if (!expo) return bounds;
+  const [[minLng, minLat], [maxLng, maxLat]] = bounds;
+  return [
+    [Math.min(minLng, expo.lng), Math.min(minLat, expo.lat)],
+    [Math.max(maxLng, expo.lng), Math.max(maxLat, expo.lat)],
+  ];
 }
 
 export async function generateMetadata({
