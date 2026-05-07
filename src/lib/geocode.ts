@@ -4,12 +4,15 @@
 // API. Used by the race detail page to turn an editor-typed
 // expo address into a lng/lat the map can mark.
 //
-// We re-use NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN — it's the same
-// public token the map already uses client-side, scoped for
-// geocoding by default. The fetch caches with a 24-hour
-// revalidate window: addresses change rarely, and the page's
-// own ISR (revalidate = 60) means content edits surface within
-// a minute regardless.
+// Prefers MAPBOX_GEOCODING_TOKEN (a server-only secret token
+// without URL restrictions) so the request isn't rejected as
+// `Forbidden` by the public map token's allowlist. Falls back to
+// NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN if the secret isn't set, which
+// is fine in environments where the public token has no URL
+// restrictions. The fetch caches with a 24-hour revalidate
+// window: addresses change rarely, and the page's own ISR
+// (revalidate = 60) means content edits surface within a minute
+// regardless.
 
 export interface GeocodeResult {
   lng: number;
@@ -22,7 +25,9 @@ export async function geocodeAddress(
   address: string | null | undefined,
 ): Promise<GeocodeResult | null> {
   if (!address) return null;
-  const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+  const token =
+    process.env.MAPBOX_GEOCODING_TOKEN ||
+    process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
   if (!token) return null;
   const trimmed = address.trim();
   if (!trimmed) return null;
