@@ -435,55 +435,37 @@ function fitToRoute(
   return true;
 }
 
-// Drops a circle marker at the expo coordinate with a Mapbox
-// popup that surfaces the venue name + address on click. The
-// marker DOM is built with createElement / textContent rather
-// than innerHTML so the editor-supplied strings can never escape
-// into HTML — defensive even though Sanity content is trusted.
-// Theme tokens (--ds-gray-1000 / --ds-background-100) flip with
-// dark mode automatically; no listener needed when the style
-// swaps because mapboxgl.Marker is overlaid via the DOM, not the
-// canvas, so it survives setStyle.
+// Drops a brand-pink circle marker at the expo coordinate. The
+// pin picks up the same --ds-pink-800 the route line uses (via
+// getRouteLineColor) so the expo and the route read as a single
+// brand gesture, and the white border + drop shadow keep it
+// legible against light or dark map tiles. The popup is a
+// single "Expo" label — venue name + address are kept in the
+// schema for future surfacing but stay out of the marker UI.
+// mapboxgl.Marker is DOM-overlaid (not canvas-baked), so it
+// survives setStyle without re-adding.
 function addExpoMarker(
   map: mapboxgl.Map,
   expo: ExpoLocation,
 ): mapboxgl.Marker {
   const dot = document.createElement("div");
   dot.style.cssText = [
-    "width: 14px",
-    "height: 14px",
+    "width: 18px",
+    "height: 18px",
     "border-radius: 50%",
-    "background: var(--ds-gray-1000)",
+    `background: ${getRouteLineColor()}`,
     "border: 2px solid var(--ds-background-100)",
-    "box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3)",
+    "box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35)",
     "cursor: pointer",
   ].join("; ");
 
-  const popupNode = document.createElement("div");
-  popupNode.style.cssText =
-    "padding: 4px 2px; min-width: 180px; max-width: 240px;";
-
-  const label = document.createElement("div");
-  label.style.cssText =
-    "font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ds-gray-700); margin-bottom: 6px;";
-  label.textContent = "Race Expo";
-  popupNode.appendChild(label);
-
-  if (expo.venueName) {
-    const name = document.createElement("div");
-    name.style.cssText =
-      "font-size: 14px; font-weight: 600; color: var(--ds-gray-1000); line-height: 1.3;";
-    name.textContent = expo.venueName;
-    popupNode.appendChild(name);
-  }
-
-  if (expo.address) {
-    const addr = document.createElement("div");
-    addr.style.cssText =
-      "font-size: 13px; color: var(--ds-gray-900); margin-top: 2px; line-height: 1.4;";
-    addr.textContent = expo.address;
-    popupNode.appendChild(addr);
-  }
+  const popupNode = document.createElement("span");
+  popupNode.style.cssText = [
+    "font-size: 13px",
+    "font-weight: 600",
+    "color: var(--ds-gray-1000)",
+  ].join("; ");
+  popupNode.textContent = "Expo";
 
   const popup = new mapboxgl.Popup({
     offset: 14,
