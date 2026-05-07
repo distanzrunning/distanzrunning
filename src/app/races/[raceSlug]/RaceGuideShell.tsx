@@ -42,6 +42,7 @@ import {
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { AdSlot } from "@/components/ui/AdSlot";
+import { LoadingDots } from "@/components/ui/LoadingDots";
 import { Switch } from "@/components/ui/Switch";
 import { formatDistance, formatElevation } from "@/lib/raceUtils";
 import { useUnits, type UnitSystem } from "@/contexts/UnitsContext";
@@ -357,17 +358,27 @@ function RaceMap({
   return (
     <>
       <div ref={containerRef} className="h-full w-full" />
-      {status.kind === "loading" && <StatusOverlay text="Loading route…" />}
+      {status.kind === "loading" && <MapLoadingOverlay />}
       {status.kind === "error" && <StatusOverlay text={status.message} />}
     </>
   );
 }
 
-// Fully opaque so the user never sees the map canvas behind it
-// during the load phase — globe tiles, blank canvas, and the
-// brief gap before the route line draws all stay hidden.
-// --ds-background-100 flips with theme so the cover reads right
-// in both modes.
+// Loading state: opaque cover with the shared LoadingDots
+// primitive — text + animated dots, matching the rest of the
+// app's loading affordances. Fully opaque so any blank tile or
+// pre-route-layer frame stays hidden behind it. Theme-stable
+// via --ds-background-100.
+function MapLoadingOverlay() {
+  return (
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[color:var(--ds-background-100)]">
+      <LoadingDots>Loading</LoadingDots>
+    </div>
+  );
+}
+
+// Error state: plain text on the same opaque surface. Distinct
+// from the loading state so the difference reads instantly.
 function StatusOverlay({ text }: { text: string }) {
   return (
     <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[color:var(--ds-background-100)] p-6 text-center text-copy-14 text-[color:var(--ds-gray-900)]">
