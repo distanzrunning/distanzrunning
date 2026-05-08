@@ -5,6 +5,8 @@
 export interface ElevationPoint {
   distance: number // in kilometers
   elevation: number // in meters
+  lng: number
+  lat: number
 }
 
 /**
@@ -86,7 +88,9 @@ export function createElevationProfile(
     if (cumulativeDistance >= nextSampleDistance || i === 0 || i === coordinates.length - 1) {
       elevationProfile.push({
         distance: cumulativeDistance,
-        elevation: elevations[i] || 0
+        elevation: elevations[i] || 0,
+        lng: coordinates[i][0],
+        lat: coordinates[i][1],
       })
       nextSampleDistance = cumulativeDistance + sampleInterval
     }

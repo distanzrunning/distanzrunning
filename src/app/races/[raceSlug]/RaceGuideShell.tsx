@@ -163,6 +163,11 @@ export default function RaceGuideShell({
   // sequenced with the map.
   const [mapReady, setMapReady] = useState(false);
   const panelRevealed = !routeGeoJsonUrl || mapReady;
+  // Bidirectional bridge between the elevation chart and the
+  // map: the chart reports the hovered distance (km along the
+  // route) and the map drops a blue marker at the matching
+  // coordinate. null = no hover.
+  const [hoverDistance, setHoverDistance] = useState<number | null>(null);
   return (
     // Single-cell grid: the sticky map and the editorial panel
     // both occupy row 1 / col 1. The cell auto-sizes to the
@@ -205,6 +210,8 @@ export default function RaceGuideShell({
             initialBounds={routeBounds}
             endpoints={routeEndpoints}
             expo={expo}
+            elevationSeries={elevationSeries}
+            hoverDistance={hoverDistance}
             onReady={() => setMapReady(true)}
           />
         ) : (
@@ -236,6 +243,7 @@ export default function RaceGuideShell({
           race={race}
           heroImageUrl={heroImageUrl}
           elevationSeries={elevationSeries}
+          onHoverDistance={setHoverDistance}
         />
       </div>
     </div>
@@ -256,12 +264,16 @@ function RaceMap({
   initialBounds,
   endpoints,
   expo,
+  elevationSeries,
+  hoverDistance,
   onReady,
 }: {
   geoJsonUrl: string;
   initialBounds: RouteBounds | null;
   endpoints: { start: RouteEndpoint; finish: RouteEndpoint } | null;
   expo: ExpoLocation | null;
+  elevationSeries: ElevationPoint[] | null;
+  hoverDistance: number | null;
   onReady?: () => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -269,6 +281,7 @@ function RaceMap({
   const geoJsonRef = useRef<GeoJSON.FeatureCollection | null>(null);
   const expoMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const endpointMarkersRef = useRef<mapboxgl.Marker[]>([]);
+  const hoverMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
 
@@ -357,6 +370,10 @@ function RaceMap({
         if (expo) {
           expoMarkerRef.current = addExpoMarker(map, expo);
         }
+        // Hover marker is created hidden; the hoverDistance
+        // effect below shows + repositions it as the user hovers
+        // the elevation chart.
+        hoverMarkerRef.current = createHoverMarker(map);
         // Only fit post-load when we didn't get server-side
         // bounds — the constructor already framed it otherwise.
         if (!initialBounds) {
@@ -395,6 +412,8 @@ function RaceMap({
       expoMarkerRef.current = null;
       endpointMarkersRef.current.forEach((m) => m.remove());
       endpointMarkersRef.current = [];
+      hoverMarkerRef.current?.remove();
+      hoverMarkerRef.current = null;
       map.remove();
       mapRef.current = null;
     };
@@ -417,6 +436,28 @@ function RaceMap({
     if (status.kind === "ready") onReady?.();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status.kind]);
+
+  // Mirror the elevation chart's hover onto the route line. We
+  // binary-search the elevation series for the sample closest
+  // to the hovered distance and read its lng/lat directly off
+  // that point (carried alongside distance + elevation since
+  // the gpxUtils refactor).
+  useEffect(() => {
+    const marker = hoverMarkerRef.current;
+    if (!marker) return;
+    const el = marker.getElement();
+    if (hoverDistance == null || !elevationSeries) {
+      el.style.display = "none";
+      return;
+    }
+    const point = findPointAtDistance(elevationSeries, hoverDistance);
+    if (!point) {
+      el.style.display = "none";
+      return;
+    }
+    marker.setLngLat([point.lng, point.lat]);
+    el.style.display = "block";
+  }, [hoverDistance, elevationSeries]);
 
   return (
     <>
@@ -697,6 +738,57 @@ function endpointsCoincide(a: RouteEndpoint, b: RouteEndpoint): boolean {
   );
 }
 
+// Hover marker — a small blue dot that mirrors the elevation
+// chart's hover position back onto the route line. Created
+// hidden; the hoverDistance effect in RaceMap shows it and
+// updates its lng/lat when the user hovers the chart. The
+// marker DOM uses var(--ds-blue-700) directly (CSS variables
+// resolve in inline styles, unlike Mapbox style-spec paint
+// values) so it picks up the DS blue token in either theme.
+const HOVER_DOT_SIZE = 14;
+
+function createHoverMarker(map: mapboxgl.Map): mapboxgl.Marker {
+  const dot = document.createElement("div");
+  dot.setAttribute("aria-hidden", "true");
+  dot.style.cssText = [
+    `width: ${HOVER_DOT_SIZE}px`,
+    `height: ${HOVER_DOT_SIZE}px`,
+    "border-radius: 50%",
+    "background: var(--ds-blue-700)",
+    "border: 2px solid #fff",
+    "box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4)",
+    "box-sizing: border-box",
+    "pointer-events: none",
+    "display: none",
+  ].join("; ");
+  return new mapboxgl.Marker(dot).setLngLat([0, 0]).addTo(map);
+}
+
+// Binary-search the elevation series (sorted ascending by
+// distance) for the sample closest to `target`. Picks whichever
+// of the two neighbours straddling the target is nearer.
+function findPointAtDistance(
+  series: ElevationPoint[],
+  target: number,
+): ElevationPoint | null {
+  if (series.length === 0) return null;
+  let lo = 0;
+  let hi = series.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (series[mid].distance < target) lo = mid + 1;
+    else hi = mid;
+  }
+  if (
+    lo > 0 &&
+    Math.abs(series[lo - 1].distance - target) <
+      Math.abs(series[lo].distance - target)
+  ) {
+    return series[lo - 1];
+  }
+  return series[lo];
+}
+
 // Factory for a Mapbox IControl that fits the map back to the
 // route bbox + the same padding the constructor used. Lives in
 // its own .mapboxgl-ctrl-group chip so it stacks under the
@@ -768,9 +860,15 @@ interface GuidePanelProps {
   race: RaceGuideMeta;
   heroImageUrl: string | null;
   elevationSeries: ElevationPoint[] | null;
+  onHoverDistance: (distance: number | null) => void;
 }
 
-function GuidePanel({ race, heroImageUrl, elevationSeries }: GuidePanelProps) {
+function GuidePanel({
+  race,
+  heroImageUrl,
+  elevationSeries,
+  onHoverDistance,
+}: GuidePanelProps) {
   // Single source of truth for whether the elevation block
   // appears: TOC entry and the card itself both gate on the
   // prefetched series being non-empty, so the TOC link can
@@ -799,7 +897,12 @@ function GuidePanel({ race, heroImageUrl, elevationSeries }: GuidePanelProps) {
       />
       <AdsCard />
       <StatsCard race={race} />
-      {hasElevation && <ElevationCard series={elevationSeries!} />}
+      {hasElevation && (
+        <ElevationCard
+          series={elevationSeries!}
+          onHoverDistance={onHoverDistance}
+        />
+      )}
       <CourseRecordsCard race={race} />
       <BodySections sections={bodySections} />
     </div>
@@ -1791,7 +1894,13 @@ function CourseRecordsCard({ race }: { race: RaceGuideMeta }) {
 
 const ELEVATION_GRADIENT_ID = "race-elevation-gradient";
 
-function ElevationCard({ series }: { series: ElevationPoint[] }) {
+function ElevationCard({
+  series,
+  onHoverDistance,
+}: {
+  series: ElevationPoint[];
+  onHoverDistance: (distance: number | null) => void;
+}) {
   const { units } = useUnits();
   const useMetric = units === "metric";
   // Resolve from --ds-pink-800 once on mount. Lazy initializer
@@ -1861,6 +1970,18 @@ function ElevationCard({ series }: { series: ElevationPoint[] }) {
           <AreaChart
             data={chart.points}
             margin={{ top: 8, right: 8, left: -8, bottom: 0 }}
+            onMouseMove={(state) => {
+              // Recharts' activeTooltipIndex maps 1:1 with our
+              // chart data array, which mirrors `series` indices
+              // — so we can read the original (km) distance
+              // straight from `series` and bypass the imperial
+              // conversion the chart applies for display.
+              const idx = state?.activeTooltipIndex;
+              if (typeof idx === "number" && series[idx]) {
+                onHoverDistance(series[idx].distance);
+              }
+            }}
+            onMouseLeave={() => onHoverDistance(null)}
           >
             <defs>
               <linearGradient
