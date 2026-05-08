@@ -848,26 +848,33 @@ function findPointAtDistance(
 }
 
 // Walks the elevation series and returns one Mapbox marker per
-// 5-unit interval (5, 10, 15… km or mi based on the active unit
-// system). Skips 0 and the route's max distance — those slots
-// are owned by the start/finish markers, and rendering a "0"
-// chip on top of the green Start dot would be visually muddy.
+// distance milestone. Metric uses 5 km steps; imperial uses 3 mi
+// steps because 3 mi (~4.83 km) tracks the metric interval more
+// closely than 5 mi (~8.05 km) — a marathon ends up with the
+// same ~8 markers in either unit system. Skips 0 and the
+// route's max distance: those slots belong to the start/finish
+// markers, and a "0" chip on top of the green Start dot would
+// be visually muddy.
+const DISTANCE_MARKER_INTERVAL_KM = 5;
+const DISTANCE_MARKER_INTERVAL_MI = 3;
+
 function buildDistanceMarkers(
   map: mapboxgl.Map,
   series: ElevationPoint[],
   useMetric: boolean,
 ): mapboxgl.Marker[] {
   if (series.length === 0) return [];
-  const interval = 5;
   const maxKm = series[series.length - 1].distance;
   const markers: mapboxgl.Marker[] = [];
 
   if (useMetric) {
+    const interval = DISTANCE_MARKER_INTERVAL_KM;
     for (let km = interval; km < maxKm; km += interval) {
       const point = findPointAtDistance(series, km);
       if (point) markers.push(addDistanceMarker(map, point, km));
     }
   } else {
+    const interval = DISTANCE_MARKER_INTERVAL_MI;
     const maxMi = maxKm / 1.609344;
     for (let mi = interval; mi < maxMi; mi += interval) {
       const km = mi * 1.609344;
