@@ -364,16 +364,17 @@ function RaceMap({
         const data = (await res.json()) as GeoJSON.FeatureCollection;
         geoJsonRef.current = data;
         addRouteLayer(map, data, getRouteLineColor());
-        if (endpoints) {
-          endpointMarkersRef.current = addEndpointMarkers(map, endpoints);
-        }
+        // Marker DOM stacks in the order added (last = on top).
+        // Hover first so it sits below the always-on POIs;
+        // endpoints last so the start / finish dots stay visible
+        // even when the hover marker passes over them.
+        hoverMarkerRef.current = createHoverMarker(map);
         if (expo) {
           expoMarkerRef.current = addExpoMarker(map, expo);
         }
-        // Hover marker is created hidden; the hoverDistance
-        // effect below shows + repositions it as the user hovers
-        // the elevation chart.
-        hoverMarkerRef.current = createHoverMarker(map);
+        if (endpoints) {
+          endpointMarkersRef.current = addEndpointMarkers(map, endpoints);
+        }
         // Only fit post-load when we didn't get server-side
         // bounds — the constructor already framed it otherwise.
         if (!initialBounds) {
