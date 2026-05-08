@@ -4101,3 +4101,29 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   color: var(--ds-gray-1000);
 }
 
+/* Race-detail Mapbox attribution. Required by Mapbox ToS, so
+   it stays on — but we tone it to fine-print: translucent DS
+   surface (theme-stable via the -rgb companion of
+   --ds-background-100), a tighter type, and link colours from
+   the gray scale so it reads as a credit, not a control.
+   Scoped to .race-detail-map so the calendar's Mapbox use is
+   untouched. */
+.race-detail-map .mapboxgl-ctrl-attrib {
+  background: rgba(var(--ds-background-100-rgb), 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 4px;
+  padding: 0 6px;
+  font-size: 10px;
+  color: var(--ds-gray-700);
+}
+.race-detail-map .mapboxgl-ctrl-attrib a {
+  color: var(--ds-gray-900);
+}
+.race-detail-map .mapboxgl-ctrl-attrib a:hover {
+  color: var(--ds-gray-1000);
+}
+.race-detail-map .mapboxgl-ctrl-attrib-button {
+  background-color: rgba(var(--ds-background-100-rgb), 0.7);
+}
+
