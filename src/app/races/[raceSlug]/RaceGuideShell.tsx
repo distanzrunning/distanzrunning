@@ -149,6 +149,14 @@ export default function RaceGuideShell({
   routeBounds,
   expo,
 }: RaceGuideShellProps) {
+  // Drive the panel's enter animation off the map's ready state.
+  // Races without a route asset have nothing to wait for — the
+  // panel reveals immediately. Races with a map keep the panel
+  // at opacity 0 until RaceMap reports it has drawn the route,
+  // then a transition fades + slides it in so the reveal feels
+  // sequenced with the map.
+  const [mapReady, setMapReady] = useState(false);
+  const panelRevealed = !routeGeoJsonUrl || mapReady;
   return (
     // Single-cell grid: the sticky map and the editorial panel
     // both occupy row 1 / col 1. The cell auto-sizes to the
@@ -190,6 +198,7 @@ export default function RaceGuideShell({
             geoJsonUrl={routeGeoJsonUrl}
             initialBounds={routeBounds}
             expo={expo}
+            onReady={() => setMapReady(true)}
           />
         ) : (
           <StatusOverlay text="Route map coming soon." />
@@ -213,6 +222,14 @@ export default function RaceGuideShell({
           pointerEvents: "none",
           position: "relative",
           zIndex: 1,
+          opacity: panelRevealed ? 1 : 0,
+          transform: panelRevealed ? "translateY(0)" : "translateY(12px)",
+          transition:
+            "opacity 600ms ease-out, transform 600ms ease-out",
+          // willChange hints the compositor so the transition
+          // runs on the GPU rather than triggering layout work
+          // on the long panel column.
+          willChange: "opacity, transform",
         }}
       >
         <GuidePanel
@@ -238,10 +255,12 @@ function RaceMap({
   geoJsonUrl,
   initialBounds,
   expo,
+  onReady,
 }: {
   geoJsonUrl: string;
   initialBounds: RouteBounds | null;
   expo: ExpoLocation | null;
+  onReady?: () => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -363,6 +382,16 @@ function RaceMap({
     if (!map) return;
     map.setStyle(styleForMode(isDark));
   }, [isDark]);
+
+  // Notify the shell once the route is drawn so the panel can
+  // animate in. Reactive to status.kind only — onReady is an
+  // inline arrow in the parent and changes identity on every
+  // render, but the only flip we care about is loading → ready,
+  // and that only happens once per map mount.
+  useEffect(() => {
+    if (status.kind === "ready") onReady?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status.kind]);
 
   return (
     <>
