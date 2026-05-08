@@ -431,13 +431,15 @@ function RaceMap({
     requestAnimationFrame(() => map.resize());
 
     return () => {
-      expoMarkerRef.current?.remove();
-      expoMarkerRef.current = null;
-      endpointMarkersRef.current.forEach((m) => m.remove());
+      if (expoMarkerRef.current) {
+        removeMarkerWithTooltip(expoMarkerRef.current);
+        expoMarkerRef.current = null;
+      }
+      endpointMarkersRef.current.forEach(removeMarkerWithTooltip);
       endpointMarkersRef.current = [];
       hoverMarkerRef.current?.remove();
       hoverMarkerRef.current = null;
-      distanceMarkersRef.current.forEach((m) => m.remove());
+      distanceMarkersRef.current.forEach(removeMarkerWithTooltip);
       distanceMarkersRef.current = [];
       milestoneButtonRef.current = null;
       map.remove();
@@ -495,7 +497,7 @@ function RaceMap({
     if (!map || status.kind !== "ready" || !elevationSeries) return;
 
     if (!showDistanceMarkers) {
-      distanceMarkersRef.current.forEach((m) => m.remove());
+      distanceMarkersRef.current.forEach(removeMarkerWithTooltip);
       distanceMarkersRef.current = [];
       return;
     }
@@ -507,7 +509,7 @@ function RaceMap({
     );
 
     return () => {
-      distanceMarkersRef.current.forEach((m) => m.remove());
+      distanceMarkersRef.current.forEach(removeMarkerWithTooltip);
       distanceMarkersRef.current = [];
     };
   }, [showDistanceMarkers, useMetric, elevationSeries, status.kind]);
@@ -708,9 +710,16 @@ function addExpoMarker(
   map: mapboxgl.Map,
   expo: ExpoLocation,
 ): mapboxgl.Marker {
-  return addPoiMarker(map, [expo.lng, expo.lat], "Expo", {
+  const marker = addPoiMarker(map, [expo.lng, expo.lat], "Expo", {
     dotSize: EXPO_DOT_SIZE,
   });
+  // Hover tooltip layered on top of the always-visible "Expo"
+  // chip — surfaces the venue name (richer than the chip's
+  // generic label) when there's one to show. Skip if neither
+  // venue nor address is set; the chip alone is enough.
+  const tooltipText = expo.venueName ?? expo.address;
+  if (tooltipText) attachTextTooltip(map, marker, tooltipText);
+  return marker;
 }
 
 // Endpoint markers — the start and finish dots ride on the
@@ -768,7 +777,9 @@ function addEndpointMarker(
     ].join("; ");
   }
 
-  return new mapboxgl.Marker(dot).setLngLat(lngLat).addTo(map);
+  const marker = new mapboxgl.Marker(dot).setLngLat(lngLat).addTo(map);
+  attachTextTooltip(map, marker, variant === "start" ? "Start" : "Finish");
+  return marker;
 }
 
 // For loop courses where start ≈ finish (within ~50 m), we drop
@@ -851,6 +862,54 @@ function findPointAtDistance(
   return series[lo];
 }
 
+// Wires a hover tooltip onto a marker — popup appears on
+// mouseenter, hides on mouseleave. Stashes the popup on the
+// marker as a custom property so the cleanup paths can dispose
+// of it alongside marker.remove() (the popup is otherwise its
+// own DOM node, separate from the marker, and would orphan on
+// re-mount paths like the distance-marker toggle).
+type MarkerWithTooltip = mapboxgl.Marker & {
+  _tooltipPopup?: mapboxgl.Popup;
+};
+
+function attachTextTooltip(
+  map: mapboxgl.Map,
+  marker: mapboxgl.Marker,
+  text: string,
+): void {
+  const span = document.createElement("span");
+  span.textContent = text;
+
+  const popup = new mapboxgl.Popup({
+    offset: 14,
+    closeButton: false,
+    closeOnClick: false,
+    className: "map-marker-tooltip",
+  })
+    .setDOMContent(span)
+    .setLngLat(marker.getLngLat());
+
+  const el = marker.getElement();
+  el.addEventListener("mouseenter", () => {
+    popup.addTo(map);
+    const popupEl = popup.getElement();
+    // pointer-events:none on the popup wrapper so the cursor can
+    // pass through it without stealing the marker's hover state
+    // and causing flicker as the cursor crosses the popup edge.
+    if (popupEl) popupEl.style.pointerEvents = "none";
+  });
+  el.addEventListener("mouseleave", () => {
+    popup.remove();
+  });
+
+  (marker as MarkerWithTooltip)._tooltipPopup = popup;
+}
+
+function removeMarkerWithTooltip(marker: mapboxgl.Marker): void {
+  (marker as MarkerWithTooltip)._tooltipPopup?.remove();
+  marker.remove();
+}
+
 // Walks the elevation series and returns one Mapbox marker per
 // distance milestone. Metric uses 5 km steps; imperial uses 3 mi
 // steps because 3 mi (~4.83 km) tracks the metric interval more
@@ -870,12 +929,13 @@ function buildDistanceMarkers(
   if (series.length === 0) return [];
   const maxKm = series[series.length - 1].distance;
   const markers: mapboxgl.Marker[] = [];
+  const unit = useMetric ? "km" : "mi";
 
   if (useMetric) {
     const interval = DISTANCE_MARKER_INTERVAL_KM;
     for (let km = interval; km < maxKm; km += interval) {
       const point = findPointAtDistance(series, km);
-      if (point) markers.push(addDistanceMarker(map, point, km));
+      if (point) markers.push(addDistanceMarker(map, point, km, unit));
     }
   } else {
     const interval = DISTANCE_MARKER_INTERVAL_MI;
@@ -883,7 +943,7 @@ function buildDistanceMarkers(
     for (let mi = interval; mi < maxMi; mi += interval) {
       const km = mi * 1.609344;
       const point = findPointAtDistance(series, km);
-      if (point) markers.push(addDistanceMarker(map, point, mi));
+      if (point) markers.push(addDistanceMarker(map, point, mi, unit));
     }
   }
 
@@ -894,15 +954,12 @@ function addDistanceMarker(
   map: mapboxgl.Map,
   point: ElevationPoint,
   label: number,
+  unit: "km" | "mi",
 ): mapboxgl.Marker {
   const dot = document.createElement("div");
-  dot.setAttribute("aria-hidden", "true");
-  // Theme-aware neutral pin: --ds-gray-1000 fill paired with
-  // --ds-background-100 text + border. Both tokens flip with
-  // theme — light mode renders a dark marker with a white
-  // digit + halo; dark mode renders a near-white marker with a
-  // dark digit + halo. Either way the digit always contrasts
-  // against the fill.
+  // pointer-events:auto so the dot receives hover events for
+  // its tooltip; default Mapbox marker DOM has pointer-events
+  // enabled so this is just being explicit.
   dot.style.cssText = [
     "width: 22px",
     "height: 22px",
@@ -917,10 +974,14 @@ function addDistanceMarker(
     "box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4)",
     "border: 2px solid var(--ds-background-100)",
     "box-sizing: border-box",
-    "pointer-events: none",
+    "cursor: default",
   ].join("; ");
   dot.textContent = String(label);
-  return new mapboxgl.Marker(dot).setLngLat([point.lng, point.lat]).addTo(map);
+  const marker = new mapboxgl.Marker(dot)
+    .setLngLat([point.lng, point.lat])
+    .addTo(map);
+  attachTextTooltip(map, marker, `${label} ${unit}`);
+  return marker;
 }
 
 // IControl factory for the milestone toggle. Stores the button
