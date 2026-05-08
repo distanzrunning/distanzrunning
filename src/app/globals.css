@@ -4101,6 +4101,22 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   color: var(--ds-gray-1000);
 }
 
+/* Race-detail recenter map control. Mapbox's default
+   .mapboxgl-ctrl-group button uses background-image SVGs and
+   doesn't pre-set color/stroke for inline children, so we set
+   explicit colour here. Inherits hover state from Mapbox's CSS
+   so the button highlights consistently with the zoom buttons
+   in both themes. */
+.mapboxgl-ctrl-recenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.5);
+}
+:is(.dark, [data-theme="dark"]) .mapboxgl-ctrl-recenter {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 /* Race detail guide panel — CRT-on reveal. The panel column
    sits in the grid cell starting near the top of the page; the
    slit is anchored at 50vh in element-coords so it lands

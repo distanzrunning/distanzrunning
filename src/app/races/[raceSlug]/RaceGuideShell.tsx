@@ -275,6 +275,17 @@ function RaceMap({
     }
     mapboxgl.accessToken = token;
 
+    // Padding used both for the constructor's initial fit and
+    // for the recenter button so a click always reproduces the
+    // first frame the user saw — the map never reframes
+    // differently on recenter than it did on first paint.
+    const fitBoundsPadding = {
+      top: ROUTE_BREATHING,
+      bottom: ROUTE_BREATHING,
+      left: PANEL_INSET + PANEL_WIDTH + ROUTE_BREATHING,
+      right: ROUTE_BREATHING,
+    };
+
     // Initialise framed on the route bbox (computed server-side
     // by fetchRouteAssets and passed in via initialBounds) so the
     // map never paints the [0, 0] / zoom 1 globe before fitting.
@@ -290,12 +301,7 @@ function RaceMap({
         ? {
             bounds: initialBounds,
             fitBoundsOptions: {
-              padding: {
-                top: ROUTE_BREATHING,
-                bottom: ROUTE_BREATHING,
-                left: PANEL_INSET + PANEL_WIDTH + ROUTE_BREATHING,
-                right: ROUTE_BREATHING,
-              },
+              padding: fitBoundsPadding,
               duration: 0,
             },
           }
@@ -308,6 +314,17 @@ function RaceMap({
       new mapboxgl.NavigationControl({ showCompass: false }),
       "bottom-right",
     );
+
+    // Recenter control sits in its own .mapboxgl-ctrl-group chip
+    // below the zoom buttons. Only meaningful when we have a
+    // route bbox to recenter to, so we skip it on the rare bound-
+    // less path.
+    if (initialBounds) {
+      map.addControl(
+        createRecenterControl(initialBounds, fitBoundsPadding),
+        "bottom-right",
+      );
+    }
 
     map.on("error", (e) => {
       const msg =
@@ -569,6 +586,65 @@ function addExpoMarker(
   })
     .setLngLat([expo.lng, expo.lat])
     .addTo(map);
+}
+
+// Factory for a Mapbox IControl that fits the map back to the
+// route bbox + the same padding the constructor used. Lives in
+// its own .mapboxgl-ctrl-group chip so it stacks under the
+// default NavigationControl, picking up Mapbox's standard
+// button styling (size, hover, focus). Inline crosshair SVG
+// uses currentColor so it matches Mapbox's icon contrast in
+// both themes.
+function createRecenterControl(
+  bounds: RouteBounds,
+  padding: mapboxgl.PaddingOptions,
+): mapboxgl.IControl {
+  let mapInstance: mapboxgl.Map | null = null;
+  let buttonEl: HTMLButtonElement | null = null;
+
+  const handleClick = () => {
+    mapInstance?.fitBounds(bounds, {
+      padding,
+      duration: 600,
+    });
+  };
+
+  return {
+    onAdd(map: mapboxgl.Map): HTMLElement {
+      mapInstance = map;
+      const container = document.createElement("div");
+      container.className = "mapboxgl-ctrl mapboxgl-ctrl-group";
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.title = "Recenter route";
+      button.setAttribute("aria-label", "Recenter route");
+      button.className = "mapboxgl-ctrl-recenter";
+      button.innerHTML = [
+        '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">',
+        '<circle cx="10" cy="10" r="6"/>',
+        '<circle cx="10" cy="10" r="1.5" fill="currentColor" stroke="none"/>',
+        '<line x1="10" y1="2" x2="10" y2="4"/>',
+        '<line x1="10" y1="16" x2="10" y2="18"/>',
+        '<line x1="2" y1="10" x2="4" y2="10"/>',
+        '<line x1="16" y1="10" x2="18" y2="10"/>',
+        "</svg>",
+      ].join("");
+      button.addEventListener("click", handleClick);
+      buttonEl = button;
+
+      container.appendChild(button);
+      return container;
+    },
+    onRemove(): void {
+      buttonEl?.removeEventListener("click", handleClick);
+      mapInstance = null;
+      buttonEl = null;
+    },
+    getDefaultPosition(): mapboxgl.ControlPosition {
+      return "bottom-right";
+    },
+  };
 }
 
 // ============================================================================
