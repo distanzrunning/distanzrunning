@@ -273,10 +273,7 @@ function RaceMap({
     const mapOptions: mapboxgl.MapOptions = {
       container: containerRef.current,
       style: styleForMode(isDark),
-      // Default attribution control is on — required by Mapbox
-      // ToS for hosted tiles. We restyle it via globals.css
-      // (see .race-detail-map .mapboxgl-ctrl-attrib) so it
-      // reads as fine print rather than chrome.
+      attributionControl: false,
       ...(initialBounds
         ? {
             bounds: initialBounds,
@@ -369,10 +366,7 @@ function RaceMap({
 
   return (
     <>
-      <div
-        ref={containerRef}
-        className="race-detail-map h-full w-full"
-      />
+      <div ref={containerRef} className="h-full w-full" />
       {status.kind === "loading" && <MapLoadingOverlay />}
       {status.kind === "error" && <StatusOverlay text={status.message} />}
     </>
