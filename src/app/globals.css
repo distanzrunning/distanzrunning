@@ -4113,10 +4113,13 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(0, 0, 0, 0.5);
+  /* Matches Mapbox's zoom-button icon weight — their default
+     SVGs are filled near-black, so a higher opacity here lines
+     up with theirs visually. */
+  color: rgba(0, 0, 0, 0.75);
 }
 .mapboxgl-ctrl-group button.mapboxgl-ctrl-recenter:hover {
-  color: rgba(0, 0, 0, 0.75);
+  color: rgba(0, 0, 0, 0.95);
 }
 
 /* Race detail guide panel — CRT-on reveal. The panel column

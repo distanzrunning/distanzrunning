@@ -621,7 +621,7 @@ function createRecenterControl(
       button.setAttribute("aria-label", "Recenter route");
       button.className = "mapboxgl-ctrl-recenter";
       button.innerHTML = [
-        '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">',
+        '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">',
         '<circle cx="10" cy="10" r="6"/>',
         '<circle cx="10" cy="10" r="1.5" fill="currentColor" stroke="none"/>',
         '<line x1="10" y1="2" x2="10" y2="4"/>',
