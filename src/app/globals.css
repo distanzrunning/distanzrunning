@@ -4101,37 +4101,3 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   color: var(--ds-gray-1000);
 }
 
-/* Race-detail expo popup. Mapbox's default popup paints a white
-   .mapboxgl-popup-content + a CSS-triangle .mapboxgl-popup-tip
-   tinted to match. We swap both to --ds-background-100 (theme-
-   stable surface token) and --ds-shadow-menu so the tooltip
-   reads correctly in dark mode without a parallel dark: rule.
-   The tip's colour is set per-anchor because Mapbox picks the
-   anchor at runtime based on viewport room, and each anchor
-   uses a different border side for its triangle. */
-.race-expo-popup .mapboxgl-popup-content {
-  background: var(--ds-background-100);
-  color: var(--ds-gray-1000);
-  box-shadow: var(--ds-shadow-menu);
-  border-radius: 6px;
-  padding: 6px 10px;
-}
-.race-expo-popup .mapboxgl-popup-tip {
-  border-color: transparent;
-}
-.race-expo-popup.mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
-.race-expo-popup.mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
-.race-expo-popup.mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
-  border-bottom-color: var(--ds-background-100);
-}
-.race-expo-popup.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
-.race-expo-popup.mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
-.race-expo-popup.mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip {
-  border-top-color: var(--ds-background-100);
-}
-.race-expo-popup.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
-  border-right-color: var(--ds-background-100);
-}
-.race-expo-popup.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
-  border-left-color: var(--ds-background-100);
-}

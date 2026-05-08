@@ -233,10 +233,7 @@ function RaceMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const geoJsonRef = useRef<GeoJSON.FeatureCollection | null>(null);
-  const expoMarkerRef = useRef<{
-    marker: mapboxgl.Marker;
-    popup: mapboxgl.Popup;
-  } | null>(null);
+  const expoMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
 
@@ -339,8 +336,7 @@ function RaceMap({
     requestAnimationFrame(() => map.resize());
 
     return () => {
-      expoMarkerRef.current?.popup.remove();
-      expoMarkerRef.current?.marker.remove();
+      expoMarkerRef.current?.remove();
       expoMarkerRef.current = null;
       map.remove();
       mapRef.current = null;
@@ -480,67 +476,65 @@ function fitToRoute(
   return true;
 }
 
-// Drops a brand-pink circle marker at the expo coordinate. The
-// pin picks up the same --ds-pink-800 the route line uses (via
-// getRouteLineColor) so the expo and the route read as a single
-// brand gesture, and the white border + drop shadow keep it
-// legible against light or dark map tiles. The popup is a
-// single "Expo" label — venue name + address are kept in the
-// schema for future surfacing but stay out of the marker UI.
-// mapboxgl.Marker is DOM-overlaid (not canvas-baked), so it
-// survives setStyle without re-adding.
+// Drops a brand-pink expo marker with an always-visible "Expo"
+// chip baked into the same DOM. Pin picks up --ds-pink-800 (via
+// getRouteLineColor) so the expo + route read as a single brand
+// gesture; the chip uses --ds-background-100 / --ds-gray-1000 +
+// --ds-shadow-small so it floats legibly over any map tile in
+// either theme. Anchor 'left' + offset puts the dot's centre on
+// the lng/lat with the chip extending to its right. No popup
+// primitive — the label is the marker, no hover state needed.
+const EXPO_DOT_SIZE = 18;
+
 function addExpoMarker(
   map: mapboxgl.Map,
   expo: ExpoLocation,
-): { marker: mapboxgl.Marker; popup: mapboxgl.Popup } {
+): mapboxgl.Marker {
+  const wrapper = document.createElement("div");
+  wrapper.style.cssText = [
+    "display: flex",
+    "align-items: center",
+    "gap: 8px",
+  ].join("; ");
+
   const dot = document.createElement("div");
   dot.style.cssText = [
-    "width: 18px",
-    "height: 18px",
+    `width: ${EXPO_DOT_SIZE}px`,
+    `height: ${EXPO_DOT_SIZE}px`,
     "border-radius: 50%",
+    "flex-shrink: 0",
     `background: ${getRouteLineColor()}`,
     "border: 2px solid var(--ds-background-100)",
     "box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35)",
-    "cursor: pointer",
   ].join("; ");
 
-  const popupNode = document.createElement("span");
-  popupNode.style.cssText = [
-    "font-size: 13px",
-    "font-weight: 600",
+  const chip = document.createElement("div");
+  chip.style.cssText = [
+    "padding: 3px 8px",
+    "border-radius: 4px",
+    "background: var(--ds-background-100)",
     "color: var(--ds-gray-1000)",
+    "font-size: 12px",
+    "font-weight: 600",
+    "line-height: 1",
+    "white-space: nowrap",
+    "box-shadow: var(--ds-shadow-small)",
   ].join("; ");
-  popupNode.textContent = "Expo";
+  chip.textContent = "Expo";
 
-  // Hover-driven popup: we deliberately don't call setPopup on
-  // the marker (which would bind it to a click toggle). Instead
-  // we add/remove the popup on the dot's mouseenter/mouseleave.
-  // pointer-events:none on the popup wrapper means the cursor
-  // can pass through it without stealing the hover or causing
-  // an enter/leave flicker when it crosses the popup's edge.
-  const popup = new mapboxgl.Popup({
-    offset: 14,
-    closeButton: false,
-    closeOnClick: false,
-    className: "race-expo-popup",
+  wrapper.appendChild(dot);
+  wrapper.appendChild(chip);
+
+  // anchor 'left' aligns the wrapper's left edge with the lng/
+  // lat; offset shifts the wrapper left by half the dot's width
+  // so the dot's *centre* lands on the geographic point and the
+  // chip extends to its right.
+  return new mapboxgl.Marker(wrapper, {
+    anchor: "left",
+    offset: [-EXPO_DOT_SIZE / 2, 0],
   })
-    .setDOMContent(popupNode)
-    .setLngLat([expo.lng, expo.lat]);
-
-  dot.addEventListener("mouseenter", () => {
-    popup.addTo(map);
-    const el = popup.getElement();
-    if (el) el.style.pointerEvents = "none";
-  });
-  dot.addEventListener("mouseleave", () => {
-    popup.remove();
-  });
-
-  const marker = new mapboxgl.Marker(dot)
     .setLngLat([expo.lng, expo.lat])
     .addTo(map);
-
-  return { marker, popup };
 }
 
 // ============================================================================
