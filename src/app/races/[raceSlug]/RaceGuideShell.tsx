@@ -621,8 +621,8 @@ function addExpoMarker(
 // screen readers.
 type EndpointVariant = "start" | "finish";
 
-const ENDPOINT_DOT_SIZE = 24;
-const ENDPOINT_BORDER_WIDTH = 2.5;
+const ENDPOINT_DOT_SIZE = 20;
+const ENDPOINT_BORDER_WIDTH = 2;
 
 function addEndpointMarker(
   map: mapboxgl.Map,
