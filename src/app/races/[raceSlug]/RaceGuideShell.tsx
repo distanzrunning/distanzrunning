@@ -174,6 +174,15 @@ export default function RaceGuideShell({
           // cover (which lives inside this sticky container) can
           // never paint over the panel cards' borders.
           zIndex: 0,
+          // Match PageFrame's 6 px radius on the top corners so
+          // the map tiles + loading overlay (clipped by the
+          // overflow-hidden above) don't paint past the frame's
+          // curve. Bottom corners stay flat: the map deliberately
+          // extends past PageFrame's bottom margin to fill the
+          // viewport (see MAP_VIEWPORT_HEIGHT), so a second curve
+          // there would sit below PageFrame's own bottom corner.
+          borderTopLeftRadius: 6,
+          borderTopRightRadius: 6,
         }}
       >
         {routeGeoJsonUrl ? (
