@@ -369,9 +369,17 @@ function RaceMap({
 // app's loading affordances. Fully opaque so any blank tile or
 // pre-route-layer frame stays hidden behind it. Theme-stable
 // via --ds-background-100.
+//
+// padding-left equals the panel's footprint (inset + width) so
+// flex `justify-center` centres the dots within the route's
+// visible area on the right of the panel — they land where the
+// route ends up framed, rather than under the panel itself.
 function MapLoadingOverlay() {
   return (
-    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[color:var(--ds-background-100)]">
+    <div
+      className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[color:var(--ds-background-100)]"
+      style={{ paddingLeft: PANEL_INSET + PANEL_WIDTH }}
+    >
       <LoadingDots>Loading</LoadingDots>
     </div>
   );
