@@ -893,16 +893,16 @@ function addDistanceMarker(
 ): mapboxgl.Marker {
   const dot = document.createElement("div");
   dot.setAttribute("aria-hidden", "true");
-  // Brand pink fill (same --ds-pink-800 as the route line, via
-  // getRouteLineColor) + 2 px white border + white text. Reads
-  // as a marker on the same line — visually subordinate to the
-  // endpoints (start/finish carry their own race-coded fills)
-  // but visibly part of the route's brand gesture.
+  // Dark fill (--ds-gray-1000, theme-flipping) + 2 px white
+  // border + white digit. Reads as a neutral milestone pin —
+  // popped off the pink route line for legibility, and
+  // visually subordinate to the endpoints which carry the
+  // race-coded fills (green / checker).
   dot.style.cssText = [
     "width: 22px",
     "height: 22px",
     "border-radius: 50%",
-    `background: ${getRouteLineColor()}`,
+    "background: var(--ds-gray-1000)",
     "color: #fff",
     "font-size: 11px",
     "font-weight: 600",
