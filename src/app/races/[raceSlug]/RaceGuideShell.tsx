@@ -544,22 +544,23 @@ function fitToRoute(
 
 // Shared map-marker primitive: a brand-pink dot with an
 // always-visible label chip baked into the same DOM. Used for
-// both the expo marker (off-route POI, larger dot) and the
-// route endpoint markers (Start / Finish, smaller dots on the
-// route line itself). Dot picks up --ds-pink-800 (via
+// both the expo marker (off-route POI, larger dot, neutral
+// chip) and the route endpoint markers (Start / Finish, smaller
+// dots, race-coded chips). Dot picks up --ds-pink-800 (via
 // getRouteLineColor) so markers + route line read as a single
-// brand gesture; chip uses --ds-background-100 / --ds-gray-1000
-// + --ds-shadow-small so it floats legibly over either theme.
-// anchor 'left' + offset of half the dot width puts the dot's
-// *centre* on the geographic point with the chip extending
-// rightward.
+// brand gesture. anchor 'left' + offset of half the dot width
+// puts the dot's *centre* on the geographic point with the chip
+// extending rightward.
+type ChipVariant = "default" | "start" | "finish";
+
 function addPoiMarker(
   map: mapboxgl.Map,
   lngLat: RouteEndpoint,
   label: string,
-  options: { dotSize?: number } = {},
+  options: { dotSize?: number; chipVariant?: ChipVariant } = {},
 ): mapboxgl.Marker {
   const dotSize = options.dotSize ?? 14;
+  const variant = options.chipVariant ?? "default";
 
   const wrapper = document.createElement("div");
   wrapper.style.cssText = [
@@ -580,17 +581,7 @@ function addPoiMarker(
   ].join("; ");
 
   const chip = document.createElement("div");
-  chip.style.cssText = [
-    "padding: 3px 8px",
-    "border-radius: 4px",
-    "background: var(--ds-background-100)",
-    "color: var(--ds-gray-1000)",
-    "font-size: 12px",
-    "font-weight: 600",
-    "line-height: 1",
-    "white-space: nowrap",
-    "box-shadow: var(--ds-shadow-small)",
-  ].join("; ");
+  chip.style.cssText = chipCss(variant);
   chip.textContent = label;
 
   wrapper.appendChild(dot);
@@ -602,6 +593,69 @@ function addPoiMarker(
   })
     .setLngLat(lngLat)
     .addTo(map);
+}
+
+// Chip CSS per variant. All variants share base typography +
+// shape; backgrounds + borders + text-shadow vary so each
+// communicates its role visually.
+//   - default  Off-route POI (expo). Surface tokens, dark text.
+//   - start    Solid green (--ds-green-700) with white text +
+//              white border so it reads as "go".
+//   - finish   Tiled black-and-white checker (classic finish
+//              flag) with white text shadowed for contrast.
+// Endpoint variants are bumped one step bigger than default so
+// they read at glanceable distance over the route.
+function chipCss(variant: ChipVariant): string {
+  if (variant === "start") {
+    return [
+      "padding: 5px 12px",
+      "border-radius: 4px",
+      "background: var(--ds-green-700)",
+      "color: #fff",
+      "border: 2px solid #fff",
+      "font-size: 13px",
+      "font-weight: 600",
+      "line-height: 1",
+      "white-space: nowrap",
+      "box-shadow: var(--ds-shadow-small)",
+    ].join("; ");
+  }
+  if (variant === "finish") {
+    // 6 px checker tiles via two 45° gradient layers — half the
+    // tile is black, half white. Layered offsets put the black
+    // and white squares in alternating positions.
+    return [
+      "padding: 5px 12px",
+      "border-radius: 4px",
+      "background-color: #fff",
+      "background-image: " +
+        "linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), " +
+        "linear-gradient(45deg, #000 25%, #fff 25%, #fff 75%, #000 75%, #000)",
+      "background-size: 12px 12px",
+      "background-position: 0 0, 6px 6px",
+      "color: #fff",
+      "border: 2px solid #fff",
+      "font-size: 13px",
+      "font-weight: 600",
+      "line-height: 1",
+      "white-space: nowrap",
+      "box-shadow: var(--ds-shadow-small)",
+      // Strong shadow so "Finish" stays legible over the
+      // alternating black + white squares behind it.
+      "text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85), 0 0 4px rgba(0, 0, 0, 0.6)",
+    ].join("; ");
+  }
+  return [
+    "padding: 3px 8px",
+    "border-radius: 4px",
+    "background: var(--ds-background-100)",
+    "color: var(--ds-gray-1000)",
+    "font-size: 12px",
+    "font-weight: 600",
+    "line-height: 1",
+    "white-space: nowrap",
+    "box-shadow: var(--ds-shadow-small)",
+  ].join("; ");
 }
 
 const EXPO_DOT_SIZE = 18;
@@ -618,10 +672,9 @@ function addExpoMarker(
 
 // Adds Start + Finish markers at the route's first and last
 // coordinates. For loop courses where start ≈ finish (within
-// ~50m), collapses to a single "Start / Finish" marker so the
-// two chips don't overlap into mush. Threshold is approximate;
-// generous enough that a city-block-sized chute around the
-// finish line still reads as a loop.
+// ~50m), collapses to a single "Start / Finish" marker (kept
+// in the start variant — runners care about the start) so the
+// two chips don't overlap into mush.
 function addEndpointMarkers(
   map: mapboxgl.Map,
   endpoints: { start: RouteEndpoint; finish: RouteEndpoint },
@@ -630,15 +683,18 @@ function addEndpointMarkers(
     return [
       addPoiMarker(map, endpoints.start, "Start / Finish", {
         dotSize: ENDPOINT_DOT_SIZE,
+        chipVariant: "start",
       }),
     ];
   }
   return [
     addPoiMarker(map, endpoints.start, "Start", {
       dotSize: ENDPOINT_DOT_SIZE,
+      chipVariant: "start",
     }),
     addPoiMarker(map, endpoints.finish, "Finish", {
       dotSize: ENDPOINT_DOT_SIZE,
+      chipVariant: "finish",
     }),
   ];
 }
