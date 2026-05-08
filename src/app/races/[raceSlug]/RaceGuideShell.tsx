@@ -1971,14 +1971,31 @@ function ElevationCard({
             data={chart.points}
             margin={{ top: 8, right: 8, left: -8, bottom: 0 }}
             onMouseMove={(state) => {
-              // Recharts' activeTooltipIndex maps 1:1 with our
-              // chart data array, which mirrors `series` indices
-              // — so we can read the original (km) distance
-              // straight from `series` and bypass the imperial
-              // conversion the chart applies for display.
-              const idx = state?.activeTooltipIndex;
+              // Pull the hovered point's distance via Recharts'
+              // activePayload (well-supported across versions)
+              // and convert back to km so the map lookup matches
+              // the source elevation series. Fall back through
+              // activeTooltipIndex / activeIndex purely as a
+              // belt-and-braces.
+              const stateAny = state as {
+                activePayload?: Array<{
+                  payload?: { distance?: number };
+                }>;
+                activeTooltipIndex?: number;
+                activeIndex?: number;
+              };
+              const idx =
+                stateAny.activeTooltipIndex ?? stateAny.activeIndex;
               if (typeof idx === "number" && series[idx]) {
                 onHoverDistance(series[idx].distance);
+                return;
+              }
+              const displayDistance =
+                stateAny.activePayload?.[0]?.payload?.distance;
+              if (typeof displayDistance === "number") {
+                onHoverDistance(
+                  useMetric ? displayDistance : displayDistance * 1.609344,
+                );
               }
             }}
             onMouseLeave={() => onHoverDistance(null)}
