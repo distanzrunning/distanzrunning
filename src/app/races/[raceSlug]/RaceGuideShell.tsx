@@ -897,24 +897,25 @@ function addDistanceMarker(
 ): mapboxgl.Marker {
   const dot = document.createElement("div");
   dot.setAttribute("aria-hidden", "true");
-  // Dark fill (--ds-gray-1000, theme-flipping) + 2 px white
-  // border + white digit. Reads as a neutral milestone pin —
-  // popped off the pink route line for legibility, and
-  // visually subordinate to the endpoints which carry the
-  // race-coded fills (green / checker).
+  // Theme-aware neutral pin: --ds-gray-1000 fill paired with
+  // --ds-background-100 text + border. Both tokens flip with
+  // theme — light mode renders a dark marker with a white
+  // digit + halo; dark mode renders a near-white marker with a
+  // dark digit + halo. Either way the digit always contrasts
+  // against the fill.
   dot.style.cssText = [
     "width: 22px",
     "height: 22px",
     "border-radius: 50%",
     "background: var(--ds-gray-1000)",
-    "color: #fff",
+    "color: var(--ds-background-100)",
     "font-size: 11px",
     "font-weight: 600",
     "display: flex",
     "align-items: center",
     "justify-content: center",
     "box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4)",
-    "border: 2px solid #fff",
+    "border: 2px solid var(--ds-background-100)",
     "box-sizing: border-box",
     "pointer-events: none",
   ].join("; ");
