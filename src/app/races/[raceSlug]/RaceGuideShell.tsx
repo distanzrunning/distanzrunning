@@ -1908,6 +1908,7 @@ function ElevationCard({
   // theme-stable so we don't need to re-resolve on dark/light
   // flips.
   const [lineColor] = useState(() => getRouteLineColor());
+  const chartContainerRef = useRef<HTMLDivElement>(null);
 
   // Chart data + tick domains, recomputed when units or the
   // series change. Source distances are kilometres and source
@@ -1965,40 +1966,42 @@ function ElevationCard({
       <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
         Elevation profile
       </h2>
-      <div style={{ height: 220 }}>
+      <div
+        ref={chartContainerRef}
+        style={{ height: 220 }}
+        onMouseMove={(e) => {
+          // Native handler instead of Recharts' onMouseMove
+          // because Recharts' state shape has shifted across
+          // versions (activeTooltipIndex / activeIndex /
+          // activePayload availability). Compute distance
+          // from cursor X relative to the chart's plot area
+          // — left padding ≈ YAxis width (44 px) + AreaChart
+          // margin.left (-8) = 36 px; right padding ≈
+          // margin.right (8 px). Imprecise by a pixel or two
+          // but the lookup snaps to the closest sample so
+          // small offsets don't matter.
+          const container = chartContainerRef.current;
+          if (!container || series.length === 0) return;
+          const rect = container.getBoundingClientRect();
+          const mouseX = e.clientX - rect.left;
+          const leftPad = 36;
+          const rightPad = 8;
+          const plotWidth = rect.width - leftPad - rightPad;
+          if (plotWidth <= 0) return;
+          const ratio = (mouseX - leftPad) / plotWidth;
+          if (ratio < 0 || ratio > 1) {
+            onHoverDistance(null);
+            return;
+          }
+          const maxKm = series[series.length - 1].distance;
+          onHoverDistance(ratio * maxKm);
+        }}
+        onMouseLeave={() => onHoverDistance(null)}
+      >
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={chart.points}
             margin={{ top: 8, right: 8, left: -8, bottom: 0 }}
-            onMouseMove={(state) => {
-              // Pull the hovered point's distance via Recharts'
-              // activePayload (well-supported across versions)
-              // and convert back to km so the map lookup matches
-              // the source elevation series. Fall back through
-              // activeTooltipIndex / activeIndex purely as a
-              // belt-and-braces.
-              const stateAny = state as {
-                activePayload?: Array<{
-                  payload?: { distance?: number };
-                }>;
-                activeTooltipIndex?: number;
-                activeIndex?: number;
-              };
-              const idx =
-                stateAny.activeTooltipIndex ?? stateAny.activeIndex;
-              if (typeof idx === "number" && series[idx]) {
-                onHoverDistance(series[idx].distance);
-                return;
-              }
-              const displayDistance =
-                stateAny.activePayload?.[0]?.payload?.distance;
-              if (typeof displayDistance === "number") {
-                onHoverDistance(
-                  useMetric ? displayDistance : displayDistance * 1.609344,
-                );
-              }
-            }}
-            onMouseLeave={() => onHoverDistance(null)}
           >
             <defs>
               <linearGradient
