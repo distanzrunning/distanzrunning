@@ -170,6 +170,10 @@ export default function RaceGuideShell({
           position: "sticky",
           top: MAP_STICKY_TOP,
           height: MAP_VIEWPORT_HEIGHT,
+          // Explicitly below the panel's zIndex: 1 so the loading
+          // cover (which lives inside this sticky container) can
+          // never paint over the panel cards' borders.
+          zIndex: 0,
         }}
       >
         {routeGeoJsonUrl ? (
@@ -363,8 +367,11 @@ function RaceMap({
 // Loading state: opaque cover with the shared LoadingDots
 // primitive — text + animated dots, matching the rest of the
 // app's loading affordances. Fully opaque so any blank tile or
-// pre-route-layer frame stays hidden behind it. Theme-stable
-// via --ds-background-100.
+// pre-route-layer frame stays hidden behind it. Surface uses
+// --ds-gray-100 (the Geist "component background" surface)
+// rather than --ds-background-100 so the panel cards above
+// still read with visible edges in both themes — the cards use
+// background-200 / background-100, which would blend.
 //
 // padding-left equals the panel's footprint (inset + width) so
 // flex `justify-center` centres the dots within the route's
@@ -373,7 +380,7 @@ function RaceMap({
 function MapLoadingOverlay() {
   return (
     <div
-      className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[color:var(--ds-background-100)]"
+      className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[color:var(--ds-gray-100)]"
       style={{ paddingLeft: PANEL_INSET + PANEL_WIDTH }}
     >
       <LoadingDots>Loading</LoadingDots>
@@ -385,7 +392,7 @@ function MapLoadingOverlay() {
 // from the loading state so the difference reads instantly.
 function StatusOverlay({ text }: { text: string }) {
   return (
-    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[color:var(--ds-background-100)] p-6 text-center text-copy-14 text-[color:var(--ds-gray-900)]">
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[color:var(--ds-gray-100)] p-6 text-center text-copy-14 text-[color:var(--ds-gray-900)]">
       {text}
     </div>
   );
