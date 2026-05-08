@@ -4105,21 +4105,66 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
    `.mapboxgl-ctrl-group button { display: block; padding: 0 }`
    at specificity 0,1,1, which outranks a single-class override
    — so we qualify the selector to set flex centring + icon
-   colour. The Mapbox control chip stays white in both themes
-   (Mapbox hardcodes background: #fff and ships no dark-mode
-   variant), which is why the colour stays dark for both modes:
-   matching how the default zoom buttons render. */
+   colour. Light-mode colour matches Mapbox's zoom-button icon
+   weight (their default SVGs are filled near-black). */
 .mapboxgl-ctrl-group button.mapboxgl-ctrl-recenter {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Matches Mapbox's zoom-button icon weight — their default
-     SVGs are filled near-black, so a higher opacity here lines
-     up with theirs visually. */
   color: rgba(0, 0, 0, 0.75);
 }
 .mapboxgl-ctrl-group button.mapboxgl-ctrl-recenter:hover {
   color: rgba(0, 0, 0, 0.95);
+}
+
+/* Race-detail map control chip — dark mode. Mapbox hardcodes
+   .mapboxgl-ctrl-group { background: #fff } with no dark-mode
+   variant, so we override scoped to .race-detail-map only:
+     - chip background flips to --ds-background-100 (theme
+       token; dark in dark mode) plus a light outer ring shadow
+     - separator hairline between buttons swaps to a DS gray
+     - hover overlay flips to a light tint
+     - .mapboxgl-ctrl-icon (zoom +/-) gets filter: invert(1) so
+       the embedded near-black SVGs paint light on the dark chip
+     - recenter icon (currentColor SVG, no .mapboxgl-ctrl-icon
+       wrapper) gets a light colour via its own selector
+   Selectors are qualified through the chip + map class for
+   specificity above Mapbox's single-class defaults. */
+:is(.dark, [data-theme="dark"]) .race-detail-map .mapboxgl-ctrl-group {
+  background: var(--ds-background-100);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
+}
+:is(.dark, [data-theme="dark"])
+  .race-detail-map
+  .mapboxgl-ctrl-group
+  button
+  + button {
+  border-top-color: var(--ds-gray-400);
+}
+:is(.dark, [data-theme="dark"])
+  .race-detail-map
+  .mapboxgl-ctrl-group
+  button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+:is(.dark, [data-theme="dark"])
+  .race-detail-map
+  .mapboxgl-ctrl-group
+  button
+  .mapboxgl-ctrl-icon {
+  filter: invert(1);
+}
+:is(.dark, [data-theme="dark"])
+  .race-detail-map
+  .mapboxgl-ctrl-group
+  button.mapboxgl-ctrl-recenter {
+  color: rgba(255, 255, 255, 0.75);
+}
+:is(.dark, [data-theme="dark"])
+  .race-detail-map
+  .mapboxgl-ctrl-group
+  button.mapboxgl-ctrl-recenter:hover {
+  color: rgba(255, 255, 255, 0.95);
 }
 
 /* Race detail guide panel — CRT-on reveal. The panel column
