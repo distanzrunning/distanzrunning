@@ -286,7 +286,10 @@ function RaceMap({
   const milestoneButtonRef = useRef<HTMLButtonElement | null>(null);
   const { units } = useUnits();
   const useMetric = units === "metric";
-  const [showDistanceMarkers, setShowDistanceMarkers] = useState(true);
+  // Default OFF so the map reads as a clean editorial canvas
+  // on first paint (Strava-style restraint — bold route line,
+  // no chrome). User opts in via the milestone toggle control.
+  const [showDistanceMarkers, setShowDistanceMarkers] = useState(false);
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
 
@@ -360,6 +363,7 @@ function RaceMap({
     if (elevationSeries) {
       map.addControl(
         createMilestoneToggleControl(
+          showDistanceMarkers,
           () => setShowDistanceMarkers((prev) => !prev),
           milestoneButtonRef,
         ),
@@ -922,8 +926,11 @@ function addDistanceMarker(
 // DOM in the supplied ref so the React tree can sync aria-pressed
 // (and the inactive-dim CSS rule) with the React state. Click
 // fires onToggle, which the parent uses to flip
-// setShowDistanceMarkers.
+// setShowDistanceMarkers. `initialPressed` paints the correct
+// state on first mount — the sync useEffect can't run before
+// the ref is populated by addControl.
 function createMilestoneToggleControl(
+  initialPressed: boolean,
   onToggle: () => void,
   buttonRef: React.MutableRefObject<HTMLButtonElement | null>,
 ): mapboxgl.IControl {
@@ -936,7 +943,7 @@ function createMilestoneToggleControl(
       button.type = "button";
       button.title = "Toggle distance markers";
       button.setAttribute("aria-label", "Toggle distance markers");
-      button.setAttribute("aria-pressed", "true");
+      button.setAttribute("aria-pressed", String(initialPressed));
       button.className = "mapboxgl-ctrl-milestones";
       button.innerHTML = [
         '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
