@@ -542,25 +542,19 @@ function fitToRoute(
   return true;
 }
 
-// Shared map-marker primitive: a brand-pink dot with an
-// always-visible label chip baked into the same DOM. Used for
-// both the expo marker (off-route POI, larger dot, neutral
-// chip) and the route endpoint markers (Start / Finish, smaller
-// dots, race-coded chips). Dot picks up --ds-pink-800 (via
-// getRouteLineColor) so markers + route line read as a single
-// brand gesture. anchor 'left' + offset of half the dot width
-// puts the dot's *centre* on the geographic point with the chip
-// extending rightward.
-type ChipVariant = "default" | "start" | "finish";
-
+// Off-route POI primitive: brand-pink dot + always-visible
+// label chip in the same DOM (used by the expo marker). Dot
+// picks up --ds-pink-800 (via getRouteLineColor) so the marker
+// + route line read as a single brand gesture. anchor 'left' +
+// offset of half the dot width puts the dot's *centre* on the
+// geographic point with the chip extending rightward.
 function addPoiMarker(
   map: mapboxgl.Map,
   lngLat: RouteEndpoint,
   label: string,
-  options: { dotSize?: number; chipVariant?: ChipVariant } = {},
+  options: { dotSize?: number } = {},
 ): mapboxgl.Marker {
   const dotSize = options.dotSize ?? 14;
-  const variant = options.chipVariant ?? "default";
 
   const wrapper = document.createElement("div");
   wrapper.style.cssText = [
@@ -581,7 +575,17 @@ function addPoiMarker(
   ].join("; ");
 
   const chip = document.createElement("div");
-  chip.style.cssText = chipCss(variant);
+  chip.style.cssText = [
+    "padding: 3px 8px",
+    "border-radius: 4px",
+    "background: var(--ds-background-100)",
+    "color: var(--ds-gray-1000)",
+    "font-size: 12px",
+    "font-weight: 600",
+    "line-height: 1",
+    "white-space: nowrap",
+    "box-shadow: var(--ds-shadow-small)",
+  ].join("; ");
   chip.textContent = label;
 
   wrapper.appendChild(dot);
@@ -595,71 +599,7 @@ function addPoiMarker(
     .addTo(map);
 }
 
-// Chip CSS per variant. All variants share base typography +
-// shape; backgrounds + borders + text-shadow vary so each
-// communicates its role visually.
-//   - default  Off-route POI (expo). Surface tokens, dark text.
-//   - start    Solid green (--ds-green-700) with white text +
-//              white border so it reads as "go".
-//   - finish   Tiled black-and-white checker (classic finish
-//              flag) with white text shadowed for contrast.
-// Endpoint variants are bumped one step bigger than default so
-// they read at glanceable distance over the route.
-function chipCss(variant: ChipVariant): string {
-  if (variant === "start") {
-    return [
-      "padding: 5px 12px",
-      "border-radius: 4px",
-      "background: var(--ds-green-700)",
-      "color: #fff",
-      "border: 2px solid #fff",
-      "font-size: 13px",
-      "font-weight: 600",
-      "line-height: 1",
-      "white-space: nowrap",
-      "box-shadow: var(--ds-shadow-small)",
-    ].join("; ");
-  }
-  if (variant === "finish") {
-    // 6 px checker tiles via two 45° gradient layers — half the
-    // tile is black, half white. Layered offsets put the black
-    // and white squares in alternating positions.
-    return [
-      "padding: 5px 12px",
-      "border-radius: 4px",
-      "background-color: #fff",
-      "background-image: " +
-        "linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), " +
-        "linear-gradient(45deg, #000 25%, #fff 25%, #fff 75%, #000 75%, #000)",
-      "background-size: 12px 12px",
-      "background-position: 0 0, 6px 6px",
-      "color: #fff",
-      "border: 2px solid #fff",
-      "font-size: 13px",
-      "font-weight: 600",
-      "line-height: 1",
-      "white-space: nowrap",
-      "box-shadow: var(--ds-shadow-small)",
-      // Strong shadow so "Finish" stays legible over the
-      // alternating black + white squares behind it.
-      "text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85), 0 0 4px rgba(0, 0, 0, 0.6)",
-    ].join("; ");
-  }
-  return [
-    "padding: 3px 8px",
-    "border-radius: 4px",
-    "background: var(--ds-background-100)",
-    "color: var(--ds-gray-1000)",
-    "font-size: 12px",
-    "font-weight: 600",
-    "line-height: 1",
-    "white-space: nowrap",
-    "box-shadow: var(--ds-shadow-small)",
-  ].join("; ");
-}
-
 const EXPO_DOT_SIZE = 18;
-const ENDPOINT_DOT_SIZE = 12;
 
 function addExpoMarker(
   map: mapboxgl.Map,
@@ -670,32 +610,78 @@ function addExpoMarker(
   });
 }
 
-// Adds Start + Finish markers at the route's first and last
-// coordinates. For loop courses where start ≈ finish (within
-// ~50m), collapses to a single "Start / Finish" marker (kept
-// in the start variant — runners care about the start) so the
-// two chips don't overlap into mush.
+// Endpoint markers — the start and finish dots ride on the
+// route line itself. Each is a 24 px circle with a 2.5 px white
+// border + drop shadow; the colour / pattern is the marker
+// (no side chip). Universally legible:
+//   - Start  Solid --ds-green-700 (reads as "go").
+//   - Finish Tiled 6 px black-and-white checker (classic
+//            finish-flag pattern).
+// aria-label on the DOM keeps the markers identifiable to
+// screen readers.
+type EndpointVariant = "start" | "finish";
+
+const ENDPOINT_DOT_SIZE = 24;
+const ENDPOINT_BORDER_WIDTH = 2.5;
+
+function addEndpointMarker(
+  map: mapboxgl.Map,
+  lngLat: RouteEndpoint,
+  variant: EndpointVariant,
+): mapboxgl.Marker {
+  const dot = document.createElement("div");
+  dot.setAttribute("role", "img");
+  dot.setAttribute(
+    "aria-label",
+    variant === "start" ? "Race start" : "Race finish",
+  );
+
+  const baseStyles = [
+    `width: ${ENDPOINT_DOT_SIZE}px`,
+    `height: ${ENDPOINT_DOT_SIZE}px`,
+    "border-radius: 50%",
+    `border: ${ENDPOINT_BORDER_WIDTH}px solid #fff`,
+    "box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4)",
+    "box-sizing: border-box",
+  ];
+
+  if (variant === "start") {
+    dot.style.cssText = [
+      ...baseStyles,
+      "background: var(--ds-green-700)",
+    ].join("; ");
+  } else {
+    // 6 px checker tiles via two 45° gradient layers. Tile size
+    // matches the marker scale so the pattern reads cleanly at
+    // a 24 px dot.
+    dot.style.cssText = [
+      ...baseStyles,
+      "background-color: #fff",
+      "background-image: " +
+        "linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), " +
+        "linear-gradient(45deg, #000 25%, #fff 25%, #fff 75%, #000 75%, #000)",
+      "background-size: 6px 6px",
+      "background-position: 0 0, 3px 3px",
+    ].join("; ");
+  }
+
+  return new mapboxgl.Marker(dot).setLngLat(lngLat).addTo(map);
+}
+
+// For loop courses where start ≈ finish (within ~50 m), we drop
+// the finish marker — pre-race the user cares about "where do I
+// start", and a single green dot at the loop point is cleaner
+// than two stacked markers covering each other.
 function addEndpointMarkers(
   map: mapboxgl.Map,
   endpoints: { start: RouteEndpoint; finish: RouteEndpoint },
 ): mapboxgl.Marker[] {
   if (endpointsCoincide(endpoints.start, endpoints.finish)) {
-    return [
-      addPoiMarker(map, endpoints.start, "Start / Finish", {
-        dotSize: ENDPOINT_DOT_SIZE,
-        chipVariant: "start",
-      }),
-    ];
+    return [addEndpointMarker(map, endpoints.start, "start")];
   }
   return [
-    addPoiMarker(map, endpoints.start, "Start", {
-      dotSize: ENDPOINT_DOT_SIZE,
-      chipVariant: "start",
-    }),
-    addPoiMarker(map, endpoints.finish, "Finish", {
-      dotSize: ENDPOINT_DOT_SIZE,
-      chipVariant: "finish",
-    }),
+    addEndpointMarker(map, endpoints.start, "start"),
+    addEndpointMarker(map, endpoints.finish, "finish"),
   ];
 }
 
