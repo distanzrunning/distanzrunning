@@ -15,7 +15,11 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 import { sanityFetch } from "@/sanity/lib/live";
 import { urlFor } from "@/sanity/lib/image";
-import { fetchRouteAssets, type RouteBounds } from "@/lib/gpxUtils";
+import {
+  fetchRouteAssets,
+  type RouteBounds,
+  type RouteEndpoint,
+} from "@/lib/gpxUtils";
 import { geocodeAddress } from "@/lib/geocode";
 import RaceGuideShell, {
   type RaceGuideMeta,
@@ -134,6 +138,11 @@ export default async function RaceGuidePage({
   // when the expo is on the far side of town.
   const initialBounds = expandBoundsForExpo(routeAssets?.bounds, expo);
 
+  const routeEndpoints: { start: RouteEndpoint; finish: RouteEndpoint } | null =
+    routeAssets
+      ? { start: routeAssets.start, finish: routeAssets.finish }
+      : null;
+
   return (
     <RaceGuideShell
       race={race}
@@ -141,6 +150,7 @@ export default async function RaceGuidePage({
       heroImageUrl={heroImageUrl}
       elevationSeries={routeAssets?.elevation ?? null}
       routeBounds={initialBounds}
+      routeEndpoints={routeEndpoints}
       expo={expo}
     />
   );

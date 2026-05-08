@@ -154,9 +154,14 @@ export function parseGeoJSONWithElevation(geoJsonText: string): {
  */
 export type RouteBounds = [[number, number], [number, number]];
 
+/** [lng, lat] coordinate. Matches Mapbox's LngLatLike tuple. */
+export type RouteEndpoint = [number, number];
+
 export interface RouteAssets {
   elevation: ElevationPoint[];
   bounds: RouteBounds;
+  start: RouteEndpoint;
+  finish: RouteEndpoint;
 }
 
 /**
@@ -190,7 +195,9 @@ export async function fetchRouteAssets(
     if (profile.length === 0) return null;
     const bounds = computeBounds(coordinates);
     if (!bounds) return null;
-    return { elevation: profile, bounds };
+    const start = coordinates[0];
+    const finish = coordinates[coordinates.length - 1];
+    return { elevation: profile, bounds, start, finish };
   } catch {
     return null;
   }

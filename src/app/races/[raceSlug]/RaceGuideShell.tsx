@@ -46,7 +46,11 @@ import { LoadingDots } from "@/components/ui/LoadingDots";
 import { Switch } from "@/components/ui/Switch";
 import { formatDistance, formatElevation } from "@/lib/raceUtils";
 import { useUnits, type UnitSystem } from "@/contexts/UnitsContext";
-import type { ElevationPoint, RouteBounds } from "@/lib/gpxUtils";
+import type {
+  ElevationPoint,
+  RouteBounds,
+  RouteEndpoint,
+} from "@/lib/gpxUtils";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
@@ -105,6 +109,7 @@ interface RaceGuideShellProps {
   heroImageUrl: string | null;
   elevationSeries: ElevationPoint[] | null;
   routeBounds: RouteBounds | null;
+  routeEndpoints: { start: RouteEndpoint; finish: RouteEndpoint } | null;
   expo: ExpoLocation | null;
 }
 
@@ -147,6 +152,7 @@ export default function RaceGuideShell({
   heroImageUrl,
   elevationSeries,
   routeBounds,
+  routeEndpoints,
   expo,
 }: RaceGuideShellProps) {
   // Drive the panel's enter animation off the map's ready state.
@@ -197,6 +203,7 @@ export default function RaceGuideShell({
           <RaceMap
             geoJsonUrl={routeGeoJsonUrl}
             initialBounds={routeBounds}
+            endpoints={routeEndpoints}
             expo={expo}
             onReady={() => setMapReady(true)}
           />
@@ -247,11 +254,13 @@ type MapStatus =
 function RaceMap({
   geoJsonUrl,
   initialBounds,
+  endpoints,
   expo,
   onReady,
 }: {
   geoJsonUrl: string;
   initialBounds: RouteBounds | null;
+  endpoints: { start: RouteEndpoint; finish: RouteEndpoint } | null;
   expo: ExpoLocation | null;
   onReady?: () => void;
 }) {
@@ -259,6 +268,7 @@ function RaceMap({
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const geoJsonRef = useRef<GeoJSON.FeatureCollection | null>(null);
   const expoMarkerRef = useRef<mapboxgl.Marker | null>(null);
+  const endpointMarkersRef = useRef<mapboxgl.Marker[]>([]);
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
 
@@ -341,6 +351,9 @@ function RaceMap({
         const data = (await res.json()) as GeoJSON.FeatureCollection;
         geoJsonRef.current = data;
         addRouteLayer(map, data, getRouteLineColor());
+        if (endpoints) {
+          endpointMarkersRef.current = addEndpointMarkers(map, endpoints);
+        }
         if (expo) {
           expoMarkerRef.current = addExpoMarker(map, expo);
         }
@@ -380,11 +393,13 @@ function RaceMap({
     return () => {
       expoMarkerRef.current?.remove();
       expoMarkerRef.current = null;
+      endpointMarkersRef.current.forEach((m) => m.remove());
+      endpointMarkersRef.current = [];
       map.remove();
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geoJsonUrl, expo, initialBounds]);
+  }, [geoJsonUrl, expo, initialBounds, endpoints]);
 
   // Swap style when dark mode flips. Doesn't recreate the map.
   useEffect(() => {
@@ -527,20 +542,25 @@ function fitToRoute(
   return true;
 }
 
-// Drops a brand-pink expo marker with an always-visible "Expo"
-// chip baked into the same DOM. Pin picks up --ds-pink-800 (via
-// getRouteLineColor) so the expo + route read as a single brand
-// gesture; the chip uses --ds-background-100 / --ds-gray-1000 +
-// --ds-shadow-small so it floats legibly over any map tile in
-// either theme. Anchor 'left' + offset puts the dot's centre on
-// the lng/lat with the chip extending to its right. No popup
-// primitive — the label is the marker, no hover state needed.
-const EXPO_DOT_SIZE = 18;
-
-function addExpoMarker(
+// Shared map-marker primitive: a brand-pink dot with an
+// always-visible label chip baked into the same DOM. Used for
+// both the expo marker (off-route POI, larger dot) and the
+// route endpoint markers (Start / Finish, smaller dots on the
+// route line itself). Dot picks up --ds-pink-800 (via
+// getRouteLineColor) so markers + route line read as a single
+// brand gesture; chip uses --ds-background-100 / --ds-gray-1000
+// + --ds-shadow-small so it floats legibly over either theme.
+// anchor 'left' + offset of half the dot width puts the dot's
+// *centre* on the geographic point with the chip extending
+// rightward.
+function addPoiMarker(
   map: mapboxgl.Map,
-  expo: ExpoLocation,
+  lngLat: RouteEndpoint,
+  label: string,
+  options: { dotSize?: number } = {},
 ): mapboxgl.Marker {
+  const dotSize = options.dotSize ?? 14;
+
   const wrapper = document.createElement("div");
   wrapper.style.cssText = [
     "display: flex",
@@ -550,8 +570,8 @@ function addExpoMarker(
 
   const dot = document.createElement("div");
   dot.style.cssText = [
-    `width: ${EXPO_DOT_SIZE}px`,
-    `height: ${EXPO_DOT_SIZE}px`,
+    `width: ${dotSize}px`,
+    `height: ${dotSize}px`,
     "border-radius: 50%",
     "flex-shrink: 0",
     `background: ${getRouteLineColor()}`,
@@ -571,21 +591,68 @@ function addExpoMarker(
     "white-space: nowrap",
     "box-shadow: var(--ds-shadow-small)",
   ].join("; ");
-  chip.textContent = "Expo";
+  chip.textContent = label;
 
   wrapper.appendChild(dot);
   wrapper.appendChild(chip);
 
-  // anchor 'left' aligns the wrapper's left edge with the lng/
-  // lat; offset shifts the wrapper left by half the dot's width
-  // so the dot's *centre* lands on the geographic point and the
-  // chip extends to its right.
   return new mapboxgl.Marker(wrapper, {
     anchor: "left",
-    offset: [-EXPO_DOT_SIZE / 2, 0],
+    offset: [-dotSize / 2, 0],
   })
-    .setLngLat([expo.lng, expo.lat])
+    .setLngLat(lngLat)
     .addTo(map);
+}
+
+const EXPO_DOT_SIZE = 18;
+const ENDPOINT_DOT_SIZE = 12;
+
+function addExpoMarker(
+  map: mapboxgl.Map,
+  expo: ExpoLocation,
+): mapboxgl.Marker {
+  return addPoiMarker(map, [expo.lng, expo.lat], "Expo", {
+    dotSize: EXPO_DOT_SIZE,
+  });
+}
+
+// Adds Start + Finish markers at the route's first and last
+// coordinates. For loop courses where start ≈ finish (within
+// ~50m), collapses to a single "Start / Finish" marker so the
+// two chips don't overlap into mush. Threshold is approximate;
+// generous enough that a city-block-sized chute around the
+// finish line still reads as a loop.
+function addEndpointMarkers(
+  map: mapboxgl.Map,
+  endpoints: { start: RouteEndpoint; finish: RouteEndpoint },
+): mapboxgl.Marker[] {
+  if (endpointsCoincide(endpoints.start, endpoints.finish)) {
+    return [
+      addPoiMarker(map, endpoints.start, "Start / Finish", {
+        dotSize: ENDPOINT_DOT_SIZE,
+      }),
+    ];
+  }
+  return [
+    addPoiMarker(map, endpoints.start, "Start", {
+      dotSize: ENDPOINT_DOT_SIZE,
+    }),
+    addPoiMarker(map, endpoints.finish, "Finish", {
+      dotSize: ENDPOINT_DOT_SIZE,
+    }),
+  ];
+}
+
+// ~50 m at most latitudes (0.0005 degrees ≈ 55 m). Loose
+// threshold so any plausible loop chute reads as a single
+// start/finish point.
+const ENDPOINT_COINCIDENCE_DEG = 0.0005;
+
+function endpointsCoincide(a: RouteEndpoint, b: RouteEndpoint): boolean {
+  return (
+    Math.abs(a[0] - b[0]) < ENDPOINT_COINCIDENCE_DEG &&
+    Math.abs(a[1] - b[1]) < ENDPOINT_COINCIDENCE_DEG
+  );
 }
 
 // Factory for a Mapbox IControl that fits the map back to the
