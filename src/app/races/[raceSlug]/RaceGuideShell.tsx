@@ -411,16 +411,12 @@ function RaceMap({
 // still read with visible edges in both themes — the cards use
 // background-200 / background-100, which would blend.
 //
-// padding-left equals the panel's footprint (inset + width) so
-// flex `justify-center` centres the dots within the route's
-// visible area on the right of the panel — they land where the
-// route ends up framed, rather than under the panel itself.
+// Dots sit dead-centre because the panel doesn't reveal until
+// the map is ready, so there's no left-side panel to compensate
+// for during the load phase.
 function MapLoadingOverlay() {
   return (
-    <div
-      className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[color:var(--ds-gray-100)]"
-      style={{ paddingLeft: PANEL_INSET + PANEL_WIDTH }}
-    >
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[color:var(--ds-gray-100)]">
       <LoadingDots>Loading</LoadingDots>
     </div>
   );
