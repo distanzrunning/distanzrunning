@@ -4101,3 +4101,44 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   color: var(--ds-gray-1000);
 }
 
+/* Race detail guide panel — CRT-on reveal. The panel column
+   sits in the grid cell starting near the top of the page; the
+   slit is anchored at 50vh in element-coords so it lands
+   roughly at the user's viewport centre at scroll = 0 (a few
+   pixels off due to header / frame offsets, not noticeable).
+   Stages:
+     0-10%   slit at 50vh, opacity 0 → 1 (the "flash on")
+     10-55%  slit expands symmetrically to fill the viewport
+     55-100% below-fold portion of the (tall) panel uncovers
+             off-screen — invisible to the user but lifts the
+             clip so subsequent scroll shows full content
+   .is-revealed is added by the shell once mapReady flips. The
+   base rule keeps the panel hidden during SSR + hydration so
+   there's no flash before the animation runs. */
+.guide-panel-crt {
+  clip-path: inset(50vh 0 calc(100% - 50vh - 1px) 0);
+  opacity: 0;
+  will-change: clip-path, opacity;
+}
+.guide-panel-crt.is-revealed {
+  animation: guide-panel-crt-on 750ms ease-out forwards;
+}
+@keyframes guide-panel-crt-on {
+  0% {
+    clip-path: inset(50vh 0 calc(100% - 50vh - 1px) 0);
+    opacity: 0;
+  }
+  10% {
+    clip-path: inset(50vh 0 calc(100% - 50vh - 1px) 0);
+    opacity: 1;
+  }
+  55% {
+    clip-path: inset(0 0 calc(100% - 100vh) 0);
+    opacity: 1;
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+

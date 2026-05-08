@@ -215,6 +215,7 @@ export default function RaceGuideShell({
           the empty area; the aside re-enables pointer events so
           its own content stays interactive. */}
       <div
+        className={`guide-panel-crt${panelRevealed ? " is-revealed" : ""}`}
         style={{
           gridColumn: 1,
           gridRow: 1,
@@ -222,14 +223,6 @@ export default function RaceGuideShell({
           pointerEvents: "none",
           position: "relative",
           zIndex: 1,
-          opacity: panelRevealed ? 1 : 0,
-          transform: panelRevealed ? "translateY(0)" : "translateY(12px)",
-          transition:
-            "opacity 600ms ease-out, transform 600ms ease-out",
-          // willChange hints the compositor so the transition
-          // runs on the GPU rather than triggering layout work
-          // on the long panel column.
-          willChange: "opacity, transform",
         }}
       >
         <GuidePanel
