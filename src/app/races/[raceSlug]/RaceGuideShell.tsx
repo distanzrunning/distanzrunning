@@ -282,6 +282,11 @@ function RaceMap({
   const expoMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const endpointMarkersRef = useRef<mapboxgl.Marker[]>([]);
   const hoverMarkerRef = useRef<mapboxgl.Marker | null>(null);
+  const distanceMarkersRef = useRef<mapboxgl.Marker[]>([]);
+  const milestoneButtonRef = useRef<HTMLButtonElement | null>(null);
+  const { units } = useUnits();
+  const useMetric = units === "metric";
+  const [showDistanceMarkers, setShowDistanceMarkers] = useState(true);
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
 
@@ -345,6 +350,19 @@ function RaceMap({
     if (initialBounds) {
       map.addControl(
         createRecenterControl(initialBounds, fitBoundsPadding),
+        "bottom-right",
+      );
+    }
+
+    // Milestone toggle — adds / removes the every-5-units route
+    // markers. Only relevant when there's an elevation series to
+    // walk for marker positions.
+    if (elevationSeries) {
+      map.addControl(
+        createMilestoneToggleControl(
+          () => setShowDistanceMarkers((prev) => !prev),
+          milestoneButtonRef,
+        ),
         "bottom-right",
       );
     }
@@ -415,11 +433,14 @@ function RaceMap({
       endpointMarkersRef.current = [];
       hoverMarkerRef.current?.remove();
       hoverMarkerRef.current = null;
+      distanceMarkersRef.current.forEach((m) => m.remove());
+      distanceMarkersRef.current = [];
+      milestoneButtonRef.current = null;
       map.remove();
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geoJsonUrl, expo, initialBounds, endpoints]);
+  }, [geoJsonUrl, expo, initialBounds, endpoints, elevationSeries]);
 
   // Swap style when dark mode flips. Doesn't recreate the map.
   useEffect(() => {
@@ -459,6 +480,42 @@ function RaceMap({
     marker.setLngLat([point.lng, point.lat]);
     el.style.display = "block";
   }, [hoverDistance, elevationSeries]);
+
+  // Build / tear down the every-5-units route markers. Re-runs
+  // whenever the toggle flips or the unit system changes (each
+  // mile / km set has different positions on the route). Bails
+  // until the map is ready so we don't try to add markers before
+  // the route + style are painted.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || status.kind !== "ready" || !elevationSeries) return;
+
+    if (!showDistanceMarkers) {
+      distanceMarkersRef.current.forEach((m) => m.remove());
+      distanceMarkersRef.current = [];
+      return;
+    }
+
+    distanceMarkersRef.current = buildDistanceMarkers(
+      map,
+      elevationSeries,
+      useMetric,
+    );
+
+    return () => {
+      distanceMarkersRef.current.forEach((m) => m.remove());
+      distanceMarkersRef.current = [];
+    };
+  }, [showDistanceMarkers, useMetric, elevationSeries, status.kind]);
+
+  // Reflect the toggle's pressed state on the control's button
+  // (the button DOM is owned by Mapbox's IControl, not React's
+  // tree, so we sync via the ref the control populates on mount).
+  useEffect(() => {
+    const button = milestoneButtonRef.current;
+    if (!button) return;
+    button.setAttribute("aria-pressed", String(showDistanceMarkers));
+  }, [showDistanceMarkers]);
 
   return (
     <>
@@ -788,6 +845,107 @@ function findPointAtDistance(
     return series[lo - 1];
   }
   return series[lo];
+}
+
+// Walks the elevation series and returns one Mapbox marker per
+// 5-unit interval (5, 10, 15… km or mi based on the active unit
+// system). Skips 0 and the route's max distance — those slots
+// are owned by the start/finish markers, and rendering a "0"
+// chip on top of the green Start dot would be visually muddy.
+function buildDistanceMarkers(
+  map: mapboxgl.Map,
+  series: ElevationPoint[],
+  useMetric: boolean,
+): mapboxgl.Marker[] {
+  if (series.length === 0) return [];
+  const interval = 5;
+  const maxKm = series[series.length - 1].distance;
+  const markers: mapboxgl.Marker[] = [];
+
+  if (useMetric) {
+    for (let km = interval; km < maxKm; km += interval) {
+      const point = findPointAtDistance(series, km);
+      if (point) markers.push(addDistanceMarker(map, point, km));
+    }
+  } else {
+    const maxMi = maxKm / 1.609344;
+    for (let mi = interval; mi < maxMi; mi += interval) {
+      const km = mi * 1.609344;
+      const point = findPointAtDistance(series, km);
+      if (point) markers.push(addDistanceMarker(map, point, mi));
+    }
+  }
+
+  return markers;
+}
+
+function addDistanceMarker(
+  map: mapboxgl.Map,
+  point: ElevationPoint,
+  label: number,
+): mapboxgl.Marker {
+  const dot = document.createElement("div");
+  dot.setAttribute("aria-hidden", "true");
+  dot.style.cssText = [
+    "width: 22px",
+    "height: 22px",
+    "border-radius: 50%",
+    "background: #fff",
+    "color: #000",
+    "font-size: 11px",
+    "font-weight: 600",
+    "display: flex",
+    "align-items: center",
+    "justify-content: center",
+    "box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4)",
+    "border: 1.5px solid rgba(0, 0, 0, 0.15)",
+    "box-sizing: border-box",
+    "pointer-events: none",
+  ].join("; ");
+  dot.textContent = String(label);
+  return new mapboxgl.Marker(dot).setLngLat([point.lng, point.lat]).addTo(map);
+}
+
+// IControl factory for the milestone toggle. Stores the button
+// DOM in the supplied ref so the React tree can sync aria-pressed
+// (and the inactive-dim CSS rule) with the React state. Click
+// fires onToggle, which the parent uses to flip
+// setShowDistanceMarkers.
+function createMilestoneToggleControl(
+  onToggle: () => void,
+  buttonRef: React.MutableRefObject<HTMLButtonElement | null>,
+): mapboxgl.IControl {
+  return {
+    onAdd(): HTMLElement {
+      const container = document.createElement("div");
+      container.className = "mapboxgl-ctrl mapboxgl-ctrl-group";
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.title = "Toggle distance markers";
+      button.setAttribute("aria-label", "Toggle distance markers");
+      button.setAttribute("aria-pressed", "true");
+      button.className = "mapboxgl-ctrl-milestones";
+      button.innerHTML = [
+        '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+        '<path d="M12 13v8"/>',
+        '<path d="M12 3v3"/>',
+        '<path d="M4 6a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h13.181a2 2 0 0 0 1.414-.586l1.829-1.828a1 1 0 0 0 0-1.414l-1.829-1.828A2 2 0 0 0 17.181 6H4z"/>',
+        "</svg>",
+      ].join("");
+      button.addEventListener("click", onToggle);
+      buttonRef.current = button;
+
+      container.appendChild(button);
+      return container;
+    },
+    onRemove(): void {
+      buttonRef.current = null;
+    },
+    getDefaultPosition(): mapboxgl.ControlPosition {
+      return "bottom-right";
+    },
+  };
 }
 
 // Factory for a Mapbox IControl that fits the map back to the

@@ -4107,14 +4107,24 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
    — so we qualify the selector to set flex centring + icon
    colour. Light-mode colour matches Mapbox's zoom-button icon
    weight (their default SVGs are filled near-black). */
-.mapboxgl-ctrl-group button.mapboxgl-ctrl-recenter {
+.mapboxgl-ctrl-group button.mapboxgl-ctrl-recenter,
+.mapboxgl-ctrl-group button.mapboxgl-ctrl-milestones {
   display: flex;
   align-items: center;
   justify-content: center;
   color: rgba(0, 0, 0, 0.75);
 }
-.mapboxgl-ctrl-group button.mapboxgl-ctrl-recenter:hover {
+.mapboxgl-ctrl-group button.mapboxgl-ctrl-recenter:hover,
+.mapboxgl-ctrl-group button.mapboxgl-ctrl-milestones:hover {
   color: rgba(0, 0, 0, 0.95);
+}
+/* Milestone toggle is a press-state control. When inactive
+   (markers hidden), dim the SVG to ~45 % so the user sees the
+   pressed state without us swapping icons. */
+.mapboxgl-ctrl-group
+  button.mapboxgl-ctrl-milestones[aria-pressed="false"]
+  svg {
+  opacity: 0.45;
 }
 
 /* Race-detail map control chip — dark mode. Mapbox hardcodes
@@ -4157,13 +4167,21 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
 :is(.dark, [data-theme="dark"])
   .race-detail-map
   .mapboxgl-ctrl-group
-  button.mapboxgl-ctrl-recenter {
+  button.mapboxgl-ctrl-recenter,
+:is(.dark, [data-theme="dark"])
+  .race-detail-map
+  .mapboxgl-ctrl-group
+  button.mapboxgl-ctrl-milestones {
   color: rgba(255, 255, 255, 0.75);
 }
 :is(.dark, [data-theme="dark"])
   .race-detail-map
   .mapboxgl-ctrl-group
-  button.mapboxgl-ctrl-recenter:hover {
+  button.mapboxgl-ctrl-recenter:hover,
+:is(.dark, [data-theme="dark"])
+  .race-detail-map
+  .mapboxgl-ctrl-group
+  button.mapboxgl-ctrl-milestones:hover {
   color: rgba(255, 255, 255, 0.95);
 }
 
