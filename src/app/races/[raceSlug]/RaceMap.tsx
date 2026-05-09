@@ -735,16 +735,6 @@ function MapControls({
           <Crosshair className="size-4" />
         </MapControlButton>
       )}
-      {showMilestoneToggle && (
-        <MapControlButton
-          onClick={onToggleDistanceMarkers}
-          ariaLabel="Toggle distance markers"
-          pressed={showDistanceMarkers}
-          className="pointer-events-auto"
-        >
-          <MapPin className="size-4" />
-        </MapControlButton>
-      )}
       <div
         ref={styleSwitcherWrapperRef}
         className="pointer-events-auto relative"
@@ -774,6 +764,16 @@ function MapControls({
       >
         <Box className="size-4" />
       </MapControlButton>
+      {showMilestoneToggle && (
+        <MapControlButton
+          onClick={onToggleDistanceMarkers}
+          ariaLabel="Toggle distance markers"
+          pressed={showDistanceMarkers}
+          className="pointer-events-auto"
+        >
+          <MapPin className="size-4" />
+        </MapControlButton>
+      )}
       <MapControlButton
         onClick={onToggleExpanded}
         ariaLabel={expanded ? "Exit fullscreen" : "Fullscreen map"}
