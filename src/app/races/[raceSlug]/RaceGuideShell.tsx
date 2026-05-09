@@ -21,11 +21,11 @@ import {
   Clock,
   Crosshair,
   Droplets,
+  ExternalLink,
   Footprints,
   MapPin,
   Minus,
   Mountain,
-  Navigation,
   Plus,
   Ruler,
   Thermometer,
@@ -1230,11 +1230,13 @@ function ExpoCard({
 
   if (!pos) return null;
 
-  // Google Maps directions URL — using lat/lng (rather than
-  // address text) so the destination is the exact geocoded
-  // point we have, not whatever Google's geocoder picks for the
-  // text query.
-  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${expo.lat},${expo.lng}`;
+  // Google Maps location URL — opens with a pin at the place
+  // (search view) rather than the directions view, so the user
+  // sees the spot in context and can choose what to do next
+  // (directions, save, share). lat/lng query rather than the
+  // address text so the pin lands on the exact geocoded point
+  // our marker uses.
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${expo.lat},${expo.lng}`;
 
   return (
     <div
@@ -1277,13 +1279,13 @@ function ExpoCard({
         </button>
       </div>
       <a
-        href={directionsUrl}
+        href={mapsUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-4 flex h-9 items-center justify-center gap-2 rounded-md border border-[color:var(--ds-gray-400)] text-copy-13 font-semibold text-[color:var(--ds-gray-1000)] no-underline transition-colors hover:bg-[color:var(--ds-gray-200)]"
       >
-        <Navigation className="size-4" />
-        Directions
+        Open in Google Maps
+        <ExternalLink className="size-4" />
       </a>
     </div>
   );
