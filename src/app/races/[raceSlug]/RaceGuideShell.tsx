@@ -9,7 +9,7 @@
 // the page itself scroll. The panel scrolls with the page; the
 // map stays put.
 
-import { Fragment, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -136,6 +136,38 @@ export default function RaceGuideShell({
   // inside the map via a fullscreen control; lifted here so
   // the shell can conditionally remove the panel column.
   const [mapExpanded, setMapExpanded] = useState(false);
+
+  // Detect whether the page already loaded scrolled (refresh,
+  // deep link with hash, browser scroll restoration). The CRT
+  // panel-reveal animation anchors a 1px slit at 50vh from the
+  // panel's top — perfect when the user lands at scroll = 0
+  // (panel top = viewport top, slit ≈ viewport centre), but
+  // the slit lands well above the viewport when the page is
+  // already scrolled, so the animation runs invisibly. Skip
+  // the animation in that case and just show the panel.
+  // Initialised to false to match SSR; the effect upgrades it
+  // on the first client tick to avoid a hydration mismatch.
+  const [skipPanelAnimation, setSkipPanelAnimation] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.scrollY > 0) setSkipPanelAnimation(true);
+  }, []);
+
+  // Lock body scroll while the map is expanded. Otherwise a
+  // user who'd scrolled down to read the panel before clicking
+  // fullscreen lands on a scroll position past the (now much
+  // shorter) <main>, and the page footer slides into view
+  // beneath the map. Locking + the position:fixed map style
+  // below together pin the user to the map for the duration
+  // of fullscreen.
+  useEffect(() => {
+    if (!mapExpanded) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mapExpanded]);
   return (
     // Single-cell grid: the sticky map and the editorial panel
     // both occupy row 1 / col 1. The cell auto-sizes to the
@@ -154,13 +186,31 @@ export default function RaceGuideShell({
         style={{
           gridColumn: 1,
           gridRow: 1,
-          position: "sticky",
-          top: MAP_STICKY_TOP,
-          height: MAP_VIEWPORT_HEIGHT,
-          // Explicitly below the panel's zIndex: 1 so the loading
-          // cover (which lives inside this sticky container) can
-          // never paint over the panel cards' borders.
-          zIndex: 0,
+          // Default state: sticky map below the SiteHeader.
+          // Expanded state: pinned to the viewport via
+          // position:fixed so the map fills the screen
+          // regardless of where the user had scrolled before
+          // toggling fullscreen — without this, a scrolled-down
+          // user would see the page footer beneath the map.
+          ...(mapExpanded
+            ? {
+                position: "fixed",
+                top: MAP_STICKY_TOP,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 50,
+              }
+            : {
+                position: "sticky",
+                top: MAP_STICKY_TOP,
+                height: MAP_VIEWPORT_HEIGHT,
+                // Explicitly below the panel's zIndex: 1 so the
+                // loading cover (which lives inside this sticky
+                // container) can never paint over the panel
+                // cards' borders.
+                zIndex: 0,
+              }),
           // Match PageFrame's 6 px radius on the top corners so
           // the map tiles + loading overlay (clipped by the
           // overflow-hidden above) don't paint past the frame's
@@ -168,8 +218,10 @@ export default function RaceGuideShell({
           // extends past PageFrame's bottom margin to fill the
           // viewport (see MAP_VIEWPORT_HEIGHT), so a second curve
           // there would sit below PageFrame's own bottom corner.
-          borderTopLeftRadius: 6,
-          borderTopRightRadius: 6,
+          // In expanded mode the map fills the viewport edge-to-
+          // edge, so we drop the rounding for a clean rectangle.
+          borderTopLeftRadius: mapExpanded ? 0 : 6,
+          borderTopRightRadius: mapExpanded ? 0 : 6,
         }}
       >
         {routeGeoJson ? (
@@ -203,7 +255,11 @@ export default function RaceGuideShell({
           to map-only and the route gets the full canvas. */}
       {!mapExpanded && (
         <div
-          className={`guide-panel-crt${panelRevealed ? " is-revealed" : ""}`}
+          className={
+            skipPanelAnimation
+              ? ""
+              : `guide-panel-crt${panelRevealed ? " is-revealed" : ""}`
+          }
           style={{
             gridColumn: 1,
             gridRow: 1,
