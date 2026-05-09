@@ -471,7 +471,18 @@ function RaceMap({
   }, [routeGeoJson, expo, initialBounds, endpoints, elevationSeries]);
 
   // Swap style when dark mode flips. Doesn't recreate the map.
+  // Skip the very first run — the map was constructed with the
+  // correct style for the initial isDark, and Mapbox v3 doesn't
+  // no-op same-style setStyle calls; it wipes everything and
+  // reloads. That wipe was racing with our async arrow-image
+  // load on first paint and triggering "source not found" when
+  // the arrow .then tried to add its layer post-wipe.
+  const initialStyleMount = useRef(true);
   useEffect(() => {
+    if (initialStyleMount.current) {
+      initialStyleMount.current = false;
+      return;
+    }
     const map = mapRef.current;
     if (!map) return;
     map.setStyle(styleForMode(isDark));
@@ -689,27 +700,32 @@ function addRouteLayer(
   }
   // Arrow image is loaded asynchronously (SVG → <img> → addImage)
   // and the symbol layer is added once the image is registered.
+  // Defensive guard: if a style swap landed between us adding
+  // the source and the image finishing, the source could be
+  // gone by the time .then runs — skip rather than throw a
+  // Mapbox "source not found" error. The next style.load will
+  // re-add everything.
   ensureArrowImage(map, casingColor, color).then(() => {
-    if (!map.getLayer("race-route-arrows")) {
-      map.addLayer(
-        {
-          id: "race-route-arrows",
-          type: "symbol",
-          source: "race-route",
-          layout: {
-            "symbol-placement": "line",
-            "symbol-spacing": 80,
-            "icon-image": "race-route-arrow",
-            "icon-size": 1.2,
-            "icon-rotation-alignment": "map",
-            "icon-pitch-alignment": "map",
-            "icon-ignore-placement": true,
-            "icon-allow-overlap": true,
-          },
+    if (!map.getSource("race-route")) return;
+    if (map.getLayer("race-route-arrows")) return;
+    map.addLayer(
+      {
+        id: "race-route-arrows",
+        type: "symbol",
+        source: "race-route",
+        layout: {
+          "symbol-placement": "line",
+          "symbol-spacing": 80,
+          "icon-image": "race-route-arrow",
+          "icon-size": 1.2,
+          "icon-rotation-alignment": "map",
+          "icon-pitch-alignment": "map",
+          "icon-ignore-placement": true,
+          "icon-allow-overlap": true,
         },
-        firstSymbolId,
-      );
-    }
+      },
+      firstSymbolId,
+    );
   });
 }
 
