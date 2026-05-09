@@ -4158,6 +4158,7 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   line-height: 1.35;
   max-width: 220px;
   white-space: normal;
+  text-align: center;
 }
 /* Hide Mapbox's default CSS-triangle tip — the marker itself
    is the visual anchor, no pointer needed. */
