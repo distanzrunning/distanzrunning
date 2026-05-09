@@ -4130,9 +4130,18 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
 /* Centre-align the bottom-right control column so chips of
    different widths (the compact attribution is narrower than
    the 29 px nav buttons) line up by their centres rather than
-   the default flex-end / right-edge alignment. */
+   the default float-right / right-edge alignment Mapbox ships.
+   We force the container to flex column-reverse (so the
+   add-order Mapbox uses — first at bottom, last at top — is
+   preserved) and override the per-control float so flex
+   centring actually applies. */
 .race-detail-map .mapboxgl-ctrl-bottom-right {
+  display: flex;
+  flex-direction: column-reverse;
   align-items: center;
+}
+.race-detail-map .mapboxgl-ctrl-bottom-right > .mapboxgl-ctrl {
+  float: none;
 }
 
 /* Race-detail compact attribution chip. Mapbox's compact mode
