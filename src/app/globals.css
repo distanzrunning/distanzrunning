@@ -4127,6 +4127,21 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   opacity: 0.45;
 }
 
+/* Race-detail bottom-left credits row — Mapbox stacks the
+   wordmark + attribution vertically by default (each control
+   floats and clears, so attribution lands above the logo). We
+   force flex-row + center alignment so the wordmark sits to
+   the left and the attribution text reads alongside it on the
+   same line, like a single fine-print credit row. */
+.race-detail-map .mapboxgl-ctrl-bottom-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.race-detail-map .mapboxgl-ctrl-bottom-left > .mapboxgl-ctrl {
+  float: none;
+}
+
 /* Race-detail attribution — plain text at bottom-left, no
    chip, no background. Mapbox's default wraps the credits in
    a white pill; we strip that and rely on the DS gray scale
