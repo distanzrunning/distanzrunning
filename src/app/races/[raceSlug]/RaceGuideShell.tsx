@@ -376,6 +376,18 @@ function RaceMap({
         child.style.clear = "none";
         child.style.margin = "0 0 8px 8px";
       });
+      // Mapbox ships .mapboxgl-ctrl.mapboxgl-ctrl-attrib with
+      // background-color: #ffffff80 + padding: 0 5px at the
+      // same selector specificity as our CSS override; its
+      // stylesheet loads after globals.css so it wins on source
+      // order. Inline style here outranks both unconditionally.
+      const attrib = bottomLeft.querySelector<HTMLElement>(
+        ".mapboxgl-ctrl-attrib",
+      );
+      if (attrib) {
+        attrib.style.background = "transparent";
+        attrib.style.padding = "0";
+      }
     });
 
     map.addControl(
