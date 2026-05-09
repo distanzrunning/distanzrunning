@@ -789,7 +789,8 @@ export function getRouteLineColor(): string {
 //      any tile colour
 //   3. race-route-line    — the brand-pink route itself
 //   4. race-route-arrows  — chevrons placed along the line at
-//      80 px intervals, rotated to follow line direction
+//      100 px intervals, zoom-responsive in size, rotated to
+//      follow line direction
 function addRouteLayer(
   map: mapboxgl.Map,
   data: GeoJSON.FeatureCollection,
@@ -884,9 +885,19 @@ function addRouteLayer(
         source: "race-route",
         layout: {
           "symbol-placement": "line",
-          "symbol-spacing": 80,
+          "symbol-spacing": 100,
           "icon-image": "race-route-arrow",
-          "icon-size": 1.2,
+          "icon-size": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10,
+            0.7,
+            14,
+            0.9,
+            18,
+            1.0,
+          ],
           "icon-rotation-alignment": "map",
           "icon-pitch-alignment": "map",
           "icon-ignore-placement": true,
