@@ -348,13 +348,13 @@ function RaceMap({
 
     // Compact attribution — small "i" button that expands the
     // Mapbox + OpenStreetMap credits on click. Satisfies ToS
-    // without pinning a permanent text chip to the map. We
-    // disabled the default attributionControl in mapOptions,
-    // so this is the only attribution surface; the footer
-    // credit can come out.
+    // without pinning a permanent text chip to the map. Sits
+    // at bottom-left next to the Mapbox wordmark (the
+    // conventional credits corner) so the bottom-right stays
+    // dedicated to interactive controls.
     map.addControl(
       new mapboxgl.AttributionControl({ compact: true }),
-      "bottom-right",
+      "bottom-left",
     );
 
     // Recenter control sits in its own .mapboxgl-ctrl-group chip
