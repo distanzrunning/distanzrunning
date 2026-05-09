@@ -146,7 +146,7 @@ export default async function RaceGuidePage({
   return (
     <RaceGuideShell
       race={race}
-      routeGeoJsonUrl={race.routeGeoJsonUrl ?? null}
+      routeGeoJson={routeAssets?.geoJson ?? null}
       heroImageUrl={heroImageUrl}
       elevationSeries={routeAssets?.elevation ?? null}
       routeBounds={initialBounds}

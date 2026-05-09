@@ -112,7 +112,7 @@ export interface ExpoLocation {
 
 interface RaceGuideShellProps {
   race: RaceGuideMeta;
-  routeGeoJsonUrl: string | null;
+  routeGeoJson: GeoJSON.FeatureCollection | null;
   heroImageUrl: string | null;
   elevationSeries: ElevationPoint[] | null;
   routeBounds: RouteBounds | null;
@@ -155,7 +155,7 @@ const ROUTE_BREATHING = 96;
 
 export default function RaceGuideShell({
   race,
-  routeGeoJsonUrl,
+  routeGeoJson,
   heroImageUrl,
   elevationSeries,
   routeBounds,
@@ -169,7 +169,7 @@ export default function RaceGuideShell({
   // then a transition fades + slides it in so the reveal feels
   // sequenced with the map.
   const [mapReady, setMapReady] = useState(false);
-  const panelRevealed = !routeGeoJsonUrl || mapReady;
+  const panelRevealed = !routeGeoJson || mapReady;
   // Bidirectional bridge between the elevation chart and the
   // map: the chart reports the hovered distance (km along the
   // route) and the map drops a blue marker at the matching
@@ -211,9 +211,9 @@ export default function RaceGuideShell({
           borderTopRightRadius: 6,
         }}
       >
-        {routeGeoJsonUrl ? (
+        {routeGeoJson ? (
           <RaceMap
-            geoJsonUrl={routeGeoJsonUrl}
+            routeGeoJson={routeGeoJson}
             initialBounds={routeBounds}
             endpoints={routeEndpoints}
             expo={expo}
@@ -267,7 +267,7 @@ type MapStatus =
   | { kind: "error"; message: string };
 
 function RaceMap({
-  geoJsonUrl,
+  routeGeoJson,
   initialBounds,
   endpoints,
   expo,
@@ -275,7 +275,7 @@ function RaceMap({
   hoverDistance,
   onReady,
 }: {
-  geoJsonUrl: string;
+  routeGeoJson: GeoJSON.FeatureCollection;
   initialBounds: RouteBounds | null;
   endpoints: { start: RouteEndpoint; finish: RouteEndpoint } | null;
   expo: ExpoLocation | null;
@@ -285,7 +285,6 @@ function RaceMap({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
-  const geoJsonRef = useRef<GeoJSON.FeatureCollection | null>(null);
   const expoMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const endpointMarkersRef = useRef<mapboxgl.Marker[]>([]);
   const hoverMarkerRef = useRef<mapboxgl.Marker | null>(null);
@@ -401,13 +400,13 @@ function RaceMap({
       setStatus({ kind: "error", message: msg });
     });
 
-    map.on("load", async () => {
+    // GeoJSON is now passed as a prop (parsed server-side in
+    // fetchRouteAssets), so no client-side fetch is needed —
+    // the load handler is synchronous, just adds layers and
+    // markers and flips status to ready.
+    map.on("load", () => {
       try {
-        const res = await fetch(geoJsonUrl);
-        if (!res.ok) throw new Error(`Route fetch HTTP ${res.status}`);
-        const data = (await res.json()) as GeoJSON.FeatureCollection;
-        geoJsonRef.current = data;
-        addRouteLayer(map, data, getRouteLineColor(), isDark);
+        addRouteLayer(map, routeGeoJson, getRouteLineColor(), isDark);
         // Marker DOM stacks in the order added (last = on top).
         // Hover first so it sits below the always-on POIs;
         // endpoints last so the start / finish dots stay visible
@@ -424,7 +423,7 @@ function RaceMap({
         // Only fit post-load when we didn't get server-side
         // bounds — the constructor already framed it otherwise.
         if (!initialBounds) {
-          const fitted = fitToRoute(map, data, expo);
+          const fitted = fitToRoute(map, routeGeoJson, expo);
           if (!fitted) {
             setStatus({
               kind: "error",
@@ -447,8 +446,7 @@ function RaceMap({
     // user-added sources, layers, AND images — so addRouteLayer
     // is responsible for re-registering the arrow image too).
     map.on("style.load", () => {
-      const data = geoJsonRef.current;
-      if (data) addRouteLayer(map, data, getRouteLineColor(), isDark);
+      addRouteLayer(map, routeGeoJson, getRouteLineColor(), isDark);
     });
 
     // Resize after the first paint as a guard against the
@@ -470,7 +468,7 @@ function RaceMap({
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geoJsonUrl, expo, initialBounds, endpoints, elevationSeries]);
+  }, [routeGeoJson, expo, initialBounds, endpoints, elevationSeries]);
 
   // Swap style when dark mode flips. Doesn't recreate the map.
   useEffect(() => {

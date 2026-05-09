@@ -166,6 +166,14 @@ export interface RouteAssets {
   bounds: RouteBounds;
   start: RouteEndpoint;
   finish: RouteEndpoint;
+  /**
+   * The full parsed GeoJSON FeatureCollection, returned so the
+   * client can add the source to Mapbox without re-fetching the
+   * URL — saves one round-trip on first paint. Costs ~20 KB of
+   * extra HTML payload for a marathon-length route, which is
+   * dwarfed by the JS bundle anyway.
+   */
+  geoJson: GeoJSON.FeatureCollection;
 }
 
 /**
@@ -201,7 +209,12 @@ export async function fetchRouteAssets(
     if (!bounds) return null;
     const start = coordinates[0];
     const finish = coordinates[coordinates.length - 1];
-    return { elevation: profile, bounds, start, finish };
+    // Parse the GeoJSON once more for the client (parseGeoJSON-
+    // WithElevation already parses internally but only returns
+    // the extracted coords). Marginal cost (~5-15 ms for 100 KB)
+    // vs saving a network round-trip on first paint.
+    const geoJson = JSON.parse(text) as GeoJSON.FeatureCollection;
+    return { elevation: profile, bounds, start, finish, geoJson };
   } catch {
     return null;
   }
