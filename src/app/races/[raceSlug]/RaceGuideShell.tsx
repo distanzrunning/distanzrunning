@@ -606,17 +606,20 @@ function styleForMode(isDark: boolean): string {
     : "mapbox://styles/mapbox/light-v11";
 }
 
-// Three layers stacked from bottom to top:
-//   1. race-route-casing  — wider line drawn under the route
-//      with a translucent theme-aware colour (subtle dark
-//      shadow on light maps, light halo on dark maps), giving
-//      the route a Strava-like outline that pops against any
-//      map tile colour.
-//   2. race-route-line    — the brand-pink route itself.
-//   3. race-route-arrows  — a symbol layer placing arrows along
-//      the line at ~150 px intervals; Mapbox auto-rotates each
-//      arrow to follow the line's direction so the user reads
-//      start → finish at a glance.
+// Strava-style 4-layer route stack (matches the technique in
+// src/components/RaceRouteMap.tsx). Layers are inserted *before*
+// the first symbol/label layer so map labels (street names,
+// places) render on top of the route — the route reads as part
+// of the map, not pasted over it.
+//
+// Bottom → top:
+//   1. race-route-shadow  — soft blurred dark line, slight depth
+//   2. race-route-casing  — solid white (light) / dark grey
+//      (dark) outline that gives the route definition against
+//      any tile colour
+//   3. race-route-line    — the brand-pink route itself
+//   4. race-route-arrows  — chevrons placed along the line at
+//      80 px intervals, rotated to follow line direction
 function addRouteLayer(
   map: mapboxgl.Map,
   data: GeoJSON.FeatureCollection,
@@ -626,89 +629,120 @@ function addRouteLayer(
   if (!map.getSource("race-route")) {
     map.addSource("race-route", { type: "geojson", data });
   }
-  if (!map.getLayer("race-route-casing")) {
-    map.addLayer({
-      id: "race-route-casing",
-      type: "line",
-      source: "race-route",
-      layout: { "line-cap": "round", "line-join": "round" },
-      paint: {
-        "line-color": isDark
-          ? "rgba(255, 255, 255, 0.35)"
-          : "rgba(0, 0, 0, 0.25)",
-        "line-width": 7,
+
+  // Find the first label/symbol layer so we can insert the
+  // route layers below it (street names paint on top of route).
+  const layers = map.getStyle().layers;
+  let firstSymbolId: string | undefined;
+  for (const layer of layers ?? []) {
+    if (layer.type === "symbol" || layer.id?.includes("label")) {
+      firstSymbolId = layer.id;
+      break;
+    }
+  }
+
+  const casingColor = isDark ? "#2d2d2d" : "#ffffff";
+
+  if (!map.getLayer("race-route-shadow")) {
+    map.addLayer(
+      {
+        id: "race-route-shadow",
+        type: "line",
+        source: "race-route",
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: {
+          "line-color": "rgba(0, 0, 0, 0.2)",
+          "line-width": 6,
+          "line-blur": 3,
+        },
       },
-    });
+      firstSymbolId,
+    );
+  }
+  if (!map.getLayer("race-route-casing")) {
+    map.addLayer(
+      {
+        id: "race-route-casing",
+        type: "line",
+        source: "race-route",
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: {
+          "line-color": casingColor,
+          "line-width": 6,
+        },
+      },
+      firstSymbolId,
+    );
   }
   if (!map.getLayer("race-route-line")) {
-    map.addLayer({
-      id: "race-route-line",
-      type: "line",
-      source: "race-route",
-      layout: { "line-cap": "round", "line-join": "round" },
-      paint: {
-        "line-color": color,
-        "line-width": 4,
+    map.addLayer(
+      {
+        id: "race-route-line",
+        type: "line",
+        source: "race-route",
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: {
+          "line-color": color,
+          "line-width": 4,
+        },
       },
-    });
+      firstSymbolId,
+    );
   }
   // Arrow image is loaded asynchronously (SVG → <img> → addImage)
   // and the symbol layer is added once the image is registered.
-  // Mapbox keeps the layer config we pass, so the arrows
-  // re-render cleanly even if the image loads after the layer
-  // is requested.
-  ensureArrowImage(map, isDark).then(() => {
+  ensureArrowImage(map, casingColor, color).then(() => {
     if (!map.getLayer("race-route-arrows")) {
-      map.addLayer({
-        id: "race-route-arrows",
-        type: "symbol",
-        source: "race-route",
-        layout: {
-          "symbol-placement": "line",
-          "symbol-spacing": 150,
-          "icon-image": "race-route-arrow",
-          "icon-size": 0.6,
-          "icon-allow-overlap": true,
-          "icon-rotation-alignment": "map",
+      map.addLayer(
+        {
+          id: "race-route-arrows",
+          type: "symbol",
+          source: "race-route",
+          layout: {
+            "symbol-placement": "line",
+            "symbol-spacing": 80,
+            "icon-image": "race-route-arrow",
+            "icon-size": 1.2,
+            "icon-rotation-alignment": "map",
+            "icon-pitch-alignment": "map",
+            "icon-ignore-placement": true,
+            "icon-allow-overlap": true,
+          },
         },
-      });
+        firstSymbolId,
+      );
     }
   });
 }
 
-// Builds a chevron arrow at runtime that reads as part of the
-// route-line family: same brand-pink stroke as the line, plus
-// a translucent theme-aware outer stroke matching the line's
-// casing. Two SVG <path>s stacked — outer (casing colour,
-// wider) drawn first, inner (line colour, thinner) on top —
-// gives a pink chevron with the same dark/light halo as the
-// line itself. Map images survive most renders but are wiped
-// by setStyle, so we rebuild on each addRouteLayer call
-// (no-op when the image is already registered).
+// Builds a chevron arrow that reads as part of the route-line
+// family: pink inner stroke + the same solid casing colour as
+// the line's outline. Chevron points RIGHT in icon-space; with
+// `icon-rotation-alignment: map` Mapbox rotates it to align
+// with the line's forward direction. Map images are wiped on
+// setStyle, so we rebuild on each addRouteLayer call (no-op
+// when the image is already registered).
 function ensureArrowImage(
   map: mapboxgl.Map,
-  isDark: boolean,
+  casingColor: string,
+  lineColor: string,
 ): Promise<void> {
   if (map.hasImage("race-route-arrow")) return Promise.resolve();
-  const lineColor = getRouteLineColor();
-  const casingColor = isDark
-    ? "rgba(255, 255, 255, 0.35)"
-    : "rgba(0, 0, 0, 0.25)";
-  // Chevron path: V opening down, peak at top centre — points
-  // "up" in icon-space, which Mapbox aligns with the line's
-  // forward direction at each placement.
-  const path = "M5 14l7-7 7 7";
+  // Chevron > pointing right. Two stacked paths: outer (casing
+  // colour, wider) and inner (line colour, thinner) — same
+  // outline + fill rhythm as the route line itself.
+  const path = "M6 6 L13 10 L6 14";
   const svg = [
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke-linecap="round" stroke-linejoin="round">',
-    `<path d="${path}" stroke="${casingColor}" stroke-width="6"/>`,
-    `<path d="${path}" stroke="${lineColor}" stroke-width="3"/>`,
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20" fill="none" stroke-linecap="round" stroke-linejoin="round">',
+    `<path d="${path}" stroke="${casingColor}" stroke-width="3"/>`,
+    `<path d="${path}" stroke="${lineColor}" stroke-width="1.5"/>`,
     "</svg>",
   ].join("");
-  const url = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  const url = `data:image/svg+xml;base64,${btoa(svg)}`;
   return new Promise((resolve, reject) => {
     const img = document.createElement("img");
-    img.width = 24;
-    img.height = 24;
+    img.width = 20;
+    img.height = 20;
     img.onload = () => {
       if (!map.hasImage("race-route-arrow")) {
         map.addImage("race-route-arrow", img);
