@@ -19,9 +19,13 @@ import {
   ChevronRight,
   ChevronsUp,
   Clock,
+  Crosshair,
   Droplets,
   Footprints,
+  Milestone,
+  Minus,
   Mountain,
+  Plus,
   Ruler,
   Thermometer,
   TrendingUp,
@@ -44,6 +48,7 @@ import { DarkModeContext } from "@/components/DarkModeProvider";
 import { AdSlot } from "@/components/ui/AdSlot";
 import { LoadingDots } from "@/components/ui/LoadingDots";
 import { Switch } from "@/components/ui/Switch";
+import DsTooltip from "@/components/ui/Tooltip";
 import { formatDistance, formatElevation } from "@/lib/raceUtils";
 import { useUnits, type UnitSystem } from "@/contexts/UnitsContext";
 import type {
@@ -283,13 +288,25 @@ function RaceMap({
   const endpointMarkersRef = useRef<mapboxgl.Marker[]>([]);
   const hoverMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const distanceMarkersRef = useRef<mapboxgl.Marker[]>([]);
-  const milestoneButtonRef = useRef<HTMLButtonElement | null>(null);
   const { units } = useUnits();
   const useMetric = units === "metric";
   // Default OFF so the map reads as a clean editorial canvas
   // on first paint (Strava-style restraint — bold route line,
   // no chrome). User opts in via the milestone toggle control.
   const [showDistanceMarkers, setShowDistanceMarkers] = useState(false);
+  // We need fitBoundsPadding both inside the load handler (for
+  // the constructor) and outside (for the React MapControls'
+  // recenter handler). Memoised so the controls don't see a
+  // new identity per render and re-trigger their effects.
+  const fitBoundsPadding = useMemo<mapboxgl.PaddingOptions>(
+    () => ({
+      top: ROUTE_BREATHING,
+      bottom: ROUTE_BREATHING,
+      left: PANEL_INSET + PANEL_WIDTH + ROUTE_BREATHING,
+      right: ROUTE_BREATHING,
+    }),
+    [],
+  );
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
 
@@ -305,17 +322,6 @@ function RaceMap({
       return;
     }
     mapboxgl.accessToken = token;
-
-    // Padding used both for the constructor's initial fit and
-    // for the recenter button so a click always reproduces the
-    // first frame the user saw — the map never reframes
-    // differently on recenter than it did on first paint.
-    const fitBoundsPadding = {
-      top: ROUTE_BREATHING,
-      bottom: ROUTE_BREATHING,
-      left: PANEL_INSET + PANEL_WIDTH + ROUTE_BREATHING,
-      right: ROUTE_BREATHING,
-    };
 
     // Initialise framed on the route bbox (computed server-side
     // by fetchRouteAssets and passed in via initialBounds) so the
@@ -345,6 +351,9 @@ function RaceMap({
     // chip, no "i" toggle. Lives alongside the Mapbox wordmark
     // (the conventional credits corner). compact:false forces
     // the full inline text instead of the collapsed button.
+    // The action buttons (zoom / recenter / milestone) are
+    // rendered via React (see <MapControls>) instead of via
+    // Mapbox's IControl API.
     map.addControl(
       new mapboxgl.AttributionControl({ compact: false }),
       "bottom-left",
@@ -352,15 +361,10 @@ function RaceMap({
 
     // Force the bottom-left credits row (Mapbox wordmark +
     // attribution) to lay out horizontally via inline styles.
-    // Mapbox's default uses float-left on each control, which
-    // *should* line them up horizontally — but combined with
-    // its own dynamic inline display:block on the logo wrapper
-    // and our globals.css CSS being intermittently caught by
-    // PostCSS / CDN caching, CSS-only overrides have been
-    // unreliable across deploys. Inline styles via .style win
-    // unconditionally. Set in a microtask so Mapbox's logo
-    // injection (which fires synchronously during map
-    // construction) has settled.
+    // CSS-only overrides via globals.css have been unreliable
+    // across deploys (Tailwind/PostCSS/CDN-cache); inline
+    // .style wins unconditionally. queueMicrotask defers it
+    // past Mapbox's synchronous logo injection.
     queueMicrotask(() => {
       const bottomLeft = map
         .getContainer()
@@ -376,11 +380,6 @@ function RaceMap({
         child.style.clear = "none";
         child.style.margin = "0 0 8px 8px";
       });
-      // Mapbox ships .mapboxgl-ctrl.mapboxgl-ctrl-attrib with
-      // background-color: #ffffff80 + padding: 0 5px at the
-      // same selector specificity as our CSS override; its
-      // stylesheet loads after globals.css so it wins on source
-      // order. Inline style here outranks both unconditionally.
       const attrib = bottomLeft.querySelector<HTMLElement>(
         ".mapboxgl-ctrl-attrib",
       );
@@ -390,35 +389,6 @@ function RaceMap({
       }
     });
 
-    map.addControl(
-      new mapboxgl.NavigationControl({ showCompass: false }),
-      "bottom-right",
-    );
-
-    // Recenter control sits in its own .mapboxgl-ctrl-group chip
-    // below the zoom buttons. Only meaningful when we have a
-    // route bbox to recenter to, so we skip it on the rare bound-
-    // less path.
-    if (initialBounds) {
-      map.addControl(
-        createRecenterControl(initialBounds, fitBoundsPadding),
-        "bottom-right",
-      );
-    }
-
-    // Milestone toggle — adds / removes the every-5-units route
-    // markers. Only relevant when there's an elevation series to
-    // walk for marker positions.
-    if (elevationSeries) {
-      map.addControl(
-        createMilestoneToggleControl(
-          showDistanceMarkers,
-          () => setShowDistanceMarkers((prev) => !prev),
-          milestoneButtonRef,
-        ),
-        "bottom-right",
-      );
-    }
 
     map.on("error", (e) => {
       const msg =
@@ -490,7 +460,6 @@ function RaceMap({
       hoverMarkerRef.current = null;
       distanceMarkersRef.current.forEach(removeMarkerWithTooltip);
       distanceMarkersRef.current = [];
-      milestoneButtonRef.current = null;
       map.remove();
       mapRef.current = null;
     };
@@ -563,18 +532,25 @@ function RaceMap({
     };
   }, [showDistanceMarkers, useMetric, elevationSeries, status.kind]);
 
-  // Reflect the toggle's pressed state on the control's button
-  // (the button DOM is owned by Mapbox's IControl, not React's
-  // tree, so we sync via the ref the control populates on mount).
-  useEffect(() => {
-    const button = milestoneButtonRef.current;
-    if (!button) return;
-    button.setAttribute("aria-pressed", String(showDistanceMarkers));
-  }, [showDistanceMarkers]);
 
   return (
     <>
-      <div ref={containerRef} className="h-full w-full" />
+      <div
+        ref={containerRef}
+        className="race-detail-map h-full w-full"
+      />
+      {status.kind === "ready" && (
+        <MapControls
+          mapRef={mapRef}
+          initialBounds={initialBounds}
+          fitBoundsPadding={fitBoundsPadding}
+          showMilestoneToggle={!!elevationSeries}
+          showDistanceMarkers={showDistanceMarkers}
+          onToggleDistanceMarkers={() =>
+            setShowDistanceMarkers((prev) => !prev)
+          }
+        />
+      )}
       {status.kind === "loading" && <MapLoadingOverlay />}
       {status.kind === "error" && <StatusOverlay text={status.message} />}
     </>
@@ -1033,109 +1009,151 @@ function addDistanceMarker(
   return marker;
 }
 
-// IControl factory for the milestone toggle. Stores the button
-// DOM in the supplied ref so the React tree can sync aria-pressed
-// (and the inactive-dim CSS rule) with the React state. Click
-// fires onToggle, which the parent uses to flip
-// setShowDistanceMarkers. `initialPressed` paints the correct
-// state on first mount — the sync useEffect can't run before
-// the ref is populated by addControl.
-function createMilestoneToggleControl(
-  initialPressed: boolean,
-  onToggle: () => void,
-  buttonRef: React.MutableRefObject<HTMLButtonElement | null>,
-): mapboxgl.IControl {
-  return {
-    onAdd(): HTMLElement {
-      const container = document.createElement("div");
-      container.className = "mapboxgl-ctrl mapboxgl-ctrl-group";
-
-      const button = document.createElement("button");
-      button.type = "button";
-      button.title = "Toggle distance markers";
-      button.setAttribute("aria-label", "Toggle distance markers");
-      button.setAttribute("aria-pressed", String(initialPressed));
-      button.className = "mapboxgl-ctrl-milestones";
-      button.innerHTML = [
-        '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
-        '<path d="M12 13v8"/>',
-        '<path d="M12 3v3"/>',
-        '<path d="M4 6a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h13.181a2 2 0 0 0 1.414-.586l1.829-1.828a1 1 0 0 0 0-1.414l-1.829-1.828A2 2 0 0 0 17.181 6H4z"/>',
-        "</svg>",
-      ].join("");
-      button.addEventListener("click", onToggle);
-      buttonRef.current = button;
-
-      container.appendChild(button);
-      return container;
-    },
-    onRemove(): void {
-      buttonRef.current = null;
-    },
-    getDefaultPosition(): mapboxgl.ControlPosition {
-      return "bottom-right";
-    },
-  };
+// React-based map control overlay. Replaces Mapbox's IControl
+// API with a normal React tree: the buttons compose with our DS
+// Tooltip primitive, react to state directly, and don't need
+// the CSS/cascade gymnastics that Mapbox's chip styling kept
+// forcing on us. Absolute-positioned over the sticky map
+// container; pointer-events on the wrapper is none so the map
+// captures pan/zoom, while each button re-enables pointer
+// events on itself.
+interface MapControlsProps {
+  mapRef: React.MutableRefObject<mapboxgl.Map | null>;
+  initialBounds: RouteBounds | null;
+  fitBoundsPadding: mapboxgl.PaddingOptions;
+  showMilestoneToggle: boolean;
+  showDistanceMarkers: boolean;
+  onToggleDistanceMarkers: () => void;
 }
 
-// Factory for a Mapbox IControl that fits the map back to the
-// route bbox + the same padding the constructor used. Lives in
-// its own .mapboxgl-ctrl-group chip so it stacks under the
-// default NavigationControl, picking up Mapbox's standard
-// button styling (size, hover, focus). Inline crosshair SVG
-// uses currentColor so it matches Mapbox's icon contrast in
-// both themes.
-function createRecenterControl(
-  bounds: RouteBounds,
-  padding: mapboxgl.PaddingOptions,
-): mapboxgl.IControl {
-  let mapInstance: mapboxgl.Map | null = null;
-  let buttonEl: HTMLButtonElement | null = null;
-
-  const handleClick = () => {
-    mapInstance?.fitBounds(bounds, {
-      padding,
+function MapControls({
+  mapRef,
+  initialBounds,
+  fitBoundsPadding,
+  showMilestoneToggle,
+  showDistanceMarkers,
+  onToggleDistanceMarkers,
+}: MapControlsProps) {
+  const handleZoomIn = () => mapRef.current?.zoomIn();
+  const handleZoomOut = () => mapRef.current?.zoomOut();
+  const handleRecenter = () => {
+    if (!initialBounds) return;
+    mapRef.current?.fitBounds(initialBounds, {
+      padding: fitBoundsPadding,
       duration: 600,
     });
   };
 
-  return {
-    onAdd(map: mapboxgl.Map): HTMLElement {
-      mapInstance = map;
-      const container = document.createElement("div");
-      container.className = "mapboxgl-ctrl mapboxgl-ctrl-group";
-
-      const button = document.createElement("button");
-      button.type = "button";
-      button.title = "Recenter route";
-      button.setAttribute("aria-label", "Recenter route");
-      button.className = "mapboxgl-ctrl-recenter";
-      button.innerHTML = [
-        '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">',
-        '<circle cx="10" cy="10" r="6"/>',
-        '<circle cx="10" cy="10" r="1.5" fill="currentColor" stroke="none"/>',
-        '<line x1="10" y1="2" x2="10" y2="4"/>',
-        '<line x1="10" y1="16" x2="10" y2="18"/>',
-        '<line x1="2" y1="10" x2="4" y2="10"/>',
-        '<line x1="16" y1="10" x2="18" y2="10"/>',
-        "</svg>",
-      ].join("");
-      button.addEventListener("click", handleClick);
-      buttonEl = button;
-
-      container.appendChild(button);
-      return container;
-    },
-    onRemove(): void {
-      buttonEl?.removeEventListener("click", handleClick);
-      mapInstance = null;
-      buttonEl = null;
-    },
-    getDefaultPosition(): mapboxgl.ControlPosition {
-      return "bottom-right";
-    },
-  };
+  return (
+    <div className="pointer-events-none absolute bottom-4 right-4 z-[3] flex flex-col gap-2">
+      <div className="pointer-events-auto flex flex-col">
+        <MapControlButton
+          onClick={handleZoomIn}
+          ariaLabel="Zoom in"
+          tooltip="Zoom in"
+          position="top"
+        >
+          <Plus className="size-4" />
+        </MapControlButton>
+        <MapControlButton
+          onClick={handleZoomOut}
+          ariaLabel="Zoom out"
+          tooltip="Zoom out"
+          position="bottom"
+        >
+          <Minus className="size-4" />
+        </MapControlButton>
+      </div>
+      {initialBounds && (
+        <MapControlButton
+          onClick={handleRecenter}
+          ariaLabel="Recenter route"
+          tooltip="Recenter route"
+          className="pointer-events-auto"
+        >
+          <Crosshair className="size-4" />
+        </MapControlButton>
+      )}
+      {showMilestoneToggle && (
+        <MapControlButton
+          onClick={onToggleDistanceMarkers}
+          ariaLabel="Toggle distance markers"
+          tooltip="Toggle distance markers"
+          pressed={showDistanceMarkers}
+          className="pointer-events-auto"
+        >
+          <Milestone className="size-4" />
+        </MapControlButton>
+      )}
+    </div>
+  );
 }
+
+// Individual map-control button. Sits in one of three states:
+//   - default: neutral surface, gray-1000 icon
+//   - pressed (toggle on): inverted (gray-1000 surface, light icon)
+//   - pressed=false (toggle off): muted icon at gray-700
+// `position` lets the zoom buttons share a single chip — the
+// 'top' button gets a flat bottom edge, 'bottom' gets a flat
+// top edge, with a hairline divider in between via
+// border-bottom on 'top'. Standalone buttons get full rounding.
+type MapButtonPosition = "top" | "bottom" | "standalone";
+
+interface MapControlButtonProps {
+  onClick: () => void;
+  ariaLabel: string;
+  tooltip: string;
+  pressed?: boolean;
+  position?: MapButtonPosition;
+  className?: string;
+  children: React.ReactNode;
+}
+
+function MapControlButton({
+  onClick,
+  ariaLabel,
+  tooltip,
+  pressed,
+  position = "standalone",
+  className = "",
+  children,
+}: MapControlButtonProps) {
+  const radius =
+    position === "top"
+      ? "rounded-t-md"
+      : position === "bottom"
+        ? "rounded-b-md"
+        : "rounded-md";
+  const divider = position === "top" ? "border-b" : "";
+
+  // Two style modes: inactive (muted) when pressed === false,
+  // inverted (filled gray-1000) when pressed === true, default
+  // surface look otherwise.
+  const colors =
+    pressed === true
+      ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)] hover:bg-[color:var(--ds-gray-900)]"
+      : pressed === false
+        ? "bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-700)] hover:bg-[color:var(--ds-gray-200)] hover:text-[color:var(--ds-gray-1000)]"
+        : "bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-200)]";
+
+  const isToggle = pressed !== undefined;
+
+  return (
+    <DsTooltip content={tooltip} side="left" delay={300}>
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={ariaLabel}
+        {...(isToggle ? { "aria-pressed": pressed } : {})}
+        className={`flex h-8 w-8 items-center justify-center border border-[color:var(--ds-gray-400)] transition-colors active:scale-[0.98] ${radius} ${divider} ${colors} ${className}`.trim()}
+        style={{ boxShadow: "var(--ds-shadow-small)" }}
+      >
+        {children}
+      </button>
+    </DsTooltip>
+  );
+}
+
 
 // ============================================================================
 // Guide panel — vertical stack of editorial cards over the map.

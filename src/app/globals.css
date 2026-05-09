@@ -4101,37 +4101,12 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   color: var(--ds-gray-1000);
 }
 
-/* Race-detail recenter map control. Mapbox ships
-   `.mapboxgl-ctrl-group button { display: block; padding: 0 }`
-   at specificity 0,1,1, which outranks a single-class override
-   — so we qualify the selector to set flex centring + icon
-   colour. Light-mode colour matches Mapbox's zoom-button icon
-   weight (their default SVGs are filled near-black). */
-.mapboxgl-ctrl-group button.mapboxgl-ctrl-recenter,
-.mapboxgl-ctrl-group button.mapboxgl-ctrl-milestones {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(0, 0, 0, 0.75);
-}
-.mapboxgl-ctrl-group button.mapboxgl-ctrl-recenter:hover,
-.mapboxgl-ctrl-group button.mapboxgl-ctrl-milestones:hover {
-  color: rgba(0, 0, 0, 0.95);
-}
-/* Milestone toggle is a press-state control. When inactive
-   (markers hidden), dim the SVG to ~45 % so the user sees the
-   pressed state without us swapping icons. */
-.mapboxgl-ctrl-group
-  button.mapboxgl-ctrl-milestones[aria-pressed="false"]
-  svg {
-  opacity: 0.45;
-}
-
 /* Race-detail attribution — plain text at bottom-left, no
-   chip, no background. Mapbox's default wraps the credits in
-   a white pill; we strip that and rely on the DS gray scale
-   for theme-aware text/link colours so the credits read as
-   fine print rather than chrome. */
+   chip, no background. The action controls (zoom / recenter /
+   milestone toggle) are React-rendered overlays now (see
+   <MapControls> in RaceGuideShell.tsx), so this file only
+   styles the native bottom-left credits row + Mapbox wordmark
+   that Mapbox owns end-to-end. */
 .race-detail-map .mapboxgl-ctrl-attrib {
   background: transparent;
   padding: 0;
@@ -4145,69 +4120,10 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
 .race-detail-map .mapboxgl-ctrl-attrib a:hover {
   color: var(--ds-gray-1000);
 }
-/* Mapbox wordmark also lives at bottom-left; invert in dark
-   mode so the dark logo reads against dark map tiles. Same
-   filter trick as the control-button icons. */
+/* Wordmark inverts in dark mode so the dark logo reads against
+   dark map tiles. */
 :is(.dark, [data-theme="dark"]) .race-detail-map .mapboxgl-ctrl-logo {
   filter: invert(1);
-}
-
-/* Race-detail map control chip — dark mode. Mapbox hardcodes
-   .mapboxgl-ctrl-group { background: #fff } with no dark-mode
-   variant, so we override scoped to .race-detail-map only:
-     - chip background flips to --ds-background-100 (theme
-       token; dark in dark mode) plus a light outer ring shadow
-     - separator hairline between buttons swaps to a DS gray
-     - hover overlay flips to a light tint
-     - .mapboxgl-ctrl-icon (zoom +/-) gets filter: invert(1) so
-       the embedded near-black SVGs paint light on the dark chip
-     - recenter icon (currentColor SVG, no .mapboxgl-ctrl-icon
-       wrapper) gets a light colour via its own selector
-   Selectors are qualified through the chip + map class for
-   specificity above Mapbox's single-class defaults. */
-:is(.dark, [data-theme="dark"]) .race-detail-map .mapboxgl-ctrl-group {
-  background: var(--ds-background-100);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
-}
-:is(.dark, [data-theme="dark"])
-  .race-detail-map
-  .mapboxgl-ctrl-group
-  button
-  + button {
-  border-top-color: var(--ds-gray-400);
-}
-:is(.dark, [data-theme="dark"])
-  .race-detail-map
-  .mapboxgl-ctrl-group
-  button:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-}
-:is(.dark, [data-theme="dark"])
-  .race-detail-map
-  .mapboxgl-ctrl-group
-  button
-  .mapboxgl-ctrl-icon {
-  filter: invert(1);
-}
-:is(.dark, [data-theme="dark"])
-  .race-detail-map
-  .mapboxgl-ctrl-group
-  button.mapboxgl-ctrl-recenter,
-:is(.dark, [data-theme="dark"])
-  .race-detail-map
-  .mapboxgl-ctrl-group
-  button.mapboxgl-ctrl-milestones {
-  color: rgba(255, 255, 255, 0.75);
-}
-:is(.dark, [data-theme="dark"])
-  .race-detail-map
-  .mapboxgl-ctrl-group
-  button.mapboxgl-ctrl-recenter:hover,
-:is(.dark, [data-theme="dark"])
-  .race-detail-map
-  .mapboxgl-ctrl-group
-  button.mapboxgl-ctrl-milestones:hover {
-  color: rgba(255, 255, 255, 0.95);
 }
 
 /* Race-detail map marker tooltips. Mapbox's default popup
