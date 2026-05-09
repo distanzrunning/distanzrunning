@@ -710,22 +710,6 @@ function MapControls({
 
   return (
     <div className="pointer-events-none absolute bottom-4 right-4 z-[3] flex flex-col items-end gap-2">
-      <div className="pointer-events-auto flex flex-col">
-        <MapControlButton
-          onClick={handleZoomIn}
-          ariaLabel="Zoom in"
-          position="top"
-        >
-          <Plus className="size-4" />
-        </MapControlButton>
-        <MapControlButton
-          onClick={handleZoomOut}
-          ariaLabel="Zoom out"
-          position="bottom"
-        >
-          <Minus className="size-4" />
-        </MapControlButton>
-      </div>
       {initialBounds && (
         <MapControlButton
           onClick={handleRecenter}
@@ -786,6 +770,22 @@ function MapControls({
           <Maximize className="size-4" />
         )}
       </MapControlButton>
+      <div className="pointer-events-auto flex flex-col">
+        <MapControlButton
+          onClick={handleZoomIn}
+          ariaLabel="Zoom in"
+          position="top"
+        >
+          <Plus className="size-4" />
+        </MapControlButton>
+        <MapControlButton
+          onClick={handleZoomOut}
+          ariaLabel="Zoom out"
+          position="bottom"
+        >
+          <Minus className="size-4" />
+        </MapControlButton>
+      </div>
     </div>
   );
 }
