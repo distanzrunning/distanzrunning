@@ -676,23 +676,34 @@ function addRouteLayer(
   });
 }
 
-// Builds a small SVG arrow at runtime, converts to an <img>,
-// and registers it with the map style under "race-route-arrow".
-// Theme-aware stroke colour via --ds-gray-1000 (resolved at
-// runtime through getComputedStyle of its -rgb companion) so
-// the arrow is dark on light maps, light on dark maps. Map
-// images survive across renders but are wiped on setStyle, so
-// we rebuild on each addRouteLayer call (no-op when the image
-// is already registered).
+// Builds a chevron arrow at runtime that reads as part of the
+// route-line family: same brand-pink stroke as the line, plus
+// a translucent theme-aware outer stroke matching the line's
+// casing. Two SVG <path>s stacked — outer (casing colour,
+// wider) drawn first, inner (line colour, thinner) on top —
+// gives a pink chevron with the same dark/light halo as the
+// line itself. Map images survive most renders but are wiped
+// by setStyle, so we rebuild on each addRouteLayer call
+// (no-op when the image is already registered).
 function ensureArrowImage(
   map: mapboxgl.Map,
   isDark: boolean,
 ): Promise<void> {
   if (map.hasImage("race-route-arrow")) return Promise.resolve();
-  const stroke = isDark
-    ? "rgba(245, 245, 245, 0.95)"
-    : "rgba(20, 20, 20, 0.85)";
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="${stroke}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V4"/><path d="M5 11l7-7 7 7"/></svg>`;
+  const lineColor = getRouteLineColor();
+  const casingColor = isDark
+    ? "rgba(255, 255, 255, 0.35)"
+    : "rgba(0, 0, 0, 0.25)";
+  // Chevron path: V opening down, peak at top centre — points
+  // "up" in icon-space, which Mapbox aligns with the line's
+  // forward direction at each placement.
+  const path = "M5 14l7-7 7 7";
+  const svg = [
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke-linecap="round" stroke-linejoin="round">',
+    `<path d="${path}" stroke="${casingColor}" stroke-width="6"/>`,
+    `<path d="${path}" stroke="${lineColor}" stroke-width="3"/>`,
+    "</svg>",
+  ].join("");
   const url = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
   return new Promise((resolve, reject) => {
     const img = document.createElement("img");
