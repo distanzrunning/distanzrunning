@@ -4197,7 +4197,7 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
 .map-marker-tooltip .mapboxgl-popup-content {
   background: var(--ds-background-100);
   color: var(--ds-gray-1000);
-  box-shadow: var(--ds-shadow-menu);
+  box-shadow: none;
   border-radius: 6px;
   padding: 5px 10px;
   font-size: 12px;
@@ -4205,24 +4205,11 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   line-height: 1.2;
   white-space: nowrap;
 }
+/* Hide the default CSS-triangle tip so the tooltip reads as a
+   clean floating chip — minimal, no pointer arrow toward the
+   marker. */
 .map-marker-tooltip .mapboxgl-popup-tip {
-  border-color: transparent;
-}
-.map-marker-tooltip.mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
-.map-marker-tooltip.mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
-.map-marker-tooltip.mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
-  border-bottom-color: var(--ds-background-100);
-}
-.map-marker-tooltip.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
-.map-marker-tooltip.mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
-.map-marker-tooltip.mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip {
-  border-top-color: var(--ds-background-100);
-}
-.map-marker-tooltip.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
-  border-right-color: var(--ds-background-100);
-}
-.map-marker-tooltip.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
-  border-left-color: var(--ds-background-100);
+  display: none;
 }
 
 /* Race detail guide panel — CRT-on reveal. The panel column
