@@ -407,7 +407,7 @@ function RaceMap({
         if (!res.ok) throw new Error(`Route fetch HTTP ${res.status}`);
         const data = (await res.json()) as GeoJSON.FeatureCollection;
         geoJsonRef.current = data;
-        addRouteLayer(map, data, getRouteLineColor());
+        addRouteLayer(map, data, getRouteLineColor(), isDark);
         // Marker DOM stacks in the order added (last = on top).
         // Hover first so it sits below the always-on POIs;
         // endpoints last so the start / finish dots stay visible
@@ -444,10 +444,11 @@ function RaceMap({
     });
 
     // Re-add the route layer after a style swap (setStyle wipes
-    // user-added sources/layers).
+    // user-added sources, layers, AND images — so addRouteLayer
+    // is responsible for re-registering the arrow image too).
     map.on("style.load", () => {
       const data = geoJsonRef.current;
-      if (data) addRouteLayer(map, data, getRouteLineColor());
+      if (data) addRouteLayer(map, data, getRouteLineColor(), isDark);
     });
 
     // Resize after the first paint as a guard against the
@@ -605,22 +606,106 @@ function styleForMode(isDark: boolean): string {
     : "mapbox://styles/mapbox/light-v11";
 }
 
+// Three layers stacked from bottom to top:
+//   1. race-route-casing  — wider line drawn under the route
+//      with a translucent theme-aware colour (subtle dark
+//      shadow on light maps, light halo on dark maps), giving
+//      the route a Strava-like outline that pops against any
+//      map tile colour.
+//   2. race-route-line    — the brand-pink route itself.
+//   3. race-route-arrows  — a symbol layer placing arrows along
+//      the line at ~150 px intervals; Mapbox auto-rotates each
+//      arrow to follow the line's direction so the user reads
+//      start → finish at a glance.
 function addRouteLayer(
   map: mapboxgl.Map,
   data: GeoJSON.FeatureCollection,
   color: string,
+  isDark: boolean,
 ): void {
-  if (map.getSource("race-route")) return;
-  map.addSource("race-route", { type: "geojson", data });
-  map.addLayer({
-    id: "race-route-line",
-    type: "line",
-    source: "race-route",
-    layout: { "line-cap": "round", "line-join": "round" },
-    paint: {
-      "line-color": color,
-      "line-width": 4,
-    },
+  if (!map.getSource("race-route")) {
+    map.addSource("race-route", { type: "geojson", data });
+  }
+  if (!map.getLayer("race-route-casing")) {
+    map.addLayer({
+      id: "race-route-casing",
+      type: "line",
+      source: "race-route",
+      layout: { "line-cap": "round", "line-join": "round" },
+      paint: {
+        "line-color": isDark
+          ? "rgba(255, 255, 255, 0.35)"
+          : "rgba(0, 0, 0, 0.25)",
+        "line-width": 7,
+      },
+    });
+  }
+  if (!map.getLayer("race-route-line")) {
+    map.addLayer({
+      id: "race-route-line",
+      type: "line",
+      source: "race-route",
+      layout: { "line-cap": "round", "line-join": "round" },
+      paint: {
+        "line-color": color,
+        "line-width": 4,
+      },
+    });
+  }
+  // Arrow image is loaded asynchronously (SVG → <img> → addImage)
+  // and the symbol layer is added once the image is registered.
+  // Mapbox keeps the layer config we pass, so the arrows
+  // re-render cleanly even if the image loads after the layer
+  // is requested.
+  ensureArrowImage(map, isDark).then(() => {
+    if (!map.getLayer("race-route-arrows")) {
+      map.addLayer({
+        id: "race-route-arrows",
+        type: "symbol",
+        source: "race-route",
+        layout: {
+          "symbol-placement": "line",
+          "symbol-spacing": 150,
+          "icon-image": "race-route-arrow",
+          "icon-size": 0.6,
+          "icon-allow-overlap": true,
+          "icon-rotation-alignment": "map",
+        },
+      });
+    }
+  });
+}
+
+// Builds a small SVG arrow at runtime, converts to an <img>,
+// and registers it with the map style under "race-route-arrow".
+// Theme-aware stroke colour via --ds-gray-1000 (resolved at
+// runtime through getComputedStyle of its -rgb companion) so
+// the arrow is dark on light maps, light on dark maps. Map
+// images survive across renders but are wiped on setStyle, so
+// we rebuild on each addRouteLayer call (no-op when the image
+// is already registered).
+function ensureArrowImage(
+  map: mapboxgl.Map,
+  isDark: boolean,
+): Promise<void> {
+  if (map.hasImage("race-route-arrow")) return Promise.resolve();
+  const stroke = isDark
+    ? "rgba(245, 245, 245, 0.95)"
+    : "rgba(20, 20, 20, 0.85)";
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="${stroke}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V4"/><path d="M5 11l7-7 7 7"/></svg>`;
+  const url = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  return new Promise((resolve, reject) => {
+    const img = document.createElement("img");
+    img.width = 24;
+    img.height = 24;
+    img.onload = () => {
+      if (!map.hasImage("race-route-arrow")) {
+        map.addImage("race-route-arrow", img);
+      }
+      resolve();
+    };
+    img.onerror = () => reject(new Error("arrow image load failed"));
+    img.src = url;
   });
 }
 
