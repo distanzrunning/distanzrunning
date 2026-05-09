@@ -19,13 +19,12 @@ import {
   Crosshair,
   ExternalLink,
   Layers,
+  Map as MapIcon,
   MapPin,
   Minus,
-  Moon,
   Mountain,
   Plus,
   Satellite,
-  Sun,
   X,
 } from "lucide-react";
 import mapboxgl from "mapbox-gl";
@@ -97,20 +96,22 @@ type MapStatus =
 
 type EndpointVariant = "start" | "finish";
 
-// User-selectable basemap. Four explicit choices — the user
-// picks once and the choice persists. Decoupled from the page
-// theme so a user reading the site in dark mode can still pick
-// e.g. Satellite or Light without the global theme overriding
-// their choice. The route casing colour shifts when the user
-// picks "Dark" (so the casing reads against dark tiles); all
-// other styles use the light casing for visibility against
-// imagery, terrain shading, or light tiles.
+// User-selectable basemap. Three options:
 //
-// Terrain is the streets-style "outdoors" basemap with hill
-// shading + contour lines — covers the same use case as the
-// generic streets basemap plus elevation context, so we don't
-// ship both.
-type MapStyleChoice = "satellite" | "terrain" | "light" | "dark";
+//   - default: minimal labels-only style that *follows the
+//     global page theme*. Light theme → light-v11; dark theme
+//     → dark-v11; toggling the global theme swaps the basemap
+//     automatically. The user can never end up with a dark map
+//     in light mode (or vice versa) — that combination would
+//     read as a styling bug, so we don't expose it.
+//   - satellite: imagery basemap, theme-agnostic.
+//   - terrain: outdoors basemap with hill shading + contour
+//     lines, theme-agnostic.
+//
+// Persisted choice survives across navigations. When the
+// stored value is "default" we re-resolve against the *current*
+// theme on every mount, which is the whole point.
+type MapStyleChoice = "default" | "satellite" | "terrain";
 
 const MAP_STYLE_STORAGE_KEY = "distanz-race-map-style";
 
@@ -119,18 +120,14 @@ const MAP_STYLE_OPTIONS: {
   label: string;
   Icon: typeof Satellite;
 }[] = [
+  { value: "default", label: "Map", Icon: MapIcon },
   { value: "satellite", label: "Satellite", Icon: Satellite },
   { value: "terrain", label: "Terrain", Icon: Mountain },
-  { value: "light", label: "Light", Icon: Sun },
-  { value: "dark", label: "Dark", Icon: Moon },
 ];
 
 function isValidMapStyle(value: string | null): value is MapStyleChoice {
   return (
-    value === "satellite" ||
-    value === "terrain" ||
-    value === "light" ||
-    value === "dark"
+    value === "default" || value === "satellite" || value === "terrain"
   );
 }
 
@@ -199,35 +196,38 @@ export default function RaceMap({
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
 
   // User's chosen basemap. Hydrated from localStorage so the
-  // choice persists across page navigations / sessions. First
-  // visit defaults to "light" or "dark" based on the page theme
-  // so existing users on a dark site don't get a sudden flash
-  // of the bright streets-v12 default. SSR fallback is "light";
-  // there's no flash because the map doesn't render until
-  // client mount.
+  // choice persists across page navigations / sessions. SSR
+  // fallback is "default" — the map doesn't render until
+  // client mount, so there's no flash. "default" follows the
+  // global theme (light/dark) automatically, so we don't need
+  // to branch on isDark here.
   const [mapStyle, setMapStyle] = useState<MapStyleChoice>(() => {
-    if (typeof window === "undefined") return "light";
+    if (typeof window === "undefined") return "default";
     const stored = window.localStorage.getItem(MAP_STYLE_STORAGE_KEY);
     if (isValidMapStyle(stored)) return stored;
-    return isDark ? "dark" : "light";
+    return "default";
   });
   useEffect(() => {
     if (typeof window === "undefined") return;
     window.localStorage.setItem(MAP_STYLE_STORAGE_KEY, mapStyle);
   }, [mapStyle]);
 
-  // Mirror mapStyle into a ref so the style.load handler (which
-  // is registered inside the main map useEffect with mapStyle
-  // *not* in its deps — we don't want to tear down the map on
-  // every style swap) can read the current value rather than
-  // its stale closure capture. Without this, swapping styles
+  // Mirror mapStyle + isDark into refs so the style.load
+  // handler (registered inside the main map useEffect, with
+  // neither in its deps — we don't want to tear down the map
+  // on every theme/style swap) can read current values rather
+  // than stale closure captures. Without these, a style swap
   // wipes layers via setStyle, then style.load re-runs
-  // addRouteLayer with the original mapStyle — i.e. the casing
-  // stays white after switching to Dark.
+  // addRouteLayer with the captured-at-mount values — the
+  // casing stays white when the user toggles to dark, and so on.
   const mapStyleRef = useRef(mapStyle);
   useEffect(() => {
     mapStyleRef.current = mapStyle;
   }, [mapStyle]);
+  const isDarkRef = useRef(isDark);
+  useEffect(() => {
+    isDarkRef.current = isDark;
+  }, [isDark]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -251,7 +251,7 @@ export default function RaceMap({
     // post-load fit takes over.
     const mapOptions: mapboxgl.MapOptions = {
       container: containerRef.current,
-      style: styleForMode(mapStyle),
+      style: styleForMode(mapStyle, isDark),
       attributionControl: false,
       ...(initialBounds
         ? {
@@ -326,7 +326,7 @@ export default function RaceMap({
           map,
           routeGeoJson,
           getRouteLineColor(),
-          mapStyle === "dark",
+          isBasemapDark(mapStyle, isDark),
         );
         // Marker DOM stacks in the order added (last = on top).
         // Hover first so it sits below the always-on POIs;
@@ -366,16 +366,16 @@ export default function RaceMap({
     // Re-add the route layer after a style swap (setStyle wipes
     // user-added sources, layers, AND images — so addRouteLayer
     // is responsible for re-registering the arrow image too).
-    // Reads mapStyleRef.current rather than mapStyle so the
-    // casing / shadow / arrow colours pick up the *current*
-    // chosen basemap on each style swap, not the value captured
-    // when the effect first ran.
+    // Reads the current refs rather than the closure values so
+    // the casing / shadow / arrow colours pick up the *current*
+    // basemap + theme combination on each style swap, not the
+    // values captured when the effect first ran.
     map.on("style.load", () => {
       addRouteLayer(
         map,
         routeGeoJson,
         getRouteLineColor(),
-        mapStyleRef.current === "dark",
+        isBasemapDark(mapStyleRef.current, isDarkRef.current),
       );
     });
 
@@ -400,16 +400,24 @@ export default function RaceMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeGeoJson, expo, initialBounds, endpoints, elevationSeries]);
 
-  // Swap style when the user picks a new basemap. Doesn't
-  // recreate the map. Skip the very first run — the map was
-  // constructed with the correct style already, and Mapbox v3
-  // doesn't no-op same-style setStyle calls; it wipes
-  // everything and reloads. That wipe was racing with our async
-  // arrow-image load on first paint and triggering "source not
-  // found" when the arrow .then tried to add its layer
-  // post-wipe. The style.load handler re-adds route layers
-  // after every swap, so user style choices survive automatically.
+  // Swap style when the global theme flips OR the user picks
+  // a new basemap. Doesn't recreate the map. Skip the very
+  // first run — the map was constructed with the correct style
+  // already, and Mapbox v3 doesn't no-op same-style setStyle
+  // calls; it wipes everything and reloads. That wipe was
+  // racing with our async arrow-image load on first paint and
+  // triggering "source not found" when the arrow .then tried
+  // to add its layer post-wipe. The style.load handler re-adds
+  // route layers after every swap, so user style choices
+  // survive automatically.
+  //
+  // Short-circuit when the resolved URL hasn't changed (e.g.
+  // theme flip while on Satellite — both isDark values resolve
+  // to the same satellite-streets-v12 style). Without the guard
+  // the user gets a pointless full-style reload flicker every
+  // time they toggle the theme on a non-default basemap.
   const initialStyleMount = useRef(true);
+  const lastStyleUrlRef = useRef<string>(styleForMode(mapStyle, isDark));
   useEffect(() => {
     if (initialStyleMount.current) {
       initialStyleMount.current = false;
@@ -417,8 +425,11 @@ export default function RaceMap({
     }
     const map = mapRef.current;
     if (!map) return;
-    map.setStyle(styleForMode(mapStyle));
-  }, [mapStyle]);
+    const next = styleForMode(mapStyle, isDark);
+    if (next === lastStyleUrlRef.current) return;
+    lastStyleUrlRef.current = next;
+    map.setStyle(next);
+  }, [isDark, mapStyle]);
 
   // Notify the shell once the route is drawn so the panel can
   // animate in. Reactive to status.kind only — onReady is an
@@ -907,18 +918,27 @@ function ExpoCard({
 // Style + colour helpers
 // ============================================================================
 
-function styleForMode(choice: MapStyleChoice): string {
+function styleForMode(choice: MapStyleChoice, isDark: boolean): string {
   switch (choice) {
     case "satellite":
       return "mapbox://styles/mapbox/satellite-streets-v12";
     case "terrain":
       return "mapbox://styles/mapbox/outdoors-v12";
-    case "dark":
-      return "mapbox://styles/mapbox/dark-v11";
-    case "light":
+    case "default":
     default:
-      return "mapbox://styles/mapbox/light-v11";
+      return isDark
+        ? "mapbox://styles/mapbox/dark-v11"
+        : "mapbox://styles/mapbox/light-v11";
   }
+}
+
+// Whether the rendered basemap is dark — drives the route
+// casing / shadow colour. Only the theme-following "default"
+// choice can be dark; satellite + terrain always use the
+// light casing palette since their tiles are colourful enough
+// that a white casing always reads cleanly.
+function isBasemapDark(choice: MapStyleChoice, isDark: boolean): boolean {
+  return choice === "default" && isDark;
 }
 
 // Exported because the panel's elevation chart shares the
