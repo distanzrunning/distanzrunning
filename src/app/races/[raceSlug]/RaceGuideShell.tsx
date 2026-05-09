@@ -350,6 +350,34 @@ function RaceMap({
       "bottom-left",
     );
 
+    // Force the bottom-left credits row (Mapbox wordmark +
+    // attribution) to lay out horizontally via inline styles.
+    // Mapbox's default uses float-left on each control, which
+    // *should* line them up horizontally — but combined with
+    // its own dynamic inline display:block on the logo wrapper
+    // and our globals.css CSS being intermittently caught by
+    // PostCSS / CDN caching, CSS-only overrides have been
+    // unreliable across deploys. Inline styles via .style win
+    // unconditionally. Set in a microtask so Mapbox's logo
+    // injection (which fires synchronously during map
+    // construction) has settled.
+    queueMicrotask(() => {
+      const bottomLeft = map
+        .getContainer()
+        .querySelector<HTMLElement>(".mapboxgl-ctrl-bottom-left");
+      if (!bottomLeft) return;
+      bottomLeft.style.display = "flex";
+      bottomLeft.style.flexDirection = "row";
+      bottomLeft.style.alignItems = "center";
+      bottomLeft.style.gap = "8px";
+      Array.from(bottomLeft.children).forEach((child) => {
+        if (!(child instanceof HTMLElement)) return;
+        child.style.float = "none";
+        child.style.clear = "none";
+        child.style.margin = "0 0 8px 8px";
+      });
+    });
+
     map.addControl(
       new mapboxgl.NavigationControl({ showCompass: false }),
       "bottom-right",
