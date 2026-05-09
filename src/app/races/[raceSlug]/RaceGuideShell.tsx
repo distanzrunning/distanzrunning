@@ -346,6 +346,17 @@ function RaceMap({
       "bottom-right",
     );
 
+    // Compact attribution — small "i" button that expands the
+    // Mapbox + OpenStreetMap credits on click. Satisfies ToS
+    // without pinning a permanent text chip to the map. We
+    // disabled the default attributionControl in mapOptions,
+    // so this is the only attribution surface; the footer
+    // credit can come out.
+    map.addControl(
+      new mapboxgl.AttributionControl({ compact: true }),
+      "bottom-right",
+    );
+
     // Recenter control sits in its own .mapboxgl-ctrl-group chip
     // below the zoom buttons. Only meaningful when we have a
     // route bbox to recenter to, so we skip it on the rare bound-

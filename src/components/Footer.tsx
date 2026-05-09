@@ -129,30 +129,6 @@ export default function Footer() {
             <ThemeSwitcher value={theme} onChange={setTheme} />
           </div>
         </div>
-
-        {/* Map data attribution. Required by Mapbox + OpenStreetMap
-            ToS — kept here in the footer rather than on the map
-            chrome so race detail / calendar maps stay clean. */}
-        <p className="mt-12 text-[12px] leading-4 text-[color:var(--ds-gray-700)]">
-          Maps ©{" "}
-          <a
-            href="https://www.mapbox.com/about/maps/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-[color:var(--ds-gray-1000)]"
-          >
-            Mapbox
-          </a>{" "}
-          · ©{" "}
-          <a
-            href="https://www.openstreetmap.org/copyright"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-[color:var(--ds-gray-1000)]"
-          >
-            OpenStreetMap
-          </a>
-        </p>
       </div>
     </footer>
   );

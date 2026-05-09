@@ -4127,6 +4127,31 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   opacity: 0.45;
 }
 
+/* Race-detail compact attribution chip. Mapbox's compact mode
+   collapses the credits to a small "i" button that expands on
+   click — satisfies ToS without pinning a permanent text chip
+   to the map. We restyle the chip + link colours with DS
+   tokens scoped to .race-detail-map so they match the zoom /
+   recenter / milestone controls in both themes. */
+.race-detail-map .mapboxgl-ctrl-attrib.mapboxgl-compact {
+  background-color: rgba(var(--ds-background-100-rgb), 0.85);
+  color: var(--ds-gray-900);
+}
+.race-detail-map .mapboxgl-ctrl-attrib a {
+  color: var(--ds-gray-900);
+}
+.race-detail-map .mapboxgl-ctrl-attrib a:hover {
+  color: var(--ds-gray-1000);
+}
+/* The "i" toggle icon is a background-image SVG; invert it in
+   dark mode so it reads on the dark chip surface (same trick
+   we use on the zoom button icons). */
+:is(.dark, [data-theme="dark"])
+  .race-detail-map
+  .mapboxgl-ctrl-attrib-button {
+  filter: invert(1);
+}
+
 /* Race-detail map control chip — dark mode. Mapbox hardcodes
    .mapboxgl-ctrl-group { background: #fff } with no dark-mode
    variant, so we override scoped to .race-detail-map only:
