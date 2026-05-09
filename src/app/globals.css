@@ -4187,6 +4187,27 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
 .map-marker-tooltip.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
   border-left-color: var(--ds-gray-1000);
 }
+/* Speech-bubble corners: kill the radius on the side of the
+   body where the tip attaches so the rounded corner doesn't
+   curve up away from the tip's flat side and leave a visible
+   shoulder. Mapbox already does this for diagonal anchors but
+   not the straight ones; we apply it to all four. */
+.map-marker-tooltip.mapboxgl-popup-anchor-top .mapboxgl-popup-content {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.map-marker-tooltip.mapboxgl-popup-anchor-bottom .mapboxgl-popup-content {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.map-marker-tooltip.mapboxgl-popup-anchor-left .mapboxgl-popup-content {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.map-marker-tooltip.mapboxgl-popup-anchor-right .mapboxgl-popup-content {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
 
 /* Race detail guide panel — CRT-on reveal. The panel column
    sits in the grid cell starting near the top of the page; the
