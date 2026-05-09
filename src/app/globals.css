@@ -4132,14 +4132,20 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
    floats and clears, so attribution lands above the logo). We
    force flex-row + center alignment so the wordmark sits to
    the left and the attribution text reads alongside it on the
-   same line, like a single fine-print credit row. */
+   same line, like a single fine-print credit row. !important
+   here because Mapbox's default float layout and any stylesheet-
+   load-order quirks have been tripping up plain selector
+   overrides — this rule needs to win unconditionally. */
 .race-detail-map .mapboxgl-ctrl-bottom-left {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px;
 }
 .race-detail-map .mapboxgl-ctrl-bottom-left > .mapboxgl-ctrl {
-  float: none;
+  float: none !important;
+  margin: 0 0 8px 8px !important;
+  clear: none !important;
 }
 
 /* Race-detail attribution — plain text at bottom-left, no
