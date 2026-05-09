@@ -936,15 +936,14 @@ function removeMarkerWithTooltip(marker: mapboxgl.Marker): void {
 }
 
 // Walks the elevation series and returns one Mapbox marker per
-// distance milestone. Metric uses 5 km steps; imperial uses 3 mi
-// steps because 3 mi (~4.83 km) tracks the metric interval more
-// closely than 5 mi (~8.05 km) — a marathon ends up with the
-// same ~8 markers in either unit system. Skips 0 and the
-// route's max distance: those slots belong to the start/finish
-// markers, and a "0" chip on top of the green Start dot would
-// be visually muddy.
-const DISTANCE_MARKER_INTERVAL_KM = 5;
-const DISTANCE_MARKER_INTERVAL_MI = 3;
+// integer kilometre or mile, matching the active unit system.
+// Skips 0 and the route's max distance — those slots belong to
+// the start/finish markers, and a "0" chip on top of the green
+// Start dot would be visually muddy. Density is high (a
+// marathon shows ~26 mi or ~42 km markers), but the toggle is
+// off by default so users only see them when they opt in.
+const DISTANCE_MARKER_INTERVAL_KM = 1;
+const DISTANCE_MARKER_INTERVAL_MI = 1;
 
 function buildDistanceMarkers(
   map: mapboxgl.Map,
