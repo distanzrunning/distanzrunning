@@ -16,8 +16,10 @@ import {
   useState,
 } from "react";
 import {
+  Check,
   Crosshair,
   ExternalLink,
+  Layers,
   MapPin,
   Minus,
   Plus,
@@ -93,6 +95,20 @@ type MapStatus =
 
 type EndpointVariant = "start" | "finish";
 
+// User-selectable basemap. "default" follows the dark/light
+// theme toggle (light-v11 / dark-v11 — minimal labels-only).
+// Satellite + Outdoors are theme-agnostic; the user opts in
+// when they want imagery or terrain context.
+type MapStyleChoice = "default" | "satellite" | "outdoors";
+
+const MAP_STYLE_STORAGE_KEY = "distanz-race-map-style";
+
+const MAP_STYLE_OPTIONS: { value: MapStyleChoice; label: string }[] = [
+  { value: "default", label: "Map" },
+  { value: "satellite", label: "Satellite" },
+  { value: "outdoors", label: "Outdoors" },
+];
+
 // Wires a hover tooltip onto a marker — popup appears on
 // mouseenter, hides on mouseleave. Stashes the popup on the
 // marker as a custom property so the cleanup paths can dispose
@@ -157,6 +173,27 @@ export default function RaceMap({
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
 
+  // User's chosen basemap. Hydrated from localStorage so the
+  // choice persists across page navigations / sessions. SSR
+  // fallback is "default" — there's no flash because the map
+  // doesn't render until client mount anyway.
+  const [mapStyle, setMapStyle] = useState<MapStyleChoice>(() => {
+    if (typeof window === "undefined") return "default";
+    const stored = window.localStorage.getItem(MAP_STYLE_STORAGE_KEY);
+    if (
+      stored === "default" ||
+      stored === "satellite" ||
+      stored === "outdoors"
+    ) {
+      return stored;
+    }
+    return "default";
+  });
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(MAP_STYLE_STORAGE_KEY, mapStyle);
+  }, [mapStyle]);
+
   // Mirror isDark into a ref so the style.load handler (which is
   // registered inside the main map useEffect with isDark *not*
   // in its deps — we don't want to tear down the map on every
@@ -192,7 +229,7 @@ export default function RaceMap({
     // post-load fit takes over.
     const mapOptions: mapboxgl.MapOptions = {
       container: containerRef.current,
-      style: styleForMode(isDark),
+      style: styleForMode(mapStyle, isDark),
       attributionControl: false,
       ...(initialBounds
         ? {
@@ -336,14 +373,23 @@ export default function RaceMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeGeoJson, expo, initialBounds, endpoints, elevationSeries]);
 
-  // Swap style when dark mode flips. Doesn't recreate the map.
-  // Skip the very first run — the map was constructed with the
-  // correct style for the initial isDark, and Mapbox v3 doesn't
-  // no-op same-style setStyle calls; it wipes everything and
-  // reloads. That wipe was racing with our async arrow-image
-  // load on first paint and triggering "source not found" when
-  // the arrow .then tried to add its layer post-wipe.
+  // Swap style when dark mode flips OR the user picks a new
+  // basemap. Doesn't recreate the map. Skip the very first run
+  // — the map was constructed with the correct style already,
+  // and Mapbox v3 doesn't no-op same-style setStyle calls; it
+  // wipes everything and reloads. That wipe was racing with our
+  // async arrow-image load on first paint and triggering
+  // "source not found" when the arrow .then tried to add its
+  // layer post-wipe. The style.load handler re-adds route layers
+  // after every swap, so user style choices survive automatically.
+  //
+  // We also short-circuit when the resolved URL hasn't changed
+  // (e.g. theme flip while on Satellite — both isDark values
+  // resolve to the same satellite-streets-v12 style). Without
+  // the guard the user gets a pointless full-style reload flicker
+  // every time they toggle the theme on a non-default basemap.
   const initialStyleMount = useRef(true);
+  const lastStyleUrlRef = useRef<string>(styleForMode(mapStyle, isDark));
   useEffect(() => {
     if (initialStyleMount.current) {
       initialStyleMount.current = false;
@@ -351,8 +397,11 @@ export default function RaceMap({
     }
     const map = mapRef.current;
     if (!map) return;
-    map.setStyle(styleForMode(isDark));
-  }, [isDark]);
+    const next = styleForMode(mapStyle, isDark);
+    if (next === lastStyleUrlRef.current) return;
+    lastStyleUrlRef.current = next;
+    map.setStyle(next);
+  }, [isDark, mapStyle]);
 
   // Notify the shell once the route is drawn so the panel can
   // animate in. Reactive to status.kind only — onReady is an
@@ -429,6 +478,8 @@ export default function RaceMap({
           onToggleDistanceMarkers={() =>
             setShowDistanceMarkers((prev) => !prev)
           }
+          mapStyle={mapStyle}
+          onMapStyleChange={setMapStyle}
         />
       )}
       {status.kind === "ready" && expoCardOpen && expo && mapRef.current && (
@@ -499,6 +550,8 @@ interface MapControlsProps {
   showMilestoneToggle: boolean;
   showDistanceMarkers: boolean;
   onToggleDistanceMarkers: () => void;
+  mapStyle: MapStyleChoice;
+  onMapStyleChange: (next: MapStyleChoice) => void;
 }
 
 function MapControls({
@@ -508,7 +561,10 @@ function MapControls({
   showMilestoneToggle,
   showDistanceMarkers,
   onToggleDistanceMarkers,
+  mapStyle,
+  onMapStyleChange,
 }: MapControlsProps) {
+  const [styleMenuOpen, setStyleMenuOpen] = useState(false);
   const handleZoomIn = () => mapRef.current?.zoomIn();
   const handleZoomOut = () => mapRef.current?.zoomOut();
   const handleRecenter = () => {
@@ -520,7 +576,7 @@ function MapControls({
   };
 
   return (
-    <div className="pointer-events-none absolute bottom-4 right-4 z-[3] flex flex-col gap-2">
+    <div className="pointer-events-none absolute bottom-4 right-4 z-[3] flex flex-col items-end gap-2">
       <div className="pointer-events-auto flex flex-col">
         <MapControlButton
           onClick={handleZoomIn}
@@ -560,6 +616,86 @@ function MapControls({
           <MapPin className="size-4" />
         </MapControlButton>
       )}
+      <div className="pointer-events-auto relative">
+        <MapControlButton
+          onClick={() => setStyleMenuOpen((prev) => !prev)}
+          ariaLabel="Change map style"
+          tooltip="Map style"
+        >
+          <Layers className="size-4" />
+        </MapControlButton>
+        {styleMenuOpen && (
+          <StyleMenu
+            value={mapStyle}
+            onChange={(next) => {
+              onMapStyleChange(next);
+              setStyleMenuOpen(false);
+            }}
+            onClose={() => setStyleMenuOpen(false)}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Small popover anchored to the Layers button. Opens upward
+// from the button (controls are bottom-right; menu can't go
+// further down without spilling off the map). Active style is
+// indicated by a trailing check rather than a heavy filled
+// state — keeps the surface restrained per the DS "less is
+// more" principle.
+interface StyleMenuProps {
+  value: MapStyleChoice;
+  onChange: (next: MapStyleChoice) => void;
+  onClose: () => void;
+}
+
+function StyleMenu({ value, onChange, onClose }: StyleMenuProps) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (!ref.current) return;
+      if (ref.current.contains(e.target as Node)) return;
+      onClose();
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      ref={ref}
+      role="menu"
+      className="absolute bottom-0 right-full mr-2 w-36 rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-1"
+      style={{ boxShadow: "var(--ds-shadow-menu)" }}
+    >
+      {MAP_STYLE_OPTIONS.map((opt) => {
+        const active = opt.value === value;
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            role="menuitemradio"
+            aria-checked={active}
+            onClick={() => onChange(opt.value)}
+            className="flex h-8 w-full items-center justify-between rounded px-2 text-copy-13 text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-200)]"
+          >
+            <span>{opt.label}</span>
+            {active && (
+              <Check className="size-4 text-[color:var(--ds-gray-1000)]" />
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -755,10 +891,21 @@ function ExpoCard({
 // Style + colour helpers
 // ============================================================================
 
-function styleForMode(isDark: boolean): string {
-  return isDark
-    ? "mapbox://styles/mapbox/dark-v11"
-    : "mapbox://styles/mapbox/light-v11";
+function styleForMode(
+  choice: MapStyleChoice,
+  isDark: boolean,
+): string {
+  switch (choice) {
+    case "satellite":
+      return "mapbox://styles/mapbox/satellite-streets-v12";
+    case "outdoors":
+      return "mapbox://styles/mapbox/outdoors-v12";
+    case "default":
+    default:
+      return isDark
+        ? "mapbox://styles/mapbox/dark-v11"
+        : "mapbox://styles/mapbox/light-v11";
+  }
 }
 
 // Exported because the panel's elevation chart shares the
