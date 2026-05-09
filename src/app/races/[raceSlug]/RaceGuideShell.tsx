@@ -25,11 +25,13 @@ import {
   MapPin,
   Minus,
   Mountain,
+  Navigation,
   Plus,
   Ruler,
   Thermometer,
   TrendingUp,
   Users,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import mapboxgl from "mapbox-gl";
@@ -294,6 +296,7 @@ function RaceMap({
   // on first paint (Strava-style restraint — bold route line,
   // no chrome). User opts in via the milestone toggle control.
   const [showDistanceMarkers, setShowDistanceMarkers] = useState(false);
+  const [expoCardOpen, setExpoCardOpen] = useState(false);
   // We need fitBoundsPadding both inside the load handler (for
   // the constructor) and outside (for the React MapControls'
   // recenter handler). Memoised so the controls don't see a
@@ -411,7 +414,9 @@ function RaceMap({
         // even when the hover marker passes over them.
         hoverMarkerRef.current = createHoverMarker(map);
         if (expo) {
-          expoMarkerRef.current = addExpoMarker(map, expo);
+          expoMarkerRef.current = addExpoMarker(map, expo, () =>
+            setExpoCardOpen((prev) => !prev),
+          );
         }
         if (endpoints) {
           endpointMarkersRef.current = addEndpointMarkers(map, endpoints);
@@ -549,6 +554,13 @@ function RaceMap({
           onToggleDistanceMarkers={() =>
             setShowDistanceMarkers((prev) => !prev)
           }
+        />
+      )}
+      {status.kind === "ready" && expoCardOpen && expo && mapRef.current && (
+        <ExpoCard
+          map={mapRef.current}
+          expo={expo}
+          onClose={() => setExpoCardOpen(false)}
         />
       )}
       {status.kind === "loading" && <MapLoadingOverlay />}
@@ -734,16 +746,21 @@ const EXPO_DOT_SIZE = 18;
 function addExpoMarker(
   map: mapboxgl.Map,
   expo: ExpoLocation,
+  onClick: () => void,
 ): mapboxgl.Marker {
   const marker = addPoiMarker(map, [expo.lng, expo.lat], "Expo", {
     dotSize: EXPO_DOT_SIZE,
   });
-  // Hover tooltip layered on top of the always-visible "Expo"
-  // chip — surfaces the venue name (richer than the chip's
-  // generic label) when there's one to show. Skip if neither
-  // venue nor address is set; the chip alone is enough.
-  const tooltipText = expo.venueName ?? expo.address;
-  if (tooltipText) attachTextTooltip(map, marker, tooltipText);
+  // Click on the dot or chip toggles the rich expo card popup
+  // (rendered as a React overlay in <ExpoCard>). stopPropagation
+  // so the document-level click handler in ExpoCard doesn't see
+  // the same click and immediately close the card after opening.
+  const el = marker.getElement();
+  el.style.cursor = "pointer";
+  el.addEventListener("click", (e) => {
+    e.stopPropagation();
+    onClick();
+  });
   return marker;
 }
 
@@ -1153,6 +1170,124 @@ function MapControlButton({
   );
 }
 
+
+// Expo card — rich popup that opens when the user clicks the
+// expo marker. Renders as an absolute-positioned React overlay
+// inside the map container, with its (x, y) projected from the
+// expo's lng/lat via map.project() and re-projected on every
+// map move/zoom so it stays glued to the marker through pan
+// and scale. Closes on click outside (excluding the marker
+// itself, which toggles via its own click handler) and ESC.
+function ExpoCard({
+  map,
+  expo,
+  onClose,
+}: {
+  map: mapboxgl.Map;
+  expo: ExpoLocation;
+  onClose: () => void;
+}) {
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Project + re-project on map move / zoom so the card tracks
+  // the marker. We deliberately listen to the high-frequency
+  // 'move' event (not just 'moveend') so the card glides with
+  // the pan instead of teleporting at the end.
+  useEffect(() => {
+    const updatePos = () => {
+      const p = map.project([expo.lng, expo.lat]);
+      setPos({ x: p.x, y: p.y });
+    };
+    updatePos();
+    map.on("move", updatePos);
+    map.on("zoom", updatePos);
+    return () => {
+      map.off("move", updatePos);
+      map.off("zoom", updatePos);
+    };
+  }, [map, expo]);
+
+  // Close on click outside the card (the marker click handler
+  // calls stopPropagation, so re-clicking the dot doesn't fire
+  // this) and on ESC.
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (!cardRef.current) return;
+      if (cardRef.current.contains(e.target as Node)) return;
+      onClose();
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("click", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("click", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [onClose]);
+
+  if (!pos) return null;
+
+  // Google Maps directions URL — using lat/lng (rather than
+  // address text) so the destination is the exact geocoded
+  // point we have, not whatever Google's geocoder picks for the
+  // text query.
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${expo.lat},${expo.lng}`;
+
+  return (
+    <div
+      ref={cardRef}
+      className="pointer-events-auto absolute z-[3] w-[300px] rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-4"
+      style={{
+        left: pos.x,
+        top: pos.y,
+        // Centre horizontally on the dot, place card bottom 16
+        // px above the dot's centre so it floats above the
+        // marker with breathing room.
+        transform: "translate(-50%, calc(-100% - 16px))",
+        boxShadow: "var(--ds-shadow-menu)",
+      }}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          {expo.venueName && (
+            <h3 className="m-0 text-heading-16 text-[color:var(--ds-gray-1000)]">
+              {expo.venueName}
+            </h3>
+          )}
+          {expo.address && (
+            <p
+              className={`m-0 text-copy-13 text-[color:var(--ds-gray-900)] ${
+                expo.venueName ? "mt-1" : ""
+              }`}
+            >
+              {expo.address}
+            </p>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="-m-1 flex size-7 shrink-0 items-center justify-center rounded text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-200)] hover:text-[color:var(--ds-gray-1000)]"
+        >
+          <X className="size-4" />
+        </button>
+      </div>
+      <a
+        href={directionsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-4 flex h-9 items-center justify-center gap-2 rounded-md border border-[color:var(--ds-gray-400)] text-copy-13 font-semibold text-[color:var(--ds-gray-1000)] no-underline transition-colors hover:bg-[color:var(--ds-gray-200)]"
+      >
+        <Navigation className="size-4" />
+        Directions
+      </a>
+    </div>
+  );
+}
 
 // ============================================================================
 // Guide panel — vertical stack of editorial cards over the map.
