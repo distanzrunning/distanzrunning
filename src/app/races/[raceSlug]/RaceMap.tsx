@@ -157,6 +157,19 @@ export default function RaceMap({
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
 
+  // Mirror isDark into a ref so the style.load handler (which is
+  // registered inside the main map useEffect with isDark *not*
+  // in its deps — we don't want to tear down the map on every
+  // theme flip) can read the current value rather than its
+  // stale closure capture. Without this, toggling dark mode
+  // wipes layers via setStyle, then style.load re-runs
+  // addRouteLayer with the original isDark — i.e. the casing
+  // stays white in dark mode.
+  const isDarkRef = useRef(isDark);
+  useEffect(() => {
+    isDarkRef.current = isDark;
+  }, [isDark]);
+
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -289,8 +302,17 @@ export default function RaceMap({
     // Re-add the route layer after a style swap (setStyle wipes
     // user-added sources, layers, AND images — so addRouteLayer
     // is responsible for re-registering the arrow image too).
+    // Reads isDarkRef.current rather than isDark so the casing
+    // / shadow / arrow colours pick up the *current* theme on
+    // each style swap, not the value captured when the effect
+    // first ran.
     map.on("style.load", () => {
-      addRouteLayer(map, routeGeoJson, getRouteLineColor(), isDark);
+      addRouteLayer(
+        map,
+        routeGeoJson,
+        getRouteLineColor(),
+        isDarkRef.current,
+      );
     });
 
     // Resize after the first paint as a guard against the
@@ -790,6 +812,14 @@ function addRouteLayer(
   }
 
   const casingColor = isDark ? "#2d2d2d" : "#ffffff";
+  // Shadow flips with theme too: subtle dark fade in light mode
+  // (drop-shadow effect against light tiles), subtle light glow
+  // in dark mode (visible halo against dark tiles). The fixed
+  // dark shadow we previously used was invisible on dark map
+  // tiles — wasted layer.
+  const shadowColor = isDark
+    ? "rgba(255, 255, 255, 0.15)"
+    : "rgba(0, 0, 0, 0.2)";
 
   if (!map.getLayer("race-route-shadow")) {
     map.addLayer(
@@ -799,7 +829,7 @@ function addRouteLayer(
         source: "race-route",
         layout: { "line-cap": "round", "line-join": "round" },
         paint: {
-          "line-color": "rgba(0, 0, 0, 0.2)",
+          "line-color": shadowColor,
           "line-width": 6,
           "line-blur": 3,
         },
