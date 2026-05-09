@@ -341,21 +341,18 @@ function RaceMap({
     const map = new mapboxgl.Map(mapOptions);
     mapRef.current = map;
 
-    // Attribution lives alone at bottom-right — small "i" chip
-    // that expands credits on click; satisfies ToS without
-    // pinning a permanent text chip to the map.
+    // Attribution at bottom-left as plain text — minimalist, no
+    // chip, no "i" toggle. Lives alongside the Mapbox wordmark
+    // (the conventional credits corner). compact:false forces
+    // the full inline text instead of the collapsed button.
     map.addControl(
-      new mapboxgl.AttributionControl({ compact: true }),
-      "bottom-right",
+      new mapboxgl.AttributionControl({ compact: false }),
+      "bottom-left",
     );
 
-    // Action buttons go top-right. Zoom is added first so it
-    // sits at the top of the top-right column (most-used =
-    // closest to natural eye position); recenter + milestone
-    // toggle stack below in interaction-frequency order.
     map.addControl(
       new mapboxgl.NavigationControl({ showCompass: false }),
-      "top-right",
+      "bottom-right",
     );
 
     // Recenter control sits in its own .mapboxgl-ctrl-group chip
@@ -365,7 +362,7 @@ function RaceMap({
     if (initialBounds) {
       map.addControl(
         createRecenterControl(initialBounds, fitBoundsPadding),
-        "top-right",
+        "bottom-right",
       );
     }
 
@@ -379,7 +376,7 @@ function RaceMap({
           () => setShowDistanceMarkers((prev) => !prev),
           milestoneButtonRef,
         ),
-        "top-right",
+        "bottom-right",
       );
     }
 

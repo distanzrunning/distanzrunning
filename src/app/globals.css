@@ -4127,40 +4127,17 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   opacity: 0.45;
 }
 
-/* Centre-align the right-side control columns so chips of
-   different widths (the compact attribution chip is narrower
-   than the 29 px nav buttons) line up by their centres rather
-   than the default float-right / right-edge alignment Mapbox
-   ships. We force the containers to flex and override the
-   per-control float so flex centring actually applies.
-   Direction differs: top-right grows top-down (column), and
-   bottom-right grows bottom-up (column-reverse) — both ways
-   the first-added control lands closest to the corner. */
-.race-detail-map .mapboxgl-ctrl-top-right,
-.race-detail-map .mapboxgl-ctrl-bottom-right {
-  display: flex;
-  align-items: center;
-}
-.race-detail-map .mapboxgl-ctrl-top-right {
-  flex-direction: column;
-}
-.race-detail-map .mapboxgl-ctrl-bottom-right {
-  flex-direction: column-reverse;
-}
-.race-detail-map .mapboxgl-ctrl-top-right > .mapboxgl-ctrl,
-.race-detail-map .mapboxgl-ctrl-bottom-right > .mapboxgl-ctrl {
-  float: none;
-}
-
-/* Race-detail compact attribution chip. Mapbox's compact mode
-   collapses the credits to a small "i" button that expands on
-   click — satisfies ToS without pinning a permanent text chip
-   to the map. We restyle the chip + link colours with DS
-   tokens scoped to .race-detail-map so they match the zoom /
-   recenter / milestone controls in both themes. */
-.race-detail-map .mapboxgl-ctrl-attrib.mapboxgl-compact {
-  background-color: rgba(var(--ds-background-100-rgb), 0.85);
-  color: var(--ds-gray-900);
+/* Race-detail attribution — plain text at bottom-left, no
+   chip, no background. Mapbox's default wraps the credits in
+   a white pill; we strip that and rely on the DS gray scale
+   for theme-aware text/link colours so the credits read as
+   fine print rather than chrome. */
+.race-detail-map .mapboxgl-ctrl-attrib {
+  background: transparent;
+  padding: 0;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--ds-gray-700);
 }
 .race-detail-map .mapboxgl-ctrl-attrib a {
   color: var(--ds-gray-900);
@@ -4168,12 +4145,10 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
 .race-detail-map .mapboxgl-ctrl-attrib a:hover {
   color: var(--ds-gray-1000);
 }
-/* The "i" toggle icon is a background-image SVG; invert it in
-   dark mode so it reads on the dark chip surface (same trick
-   we use on the zoom button icons). */
-:is(.dark, [data-theme="dark"])
-  .race-detail-map
-  .mapboxgl-ctrl-attrib-button {
+/* Mapbox wordmark also lives at bottom-left; invert in dark
+   mode so the dark logo reads against dark map tiles. Same
+   filter trick as the control-button icons. */
+:is(.dark, [data-theme="dark"]) .race-detail-map .mapboxgl-ctrl-logo {
   filter: invert(1);
 }
 
