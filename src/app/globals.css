@@ -4127,6 +4127,14 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   opacity: 0.45;
 }
 
+/* Centre-align the bottom-right control column so chips of
+   different widths (the compact attribution is narrower than
+   the 29 px nav buttons) line up by their centres rather than
+   the default flex-end / right-edge alignment. */
+.race-detail-map .mapboxgl-ctrl-bottom-right {
+  align-items: center;
+}
+
 /* Race-detail compact attribution chip. Mapbox's compact mode
    collapses the credits to a small "i" button that expands on
    click — satisfies ToS without pinning a permanent text chip

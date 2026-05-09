@@ -348,13 +348,14 @@ function RaceMap({
 
     // Compact attribution — small "i" button that expands the
     // Mapbox + OpenStreetMap credits on click. Satisfies ToS
-    // without pinning a permanent text chip to the map. Sits
-    // at bottom-left next to the Mapbox wordmark (the
-    // conventional credits corner) so the bottom-right stays
-    // dedicated to interactive controls.
+    // without pinning a permanent text chip to the map. Stacks
+    // under the zoom / recenter / milestone controls at
+    // bottom-right; the column gets align-items:center via
+    // globals.css so chips with different widths line up by
+    // their centres.
     map.addControl(
       new mapboxgl.AttributionControl({ compact: true }),
-      "bottom-left",
+      "bottom-right",
     );
 
     // Recenter control sits in its own .mapboxgl-ctrl-group chip
