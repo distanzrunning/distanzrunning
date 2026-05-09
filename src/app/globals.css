@@ -4206,4 +4206,25 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
     opacity: 1;
   }
 }
+/* Respect prefers-reduced-motion: drop the clip-path
+   expansion (decorative) and reveal the panel with a short
+   opacity fade instead — sequencing with the map's ready
+   state is preserved (.is-revealed still gates visibility),
+   just without the CRT geometry. */
+@media (prefers-reduced-motion: reduce) {
+  .guide-panel-crt {
+    clip-path: none;
+  }
+  .guide-panel-crt.is-revealed {
+    animation: guide-panel-fade-in 200ms ease-out forwards;
+  }
+  @keyframes guide-panel-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
 
