@@ -16,11 +16,14 @@ import {
   useState,
 } from "react";
 import {
+  Box,
   Crosshair,
   ExternalLink,
   Layers,
   Map as MapIcon,
   MapPin,
+  Maximize,
+  Minimize,
   Minus,
   Mountain,
   Plus,
@@ -154,6 +157,8 @@ interface RaceMapProps {
   expo: ExpoLocation | null;
   elevationSeries: ElevationPoint[] | null;
   hoverDistance: number | null;
+  expanded: boolean;
+  onToggleExpanded: () => void;
   onReady?: () => void;
 }
 
@@ -164,6 +169,8 @@ export default function RaceMap({
   expo,
   elevationSeries,
   hoverDistance,
+  expanded,
+  onToggleExpanded,
   onReady,
 }: RaceMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -179,18 +186,28 @@ export default function RaceMap({
   // no chrome). User opts in via the milestone toggle control.
   const [showDistanceMarkers, setShowDistanceMarkers] = useState(false);
   const [expoCardOpen, setExpoCardOpen] = useState(false);
+  // 3D terrain mode. Adds the DEM source + sets a pitched
+  // camera. Ephemeral (not persisted) — user opts in per visit
+  // since the 3D view is a "look at this section closer" tool,
+  // not a default reading mode.
+  const [pitched, setPitched] = useState(false);
   // We need fitBoundsPadding both inside the load handler (for
   // the constructor) and outside (for the React MapControls'
   // recenter handler). Memoised so the controls don't see a
-  // new identity per render and re-trigger their effects.
+  // new identity per render and re-trigger their effects. When
+  // the map is expanded (fullscreen toggle), the panel column
+  // is removed from the layout so we drop the panel-side
+  // padding and let the route use the full canvas.
   const fitBoundsPadding = useMemo<mapboxgl.PaddingOptions>(
     () => ({
       top: ROUTE_BREATHING,
       bottom: ROUTE_BREATHING,
-      left: PANEL_INSET + PANEL_WIDTH + ROUTE_BREATHING,
+      left: expanded
+        ? ROUTE_BREATHING
+        : PANEL_INSET + PANEL_WIDTH + ROUTE_BREATHING,
       right: ROUTE_BREATHING,
     }),
-    [],
+    [expanded],
   );
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
@@ -228,6 +245,10 @@ export default function RaceMap({
   useEffect(() => {
     isDarkRef.current = isDark;
   }, [isDark]);
+  const pitchedRef = useRef(pitched);
+  useEffect(() => {
+    pitchedRef.current = pitched;
+  }, [pitched]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -369,7 +390,9 @@ export default function RaceMap({
     // Reads the current refs rather than the closure values so
     // the casing / shadow / arrow colours pick up the *current*
     // basemap + theme combination on each style swap, not the
-    // values captured when the effect first ran.
+    // values captured when the effect first ran. Also re-applies
+    // terrain if the user is currently in 3D mode (style swaps
+    // wipe the DEM source alongside everything else).
     map.on("style.load", () => {
       addRouteLayer(
         map,
@@ -377,6 +400,9 @@ export default function RaceMap({
         getRouteLineColor(),
         isBasemapDark(mapStyleRef.current, isDarkRef.current),
       );
+      if (pitchedRef.current) {
+        ensureTerrain(map);
+      }
     });
 
     // Resize after the first paint as a guard against the
@@ -430,6 +456,28 @@ export default function RaceMap({
     lastStyleUrlRef.current = next;
     map.setStyle(next);
   }, [isDark, mapStyle]);
+
+  // Refit the route when the user toggles fullscreen — the
+  // padding switches between "leave room for the panel" and
+  // "use the whole canvas" so the visual framing changes
+  // meaningfully on each toggle. Skip the very first run
+  // (the constructor already framed it). resize() first so
+  // Mapbox picks up the new container dimensions before
+  // computing the new fit.
+  const initialExpandedMount = useRef(true);
+  useEffect(() => {
+    if (initialExpandedMount.current) {
+      initialExpandedMount.current = false;
+      return;
+    }
+    const map = mapRef.current;
+    if (!map || !initialBounds) return;
+    map.resize();
+    map.fitBounds(initialBounds, {
+      padding: fitBoundsPadding,
+      duration: 600,
+    });
+  }, [expanded, fitBoundsPadding, initialBounds]);
 
   // Notify the shell once the route is drawn so the panel can
   // animate in. Reactive to status.kind only — onReady is an
@@ -490,6 +538,25 @@ export default function RaceMap({
     };
   }, [showDistanceMarkers, useMetric, elevationSeries, status.kind]);
 
+  // Toggle the 3D terrain mode: ensure / clear the DEM source
+  // and animate camera pitch. We tear down the terrain *after*
+  // the easeTo lands (via map.once("moveend")) so the user sees
+  // a smooth ride back to flat rather than the geometry
+  // popping flat mid-animation.
+  const handleTogglePitched = () => {
+    const map = mapRef.current;
+    if (!map) return;
+    const next = !pitched;
+    setPitched(next);
+    if (next) {
+      ensureTerrain(map);
+      map.easeTo({ pitch: 60, duration: 800 });
+    } else {
+      map.easeTo({ pitch: 0, duration: 800 });
+      map.once("moveend", () => clearTerrain(map));
+    }
+  };
+
   return (
     <>
       <div
@@ -508,6 +575,10 @@ export default function RaceMap({
           }
           mapStyle={mapStyle}
           onMapStyleChange={setMapStyle}
+          pitched={pitched}
+          onTogglePitched={handleTogglePitched}
+          expanded={expanded}
+          onToggleExpanded={onToggleExpanded}
         />
       )}
       {status.kind === "ready" && expoCardOpen && expo && mapRef.current && (
@@ -580,6 +651,10 @@ interface MapControlsProps {
   onToggleDistanceMarkers: () => void;
   mapStyle: MapStyleChoice;
   onMapStyleChange: (next: MapStyleChoice) => void;
+  pitched: boolean;
+  onTogglePitched: () => void;
+  expanded: boolean;
+  onToggleExpanded: () => void;
 }
 
 function MapControls({
@@ -591,6 +666,10 @@ function MapControls({
   onToggleDistanceMarkers,
   mapStyle,
   onMapStyleChange,
+  pitched,
+  onTogglePitched,
+  expanded,
+  onToggleExpanded,
 }: MapControlsProps) {
   const [styleSwitcherOpen, setStyleSwitcherOpen] = useState(false);
   // Wraps the trigger button + popover so the close-on-outside
@@ -687,6 +766,26 @@ function MapControls({
           />
         )}
       </div>
+      <MapControlButton
+        onClick={onTogglePitched}
+        ariaLabel="Toggle 3D"
+        pressed={pitched}
+        className="pointer-events-auto"
+      >
+        <Box className="size-4" />
+      </MapControlButton>
+      <MapControlButton
+        onClick={onToggleExpanded}
+        ariaLabel={expanded ? "Exit fullscreen" : "Fullscreen map"}
+        pressed={expanded}
+        className="pointer-events-auto"
+      >
+        {expanded ? (
+          <Minimize className="size-4" />
+        ) : (
+          <Maximize className="size-4" />
+        )}
+      </MapControlButton>
     </div>
   );
 }
@@ -944,6 +1043,34 @@ function styleForMode(choice: MapStyleChoice, isDark: boolean): string {
 // that a white casing always reads cleanly.
 function isBasemapDark(choice: MapStyleChoice, isDark: boolean): boolean {
   return choice === "default" && isDark;
+}
+
+// 3D terrain helpers. Mapbox's hosted terrain DEM tileset
+// gives us global elevation data; setting it as the map's
+// terrain elevates the geometry under every tile so the
+// camera reads the route over actual hills + valleys when
+// the user pitches in.
+const TERRAIN_SOURCE_ID = "mapbox-dem";
+
+function ensureTerrain(map: mapboxgl.Map): void {
+  if (!map.getSource(TERRAIN_SOURCE_ID)) {
+    map.addSource(TERRAIN_SOURCE_ID, {
+      type: "raster-dem",
+      url: "mapbox://mapbox.mapbox-terrain-dem-v1",
+      tileSize: 512,
+      maxzoom: 14,
+    });
+  }
+  // Exaggeration > 1 makes hills more dramatic; 1.5 is a
+  // commonly used "still believable but readable" middle
+  // ground (Mapbox's own demos use this value).
+  map.setTerrain({ source: TERRAIN_SOURCE_ID, exaggeration: 1.5 });
+}
+
+function clearTerrain(map: mapboxgl.Map): void {
+  if (map.getTerrain()) {
+    map.setTerrain(null);
+  }
 }
 
 // Exported because the panel's elevation chart shares the

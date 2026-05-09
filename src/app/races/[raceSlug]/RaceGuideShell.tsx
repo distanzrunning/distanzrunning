@@ -17,7 +17,6 @@ import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import {
   ArrowDown,
   ChevronRight,
-  ChevronsUp,
   Clock,
   Droplets,
   Footprints,
@@ -132,6 +131,11 @@ export default function RaceGuideShell({
   // route) and the map drops a blue marker at the matching
   // coordinate. null = no hover.
   const [hoverDistance, setHoverDistance] = useState<number | null>(null);
+  // Map "expanded" state: when true the editorial panel is
+  // hidden and the map gets the full canvas. Toggled from
+  // inside the map via a fullscreen control; lifted here so
+  // the shell can conditionally remove the panel column.
+  const [mapExpanded, setMapExpanded] = useState(false);
   return (
     // Single-cell grid: the sticky map and the editorial panel
     // both occupy row 1 / col 1. The cell auto-sizes to the
@@ -176,6 +180,8 @@ export default function RaceGuideShell({
             expo={expo}
             elevationSeries={elevationSeries}
             hoverDistance={hoverDistance}
+            expanded={mapExpanded}
+            onToggleExpanded={() => setMapExpanded((prev) => !prev)}
             onReady={() => setMapReady(true)}
           />
         ) : (
@@ -191,25 +197,30 @@ export default function RaceGuideShell({
           panel. The container is padded for the panel inset and
           is pointer-events:none so map interactions pass through
           the empty area; the aside re-enables pointer events so
-          its own content stays interactive. */}
-      <div
-        className={`guide-panel-crt${panelRevealed ? " is-revealed" : ""}`}
-        style={{
-          gridColumn: 1,
-          gridRow: 1,
-          padding: PANEL_INSET,
-          pointerEvents: "none",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <GuidePanel
-          race={race}
-          heroImageUrl={heroImageUrl}
-          elevationSeries={elevationSeries}
-          onHoverDistance={setHoverDistance}
-        />
-      </div>
+          its own content stays interactive.
+          When the map is expanded (fullscreen toggle), the panel
+          is removed from the tree entirely so the page collapses
+          to map-only and the route gets the full canvas. */}
+      {!mapExpanded && (
+        <div
+          className={`guide-panel-crt${panelRevealed ? " is-revealed" : ""}`}
+          style={{
+            gridColumn: 1,
+            gridRow: 1,
+            padding: PANEL_INSET,
+            pointerEvents: "none",
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
+          <GuidePanel
+            race={race}
+            heroImageUrl={heroImageUrl}
+            elevationSeries={elevationSeries}
+            onHoverDistance={setHoverDistance}
+          />
+        </div>
+      )}
     </div>
   );
 }
