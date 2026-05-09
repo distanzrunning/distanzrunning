@@ -18,7 +18,7 @@ import {
 import {
   Crosshair,
   ExternalLink,
-  Map as MapIcon,
+  Layers,
   MapPin,
   Minus,
   Moon,
@@ -98,24 +98,28 @@ type MapStatus =
 
 type EndpointVariant = "start" | "finish";
 
-// User-selectable basemap. Five explicit choices — the user
+// User-selectable basemap. Four explicit choices — the user
 // picks once and the choice persists. Decoupled from the page
 // theme so a user reading the site in dark mode can still pick
 // e.g. Satellite or Light without the global theme overriding
 // their choice. The route casing colour shifts when the user
 // picks "Dark" (so the casing reads against dark tiles); all
 // other styles use the light casing for visibility against
-// imagery, terrain shading, or street tiles.
-type MapStyleChoice = "map" | "satellite" | "terrain" | "light" | "dark";
+// imagery, terrain shading, or light tiles.
+//
+// Terrain is the streets-style "outdoors" basemap with hill
+// shading + contour lines — covers the same use case as the
+// generic streets basemap plus elevation context, so we don't
+// ship both.
+type MapStyleChoice = "satellite" | "terrain" | "light" | "dark";
 
 const MAP_STYLE_STORAGE_KEY = "distanz-race-map-style";
 
 const MAP_STYLE_OPTIONS: {
   value: MapStyleChoice;
   label: string;
-  Icon: typeof MapIcon;
+  Icon: typeof Satellite;
 }[] = [
-  { value: "map", label: "Map", Icon: MapIcon },
   { value: "satellite", label: "Satellite", Icon: Satellite },
   { value: "terrain", label: "Terrain", Icon: Mountain },
   { value: "light", label: "Light", Icon: Sun },
@@ -124,7 +128,6 @@ const MAP_STYLE_OPTIONS: {
 
 function isValidMapStyle(value: string | null): value is MapStyleChoice {
   return (
-    value === "map" ||
     value === "satellite" ||
     value === "terrain" ||
     value === "light" ||
@@ -484,19 +487,18 @@ export default function RaceMap({
         className="race-detail-map h-full w-full"
       />
       {status.kind === "ready" && (
-        <>
-          <MapStyleSwitcher value={mapStyle} onChange={setMapStyle} />
-          <MapControls
-            mapRef={mapRef}
-            initialBounds={initialBounds}
-            fitBoundsPadding={fitBoundsPadding}
-            showMilestoneToggle={!!elevationSeries}
-            showDistanceMarkers={showDistanceMarkers}
-            onToggleDistanceMarkers={() =>
-              setShowDistanceMarkers((prev) => !prev)
-            }
-          />
-        </>
+        <MapControls
+          mapRef={mapRef}
+          initialBounds={initialBounds}
+          fitBoundsPadding={fitBoundsPadding}
+          showMilestoneToggle={!!elevationSeries}
+          showDistanceMarkers={showDistanceMarkers}
+          onToggleDistanceMarkers={() =>
+            setShowDistanceMarkers((prev) => !prev)
+          }
+          mapStyle={mapStyle}
+          onMapStyleChange={setMapStyle}
+        />
       )}
       {status.kind === "ready" && expoCardOpen && expo && mapRef.current && (
         <ExpoCard
@@ -566,6 +568,8 @@ interface MapControlsProps {
   showMilestoneToggle: boolean;
   showDistanceMarkers: boolean;
   onToggleDistanceMarkers: () => void;
+  mapStyle: MapStyleChoice;
+  onMapStyleChange: (next: MapStyleChoice) => void;
 }
 
 function MapControls({
@@ -575,7 +579,10 @@ function MapControls({
   showMilestoneToggle,
   showDistanceMarkers,
   onToggleDistanceMarkers,
+  mapStyle,
+  onMapStyleChange,
 }: MapControlsProps) {
+  const [styleSwitcherOpen, setStyleSwitcherOpen] = useState(false);
   const handleZoomIn = () => mapRef.current?.zoomIn();
   const handleZoomOut = () => mapRef.current?.zoomOut();
   const handleRecenter = () => {
@@ -627,63 +634,94 @@ function MapControls({
           <MapPin className="size-4" />
         </MapControlButton>
       )}
+      <div className="pointer-events-auto relative">
+        <MapControlButton
+          onClick={() => setStyleSwitcherOpen((prev) => !prev)}
+          ariaLabel="Map style"
+          tooltip="Map style"
+          pressed={styleSwitcherOpen ? true : undefined}
+        >
+          <Layers className="size-4" />
+        </MapControlButton>
+        {styleSwitcherOpen && (
+          <MapStyleSwitcher
+            value={mapStyle}
+            onChange={(next) => {
+              onMapStyleChange(next);
+              setStyleSwitcherOpen(false);
+            }}
+            onClose={() => setStyleSwitcherOpen(false)}
+          />
+        )}
+      </div>
     </div>
   );
 }
 
-// Always-visible segmented control along the top of the map,
-// letting the user switch basemap with a single tap. Active
-// option fills with the gray-1000 chip; inactive options carry
-// only the icon + label and surface a subtle hover. Sits at
-// top-center over the visible map area (offset right of the
-// editorial panel) so it reads as a primary affordance — Strava
-// uses the same pattern.
+// Horizontal segmented control that expands left from the
+// Layers button when opened. Pinned to the button's right edge
+// (right-full) and bottom-aligned with the button so the chip
+// row reads as a row connected to the trigger. Click outside or
+// Escape closes.
 interface MapStyleSwitcherProps {
   value: MapStyleChoice;
   onChange: (next: MapStyleChoice) => void;
+  onClose: () => void;
 }
 
-function MapStyleSwitcher({ value, onChange }: MapStyleSwitcherProps) {
+function MapStyleSwitcher({
+  value,
+  onChange,
+  onClose,
+}: MapStyleSwitcherProps) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (!ref.current) return;
+      if (ref.current.contains(e.target as Node)) return;
+      onClose();
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [onClose]);
+
   return (
     <div
-      className="pointer-events-none absolute top-4 z-[3] flex justify-center"
-      style={{
-        // The visible map area starts after the panel column.
-        // Centre the switcher in that remaining strip so it
-        // doesn't overlap the panel and reads as part of the
-        // map surface.
-        left: PANEL_INSET + PANEL_WIDTH + PANEL_INSET,
-        right: PANEL_INSET,
-      }}
+      ref={ref}
+      role="radiogroup"
+      aria-label="Map style"
+      className="absolute bottom-0 right-full mr-2 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-1"
+      style={{ boxShadow: "var(--ds-shadow-small)" }}
     >
-      <div
-        role="radiogroup"
-        aria-label="Map style"
-        className="pointer-events-auto inline-flex items-center gap-1 rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-1"
-        style={{ boxShadow: "var(--ds-shadow-small)" }}
-      >
-        {MAP_STYLE_OPTIONS.map((opt) => {
-          const active = opt.value === value;
-          const Icon = opt.Icon;
-          return (
-            <button
-              key={opt.value}
-              type="button"
-              role="radio"
-              aria-checked={active}
-              onClick={() => onChange(opt.value)}
-              className={`flex h-7 items-center gap-1.5 rounded-full px-3 text-copy-13 transition-colors ${
-                active
-                  ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)]"
-                  : "text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-200)]"
-              }`}
-            >
-              <Icon className="size-4" strokeWidth={active ? 2.5 : 1.5} />
-              <span>{opt.label}</span>
-            </button>
-          );
-        })}
-      </div>
+      {MAP_STYLE_OPTIONS.map((opt) => {
+        const active = opt.value === value;
+        const Icon = opt.Icon;
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            onClick={() => onChange(opt.value)}
+            className={`flex h-6 items-center gap-1.5 rounded-full px-3 text-copy-13 transition-colors ${
+              active
+                ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)]"
+                : "text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-200)]"
+            }`}
+          >
+            <Icon className="size-4" strokeWidth={active ? 2.5 : 1.5} />
+            <span>{opt.label}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -888,10 +926,8 @@ function styleForMode(choice: MapStyleChoice): string {
     case "dark":
       return "mapbox://styles/mapbox/dark-v11";
     case "light":
-      return "mapbox://styles/mapbox/light-v11";
-    case "map":
     default:
-      return "mapbox://styles/mapbox/streets-v12";
+      return "mapbox://styles/mapbox/light-v11";
   }
 }
 
@@ -935,12 +971,23 @@ function addRouteLayer(
     map.addSource("race-route", { type: "geojson", data });
   }
 
-  // Find the first label/symbol layer so we can insert the
-  // route layers below it (street names paint on top of route).
+  // Find the first text-label symbol layer so we can insert the
+  // route layers immediately below it — the route paints above
+  // every road / terrain / water layer, but place names and
+  // road labels still read on top. The earlier heuristic
+  // (first symbol layer of any kind) caught POI icon symbols on
+  // the streets / outdoors basemaps, which sit *before* the
+  // road network in those layer stacks; that landed the route
+  // beneath all the road geometry. Restricting to symbol layers
+  // whose id contains "label" matches Mapbox's naming
+  // convention for text-bearing layers (road-label,
+  // place-label, settlement-label, …) and skips the icon-only
+  // POI symbols. Falls back to undefined (insert on top) if no
+  // label layer is found.
   const layers = map.getStyle().layers;
   let firstSymbolId: string | undefined;
   for (const layer of layers ?? []) {
-    if (layer.type === "symbol" || layer.id?.includes("label")) {
+    if (layer.type === "symbol" && layer.id?.includes("label")) {
       firstSymbolId = layer.id;
       break;
     }
