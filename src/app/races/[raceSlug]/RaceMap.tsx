@@ -593,6 +593,32 @@ function MapControls({
   onMapStyleChange,
 }: MapControlsProps) {
   const [styleSwitcherOpen, setStyleSwitcherOpen] = useState(false);
+  // Wraps the trigger button + popover so the close-on-outside
+  // handler can treat clicks on the trigger as "inside" the
+  // switcher unit. Without this the trigger's own onClick (toggle
+  // open/closed) and the popover's outside-click handler (close)
+  // both run on the same click while open, batching to no net
+  // change — i.e. the menu wouldn't close when re-clicking the
+  // Layers button.
+  const styleSwitcherWrapperRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!styleSwitcherOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (!styleSwitcherWrapperRef.current) return;
+      if (styleSwitcherWrapperRef.current.contains(e.target as Node)) return;
+      setStyleSwitcherOpen(false);
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setStyleSwitcherOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [styleSwitcherOpen]);
+
   const handleZoomIn = () => mapRef.current?.zoomIn();
   const handleZoomOut = () => mapRef.current?.zoomOut();
   const handleRecenter = () => {
@@ -640,7 +666,10 @@ function MapControls({
           <MapPin className="size-4" />
         </MapControlButton>
       )}
-      <div className="pointer-events-auto relative">
+      <div
+        ref={styleSwitcherWrapperRef}
+        className="pointer-events-auto relative"
+      >
         <MapControlButton
           onClick={() => setStyleSwitcherOpen((prev) => !prev)}
           ariaLabel="Map style"
@@ -655,7 +684,6 @@ function MapControls({
               onMapStyleChange(next);
               setStyleSwitcherOpen(false);
             }}
-            onClose={() => setStyleSwitcherOpen(false)}
           />
         )}
       </div>
@@ -666,41 +694,18 @@ function MapControls({
 // Horizontal segmented control that expands left from the
 // Layers button when opened. Pinned to the button's right edge
 // (right-full) and bottom-aligned with the button so the chip
-// row reads as a row connected to the trigger. Click outside or
-// Escape closes.
+// row reads as a row connected to the trigger. Close-on-outside
+// + Escape live in the parent so the trigger button counts as
+// "inside" the switcher unit (lets re-clicking the trigger
+// toggle the popover closed).
 interface MapStyleSwitcherProps {
   value: MapStyleChoice;
   onChange: (next: MapStyleChoice) => void;
-  onClose: () => void;
 }
 
-function MapStyleSwitcher({
-  value,
-  onChange,
-  onClose,
-}: MapStyleSwitcherProps) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (!ref.current) return;
-      if (ref.current.contains(e.target as Node)) return;
-      onClose();
-    };
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("mousedown", handleClick);
-    document.addEventListener("keydown", handleKey);
-    return () => {
-      document.removeEventListener("mousedown", handleClick);
-      document.removeEventListener("keydown", handleKey);
-    };
-  }, [onClose]);
-
+function MapStyleSwitcher({ value, onChange }: MapStyleSwitcherProps) {
   return (
     <div
-      ref={ref}
       role="radiogroup"
       aria-label="Map style"
       className="absolute bottom-0 right-full mr-2 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-1"
