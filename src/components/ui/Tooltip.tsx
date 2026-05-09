@@ -81,72 +81,72 @@ export function Tooltip({
     return () => setMounted(false);
   }, []);
 
-  // Pure measurement helper — re-runnable on scroll/resize so
-  // the tooltip keeps tracking its trigger even when the
-  // trigger sits inside a sticky/fixed ancestor (e.g. the
-  // race-detail map controls). Without this the tooltip's
-  // page-relative top is computed once at hover time and stays
-  // anchored to the page while the sticky trigger stays glued
-  // to the viewport — they diverge as the user scrolls.
+  // Measurement helper — uses raw getBoundingClientRect()
+  // (viewport-relative) coords, no scrollX/scrollY math, since
+  // the tooltip itself is rendered with position:fixed. For a
+  // sticky / fixed trigger that's the entire fix: the trigger
+  // stays at its viewport position and the tooltip stays at
+  // its viewport position, so they remain aligned during scroll
+  // without any extra work. For non-sticky triggers, scroll
+  // changes the trigger's viewport coords, so the scroll
+  // listener below re-runs this to keep them aligned.
   const updatePosition = useCallback(() => {
     if (!triggerRef.current || !tooltipRef.current) return;
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
     const tooltipRect = tooltipRef.current.getBoundingClientRect();
-    const scrollX = window.scrollX;
-    const scrollY = window.scrollY;
 
     let top = 0;
     let left = 0;
 
     switch (side) {
       case "top":
-        top = triggerRect.top + scrollY - tooltipRect.height - TOOLTIP_OFFSET;
+        top = triggerRect.top - tooltipRect.height - TOOLTIP_OFFSET;
         break;
       case "bottom":
-        top = triggerRect.bottom + scrollY + TOOLTIP_OFFSET;
+        top = triggerRect.bottom + TOOLTIP_OFFSET;
         break;
       case "left":
-        left = triggerRect.left + scrollX - tooltipRect.width - TOOLTIP_OFFSET;
+        left = triggerRect.left - tooltipRect.width - TOOLTIP_OFFSET;
         break;
       case "right":
-        left = triggerRect.right + scrollX + TOOLTIP_OFFSET;
+        left = triggerRect.right + TOOLTIP_OFFSET;
         break;
     }
 
     if (side === "top" || side === "bottom") {
       switch (align) {
         case "start":
-          left = triggerRect.left + scrollX;
+          left = triggerRect.left;
           break;
         case "center":
           left =
-            triggerRect.left + scrollX + triggerRect.width / 2 - tooltipRect.width / 2;
+            triggerRect.left + triggerRect.width / 2 - tooltipRect.width / 2;
           break;
         case "end":
-          left = triggerRect.right + scrollX - tooltipRect.width;
+          left = triggerRect.right - tooltipRect.width;
           break;
       }
     } else {
       switch (align) {
         case "start":
-          top = triggerRect.top + scrollY;
+          top = triggerRect.top;
           break;
         case "center":
           top =
-            triggerRect.top + scrollY + triggerRect.height / 2 - tooltipRect.height / 2;
+            triggerRect.top + triggerRect.height / 2 - tooltipRect.height / 2;
           break;
         case "end":
-          top = triggerRect.bottom + scrollY - tooltipRect.height;
+          top = triggerRect.bottom - tooltipRect.height;
           break;
       }
     }
 
     let arrowOffset = 0;
     if (side === "top" || side === "bottom") {
-      arrowOffset = triggerRect.left + scrollX + triggerRect.width / 2 - left;
+      arrowOffset = triggerRect.left + triggerRect.width / 2 - left;
     } else {
-      arrowOffset = triggerRect.top + scrollY + triggerRect.height / 2 - top;
+      arrowOffset = triggerRect.top + triggerRect.height / 2 - top;
     }
 
     setPosition({ top, left, arrowOffset });
@@ -277,7 +277,14 @@ export function Tooltip({
           ref={tooltipRef}
           role="tooltip"
           style={{
-            position: "absolute",
+            // position:fixed (not absolute) so the tooltip is
+            // anchored to the viewport rather than the page —
+            // sticky / fixed triggers (e.g. the race-detail map
+            // controls) keep the tooltip glued to the button
+            // through scroll without any recompute, since both
+            // are then viewport-anchored. Non-sticky triggers
+            // are handled by the scroll listener above.
+            position: "fixed",
             top: isPositioned ? position.top : -9999,
             left: isPositioned ? position.left : -9999,
             zIndex: 9999,
