@@ -341,20 +341,19 @@ function RaceMap({
     const map = new mapboxgl.Map(mapOptions);
     mapRef.current = map;
 
+    // Attribution added FIRST so it lands at the bottom of the
+    // column-reverse stack (Mapbox renders last-added at the
+    // top). Compact mode = small "i" chip that expands credits
+    // on click; satisfies ToS without pinning a permanent text
+    // chip to the map. Action buttons (zoom / recenter /
+    // milestone) stack above it in their interaction order.
     map.addControl(
-      new mapboxgl.NavigationControl({ showCompass: false }),
+      new mapboxgl.AttributionControl({ compact: true }),
       "bottom-right",
     );
 
-    // Compact attribution — small "i" button that expands the
-    // Mapbox + OpenStreetMap credits on click. Satisfies ToS
-    // without pinning a permanent text chip to the map. Stacks
-    // under the zoom / recenter / milestone controls at
-    // bottom-right; the column gets align-items:center via
-    // globals.css so chips with different widths line up by
-    // their centres.
     map.addControl(
-      new mapboxgl.AttributionControl({ compact: true }),
+      new mapboxgl.NavigationControl({ showCompass: false }),
       "bottom-right",
     );
 
