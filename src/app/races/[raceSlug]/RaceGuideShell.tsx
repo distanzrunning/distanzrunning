@@ -22,7 +22,7 @@ import {
   Crosshair,
   Droplets,
   Footprints,
-  Milestone,
+  MapPin,
   Minus,
   Mountain,
   Plus,
@@ -1082,7 +1082,7 @@ function MapControls({
           pressed={showDistanceMarkers}
           className="pointer-events-auto"
         >
-          <Milestone className="size-4" />
+          <MapPin className="size-4" />
         </MapControlButton>
       )}
     </div>
