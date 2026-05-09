@@ -46,11 +46,13 @@ import type { ElevationPoint, RouteBounds, RouteEndpoint } from "@/lib/gpxUtils"
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
-import RaceMap, {
+import {
   MAP_STICKY_TOP,
   MAP_VIEWPORT_HEIGHT,
   PANEL_INSET,
   PANEL_WIDTH,
+} from "./_constants";
+import RaceMap, {
   StatusOverlay,
   getRouteLineColor,
   type ExpoLocation,

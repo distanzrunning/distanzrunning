@@ -36,15 +36,7 @@ import type {
   RouteEndpoint,
 } from "@/lib/gpxUtils";
 
-// ============================================================================
-// Public layout constants — exported so the shell can size its
-// sticky map cell + panel column without duplicating the values.
-// ============================================================================
-
-export const MAP_STICKY_TOP = 50;
-export const MAP_VIEWPORT_HEIGHT = "calc(100vh - 50px)";
-export const PANEL_WIDTH = 520;
-export const PANEL_INSET = 32;
+import { PANEL_INSET, PANEL_WIDTH } from "./_constants";
 
 // ============================================================================
 // Public types
