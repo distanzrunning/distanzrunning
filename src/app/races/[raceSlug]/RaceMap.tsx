@@ -33,7 +33,6 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { LoadingDots } from "@/components/ui/LoadingDots";
-import DsTooltip from "@/components/ui/Tooltip";
 import { useUnits } from "@/contexts/UnitsContext";
 import type {
   ElevationPoint,
@@ -599,7 +598,6 @@ function MapControls({
         <MapControlButton
           onClick={handleZoomIn}
           ariaLabel="Zoom in"
-          tooltip="Zoom in"
           position="top"
         >
           <Plus className="size-4" />
@@ -607,7 +605,6 @@ function MapControls({
         <MapControlButton
           onClick={handleZoomOut}
           ariaLabel="Zoom out"
-          tooltip="Zoom out"
           position="bottom"
         >
           <Minus className="size-4" />
@@ -617,7 +614,6 @@ function MapControls({
         <MapControlButton
           onClick={handleRecenter}
           ariaLabel="Recenter route"
-          tooltip="Recenter route"
           className="pointer-events-auto"
         >
           <Crosshair className="size-4" />
@@ -627,7 +623,6 @@ function MapControls({
         <MapControlButton
           onClick={onToggleDistanceMarkers}
           ariaLabel="Toggle distance markers"
-          tooltip="Toggle distance markers"
           pressed={showDistanceMarkers}
           className="pointer-events-auto"
         >
@@ -638,7 +633,6 @@ function MapControls({
         <MapControlButton
           onClick={() => setStyleSwitcherOpen((prev) => !prev)}
           ariaLabel="Map style"
-          tooltip="Map style"
           pressed={styleSwitcherOpen ? true : undefined}
         >
           <Layers className="size-4" />
@@ -737,7 +731,6 @@ function MapStyleSwitcher({
 interface MapControlButtonProps {
   onClick: () => void;
   ariaLabel: string;
-  tooltip: string;
   pressed?: boolean;
   position?: MapButtonPosition;
   className?: string;
@@ -747,7 +740,6 @@ interface MapControlButtonProps {
 function MapControlButton({
   onClick,
   ariaLabel,
-  tooltip,
   pressed,
   position = "standalone",
   className = "",
@@ -774,18 +766,16 @@ function MapControlButton({
   const isToggle = pressed !== undefined;
 
   return (
-    <DsTooltip content={tooltip} side="left" delay={300}>
-      <button
-        type="button"
-        onClick={onClick}
-        aria-label={ariaLabel}
-        {...(isToggle ? { "aria-pressed": pressed } : {})}
-        className={`flex h-8 w-8 items-center justify-center border border-[color:var(--ds-gray-400)] transition-colors active:scale-[0.98] ${radius} ${divider} ${colors} ${className}`.trim()}
-        style={{ boxShadow: "var(--ds-shadow-small)" }}
-      >
-        {children}
-      </button>
-    </DsTooltip>
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={ariaLabel}
+      {...(isToggle ? { "aria-pressed": pressed } : {})}
+      className={`flex h-8 w-8 items-center justify-center border border-[color:var(--ds-gray-400)] transition-colors active:scale-[0.98] ${radius} ${divider} ${colors} ${className}`.trim()}
+      style={{ boxShadow: "var(--ds-shadow-small)" }}
+    >
+      {children}
+    </button>
   );
 }
 
