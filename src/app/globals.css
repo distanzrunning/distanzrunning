@@ -4135,26 +4135,22 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
    per-anchor because Mapbox picks the anchor at runtime based
    on viewport room, and each anchor uses a different border
    side for its triangle. */
-/* Inverted theme colours for high contrast against any map
+/* Marker tooltip — clean rounded pill, no tip arrow. Modern
+   tooltip pattern (Apple, Google Material, Tailwind UI all
+   skip tips on tooltips); the marker dot directly below makes
+   the relationship obvious. No tip means no seam possible
+   between body and pointer.
+
+   Inverted theme colours for high contrast against any map
    tile: dark chip in light mode, light chip in dark mode.
    --ds-gray-1000 / --ds-background-100 both theme-flip, so
-   pairing them swapped gives the inverted look in either mode.
-   max-width + white-space:normal lets longer content wrap
-   instead of stretching off the map; line-height 1.35 keeps
-   wrapped lines readable.
-   Elevation comes from a filter:drop-shadow on the .mapboxgl-
-   popup wrapper rather than box-shadow on .mapboxgl-popup-
-   content — drop-shadow follows the union of the visible
-   shape (content rectangle + tip triangle), so there's no
-   visible "seam" where the content's box-shadow would
-   otherwise leak past the tip's transparent side borders. */
-.map-marker-tooltip {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.18));
-}
+   pairing them swapped gives the inverted look in either
+   mode. max-width + white-space:normal lets longer content
+   wrap instead of stretching off the map. */
 .map-marker-tooltip .mapboxgl-popup-content {
   background: var(--ds-gray-1000);
   color: var(--ds-background-100);
-  box-shadow: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
   padding: 6px 10px;
   font-size: 12px;
@@ -4163,50 +4159,10 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   max-width: 220px;
   white-space: normal;
 }
-/* Restore the CSS-triangle tip (we'd hidden it for a flat
-   chip look). The tip's colour is set per-anchor because
-   Mapbox picks the anchor at runtime based on viewport room,
-   and each anchor uses a different border side for its
-   triangle. */
+/* Hide Mapbox's default CSS-triangle tip — the marker itself
+   is the visual anchor, no pointer needed. */
 .map-marker-tooltip .mapboxgl-popup-tip {
-  border-color: transparent;
-}
-.map-marker-tooltip.mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
-.map-marker-tooltip.mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
-.map-marker-tooltip.mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
-  border-bottom-color: var(--ds-gray-1000);
-}
-.map-marker-tooltip.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
-.map-marker-tooltip.mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
-.map-marker-tooltip.mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip {
-  border-top-color: var(--ds-gray-1000);
-}
-.map-marker-tooltip.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
-  border-right-color: var(--ds-gray-1000);
-}
-.map-marker-tooltip.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
-  border-left-color: var(--ds-gray-1000);
-}
-/* Speech-bubble corners: kill the radius on the side of the
-   body where the tip attaches so the rounded corner doesn't
-   curve up away from the tip's flat side and leave a visible
-   shoulder. Mapbox already does this for diagonal anchors but
-   not the straight ones; we apply it to all four. */
-.map-marker-tooltip.mapboxgl-popup-anchor-top .mapboxgl-popup-content {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-.map-marker-tooltip.mapboxgl-popup-anchor-bottom .mapboxgl-popup-content {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-.map-marker-tooltip.mapboxgl-popup-anchor-left .mapboxgl-popup-content {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-.map-marker-tooltip.mapboxgl-popup-anchor-right .mapboxgl-popup-content {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+  display: none;
 }
 
 /* Race detail guide panel — CRT-on reveal. The panel column
