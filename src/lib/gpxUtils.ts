@@ -408,3 +408,73 @@ export async function fetchGPXElevationData(gpxUrl: string): Promise<ElevationPo
     return []
   }
 }
+
+/**
+ * Serialise the parsed route + POIs back out as a GPX 1.1
+ * document, suitable for "Save GPX" downloads. Track points
+ * preserve elevation when present; POI features become
+ * waypoints with `<sym>` matching their type so importing
+ * watches / apps can re-symbolise them. Pure string builder
+ * — no DOM, runs anywhere.
+ */
+export function routeAssetsToGpx(opts: {
+  geoJson: GeoJSON.FeatureCollection;
+  pois: RoutePoi[];
+  raceName: string;
+}): string {
+  const escape = (s: string) =>
+    s.replace(/[&<>"']/g, (c) => {
+      switch (c) {
+        case "&":
+          return "&amp;";
+        case "<":
+          return "&lt;";
+        case ">":
+          return "&gt;";
+        case '"':
+          return "&quot;";
+        case "'":
+          return "&apos;";
+        default:
+          return c;
+      }
+    });
+
+  const lines: string[] = [];
+  lines.push('<?xml version="1.0" encoding="UTF-8"?>');
+  lines.push(
+    '<gpx version="1.1" creator="Distanz Running" xmlns="http://www.topografix.com/GPX/1/1">',
+  );
+  lines.push(`  <metadata><name>${escape(opts.raceName)}</name></metadata>`);
+
+  for (const poi of opts.pois) {
+    lines.push(`  <wpt lat="${poi.lat}" lon="${poi.lng}">`);
+    if (poi.name) lines.push(`    <name>${escape(poi.name)}</name>`);
+    lines.push(`    <sym>${escape(poi.type)}</sym>`);
+    lines.push(`    <type>${escape(poi.type)}</type>`);
+    lines.push(`  </wpt>`);
+  }
+
+  lines.push(`  <trk>`);
+  lines.push(`    <name>${escape(opts.raceName)}</name>`);
+  lines.push(`    <trkseg>`);
+  for (const feature of opts.geoJson.features ?? []) {
+    const geom = feature.geometry;
+    if (!geom) continue;
+    const pushPoint = (coord: number[]): void => {
+      const [lng, lat, ele] = coord;
+      if (typeof lng !== "number" || typeof lat !== "number") return;
+      const eleTag = typeof ele === "number" ? `<ele>${ele}</ele>` : "";
+      lines.push(`      <trkpt lat="${lat}" lon="${lng}">${eleTag}</trkpt>`);
+    };
+    if (geom.type === "LineString") {
+      for (const coord of geom.coordinates) pushPoint(coord);
+    } else if (geom.type === "MultiLineString") {
+      for (const line of geom.coordinates) for (const c of line) pushPoint(c);
+    }
+  }
+  lines.push(`    </trkseg>`);
+  lines.push(`  </trk>`);
+  lines.push(`</gpx>`);
+  return lines.join("\n");
+}

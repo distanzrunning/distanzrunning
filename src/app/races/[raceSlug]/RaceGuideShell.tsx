@@ -323,6 +323,8 @@ export default function RaceGuideShell({
             expo={expo}
             elevationSeries={elevationSeries}
             hoverDistance={hoverDistance}
+            raceName={race.title}
+            raceSlug={race.slug ?? race.title.toLowerCase().replace(/\s+/g, "-")}
             expanded={mapExpanded}
             onToggleExpanded={handleToggleExpanded}
             onReady={() => setMapReady(true)}

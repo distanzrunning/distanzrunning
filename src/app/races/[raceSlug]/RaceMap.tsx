@@ -31,13 +31,14 @@ import {
   type LucideIcon,
   Map as MapIcon,
   MapPin,
+  Download,
+  Flag,
   Maximize,
   Milestone,
   Minimize,
   Minus,
   Mountain,
   ParkingSquare,
-  Pin,
   Plus,
   Satellite,
   Users,
@@ -49,12 +50,13 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { LoadingDots } from "@/components/ui/LoadingDots";
 import { useUnits } from "@/contexts/UnitsContext";
-import type {
-  ElevationPoint,
-  RouteBounds,
-  RouteEndpoint,
-  RoutePoi,
-  RoutePoiType,
+import {
+  routeAssetsToGpx,
+  type ElevationPoint,
+  type RouteBounds,
+  type RouteEndpoint,
+  type RoutePoi,
+  type RoutePoiType,
 } from "@/lib/gpxUtils";
 
 import { PANEL_INSET, PANEL_WIDTH } from "./_constants";
@@ -179,6 +181,8 @@ interface RaceMapProps {
   expo: ExpoLocation | null;
   elevationSeries: ElevationPoint[] | null;
   hoverDistance: number | null;
+  raceName: string;
+  raceSlug: string;
   expanded: boolean;
   onToggleExpanded: () => void;
   onReady?: () => void;
@@ -192,6 +196,8 @@ export default function RaceMap({
   expo,
   elevationSeries,
   hoverDistance,
+  raceName,
+  raceSlug,
   expanded,
   onToggleExpanded,
   onReady,
@@ -594,6 +600,29 @@ export default function RaceMap({
     };
   }, [showPoiMarkers, pois, status.kind]);
 
+  // Build a GPX 1.1 document from the in-memory route + POIs
+  // and trigger a browser download. No network round-trip — the
+  // GeoJSON is already in client memory (server-passed). We use
+  // the slug as the filename rather than the title so users
+  // get a friendly, filesystem-safe name without us needing to
+  // sanitise unicode race names.
+  const handleSaveGpx = () => {
+    const gpx = routeAssetsToGpx({
+      geoJson: routeGeoJson,
+      pois: pois ?? [],
+      raceName,
+    });
+    const blob = new Blob([gpx], { type: "application/gpx+xml" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${raceSlug}.gpx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   // Toggle the 3D terrain mode: ensure / clear the DEM source
   // and animate camera pitch. We tear down the terrain *after*
   // the easeTo lands (via map.once("moveend")) so the user sees
@@ -638,6 +667,7 @@ export default function RaceMap({
           onTogglePitched={handleTogglePitched}
           expanded={expanded}
           onToggleExpanded={onToggleExpanded}
+          onSaveGpx={handleSaveGpx}
         />
       )}
       {status.kind === "ready" && expoCardOpen && expo && mapRef.current && (
@@ -717,6 +747,7 @@ interface MapControlsProps {
   onTogglePitched: () => void;
   expanded: boolean;
   onToggleExpanded: () => void;
+  onSaveGpx: () => void;
 }
 
 function MapControls({
@@ -735,6 +766,7 @@ function MapControls({
   onTogglePitched,
   expanded,
   onToggleExpanded,
+  onSaveGpx,
 }: MapControlsProps) {
   const [styleSwitcherOpen, setStyleSwitcherOpen] = useState(false);
   const [markersMenuOpen, setMarkersMenuOpen] = useState(false);
@@ -878,6 +910,13 @@ function MapControls({
           <Maximize className="size-4" />
         )}
       </MapControlButton>
+      <MapControlButton
+        onClick={onSaveGpx}
+        ariaLabel="Save route as GPX"
+        className="pointer-events-auto"
+      >
+        <Download className="size-4" />
+      </MapControlButton>
       <div className="pointer-events-auto flex flex-col">
         <MapControlButton
           onClick={handleZoomIn}
@@ -984,7 +1023,7 @@ function MarkersMenu({
       )}
       {hasPoiMarkers && (
         <MarkersMenuItem
-          icon={<Pin className="size-4" />}
+          icon={<Flag className="size-4" />}
           label="POI"
           active={showPoiMarkers}
           onClick={onTogglePoiMarkers}
