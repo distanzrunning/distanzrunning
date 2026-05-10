@@ -21,9 +21,8 @@ import {
   type RouteEndpoint,
 } from "@/lib/gpxUtils";
 import { geocodeAddress } from "@/lib/geocode";
-import RaceGuideShell, {
-  type RaceGuideMeta,
-} from "./RaceGuideShell";
+import RaceGuideShell from "./RaceGuideShell";
+import type { RaceGuideMeta } from "./_types";
 
 export const revalidate = 60;
 
