@@ -41,7 +41,6 @@ import {
   Plus,
   Satellite,
   Users,
-  Utensils,
   X,
 } from "lucide-react";
 import mapboxgl from "mapbox-gl";
@@ -1524,8 +1523,8 @@ const ROUTE_POI_DEFINITIONS: Record<
 > = {
   aid_station: {
     label: "Aid station",
-    Icon: Utensils,
-    color: "var(--ds-amber-700)",
+    Icon: Droplet,
+    color: "var(--ds-blue-700)",
   },
   water: { label: "Water", Icon: Droplet, color: "var(--ds-blue-700)" },
   first_aid: { label: "First aid", Icon: Cross, color: "var(--ds-red-700)" },
