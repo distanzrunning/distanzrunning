@@ -95,6 +95,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0");
 
 @layer base {
+  /* Reserve the scrollbar gutter on <html> so the page width
+     stays constant whether the scrollbar is showing or not.
+     Modals (search, newsletter, …) lock body scroll via
+     overflow: hidden, which hides the scrollbar — without
+     `scrollbar-gutter: stable` the page would reflow into the
+     freed gutter on open and back on close, causing a visible
+     right-edge shift. Supported in every browser we target
+     (Chromium 94+, Firefox 97+, Safari 18+). */
+  html {
+    scrollbar-gutter: stable;
+  }
+
   /* The .light selector mirrors :root so any subtree wrapped in
      <div class="light"> re-resolves to the light token values, even
      when an ancestor carries .dark. Pairs with the existing .dark
