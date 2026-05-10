@@ -9,7 +9,14 @@
 // the page itself scroll. The panel scrolls with the page; the
 // map stays put.
 
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Fragment,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -159,21 +166,16 @@ export default function RaceGuideShell({
       clearTimeout(closeTimeoutRef.current);
       closeTimeoutRef.current = null;
     }
+    // Recompute the slit position on every toggle so the
+    // animation anchors at the user's *current* viewport
+    // centre — they may have scrolled since the last toggle.
+    setSlitTop(computeSlitTop());
     if (mapExpanded) {
       // Exiting fullscreen: drop fullscreen immediately so
       // the panel re-mounts and its CRT-on animation plays
       // (handled by the existing is-revealed class).
       setMapExpanded(false);
       setPanelClosing(false);
-      return;
-    }
-    // Entering fullscreen: only animate the close when the
-    // user is at the top of the page — the slit at 50vh from
-    // panel-top is only visible there. Anywhere else the
-    // animation would run invisibly, just adding 750 ms of
-    // unexplained delay before the map snaps to fullscreen.
-    if (typeof window === "undefined" || window.scrollY > 0) {
-      setMapExpanded(true);
       return;
     }
     setPanelClosing(true);
@@ -184,20 +186,29 @@ export default function RaceGuideShell({
     }, 750);
   };
 
-  // Detect whether the page already loaded scrolled (refresh,
-  // deep link with hash, browser scroll restoration). The CRT
-  // panel-reveal animation anchors a 1px slit at 50vh from the
-  // panel's top — perfect when the user lands at scroll = 0
-  // (panel top = viewport top, slit ≈ viewport centre), but
-  // the slit lands well above the viewport when the page is
-  // already scrolled, so the animation runs invisibly. Skip
-  // the animation in that case and just show the panel.
-  // Initialised to false to match SSR; the effect upgrades it
-  // on the first client tick to avoid a hydration mismatch.
-  const [skipPanelAnimation, setSkipPanelAnimation] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (window.scrollY > 0) setSkipPanelAnimation(true);
+  // Position of the CRT animation's slit, in panel-element
+  // coordinates, expressed in pixels. Drives --crt-slit-top
+  // on the panel element so the keyframes anchor the slit at
+  // the user's viewport centre regardless of scroll. We
+  // approximate "viewport centre in element coords" as
+  // `scrollY + viewportHeight / 2 − panelTopOffset`, with the
+  // panel's offset taken from its DOM position once mounted.
+  // null until the first client measurement runs, to avoid a
+  // hydration mismatch (server can't read scrollY).
+  const [slitTop, setSlitTop] = useState<number | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const computeSlitTop = () => {
+    if (typeof window === "undefined") return 0;
+    const offset = panelRef.current?.offsetTop ?? 0;
+    return Math.max(0, window.scrollY + window.innerHeight / 2 - offset);
+  };
+  // Capture the slit position on first client paint so the
+  // CRT-on animation that runs once mapReady flips uses a
+  // viewport-centred slit. useLayoutEffect (over useEffect) so
+  // the variable lands before the browser paints the
+  // is-revealed class for the first time.
+  useLayoutEffect(() => {
+    setSlitTop(computeSlitTop());
   }, []);
 
   // While the map is expanded:
@@ -327,21 +338,25 @@ export default function RaceGuideShell({
           to map-only and the route gets the full canvas. */}
       {(!mapExpanded || panelClosing) && (
         <div
+          ref={panelRef}
           className={
             panelClosing
               ? "guide-panel-crt is-closing"
-              : skipPanelAnimation
-                ? ""
-                : `guide-panel-crt${panelRevealed ? " is-revealed" : ""}`
+              : `guide-panel-crt${panelRevealed ? " is-revealed" : ""}`
           }
-          style={{
-            gridColumn: 1,
-            gridRow: 1,
-            padding: PANEL_INSET,
-            pointerEvents: "none",
-            position: "relative",
-            zIndex: 1,
-          }}
+          style={
+            {
+              gridColumn: 1,
+              gridRow: 1,
+              padding: PANEL_INSET,
+              pointerEvents: "none",
+              position: "relative",
+              zIndex: 1,
+              ...(slitTop !== null
+                ? { "--crt-slit-top": `${slitTop}px` }
+                : {}),
+            } as React.CSSProperties
+          }
         >
           <GuidePanel
             race={race}

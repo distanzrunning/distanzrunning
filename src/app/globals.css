@@ -4181,24 +4181,48 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
    base rule keeps the panel hidden during SSR + hydration so
    there's no flash before the animation runs. */
 .guide-panel-crt {
-  clip-path: inset(50vh 0 calc(100% - 50vh - 1px) 0);
+  clip-path: inset(
+    var(--crt-slit-top, 50vh) 0
+    calc(100% - var(--crt-slit-top, 50vh) - 1px) 0
+  );
   opacity: 0;
   will-change: clip-path, opacity;
 }
 .guide-panel-crt.is-revealed {
   animation: guide-panel-crt-on 750ms ease-out forwards;
 }
+/* The slit is anchored at --crt-slit-top, which the shell sets
+   imperatively to "viewport vertical centre, in element coords"
+   right before applying is-revealed / is-closing. That keeps
+   the CRT effect at the user's eye level regardless of scroll
+   position; without it the slit was hard-coded to 50vh from
+   the panel's top edge and only landed at viewport centre when
+   the page happened to be at scroll = 0. The 55% keyframe also
+   expands *outward* from the slit (50vh up, 50vh down) instead
+   of from the element's top, so the reveal feels symmetrical
+   wherever the user happens to be looking. max(0px, …) clamps
+   the insets so they stay non-negative for at-top viewers
+   whose slit is already near the element's top. */
 @keyframes guide-panel-crt-on {
   0% {
-    clip-path: inset(50vh 0 calc(100% - 50vh - 1px) 0);
+    clip-path: inset(
+      var(--crt-slit-top, 50vh) 0
+      calc(100% - var(--crt-slit-top, 50vh) - 1px) 0
+    );
     opacity: 0;
   }
   10% {
-    clip-path: inset(50vh 0 calc(100% - 50vh - 1px) 0);
+    clip-path: inset(
+      var(--crt-slit-top, 50vh) 0
+      calc(100% - var(--crt-slit-top, 50vh) - 1px) 0
+    );
     opacity: 1;
   }
   55% {
-    clip-path: inset(0 0 calc(100% - 100vh) 0);
+    clip-path: inset(
+      max(0px, calc(var(--crt-slit-top, 50vh) - 50vh)) 0
+      max(0px, calc(100% - var(--crt-slit-top, 50vh) - 50vh)) 0
+    );
     opacity: 1;
   }
   100% {
@@ -4223,15 +4247,24 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
     opacity: 1;
   }
   45% {
-    clip-path: inset(0 0 calc(100% - 100vh) 0);
+    clip-path: inset(
+      max(0px, calc(var(--crt-slit-top, 50vh) - 50vh)) 0
+      max(0px, calc(100% - var(--crt-slit-top, 50vh) - 50vh)) 0
+    );
     opacity: 1;
   }
   90% {
-    clip-path: inset(50vh 0 calc(100% - 50vh - 1px) 0);
+    clip-path: inset(
+      var(--crt-slit-top, 50vh) 0
+      calc(100% - var(--crt-slit-top, 50vh) - 1px) 0
+    );
     opacity: 1;
   }
   100% {
-    clip-path: inset(50vh 0 calc(100% - 50vh - 1px) 0);
+    clip-path: inset(
+      var(--crt-slit-top, 50vh) 0
+      calc(100% - var(--crt-slit-top, 50vh) - 1px) 0
+    );
     opacity: 0;
   }
 }
