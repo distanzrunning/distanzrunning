@@ -1074,7 +1074,7 @@ function MarkersMenuItem({
       role="checkbox"
       aria-checked={active}
       onClick={onClick}
-      className={`flex h-6 items-center gap-1.5 rounded-full px-3 text-copy-13 transition-colors ${
+      className={`flex h-9 items-center gap-1.5 rounded-full px-3 text-copy-13 transition-colors lg:h-6 ${
         active
           ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)]"
           : "text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-200)]"

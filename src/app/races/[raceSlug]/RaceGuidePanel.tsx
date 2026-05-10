@@ -157,12 +157,12 @@ function HeroCard({
       className={CARD_CLASS}
     >
       {imageUrl && (
-        // Image sits inset within the card surface — the card's
-        // bg shows around it as a frame. Inner radius is one
-        // step down from the card's so the visible margin
-        // between the two reads consistently. 3:4 portrait so
-        // the hero leans editorial.
-        <div className="relative aspect-[3/4] w-full overflow-hidden rounded">
+        // 3:4 portrait on desktop where the hero leans
+        // editorial inside the card frame; 4:3 landscape on
+        // mobile where the panel is the full page and a tall
+        // portrait would dominate ~70 % of the viewport before
+        // the reader sees any content.
+        <div className="relative aspect-[4/3] w-full overflow-hidden rounded lg:aspect-[3/4]">
           <Image
             src={imageUrl}
             alt={race.title}
