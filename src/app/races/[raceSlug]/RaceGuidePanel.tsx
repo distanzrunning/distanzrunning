@@ -94,7 +94,7 @@ export default function GuidePanel({
   );
   return (
     <div
-      className="flex flex-col gap-10 lg:gap-6 lg:[width:var(--panel-width)]"
+      className="flex flex-col gap-10 lg:gap-6 lg:[width:var(--panel-width)] divide-y divide-[color:var(--ds-gray-400)] lg:divide-y-0"
       style={
         {
           "--panel-width": `${PANEL_WIDTH}px`,
@@ -402,7 +402,7 @@ function TocCard({
     <aside
       className={CARD_CLASS}
     >
-      <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
+      <h2 className="m-0 mb-4 text-heading-24 lg:text-heading-20 text-[color:var(--ds-gray-1000)]">
         In this guide
       </h2>
       <ol className="m-0 list-none divide-y divide-[color:var(--ds-gray-400)] p-0">
@@ -567,7 +567,7 @@ function StatsCard({ race }: { race: RaceGuideMeta }) {
       style={{ scrollMarginTop: SCROLL_MARGIN_TOP }}
     >
       <header className="mb-4 flex items-center justify-between gap-4">
-        <h2 className="m-0 text-heading-20 text-[color:var(--ds-gray-1000)]">
+        <h2 className="m-0 text-heading-24 lg:text-heading-20 text-[color:var(--ds-gray-1000)]">
           Key stats
         </h2>
         <Switch
@@ -963,7 +963,7 @@ function CourseRecordsCard({ race }: { race: RaceGuideMeta }) {
       className={CARD_CLASS}
       style={{ scrollMarginTop: SCROLL_MARGIN_TOP }}
     >
-      <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
+      <h2 className="m-0 mb-4 text-heading-24 lg:text-heading-20 text-[color:var(--ds-gray-1000)]">
         Course records
       </h2>
       <ul className="m-0 list-none divide-y divide-[color:var(--ds-gray-400)] p-0">
@@ -1057,7 +1057,7 @@ function ElevationCard({
       className={CARD_CLASS}
       style={{ scrollMarginTop: SCROLL_MARGIN_TOP }}
     >
-      <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
+      <h2 className="m-0 mb-4 text-heading-24 lg:text-heading-20 text-[color:var(--ds-gray-1000)]">
         Elevation profile
       </h2>
       <div
