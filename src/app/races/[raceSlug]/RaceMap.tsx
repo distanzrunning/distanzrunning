@@ -1524,9 +1524,9 @@ const ROUTE_POI_DEFINITIONS: Record<
   aid_station: {
     label: "Aid station",
     Icon: Droplet,
-    color: "var(--ds-blue-700)",
+    color: "var(--ds-blue-600)",
   },
-  water: { label: "Water", Icon: Droplet, color: "var(--ds-blue-700)" },
+  water: { label: "Water", Icon: Droplet, color: "var(--ds-blue-600)" },
   first_aid: { label: "First aid", Icon: Cross, color: "var(--ds-red-700)" },
   drop_bag: {
     label: "Drop bag",
