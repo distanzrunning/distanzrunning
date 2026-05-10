@@ -868,7 +868,7 @@ function MapControls({
       )}
       <div
         ref={styleSwitcherWrapperRef}
-        className="pointer-events-auto relative"
+        className="pointer-events-auto relative hidden lg:block"
       >
         <MapControlButton
           onClick={() => setStyleSwitcherOpen((prev) => !prev)}
@@ -891,7 +891,7 @@ function MapControls({
         onClick={onTogglePitched}
         ariaLabel="Toggle 3D"
         pressed={pitched}
-        className="pointer-events-auto"
+        className="pointer-events-auto hidden lg:flex"
       >
         <Box className="size-4" />
       </MapControlButton>
@@ -937,7 +937,7 @@ function MapControls({
       <MapControlButton
         onClick={onSaveGpx}
         ariaLabel="Save route as GPX"
-        className="pointer-events-auto"
+        className="pointer-events-auto hidden lg:flex"
       >
         <Download className="size-4" />
       </MapControlButton>
