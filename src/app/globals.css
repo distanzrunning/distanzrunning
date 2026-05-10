@@ -4208,11 +4208,32 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
 }
 /* Closing variant — used when the user clicks the fullscreen
    map button and we want to collapse the panel before the map
-   covers the viewport. Replays the open keyframes in reverse,
-   ending at the same slit-at-50vh + opacity-0 state the panel
-   started from. */
+   covers the viewport. A separate keyframe (rather than
+   `reverse` of the open one) so the browser restarts the
+   animation cleanly on class swap; reusing the same
+   animation-name with only animation-direction changed didn't
+   re-trigger across browsers. Mirrors the open keyframes in
+   reverse so the visual is symmetrical. */
 .guide-panel-crt.is-closing {
-  animation: guide-panel-crt-on 750ms ease-in reverse forwards;
+  animation: guide-panel-crt-off 750ms ease-in forwards;
+}
+@keyframes guide-panel-crt-off {
+  0% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  45% {
+    clip-path: inset(0 0 calc(100% - 100vh) 0);
+    opacity: 1;
+  }
+  90% {
+    clip-path: inset(50vh 0 calc(100% - 50vh - 1px) 0);
+    opacity: 1;
+  }
+  100% {
+    clip-path: inset(50vh 0 calc(100% - 50vh - 1px) 0);
+    opacity: 0;
+  }
 }
 
 /* Respect prefers-reduced-motion: drop the clip-path
@@ -4228,7 +4249,7 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
     animation: guide-panel-fade-in 200ms ease-out forwards;
   }
   .guide-panel-crt.is-closing {
-    animation: guide-panel-fade-in 200ms ease-in reverse forwards;
+    animation: guide-panel-fade-out 200ms ease-in forwards;
   }
   @keyframes guide-panel-fade-in {
     from {
@@ -4236,6 +4257,14 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
     }
     to {
       opacity: 1;
+    }
+  }
+  @keyframes guide-panel-fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
     }
   }
 }
