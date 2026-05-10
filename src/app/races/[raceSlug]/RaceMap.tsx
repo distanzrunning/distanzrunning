@@ -498,7 +498,8 @@ export default function RaceMap({
   // meaningfully on each toggle. Skip the very first run
   // (the constructor already framed it). resize() first so
   // Mapbox picks up the new container dimensions before
-  // computing the new fit.
+  // computing the new fit. Preserve current pitch so 3D mode
+  // survives the fullscreen swap in either direction.
   const initialExpandedMount = useRef(true);
   useEffect(() => {
     if (initialExpandedMount.current) {
@@ -511,6 +512,7 @@ export default function RaceMap({
     map.fitBounds(initialBounds, {
       padding: fitBoundsPadding,
       duration: 600,
+      pitch: map.getPitch(),
     });
   }, [expanded, fitBoundsPadding, initialBounds]);
 
@@ -784,9 +786,16 @@ function MapControls({
   const handleZoomOut = () => mapRef.current?.zoomOut();
   const handleRecenter = () => {
     if (!initialBounds) return;
-    mapRef.current?.fitBounds(initialBounds, {
+    const map = mapRef.current;
+    if (!map) return;
+    // Preserve the current pitch so a user who's tilted into 3D
+    // and panned away keeps their tilt when re-framing the
+    // route — Recenter is "show me the whole route again", not
+    // "drop me back to the default camera".
+    map.fitBounds(initialBounds, {
       padding: fitBoundsPadding,
       duration: 600,
+      pitch: map.getPitch(),
     });
   };
 
