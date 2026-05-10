@@ -136,6 +136,53 @@ export default function RaceGuideShell({
   // inside the map via a fullscreen control; lifted here so
   // the shell can conditionally remove the panel column.
   const [mapExpanded, setMapExpanded] = useState(false);
+  // Plays the CRT-on animation in reverse — set true right
+  // before mapExpanded flips to true, cleared after the
+  // animation lands. The panel stays mounted while closing
+  // is true so the keyframes have something to animate; once
+  // the timeout fires we both mark closing as done and flip
+  // the map to fullscreen, so the close animation and the
+  // fullscreen swap feel like one motion. Mirrors the open
+  // animation's behaviour so the panel doesn't just pop in
+  // and out of the layout.
+  const [panelClosing, setPanelClosing] = useState(false);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    },
+    [],
+  );
+
+  const handleToggleExpanded = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    if (mapExpanded) {
+      // Exiting fullscreen: drop fullscreen immediately so
+      // the panel re-mounts and its CRT-on animation plays
+      // (handled by the existing is-revealed class).
+      setMapExpanded(false);
+      setPanelClosing(false);
+      return;
+    }
+    // Entering fullscreen: only animate the close when the
+    // user is at the top of the page — the slit at 50vh from
+    // panel-top is only visible there. Anywhere else the
+    // animation would run invisibly, just adding 750 ms of
+    // unexplained delay before the map snaps to fullscreen.
+    if (typeof window === "undefined" || window.scrollY > 0) {
+      setMapExpanded(true);
+      return;
+    }
+    setPanelClosing(true);
+    closeTimeoutRef.current = setTimeout(() => {
+      setPanelClosing(false);
+      setMapExpanded(true);
+      closeTimeoutRef.current = null;
+    }, 750);
+  };
 
   // Detect whether the page already loaded scrolled (refresh,
   // deep link with hash, browser scroll restoration). The CRT
@@ -258,7 +305,7 @@ export default function RaceGuideShell({
             elevationSeries={elevationSeries}
             hoverDistance={hoverDistance}
             expanded={mapExpanded}
-            onToggleExpanded={() => setMapExpanded((prev) => !prev)}
+            onToggleExpanded={handleToggleExpanded}
             onReady={() => setMapReady(true)}
           />
         ) : (
@@ -278,12 +325,14 @@ export default function RaceGuideShell({
           When the map is expanded (fullscreen toggle), the panel
           is removed from the tree entirely so the page collapses
           to map-only and the route gets the full canvas. */}
-      {!mapExpanded && (
+      {(!mapExpanded || panelClosing) && (
         <div
           className={
-            skipPanelAnimation
-              ? ""
-              : `guide-panel-crt${panelRevealed ? " is-revealed" : ""}`
+            panelClosing
+              ? "guide-panel-crt is-closing"
+              : skipPanelAnimation
+                ? ""
+                : `guide-panel-crt${panelRevealed ? " is-revealed" : ""}`
           }
           style={{
             gridColumn: 1,

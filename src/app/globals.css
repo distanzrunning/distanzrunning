@@ -4206,6 +4206,15 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
     opacity: 1;
   }
 }
+/* Closing variant — used when the user clicks the fullscreen
+   map button and we want to collapse the panel before the map
+   covers the viewport. Replays the open keyframes in reverse,
+   ending at the same slit-at-50vh + opacity-0 state the panel
+   started from. */
+.guide-panel-crt.is-closing {
+  animation: guide-panel-crt-on 750ms ease-in reverse forwards;
+}
+
 /* Respect prefers-reduced-motion: drop the clip-path
    expansion (decorative) and reveal the panel with a short
    opacity fade instead — sequencing with the map's ready
@@ -4217,6 +4226,9 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   }
   .guide-panel-crt.is-revealed {
     animation: guide-panel-fade-in 200ms ease-out forwards;
+  }
+  .guide-panel-crt.is-closing {
+    animation: guide-panel-fade-in 200ms ease-in reverse forwards;
   }
   @keyframes guide-panel-fade-in {
     from {
