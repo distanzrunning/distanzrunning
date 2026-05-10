@@ -204,10 +204,14 @@ export default function RaceMap({
   const distanceMarkersRef = useRef<mapboxgl.Marker[]>([]);
   const { units } = useUnits();
   const useMetric = units === "metric";
-  // Default OFF so the map reads as a clean editorial canvas
-  // on first paint (Strava-style restraint — bold route line,
-  // no chrome). User opts in via the milestone toggle control.
-  const [showDistanceMarkers, setShowDistanceMarkers] = useState(false);
+  // Toggles route annotations (distance milestones + POI
+  // markers like aid stations / water / cutoffs). Default OFF
+  // so the map reads as a clean editorial canvas on first
+  // paint (Strava-style restraint — bold route line, no
+  // chrome). One control covers both annotation types: when
+  // the user wants the route "marked up" they typically want
+  // all of it, not a partial view.
+  const [showRouteMarkers, setShowRouteMarkers] = useState(false);
   const [expoCardOpen, setExpoCardOpen] = useState(false);
   // 3D terrain mode. Adds the DEM source + sets a pitched
   // camera. Ephemeral (not persisted) — user opts in per visit
@@ -383,11 +387,9 @@ export default function RaceMap({
             setExpoCardOpen((prev) => !prev),
           );
         }
-        if (pois && pois.length > 0) {
-          poiMarkersRef.current = pois.map((poi) =>
-            addRoutePoiMarker(map, poi),
-          );
-        }
+        // POI markers are only added when the route-markers
+        // toggle is on; the dedicated effect below handles
+        // build/teardown.
         if (endpoints) {
           endpointMarkersRef.current = addEndpointMarkers(map, endpoints);
         }
@@ -542,32 +544,42 @@ export default function RaceMap({
     el.style.display = "block";
   }, [hoverDistance, elevationSeries]);
 
-  // Build / tear down the every-1-unit route markers. Re-runs
-  // whenever the toggle flips or the unit system changes (each
-  // mile / km set has different positions on the route). Bails
-  // until the map is ready so we don't try to add markers before
-  // the route + style are painted.
+  // Build / tear down route annotations (distance milestones +
+  // POI markers) whenever the toggle flips. Distance markers
+  // also rebuild on unit-system change since each mi / km set
+  // has different positions along the route. Bails until the
+  // map is ready so we don't try to add markers before the
+  // route + style are painted.
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || status.kind !== "ready" || !elevationSeries) return;
+    if (!map || status.kind !== "ready") return;
 
-    if (!showDistanceMarkers) {
+    if (!showRouteMarkers) {
       distanceMarkersRef.current.forEach(removeMarkerWithTooltip);
       distanceMarkersRef.current = [];
+      poiMarkersRef.current.forEach(removeMarkerWithTooltip);
+      poiMarkersRef.current = [];
       return;
     }
 
-    distanceMarkersRef.current = buildDistanceMarkers(
-      map,
-      elevationSeries,
-      useMetric,
-    );
+    if (elevationSeries) {
+      distanceMarkersRef.current = buildDistanceMarkers(
+        map,
+        elevationSeries,
+        useMetric,
+      );
+    }
+    if (pois && pois.length > 0) {
+      poiMarkersRef.current = pois.map((poi) => addRoutePoiMarker(map, poi));
+    }
 
     return () => {
       distanceMarkersRef.current.forEach(removeMarkerWithTooltip);
       distanceMarkersRef.current = [];
+      poiMarkersRef.current.forEach(removeMarkerWithTooltip);
+      poiMarkersRef.current = [];
     };
-  }, [showDistanceMarkers, useMetric, elevationSeries, status.kind]);
+  }, [showRouteMarkers, useMetric, elevationSeries, pois, status.kind]);
 
   // Toggle the 3D terrain mode: ensure / clear the DEM source
   // and animate camera pitch. We tear down the terrain *after*
@@ -599,11 +611,9 @@ export default function RaceMap({
           mapRef={mapRef}
           initialBounds={initialBounds}
           fitBoundsPadding={fitBoundsPadding}
-          showMilestoneToggle={!!elevationSeries}
-          showDistanceMarkers={showDistanceMarkers}
-          onToggleDistanceMarkers={() =>
-            setShowDistanceMarkers((prev) => !prev)
-          }
+          showMarkersToggle={!!elevationSeries || (pois?.length ?? 0) > 0}
+          showRouteMarkers={showRouteMarkers}
+          onToggleRouteMarkers={() => setShowRouteMarkers((prev) => !prev)}
           mapStyle={mapStyle}
           onMapStyleChange={setMapStyle}
           pitched={pitched}
@@ -677,9 +687,9 @@ interface MapControlsProps {
   mapRef: React.MutableRefObject<mapboxgl.Map | null>;
   initialBounds: RouteBounds | null;
   fitBoundsPadding: mapboxgl.PaddingOptions;
-  showMilestoneToggle: boolean;
-  showDistanceMarkers: boolean;
-  onToggleDistanceMarkers: () => void;
+  showMarkersToggle: boolean;
+  showRouteMarkers: boolean;
+  onToggleRouteMarkers: () => void;
   mapStyle: MapStyleChoice;
   onMapStyleChange: (next: MapStyleChoice) => void;
   pitched: boolean;
@@ -692,9 +702,9 @@ function MapControls({
   mapRef,
   initialBounds,
   fitBoundsPadding,
-  showMilestoneToggle,
-  showDistanceMarkers,
-  onToggleDistanceMarkers,
+  showMarkersToggle,
+  showRouteMarkers,
+  onToggleRouteMarkers,
   mapStyle,
   onMapStyleChange,
   pitched,
@@ -779,11 +789,11 @@ function MapControls({
       >
         <Box className="size-4" />
       </MapControlButton>
-      {showMilestoneToggle && (
+      {showMarkersToggle && (
         <MapControlButton
-          onClick={onToggleDistanceMarkers}
-          ariaLabel="Toggle distance markers"
-          pressed={showDistanceMarkers}
+          onClick={onToggleRouteMarkers}
+          ariaLabel="Toggle route markers"
+          pressed={showRouteMarkers}
           className="pointer-events-auto"
         >
           <MapPin className="size-4" />
