@@ -63,6 +63,14 @@ interface GuidePanelProps {
   heroImageUrl: string | null;
   elevationSeries: ElevationPoint[] | null;
   onHoverDistance: (distance: number | null) => void;
+  /**
+   * Slot rendered between the TOC and the ads / stats blocks.
+   * Used on mobile where the map sits inline with the
+   * editorial flow rather than as a sticky overlay; null /
+   * undefined on desktop, where the shell renders the map as a
+   * sibling instead.
+   */
+  mapSlot?: React.ReactNode;
 }
 
 export default function GuidePanel({
@@ -70,6 +78,7 @@ export default function GuidePanel({
   heroImageUrl,
   elevationSeries,
   onHoverDistance,
+  mapSlot,
 }: GuidePanelProps) {
   // Single source of truth for whether the elevation block
   // appears: TOC entry and the card itself both gate on the
@@ -85,11 +94,13 @@ export default function GuidePanel({
   );
   return (
     <div
-      className="flex flex-col gap-6"
-      style={{
-        width: PANEL_WIDTH,
-        pointerEvents: "auto",
-      }}
+      className="flex flex-col gap-6 lg:[width:var(--panel-width)]"
+      style={
+        {
+          "--panel-width": `${PANEL_WIDTH}px`,
+          pointerEvents: "auto",
+        } as React.CSSProperties
+      }
     >
       <HeroCard race={race} imageUrl={heroImageUrl} />
       <TocCard
@@ -97,6 +108,7 @@ export default function GuidePanel({
         hasElevation={hasElevation}
         bodySections={bodySections}
       />
+      {mapSlot}
       <AdsCard />
       <StatsCard race={race} />
       {hasElevation && (
@@ -114,10 +126,19 @@ export default function GuidePanel({
 // ============================================================================
 // Card surface tokens — shared across every card in the stack.
 // ============================================================================
+//
+// At lg+ the cards carry a floating-surface treatment (rounded
+// corners + secondary background + drop shadow + interior
+// padding) so each section reads as a discrete card stacked
+// over the sticky map. Below lg the panel is a single
+// continuous editorial flow (no map underneath, so no need to
+// distinguish cards from a base canvas) — we drop the card
+// chrome and let sections share the shell's background. Inline
+// style stays minimal: scroll-margin-top for anchored sections
+// is the only thing that varies per-card.
 
 const CARD_CLASS =
-  "overflow-hidden rounded-md bg-[color:var(--ds-background-200)] dark:bg-[color:var(--ds-background-100)]";
-const CARD_SHADOW = "var(--ds-shadow-menu)";
+  "overflow-hidden lg:rounded-md lg:bg-[color:var(--ds-background-200)] dark:lg:bg-[color:var(--ds-background-100)] lg:p-5 lg:[box-shadow:var(--ds-shadow-menu)]";
 
 // ============================================================================
 // Hero card — image, title, location, meta pills, intro lede.
@@ -133,8 +154,7 @@ function HeroCard({
   const pills = useHeroPills(race);
   return (
     <div
-      className={`${CARD_CLASS} p-5`}
-      style={{ boxShadow: CARD_SHADOW }}
+      className={CARD_CLASS}
     >
       {imageUrl && (
         // Image sits inset within the card surface — the card's
@@ -380,8 +400,7 @@ function TocCard({
   if (entries.length === 0) return null;
   return (
     <aside
-      className={`${CARD_CLASS} p-5`}
-      style={{ boxShadow: CARD_SHADOW }}
+      className={CARD_CLASS}
     >
       <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
         In this guide
@@ -493,8 +512,7 @@ function slugify(text: string): string {
 function AdsCard() {
   return (
     <div
-      className={`${CARD_CLASS} p-5`}
-      style={{ boxShadow: CARD_SHADOW }}
+      className={CARD_CLASS}
     >
       <AdSlot
         slot="race-detail-panel"
@@ -539,8 +557,8 @@ function StatsCard({ race }: { race: RaceGuideMeta }) {
   return (
     <section
       id={STATS_SECTION_ID}
-      className={`${CARD_CLASS} p-5`}
-      style={{ boxShadow: CARD_SHADOW, scrollMarginTop: SCROLL_MARGIN_TOP }}
+      className={CARD_CLASS}
+      style={{ scrollMarginTop: SCROLL_MARGIN_TOP }}
     >
       <header className="mb-4 flex items-center justify-between gap-4">
         <h2 className="m-0 text-heading-20 text-[color:var(--ds-gray-1000)]">
@@ -936,8 +954,8 @@ function CourseRecordsCard({ race }: { race: RaceGuideMeta }) {
   return (
     <section
       id={RECORDS_SECTION_ID}
-      className={`${CARD_CLASS} p-5`}
-      style={{ boxShadow: CARD_SHADOW, scrollMarginTop: SCROLL_MARGIN_TOP }}
+      className={CARD_CLASS}
+      style={{ scrollMarginTop: SCROLL_MARGIN_TOP }}
     >
       <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
         Course records
@@ -1030,8 +1048,8 @@ function ElevationCard({
   return (
     <section
       id={ELEVATION_SECTION_ID}
-      className={`${CARD_CLASS} p-5`}
-      style={{ boxShadow: CARD_SHADOW, scrollMarginTop: SCROLL_MARGIN_TOP }}
+      className={CARD_CLASS}
+      style={{ scrollMarginTop: SCROLL_MARGIN_TOP }}
     >
       <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
         Elevation profile
@@ -1305,8 +1323,8 @@ function BodySectionCard({ section }: { section: BodySection }) {
   return (
     <section
       id={section.id}
-      className={`${CARD_CLASS} p-5`}
-      style={{ boxShadow: CARD_SHADOW, scrollMarginTop: SCROLL_MARGIN_TOP }}
+      className={CARD_CLASS}
+      style={{ scrollMarginTop: SCROLL_MARGIN_TOP }}
     >
       <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
         {section.title}
