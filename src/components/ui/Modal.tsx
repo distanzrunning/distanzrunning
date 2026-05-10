@@ -121,20 +121,20 @@ export function Modal({
     };
   }, [open]);
 
-  // Body scroll lock (compensate for scrollbar width to prevent layout shift)
+  // Body scroll lock. We don't compensate for the freed
+  // scrollbar width because globals.css sets
+  // `scrollbar-gutter: stable` on <html>, which reserves the
+  // gutter unconditionally — there's nothing to compensate
+  // for, and adding padding-right here on top of that
+  // *causes* a layout shift (pushes content inward by the
+  // gutter width since clientWidth always reads as
+  // viewport-width − gutter).
   useEffect(() => {
     if (!mounted) return;
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
     const prevOverflow = document.body.style.overflow;
-    const prevPaddingRight = document.body.style.paddingRight;
     document.body.style.overflow = "hidden";
-    if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    }
     return () => {
       document.body.style.overflow = prevOverflow;
-      document.body.style.paddingRight = prevPaddingRight;
     };
   }, [mounted]);
 
