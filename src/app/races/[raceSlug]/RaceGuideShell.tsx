@@ -153,19 +153,37 @@ export default function RaceGuideShell({
     if (window.scrollY > 0) setSkipPanelAnimation(true);
   }, []);
 
-  // Lock body scroll while the map is expanded. Otherwise a
-  // user who'd scrolled down to read the panel before clicking
-  // fullscreen lands on a scroll position past the (now much
-  // shorter) <main>, and the page footer slides into view
-  // beneath the map. Locking + the position:fixed map style
-  // below together pin the user to the map for the duration
-  // of fullscreen.
+  // While the map is expanded:
+  //
+  //   1. Lock body scroll. Otherwise a user who'd scrolled
+  //      down to read the panel before clicking fullscreen
+  //      lands on a scroll position past the (now much shorter)
+  //      <main>, and the page footer slides into view beneath
+  //      the map.
+  //
+  //   2. Drop the `container-type: inline-size` on PageFrame
+  //      (the <main>). CSS Containment makes any element with
+  //      a non-normal container-type a containing block for
+  //      position:fixed descendants — so the map's fullscreen
+  //      `position: fixed` was scoping to PageFrame's box
+  //      rather than the viewport. That left the footer visible
+  //      above the map, the page background showing below, and
+  //      the bottom-right controls landing wherever PageFrame's
+  //      bottom edge happened to fall (often well off-screen,
+  //      so they read as "not clickable"). Restoring the value
+  //      on cleanup keeps the @container queries working
+  //      everywhere else.
+  const shellRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!mapExpanded) return;
-    const prev = document.body.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const main = shellRef.current?.closest("main") as HTMLElement | null;
+    const prevContainerType = main?.style.containerType ?? "";
+    if (main) main.style.containerType = "normal";
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.overflow = prevBodyOverflow;
+      if (main) main.style.containerType = prevContainerType;
     };
   }, [mapExpanded]);
   return (
@@ -177,6 +195,7 @@ export default function RaceGuideShell({
     // `position: sticky; top: 50px` keeps it pinned just under
     // the SiteHeader throughout that scroll.
     <div
+      ref={shellRef}
       className="relative grid w-full"
       style={{ gridTemplateColumns: "1fr", gridTemplateRows: "auto" }}
       aria-label={`${race.title} route guide`}
