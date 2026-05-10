@@ -267,19 +267,64 @@ export async function fetchRouteAssets(
   }
 }
 
-function isValidPoiType(value: unknown): value is RoutePoiType {
-  return (
-    value === "aid_station" ||
-    value === "water" ||
-    value === "first_aid" ||
-    value === "drop_bag" ||
-    value === "cutoff" ||
-    value === "crew_access" ||
-    value === "photo" ||
-    value === "toilets" ||
-    value === "parking" ||
-    value === "hazard"
-  );
+/**
+ * Map a free-form type string from a Point feature's properties
+ * to one of our supported RoutePoiType values, or null to skip.
+ *
+ * Real-world race GeoJSONs ship with at least two conventions:
+ *   - snake_case:  "aid_station", "first_aid"
+ *   - Title Case:  "Aid Station", "Water Source", "Distance Marker"
+ *
+ * We lowercase + collapse whitespace to underscores, then match
+ * against a list of known aliases. Anything we don't recognise
+ * (e.g. "Segment Start", "Distance Marker", "Generic", "Waypoint")
+ * is dropped — race-relevant POIs only, and we already render
+ * distance markers via the milestone toggle.
+ */
+function normalizeRoutePoiType(raw: unknown): RoutePoiType | null {
+  if (typeof raw !== "string") return null;
+  const key = raw.trim().toLowerCase().replace(/\s+/g, "_");
+  switch (key) {
+    case "aid_station":
+    case "aidstation":
+    case "aid":
+      return "aid_station";
+    case "water":
+    case "water_source":
+    case "watersource":
+      return "water";
+    case "first_aid":
+    case "firstaid":
+    case "medical":
+      return "first_aid";
+    case "drop_bag":
+    case "dropbag":
+      return "drop_bag";
+    case "cutoff":
+    case "cut_off":
+      return "cutoff";
+    case "crew_access":
+    case "crew":
+      return "crew_access";
+    case "photo":
+    case "photo_op":
+    case "photoop":
+    case "attraction":
+      return "photo";
+    case "toilets":
+    case "toilet":
+    case "restroom":
+    case "restrooms":
+      return "toilets";
+    case "parking":
+      return "parking";
+    case "hazard":
+    case "warning":
+    case "danger":
+      return "hazard";
+    default:
+      return null;
+  }
 }
 
 function extractPois(fc: GeoJSON.FeatureCollection): RoutePoi[] {
@@ -291,10 +336,16 @@ function extractPois(fc: GeoJSON.FeatureCollection): RoutePoi[] {
     const [lng, lat] = coords;
     if (typeof lng !== "number" || typeof lat !== "number") continue;
     const props = (feature.properties ?? {}) as Record<string, unknown>;
-    const rawType = props.type;
-    if (!isValidPoiType(rawType)) continue;
-    const name = typeof props.name === "string" ? props.name : null;
-    pois.push({ type: rawType, name, lng, lat });
+    // Try `type` first, fall back to `sym` (the GPX/KML idiom
+    // some exporters use) so we don't drop a marker just
+    // because the source tool didn't write a `type` key.
+    const normalized =
+      normalizeRoutePoiType(props.type) ??
+      normalizeRoutePoiType(props.sym);
+    if (!normalized) continue;
+    const rawName = typeof props.name === "string" ? props.name.trim() : "";
+    const name = rawName.length > 0 ? rawName : null;
+    pois.push({ type: normalized, name, lng, lat });
   }
   return pois;
 }
