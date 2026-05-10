@@ -48,7 +48,12 @@ import { AdSlot } from "@/components/ui/AdSlot";
 import { Switch } from "@/components/ui/Switch";
 import { formatDistance, formatElevation } from "@/lib/raceUtils";
 import { useUnits, type UnitSystem } from "@/contexts/UnitsContext";
-import type { ElevationPoint, RouteBounds, RouteEndpoint } from "@/lib/gpxUtils";
+import type {
+  ElevationPoint,
+  RouteBounds,
+  RouteEndpoint,
+  RoutePoi,
+} from "@/lib/gpxUtils";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
@@ -113,6 +118,7 @@ interface RaceGuideShellProps {
   elevationSeries: ElevationPoint[] | null;
   routeBounds: RouteBounds | null;
   routeEndpoints: { start: RouteEndpoint; finish: RouteEndpoint } | null;
+  routePois: RoutePoi[] | null;
   expo: ExpoLocation | null;
 }
 
@@ -123,6 +129,7 @@ export default function RaceGuideShell({
   elevationSeries,
   routeBounds,
   routeEndpoints,
+  routePois,
   expo,
 }: RaceGuideShellProps) {
   // Drive the panel's enter animation off the map's ready state.
@@ -312,6 +319,7 @@ export default function RaceGuideShell({
             routeGeoJson={routeGeoJson}
             initialBounds={routeBounds}
             endpoints={routeEndpoints}
+            pois={routePois}
             expo={expo}
             elevationSeries={elevationSeries}
             hoverDistance={hoverDistance}

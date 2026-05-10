@@ -15,19 +15,31 @@ import {
   useRef,
   useState,
 } from "react";
+import { createRoot } from "react-dom/client";
 import {
+  AlertTriangle,
+  Backpack,
+  Bath,
   Box,
+  Camera,
+  Clock,
   Crosshair,
+  Cross,
+  Droplet,
   ExternalLink,
   Layers,
+  type LucideIcon,
   Map as MapIcon,
   MapPin,
   Maximize,
   Minimize,
   Minus,
   Mountain,
+  ParkingSquare,
   Plus,
   Satellite,
+  Users,
+  Utensils,
   X,
 } from "lucide-react";
 import mapboxgl from "mapbox-gl";
@@ -40,6 +52,8 @@ import type {
   ElevationPoint,
   RouteBounds,
   RouteEndpoint,
+  RoutePoi,
+  RoutePoiType,
 } from "@/lib/gpxUtils";
 
 import { PANEL_INSET, PANEL_WIDTH } from "./_constants";
@@ -142,6 +156,12 @@ function isValidMapStyle(value: string | null): value is MapStyleChoice {
 // re-mount paths like the distance-marker toggle).
 type MarkerWithTooltip = mapboxgl.Marker & {
   _tooltipPopup?: mapboxgl.Popup;
+  // Route-POI markers render their lucide icon through a
+  // createRoot-mounted React tree so we can reuse the typed
+  // icon components instead of hand-authoring SVG. We keep
+  // the root on the marker so cleanup can unmount it and
+  // avoid a small leak on long sessions / hot-reloads.
+  _reactRoot?: ReturnType<typeof createRoot>;
 };
 
 type MapButtonPosition = "top" | "bottom" | "standalone";
@@ -154,6 +174,7 @@ interface RaceMapProps {
   routeGeoJson: GeoJSON.FeatureCollection;
   initialBounds: RouteBounds | null;
   endpoints: { start: RouteEndpoint; finish: RouteEndpoint } | null;
+  pois: RoutePoi[] | null;
   expo: ExpoLocation | null;
   elevationSeries: ElevationPoint[] | null;
   hoverDistance: number | null;
@@ -166,6 +187,7 @@ export default function RaceMap({
   routeGeoJson,
   initialBounds,
   endpoints,
+  pois,
   expo,
   elevationSeries,
   hoverDistance,
@@ -177,6 +199,7 @@ export default function RaceMap({
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const expoMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const endpointMarkersRef = useRef<mapboxgl.Marker[]>([]);
+  const poiMarkersRef = useRef<mapboxgl.Marker[]>([]);
   const hoverMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const distanceMarkersRef = useRef<mapboxgl.Marker[]>([]);
   const { units } = useUnits();
@@ -350,13 +373,19 @@ export default function RaceMap({
           isBasemapDark(mapStyle, isDark),
         );
         // Marker DOM stacks in the order added (last = on top).
-        // Hover first so it sits below the always-on POIs;
-        // endpoints last so the start / finish dots stay visible
-        // even when the hover marker passes over them.
+        // Hover first so it sits below everything else; expo
+        // and route POIs in the middle; endpoints last so the
+        // start / finish dots stay visible even when a POI or
+        // the hover marker happens to land on the same spot.
         hoverMarkerRef.current = createHoverMarker(map);
         if (expo) {
           expoMarkerRef.current = addExpoMarker(map, expo, () =>
             setExpoCardOpen((prev) => !prev),
+          );
+        }
+        if (pois && pois.length > 0) {
+          poiMarkersRef.current = pois.map((poi) =>
+            addRoutePoiMarker(map, poi),
           );
         }
         if (endpoints) {
@@ -416,6 +445,8 @@ export default function RaceMap({
       }
       endpointMarkersRef.current.forEach(removeMarkerWithTooltip);
       endpointMarkersRef.current = [];
+      poiMarkersRef.current.forEach(removeMarkerWithTooltip);
+      poiMarkersRef.current = [];
       hoverMarkerRef.current?.remove();
       hoverMarkerRef.current = null;
       distanceMarkersRef.current.forEach(removeMarkerWithTooltip);
@@ -424,7 +455,7 @@ export default function RaceMap({
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routeGeoJson, expo, initialBounds, endpoints, elevationSeries]);
+  }, [routeGeoJson, expo, initialBounds, endpoints, pois, elevationSeries]);
 
   // Swap style when the global theme flips OR the user picks
   // a new basemap. Doesn't recreate the map. Skip the very
@@ -1330,7 +1361,109 @@ function fitToRoute(
 }
 
 // ============================================================================
-// Marker helpers — POI primitive, expo, endpoints, hover, distance
+// Marker helpers — POI primitive, expo, endpoints, hover, distance, route POIs
+// ============================================================================
+
+// Visual definitions for each route POI type. Colour comes from
+// the DS scale; icon is a lucide component. The colour fills a
+// 24 px disc with a white icon at 14 px — same anatomy as the
+// start / finish markers so the on-route POIs read as part of
+// the same family.
+const ROUTE_POI_DEFINITIONS: Record<
+  RoutePoiType,
+  { label: string; Icon: LucideIcon; color: string }
+> = {
+  aid_station: {
+    label: "Aid station",
+    Icon: Utensils,
+    color: "var(--ds-amber-700)",
+  },
+  water: { label: "Water", Icon: Droplet, color: "var(--ds-blue-700)" },
+  first_aid: { label: "First aid", Icon: Cross, color: "var(--ds-red-700)" },
+  drop_bag: {
+    label: "Drop bag",
+    Icon: Backpack,
+    color: "var(--ds-teal-700)",
+  },
+  cutoff: { label: "Cutoff", Icon: Clock, color: "var(--ds-pink-800)" },
+  crew_access: {
+    label: "Crew access",
+    Icon: Users,
+    color: "var(--ds-purple-700)",
+  },
+  photo: { label: "Photo op", Icon: Camera, color: "var(--ds-gray-700)" },
+  toilets: { label: "Toilets", Icon: Bath, color: "var(--ds-gray-700)" },
+  parking: {
+    label: "Parking",
+    Icon: ParkingSquare,
+    color: "var(--ds-gray-700)",
+  },
+  hazard: {
+    label: "Hazard",
+    Icon: AlertTriangle,
+    color: "var(--ds-amber-700)",
+  },
+};
+
+const ROUTE_POI_DOT_SIZE = 24;
+const ROUTE_POI_ICON_SIZE = 14;
+
+// On-route POI marker (aid stations, water stops, cutoffs, …).
+// Colored disc + lucide icon centred inside, white border, drop
+// shadow — matches start / finish anatomy. Tooltip on hover
+// shows the POI's name (or the type's default label if unnamed).
+//
+// The icon is rendered through createRoot so we can reuse the
+// lucide-react components without dragging in
+// react-dom/server. The root isn't explicitly unmounted on
+// marker removal: race POIs are added once per page mount and
+// torn down only when RaceMap itself unmounts, so React's
+// internal cleanup handles it.
+function addRoutePoiMarker(
+  map: mapboxgl.Map,
+  poi: RoutePoi,
+): mapboxgl.Marker {
+  const def = ROUTE_POI_DEFINITIONS[poi.type];
+  const label = poi.name ?? def.label;
+
+  const dot = document.createElement("div");
+  dot.setAttribute("role", "img");
+  dot.setAttribute("aria-label", label);
+  dot.style.cssText = [
+    `width: ${ROUTE_POI_DOT_SIZE}px`,
+    `height: ${ROUTE_POI_DOT_SIZE}px`,
+    "border-radius: 50%",
+    `background: ${def.color}`,
+    "border: 2px solid #fff",
+    "box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4)",
+    "box-sizing: border-box",
+    "display: flex",
+    "align-items: center",
+    "justify-content: center",
+    "color: #fff",
+  ].join("; ");
+
+  const Icon = def.Icon;
+  const root = createRoot(dot);
+  root.render(
+    <Icon
+      size={ROUTE_POI_ICON_SIZE}
+      color="#fff"
+      strokeWidth={2.5}
+      aria-hidden="true"
+    />,
+  );
+
+  const marker = new mapboxgl.Marker(dot)
+    .setLngLat([poi.lng, poi.lat])
+    .addTo(map);
+  (marker as MarkerWithTooltip)._reactRoot = root;
+  attachTextTooltip(map, marker, label);
+  return marker;
+}
+
+// ============================================================================
+// Marker helpers — original (expo, endpoints, hover, distance)
 // ============================================================================
 
 // Off-route POI primitive: brand-pink dot + always-visible
@@ -1573,7 +1706,16 @@ function attachTextTooltip(
 }
 
 function removeMarkerWithTooltip(marker: mapboxgl.Marker): void {
-  (marker as MarkerWithTooltip)._tooltipPopup?.remove();
+  const m = marker as MarkerWithTooltip;
+  m._tooltipPopup?.remove();
+  // Defer the React unmount past the current task so we don't
+  // tear down the root mid-render (e.g. when the entire
+  // RaceMap is unmounting in the same tick). React will warn
+  // about synchronous unmounts during commit otherwise.
+  if (m._reactRoot) {
+    const root = m._reactRoot;
+    queueMicrotask(() => root.unmount());
+  }
   marker.remove();
 }
 

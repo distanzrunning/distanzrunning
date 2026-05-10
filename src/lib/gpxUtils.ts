@@ -161,19 +161,56 @@ export type RouteBounds = [[number, number], [number, number]];
 /** [lng, lat] coordinate. Matches Mapbox's LngLatLike tuple. */
 export type RouteEndpoint = [number, number];
 
+/**
+ * Race-relevant POI types we render on the map. The set mirrors
+ * Strava's race-day map glossary: nutrition / hydration / aid /
+ * logistics. Anything else in the GeoJSON is dropped — race
+ * directors who hand us files with custom Point types just see
+ * those features ignored rather than rendered as a generic dot.
+ */
+export type RoutePoiType =
+  | "aid_station"
+  | "water"
+  | "first_aid"
+  | "drop_bag"
+  | "cutoff"
+  | "crew_access"
+  | "photo"
+  | "toilets"
+  | "parking"
+  | "hazard";
+
+export interface RoutePoi {
+  type: RoutePoiType;
+  name: string | null;
+  lng: number;
+  lat: number;
+}
+
 export interface RouteAssets {
   elevation: ElevationPoint[];
   bounds: RouteBounds;
   start: RouteEndpoint;
   finish: RouteEndpoint;
   /**
-   * The full parsed GeoJSON FeatureCollection, returned so the
-   * client can add the source to Mapbox without re-fetching the
-   * URL — saves one round-trip on first paint. Costs ~20 KB of
-   * extra HTML payload for a marathon-length route, which is
-   * dwarfed by the JS bundle anyway.
+   * The parsed GeoJSON FeatureCollection with Point features
+   * stripped out (those are surfaced separately as `pois`).
+   * Returned so the client can add the route source to Mapbox
+   * without re-fetching the URL — saves one round-trip on first
+   * paint. Costs ~20 KB of extra HTML payload for a marathon-
+   * length route, which is dwarfed by the JS bundle anyway.
    */
   geoJson: GeoJSON.FeatureCollection;
+  /**
+   * Point features extracted from the GeoJSON, typed against
+   * the supported RoutePoiType set. Each Point should carry
+   * `properties.type` (one of the RoutePoiType values) and
+   * optionally `properties.name`. Race directors bake these
+   * into the GeoJSON they upload (option A in the design doc):
+   * no separate Sanity field, the GeoJSON is the source of
+   * truth.
+   */
+  pois: RoutePoi[];
 }
 
 /**
@@ -212,12 +249,54 @@ export async function fetchRouteAssets(
     // Parse the GeoJSON once more for the client (parseGeoJSON-
     // WithElevation already parses internally but only returns
     // the extracted coords). Marginal cost (~5-15 ms for 100 KB)
-    // vs saving a network round-trip on first paint.
-    const geoJson = JSON.parse(text) as GeoJSON.FeatureCollection;
-    return { elevation: profile, bounds, start, finish, geoJson };
+    // vs saving a network round-trip on first paint. Then split
+    // the FeatureCollection: Point features become typed POIs
+    // for marker rendering; LineString features stay in the FC
+    // for the route line layer to consume.
+    const rawGeoJson = JSON.parse(text) as GeoJSON.FeatureCollection;
+    const pois = extractPois(rawGeoJson);
+    const geoJson: GeoJSON.FeatureCollection = {
+      ...rawGeoJson,
+      features: (rawGeoJson.features ?? []).filter(
+        (f) => f.geometry?.type !== "Point",
+      ),
+    };
+    return { elevation: profile, bounds, start, finish, geoJson, pois };
   } catch {
     return null;
   }
+}
+
+function isValidPoiType(value: unknown): value is RoutePoiType {
+  return (
+    value === "aid_station" ||
+    value === "water" ||
+    value === "first_aid" ||
+    value === "drop_bag" ||
+    value === "cutoff" ||
+    value === "crew_access" ||
+    value === "photo" ||
+    value === "toilets" ||
+    value === "parking" ||
+    value === "hazard"
+  );
+}
+
+function extractPois(fc: GeoJSON.FeatureCollection): RoutePoi[] {
+  const pois: RoutePoi[] = [];
+  for (const feature of fc.features ?? []) {
+    if (feature.geometry?.type !== "Point") continue;
+    const coords = feature.geometry.coordinates;
+    if (!Array.isArray(coords) || coords.length < 2) continue;
+    const [lng, lat] = coords;
+    if (typeof lng !== "number" || typeof lat !== "number") continue;
+    const props = (feature.properties ?? {}) as Record<string, unknown>;
+    const rawType = props.type;
+    if (!isValidPoiType(rawType)) continue;
+    const name = typeof props.name === "string" ? props.name : null;
+    pois.push({ type: rawType, name, lng, lat });
+  }
+  return pois;
 }
 
 function computeBounds(

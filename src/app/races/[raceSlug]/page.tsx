@@ -151,6 +151,7 @@ export default async function RaceGuidePage({
       elevationSeries={routeAssets?.elevation ?? null}
       routeBounds={initialBounds}
       routeEndpoints={routeEndpoints}
+      routePois={routeAssets?.pois ?? null}
       expo={expo}
     />
   );
