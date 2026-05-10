@@ -32,10 +32,12 @@ import {
   Map as MapIcon,
   MapPin,
   Maximize,
+  Milestone,
   Minimize,
   Minus,
   Mountain,
   ParkingSquare,
+  Pin,
   Plus,
   Satellite,
   Users,
@@ -204,14 +206,15 @@ export default function RaceMap({
   const distanceMarkersRef = useRef<mapboxgl.Marker[]>([]);
   const { units } = useUnits();
   const useMetric = units === "metric";
-  // Toggles route annotations (distance milestones + POI
-  // markers like aid stations / water / cutoffs). Default OFF
-  // so the map reads as a clean editorial canvas on first
+  // Independent toggles for the two route-annotation layers.
+  // The MapPin control opens a small popover that lets the
+  // user enable distance milestones, POI markers (aid
+  // stations / water / cutoffs / …), or both. Both default
+  // OFF so the map reads as a clean editorial canvas on first
   // paint (Strava-style restraint — bold route line, no
-  // chrome). One control covers both annotation types: when
-  // the user wants the route "marked up" they typically want
-  // all of it, not a partial view.
-  const [showRouteMarkers, setShowRouteMarkers] = useState(false);
+  // chrome).
+  const [showDistanceMarkers, setShowDistanceMarkers] = useState(false);
+  const [showPoiMarkers, setShowPoiMarkers] = useState(false);
   const [expoCardOpen, setExpoCardOpen] = useState(false);
   // 3D terrain mode. Adds the DEM source + sets a pitched
   // camera. Ephemeral (not persisted) — user opts in per visit
@@ -544,42 +547,51 @@ export default function RaceMap({
     el.style.display = "block";
   }, [hoverDistance, elevationSeries]);
 
-  // Build / tear down route annotations (distance milestones +
-  // POI markers) whenever the toggle flips. Distance markers
-  // also rebuild on unit-system change since each mi / km set
-  // has different positions along the route. Bails until the
-  // map is ready so we don't try to add markers before the
-  // route + style are painted.
+  // Build / tear down distance milestone markers when their
+  // toggle flips. Also rebuilds on unit-system change since
+  // each mi / km set has different positions along the route.
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || status.kind !== "ready") return;
+    if (!map || status.kind !== "ready" || !elevationSeries) return;
 
-    if (!showRouteMarkers) {
+    if (!showDistanceMarkers) {
       distanceMarkersRef.current.forEach(removeMarkerWithTooltip);
       distanceMarkersRef.current = [];
+      return;
+    }
+
+    distanceMarkersRef.current = buildDistanceMarkers(
+      map,
+      elevationSeries,
+      useMetric,
+    );
+
+    return () => {
+      distanceMarkersRef.current.forEach(removeMarkerWithTooltip);
+      distanceMarkersRef.current = [];
+    };
+  }, [showDistanceMarkers, useMetric, elevationSeries, status.kind]);
+
+  // Build / tear down POI markers (aid stations, water, cutoffs,
+  // etc.) when their toggle flips. Independent of the distance
+  // markers above so the user can show one set without the other.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || status.kind !== "ready" || !pois || pois.length === 0) return;
+
+    if (!showPoiMarkers) {
       poiMarkersRef.current.forEach(removeMarkerWithTooltip);
       poiMarkersRef.current = [];
       return;
     }
 
-    if (elevationSeries) {
-      distanceMarkersRef.current = buildDistanceMarkers(
-        map,
-        elevationSeries,
-        useMetric,
-      );
-    }
-    if (pois && pois.length > 0) {
-      poiMarkersRef.current = pois.map((poi) => addRoutePoiMarker(map, poi));
-    }
+    poiMarkersRef.current = pois.map((poi) => addRoutePoiMarker(map, poi));
 
     return () => {
-      distanceMarkersRef.current.forEach(removeMarkerWithTooltip);
-      distanceMarkersRef.current = [];
       poiMarkersRef.current.forEach(removeMarkerWithTooltip);
       poiMarkersRef.current = [];
     };
-  }, [showRouteMarkers, useMetric, elevationSeries, pois, status.kind]);
+  }, [showPoiMarkers, pois, status.kind]);
 
   // Toggle the 3D terrain mode: ensure / clear the DEM source
   // and animate camera pitch. We tear down the terrain *after*
@@ -611,9 +623,14 @@ export default function RaceMap({
           mapRef={mapRef}
           initialBounds={initialBounds}
           fitBoundsPadding={fitBoundsPadding}
-          showMarkersToggle={!!elevationSeries || (pois?.length ?? 0) > 0}
-          showRouteMarkers={showRouteMarkers}
-          onToggleRouteMarkers={() => setShowRouteMarkers((prev) => !prev)}
+          hasDistanceMarkers={!!elevationSeries}
+          hasPoiMarkers={(pois?.length ?? 0) > 0}
+          showDistanceMarkers={showDistanceMarkers}
+          showPoiMarkers={showPoiMarkers}
+          onToggleDistanceMarkers={() =>
+            setShowDistanceMarkers((prev) => !prev)
+          }
+          onTogglePoiMarkers={() => setShowPoiMarkers((prev) => !prev)}
           mapStyle={mapStyle}
           onMapStyleChange={setMapStyle}
           pitched={pitched}
@@ -687,9 +704,12 @@ interface MapControlsProps {
   mapRef: React.MutableRefObject<mapboxgl.Map | null>;
   initialBounds: RouteBounds | null;
   fitBoundsPadding: mapboxgl.PaddingOptions;
-  showMarkersToggle: boolean;
-  showRouteMarkers: boolean;
-  onToggleRouteMarkers: () => void;
+  hasDistanceMarkers: boolean;
+  hasPoiMarkers: boolean;
+  showDistanceMarkers: boolean;
+  showPoiMarkers: boolean;
+  onToggleDistanceMarkers: () => void;
+  onTogglePoiMarkers: () => void;
   mapStyle: MapStyleChoice;
   onMapStyleChange: (next: MapStyleChoice) => void;
   pitched: boolean;
@@ -702,9 +722,12 @@ function MapControls({
   mapRef,
   initialBounds,
   fitBoundsPadding,
-  showMarkersToggle,
-  showRouteMarkers,
-  onToggleRouteMarkers,
+  hasDistanceMarkers,
+  hasPoiMarkers,
+  showDistanceMarkers,
+  showPoiMarkers,
+  onToggleDistanceMarkers,
+  onTogglePoiMarkers,
   mapStyle,
   onMapStyleChange,
   pitched,
@@ -713,14 +736,16 @@ function MapControls({
   onToggleExpanded,
 }: MapControlsProps) {
   const [styleSwitcherOpen, setStyleSwitcherOpen] = useState(false);
+  const [markersMenuOpen, setMarkersMenuOpen] = useState(false);
   // Wraps the trigger button + popover so the close-on-outside
   // handler can treat clicks on the trigger as "inside" the
   // switcher unit. Without this the trigger's own onClick (toggle
   // open/closed) and the popover's outside-click handler (close)
   // both run on the same click while open, batching to no net
   // change — i.e. the menu wouldn't close when re-clicking the
-  // Layers button.
+  // trigger button.
   const styleSwitcherWrapperRef = useRef<HTMLDivElement>(null);
+  const markersMenuWrapperRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!styleSwitcherOpen) return;
     const handleClick = (e: MouseEvent) => {
@@ -738,6 +763,23 @@ function MapControls({
       document.removeEventListener("keydown", handleKey);
     };
   }, [styleSwitcherOpen]);
+  useEffect(() => {
+    if (!markersMenuOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (!markersMenuWrapperRef.current) return;
+      if (markersMenuWrapperRef.current.contains(e.target as Node)) return;
+      setMarkersMenuOpen(false);
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMarkersMenuOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [markersMenuOpen]);
 
   const handleZoomIn = () => mapRef.current?.zoomIn();
   const handleZoomOut = () => mapRef.current?.zoomOut();
@@ -789,15 +831,32 @@ function MapControls({
       >
         <Box className="size-4" />
       </MapControlButton>
-      {showMarkersToggle && (
-        <MapControlButton
-          onClick={onToggleRouteMarkers}
-          ariaLabel="Toggle route markers"
-          pressed={showRouteMarkers}
-          className="pointer-events-auto"
+      {(hasDistanceMarkers || hasPoiMarkers) && (
+        <div
+          ref={markersMenuWrapperRef}
+          className="pointer-events-auto relative"
         >
-          <MapPin className="size-4" />
-        </MapControlButton>
+          <MapControlButton
+            onClick={() => setMarkersMenuOpen((prev) => !prev)}
+            ariaLabel="Route markers"
+            pressed={
+              markersMenuOpen ||
+              (showDistanceMarkers || showPoiMarkers ? true : undefined)
+            }
+          >
+            <MapPin className="size-4" />
+          </MapControlButton>
+          {markersMenuOpen && (
+            <MarkersMenu
+              hasDistanceMarkers={hasDistanceMarkers}
+              hasPoiMarkers={hasPoiMarkers}
+              showDistanceMarkers={showDistanceMarkers}
+              showPoiMarkers={showPoiMarkers}
+              onToggleDistanceMarkers={onToggleDistanceMarkers}
+              onTogglePoiMarkers={onTogglePoiMarkers}
+            />
+          )}
+        </div>
       )}
       <MapControlButton
         onClick={onToggleExpanded}
@@ -873,6 +932,86 @@ function MapStyleSwitcher({ value, onChange }: MapStyleSwitcherProps) {
         );
       })}
     </div>
+  );
+}
+
+// Multi-select popover for the route-annotation toggles. Lets
+// the user enable distance milestones, POI markers, or both.
+// Stays open while the user clicks toggles (it's not a single-
+// choice menu like MapStyleSwitcher); close-on-outside +
+// Escape live in the parent so re-clicking the trigger closes
+// it cleanly. Hidden options for whichever annotation type the
+// race doesn't have data for.
+interface MarkersMenuProps {
+  hasDistanceMarkers: boolean;
+  hasPoiMarkers: boolean;
+  showDistanceMarkers: boolean;
+  showPoiMarkers: boolean;
+  onToggleDistanceMarkers: () => void;
+  onTogglePoiMarkers: () => void;
+}
+
+function MarkersMenu({
+  hasDistanceMarkers,
+  hasPoiMarkers,
+  showDistanceMarkers,
+  showPoiMarkers,
+  onToggleDistanceMarkers,
+  onTogglePoiMarkers,
+}: MarkersMenuProps) {
+  return (
+    <div
+      role="group"
+      aria-label="Route markers"
+      className="absolute bottom-0 right-full mr-2 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-1"
+      style={{ boxShadow: "var(--ds-shadow-small)" }}
+    >
+      {hasDistanceMarkers && (
+        <MarkersMenuItem
+          icon={<Milestone className="size-4" />}
+          label="Distance"
+          active={showDistanceMarkers}
+          onClick={onToggleDistanceMarkers}
+        />
+      )}
+      {hasPoiMarkers && (
+        <MarkersMenuItem
+          icon={<Pin className="size-4" />}
+          label="POI"
+          active={showPoiMarkers}
+          onClick={onTogglePoiMarkers}
+        />
+      )}
+    </div>
+  );
+}
+
+function MarkersMenuItem({
+  icon,
+  label,
+  active,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      role="checkbox"
+      aria-checked={active}
+      onClick={onClick}
+      className={`flex h-6 items-center gap-1.5 rounded-full px-3 text-copy-13 transition-colors ${
+        active
+          ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)]"
+          : "text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-200)]"
+      }`}
+    >
+      {icon}
+      <span>{label}</span>
+    </button>
   );
 }
 
