@@ -514,25 +514,66 @@ function AdsCard() {
   // a "this is sponsored" block that shouldn't blend into the
   // editorial flow. Give it its own border + radius + padding
   // so it reads as a distinct unit even without the floating-
-  // surface treatment the other cards lose on mobile. lg keeps
-  // CARD_CLASS's full chrome and clears the mobile-only border.
+  // surface treatment the other cards lose on mobile.
+  //
+  // Two slots, one per breakpoint. The 300 × 250 MPU is too
+  // wide for a comfortable fit on phones once card + panel
+  // padding eat into the viewport (overflows ~iPhone SE), so
+  // mobile gets a 300 × 100 large-mobile-banner unit instead.
+  // Each slot has its own AdSense ID so the demand can be
+  // managed independently. CSS-toggled — both mount, but only
+  // the active one paints, so no JS-detection / hydration
+  // flicker. The pattern also maps cleanly to GAM size
+  // mappings if / when we migrate.
   return (
     <div
-      className={`${CARD_CLASS} rounded-md border border-[color:var(--ds-gray-400)] p-5 lg:border-0`}
+      className={`${CARD_CLASS} rounded-md border border-[color:var(--ds-gray-400)] p-3 lg:p-5 lg:border-0`}
     >
-      <AdSlot
-        slot="race-detail-panel"
-        size="mpu"
-        preview
-        label={false}
-        fallback={<AdsCardFallback />}
-        className="mx-auto"
-      />
+      <div className="lg:hidden">
+        <AdSlot
+          slot="race-detail-panel-mobile"
+          size={{ width: 300, height: 100 }}
+          preview
+          label={false}
+          fallback={<AdsCardFallback compact />}
+          className="mx-auto"
+        />
+      </div>
+      <div className="hidden lg:block">
+        <AdSlot
+          slot="race-detail-panel"
+          size="mpu"
+          preview
+          label={false}
+          fallback={<AdsCardFallback />}
+          className="mx-auto"
+        />
+      </div>
     </div>
   );
 }
 
-function AdsCardFallback() {
+function AdsCardFallback({ compact = false }: { compact?: boolean }) {
+  // Compact variant — drops the body paragraph and lays the
+  // heading + CTA on a single horizontal row so the fallback
+  // fits the 100 px tall mobile-banner slot without
+  // overflowing or feeling cramped vertically.
+  if (compact) {
+    return (
+      <div className="flex h-full w-full items-center justify-between gap-3 text-left">
+        <h4 className="m-0 text-heading-14 text-[color:var(--ds-gray-1000)]">
+          Reach runners
+        </h4>
+        <a
+          href="mailto:brand@distanzrunning.com?subject=Advertising%20on%20Distanz%20Running"
+          className="inline-flex h-8 shrink-0 items-center gap-1 rounded-md bg-[color:var(--ds-gray-1000)] px-3 text-copy-13 font-semibold text-[color:var(--ds-background-100)] no-underline transition-colors hover:bg-[color:var(--ds-gray-900)]"
+        >
+          Get in touch
+          <ChevronRight className="size-4" />
+        </a>
+      </div>
+    );
+  }
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-3 text-center">
       <h4 className="m-0 text-heading-16 text-[color:var(--ds-gray-1000)]">
