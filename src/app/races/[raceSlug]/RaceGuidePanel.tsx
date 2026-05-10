@@ -94,7 +94,7 @@ export default function GuidePanel({
   );
   return (
     <div
-      className="flex flex-col gap-6 lg:[width:var(--panel-width)]"
+      className="flex flex-col gap-8 lg:gap-6 lg:[width:var(--panel-width)]"
       style={
         {
           "--panel-width": `${PANEL_WIDTH}px`,
@@ -138,7 +138,7 @@ export default function GuidePanel({
 // is the only thing that varies per-card.
 
 const CARD_CLASS =
-  "overflow-hidden lg:rounded-md lg:bg-[color:var(--ds-background-200)] dark:lg:bg-[color:var(--ds-background-100)] lg:p-5 lg:[box-shadow:var(--ds-shadow-menu)]";
+  "lg:overflow-hidden lg:rounded-md lg:bg-[color:var(--ds-background-200)] dark:lg:bg-[color:var(--ds-background-100)] lg:p-5 lg:[box-shadow:var(--ds-shadow-menu)]";
 
 // ============================================================================
 // Hero card — image, title, location, meta pills, intro lede.
@@ -510,9 +510,15 @@ function slugify(text: string): string {
 // ============================================================================
 
 function AdsCard() {
+  // Below lg the panel has no card chrome — but the ad slot is
+  // a "this is sponsored" block that shouldn't blend into the
+  // editorial flow. Give it its own border + radius + padding
+  // so it reads as a distinct unit even without the floating-
+  // surface treatment the other cards lose on mobile. lg keeps
+  // CARD_CLASS's full chrome and clears the mobile-only border.
   return (
     <div
-      className={CARD_CLASS}
+      className={`${CARD_CLASS} rounded-md border border-[color:var(--ds-gray-400)] p-5 lg:border-0`}
     >
       <AdSlot
         slot="race-detail-panel"
