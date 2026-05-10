@@ -26,11 +26,7 @@ import type {
   RoutePoi,
 } from "@/lib/gpxUtils";
 
-import {
-  MAP_STICKY_TOP,
-  MAP_VIEWPORT_HEIGHT,
-  PANEL_INSET,
-} from "./_constants";
+import { MAP_STICKY_TOP } from "./_constants";
 import RaceMap, { StatusOverlay, type ExpoLocation } from "./RaceMap";
 import GuidePanel from "./RaceGuidePanel";
 import type { RaceGuideMeta } from "./_types";
@@ -174,30 +170,47 @@ export default function RaceGuideShell({
     };
   }, [mapExpanded]);
   return (
-    // Single-cell grid: the sticky map and the editorial panel
-    // both occupy row 1 / col 1. The cell auto-sizes to the
-    // larger of the two children — so when the panel is taller
-    // than the viewport, the grid (and therefore <main>) grows
-    // tall enough to drive page scroll, while the map's
-    // `position: sticky; top: 50px` keeps it pinned just under
-    // the SiteHeader throughout that scroll.
+    // Two layout modes driven entirely by media queries on the
+    // wrapper:
+    //
+    //   < 1024 px (mobile / tablet) — flex column, map is a
+    //     section at the top with a fixed 60vh height, the
+    //     panel stacks below in normal flow. No sticky, no
+    //     overlay, no CRT animation (the .guide-panel-crt
+    //     styles are scoped to ≥ 1024 px in globals.css so the
+    //     class is harmless here).
+    //
+    //   ≥ 1024 px (lg+) — single-cell grid: the sticky map and
+    //     the editorial panel both occupy row 1 / col 1. The
+    //     cell auto-sizes to the larger of the two children —
+    //     so when the panel is taller than the viewport, the
+    //     grid (and therefore <main>) grows tall enough to
+    //     drive page scroll, while the map's `position:
+    //     sticky; top: 50px` keeps it pinned just under the
+    //     SiteHeader throughout that scroll.
     <div
       ref={shellRef}
-      className="relative grid w-full"
-      style={{ gridTemplateColumns: "1fr", gridTemplateRows: "auto" }}
+      className="relative flex flex-col w-full lg:grid"
+      style={{
+        gridTemplateColumns: "1fr",
+        gridTemplateRows: "auto",
+      }}
       aria-label={`${race.title} route guide`}
     >
       <div
-        className="overflow-hidden"
+        // Mobile: 60vh map section in normal flow.
+        // Desktop: sticky map under the SiteHeader, full
+        // remaining viewport height.
+        // Either: when expanded, position:fixed lifts the map
+        // out of layout flow and pins it to the viewport.
+        className={
+          mapExpanded
+            ? "overflow-hidden"
+            : "h-[60vh] overflow-hidden lg:sticky lg:top-[50px] lg:h-[calc(100vh-50px)] lg:z-0"
+        }
         style={{
           gridColumn: 1,
           gridRow: 1,
-          // Default state: sticky map below the SiteHeader.
-          // Expanded state: pinned to the viewport via
-          // position:fixed so the map fills the screen
-          // regardless of where the user had scrolled before
-          // toggling fullscreen — without this, a scrolled-down
-          // user would see the page footer beneath the map.
           ...(mapExpanded
             ? {
                 position: "fixed",
@@ -208,30 +221,15 @@ export default function RaceGuideShell({
                 // Above the global Footer (z-50) — same stacking
                 // index would tie and the later-in-DOM footer
                 // would win, painting its columns through the
-                // map. Stays below SiteHeader (z-40 sticky)
-                // but doesn't visually overlap it anyway since
-                // the map starts at top:MAP_STICKY_TOP (50 px).
+                // map.
                 zIndex: 60,
               }
-            : {
-                position: "sticky",
-                top: MAP_STICKY_TOP,
-                height: MAP_VIEWPORT_HEIGHT,
-                // Explicitly below the panel's zIndex: 1 so the
-                // loading cover (which lives inside this sticky
-                // container) can never paint over the panel
-                // cards' borders.
-                zIndex: 0,
-              }),
+            : {}),
           // Match PageFrame's 6 px radius on the top corners so
           // the map tiles + loading overlay (clipped by the
           // overflow-hidden above) don't paint past the frame's
-          // curve. Bottom corners stay flat: the map deliberately
-          // extends past PageFrame's bottom margin to fill the
-          // viewport (see MAP_VIEWPORT_HEIGHT), so a second curve
-          // there would sit below PageFrame's own bottom corner.
-          // In expanded mode the map fills the viewport edge-to-
-          // edge, so we drop the rounding for a clean rectangle.
+          // curve. Dropped in expanded mode for a clean
+          // edge-to-edge rectangle.
           borderTopLeftRadius: mapExpanded ? 0 : 6,
           borderTopRightRadius: mapExpanded ? 0 : 6,
         }}
@@ -256,34 +254,34 @@ export default function RaceGuideShell({
         )}
       </div>
 
-      {/* Panel layer over the same grid cell. position:relative
-          + zIndex lifts the wrapper above the sticky map: without
-          this, the static wrapper would paint in a lower layer
-          than the map (which is positioned via `sticky`), and
-          Mapbox's absolutely-positioned canvas would cover the
-          panel. The container is padded for the panel inset and
-          is pointer-events:none so map interactions pass through
-          the empty area; the aside re-enables pointer events so
-          its own content stays interactive.
-          When the map is expanded (fullscreen toggle), the panel
-          is removed from the tree entirely so the page collapses
-          to map-only and the route gets the full canvas. */}
+      {/* Panel layer.
+          Mobile: in-flow below the map, full width with light
+          horizontal breathing room. No pointer-events:none
+          (no map underneath to leak clicks through).
+          Desktop: position:relative + z-1 lifts above the
+          sticky map (which is positioned via `sticky` and
+          would otherwise paint above static siblings); padded
+          by PANEL_INSET so the cards sit clear of the map's
+          edges; pointer-events:none on the wrapper so the
+          empty area around the cards passes clicks down to
+          the map (the inner GuidePanel re-enables pointer
+          events on its own column).
+          When the map is expanded (fullscreen toggle), the
+          panel is removed from the tree entirely so the page
+          collapses to map-only and the route gets the full
+          canvas. */}
       {(!mapExpanded || panelClosing) && (
         <div
           ref={panelRef}
-          className={
+          className={`px-4 pt-6 pb-8 lg:p-8 lg:pointer-events-none lg:relative lg:z-[1] ${
             panelClosing
               ? "guide-panel-crt is-closing"
               : `guide-panel-crt${panelRevealed ? " is-revealed" : ""}`
-          }
+          }`}
           style={
             {
               gridColumn: 1,
               gridRow: 1,
-              padding: PANEL_INSET,
-              pointerEvents: "none",
-              position: "relative",
-              zIndex: 1,
               ...(slitTop !== null
                 ? { "--crt-slit-top": `${slitTop}px` }
                 : {}),

@@ -4179,17 +4179,24 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
              clip so subsequent scroll shows full content
    .is-revealed is added by the shell once mapReady flips. The
    base rule keeps the panel hidden during SSR + hydration so
-   there's no flash before the animation runs. */
-.guide-panel-crt {
-  clip-path: inset(
-    var(--crt-slit-top, 50vh) 0
-    calc(100% - var(--crt-slit-top, 50vh) - 1px) 0
-  );
-  opacity: 0;
-  will-change: clip-path, opacity;
-}
-.guide-panel-crt.is-revealed {
-  animation: guide-panel-crt-on 750ms ease-out forwards;
+   there's no flash before the animation runs.
+   Scoped to ≥ 1024 px because the CRT effect is tied to the
+   sticky-overlay desktop layout. On mobile the panel sits
+   below the map in normal flow — there's nothing to reveal
+   over, so we let the panel render plainly without any clip /
+   opacity animation. */
+@media (min-width: 1024px) {
+  .guide-panel-crt {
+    clip-path: inset(
+      var(--crt-slit-top, 50vh) 0
+      calc(100% - var(--crt-slit-top, 50vh) - 1px) 0
+    );
+    opacity: 0;
+    will-change: clip-path, opacity;
+  }
+  .guide-panel-crt.is-revealed {
+    animation: guide-panel-crt-on 750ms ease-out forwards;
+  }
 }
 /* The slit is anchored at --crt-slit-top, which the shell sets
    imperatively to "viewport vertical centre, in element coords"
@@ -4238,8 +4245,10 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
    animation-name with only animation-direction changed didn't
    re-trigger across browsers. Mirrors the open keyframes in
    reverse so the visual is symmetrical. */
-.guide-panel-crt.is-closing {
-  animation: guide-panel-crt-off 750ms ease-in forwards;
+@media (min-width: 1024px) {
+  .guide-panel-crt.is-closing {
+    animation: guide-panel-crt-off 750ms ease-in forwards;
+  }
 }
 @keyframes guide-panel-crt-off {
   0% {
@@ -4274,7 +4283,7 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
    opacity fade instead — sequencing with the map's ready
    state is preserved (.is-revealed still gates visibility),
    just without the CRT geometry. */
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (min-width: 1024px) {
   .guide-panel-crt {
     clip-path: none;
   }

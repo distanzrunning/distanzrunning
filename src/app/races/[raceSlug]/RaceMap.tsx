@@ -226,23 +226,47 @@ export default function RaceMap({
   // since the 3D view is a "look at this section closer" tool,
   // not a default reading mode.
   const [pitched, setPitched] = useState(false);
+  // Track whether we're at the desktop breakpoint (lg: 1024 px+).
+  // Below lg the panel doesn't overlay the map (it stacks below
+  // it in normal flow), so the route should use the full map
+  // width — same fitBoundsPadding shape as fullscreen mode.
+  // Lazy initial state reads matchMedia synchronously so the
+  // first render uses the correct value (avoids a refit flicker
+  // on first paint). SSR fallback is true (desktop) so the
+  // initial-bounds constructor on a desktop client matches the
+  // server-rendered HTML.
+  const [isLgBreakpoint, setIsLgBreakpoint] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    return window.matchMedia("(min-width: 1024px)").matches;
+  });
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mql = window.matchMedia("(min-width: 1024px)");
+    const handler = (e: MediaQueryListEvent) => setIsLgBreakpoint(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+
   // We need fitBoundsPadding both inside the load handler (for
   // the constructor) and outside (for the React MapControls'
   // recenter handler). Memoised so the controls don't see a
-  // new identity per render and re-trigger their effects. When
-  // the map is expanded (fullscreen toggle), the panel column
-  // is removed from the layout so we drop the panel-side
-  // padding and let the route use the full canvas.
+  // new identity per render and re-trigger their effects. The
+  // panel-side breathing room (left padding) is only applied
+  // on desktop in normal mode — when the map is fullscreen, or
+  // the page is below the lg breakpoint where the panel stacks
+  // below the map instead of overlaying it, the route uses
+  // the full canvas.
+  const skipPanelPadding = expanded || !isLgBreakpoint;
   const fitBoundsPadding = useMemo<mapboxgl.PaddingOptions>(
     () => ({
       top: ROUTE_BREATHING,
       bottom: ROUTE_BREATHING,
-      left: expanded
+      left: skipPanelPadding
         ? ROUTE_BREATHING
         : PANEL_INSET + PANEL_WIDTH + ROUTE_BREATHING,
       right: ROUTE_BREATHING,
     }),
-    [expanded],
+    [skipPanelPadding],
   );
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
@@ -1113,7 +1137,7 @@ function MapControlButton({
       onClick={onClick}
       aria-label={ariaLabel}
       {...(isToggle ? { "aria-pressed": pressed } : {})}
-      className={`flex h-8 w-8 items-center justify-center border border-[color:var(--ds-gray-400)] transition-colors active:scale-[0.98] ${radius} ${divider} ${colors} ${className}`.trim()}
+      className={`flex h-10 w-10 items-center justify-center border border-[color:var(--ds-gray-400)] transition-colors active:scale-[0.98] lg:h-8 lg:w-8 ${radius} ${divider} ${colors} ${className}`.trim()}
       style={{ boxShadow: "var(--ds-shadow-small)" }}
     >
       {children}
