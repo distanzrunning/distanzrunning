@@ -94,7 +94,7 @@ export default function GuidePanel({
   );
   return (
     <div
-      className="flex flex-col gap-10 lg:gap-6 lg:[width:var(--panel-width)] divide-y divide-[color:var(--ds-gray-400)] lg:divide-y-0"
+      className="flex flex-col gap-10 lg:gap-6 lg:[width:var(--panel-width)]"
       style={
         {
           "--panel-width": `${PANEL_WIDTH}px`,
