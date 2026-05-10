@@ -107,15 +107,18 @@
     scrollbar-gutter: stable;
   }
 
-  /* Radix Dialog (used by the search modal) opens with a body
-     `padding-right` inserted via react-remove-scroll, which
-     compensates for a scrollbar it expects to disappear. Since
-     scrollbar-gutter: stable above already reserves the gutter
-     on <html>, that JS-set padding stacks on top and produces
-     the very inward shift it was meant to prevent. Pin body's
-     padding-right to 0 so the JS injection has no effect. */
-  body {
+  /* Radix Dialog (used by the search modal) opens with both
+     `padding-right` and `margin-right` injected onto
+     body[data-scroll-locked] via react-remove-scroll-bar,
+     each `!important`. Since scrollbar-gutter: stable above
+     already reserves the gutter on <html>, that injection
+     stacks on top and produces the very inward shift it was
+     meant to prevent. Pin both to 0 with a higher-specificity
+     selector (html body[data-scroll-locked]) so we win over
+     react-remove-scroll-bar's own `!important`. */
+  html body[data-scroll-locked] {
     padding-right: 0 !important;
+    margin-right: 0 !important;
   }
 
   /* The .light selector mirrors :root so any subtree wrapped in
