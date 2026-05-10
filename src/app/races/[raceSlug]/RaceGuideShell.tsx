@@ -217,10 +217,14 @@ export default function RaceGuideShell({
   if (!isLgBreakpoint) {
     const mobileMap = (
       <div
+        // `relative` so the map's absolutely-positioned controls
+        // (zoom, recenter, layers, …) anchor to this 60vh
+        // container rather than escaping out to the panel
+        // wrapper and landing at the bottom of the page.
         className={
           mapExpanded
             ? "overflow-hidden"
-            : "h-[60vh] overflow-hidden rounded-md border border-[color:var(--ds-gray-400)]"
+            : "relative h-[60vh] overflow-hidden rounded-md border border-[color:var(--ds-gray-400)]"
         }
         style={
           mapExpanded
