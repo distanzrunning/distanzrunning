@@ -218,7 +218,13 @@ export default function RaceGuideShell({
                 left: 0,
                 right: 0,
                 bottom: 0,
-                zIndex: 50,
+                // Above the global Footer (z-50) — same stacking
+                // index would tie and the later-in-DOM footer
+                // would win, painting its columns through the
+                // map. Stays below SiteHeader (z-40 sticky)
+                // but doesn't visually overlap it anyway since
+                // the map starts at top:MAP_STICKY_TOP (50 px).
+                zIndex: 60,
               }
             : {
                 position: "sticky",
