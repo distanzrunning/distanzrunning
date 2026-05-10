@@ -108,15 +108,15 @@ export default function GuidePanel({
         hasElevation={hasElevation}
         bodySections={bodySections}
       />
-      {mapSlot}
-      <AdsCard />
       <StatsCard race={race} />
+      {mapSlot}
       {hasElevation && (
         <ElevationCard
           series={elevationSeries!}
           onHoverDistance={onHoverDistance}
         />
       )}
+      <AdsCard />
       <CourseRecordsCard race={race} />
       <BodySections sections={bodySections} />
     </div>
