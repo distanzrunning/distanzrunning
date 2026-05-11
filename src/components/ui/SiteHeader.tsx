@@ -268,6 +268,8 @@ export default function SiteHeader({
             style={{
               backgroundColor: "var(--ds-overlay-backdrop-color)",
               opacity: "var(--ds-overlay-backdrop-opacity)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
             }}
           />
           <Dialog.Content className="fixed left-1/2 top-24 z-[70] w-[calc(100%-1rem)] -translate-x-1/2 p-0 focus:outline-none md:w-full md:max-w-xl">

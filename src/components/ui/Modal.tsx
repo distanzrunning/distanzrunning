@@ -213,7 +213,13 @@ export function Modal({
 
   return createPortal(
     <>
-      {/* Backdrop */}
+      {/* Backdrop. backdrop-filter: blur frosts the page behind
+          the modal so even when the colour-contrast is subtle
+          (notably dark mode, where a pure-black scrim on a
+          pure-black page would be invisible), the modal still
+          reads as elevated over a visually different surface.
+          Tokens for colour + opacity are theme-aware
+          (var(--ds-overlay-backdrop-*)). */}
       <div
         style={{
           position: "fixed",
@@ -223,6 +229,8 @@ export function Modal({
           height: "100%",
           backgroundColor: "var(--ds-overlay-backdrop-color)",
           opacity: visible ? "var(--ds-overlay-backdrop-opacity)" : (0 as never),
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
           zIndex: 50,
           pointerEvents: visible ? "all" : "none",
           transition: `opacity ${effectiveDuration}ms ${TIMING}`,

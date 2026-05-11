@@ -1058,9 +1058,15 @@
       0px 8px 16px -4px rgba(0, 0, 0, 0.2),
       0px 24px 32px -8px rgba(0, 0, 0, 0.3);
 
-    /* Overlay / Backdrop */
-    --ds-overlay-backdrop-color: rgb(0, 0, 0);
-    --ds-overlay-backdrop-opacity: 0.8;
+    /* Overlay / Backdrop — dark mode.
+       Light mode uses a near-white scrim; dark mode can't use
+       a black scrim (the page is already #000, so overlaying
+       black on black is invisible). Use a desaturated gray so
+       the page-beneath reads as muted but visibly different
+       from the elevated modal panel (#0A0A0A). Pairs with the
+       backdrop-filter: blur in Modal.tsx for clear separation. */
+    --ds-overlay-backdrop-color: rgb(40, 40, 40);
+    --ds-overlay-backdrop-opacity: 0.7;
 
     /* Modal backgrounds — mirror light-mode semantics: the elevated
        panel sits slightly brighter than the page canvas and any
