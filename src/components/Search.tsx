@@ -36,8 +36,6 @@ import { liteClient as algoliasearch } from "algoliasearch/lite";
 import Link from "next/link";
 import { ArrowRight, Loader2, Search as SearchIcon, X } from "lucide-react";
 
-import IconButton from "@/components/ui/IconButton";
-import { Tooltip } from "@/components/ui/Tooltip";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
@@ -209,28 +207,42 @@ function SearchInput({
   };
 
   return (
-    <div className="flex items-center gap-2 border-b border-[color:var(--ds-gray-400)] px-4 py-2">
-      <input
-        ref={inputRef}
-        type="text"
-        value={localQuery}
-        onChange={(e) => setLocalQuery(e.target.value)}
-        placeholder="Search"
-        autoComplete="off"
-        autoCorrect="off"
-        spellCheck={false}
-        className="h-9 w-full bg-transparent text-base text-[color:var(--ds-gray-1000)] outline-none placeholder:text-[color:var(--ds-gray-700)]"
-      />
-      <Tooltip content="Close search" side="bottom" showArrow={false}>
-        <IconButton
-          onClick={reset}
-          variant="tertiary"
-          size="small"
-          aria-label="Close search"
-        >
-          <X className="size-4" />
-        </IconButton>
-      </Tooltip>
+    <div className="flex items-center gap-3 border-b border-[color:var(--ds-gray-400)] px-4 py-3">
+      {/* Pill-shaped input chip — search icon on the left makes
+          the affordance obvious without relying on the
+          placeholder, and the hairline border + bg-100 surface
+          gives the field a visible boundary on dark mode where
+          a transparent input on the panel reads as a flat
+          surface with nothing to type into. */}
+      <label className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] px-3">
+        <SearchIcon
+          className="size-4 shrink-0 text-[color:var(--ds-gray-700)]"
+          aria-hidden
+        />
+        <input
+          ref={inputRef}
+          type="text"
+          value={localQuery}
+          onChange={(e) => setLocalQuery(e.target.value)}
+          placeholder="Search articles, gear, races…"
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck={false}
+          className="h-full w-full min-w-0 bg-transparent text-base text-[color:var(--ds-gray-1000)] outline-none placeholder:text-[color:var(--ds-gray-700)]"
+        />
+      </label>
+      {/* Bordered chip close — matches the input's chrome so the
+          control row reads as a single composed unit. Tooltip
+          dropped (it never fires on touch and the aria-label
+          covers a11y). */}
+      <button
+        type="button"
+        onClick={reset}
+        aria-label="Close search"
+        className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
+      >
+        <X className="size-4" />
+      </button>
     </div>
   );
 }

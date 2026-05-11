@@ -341,15 +341,16 @@ export default function MobileNavDrawer({
               SearchProvider dialog; we close the drawer first so
               the two never stack. */}
           <div className="flex items-center justify-between gap-2 border-t border-[color:var(--ds-gray-400)] px-5 py-4">
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              shape="rounded"
+              size="small"
               onClick={handleOpenSearch}
               aria-label="Open search"
-              className="inline-flex h-9 items-center gap-2 rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] px-3 text-[13px] font-medium text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
             >
               <SearchIcon className="size-4" aria-hidden />
               <span>Search</span>
-            </button>
+            </Button>
             <ThemeSwitcher
               showSystem={false}
               value={theme === "system" ? "light" : theme}
