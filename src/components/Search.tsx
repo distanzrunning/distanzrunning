@@ -259,8 +259,7 @@ function SearchPanel({
 
   return (
     <div
-      className="flex w-full max-w-xl flex-col overflow-hidden rounded-xl bg-[color:var(--ds-background-100)]"
-      style={{ boxShadow: "var(--ds-shadow-modal)" }}
+      className="flex h-full w-full flex-col overflow-hidden bg-[color:var(--ds-background-100)]"
     >
       <SearchInput
         isExpanded={isExpanded}
@@ -268,7 +267,7 @@ function SearchPanel({
         onQueryChange={setQuery}
         onSearchingChange={setIsSearching}
       />
-      <div className="relative h-[432px] overflow-y-auto">
+      <div className="relative flex-1 overflow-y-auto">
         <SearchBody
           query={query}
           isSearching={isSearching}

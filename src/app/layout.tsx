@@ -11,6 +11,7 @@ import { DarkModeProvider } from "@/components/DarkModeProvider";
 import ReCaptchaProvider from "@/components/ReCaptchaProvider";
 import { ConsentProvider } from "@/contexts/ConsentContext";
 import { UnitsProvider } from "@/contexts/UnitsContext";
+import { SearchProvider } from "@/contexts/SearchContext";
 import { ConsentBanner } from "@/components/ui/ConsentBanner";
 import ConsentSync from "@/components/ConsentSync";
 import { gcmDefaultsScript } from "@/lib/consent-gcm";
@@ -173,17 +174,19 @@ export default function RootLayout({
           <DarkModeProvider>
             <UnitsProvider>
             <ConsentProvider>
-              <ConsentSync />
-              <LayoutContent
-                header={<SiteHeaderWrapper newsletterSource="homepage" />}
-                footer={<Footer />}
-              >
-                {children}
-              </LayoutContent>
-              <ConsentBanner />
+              <SearchProvider>
+                <ConsentSync />
+                <LayoutContent
+                  header={<SiteHeaderWrapper newsletterSource="homepage" />}
+                  footer={<Footer />}
+                >
+                  {children}
+                </LayoutContent>
+                <ConsentBanner />
 
-              <Analytics />
-              <SpeedInsights />
+                <Analytics />
+                <SpeedInsights />
+              </SearchProvider>
             </ConsentProvider>
             </UnitsProvider>
           </DarkModeProvider>

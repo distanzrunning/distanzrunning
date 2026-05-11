@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import posthog from "posthog-js";
-import * as Dialog from "@radix-ui/react-dialog";
 import { Search as SearchIcon } from "lucide-react";
 import Button from "@/components/ui/Button";
 import IconButton from "@/components/ui/IconButton";
@@ -17,7 +16,7 @@ import SiteNavigationMenu, {
 } from "@/components/ui/SiteNavigationMenu";
 import MobileNavDrawer from "@/components/ui/MobileNavDrawer";
 import Wordmark from "@/components/ui/Wordmark";
-import Search from "@/components/Search";
+import { useSearch } from "@/contexts/SearchContext";
 
 // ============================================================================
 // SiteHeader
@@ -63,7 +62,7 @@ export default function SiteHeader({
 }: SiteHeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const { openSearch } = useSearch();
   // True while any desktop nav megamenu is open. Drives the glassy
   // page-dim overlay rendered below the header so the menu's
   // contents read against busy page content (images, dense grids).
@@ -100,18 +99,8 @@ export default function SiteHeader({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // ⌘K / Ctrl+K opens the search modal — matches the DS Search page
-  // and the rest of the editorial web (Vercel, Linear, GitHub).
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        setSearchOpen((open) => !open);
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  // ⌘K / Ctrl+K shortcut + Dialog are owned by SearchProvider —
+  // see src/contexts/SearchContext.tsx.
 
   return (
     <>
@@ -167,7 +156,7 @@ export default function SiteHeader({
             size="small"
             aria-label="Open search"
             title="Search (⌘K)"
-            onClick={() => setSearchOpen(true)}
+            onClick={openSearch}
           >
             <SearchIcon className="size-4" />
           </IconButton>
@@ -260,27 +249,6 @@ export default function SiteHeader({
           })
         }
       />
-
-      <Dialog.Root open={searchOpen} onOpenChange={setSearchOpen}>
-        <Dialog.Portal>
-          <Dialog.Overlay
-            className="fixed inset-0 z-[60]"
-            style={{
-              backgroundColor: "var(--ds-overlay-backdrop-color)",
-              opacity: "var(--ds-overlay-backdrop-opacity)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
-            }}
-          />
-          <Dialog.Content className="fixed left-1/2 top-24 z-[70] w-[calc(100%-1rem)] -translate-x-1/2 p-0 focus:outline-none md:w-full md:max-w-xl">
-            <Dialog.Title className="sr-only">Search</Dialog.Title>
-            <Dialog.Description className="sr-only">
-              Search articles, gear and races
-            </Dialog.Description>
-            <Search isExpanded={searchOpen} onExpandChange={setSearchOpen} />
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
 
       <NewsletterModal
         isOpen={newsletterOpen}
