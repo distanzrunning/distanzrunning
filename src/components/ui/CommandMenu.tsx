@@ -28,6 +28,14 @@ export interface CommandMenuProps {
   value?: string;
   /** Fired when the input value changes (typing). */
   onValueChange?: (value: string) => void;
+  /**
+   * Custom content for the empty state (shown when no items
+   * render). Defaults to "No results found." text. Pass a sized
+   * wrapper div if you want a larger empty area (e.g. centered
+   * icon / spinner) — the container is min-height 64 so any
+   * taller content drives the height.
+   */
+  emptyState?: ReactNode;
 }
 
 interface CommandMenuGroupProps {
@@ -165,7 +173,7 @@ const CMDK_CSS = `
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 64px;
+    min-height: 64px;
     font-size: 14px;
     color: var(--ds-gray-700);
     user-select: none;
@@ -296,6 +304,7 @@ export function CommandMenu({
   filter,
   value,
   onValueChange,
+  emptyState,
 }: CommandMenuProps) {
   return (
     <>
@@ -361,7 +370,7 @@ export function CommandMenu({
 
         {/* Scrollable items — Geist: list */}
         <Command.List>
-          <Command.Empty>No results found.</Command.Empty>
+          <Command.Empty>{emptyState ?? "No results found."}</Command.Empty>
           {children}
         </Command.List>
       </Command.Dialog>

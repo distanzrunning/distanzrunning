@@ -26,17 +26,18 @@
 
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 import {
   Configure,
   InstantSearch,
   useHits,
+  useInstantSearch,
   useSearchBox,
 } from "react-instantsearch";
 import type { Hit as AlgoliaHit } from "instantsearch.js";
 import { liteClient as algoliasearch } from "algoliasearch/lite";
 import { useRouter } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2, Search as SearchIcon } from "lucide-react";
 
 import { CommandMenu } from "@/components/ui/CommandMenu";
 
@@ -132,6 +133,8 @@ function SearchInner({
   const router = useRouter();
   const { query, refine } = useSearchBox();
   const { hits } = useHits<HitFields>();
+  const { status } = useInstantSearch();
+  const isLoading = status === "loading" || status === "stalled";
 
   const handleClose = () => {
     refine("");
@@ -162,6 +165,24 @@ function SearchInner({
     );
   }, [hits]);
 
+  // Three result-area states, in priority order:
+  //   1. No query yet → subtle centred search glyph (placeholder
+  //      that signals "type to begin").
+  //   2. Query + Algolia still working → spinner so the modal
+  //      reads as actively searching rather than empty.
+  //   3. Query resolved with no hits → "No results for X".
+  // When hits exist and we're not loading, we render the
+  // grouped items below and cmdk hides Command.Empty automatically.
+  const hasHits = !isLoading && hits.length > 0;
+  const emptyState: ReactNode =
+    query.length === 0 ? (
+      <SearchEmpty />
+    ) : isLoading ? (
+      <SearchLoading />
+    ) : (
+      <SearchNoResults query={query} />
+    );
+
   return (
     <CommandMenu
       open={isExpanded}
@@ -173,21 +194,61 @@ function SearchInner({
       // every item it's handed instead of running its own
       // fuzzy filter on top of the title strings.
       filter={() => 1}
+      emptyState={emptyState}
     >
-      {grouped.map((group) => (
-        <CommandMenu.Group key={group.heading} heading={group.heading}>
-          {group.items.map((hit) => (
-            <CommandMenu.Item
-              key={hit.objectID}
-              value={hit.objectID}
-              icon={<ArrowRight className="size-4" />}
-              onSelect={() => handleSelect(hit)}
-            >
-              {hit.title}
-            </CommandMenu.Item>
-          ))}
-        </CommandMenu.Group>
-      ))}
+      {hasHits &&
+        grouped.map((group) => (
+          <CommandMenu.Group key={group.heading} heading={group.heading}>
+            {group.items.map((hit) => (
+              <CommandMenu.Item
+                key={hit.objectID}
+                value={hit.objectID}
+                icon={<ArrowRight className="size-4" />}
+                onSelect={() => handleSelect(hit)}
+              >
+                {hit.title}
+              </CommandMenu.Item>
+            ))}
+          </CommandMenu.Group>
+        ))}
     </CommandMenu>
+  );
+}
+
+// ============================================================================
+// Empty-state placeholders. Each fills a ~240 px area inside
+// CommandMenu's Command.Empty so the centred icon / spinner /
+// text reads as occupying the result region rather than a
+// thin 64 px strip at the top.
+// ============================================================================
+
+function SearchEmpty() {
+  return (
+    <div className="flex h-60 w-full items-center justify-center">
+      <SearchIcon
+        className="size-12 text-[color:var(--ds-gray-500)]"
+        strokeWidth={1.5}
+        aria-hidden
+      />
+    </div>
+  );
+}
+
+function SearchLoading() {
+  return (
+    <div className="flex h-60 w-full items-center justify-center">
+      <Loader2
+        className="size-5 animate-spin text-[color:var(--ds-gray-700)]"
+        aria-hidden
+      />
+    </div>
+  );
+}
+
+function SearchNoResults({ query }: { query: string }) {
+  return (
+    <div className="flex h-60 w-full items-center justify-center px-6 text-center text-sm text-[color:var(--ds-gray-700)]">
+      No results for &ldquo;{query}&rdquo;.
+    </div>
   );
 }
