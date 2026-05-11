@@ -167,13 +167,17 @@ function SearchInner({
 
   // Three result-area states, in priority order:
   //   1. No query yet → subtle centred search glyph (placeholder
-  //      that signals "type to begin").
+  //      that signals "type to begin"). Critical: Algolia
+  //      returns a default browse-mode hit set when the query
+  //      is empty, so we have to gate rendering on
+  //      query.length > 0 — otherwise the user would see a
+  //      list of random articles before they typed anything.
   //   2. Query + Algolia still working → spinner so the modal
   //      reads as actively searching rather than empty.
   //   3. Query resolved with no hits → "No results for X".
   // When hits exist and we're not loading, we render the
   // grouped items below and cmdk hides Command.Empty automatically.
-  const hasHits = !isLoading && hits.length > 0;
+  const hasHits = query.length > 0 && !isLoading && hits.length > 0;
   const emptyState: ReactNode =
     query.length === 0 ? (
       <SearchEmpty />
