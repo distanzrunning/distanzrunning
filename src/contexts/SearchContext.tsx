@@ -94,8 +94,8 @@ export function SearchProvider({ children }: { children: ReactNode }) {
             className="
               fixed inset-x-0 bottom-0 top-[50px] z-[70] p-0
               focus:outline-none
-              lg:bottom-auto lg:left-1/2 lg:right-auto lg:top-24
-              lg:w-full lg:max-w-xl lg:-translate-x-1/2
+              md:bottom-auto md:left-1/2 md:right-auto md:top-24
+              md:w-full md:max-w-xl md:-translate-x-1/2
             "
           >
             <Dialog.Title className="sr-only">Search</Dialog.Title>

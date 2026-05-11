@@ -207,16 +207,17 @@ function SearchInput({
   };
 
   return (
-    <div className="flex items-center gap-3 border-b border-[color:var(--ds-gray-400)] px-4 py-3">
-      {/* Pill-shaped input chip — search icon on the left makes
-          the affordance obvious without relying on the
-          placeholder, and the hairline border + bg-100 surface
-          gives the field a visible boundary on dark mode where
-          a transparent input on the panel reads as a flat
-          surface with nothing to type into. */}
-      <label className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] px-3">
+    // Below md, the input row carries its own pill chrome (icon
+    // prefix + bordered field + bordered close chip) — without
+    // it the full-viewport sheet leaves nothing visually
+    // anchoring the input. At md+ the field strips back to the
+    // original Search-modal look: a plain text input + a
+    // ghost-button close, since the surrounding rounded modal
+    // card already frames the field.
+    <div className="flex items-center gap-3 border-b border-[color:var(--ds-gray-400)] px-4 py-3 md:gap-2 md:py-2">
+      <label className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] px-3 md:h-9 md:rounded-none md:border-0 md:bg-transparent md:px-0">
         <SearchIcon
-          className="size-4 shrink-0 text-[color:var(--ds-gray-700)]"
+          className="size-4 shrink-0 text-[color:var(--ds-gray-700)] md:hidden"
           aria-hidden
         />
         <input
@@ -231,15 +232,11 @@ function SearchInput({
           className="h-full w-full min-w-0 bg-transparent text-base text-[color:var(--ds-gray-1000)] outline-none placeholder:text-[color:var(--ds-gray-700)]"
         />
       </label>
-      {/* Bordered chip close — matches the input's chrome so the
-          control row reads as a single composed unit. Tooltip
-          dropped (it never fires on touch and the aria-label
-          covers a11y). */}
       <button
         type="button"
         onClick={reset}
         aria-label="Close search"
-        className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
+        className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] md:size-8 md:rounded-md md:border-0 md:bg-transparent md:hover:bg-[color:var(--ds-gray-100)]"
       >
         <X className="size-4" />
       </button>
@@ -271,7 +268,7 @@ function SearchPanel({
 
   return (
     <div
-      className="flex h-full w-full flex-col overflow-hidden bg-[color:var(--ds-background-100)] lg:rounded-xl lg:[box-shadow:var(--ds-shadow-modal)]"
+      className="flex h-full w-full flex-col overflow-hidden bg-[color:var(--ds-background-100)] md:rounded-xl md:[box-shadow:var(--ds-shadow-modal)]"
     >
       <SearchInput
         isExpanded={isExpanded}
@@ -279,7 +276,7 @@ function SearchPanel({
         onQueryChange={setQuery}
         onSearchingChange={setIsSearching}
       />
-      <div className="relative flex-1 overflow-y-auto lg:h-[432px] lg:flex-none">
+      <div className="relative flex-1 overflow-y-auto md:h-[432px] md:flex-none">
         <SearchBody
           query={query}
           isSearching={isSearching}
