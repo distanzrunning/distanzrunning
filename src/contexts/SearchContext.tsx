@@ -93,13 +93,20 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       {children}
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Portal>
+          {/* Overlay styling is hardcoded — not reading the
+              --ds-overlay-backdrop-* tokens — because the search
+              modal predates the recent token changes (grayer
+              tint + blur) that were added for the Newsletter
+              modal. Restoring the original black-on-black scrim
+              keeps the desktop search visually identical to the
+              pre-refactor version the user signed off on. Other
+              modals (Newsletter, the generic Modal primitive)
+              keep using the tokens. */}
           <Dialog.Overlay
             className="fixed inset-0 z-[60]"
             style={{
-              backgroundColor: "var(--ds-overlay-backdrop-color)",
-              opacity: "var(--ds-overlay-backdrop-opacity)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
+              backgroundColor: "rgb(0, 0, 0)",
+              opacity: 0.8,
             }}
           />
           {isMdUp ? (
