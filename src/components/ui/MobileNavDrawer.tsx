@@ -22,11 +22,17 @@ import {
 } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  ChevronRight,
+  ArrowLeft,
+  ArrowRight,
+  Search as SearchIcon,
+} from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import { useSearch } from "@/contexts/SearchContext";
 import Button from "@/components/ui/Button";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { preloadNewsletterHero } from "@/components/ui/NewsletterModal";
@@ -131,10 +137,19 @@ export default function MobileNavDrawer({
   featuredRace,
 }: MobileNavDrawerProps) {
   const { theme, setTheme } = useContext(DarkModeContext);
+  const { openSearch } = useSearch();
 
   useEffect(() => {
     ensureKeyframes();
   }, []);
+
+  // Close the drawer before opening the search sheet so the
+  // two modals never stack — the search dialog should take
+  // over the viewport cleanly.
+  const handleOpenSearch = () => {
+    onOpenChange(false);
+    openSearch();
+  };
 
   const sections: ReadonlyArray<SectionDef> = [
     {
@@ -321,12 +336,20 @@ export default function MobileNavDrawer({
             </div>
           </div>
 
-          {/* Footer — just the theme switcher row now that the
-              newsletter CTA has moved up to the top pane. */}
-          <div className="flex items-center justify-end gap-2 border-t border-[color:var(--ds-gray-400)] px-5 py-4">
-            <span className="text-[13px] leading-5 text-[color:var(--ds-gray-700)]">
-              Theme
-            </span>
+          {/* Footer — Search trigger on the left + theme switcher
+              on the right. Search opens the global full-viewport
+              SearchProvider dialog; we close the drawer first so
+              the two never stack. */}
+          <div className="flex items-center justify-between gap-2 border-t border-[color:var(--ds-gray-400)] px-5 py-4">
+            <button
+              type="button"
+              onClick={handleOpenSearch}
+              aria-label="Open search"
+              className="inline-flex h-9 items-center gap-2 rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] px-3 text-[13px] font-medium text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
+            >
+              <SearchIcon className="size-4" aria-hidden />
+              <span>Search</span>
+            </button>
             <ThemeSwitcher
               showSystem={false}
               value={theme === "system" ? "light" : theme}

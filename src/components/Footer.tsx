@@ -14,11 +14,9 @@
 
 import { useContext, type ComponentType } from "react";
 import Link from "next/link";
-import { Search as SearchIcon } from "lucide-react";
 import { SiInstagram, SiX, SiStrava, SiLinkedin } from "react-icons/si";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { useConsent } from "@/contexts/ConsentContext";
-import { useSearch } from "@/contexts/SearchContext";
 import Logo from "@/components/ui/Logo";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 
@@ -76,7 +74,6 @@ const socialLinks: ReadonlyArray<SocialLink> = [
 export default function Footer() {
   const { openSettings } = useConsent();
   const { theme, setTheme } = useContext(DarkModeContext);
-  const { openSearch } = useSearch();
 
   const companyLinks: ReadonlyArray<FooterItem> = [
     { kind: "link", label: "About", href: "/about" },
@@ -119,27 +116,16 @@ export default function Footer() {
             <SocialColumn />
           </div>
 
-          {/* Bottom-left controls row.
+          {/* Theme switcher.
               Mobile (parent flex-col): renders in flow as the last
               item, stacking below the link grid.
               Desktop (parent flex-row + relative): absolutely
               positioned at the bottom-left of the flex container so
-              it sits flush with the bottom of the link grid and
-              aligned with the wordmark's left edge.
-              Holds the search trigger + theme switcher in a
-              horizontal row so both are always reachable without
-              opening the menu. Search opens the global modal
-              (SearchProvider), full-viewport on tap. */}
-          <div className="flex items-center gap-3 md:absolute md:bottom-0 md:left-0">
-            <button
-              type="button"
-              onClick={openSearch}
-              aria-label="Open search"
-              className="inline-flex h-9 items-center gap-2 rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] px-3 text-[13px] font-medium text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
-            >
-              <SearchIcon className="size-4" aria-hidden />
-              <span>Search</span>
-            </button>
+              it sits flush with the bottom of the link grid (the
+              tallest column drives row height) and aligned with the
+              wordmark's left edge. No label — the segmented
+              sun/moon/system glyphs are self-labelling. */}
+          <div className="md:absolute md:bottom-0 md:left-0">
             <ThemeSwitcher value={theme} onChange={setTheme} />
           </div>
         </div>
