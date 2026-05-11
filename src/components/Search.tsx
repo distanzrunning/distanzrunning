@@ -1,12 +1,22 @@
 // src/components/Search.tsx
 //
-// Public-site search modal — Algolia-backed via react-instantsearch.
-// Exposes a single SearchModal presentation matching the
-// original pre-refactor SiteHeader modal: centered card with
-// a rounded surface + drop shadow, plain text input + ghost
-// close button, fixed 432 px result list. Dialog.Content's own
-// `w-[calc(100%-1rem)] md:max-w-xl` handles mobile vs desktop
-// sizing — same chrome, just narrower on mobile.
+// Public-site search — Algolia-backed via react-instantsearch,
+// rendered through the design-system `CommandMenu` primitive
+// so look + behaviour match the rest of the cmdk-based search
+// patterns documented in /admin/design-system/search.
+//
+// Architecture:
+//   - InstantSearch + Configure wrap the whole thing so the
+//     useSearchBox / useHits hooks have a client + index.
+//   - SearchInner is the controlled CommandMenu — its input
+//     value is wired to Algolia's `refine` (cmdk's own filter
+//     is disabled via `filter={() => 1}` since Algolia already
+//     produces a relevance-ranked list).
+//   - Hits render as CommandMenu.Item rows, grouped by content
+//     type (Articles · Shoes · Gear · Nutrition · Races) so the
+//     menu reads as a structured navigator rather than a flat
+//     soup. Selecting a hit pushes its public URL via the Next
+//     router and closes the menu.
 //
 // Hit URLs:
 //   - post        → /articles/{slug}
@@ -16,13 +26,7 @@
 
 "use client";
 
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import { useMemo } from "react";
 import {
   Configure,
   InstantSearch,
@@ -31,14 +35,13 @@ import {
 } from "react-instantsearch";
 import type { Hit as AlgoliaHit } from "instantsearch.js";
 import { liteClient as algoliasearch } from "algoliasearch/lite";
-import Link from "next/link";
-import { ArrowRight, Loader2, Search as SearchIcon, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 
-import IconButton from "@/components/ui/IconButton";
-import { Tooltip } from "@/components/ui/Tooltip";
+import { CommandMenu } from "@/components/ui/CommandMenu";
 
 // ============================================================================
-// Algolia client (shared between presentations)
+// Algolia client
 // ============================================================================
 
 const searchClient = algoliasearch(
@@ -50,7 +53,7 @@ const indexName =
   process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "distanz_content";
 
 // ============================================================================
-// Hit helpers — used to route a hit to its flat public URL
+// Hit helpers
 // ============================================================================
 
 type HitFields = {
@@ -67,9 +70,9 @@ type HitType = AlgoliaHit<HitFields>;
 function hrefForHit(hit: HitType): string {
   if (hit._type === "post") return `/articles/${hit.slug}`;
   if (hit._type === "raceGuide") return `/races/${hit.slug}`;
-  // productPost / legacy gearPost — section comes from Algolia
-  // (indexed from productCategory->section). Fall back to /gear
-  // for any pre-resync records that don't carry it.
+  // productPost / legacy gearPost — section indexed from
+  // productCategory->section. Fall back to /gear for any
+  // pre-resync records that don't carry it.
   const section =
     hit.section === "shoes" || hit.section === "nutrition"
       ? hit.section
@@ -77,172 +80,28 @@ function hrefForHit(hit: HitType): string {
   return `/${section}/${hit.slug}`;
 }
 
-// ============================================================================
-// Hit row — title + arrow affordance
-// ============================================================================
-
-function HitRow({
-  href,
-  title,
-  onSelect,
-}: {
-  href: string;
-  title: string;
-  onSelect: () => void;
-}) {
-  return (
-    <Link
-      href={href}
-      onClick={onSelect}
-      className="group flex w-full cursor-pointer items-center justify-between gap-3 rounded-md px-3 py-3 text-sm text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
-    >
-      <span className="truncate font-medium text-[color:var(--ds-gray-1000)]">
-        {title}
-      </span>
-      <ArrowRight
-        className="size-4 shrink-0 text-[color:var(--ds-gray-700)] transition-transform group-hover:translate-x-0.5 group-hover:text-[color:var(--ds-gray-1000)]"
-        aria-hidden
-      />
-    </Link>
-  );
+// Section heading for a hit — used to group results.
+function headingForHit(hit: HitType): string {
+  if (hit._type === "post") return "Articles";
+  if (hit._type === "raceGuide") return "Races";
+  if (hit.section === "shoes") return "Shoes";
+  if (hit.section === "nutrition") return "Nutrition";
+  return "Gear";
 }
 
-// ============================================================================
-// Body — empty state, loading, no-results, results. Shared between
-// both presentations.
-// ============================================================================
-
-function SearchBody({
-  query,
-  isSearching,
-  onSelect,
-}: {
-  query: string;
-  isSearching: boolean;
-  onSelect: () => void;
-}) {
-  const { hits } = useHits<HitFields>();
-
-  if (query.length === 0) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <SearchIcon
-          className="size-12 text-[color:var(--ds-gray-500)]"
-          strokeWidth={1.5}
-          aria-hidden
-        />
-      </div>
-    );
-  }
-
-  if (isSearching) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <Loader2
-          className="size-5 animate-spin text-[color:var(--ds-gray-700)]"
-          aria-hidden
-        />
-      </div>
-    );
-  }
-
-  if (hits.length === 0) {
-    return (
-      <div className="flex h-full items-center justify-center px-6 text-sm text-[color:var(--ds-gray-700)]">
-        No results for &ldquo;{query}&rdquo;.
-      </div>
-    );
-  }
-
-  return (
-    <div className="px-2 py-2">
-      {hits.slice(0, 8).map((hit) => (
-        <HitRow
-          key={hit.objectID}
-          href={hrefForHit(hit)}
-          title={hit.title}
-          onSelect={onSelect}
-        />
-      ))}
-    </div>
-  );
-}
+const GROUP_ORDER: ReadonlyArray<string> = [
+  "Articles",
+  "Shoes",
+  "Gear",
+  "Nutrition",
+  "Races",
+];
 
 // ============================================================================
-// Shared input-state hook. The two presentations need identical
-// debounced refine + autofocus behaviour, just with different
-// surrounding chrome.
+// Public component
 // ============================================================================
 
-function useSearchInputState({
-  isExpanded,
-  onQueryChange,
-  onSearchingChange,
-}: {
-  isExpanded: boolean;
-  onQueryChange: (q: string) => void;
-  onSearchingChange: (b: boolean) => void;
-}) {
-  const { query, refine } = useSearchBox();
-  const [localQuery, setLocalQuery] = useState(query);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (localQuery.length > 0) onSearchingChange(true);
-    const id = setTimeout(() => {
-      refine(localQuery);
-      onQueryChange(localQuery);
-      onSearchingChange(false);
-    }, 200);
-    return () => clearTimeout(id);
-  }, [localQuery, refine, onQueryChange, onSearchingChange]);
-
-  useEffect(() => {
-    if (isExpanded) inputRef.current?.focus();
-  }, [isExpanded]);
-
-  return { localQuery, setLocalQuery, inputRef };
-}
-
-// ============================================================================
-// Shared panel-state hook. Owns query / searching state and the
-// "close + reset" handler, used by both presentations.
-// ============================================================================
-
-function useSearchPanelState(onExpandChange: (b: boolean) => void) {
-  const [query, setQuery] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
-  const handleClose = useMemo(
-    () => () => {
-      setQuery("");
-      onExpandChange(false);
-    },
-    [onExpandChange],
-  );
-  return { query, setQuery, isSearching, setIsSearching, handleClose };
-}
-
-// ============================================================================
-// Algolia wrapper — both presentations share the same client +
-// index + hitsPerPage config, so we factor it out.
-// ============================================================================
-
-function SearchInstantSearch({ children }: { children: ReactNode }) {
-  return (
-    <InstantSearch searchClient={searchClient} indexName={indexName}>
-      <Configure hitsPerPage={50} />
-      {children}
-    </InstantSearch>
-  );
-}
-
-// ============================================================================
-// SearchModal — desktop / tablet (md+). Original look: centered
-// rounded card with shadow, plain text input + ghost close
-// button, fixed 432 px result list.
-// ============================================================================
-
-export function SearchModal({
+export default function Search({
   isExpanded,
   onExpandChange,
 }: {
@@ -250,90 +109,85 @@ export function SearchModal({
   onExpandChange: (expanded: boolean) => void;
 }) {
   return (
-    <SearchInstantSearch>
-      <SearchModalPanel
-        isExpanded={isExpanded}
-        onExpandChange={onExpandChange}
-      />
-    </SearchInstantSearch>
+    <InstantSearch searchClient={searchClient} indexName={indexName}>
+      <Configure hitsPerPage={20} />
+      <SearchInner isExpanded={isExpanded} onExpandChange={onExpandChange} />
+    </InstantSearch>
   );
 }
 
-function SearchModalPanel({
+// ============================================================================
+// CommandMenu-wired search inner — owns the wiring between the
+// CommandMenu's controlled input and Algolia's refine, plus the
+// hit grouping + navigation.
+// ============================================================================
+
+function SearchInner({
   isExpanded,
   onExpandChange,
 }: {
   isExpanded: boolean;
-  onExpandChange: (b: boolean) => void;
+  onExpandChange: (expanded: boolean) => void;
 }) {
-  const { query, setQuery, isSearching, setIsSearching, handleClose } =
-    useSearchPanelState(onExpandChange);
-  return (
-    <div
-      className="flex w-full max-w-xl flex-col overflow-hidden rounded-xl bg-[color:var(--ds-background-100)]"
-      style={{ boxShadow: "var(--ds-shadow-modal)" }}
-    >
-      <SearchModalInput
-        isExpanded={isExpanded}
-        onClose={handleClose}
-        onQueryChange={setQuery}
-        onSearchingChange={setIsSearching}
-      />
-      <div className="relative h-[432px] overflow-y-auto">
-        <SearchBody
-          query={query}
-          isSearching={isSearching}
-          onSelect={handleClose}
-        />
-      </div>
-    </div>
-  );
-}
+  const router = useRouter();
+  const { query, refine } = useSearchBox();
+  const { hits } = useHits<HitFields>();
 
-function SearchModalInput({
-  isExpanded,
-  onClose,
-  onQueryChange,
-  onSearchingChange,
-}: {
-  isExpanded: boolean;
-  onClose: () => void;
-  onQueryChange: (q: string) => void;
-  onSearchingChange: (b: boolean) => void;
-}) {
-  const { localQuery, setLocalQuery, inputRef } = useSearchInputState({
-    isExpanded,
-    onQueryChange,
-    onSearchingChange,
-  });
-  const reset = () => {
-    setLocalQuery("");
-    onClose();
+  const handleClose = () => {
+    refine("");
+    onExpandChange(false);
   };
+
+  const handleSelect = (hit: HitType) => {
+    refine("");
+    onExpandChange(false);
+    router.push(hrefForHit(hit));
+  };
+
+  // Group hits by section heading, preserving relevance order
+  // within each group and the canonical site-nav order across
+  // groups. Algolia's hit limit (20) keeps the rendered list
+  // short enough that all groups fit in the 436 px scrollable
+  // region without truncation.
+  const grouped = useMemo(() => {
+    const buckets = new Map<string, HitType[]>();
+    for (const hit of hits) {
+      const heading = headingForHit(hit);
+      const bucket = buckets.get(heading) ?? [];
+      bucket.push(hit);
+      buckets.set(heading, bucket);
+    }
+    return GROUP_ORDER.filter((heading) => buckets.has(heading)).map(
+      (heading) => ({ heading, items: buckets.get(heading) ?? [] }),
+    );
+  }, [hits]);
+
   return (
-    <div className="flex items-center gap-2 border-b border-[color:var(--ds-gray-400)] px-4 py-2">
-      <input
-        ref={inputRef}
-        type="text"
-        value={localQuery}
-        onChange={(e) => setLocalQuery(e.target.value)}
-        placeholder="Search"
-        autoComplete="off"
-        autoCorrect="off"
-        spellCheck={false}
-        className="h-9 w-full bg-transparent text-base text-[color:var(--ds-gray-1000)] outline-none placeholder:text-[color:var(--ds-gray-700)]"
-      />
-      <Tooltip content="Close search" side="bottom" showArrow={false}>
-        <IconButton
-          onClick={reset}
-          variant="tertiary"
-          size="small"
-          aria-label="Close search"
-        >
-          <X className="size-4" />
-        </IconButton>
-      </Tooltip>
-    </div>
+    <CommandMenu
+      open={isExpanded}
+      onClose={handleClose}
+      placeholder="Search articles, gear, races…"
+      value={query}
+      onValueChange={refine}
+      // Algolia already ranks results — tell cmdk to render
+      // every item it's handed instead of running its own
+      // fuzzy filter on top of the title strings.
+      filter={() => 1}
+    >
+      {grouped.map((group) => (
+        <CommandMenu.Group key={group.heading} heading={group.heading}>
+          {group.items.map((hit) => (
+            <CommandMenu.Item
+              key={hit.objectID}
+              value={hit.objectID}
+              icon={<ArrowRight className="size-4" />}
+              onSelect={() => handleSelect(hit)}
+            >
+              {hit.title}
+            </CommandMenu.Item>
+          ))}
+        </CommandMenu.Group>
+      ))}
+    </CommandMenu>
   );
 }
-

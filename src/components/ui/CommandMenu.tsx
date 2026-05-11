@@ -20,6 +20,14 @@ export interface CommandMenuProps {
   className?: string;
   /** Custom item filter — return 0 to hide, >0 to show (higher ranks first) */
   filter?: (value: string, search: string, keywords?: string[]) => number;
+  /**
+   * Controlled input value. Pair with `onValueChange` to drive
+   * the input from external state — used by the public-site
+   * search to wire the input directly to Algolia's `refine`.
+   */
+  value?: string;
+  /** Fired when the input value changes (typing). */
+  onValueChange?: (value: string) => void;
 }
 
 interface CommandMenuGroupProps {
@@ -286,6 +294,8 @@ export function CommandMenu({
   placeholder = "Search for actions...",
   className = "",
   filter,
+  value,
+  onValueChange,
 }: CommandMenuProps) {
   return (
     <>
@@ -320,7 +330,11 @@ export function CommandMenu({
               padding: "0 4px",
             }}
           >
-            <Command.Input placeholder={placeholder} />
+            <Command.Input
+              placeholder={placeholder}
+              value={value}
+              onValueChange={onValueChange}
+            />
             <button
               type="button"
               className="ds-cmdk-esc-button"
