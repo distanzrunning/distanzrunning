@@ -347,9 +347,9 @@ export default function MobileNavDrawer({
               size="small"
               onClick={handleOpenSearch}
               aria-label="Open search"
+              prefixIcon={<SearchIcon className="size-4" aria-hidden />}
             >
-              <SearchIcon className="size-4" aria-hidden />
-              <span>Search</span>
+              Search
             </Button>
             <ThemeSwitcher
               showSystem={false}

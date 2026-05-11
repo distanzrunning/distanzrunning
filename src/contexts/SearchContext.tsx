@@ -81,10 +81,13 @@ export function SearchProvider({ children }: { children: ReactNode }) {
               WebkitBackdropFilter: "blur(8px)",
             }}
           />
-          {/* Full-viewport sheet: fixed inset-0 + h-dvh so the
-              dialog covers everything on mobile (dvh handles the
-              iOS Safari URL bar) and on desktop. */}
-          <Dialog.Content className="fixed inset-0 z-[70] h-dvh w-screen p-0 focus:outline-none">
+          {/* Full-viewport sheet that starts *below* the
+              50 px SiteHeader so the header stays visible and
+              tappable while search is open (the user can still
+              navigate / hit the menu without dismissing). Uses
+              left/right/top/bottom rather than inset-0 so the
+              top edge sits at the header's bottom. */}
+          <Dialog.Content className="fixed inset-x-0 bottom-0 top-[50px] z-[70] p-0 focus:outline-none">
             <Dialog.Title className="sr-only">Search</Dialog.Title>
             <Dialog.Description className="sr-only">
               Search articles, gear and races
