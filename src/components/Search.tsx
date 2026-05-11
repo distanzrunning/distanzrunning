@@ -1,26 +1,12 @@
 // src/components/Search.tsx
 //
-// Public-site search — Algolia-backed via react-instantsearch.
-// Exposes two distinct presentations:
-//
-//   SearchModal — desktop / tablet (md+). Centered modal card
-//     with a rounded surface + drop shadow, fixed 432 px result
-//     list. Mirrors the original SiteHeader search modal.
-//
-//   SearchSheet — mobile (< md). Full-viewport sheet (sized by
-//     the parent Dialog.Content) with a pill-chip input + a
-//     bordered close button so the search affordance reads
-//     clearly without a surrounding card to frame it.
-//
-// Both wrap their own InstantSearch + Configure provider — only
-// one is mounted at a time (SearchProvider picks the right one
-// via matchMedia), so we don't get duplicate Algolia queries.
-//
-// Shared bits at the top of the file: Algolia client + index
-// name, hit-routing helpers, the HitRow primitive, and the
-// SearchBody component (empty / loading / no-results / hit
-// list). The two presentation components compose these with
-// their own input + panel chrome.
+// Public-site search modal — Algolia-backed via react-instantsearch.
+// Exposes a single SearchModal presentation matching the
+// original pre-refactor SiteHeader modal: centered card with
+// a rounded surface + drop shadow, plain text input + ghost
+// close button, fixed 432 px result list. Dialog.Content's own
+// `w-[calc(100%-1rem)] md:max-w-xl` handles mobile vs desktop
+// sizing — same chrome, just narrower on mobile.
 //
 // Hit URLs:
 //   - post        → /articles/{slug}
@@ -351,106 +337,3 @@ function SearchModalInput({
   );
 }
 
-// ============================================================================
-// SearchSheet — mobile (< md). Full-viewport sheet (sized by
-// the parent Dialog.Content). Pill-chip input + bordered close
-// button anchor the search affordance without a surrounding
-// card. Body flex-1 fills whatever height the sheet's container
-// hands it.
-// ============================================================================
-
-export function SearchSheet({
-  isExpanded,
-  onExpandChange,
-}: {
-  isExpanded: boolean;
-  onExpandChange: (expanded: boolean) => void;
-}) {
-  return (
-    <SearchInstantSearch>
-      <SearchSheetPanel
-        isExpanded={isExpanded}
-        onExpandChange={onExpandChange}
-      />
-    </SearchInstantSearch>
-  );
-}
-
-function SearchSheetPanel({
-  isExpanded,
-  onExpandChange,
-}: {
-  isExpanded: boolean;
-  onExpandChange: (b: boolean) => void;
-}) {
-  const { query, setQuery, isSearching, setIsSearching, handleClose } =
-    useSearchPanelState(onExpandChange);
-  return (
-    <div className="flex h-full w-full flex-col overflow-hidden bg-[color:var(--ds-background-100)]">
-      <SearchSheetInput
-        isExpanded={isExpanded}
-        onClose={handleClose}
-        onQueryChange={setQuery}
-        onSearchingChange={setIsSearching}
-      />
-      <div className="relative flex-1 overflow-y-auto">
-        <SearchBody
-          query={query}
-          isSearching={isSearching}
-          onSelect={handleClose}
-        />
-      </div>
-    </div>
-  );
-}
-
-function SearchSheetInput({
-  isExpanded,
-  onClose,
-  onQueryChange,
-  onSearchingChange,
-}: {
-  isExpanded: boolean;
-  onClose: () => void;
-  onQueryChange: (q: string) => void;
-  onSearchingChange: (b: boolean) => void;
-}) {
-  const { localQuery, setLocalQuery, inputRef } = useSearchInputState({
-    isExpanded,
-    onQueryChange,
-    onSearchingChange,
-  });
-  const reset = () => {
-    setLocalQuery("");
-    onClose();
-  };
-  return (
-    <div className="flex items-center gap-3 border-b border-[color:var(--ds-gray-400)] px-4 py-3">
-      <label className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] px-3">
-        <SearchIcon
-          className="size-4 shrink-0 text-[color:var(--ds-gray-700)]"
-          aria-hidden
-        />
-        <input
-          ref={inputRef}
-          type="text"
-          value={localQuery}
-          onChange={(e) => setLocalQuery(e.target.value)}
-          placeholder="Search articles, gear, races…"
-          autoComplete="off"
-          autoCorrect="off"
-          spellCheck={false}
-          className="h-full w-full min-w-0 bg-transparent text-base text-[color:var(--ds-gray-1000)] outline-none placeholder:text-[color:var(--ds-gray-700)]"
-        />
-      </label>
-      <button
-        type="button"
-        onClick={reset}
-        aria-label="Close search"
-        className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
-      >
-        <X className="size-4" />
-      </button>
-    </div>
-  );
-}
