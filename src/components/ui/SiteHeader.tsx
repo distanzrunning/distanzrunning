@@ -139,8 +139,13 @@ export default function SiteHeader({
 
         {/* Centre: primary nav (desktop only). Absolutely positioned so
             the row is geometrically centred on the page, independent
-            of the wordmark + action-row widths. */}
-        <div className="pointer-events-none absolute inset-x-0 hidden justify-center md:flex">
+            of the wordmark + action-row widths. inset-0 (not just
+            inset-x-0) + items-center reliably centres the nav
+            vertically; without those the absolute wrapper inherits a
+            "static position" inside the flex container that browsers
+            resolve to the top edge, leaving the nav a few pixels
+            higher than the wordmark / right cluster. */}
+        <div className="pointer-events-none absolute inset-0 hidden items-center justify-center md:flex">
           <div className="pointer-events-auto">
             <SiteNavigationMenu
               featuredNews={featuredNews}
