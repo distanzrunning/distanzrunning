@@ -1,22 +1,28 @@
 // src/components/Search.tsx
 //
-// Public-site search modal — Algolia-backed via react-instantsearch.
-// Visual layer is built from DS tokens / primitives only:
-//   - Panel uses 12 px radius + --ds-shadow-modal on top of
-//     --ds-background-100 — same shadow + radius DS Modal /
-//     NewsletterModal use, no explicit border (the shadow's first
-//     stop carries a 1 px ring that defines the edge).
-//   - All text colour flows through the gray scale tokens (gray-1000
-//     primary, gray-900 subtle, gray-700 muted) so light/dark flip
-//     automatically.
-//   - Hover state on rows uses --ds-gray-100.
+// Public-site search — Algolia-backed via react-instantsearch.
+// Exposes two distinct presentations:
 //
-// Empty state lists the five top-level destinations that mirror the
-// site nav (Articles · Shoes · Gear · Nutrition · Races).
+//   SearchModal — desktop / tablet (md+). Centered modal card
+//     with a rounded surface + drop shadow, fixed 432 px result
+//     list. Mirrors the original SiteHeader search modal.
 //
-// When the user types, hits are grouped by section header so a
-// query that spans content types reads as a structured list rather
-// than a flat soup. Each hit routes to its flat public URL:
+//   SearchSheet — mobile (< md). Full-viewport sheet (sized by
+//     the parent Dialog.Content) with a pill-chip input + a
+//     bordered close button so the search affordance reads
+//     clearly without a surrounding card to frame it.
+//
+// Both wrap their own InstantSearch + Configure provider — only
+// one is mounted at a time (SearchProvider picks the right one
+// via matchMedia), so we don't get duplicate Algolia queries.
+//
+// Shared bits at the top of the file: Algolia client + index
+// name, hit-routing helpers, the HitRow primitive, and the
+// SearchBody component (empty / loading / no-results / hit
+// list). The two presentation components compose these with
+// their own input + panel chrome.
+//
+// Hit URLs:
 //   - post        → /articles/{slug}
 //   - productPost → /{section}/{slug} — section is indexed by
 //                   the algolia-sync route from productCategory
@@ -24,7 +30,13 @@
 
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import {
   Configure,
   InstantSearch,
@@ -36,6 +48,9 @@ import { liteClient as algoliasearch } from "algoliasearch/lite";
 import Link from "next/link";
 import { ArrowRight, Loader2, Search as SearchIcon, X } from "lucide-react";
 
+// ============================================================================
+// Algolia client (shared between presentations)
+// ============================================================================
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
@@ -104,7 +119,8 @@ function HitRow({
 }
 
 // ============================================================================
-// Body — empty state, loading, no-results, results
+// Body — empty state, loading, no-results, results. Shared between
+// both presentations.
 // ============================================================================
 
 function SearchBody({
@@ -118,8 +134,6 @@ function SearchBody({
 }) {
   const { hits } = useHits<HitFields>();
 
-  // Empty state — a subtle centred search glyph. No section list,
-  // no copy. The placeholder + ⌘K shortcut do the labelling work.
   if (query.length === 0) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -151,7 +165,6 @@ function SearchBody({
     );
   }
 
-  // Flat list — Algolia's relevance ordering, top 8 results.
   return (
     <div className="px-2 py-2">
       {hits.slice(0, 8).map((hit) => (
@@ -167,17 +180,17 @@ function SearchBody({
 }
 
 // ============================================================================
-// Input row — text field + close button
+// Shared input-state hook. The two presentations need identical
+// debounced refine + autofocus behaviour, just with different
+// surrounding chrome.
 // ============================================================================
 
-function SearchInput({
+function useSearchInputState({
   isExpanded,
-  onClose,
   onQueryChange,
   onSearchingChange,
 }: {
   isExpanded: boolean;
-  onClose: () => void;
   onQueryChange: (q: string) => void;
   onSearchingChange: (b: boolean) => void;
 }) {
@@ -185,7 +198,6 @@ function SearchInput({
   const [localQuery, setLocalQuery] = useState(query);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Debounced refine + searching state
   useEffect(() => {
     if (localQuery.length > 0) onSearchingChange(true);
     const id = setTimeout(() => {
@@ -196,28 +208,222 @@ function SearchInput({
     return () => clearTimeout(id);
   }, [localQuery, refine, onQueryChange, onSearchingChange]);
 
-  // Auto-focus when the modal opens
   useEffect(() => {
     if (isExpanded) inputRef.current?.focus();
   }, [isExpanded]);
 
+  return { localQuery, setLocalQuery, inputRef };
+}
+
+// ============================================================================
+// Shared panel-state hook. Owns query / searching state and the
+// "close + reset" handler, used by both presentations.
+// ============================================================================
+
+function useSearchPanelState(onExpandChange: (b: boolean) => void) {
+  const [query, setQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const handleClose = useMemo(
+    () => () => {
+      setQuery("");
+      onExpandChange(false);
+    },
+    [onExpandChange],
+  );
+  return { query, setQuery, isSearching, setIsSearching, handleClose };
+}
+
+// ============================================================================
+// Algolia wrapper — both presentations share the same client +
+// index + hitsPerPage config, so we factor it out.
+// ============================================================================
+
+function SearchInstantSearch({ children }: { children: ReactNode }) {
+  return (
+    <InstantSearch searchClient={searchClient} indexName={indexName}>
+      <Configure hitsPerPage={50} />
+      {children}
+    </InstantSearch>
+  );
+}
+
+// ============================================================================
+// SearchModal — desktop / tablet (md+). Original look: centered
+// rounded card with shadow, plain text input + ghost close
+// button, fixed 432 px result list.
+// ============================================================================
+
+export function SearchModal({
+  isExpanded,
+  onExpandChange,
+}: {
+  isExpanded: boolean;
+  onExpandChange: (expanded: boolean) => void;
+}) {
+  return (
+    <SearchInstantSearch>
+      <SearchModalPanel
+        isExpanded={isExpanded}
+        onExpandChange={onExpandChange}
+      />
+    </SearchInstantSearch>
+  );
+}
+
+function SearchModalPanel({
+  isExpanded,
+  onExpandChange,
+}: {
+  isExpanded: boolean;
+  onExpandChange: (b: boolean) => void;
+}) {
+  const { query, setQuery, isSearching, setIsSearching, handleClose } =
+    useSearchPanelState(onExpandChange);
+  return (
+    <div
+      className="flex w-full max-w-xl flex-col overflow-hidden rounded-xl bg-[color:var(--ds-background-100)]"
+      style={{ boxShadow: "var(--ds-shadow-modal)" }}
+    >
+      <SearchModalInput
+        isExpanded={isExpanded}
+        onClose={handleClose}
+        onQueryChange={setQuery}
+        onSearchingChange={setIsSearching}
+      />
+      <div className="relative h-[432px] overflow-y-auto">
+        <SearchBody
+          query={query}
+          isSearching={isSearching}
+          onSelect={handleClose}
+        />
+      </div>
+    </div>
+  );
+}
+
+function SearchModalInput({
+  isExpanded,
+  onClose,
+  onQueryChange,
+  onSearchingChange,
+}: {
+  isExpanded: boolean;
+  onClose: () => void;
+  onQueryChange: (q: string) => void;
+  onSearchingChange: (b: boolean) => void;
+}) {
+  const { localQuery, setLocalQuery, inputRef } = useSearchInputState({
+    isExpanded,
+    onQueryChange,
+    onSearchingChange,
+  });
   const reset = () => {
     setLocalQuery("");
     onClose();
   };
-
   return (
-    // Below md, the input row carries its own pill chrome (icon
-    // prefix + bordered field + bordered close chip) — without
-    // it the full-viewport sheet leaves nothing visually
-    // anchoring the input. At md+ the field strips back to the
-    // original Search-modal look: a plain text input + a
-    // ghost-button close, since the surrounding rounded modal
-    // card already frames the field.
-    <div className="flex items-center gap-3 border-b border-[color:var(--ds-gray-400)] px-4 py-3 md:gap-2 md:py-2">
-      <label className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] px-3 md:h-9 md:rounded-none md:border-0 md:bg-transparent md:px-0">
+    <div className="flex items-center gap-2 border-b border-[color:var(--ds-gray-400)] px-4 py-2">
+      <input
+        ref={inputRef}
+        type="text"
+        value={localQuery}
+        onChange={(e) => setLocalQuery(e.target.value)}
+        placeholder="Search"
+        autoComplete="off"
+        autoCorrect="off"
+        spellCheck={false}
+        className="h-9 w-full bg-transparent text-base text-[color:var(--ds-gray-1000)] outline-none placeholder:text-[color:var(--ds-gray-700)]"
+      />
+      <button
+        type="button"
+        onClick={reset}
+        aria-label="Close search"
+        className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
+      >
+        <X className="size-4" />
+      </button>
+    </div>
+  );
+}
+
+// ============================================================================
+// SearchSheet — mobile (< md). Full-viewport sheet (sized by
+// the parent Dialog.Content). Pill-chip input + bordered close
+// button anchor the search affordance without a surrounding
+// card. Body flex-1 fills whatever height the sheet's container
+// hands it.
+// ============================================================================
+
+export function SearchSheet({
+  isExpanded,
+  onExpandChange,
+}: {
+  isExpanded: boolean;
+  onExpandChange: (expanded: boolean) => void;
+}) {
+  return (
+    <SearchInstantSearch>
+      <SearchSheetPanel
+        isExpanded={isExpanded}
+        onExpandChange={onExpandChange}
+      />
+    </SearchInstantSearch>
+  );
+}
+
+function SearchSheetPanel({
+  isExpanded,
+  onExpandChange,
+}: {
+  isExpanded: boolean;
+  onExpandChange: (b: boolean) => void;
+}) {
+  const { query, setQuery, isSearching, setIsSearching, handleClose } =
+    useSearchPanelState(onExpandChange);
+  return (
+    <div className="flex h-full w-full flex-col overflow-hidden bg-[color:var(--ds-background-100)]">
+      <SearchSheetInput
+        isExpanded={isExpanded}
+        onClose={handleClose}
+        onQueryChange={setQuery}
+        onSearchingChange={setIsSearching}
+      />
+      <div className="relative flex-1 overflow-y-auto">
+        <SearchBody
+          query={query}
+          isSearching={isSearching}
+          onSelect={handleClose}
+        />
+      </div>
+    </div>
+  );
+}
+
+function SearchSheetInput({
+  isExpanded,
+  onClose,
+  onQueryChange,
+  onSearchingChange,
+}: {
+  isExpanded: boolean;
+  onClose: () => void;
+  onQueryChange: (q: string) => void;
+  onSearchingChange: (b: boolean) => void;
+}) {
+  const { localQuery, setLocalQuery, inputRef } = useSearchInputState({
+    isExpanded,
+    onQueryChange,
+    onSearchingChange,
+  });
+  const reset = () => {
+    setLocalQuery("");
+    onClose();
+  };
+  return (
+    <div className="flex items-center gap-3 border-b border-[color:var(--ds-gray-400)] px-4 py-3">
+      <label className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] px-3">
         <SearchIcon
-          className="size-4 shrink-0 text-[color:var(--ds-gray-700)] md:hidden"
+          className="size-4 shrink-0 text-[color:var(--ds-gray-700)]"
           aria-hidden
         />
         <input
@@ -236,72 +442,10 @@ function SearchInput({
         type="button"
         onClick={reset}
         aria-label="Close search"
-        className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] md:size-8 md:rounded-md md:border-0 md:bg-transparent md:hover:bg-[color:var(--ds-gray-100)]"
+        className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)]"
       >
         <X className="size-4" />
       </button>
     </div>
-  );
-}
-
-// ============================================================================
-// Panel — wraps the input + body in a DS modal-shaped surface
-// ============================================================================
-
-function SearchPanel({
-  isExpanded,
-  onExpandChange,
-}: {
-  isExpanded: boolean;
-  onExpandChange: (b: boolean) => void;
-}) {
-  const [query, setQuery] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
-
-  const handleClose = useMemo(
-    () => () => {
-      setQuery("");
-      onExpandChange(false);
-    },
-    [onExpandChange],
-  );
-
-  return (
-    <div
-      className="flex h-full w-full flex-col overflow-hidden bg-[color:var(--ds-background-100)] md:rounded-xl md:[box-shadow:var(--ds-shadow-modal)]"
-    >
-      <SearchInput
-        isExpanded={isExpanded}
-        onClose={handleClose}
-        onQueryChange={setQuery}
-        onSearchingChange={setIsSearching}
-      />
-      <div className="relative flex-1 overflow-y-auto md:h-[432px] md:flex-none">
-        <SearchBody
-          query={query}
-          isSearching={isSearching}
-          onSelect={handleClose}
-        />
-      </div>
-    </div>
-  );
-}
-
-// ============================================================================
-// Public component
-// ============================================================================
-
-export default function Search({
-  isExpanded,
-  onExpandChange,
-}: {
-  isExpanded: boolean;
-  onExpandChange: (expanded: boolean) => void;
-}) {
-  return (
-    <InstantSearch searchClient={searchClient} indexName={indexName}>
-      <Configure hitsPerPage={50} />
-      <SearchPanel isExpanded={isExpanded} onExpandChange={onExpandChange} />
-    </InstantSearch>
   );
 }
