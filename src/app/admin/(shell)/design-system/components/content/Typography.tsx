@@ -184,7 +184,7 @@ export default function Typography() {
           Usage
         </SectionHeader>
 
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-4">
           Our typography styles can be consumed as{" "}
           <span className="inline-flex items-center gap-1.5 align-bottom">
             <SiTailwindcss size={14} className="text-[#38bdf8]" />
@@ -209,7 +209,7 @@ export default function Typography() {
           for you based on the Geist design system.
         </p>
 
-        <p className="text-copy-14 text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           The{" "}
           <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             strong
