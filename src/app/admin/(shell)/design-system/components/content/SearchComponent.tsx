@@ -252,6 +252,28 @@ const SAMPLE_GROUPS: { heading: string; items: string[] }[] = [
   },
 ];
 
+// Flat list used by the "Search as you type" example below.
+// Picked to overlap with the SAMPLE_GROUPS items so a typed
+// query produces a believable filtered set without any async
+// data fetch.
+const TYPE_AHEAD_ITEMS: ReadonlyArray<string> = [
+  "Avatar",
+  "Badge",
+  "Button",
+  "Calendar",
+  "Checkbox",
+  "Combobox",
+  "Drawer",
+  "Empty State",
+  "Input",
+  "Modal",
+  "Pagination",
+  "Popover",
+  "Select",
+  "Tabs",
+  "Tooltip",
+];
+
 // ============================================================================
 // Code strings
 // ============================================================================
@@ -327,6 +349,82 @@ export function SearchIconTrigger() {
   );
 }`;
 
+const typeAheadCode = `import { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
+import { CommandMenu } from '@/components/ui/CommandMenu';
+
+const ITEMS = [
+  'Avatar', 'Badge', 'Button', 'Calendar', 'Checkbox',
+  'Combobox', 'Drawer', 'Empty State', 'Input', 'Modal',
+  'Pagination', 'Popover', 'Select', 'Tabs', 'Tooltip',
+];
+
+export function SearchAsYouType() {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+
+  // Idle (no query) → empty array so no items render.
+  // Typing → filter against the dataset (could just as easily
+  // be an async Algolia / network call — the component doesn't
+  // care, it just renders what you hand it).
+  const matches = query.length > 0
+    ? ITEMS.filter((item) =>
+        item.toLowerCase().includes(query.toLowerCase()),
+      )
+    : [];
+
+  return (
+    <CommandMenu
+      open={open}
+      onClose={() => {
+        setQuery('');
+        setOpen(false);
+      }}
+      placeholder="Search"
+
+      // Controlled input — drive the query from external state
+      // so you can wire it to whatever data source you like.
+      value={query}
+      onValueChange={setQuery}
+
+      // Already filtered upstream — tell cmdk to render every
+      // item we give it instead of running its own fuzzy filter
+      // on top.
+      filter={() => 1}
+
+      // Three-state empty content:
+      //   - null     → suppress Command.Empty entirely
+      //   - ReactNode → custom message (e.g. "No matches for X")
+      //   - omitted  → default "No results found."
+      emptyState={
+        query.length === 0
+          ? null
+          : matches.length === 0
+            ? <NoMatches query={query} />
+            : null
+      }
+
+      // Drops the input-row divider + list padding when there's
+      // nothing below. The modal collapses to just the input.
+      resultsHidden={query.length === 0}
+    >
+      {matches.map((item) => (
+        <CommandMenu.Item
+          key={item}
+          icon={<ArrowRight className="w-4 h-4" />}
+          onSelect={() => {
+            setQuery('');
+            setOpen(false);
+            // navigate or do work...
+          }}
+        >
+          {item}
+        </CommandMenu.Item>
+      ))}
+    </CommandMenu>
+  );
+}`;
+
 // ============================================================================
 // Main component
 // ============================================================================
@@ -334,6 +432,18 @@ export function SearchIconTrigger() {
 export default function SearchComponent() {
   const [open, setOpen] = useState(false);
   const { showToast } = useToast();
+
+  // Independent state for the "Search as you type" demo —
+  // separate from the static-groups example above so the two
+  // can be exercised without stepping on each other.
+  const [typeAheadOpen, setTypeAheadOpen] = useState(false);
+  const [typeAheadValue, setTypeAheadValue] = useState("");
+  const typeAheadMatches =
+    typeAheadValue.length > 0
+      ? TYPE_AHEAD_ITEMS.filter((item) =>
+          item.toLowerCase().includes(typeAheadValue.toLowerCase()),
+        )
+      : [];
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -464,6 +574,76 @@ export default function SearchComponent() {
         </div>
       </Section>
 
+      {/* Search-as-you-type */}
+      <Section>
+        <SectionHeader id="search-as-you-type" onCopyLink={showToast}>
+          Search as you type
+        </SectionHeader>
+        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+          When the static-group navigator isn&rsquo;t the right fit —
+          e.g. a live search over an external dataset (Algolia, an
+          internal API, …) — drive the input externally and render
+          items as they come back. The modal idles as a single{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            Search
+          </code>{" "}
+          field with no result area, then reveals previews as the user
+          types. Three new props on{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            CommandMenu
+          </code>{" "}
+          do the work:
+        </p>
+        <ul className="m-0 list-disc space-y-2 pl-6 text-[15px] leading-[1.6] text-textSubtle">
+          <li>
+            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              value
+            </code>{" "}
+            +{" "}
+            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              onValueChange
+            </code>{" "}
+            — controlled input. Pipe it to your data source.
+          </li>
+          <li>
+            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              emptyState
+            </code>{" "}
+            — ReactNode for a custom empty message, or{" "}
+            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              null
+            </code>{" "}
+            to suppress Command.Empty entirely.
+          </li>
+          <li>
+            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              resultsHidden
+            </code>{" "}
+            — drops the input-row divider and zeros the list padding
+            so the modal collapses to a flush input-only surface.
+          </li>
+        </ul>
+        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+          Pair with{" "}
+          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            filter={"{() => 1}"}
+          </code>{" "}
+          to disable cmdk&rsquo;s fuzzy filter — your data source has
+          already done the ranking, so each item should render as-is.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={typeAheadCode}>
+            <button
+              type="button"
+              onClick={() => setTypeAheadOpen(true)}
+              className="flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-[var(--ds-gray-400)] bg-transparent pl-2 pr-1.5 font-sans text-sm text-[var(--ds-gray-700)] outline-none transition-colors hover:bg-[var(--ds-background-200)]"
+            >
+              Search
+            </button>
+          </CodePreview>
+        </div>
+      </Section>
+
       <CommandMenu
         open={open}
         onClose={() => setOpen(false)}
@@ -484,6 +664,44 @@ export default function SearchComponent() {
               </CommandMenu.Item>
             ))}
           </CommandMenu.Group>
+        ))}
+      </CommandMenu>
+
+      {/* Live "Search as you type" demo. Independent state from
+          the static-groups CommandMenu above so the two can be
+          exercised side by side. */}
+      <CommandMenu
+        open={typeAheadOpen}
+        onClose={() => {
+          setTypeAheadValue("");
+          setTypeAheadOpen(false);
+        }}
+        placeholder="Search"
+        value={typeAheadValue}
+        onValueChange={setTypeAheadValue}
+        filter={() => 1}
+        emptyState={
+          typeAheadValue.length === 0 ? null : typeAheadMatches.length ===
+            0 ? (
+            <div className="px-6 py-12 text-center text-sm text-textSubtle">
+              No matches for &ldquo;{typeAheadValue}&rdquo;.
+            </div>
+          ) : null
+        }
+        resultsHidden={typeAheadValue.length === 0}
+      >
+        {typeAheadMatches.map((item) => (
+          <CommandMenu.Item
+            key={item}
+            icon={<ArrowRight className="w-4 h-4" />}
+            onSelect={() => {
+              showToast(`Selected "${item}"`);
+              setTypeAheadValue("");
+              setTypeAheadOpen(false);
+            }}
+          >
+            {item}
+          </CommandMenu.Item>
         ))}
       </CommandMenu>
     </div>
