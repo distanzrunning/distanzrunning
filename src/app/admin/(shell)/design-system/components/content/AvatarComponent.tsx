@@ -454,7 +454,7 @@ export default function AvatarComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Multiple avatars can be stacked together in a group. Use the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             limit
           </code>{" "}
           prop to limit the number of visible avatars and show a count for the
@@ -546,7 +546,7 @@ export default function AvatarComponent() {
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Add a custom icon badge to indicate status, role, or any other
           attribute. Customize the background colour using the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             iconBgColor
           </code>{" "}
           prop. The avatar can also use a gradient background instead of an
@@ -597,7 +597,7 @@ export default function AvatarComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           When no image is provided, use the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             placeholder
           </code>{" "}
           prop to display a subtle shimmer animation.
@@ -614,7 +614,7 @@ export default function AvatarComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Avatars can be rendered at any size using the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             size
           </code>{" "}
           prop. Common sizes are 24, 32, 40, 48, and 64 pixels.

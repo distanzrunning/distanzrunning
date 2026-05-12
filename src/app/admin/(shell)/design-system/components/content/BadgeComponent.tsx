@@ -446,7 +446,7 @@ export default function BadgeComponent() {
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Badges come in multiple colour variants, each with a solid and subtle
           option. Use the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             variant
           </code>{" "}
           prop to set the style.
@@ -499,7 +499,7 @@ export default function BadgeComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Badges are available in three sizes: small, medium, and large. Use the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             size
           </code>{" "}
           prop to adjust.
@@ -526,7 +526,7 @@ export default function BadgeComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Add an icon before the badge text using the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             icon
           </code>{" "}
           prop. Icons are sized automatically based on the badge size.

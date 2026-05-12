@@ -691,7 +691,7 @@ export default function LoginComponent() {
           a built-in password show/hide toggle, error state, and a footer
           slot for links such as "Forgot password?". The same component
           powers the staging gate at{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             /login
           </code>{" "}
           and is suitable for any sign-in surface across the product.
@@ -740,7 +740,7 @@ export default function LoginComponent() {
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           A social-only variant — no email form, just one or more OAuth
           providers. Pass each provider through the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             providers
           </code>{" "}
           prop with a label, icon, and click handler.
@@ -759,11 +759,11 @@ export default function LoginComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           When both a provider and email form are present, pass{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             divider
           </code>{" "}
           to render a separator between them. Use{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             true
           </code>{" "}
           for the default "Or continue with email" label or pass a custom
@@ -784,7 +784,7 @@ export default function LoginComponent() {
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           A sign-up flow combines a Google provider, a name + email form,
           and a legal disclaimer. The{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             disclaimer
           </code>{" "}
           slot renders small, centered text under the submit button — use
@@ -804,7 +804,7 @@ export default function LoginComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Pass any React node to{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             footer
           </code>{" "}
           to render helper links — a forgot-password link, a sign-up link,
@@ -824,7 +824,7 @@ export default function LoginComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Pass an{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             error
           </code>{" "}
           string to render an inline error above the submit button. Fields

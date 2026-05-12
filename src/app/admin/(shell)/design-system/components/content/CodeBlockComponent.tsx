@@ -1152,7 +1152,7 @@ export default function CodeBlockComponent() {
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Specific lines can be highlighted to draw attention to important code.
           Use the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             highlightLines
           </code>{" "}
           prop with an array of line numbers.
@@ -1172,11 +1172,11 @@ export default function CodeBlockComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Show diff-style additions and removals using the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             addedLines
           </code>{" "}
           and{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             removedLines
           </code>{" "}
           props.
@@ -1197,7 +1197,7 @@ export default function CodeBlockComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Line numbers can be made clickable using the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             referencedLines
           </code>{" "}
           prop. Click a line number to highlight it with an amber left border.
@@ -1231,7 +1231,7 @@ export default function CodeBlockComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Line numbers can be hidden by setting{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             showLineNumbers={"{false}"}
           </code>
           .
@@ -1377,11 +1377,11 @@ export default function CodeBlockComponent() {
         </h3>
         <p className="text-copy-14 text-textSubtle mb-4">
           When using{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             addedLines
           </code>{" "}
           or{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             removedLines
           </code>
           , syntax highlighting changes to emphasise what is being modified.

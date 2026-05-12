@@ -205,7 +205,7 @@ export default function GridSystemShowcase() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Full Grid</p>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   max-w-[1585px]
                 </code>
               </div>
@@ -217,7 +217,7 @@ export default function GridSystemShowcase() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Content Container</p>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   max-w-7xl
                 </code>
               </div>
@@ -229,7 +229,7 @@ export default function GridSystemShowcase() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Reading Width (Articles)</p>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   max-w-4xl
                 </code>
               </div>
@@ -241,7 +241,7 @@ export default function GridSystemShowcase() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Form Container</p>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   max-w-md
                 </code>
               </div>

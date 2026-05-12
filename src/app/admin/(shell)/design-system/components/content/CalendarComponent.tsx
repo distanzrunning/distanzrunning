@@ -714,7 +714,7 @@ export default function CalendarComponent() {
         </SectionHeader>
         <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Use{" "}
-          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             horizontalLayout
           </code>{" "}
           to align content horizontally within the calendar popover.
@@ -740,11 +740,11 @@ export default function CalendarComponent() {
         </SectionHeader>
         <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Choose between{" "}
-          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             large
           </code>{" "}
           (default) and{" "}
-          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             small
           </code>{" "}
           for size.
@@ -841,7 +841,7 @@ export default function CalendarComponent() {
         </SectionHeader>
         <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Use{" "}
-          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             compact
           </code>{" "}
           for a smaller calendar trigger.
@@ -868,7 +868,7 @@ export default function CalendarComponent() {
         </SectionHeader>
         <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Use{" "}
-          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             stacked
           </code>{" "}
           to display the preset dropdown above the calendar trigger button.
@@ -939,7 +939,7 @@ export default function CalendarComponent() {
         </SectionHeader>
         <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Use{" "}
-          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             showMonthTab
           </code>{" "}
           to add a Dates/Months tab switcher within the calendar popover,

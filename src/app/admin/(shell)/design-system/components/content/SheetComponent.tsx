@@ -498,7 +498,7 @@ export default function SheetComponent() {
           style={{ color: "var(--ds-gray-900)" }}
         >
           Use the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             side
           </code>{" "}
           prop to control which edge the sheet slides in from.

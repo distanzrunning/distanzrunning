@@ -327,7 +327,7 @@ export default function Iconography() {
 
         <p className="text-copy-16 text-textSubtle mb-6">
           Icons inherit their colour from the parent text colour using{" "}
-          <code className="font-mono text-sm bg-surfaceSubtle px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             currentColor
           </code>
           . Apply colour using Tailwind text utilities.

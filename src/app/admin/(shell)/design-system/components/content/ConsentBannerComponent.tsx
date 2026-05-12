@@ -475,7 +475,7 @@ export default function ConsentBannerComponent() {
           tracking, advertising, and other third-party tech. It captures four
           categories (Essential, Marketing, Analytics, Functional) and exposes
           the state via the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             useConsent()
           </code>{" "}
           hook so any component can gate itself on the user&apos;s preferences.
@@ -518,16 +518,16 @@ export default function ConsentBannerComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Wrap the app in{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             ConsentProvider
           </code>{" "}
           and render{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             ConsentBanner
           </code>{" "}
           once at the root. The banner self-hides once a decision has been
           made and re-opens when{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             reset()
           </code>{" "}
           is called.
@@ -548,17 +548,17 @@ export default function ConsentBannerComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Use{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             useConsent()
           </code>{" "}
           to read the full preferences object or trigger the settings modal,
           and{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             useConsentCategory(name)
           </code>{" "}
           when you just need a boolean for a single category. Before the
           user decides, every optional category defaults to{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             false
           </code>{" "}
           — the strict default expected by GDPR.

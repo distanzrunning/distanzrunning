@@ -644,7 +644,7 @@ export default function ButtonComponentNew() {
         </SectionHeader>
         <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Icon-only buttons should include an{" "}
-          <code className="px-1.5 py-0.5 rounded bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] text-sm">
+          <code className="inline-code">
             aria-label
           </code>
           .
@@ -826,11 +826,11 @@ export default function ButtonComponentNew() {
         </SectionHeader>
         <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Combination of{" "}
-          <code className="px-1.5 py-0.5 rounded bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] text-sm">
+          <code className="inline-code">
             shape=&quot;rounded&quot;
           </code>{" "}
           and the{" "}
-          <code className="px-1.5 py-0.5 rounded bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] text-sm">
+          <code className="inline-code">
             shadow
           </code>{" "}
           prop, often used on marketing pages.
@@ -899,11 +899,11 @@ export default function ButtonComponentNew() {
         </SectionHeader>
         <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
           Use{" "}
-          <code className="px-1.5 py-0.5 rounded bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] text-sm">
+          <code className="inline-code">
             ButtonLink
           </code>{" "}
           for links with the same props as{" "}
-          <code className="px-1.5 py-0.5 rounded bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] text-sm">
+          <code className="inline-code">
             Button
           </code>
           .

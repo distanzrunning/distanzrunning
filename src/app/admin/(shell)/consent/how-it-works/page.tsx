@@ -4,21 +4,7 @@ export const metadata = {
 };
 
 function DocCode({ children }: { children: React.ReactNode }) {
-  return (
-    <code
-      style={{
-        fontFamily: "var(--font-mono)",
-        fontSize: 12,
-        padding: "1px 5px",
-        borderRadius: 4,
-        background: "var(--ds-gray-100)",
-        color: "var(--ds-gray-1000)",
-        border: "1px solid var(--ds-gray-alpha-400)",
-      }}
-    >
-      {children}
-    </code>
-  );
+  return <code className="inline-code">{children}</code>;
 }
 
 function DocSection({

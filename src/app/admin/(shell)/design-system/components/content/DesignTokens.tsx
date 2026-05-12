@@ -41,19 +41,19 @@ export default function DesignTokens() {
 
         <p className="text-copy-16 text-textSubtle max-w-3xl mb-6">
           Instead of hard-coding values like{" "}
-          <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-sm font-mono">
+          <code className="inline-code">
             #E43C81
           </code>{" "}
           or{" "}
-          <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-sm font-mono">
+          <code className="inline-code">
             16px
           </code>
           , we use tokens like{" "}
-          <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-sm font-mono">
+          <code className="inline-code">
             electric-pink-55
           </code>{" "}
           or{" "}
-          <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-sm font-mono">
+          <code className="inline-code">
             spacing-4
           </code>
           . This abstraction creates a shared language between design and
@@ -267,19 +267,19 @@ export default function DesignTokens() {
 
         <p className="text-copy-14 text-textSubtle max-w-3xl">
           The raw hex value{" "}
-          <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-xs font-mono">
+          <code className="inline-code">
             #D11B5C
           </code>{" "}
           is defined as the global token{" "}
-          <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-xs font-mono">
+          <code className="inline-code">
             electric-pink-55
           </code>
           , aliased by the semantic token{" "}
-          <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-xs font-mono">
+          <code className="inline-code">
             textAccent
           </code>
           , and used by the component token{" "}
-          <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-xs font-mono">
+          <code className="inline-code">
             link-color-default
           </code>
           .
@@ -309,7 +309,7 @@ export default function DesignTokens() {
             <p className="text-copy-14 text-textSubtle mb-3">
               Brand colours, greyscale, semantic colours, and status colours.
             </p>
-            <code className="text-xs font-mono text-electric-pink">
+            <code className="inline-code">
               color-*
             </code>
           </div>
@@ -319,7 +319,7 @@ export default function DesignTokens() {
             <p className="text-copy-14 text-textSubtle mb-3">
               Font families, sizes, weights, line heights, and letter spacing.
             </p>
-            <code className="text-xs font-mono text-electric-pink">
+            <code className="inline-code">
               font-*, text-*
             </code>
           </div>
@@ -329,7 +329,7 @@ export default function DesignTokens() {
             <p className="text-copy-14 text-textSubtle mb-3">
               Margins, padding, gaps, and layout spacing based on an 8px grid.
             </p>
-            <code className="text-xs font-mono text-electric-pink">
+            <code className="inline-code">
               spacing-*
             </code>
           </div>
@@ -339,7 +339,7 @@ export default function DesignTokens() {
             <p className="text-copy-14 text-textSubtle mb-3">
               Border widths, radii, and styles for consistent component edges.
             </p>
-            <code className="text-xs font-mono text-electric-pink">
+            <code className="inline-code">
               border-*, radius-*
             </code>
           </div>
@@ -349,7 +349,7 @@ export default function DesignTokens() {
             <p className="text-copy-14 text-textSubtle mb-3">
               Elevation and depth through consistent shadow definitions.
             </p>
-            <code className="text-xs font-mono text-electric-pink">
+            <code className="inline-code">
               shadow-*
             </code>
           </div>
@@ -359,7 +359,7 @@ export default function DesignTokens() {
             <p className="text-copy-14 text-textSubtle mb-3">
               Durations, easing curves, and motion parameters.
             </p>
-            <code className="text-xs font-mono text-electric-pink">
+            <code className="inline-code">
               animation-*, easing-*
             </code>
           </div>
@@ -370,7 +370,7 @@ export default function DesignTokens() {
               Presets combining radii, fills, strokes, and shadows for surfaces
               and floating elements.
             </p>
-            <code className="text-xs font-mono text-electric-pink">
+            <code className="inline-code">
               material-*
             </code>
           </div>
@@ -405,7 +405,7 @@ export default function DesignTokens() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-success-bg-subtle border border-success-border rounded-lg p-4">
             <p className="text-sm font-semibold text-success-text mb-2">Do</p>
-            <code className="text-xs font-mono text-textDefault">
+            <code className="inline-code">
               color: var(--color-textDefault);
             </code>
           </div>
@@ -413,7 +413,7 @@ export default function DesignTokens() {
             <p className="text-sm font-semibold text-error-text mb-2">
               Don&apos;t
             </p>
-            <code className="text-xs font-mono text-textDefault">
+            <code className="inline-code">
               color: #1A1A1A;
             </code>
           </div>
@@ -436,7 +436,7 @@ export default function DesignTokens() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-success-bg-subtle border border-success-border rounded-lg p-4">
             <p className="text-sm font-semibold text-success-text mb-2">Do</p>
-            <code className="text-xs font-mono text-textDefault">
+            <code className="inline-code">
               background: var(--color-surface);
             </code>
           </div>
@@ -444,7 +444,7 @@ export default function DesignTokens() {
             <p className="text-sm font-semibold text-error-text mb-2">
               Don&apos;t
             </p>
-            <code className="text-xs font-mono text-textDefault">
+            <code className="inline-code">
               background: var(--color-asphalt-95);
             </code>
           </div>
@@ -480,7 +480,7 @@ export default function DesignTokens() {
 
         <p className="text-copy-16 text-textSubtle max-w-3xl mb-6">
           Our tokens are defined in{" "}
-          <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-sm font-mono">
+          <code className="inline-code">
             src/styles/design-tokens.ts
           </code>{" "}
           and consumed via CSS custom properties and Tailwind utilities.

@@ -287,7 +287,7 @@ export default function AdSlotComponent() {
           renders a Google AdSense unit at a standard IAB size, reserves the
           exact pixel space before any network call, lazy-loads the ad only
           when the slot enters the viewport, labels the space as{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             Advertisement
           </code>{" "}
           per IAB guidelines, and falls back to a Distanz-branded card if
@@ -302,15 +302,15 @@ export default function AdSlotComponent() {
             />
             <span>
               Distanz Running is set up under AdSense publisher{" "}
-              <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              <code className="inline-code">
                 ca-pub-8457173435004026
               </code>
               . The AdSense script is injected once in{" "}
-              <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              <code className="inline-code">
                 layout.tsx
               </code>
               ; every{" "}
-              <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              <code className="inline-code">
                 AdSlot
               </code>{" "}
               just passes the ad-unit slot ID it received from the AdSense
@@ -410,7 +410,7 @@ export default function AdSlotComponent() {
           with us&rdquo; card. To show something else instead &mdash; a
           newsletter CTA, a related race, an affiliate product &mdash; pass
           any React node to{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             fallback
           </code>
           . The dimensions stay fixed so the layout never shifts whether an

@@ -467,11 +467,11 @@ export default function SearchComponent() {
           Search is a header-level trigger paired with a modal that lets
           users jump between pages. The trigger can be a compact
           input-styled button showing the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             ⌘K
           </code>{" "}
           shortcut, or a square icon button. The modal is built on{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             CommandMenu
           </code>{" "}
           and lists navigable destinations grouped by section.
@@ -509,7 +509,7 @@ export default function SearchComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           The primary placement in a page header. Click or press{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             ⌘K
           </code>{" "}
           to open the modal.
@@ -584,39 +584,39 @@ export default function SearchComponent() {
           e.g. a live search over an external dataset (Algolia, an
           internal API, …) — drive the input externally and render
           items as they come back. The modal idles as a single{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             Search
           </code>{" "}
           field with no result area, then reveals previews as the user
           types. Three new props on{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             CommandMenu
           </code>{" "}
           do the work:
         </p>
         <ul className="m-0 list-disc space-y-2 pl-6 text-copy-16 text-textSubtle">
           <li>
-            <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            <code className="inline-code">
               value
             </code>{" "}
             +{" "}
-            <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            <code className="inline-code">
               onValueChange
             </code>{" "}
             — controlled input. Pipe it to your data source.
           </li>
           <li>
-            <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            <code className="inline-code">
               emptyState
             </code>{" "}
             — ReactNode for a custom empty message, or{" "}
-            <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            <code className="inline-code">
               null
             </code>{" "}
             to suppress Command.Empty entirely.
           </li>
           <li>
-            <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            <code className="inline-code">
               resultsHidden
             </code>{" "}
             — drops the input-row divider and zeros the list padding
@@ -625,7 +625,7 @@ export default function SearchComponent() {
         </ul>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Pair with{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             filter={"{() => 1}"}
           </code>{" "}
           to disable cmdk&rsquo;s fuzzy filter — your data source has

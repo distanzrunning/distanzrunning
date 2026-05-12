@@ -164,7 +164,7 @@ import IconButton from "@/components/ui/IconButton";
           <div>
             <h3 className="font-medium text-textDefault mb-2">Accessibility</h3>
             <ul className="list-disc list-inside space-y-1">
-              <li>Always provide a descriptive <code className="text-xs bg-asphalt-95 dark:bg-asphalt-20 px-1 py-0.5 rounded">aria-label</code> (e.g., "Close dialog", "Close menu")</li>
+              <li>Always provide a descriptive <code className="inline-code">aria-label</code> (e.g., "Close dialog", "Close menu")</li>
               <li>The close button should be focusable and activated with Enter or Space</li>
               <li>Consider trapping focus within the modal and returning focus on close</li>
             </ul>

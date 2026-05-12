@@ -156,7 +156,7 @@ export default function DistanzRunningBrand() {
           <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
             A variant of the full logo for emails. The black shapes carry a
             thin white outline rendered with{" "}
-            <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            <code className="inline-code">
               paint-order: stroke fill
             </code>
             , so the stroke sits outside each path. On a light email body the

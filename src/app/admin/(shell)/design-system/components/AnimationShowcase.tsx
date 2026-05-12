@@ -68,7 +68,7 @@ export default function AnimationShowcase() {
               />
               <div className="space-y-1">
                 <p className="font-medium text-xs">{transition.name}</p>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   {transition.value}
                 </code>
               </div>
@@ -94,7 +94,7 @@ export default function AnimationShowcase() {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium text-sm">{easing.name}</span>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   {easing.value}
                 </code>
               </div>

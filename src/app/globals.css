@@ -1240,6 +1240,20 @@
 }
 
 @layer components {
+  /* Inline code chip — the canonical small `monospaced` token used in
+     body copy across the Admin shell + Design System docs. Canonical
+     style matches /admin/feedback/how-it-works. */
+  .inline-code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 16px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: var(--ds-gray-100);
+    color: var(--ds-gray-1000);
+    border: 1px solid var(--ds-gray-alpha-400);
+  }
+
   /* Input component styles */
   .ds-input-container {
     box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);

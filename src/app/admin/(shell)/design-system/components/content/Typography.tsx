@@ -191,19 +191,19 @@ export default function Typography() {
             Tailwind
           </span>{" "}
           classes. The classes below pre-set a combination of{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             font-size
           </code>
           ,{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             line-height
           </code>
           ,{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             letter-spacing
           </code>
           , and{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             font-weight
           </code>{" "}
           for you based on the Geist design system.
@@ -211,7 +211,7 @@ export default function Typography() {
 
         <p className="text-copy-16 text-textSubtle mb-6">
           The{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             strong
           </code>{" "}
           element can be used as a modifier to change the font weight. For
@@ -234,12 +234,12 @@ export default function Typography() {
 
         <p className="text-copy-16 text-textSubtle mt-4 mb-4">
           Headings are used to introduce pages or sections. Use{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             font-serif
           </code>{" "}
           (EB Garamond) for editorial contexts like featured article headlines,
           article page titles, and pull quotes. Use{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             font-sans
           </code>{" "}
           (Geist Sans) for UI contexts like section titles, card headings, and
@@ -248,7 +248,7 @@ export default function Typography() {
 
         <p className="text-copy-16 text-textSubtle mb-6">
           The{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             strong
           </code>{" "}
           element reduces the weight for creating subtle variants.
@@ -417,7 +417,7 @@ export default function Typography() {
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Labels are single-line text with ample line-height to align with
           icons. Use the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             strong
           </code>{" "}
           element to increase weight. Mono variants use monospace font.
@@ -533,7 +533,7 @@ export default function Typography() {
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Copy styles are for multi-line text with higher line height than
           Labels. Use the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             strong
           </code>{" "}
           element to increase weight for emphasis.

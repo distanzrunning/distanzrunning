@@ -40,7 +40,7 @@ export default function RadiusAndShadowsShowcase() {
                 <p className="text-xs text-textSubtle font-mono">
                   {radius.value}
                 </p>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   {radius.class}
                 </code>
               </div>
@@ -70,7 +70,7 @@ export default function RadiusAndShadowsShowcase() {
               </div>
               <div className="space-y-1">
                 <p className="font-medium text-sm">{shadow.name}</p>
-                <code className="text-xs text-textSubtler font-mono block">
+                <code className="inline-code">
                   {shadow.class}
                 </code>
                 <p className="text-xs text-textSubtle">{shadow.value}</p>

@@ -568,7 +568,7 @@ export default function CollapsibleInputComponent() {
           Collapses to a square showing only the prefix icon when
           empty and unfocused. Click the icon (or focus the input)
           to expand smoothly to the full{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             expandedWidth
           </code>
           . Loses focus with an empty buffer, collapses back.
@@ -587,15 +587,15 @@ export default function CollapsibleInputComponent() {
           style={{ lineHeight: 1.5 }}
         >
           Three sizes:{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             small
           </code>{" "}
           (32 px),{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             default
           </code>{" "}
           (40 px), and{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             large
           </code>{" "}
           (48 px). Mirrors{" "}
@@ -619,16 +619,16 @@ export default function CollapsibleInputComponent() {
           style={{ lineHeight: 1.5 }}
         >
           Pass an{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             expandedSuffix
           </code>{" "}
           to render an X clear-button in the right gutter while the
           input has a value. Adding{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             onMouseDown
           </code>{" "}
           /{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             preventDefault
           </code>{" "}
           to the button keeps focus on the input so the user can
@@ -648,7 +648,7 @@ export default function CollapsibleInputComponent() {
           style={{ lineHeight: 1.5 }}
         >
           Override the{" "}
-          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             expandedWidth
           </code>{" "}
           (default 260 px) when the surrounding layout calls for a
