@@ -26,6 +26,7 @@ import {
   Code2,
   Settings,
 } from "lucide-react";
+import Wordmark from "@/components/ui/Wordmark";
 
 interface OverviewCardProps {
   href: string;
@@ -92,13 +93,15 @@ function BrandPreview() {
 
   return (
     <div className="relative mx-auto w-full" style={{ height: 96 }}>
-      {/* Logo */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/brand/wordmark-gray.svg"
-        alt="Distanz Running"
-        className="relative z-10"
-        style={{ height: 96, width: "auto", objectFit: "contain", margin: "0 auto", display: "block" }}
+      {/* Logo — inline SVG (Wordmark uses fill="currentColor")
+          so there's no network round-trip on first paint and
+          the brand preview renders the moment React mounts.
+          The gray-700 text colour matches the previous
+          wordmark-gray.svg tint. */}
+      <Wordmark
+        aria-label="Distanz Running"
+        className="relative z-10 mx-auto block text-[color:var(--ds-gray-700)]"
+        style={{ height: 96, width: "auto" }}
       />
       {/* Horizontal guide lines */}
       <div style={{ ...guideStyle, top: 0, left: 0, right: 0, borderTopWidth: 1 }} />
