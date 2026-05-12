@@ -196,6 +196,11 @@ function SearchInner({
       // fuzzy filter on top of the title strings.
       filter={() => 1}
       emptyState={emptyState}
+      // Collapse the modal to just the input row when there's
+      // no query — drops the divider + list padding so the
+      // empty state reads as a single "Search" field, no
+      // dangling sliver of result-area below.
+      resultsHidden={query.length === 0}
     >
       {hasHits &&
         grouped.map((group) => (

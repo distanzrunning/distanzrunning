@@ -44,6 +44,14 @@ export interface CommandMenuProps {
    *                      idle state is just the input).
    */
   emptyState?: ReactNode | null;
+  /**
+   * When true, drops the divider below the input row and
+   * removes the result list's padding so the menu collapses
+   * to a flush input-only surface. Pair with
+   * `emptyState={null}` for the cleanest "just a search field"
+   * idle state.
+   */
+  resultsHidden?: boolean;
 }
 
 interface CommandMenuGroupProps {
@@ -313,6 +321,7 @@ export function CommandMenu({
   value,
   onValueChange,
   emptyState,
+  resultsHidden = false,
 }: CommandMenuProps) {
   return (
     <>
@@ -333,7 +342,9 @@ export function CommandMenu({
           style={{
             position: "relative",
             padding: 12,
-            borderBottom: "1px solid var(--ds-gray-alpha-400)",
+            borderBottom: resultsHidden
+              ? "none"
+              : "1px solid var(--ds-gray-alpha-400)",
             background: "var(--ds-background-100)",
           }}
         >
@@ -376,8 +387,11 @@ export function CommandMenu({
           </div>
         </div>
 
-        {/* Scrollable items — Geist: list */}
-        <Command.List>
+        {/* Scrollable items — Geist: list. When the result area
+            is hidden (idle search-as-you-type state), zero the
+            padding so the list adds no vertical space — modal
+            collapses to just the input row. */}
+        <Command.List style={resultsHidden ? { padding: 0 } : undefined}>
           {emptyState !== null && (
             <Command.Empty>{emptyState ?? "No results found."}</Command.Empty>
           )}
