@@ -463,7 +463,7 @@ export default function SearchComponent() {
         <SectionHeader id="intro" onCopyLink={showToast}>
           Intro
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 xl:mt-7 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 xl:mt-7 mb-6">
           Search is a header-level trigger paired with a modal that lets
           users jump between pages. The trigger can be a compact
           input-styled button showing the{" "}
@@ -507,7 +507,7 @@ export default function SearchComponent() {
         <SectionHeader id="trigger" onCopyLink={showToast}>
           Trigger with shortcut
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           The primary placement in a page header. Click or press{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             ⌘K
@@ -541,7 +541,7 @@ export default function SearchComponent() {
         <SectionHeader id="icon-triggers" onCopyLink={showToast}>
           Icon triggers
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           When space is tight — or the shortcut would be out of place — use
           an icon button. Available in the three standard variants.
         </p>
@@ -579,7 +579,7 @@ export default function SearchComponent() {
         <SectionHeader id="search-as-you-type" onCopyLink={showToast}>
           Search as you type
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           When the static-group navigator isn&rsquo;t the right fit —
           e.g. a live search over an external dataset (Algolia, an
           internal API, …) — drive the input externally and render
@@ -594,7 +594,7 @@ export default function SearchComponent() {
           </code>{" "}
           do the work:
         </p>
-        <ul className="m-0 list-disc space-y-2 pl-6 text-[15px] leading-[1.6] text-textSubtle">
+        <ul className="m-0 list-disc space-y-2 pl-6 text-copy-16 text-textSubtle">
           <li>
             <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
               value
@@ -623,7 +623,7 @@ export default function SearchComponent() {
             so the modal collapses to a flush input-only surface.
           </li>
         </ul>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Pair with{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             filter={"{() => 1}"}

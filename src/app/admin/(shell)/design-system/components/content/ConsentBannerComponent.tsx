@@ -470,7 +470,7 @@ export default function ConsentBannerComponent() {
         <SectionHeader id="intro" onCopyLink={showToast}>
           Intro
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 xl:mt-7 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 xl:mt-7 mb-6">
           The consent banner asks visitors for permission before loading
           tracking, advertising, and other third-party tech. It captures four
           categories (Essential, Marketing, Analytics, Functional) and exposes
@@ -498,7 +498,7 @@ export default function ConsentBannerComponent() {
         <SectionHeader id="preview" onCopyLink={showToast}>
           Preview
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Click <strong>Show banner</strong> to pop the real floating banner
           at its fixed bottom-left position. Deny and Accept dismiss it;
           Customise opens the settings modal. The demo runs on local state —
@@ -516,7 +516,7 @@ export default function ConsentBannerComponent() {
         <SectionHeader id="setup" onCopyLink={showToast}>
           Setup
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Wrap the app in{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             ConsentProvider
@@ -546,7 +546,7 @@ export default function ConsentBannerComponent() {
         <SectionHeader id="consuming" onCopyLink={showToast}>
           Consuming consent
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Use{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             useConsent()

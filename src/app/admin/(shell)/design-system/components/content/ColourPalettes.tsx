@@ -907,7 +907,7 @@ function ScalesSection({ isDark }: { isDark: boolean }) {
   return (
     <Section>
       <SectionHeader id="scales">Scales</SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         There are 10 color scales in the system. Right click to copy raw values.
       </p>
       <div className="mt-10 space-y-6">
@@ -954,7 +954,7 @@ function BackgroundsSection() {
   return (
     <Section>
       <SectionHeader id="backgrounds">Backgrounds</SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         There are two background colors for pages and UI components. In most
         instances, you should use Background 1—especially when color is being
         placed on top of the background. Background 2 should be used sparingly
@@ -1034,7 +1034,7 @@ function ComponentBackgroundsSection() {
       <SectionHeader id="colors-1-3-component-backgrounds">
         Colors 1–3: Component Backgrounds
       </SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         These three colors are designed for UI component backgrounds.
       </p>
       <div className="my-5">
@@ -1055,7 +1055,7 @@ function ComponentBackgroundsSection() {
           showBorder={false}
         />
       </div>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         If your UI component&apos;s default background is Background 1, you can
         use Color 1 as your hover background and Color 2 as your active
         background. On smaller UI elements like badges, you can use Color 2 or
@@ -1165,7 +1165,7 @@ function BordersSection() {
   return (
     <Section>
       <SectionHeader id="colors-4-6-borders">Colors 4-6: Borders</SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         These three colors are designed for UI component borders.
       </p>
       <div className="my-5">
@@ -1223,7 +1223,7 @@ function HighContrastBackgroundsSection() {
       <SectionHeader id="colors-7-8-high-contrast-backgrounds">
         Colors 7-8: High Contrast Backgrounds
       </SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         These two colors are designed for high contrast UI component
         backgrounds.
       </p>
@@ -1359,7 +1359,7 @@ function TextAndIconsSection() {
       <SectionHeader id="colors-9-10-text-and-icons">
         Colors 9-10: Text and Icons
       </SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         These two colors are designed for accessible text and icons.
       </p>
       <div className="my-5">

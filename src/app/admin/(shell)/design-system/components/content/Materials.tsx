@@ -213,7 +213,7 @@ function SurfaceSection() {
   return (
     <Section>
       <SectionHeader id="surface">Surface</SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4 mb-6">
+      <p className="text-copy-16 text-textSubtle mt-4 mb-6">
         On the page.
       </p>
       <MaterialTable materials={surfaceMaterials} />
@@ -226,7 +226,7 @@ function FloatingSection() {
   return (
     <Section>
       <SectionHeader id="floating">Floating</SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4 mb-6">
+      <p className="text-copy-16 text-textSubtle mt-4 mb-6">
         Above the page.
       </p>
       <MaterialTable materials={floatingMaterials} />

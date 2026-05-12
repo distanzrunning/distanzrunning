@@ -281,7 +281,7 @@ export default function AdSlotComponent() {
         <SectionHeader id="intro" onCopyLink={showToast}>
           Intro
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 xl:mt-7 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 xl:mt-7 mb-6">
           The ad slot is how Distanz Running embeds advertising into the
           product without breaking the layout or the design language. It
           renders a Google AdSense unit at a standard IAB size, reserves the
@@ -325,7 +325,7 @@ export default function AdSlotComponent() {
         <SectionHeader id="mpu" onCopyLink={showToast}>
           MPU &mdash; 300&times;250
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           The default in-article and sidebar unit. Fits beside editorial
           copy, inside race guides, and at the end of gear reviews.
         </p>
@@ -341,7 +341,7 @@ export default function AdSlotComponent() {
         <SectionHeader id="leaderboard" onCopyLink={showToast}>
           Leaderboard &mdash; 728&times;90
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Horizontal top-of-page unit for desktop. Paired below the nav or
           between content sections.
         </p>
@@ -357,7 +357,7 @@ export default function AdSlotComponent() {
         <SectionHeader id="billboard" onCopyLink={showToast}>
           Billboard &mdash; 970&times;250
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Premium above-the-fold unit on wide desktop layouts. Reserve for
           homepage and landing pages.
         </p>
@@ -373,7 +373,7 @@ export default function AdSlotComponent() {
         <SectionHeader id="skyscraper" onCopyLink={showToast}>
           Skyscraper &mdash; 160&times;600
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Vertical sidebar unit. Good for long-form article pages with a
           sticky rail.
         </p>
@@ -389,7 +389,7 @@ export default function AdSlotComponent() {
         <SectionHeader id="mobile-banner" onCopyLink={showToast}>
           Mobile banner &mdash; 320&times;50
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Compact bottom-of-screen unit for mobile. Sits above the nav bar
           or at the end of a mobile feed.
         </p>
@@ -405,7 +405,7 @@ export default function AdSlotComponent() {
         <SectionHeader id="custom-fallback" onCopyLink={showToast}>
           Custom fallback
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           When no ad fills, the slot defaults to a Distanz &ldquo;advertise
           with us&rdquo; card. To show something else instead &mdash; a
           newsletter CTA, a related race, an affiliate product &mdash; pass

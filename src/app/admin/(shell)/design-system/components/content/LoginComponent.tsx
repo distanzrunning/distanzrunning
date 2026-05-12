@@ -685,7 +685,7 @@ export default function LoginComponent() {
         <SectionHeader id="intro" onCopyLink={showToast}>
           Intro
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 xl:mt-7 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 xl:mt-7 mb-6">
           The Login component is a composable card for authentication flows.
           It provides a logo slot, title and subtitle, configurable fields,
           a built-in password show/hide toggle, error state, and a footer
@@ -703,7 +703,7 @@ export default function LoginComponent() {
         <SectionHeader id="password-only" onCopyLink={showToast}>
           Password only
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           The minimal variant — a single password field with a logo header
           and title. This is the pattern used by the Distanz Running staging
           gate.
@@ -720,7 +720,7 @@ export default function LoginComponent() {
         <SectionHeader id="email-password" onCopyLink={showToast}>
           Email + password
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           A standard sign-in form with an email and password field, a
           subtitle for welcome copy, and no logo — useful when the logo is
           rendered by a surrounding layout.
@@ -737,7 +737,7 @@ export default function LoginComponent() {
         <SectionHeader id="continue-with-google" onCopyLink={showToast}>
           Continue with Google
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           A social-only variant — no email form, just one or more OAuth
           providers. Pass each provider through the{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
@@ -757,7 +757,7 @@ export default function LoginComponent() {
         <SectionHeader id="google-and-email" onCopyLink={showToast}>
           Google and email
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           When both a provider and email form are present, pass{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             divider
@@ -781,7 +781,7 @@ export default function LoginComponent() {
         <SectionHeader id="sign-up" onCopyLink={showToast}>
           Sign up
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           A sign-up flow combines a Google provider, a name + email form,
           and a legal disclaimer. The{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
@@ -802,7 +802,7 @@ export default function LoginComponent() {
         <SectionHeader id="forgot-password" onCopyLink={showToast}>
           With forgot password
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Pass any React node to{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             footer
@@ -822,7 +822,7 @@ export default function LoginComponent() {
         <SectionHeader id="error-state" onCopyLink={showToast}>
           Error state
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Pass an{" "}
           <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             error

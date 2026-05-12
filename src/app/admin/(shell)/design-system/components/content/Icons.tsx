@@ -597,7 +597,7 @@ export default function Icons() {
           >
             Usage
           </h2>
-          <p className="text-[16px] leading-[1.5] text-textSubtle mb-6">
+          <p className="text-copy-16 text-textSubtle mb-6">
             We use multiple icon libraries to ensure comprehensive coverage. Our
             primary library is{" "}
             <a
