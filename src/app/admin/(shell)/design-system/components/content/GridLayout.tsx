@@ -7,7 +7,7 @@ export default function GridLayout() {
       <div>
         <p className="text-copy-14 tracking-wide text-electric-pink mb-2">Grid</p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
           id="grid-layout"
         >
           Grid layout
@@ -20,7 +20,7 @@ export default function GridLayout() {
       <section>
         <h2
           id="column-grid"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Column grid
         </h2>
@@ -165,7 +165,7 @@ export default function GridLayout() {
       <section>
         <h2
           id="main-wrapper"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Main wrapper
         </h2>
@@ -315,7 +315,7 @@ export default function GridLayout() {
       <section>
         <h2
           id="resources"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Resources
         </h2>

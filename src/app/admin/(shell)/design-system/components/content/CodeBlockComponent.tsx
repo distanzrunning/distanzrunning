@@ -1360,7 +1360,7 @@ export default function CodeBlockComponent() {
           languages.
         </p>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           Theme
         </h3>
         <p className="text-copy-14 text-textSubtle mb-4">
@@ -1372,7 +1372,7 @@ export default function CodeBlockComponent() {
           Atom&apos;s classic editor theme.
         </p>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           Diff highlighting
         </h3>
         <p className="text-copy-14 text-textSubtle mb-4">

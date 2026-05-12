@@ -5,7 +5,7 @@ export default function Collections() {
       <div>
         <p className="text-copy-14 tracking-wide text-electric-pink mb-2">Colour</p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-4"
+          className="text-heading-40 font-serif mb-4"
           id="collections"
         >
           Collections
@@ -23,7 +23,7 @@ export default function Collections() {
       <section>
         <h2
           id="road"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Road
         </h2>
@@ -84,7 +84,7 @@ export default function Collections() {
       <section>
         <h2
           id="track"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Track
         </h2>
@@ -146,7 +146,7 @@ export default function Collections() {
       <section>
         <h2
           id="trail"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Trail
         </h2>
@@ -208,7 +208,7 @@ export default function Collections() {
       <section>
         <h2
           id="gear"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Gear
         </h2>
@@ -270,7 +270,7 @@ export default function Collections() {
       <section>
         <h2
           id="nutrition"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Nutrition
         </h2>

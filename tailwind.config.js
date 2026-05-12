@@ -431,24 +431,8 @@ module.exports = {
         ],
         geist: ["var(--font-geist-sans)", "sans-serif"],
 
-        // Serif (EB Garamond) - Headings, display
+        // Serif (EB Garamond) — editorial headings, article titles, pull quotes
         serif: ["var(--font-eb-garamond)", "Georgia", "serif"],
-        garamond: ["var(--font-eb-garamond)", "Georgia", "serif"],
-
-        // Legacy aliases for backwards compatibility
-        display: ["var(--font-eb-garamond)", "serif"],
-        headline: ["var(--font-eb-garamond)", "serif"],
-        body: ["var(--font-geist-sans)", "sans-serif"],
-        ui: ["var(--font-geist-sans)", "sans-serif"],
-        // Old font aliases (kept so existing class names don't break)
-        inter: ["var(--font-geist-sans)", "sans-serif"],
-        eczar: ["var(--font-eb-garamond)", "Georgia", "serif"],
-        franklin: ["var(--font-geist-sans)", "sans-serif"],
-        manrope: ["var(--font-geist-sans)", "sans-serif"],
-        archivo: ["var(--font-geist-sans)", "sans-serif"],
-        bricolage: ["var(--font-geist-sans)", "sans-serif"],
-        garvis: ["var(--font-geist-sans)", "sans-serif"],
-        quasimoda: ["var(--font-geist-sans)", "sans-serif"],
         mono: [
           "var(--font-geist-mono)",
           "ui-monospace",

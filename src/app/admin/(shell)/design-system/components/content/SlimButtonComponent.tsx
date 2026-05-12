@@ -174,7 +174,7 @@ export default function SlimButtonComponent() {
         <p className="text-copy-14 tracking-wide text-electric-pink mb-2">Buttons</p>
         <h1
           id="slim-button"
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
         >
           Slim button
         </h1>
@@ -191,7 +191,7 @@ export default function SlimButtonComponent() {
       <section>
         <h2
           id="variants"
-          className="sr-only font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="sr-only text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Variants
         </h2>
@@ -254,7 +254,7 @@ export default function SlimButtonComponent() {
       <section>
         <h2
           id="guidelines"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Guidelines
         </h2>
@@ -283,7 +283,7 @@ export default function SlimButtonComponent() {
       <section>
         <h2
           id="anatomy"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Anatomy
         </h2>
@@ -347,7 +347,7 @@ export default function SlimButtonComponent() {
       <section>
         <h2
           id="props"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Props
         </h2>

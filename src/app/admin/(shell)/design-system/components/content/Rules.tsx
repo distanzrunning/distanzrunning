@@ -7,7 +7,7 @@ export default function Rules() {
           Foundations
         </p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
           id="rules"
         >
           Rules
@@ -26,7 +26,7 @@ export default function Rules() {
       <section>
         <h2
           id="styles"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Styles
         </h2>
@@ -182,7 +182,7 @@ export default function Rules() {
       <section>
         <h2
           id="dark-mode"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Dark mode
         </h2>
@@ -216,7 +216,7 @@ export default function Rules() {
       <section>
         <h2
           id="reference"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Reference
         </h2>
@@ -292,7 +292,7 @@ export default function Rules() {
       <section>
         <h2
           id="usage"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Usage
         </h2>

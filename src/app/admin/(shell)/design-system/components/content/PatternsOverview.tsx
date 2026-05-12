@@ -8,7 +8,7 @@ export default function PatternsOverview() {
         </p>
         <h1
           id="overview"
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
         >
           Overview
         </h1>

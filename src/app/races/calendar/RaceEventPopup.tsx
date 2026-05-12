@@ -337,7 +337,7 @@ export function RaceEventPopup({
             {race.raceCategoryName && (
               <div className="absolute top-3 right-3">
                 <div className="px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full shadow-sm">
-                  <p className="font-body text-xs font-medium text-neutral-900 dark:text-white">
+                  <p className="font-sans text-xs font-medium text-neutral-900 dark:text-white">
                     {race.raceCategoryName}
                   </p>
                 </div>
@@ -351,13 +351,13 @@ export function RaceEventPopup({
               {/* Date - Left Side */}
               <div className="flex flex-col items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-xl w-16 h-16">
                 <p
-                  className="font-body text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400"
+                  className="font-sans text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400"
                   suppressHydrationWarning
                 >
                   {format(new Date(race.eventDate), 'MMM')}
                 </p>
                 <p
-                  className="font-body text-2xl font-bold leading-tight text-neutral-900 dark:text-white"
+                  className="font-sans text-2xl font-bold leading-tight text-neutral-900 dark:text-white"
                   suppressHydrationWarning
                 >
                   {format(new Date(race.eventDate), 'dd')}
@@ -366,11 +366,11 @@ export function RaceEventPopup({
 
               {/* Title and Location - Center */}
               <div className="flex-1">
-                <h3 className="font-body text-xl font-semibold leading-tight text-neutral-900 dark:text-white mb-1">
+                <h3 className="font-sans text-xl font-semibold leading-tight text-neutral-900 dark:text-white mb-1">
                   {race.title}
                 </h3>
                 {(race.city || race.stateRegion || race.country) && (
-                  <p className="font-body text-sm text-neutral-600 dark:text-neutral-400">
+                  <p className="font-sans text-sm text-neutral-600 dark:text-neutral-400">
                     {formatLocation(race.city, race.stateRegion, race.country)}
                   </p>
                 )}
@@ -395,7 +395,7 @@ export function RaceEventPopup({
           {/* Key Details Card */}
           <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-800 p-5 flex-shrink-0">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="font-body text-sm font-semibold text-neutral-700 dark:text-neutral-300">Key Details</h4>
+              <h4 className="font-sans text-sm font-semibold text-neutral-700 dark:text-neutral-300">Key Details</h4>
 
               {/* Unit Toggle */}
               <div className="relative group">
@@ -420,8 +420,8 @@ export function RaceEventPopup({
                     <Route className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-electric-pink transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Surface</p>
-                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Surface</p>
+                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.surface || 'N/A'}
                     </p>
                   </div>
@@ -431,8 +431,8 @@ export function RaceEventPopup({
                     <Wallet className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-volt-green transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Entry Price</p>
-                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Entry Price</p>
+                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.price !== undefined && race.price !== null
                         ? showLocalCurrency
                           ? formatPrice(race.price, race.currency!)
@@ -446,8 +446,8 @@ export function RaceEventPopup({
                     <Users className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-pace-purple transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Field size</p>
-                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Field size</p>
+                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.fieldSize ? race.fieldSize.toLocaleString() : 'N/A'}
                     </p>
                   </div>
@@ -460,8 +460,8 @@ export function RaceEventPopup({
                     <ArrowUpRight className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-trail-brown transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Gain</p>
-                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Gain</p>
+                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.elevationGain !== undefined && race.elevationGain !== null
                         ? mapUseMetric
                           ? `${Math.round(race.elevationGain).toLocaleString()}m`
@@ -475,8 +475,8 @@ export function RaceEventPopup({
                     <ArrowDownRight className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-trail-brown transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Loss</p>
-                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Loss</p>
+                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.elevationLoss !== undefined && race.elevationLoss !== null
                         ? mapUseMetric
                           ? `${Math.round(race.elevationLoss).toLocaleString()}m`
@@ -490,8 +490,8 @@ export function RaceEventPopup({
                     <Mountain className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-signal-orange transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Profile</p>
-                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Profile</p>
+                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.profile ? race.profile.charAt(0).toUpperCase() + race.profile.slice(1) : 'N/A'}
                     </p>
                   </div>
@@ -504,8 +504,8 @@ export function RaceEventPopup({
                     <ThermometerSun className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-signal-orange transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Avg. Temp</p>
-                    <p className="font-body text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Avg. Temp</p>
+                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.averageTemperature !== undefined && race.averageTemperature !== null
                         ? mapUseMetric
                           ? `${Math.round(race.averageTemperature)}°C`
@@ -522,7 +522,7 @@ export function RaceEventPopup({
                     <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-[#FFD700] transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Men's CR</p>
+                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Men's CR</p>
                     <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.mensCourseRecord || 'N/A'}
                     </p>
@@ -549,7 +549,7 @@ export function RaceEventPopup({
                     <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-[#FFD700] transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-body text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Women's CR</p>
+                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Women's CR</p>
                     <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
                       {race.womensCourseRecord || 'N/A'}
                     </p>

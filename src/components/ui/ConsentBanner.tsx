@@ -450,7 +450,7 @@ function BottomBanner() {
           <div>
             <h2
               id="consent-banner-title"
-              className="text-[16px] font-semibold text-textDefault leading-tight"
+              className="text-heading-16 text-textDefault leading-tight"
             >
               {BANNER_TITLE}
             </h2>

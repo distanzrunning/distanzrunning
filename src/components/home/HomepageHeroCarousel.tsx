@@ -183,7 +183,7 @@ export default function HomepageHeroCarousel({
                         lg:order-1 reverts to normal flow on desktop. */}
                     <div className="order-2 flex flex-col justify-center gap-4 lg:order-1 lg:col-span-1">
                       <h2
-                        className="text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
+                        className="text-balance font-serif font-semibold text-[color:var(--ds-gray-1000)]"
                         style={{
                           fontSize: "clamp(36px, 5.2vw, 64px)",
                           lineHeight: 1.05,

@@ -1147,7 +1147,7 @@ export default function CalendarComponent() {
           </table>
         </div>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           CalendarPreset
         </h3>
         <div className="overflow-x-auto">
@@ -1193,7 +1193,7 @@ export default function CalendarComponent() {
           </table>
         </div>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           DateRange
         </h3>
         <div className="overflow-x-auto">

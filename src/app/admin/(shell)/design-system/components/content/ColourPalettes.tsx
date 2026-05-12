@@ -876,7 +876,7 @@ function ColorScaleRow({
     <div className="flex flex-col items-start gap-2 md:flex-row md:items-center">
       <div className="w-[100px] flex-shrink-0">
         <p
-          className="text-[14px] leading-[20px] font-medium text-textDefault"
+          className="text-heading-14 text-textDefault"
           id={scale.name}
         >
           {scale.name}
@@ -939,10 +939,10 @@ function ColorRowItem({
         className="h-4 w-4 rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
         style={{ background: `var(${cssVar})` }}
       />
-      <p className="text-[14px] leading-[20px] font-medium text-textDefault w-[120px]">
+      <p className="text-heading-14 text-textDefault w-[120px]">
         {label}
       </p>
-      <p className="text-[14px] leading-[20px] text-textSubtle">
+      <p className="text-label-14 text-textSubtle">
         {description}
       </p>
     </div>
@@ -1383,7 +1383,7 @@ function TextAndIconsSection() {
         <div className="flex h-[65%] w-[63%] items-center justify-center border-borderNeutral md:h-full md:w-[50%]">
           <div className="flex w-[316px] flex-col gap-1">
             <p
-              className="text-[16px] font-semibold"
+              className="text-heading-16"
               style={{ color: "var(--ds-gray-1000)" }}
             >
               The Frontend Cloud

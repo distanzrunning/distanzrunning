@@ -84,7 +84,7 @@ const navigationMenuTriggerStyle = cva(
     // loudest, matching v0.
     // rounded-sm = 6px in this project's scale (not 2px like Tailwind
     // default). rounded-md here is 10px, which would overshoot v0.
-    "group inline-flex h-7 w-max items-center justify-center rounded-sm px-2 py-1 text-[14px] leading-[20px] font-medium",
+    "group inline-flex h-7 w-max items-center justify-center rounded-sm px-2 py-1 text-button-14",
     "text-[color:var(--ds-gray-900)]",
     "bg-transparent",
     "transition-all duration-150 outline-none",

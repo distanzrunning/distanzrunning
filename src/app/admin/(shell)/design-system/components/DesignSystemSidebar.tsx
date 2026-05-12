@@ -133,8 +133,8 @@ export default function DesignSystemSidebar({
     <div className="space-y-4">
       {navigation.map((navSection) => (
         <div key={navSection.id}>
-          {/* Section header - Geist: h-10, text-[14px] leading-[20px] font-medium */}
-          <p className="text-[14px] leading-[20px] font-medium mb-0.5 flex h-10 items-center gap-2 py-1.5 pl-1 text-black dark:text-white">
+          {/* Section header — text-button-14 in the DS scale (14/20/500) */}
+          <p className="text-button-14 mb-0.5 flex h-10 items-center gap-2 py-1.5 pl-1 text-black dark:text-white">
             {navSection.label}
           </p>
 

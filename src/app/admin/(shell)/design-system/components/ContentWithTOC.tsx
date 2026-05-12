@@ -486,7 +486,7 @@ export default function ContentWithTOC({
       <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle">
         {(tocItems.length > 0 || mainSectionId) && (
           <div className="sticky top-[65px] max-h-[calc(100vh-65px)] overflow-y-auto px-6 py-6">
-            <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
+            <h4 className="text-heading-14 text-textDefault mb-3">
               {tocTitle}
             </h4>
             <div className="flex flex-col">

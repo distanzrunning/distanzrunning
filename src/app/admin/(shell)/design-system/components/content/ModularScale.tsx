@@ -116,7 +116,7 @@ export default function ModularScale() {
           Typography
         </p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
           id="modular-scale"
         >
           Modular scale
@@ -129,7 +129,7 @@ export default function ModularScale() {
       <section>
         <h2
           id="type-scale"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Type scale
         </h2>
@@ -192,7 +192,7 @@ export default function ModularScale() {
       <section>
         <h2
           id="heading-sizes"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Heading sizes
         </h2>
@@ -309,7 +309,7 @@ export default function ModularScale() {
       <section>
         <h2
           id="body-text"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Body text
         </h2>

@@ -132,7 +132,7 @@ export default function NewsletterSignup({
           {/* Left: heading + description */}
           <div className="flex max-w-md flex-col gap-2">
             <h2
-              className="font-headline text-balance"
+              className="font-serif text-balance"
               style={{
                 margin: 0,
                 fontSize: 38,

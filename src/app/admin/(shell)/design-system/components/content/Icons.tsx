@@ -649,7 +649,7 @@ export default function Icons() {
 
           {/* Installation */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Installation
             </h3>
             <CodeBlock language="bash" showLineNumbers={false}>
@@ -659,7 +659,7 @@ export default function Icons() {
 
           {/* Import - Lucide */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Import from Lucide (primary)
             </h3>
             <CodeBlock language="tsx" showLineNumbers={false}>
@@ -669,7 +669,7 @@ export default function Icons() {
 
           {/* Import - Tabler */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Import from Tabler
             </h3>
             <CodeBlock language="tsx" showLineNumbers={false}>
@@ -679,7 +679,7 @@ export default function Icons() {
 
           {/* Import - Material */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Import from Material Design
             </h3>
             <CodeBlock language="tsx" showLineNumbers={false}>
@@ -689,7 +689,7 @@ export default function Icons() {
 
           {/* Import - Simple Icons */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Import from Simple Icons (brand logos)
             </h3>
             <CodeBlock language="tsx" showLineNumbers={false}>
@@ -699,7 +699,7 @@ export default function Icons() {
 
           {/* Basic usage */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Basic usage
             </h3>
             <CodeBlock language="tsx" showLineNumbers={false}>
@@ -722,7 +722,7 @@ export default function Icons() {
 
           {/* Sizing */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Recommended sizes
             </h3>
             <div className="overflow-x-auto">
@@ -770,7 +770,7 @@ export default function Icons() {
           </h2>
           <div className="space-y-4">
             <div>
-              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+              <h3 className="text-heading-14 text-textDefault mb-2">
                 Lucide (Primary)
               </h3>
               <div className="space-y-1">
@@ -795,7 +795,7 @@ export default function Icons() {
               </div>
             </div>
             <div>
-              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+              <h3 className="text-heading-14 text-textDefault mb-2">
                 Tabler Icons
               </h3>
               <div className="space-y-1">
@@ -811,7 +811,7 @@ export default function Icons() {
               </div>
             </div>
             <div>
-              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+              <h3 className="text-heading-14 text-textDefault mb-2">
                 Material Design Icons
               </h3>
               <div className="space-y-1">
@@ -827,7 +827,7 @@ export default function Icons() {
               </div>
             </div>
             <div>
-              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+              <h3 className="text-heading-14 text-textDefault mb-2">
                 Simple Icons
               </h3>
               <div className="space-y-1">
@@ -843,7 +843,7 @@ export default function Icons() {
               </div>
             </div>
             <div>
-              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+              <h3 className="text-heading-14 text-textDefault mb-2">
                 React Icons
               </h3>
               <div className="space-y-1">

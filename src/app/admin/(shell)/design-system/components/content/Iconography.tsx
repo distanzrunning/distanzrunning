@@ -169,7 +169,7 @@ export default function Iconography() {
           Foundations
         </p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
           id="iconography"
         >
           Iconography
@@ -189,7 +189,7 @@ export default function Iconography() {
       <section>
         <h2
           id="sizing"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Sizing
         </h2>
@@ -265,7 +265,7 @@ export default function Iconography() {
       <section>
         <h2
           id="stroke-weight"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Stroke weight
         </h2>
@@ -318,7 +318,7 @@ export default function Iconography() {
       <section>
         <h2
           id="colour"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Colour
         </h2>
@@ -363,7 +363,7 @@ export default function Iconography() {
       <section>
         <h2
           id="navigation"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Navigation
         </h2>
@@ -379,7 +379,7 @@ export default function Iconography() {
       <section>
         <h2
           id="theme"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Theme
         </h2>
@@ -395,7 +395,7 @@ export default function Iconography() {
       <section>
         <h2
           id="categories"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Categories
         </h2>
@@ -416,7 +416,7 @@ export default function Iconography() {
       <section>
         <h2
           id="data"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Data &amp; metrics
         </h2>
@@ -437,7 +437,7 @@ export default function Iconography() {
       <section>
         <h2
           id="design-system"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Design system
         </h2>
@@ -458,7 +458,7 @@ export default function Iconography() {
       <section>
         <h2
           id="usage"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Usage guidelines
         </h2>
@@ -529,7 +529,7 @@ export default function Iconography() {
       <section>
         <h2
           id="reference"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Reference
         </h2>

@@ -639,7 +639,7 @@ export default function AvatarComponent() {
           Available props for the Avatar components.
         </p>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           Avatar
         </h3>
         <div className="overflow-x-auto">
@@ -713,7 +713,7 @@ export default function AvatarComponent() {
           </table>
         </div>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           AvatarGroup
         </h3>
         <div className="overflow-x-auto">
@@ -765,7 +765,7 @@ export default function AvatarComponent() {
           </table>
         </div>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           AvatarBrand
         </h3>
         <div className="overflow-x-auto">
@@ -817,7 +817,7 @@ export default function AvatarComponent() {
           </table>
         </div>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           AvatarWithIcon
         </h3>
         <div className="overflow-x-auto">

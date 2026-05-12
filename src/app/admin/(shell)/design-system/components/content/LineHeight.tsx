@@ -24,7 +24,7 @@ export default function LineHeight() {
           Typography
         </p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
           id="line-height"
         >
           Line-height
@@ -37,7 +37,7 @@ export default function LineHeight() {
       <section>
         <h2
           id="multipliers"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Multipliers
         </h2>
@@ -139,7 +139,7 @@ export default function LineHeight() {
             <p className="font-sans text-copy-14 text-textSubtle mb-2">
               Line-height: 1.15 (headline)
             </p>
-            <p className="font-serif text-[32px] leading-[1.15] font-medium">
+            <p className="text-heading-32 font-serif">
               The Ultimate Guide to Marathon Training and Race Day Strategy
             </p>
           </div>
@@ -152,7 +152,7 @@ export default function LineHeight() {
       <section>
         <h2
           id="computed-values"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Computed values
         </h2>
@@ -216,7 +216,7 @@ export default function LineHeight() {
       <section>
         <h2
           id="reference"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Reference
         </h2>

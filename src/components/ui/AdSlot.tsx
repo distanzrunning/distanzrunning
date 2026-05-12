@@ -146,7 +146,7 @@ function DefaultFallback({ width, height }: Dimensions) {
       className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border p-6 text-center"
       style={frameStyle}
     >
-      <h4 className="text-[16px] font-semibold leading-tight text-textDefault">
+      <h4 className="text-heading-16 text-textDefault">
         Want to reach runners?
       </h4>
       <p className="text-[13px] leading-snug text-textSubtle max-w-[80%]">

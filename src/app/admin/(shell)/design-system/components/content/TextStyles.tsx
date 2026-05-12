@@ -7,7 +7,7 @@ export default function TextStyles() {
           Typography
         </p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
           id="text-styles"
         >
           Text styles
@@ -26,7 +26,7 @@ export default function TextStyles() {
       <section>
         <h2
           id="display"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Display
         </h2>
@@ -140,7 +140,7 @@ export default function TextStyles() {
       <section>
         <h2
           id="headings"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Headings
         </h2>
@@ -297,7 +297,7 @@ export default function TextStyles() {
       <section>
         <h2
           id="body"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Body
         </h2>
@@ -469,7 +469,7 @@ export default function TextStyles() {
       <section>
         <h2
           id="ui"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           UI
         </h2>
@@ -627,7 +627,7 @@ export default function TextStyles() {
       <section>
         <h2
           id="reference"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Quick reference
         </h2>

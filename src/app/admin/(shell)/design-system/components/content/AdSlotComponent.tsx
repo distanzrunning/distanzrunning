@@ -430,7 +430,7 @@ export default function AdSlotComponent() {
                     background: "var(--ds-background-200)",
                   }}
                 >
-                  <h4 className="text-[16px] font-semibold leading-tight text-textDefault">
+                  <h4 className="text-heading-16 text-textDefault">
                     Get the Shakeout
                   </h4>
                   <p className="text-copy-13 leading-snug text-textSubtle">

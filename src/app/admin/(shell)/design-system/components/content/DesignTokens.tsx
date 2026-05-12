@@ -8,7 +8,7 @@ export default function DesignTokens() {
         <p className="text-copy-14 tracking-wide text-electric-pink mb-2">
           Principles
         </p>
-        <h1 className="font-serif text-[40px] leading-[1.15] font-medium mb-0">
+        <h1 className="text-heading-40 font-serif mb-0">
           Design tokens
         </h1>
       </div>
@@ -25,7 +25,7 @@ export default function DesignTokens() {
       <section>
         <h2
           id="what-are-tokens"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           What are design tokens?
         </h2>
@@ -78,7 +78,7 @@ export default function DesignTokens() {
       <section>
         <h2
           id="token-types"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Token types
         </h2>
@@ -244,7 +244,7 @@ export default function DesignTokens() {
       <section>
         <h2
           id="token-inheritance"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Token inheritance
         </h2>
@@ -292,7 +292,7 @@ export default function DesignTokens() {
       <section>
         <h2
           id="token-categories"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Token categories
         </h2>
@@ -383,7 +383,7 @@ export default function DesignTokens() {
       <section>
         <h2
           id="usage-guidelines"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Usage guidelines
         </h2>
@@ -471,7 +471,7 @@ export default function DesignTokens() {
       <section>
         <h2
           id="implementation"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Implementation
         </h2>

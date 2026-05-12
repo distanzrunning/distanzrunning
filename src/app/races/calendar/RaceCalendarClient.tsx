@@ -610,7 +610,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         <style jsx global>{`
           /* Calendar container styling */
           .calendar-wrapper .fc {
-            font-family: var(--font-body), sans-serif;
+            font-family: var(--font-sans), sans-serif;
           }
 
           /* Hide default header */

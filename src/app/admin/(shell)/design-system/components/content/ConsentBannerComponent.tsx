@@ -237,7 +237,7 @@ function DemoFloatingBanner({
           <div>
             <h2
               id="consent-demo-title"
-              className="text-[16px] font-semibold text-textDefault leading-tight"
+              className="text-heading-16 text-textDefault leading-tight"
             >
               {CONSENT_COPY.bannerTitle}
             </h2>
