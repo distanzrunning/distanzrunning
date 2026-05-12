@@ -44,7 +44,7 @@ function TypographyRow({
       onContextMenu={handleContextMenu}
     >
       <td className="py-4 pr-4 align-middle">{example}</td>
-      <td className="py-4 px-4 font-mono text-xs align-middle">{className}</td>
+      <td className="py-4 px-4 text-label-12-mono align-middle">{className}</td>
       <td className="py-4 px-4 text-textSubtle align-middle">{usage}</td>
     </tr>
   );
@@ -232,7 +232,7 @@ export default function Typography() {
           Headings
         </SectionHeader>
 
-        <p className="text-base text-textSubtle mt-4 mb-4">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-4">
           Headings are used to introduce pages or sections. Use{" "}
           <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             font-serif
@@ -246,7 +246,7 @@ export default function Typography() {
           navigation.
         </p>
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           The{" "}
           <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             strong
@@ -258,16 +258,16 @@ export default function Typography() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm w-1/2">
+                <th className="text-left py-3 pr-4 text-heading-14 w-1/2">
                   Example
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-1.5">
                     <SiTailwindcss size={14} className="text-[#06B6D4]" />
                     Class name
                   </span>
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-2">
                     <CircleHelp size={14} className="text-textSubtler" />
                     Usage
@@ -275,7 +275,7 @@ export default function Typography() {
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               {/* Editorial headings - EB Garamond */}
               <TypographyRow
                 example={<p className="text-heading-48 font-serif">Heading</p>}
@@ -359,7 +359,7 @@ export default function Typography() {
           Buttons
         </SectionHeader>
 
-        <p className="text-base text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Button text styles should only be used for button components.
         </p>
 
@@ -367,16 +367,16 @@ export default function Typography() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm w-1/2">
+                <th className="text-left py-3 pr-4 text-heading-14 w-1/2">
                   Example
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-1.5">
                     <SiTailwindcss size={14} className="text-[#06B6D4]" />
                     Class name
                   </span>
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-2">
                     <CircleHelp size={14} className="text-textSubtler" />
                     Usage
@@ -384,7 +384,7 @@ export default function Typography() {
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <TypographyRow
                 example={<p className="text-button-16">Button Text</p>}
                 className="text-button-16"
@@ -414,7 +414,7 @@ export default function Typography() {
           Labels
         </SectionHeader>
 
-        <p className="text-base text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Labels are single-line text with ample line-height to align with
           icons. Use the{" "}
           <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
@@ -427,16 +427,16 @@ export default function Typography() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm w-1/2">
+                <th className="text-left py-3 pr-4 text-heading-14 w-1/2">
                   Example
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-1.5">
                     <SiTailwindcss size={14} className="text-[#06B6D4]" />
                     Class name
                   </span>
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-2">
                     <CircleHelp size={14} className="text-textSubtler" />
                     Usage
@@ -444,7 +444,7 @@ export default function Typography() {
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <TypographyRow
                 example={<p className="text-label-20">Label Text</p>}
                 className="text-label-20"
@@ -530,7 +530,7 @@ export default function Typography() {
           Copy
         </SectionHeader>
 
-        <p className="text-base text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Copy styles are for multi-line text with higher line height than
           Labels. Use the{" "}
           <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
@@ -543,16 +543,16 @@ export default function Typography() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm w-1/2">
+                <th className="text-left py-3 pr-4 text-heading-14 w-1/2">
                   Example
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-1.5">
                     <SiTailwindcss size={14} className="text-[#06B6D4]" />
                     Class name
                   </span>
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-2">
                     <CircleHelp size={14} className="text-textSubtler" />
                     Usage
@@ -560,7 +560,7 @@ export default function Typography() {
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <TypographyRow
                 example={
                   <p className="text-copy-24">
@@ -634,7 +634,7 @@ export default function Typography() {
           Quick reference
         </SectionHeader>
 
-        <p className="text-base text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Complete specifications for all typography utility classes.
         </p>
 
@@ -642,32 +642,32 @@ export default function Typography() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   <span className="inline-flex items-center gap-1.5">
                     <SiTailwindcss size={14} className="text-[#06B6D4]" />
                     Class
                   </span>
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Font Size
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Line Height
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Letter Spacing
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Font Weight
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm font-mono whitespace-nowrap">
+            <tbody className="text-label-14-mono whitespace-nowrap">
               {/* Headings */}
               <tr className="border-b border-borderSubtle bg-surfaceSubtle">
                 <td
                   colSpan={5}
-                  className="py-2 px-4 font-sans font-semibold text-textSubtle"
+                  className="py-2 px-4 font-sans text-heading-14 text-textSubtle"
                 >
                   Headings
                 </td>
@@ -747,7 +747,7 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle bg-surfaceSubtle">
                 <td
                   colSpan={5}
-                  className="py-2 px-4 font-sans font-semibold text-textSubtle"
+                  className="py-2 px-4 font-sans text-heading-14 text-textSubtle"
                 >
                   Buttons
                 </td>
@@ -778,7 +778,7 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle bg-surfaceSubtle">
                 <td
                   colSpan={5}
-                  className="py-2 px-4 font-sans font-semibold text-textSubtle"
+                  className="py-2 px-4 font-sans text-heading-14 text-textSubtle"
                 >
                   Labels
                 </td>
@@ -858,7 +858,7 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle bg-surfaceSubtle">
                 <td
                   colSpan={5}
-                  className="py-2 px-4 font-sans font-semibold text-textSubtle"
+                  className="py-2 px-4 font-sans text-heading-14 text-textSubtle"
                 >
                   Copy
                 </td>

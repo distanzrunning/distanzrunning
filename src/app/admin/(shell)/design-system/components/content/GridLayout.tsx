@@ -5,7 +5,7 @@ export default function GridLayout() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">Grid</p>
+        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">Grid</p>
         <h1
           className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
           id="grid-layout"
@@ -27,12 +27,12 @@ export default function GridLayout() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           Across screen sizes, grid spacing and grid gutters remain fixed to the
           defined values. The number of columns is changeable, and column widths
           are fluid.
         </p>
-        <p className="text-base text-textSubtle mb-8">
+        <p className="text-copy-16 text-textSubtle mb-8">
           The recommended max-width of the grid for the web is 1585px.
         </p>
 
@@ -41,13 +41,13 @@ export default function GridLayout() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Columns
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Breakpoints
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Within media query
                 </th>
               </tr>
@@ -81,10 +81,10 @@ export default function GridLayout() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   CSS
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
@@ -113,7 +113,7 @@ export default function GridLayout() {
         <hr className="border-t border-borderDefault mb-8" />
 
         {/* 4 columns with outside gutters (small screen) */}
-        <p className="text-base font-semibold mb-4">
+        <p className="text-copy-16 font-semibold mb-4">
           4 columns with outside gutters (small screen, &lt;600px)
         </p>
         <figure className="mb-8">
@@ -129,7 +129,7 @@ export default function GridLayout() {
         <hr className="border-t border-borderDefault mb-8" />
 
         {/* 6 columns with outside gutters (medium screen) */}
-        <p className="text-base font-semibold mb-4">
+        <p className="text-copy-16 font-semibold mb-4">
           6 columns with outside gutters (medium screen)
         </p>
         <figure className="mb-8">
@@ -145,7 +145,7 @@ export default function GridLayout() {
         <hr className="border-t border-borderDefault mb-8" />
 
         {/* 12 columns with outside gutters (large screen) */}
-        <p className="text-base font-semibold mb-4">
+        <p className="text-copy-16 font-semibold mb-4">
           12 columns with outside gutters (large screen, ≥960px)
         </p>
         <figure className="mb-8">
@@ -172,12 +172,12 @@ export default function GridLayout() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           The main wrapper is the outermost layout container that frames all
           page content. It creates a centered, max-width container with vertical
           borders on larger screens, inspired by editorial layouts.
         </p>
-        <p className="text-base text-textSubtle mb-8">
+        <p className="text-copy-16 text-textSubtle mb-8">
           On mobile, the wrapper spans full width with no borders. On screens
           768px and above, it gains left and right borders and centers within
           the viewport up to a max-width of 1585px.
@@ -208,10 +208,10 @@ export default function GridLayout() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   CSS
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
@@ -255,13 +255,13 @@ export default function GridLayout() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Screen size
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Width
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Borders
                 </th>
               </tr>
@@ -334,19 +334,19 @@ export default function GridLayout() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Artboard
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Grid/artboard
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Columns
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Gap/gutter
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Within media query
                 </th>
               </tr>

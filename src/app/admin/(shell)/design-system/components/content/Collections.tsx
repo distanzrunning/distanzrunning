@@ -3,14 +3,14 @@ export default function Collections() {
     <div className="space-y-12">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">Colour</p>
+        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">Colour</p>
         <h1
           className="font-serif text-[40px] leading-[1.15] font-medium mb-4"
           id="collections"
         >
           Collections
         </h1>
-        <p className="text-base text-textSubtle max-w-3xl">
+        <p className="text-copy-16 text-textSubtle max-w-3xl">
           Curated color combinations for specific content types and contexts.
           Collections ensure visual consistency across different sections of the
           site.
@@ -30,7 +30,7 @@ export default function Collections() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mb-6 max-w-3xl">
           Professional road running content - races, training, and performance.
         </p>
 
@@ -91,7 +91,7 @@ export default function Collections() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mb-6 max-w-3xl">
           Track and field content - sprint, middle distance, and technical
           training.
         </p>
@@ -153,7 +153,7 @@ export default function Collections() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mb-6 max-w-3xl">
           Trail and ultrarunning content - adventure, exploration, and
           endurance.
         </p>
@@ -215,7 +215,7 @@ export default function Collections() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mb-6 max-w-3xl">
           Equipment and gear reviews - shoes, watches, nutrition, and
           technology.
         </p>
@@ -277,7 +277,7 @@ export default function Collections() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mb-6 max-w-3xl">
           Nutrition and wellness content - fueling strategies, recovery, and
           health.
         </p>

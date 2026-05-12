@@ -3,7 +3,7 @@ export default function DesignPrinciples() {
     <div className="space-y-4">
       {/* Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">
           Principles
         </p>
         <h1 className="text-heading-40 font-serif mb-0">
@@ -13,7 +13,7 @@ export default function DesignPrinciples() {
 
       <hr className="border-t-4 border-textDefault" />
 
-      <p className="text-base text-textSubtle max-w-3xl">
+      <p className="text-copy-16 text-textSubtle max-w-3xl">
         A set of considerations that guide our design process and
         decision-making.
       </p>
@@ -28,7 +28,7 @@ export default function DesignPrinciples() {
           Less is more
         </h2>
         <hr className="border-t border-borderDefault mb-6" />
-        <p className="text-base text-textSubtle max-w-3xl mb-8">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-8">
           Be concise. Make it readily understandable and unobtrusive. Our design
           language is unburdened by decoration. Focus on the essential through
           iteration and reduction.
@@ -42,7 +42,7 @@ export default function DesignPrinciples() {
           Deliberate typography
         </h2>
         <hr className="border-t border-borderDefault mb-6" />
-        <p className="text-base text-textSubtle max-w-3xl mb-8">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-8">
           Our content is augmented by strong typography. Create contrast with
           different weights and letterforms. Use complimentary sizes and leading
           to ensure legibility. Avoid excessive or arbitrary styles. No detail
@@ -57,7 +57,7 @@ export default function DesignPrinciples() {
           Visual harmony
         </h2>
         <hr className="border-t border-borderDefault mb-6" />
-        <p className="text-base text-textSubtle max-w-3xl mb-8">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-8">
           We strive for visual and conceptual balance. Our grid system supports
           recognisable patterns through symmetry and proximity. Our colour
           palette is considered and restrained. Imagery is purposeful, adding
@@ -72,7 +72,7 @@ export default function DesignPrinciples() {
           Clear wayfinding
         </h2>
         <hr className="border-t border-borderDefault mb-6" />
-        <p className="text-base text-textSubtle max-w-3xl mb-8">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-8">
           Well-structured paths guide people through our products. Landmarks
           help them move forward. Keep journeys focused by not including more
           options than necessary. Our wayfinding relies on clear visual
@@ -87,7 +87,7 @@ export default function DesignPrinciples() {
           Performance and precision
         </h2>
         <hr className="border-t border-borderDefault mb-6" />
-        <p className="text-base text-textSubtle max-w-3xl mb-8">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-8">
           Data demands accuracy. Maps, charts, and metrics must be presented
           with precision and clarity. Every element serves a purpose. Fast,
           responsive interfaces ensure seamless interaction with tools.
@@ -103,7 +103,7 @@ export default function DesignPrinciples() {
           Recognisable consistency
         </h2>
         <hr className="border-t border-borderDefault mb-6" />
-        <p className="text-base text-textSubtle max-w-3xl">
+        <p className="text-copy-16 text-textSubtle max-w-3xl">
           Consistency across our products is vital for providing a reliable
           experience and upholding a strong brand reputation. Across all
           touchpoints, our community deserves the same high standard of quality

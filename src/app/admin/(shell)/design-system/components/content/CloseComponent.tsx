@@ -28,7 +28,7 @@ export default function CloseComponent() {
 
         {/* Disabled Toggle */}
         <div className="mb-4">
-          <label className="inline-flex items-center gap-2 text-sm text-textSubtle cursor-pointer">
+          <label className="inline-flex items-center gap-2 text-copy-14 text-textSubtle cursor-pointer">
             <input
               type="checkbox"
               checked={isDisabled}
@@ -43,7 +43,7 @@ export default function CloseComponent() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Default variant */}
           <div className="border border-borderNeutral rounded-lg p-8 flex flex-col items-center gap-4 bg-white">
-            <span className="text-sm text-textSubtle font-medium">Default</span>
+            <span className="text-copy-14 text-textSubtle font-medium">Default</span>
             <IconButton
               aria-label="Close"
               variant="primary"
@@ -203,7 +203,7 @@ import IconButton from "@/components/ui/IconButton";
                 <X className="w-5 h-5" />
               </IconButton>
             </div>
-            <div className="bg-asphalt-98 p-4 text-sm text-textSubtle">
+            <div className="bg-asphalt-98 p-4 text-copy-14 text-textSubtle">
               Modal content goes here...
             </div>
           </div>

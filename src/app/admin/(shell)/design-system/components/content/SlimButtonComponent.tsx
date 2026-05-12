@@ -171,7 +171,7 @@ export default function SlimButtonComponent() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">Buttons</p>
+        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">Buttons</p>
         <h1
           id="slim-button"
           className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
@@ -180,7 +180,7 @@ export default function SlimButtonComponent() {
         </h1>
       </div>
 
-      <p className="text-base text-textSubtle max-w-3xl">
+      <p className="text-copy-16 text-textSubtle max-w-3xl">
         For actions where space is limited, or to resolve conflicting priorities
         between nearby buttons.
       </p>
@@ -268,7 +268,7 @@ export default function SlimButtonComponent() {
           How to use
         </h3>
 
-        <div className="space-y-4 text-base text-textSubtle max-w-3xl">
+        <div className="space-y-4 text-copy-16 text-textSubtle max-w-3xl">
           <p>Do not use for primary actions.</p>
           <p>
             For secondary actions where space is limited, and for additional
@@ -294,18 +294,18 @@ export default function SlimButtonComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Property
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Value
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Token
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Height</td>
                 <td className="py-3 px-4">36px</td>
@@ -358,13 +358,13 @@ export default function SlimButtonComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
               </tr>

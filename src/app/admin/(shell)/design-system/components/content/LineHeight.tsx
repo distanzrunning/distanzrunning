@@ -20,7 +20,7 @@ export default function LineHeight() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">
           Typography
         </p>
         <h1
@@ -44,7 +44,7 @@ export default function LineHeight() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Line-height (leading) multipliers provide vertical rhythm across all
           font sizes, ensuring text and headings are readable and legible.
           Larger text uses tighter line heights while smaller text uses looser
@@ -56,18 +56,18 @@ export default function LineHeight() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Multiplier
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Usage
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Tailwind
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm whitespace-nowrap">
+            <tbody className="text-copy-14 whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">1.5</td>
                 <td className="py-3 px-4">
@@ -114,10 +114,10 @@ export default function LineHeight() {
 
         <div className="bg-surfaceSubtle p-6 mb-8 space-y-6">
           <div>
-            <p className="font-sans text-sm text-textSubtle mb-2">
+            <p className="font-sans text-copy-14 text-textSubtle mb-2">
               Line-height: 1.5 (body text)
             </p>
-            <p className="font-sans text-base leading-[1.5]">
+            <p className="font-sans text-copy-16 leading-[1.5]">
               Running is more than a sport—it&apos;s a way of life. Every step
               forward is a testament to dedication, discipline, and the pursuit
               of personal excellence. The road stretches endlessly ahead.
@@ -125,10 +125,10 @@ export default function LineHeight() {
           </div>
           <hr className="border-t border-borderSubtle" />
           <div>
-            <p className="font-sans text-sm text-textSubtle mb-2">
+            <p className="font-sans text-copy-14 text-textSubtle mb-2">
               Line-height: 1.3 (compact)
             </p>
-            <p className="font-sans text-base leading-[1.3]">
+            <p className="font-sans text-copy-16 leading-[1.3]">
               Running is more than a sport—it&apos;s a way of life. Every step
               forward is a testament to dedication, discipline, and the pursuit
               of personal excellence. The road stretches endlessly ahead.
@@ -136,7 +136,7 @@ export default function LineHeight() {
           </div>
           <hr className="border-t border-borderSubtle" />
           <div>
-            <p className="font-sans text-sm text-textSubtle mb-2">
+            <p className="font-sans text-copy-14 text-textSubtle mb-2">
               Line-height: 1.15 (headline)
             </p>
             <p className="font-serif text-[32px] leading-[1.15] font-medium">
@@ -159,7 +159,7 @@ export default function LineHeight() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Use whole pixel values when designing with static assets. The
           line-height values below are the result of multiplying font size by
           the appropriate multiplier.
@@ -169,24 +169,24 @@ export default function LineHeight() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Font size (px)
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Tailwind size
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Multiplier
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Line-height (px)
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Tailwind leading
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm whitespace-nowrap">
+            <tbody className="text-copy-14 whitespace-nowrap">
               {computedValues.map((item, index) => (
                 <tr key={index} className="border-b border-borderSubtle">
                   <td className="py-3 pr-4">{item.size}</td>
@@ -227,18 +227,18 @@ export default function LineHeight() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Tailwind class
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Value
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Usage
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">leading-none</td>
                 <td className="py-3 px-4">1</td>

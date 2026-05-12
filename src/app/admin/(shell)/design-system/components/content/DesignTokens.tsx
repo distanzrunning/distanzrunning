@@ -5,7 +5,7 @@ export default function DesignTokens() {
     <div className="space-y-4">
       {/* Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">
           Principles
         </p>
         <h1 className="font-serif text-[40px] leading-[1.15] font-medium mb-0">
@@ -15,7 +15,7 @@ export default function DesignTokens() {
 
       <hr className="border-t-4 border-textDefault" />
 
-      <p className="text-base text-textSubtle max-w-3xl">
+      <p className="text-copy-16 text-textSubtle max-w-3xl">
         Design tokens are design decisions, translated into data. They act as a
         &ldquo;source of truth&rdquo; to help ensure that product experiences
         feel unified and cohesive.
@@ -32,14 +32,14 @@ export default function DesignTokens() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle max-w-3xl mb-6">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-6">
           Design tokens are the smallest, most fundamental pieces of our design
           system. They represent design decisions as named values&mdash;colours,
           spacing, typography, and more&mdash;stored in a format that can be
           used across platforms and tools.
         </p>
 
-        <p className="text-base text-textSubtle max-w-3xl mb-6">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-6">
           Instead of hard-coding values like{" "}
           <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-sm font-mono">
             #E43C81
@@ -61,10 +61,10 @@ export default function DesignTokens() {
         </p>
 
         <div className="bg-surfaceWarm border-l-4 border-electric-pink p-6">
-          <h3 className="font-sans font-semibold text-sm uppercase tracking-wide text-textDefault mb-2">
+          <h3 className="font-sans text-heading-14 uppercase tracking-wide text-textDefault mb-2">
             Why tokens matter
           </h3>
-          <p className="text-sm text-textSubtle leading-relaxed">
+          <p className="text-copy-14 text-textSubtle leading-relaxed">
             Tokens enable consistency at scale. When we update a token value, it
             propagates everywhere that token is used. This makes global changes
             efficient and reduces the risk of inconsistency.
@@ -85,7 +85,7 @@ export default function DesignTokens() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle max-w-3xl mb-8">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-8">
           Our token system uses a layered approach, from raw values to
           context-specific applications.
         </p>
@@ -97,7 +97,7 @@ export default function DesignTokens() {
         >
           Global tokens
         </h3>
-        <p className="text-base text-textSubtle max-w-3xl mb-4">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-4">
           The foundational layer. These are raw, context-agnostic values that
           form the building blocks of the system. They describe what the value
           is, not how it should be used.
@@ -150,7 +150,7 @@ export default function DesignTokens() {
         >
           Semantic tokens
         </h3>
-        <p className="text-base text-textSubtle max-w-3xl mb-4">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-4">
           The contextual layer. These tokens describe purpose and intent, not
           the value itself. They alias global tokens and can change based on
           context (like light/dark mode).
@@ -203,7 +203,7 @@ export default function DesignTokens() {
         >
           Component tokens
         </h3>
-        <p className="text-base text-textSubtle max-w-3xl mb-4">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-4">
           The specific layer. These tokens are scoped to individual components,
           allowing for precise control without affecting the broader system.
         </p>
@@ -251,7 +251,7 @@ export default function DesignTokens() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle max-w-3xl mb-8">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-8">
           Tokens form a chain of inheritance, from raw values through to
           component-specific applications.
         </p>
@@ -265,7 +265,7 @@ export default function DesignTokens() {
           />
         </div>
 
-        <p className="text-sm text-textSubtle max-w-3xl">
+        <p className="text-copy-14 text-textSubtle max-w-3xl">
           The raw hex value{" "}
           <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-xs font-mono">
             #D11B5C
@@ -299,14 +299,14 @@ export default function DesignTokens() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle max-w-3xl mb-8">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-8">
           Our design tokens are organised into the following categories:
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-canvas rounded-lg border border-borderDefault p-6">
             <h4 className="font-semibold mb-2">Colour</h4>
-            <p className="text-sm text-textSubtle mb-3">
+            <p className="text-copy-14 text-textSubtle mb-3">
               Brand colours, greyscale, semantic colours, and status colours.
             </p>
             <code className="text-xs font-mono text-electric-pink">
@@ -316,7 +316,7 @@ export default function DesignTokens() {
 
           <div className="bg-canvas rounded-lg border border-borderDefault p-6">
             <h4 className="font-semibold mb-2">Typography</h4>
-            <p className="text-sm text-textSubtle mb-3">
+            <p className="text-copy-14 text-textSubtle mb-3">
               Font families, sizes, weights, line heights, and letter spacing.
             </p>
             <code className="text-xs font-mono text-electric-pink">
@@ -326,7 +326,7 @@ export default function DesignTokens() {
 
           <div className="bg-canvas rounded-lg border border-borderDefault p-6">
             <h4 className="font-semibold mb-2">Spacing</h4>
-            <p className="text-sm text-textSubtle mb-3">
+            <p className="text-copy-14 text-textSubtle mb-3">
               Margins, padding, gaps, and layout spacing based on an 8px grid.
             </p>
             <code className="text-xs font-mono text-electric-pink">
@@ -336,7 +336,7 @@ export default function DesignTokens() {
 
           <div className="bg-canvas rounded-lg border border-borderDefault p-6">
             <h4 className="font-semibold mb-2">Border</h4>
-            <p className="text-sm text-textSubtle mb-3">
+            <p className="text-copy-14 text-textSubtle mb-3">
               Border widths, radii, and styles for consistent component edges.
             </p>
             <code className="text-xs font-mono text-electric-pink">
@@ -346,7 +346,7 @@ export default function DesignTokens() {
 
           <div className="bg-canvas rounded-lg border border-borderDefault p-6">
             <h4 className="font-semibold mb-2">Shadow</h4>
-            <p className="text-sm text-textSubtle mb-3">
+            <p className="text-copy-14 text-textSubtle mb-3">
               Elevation and depth through consistent shadow definitions.
             </p>
             <code className="text-xs font-mono text-electric-pink">
@@ -356,7 +356,7 @@ export default function DesignTokens() {
 
           <div className="bg-canvas rounded-lg border border-borderDefault p-6">
             <h4 className="font-semibold mb-2">Animation</h4>
-            <p className="text-sm text-textSubtle mb-3">
+            <p className="text-copy-14 text-textSubtle mb-3">
               Durations, easing curves, and motion parameters.
             </p>
             <code className="text-xs font-mono text-electric-pink">
@@ -366,7 +366,7 @@ export default function DesignTokens() {
 
           <div className="bg-canvas rounded-lg border border-borderDefault p-6">
             <h4 className="font-semibold mb-2">Materials</h4>
-            <p className="text-sm text-textSubtle mb-3">
+            <p className="text-copy-14 text-textSubtle mb-3">
               Presets combining radii, fills, strokes, and shadows for surfaces
               and floating elements.
             </p>
@@ -396,7 +396,7 @@ export default function DesignTokens() {
         >
           Prefer semantic tokens
         </h3>
-        <p className="text-base text-textSubtle max-w-3xl mb-6">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-6">
           Always use semantic tokens when available. They ensure your
           implementation adapts correctly to theme changes and design system
           updates.
@@ -427,7 +427,7 @@ export default function DesignTokens() {
         >
           Use global tokens sparingly
         </h3>
-        <p className="text-base text-textSubtle max-w-3xl mb-6">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-6">
           Only use global tokens directly when no semantic token exists for your
           use case. Global tokens don&apos;t carry contextual meaning and
           won&apos;t automatically adapt to themes.
@@ -458,7 +458,7 @@ export default function DesignTokens() {
         >
           Never hard-code values
         </h3>
-        <p className="text-base text-textSubtle max-w-3xl">
+        <p className="text-copy-16 text-textSubtle max-w-3xl">
           Hard-coded values bypass the token system entirely, making maintenance
           difficult and breaking consistency. Always reference a token, even for
           seemingly simple values.
@@ -478,7 +478,7 @@ export default function DesignTokens() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle max-w-3xl mb-6">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-6">
           Our tokens are defined in{" "}
           <code className="px-1.5 py-0.5 bg-neutralBgSubtle rounded text-sm font-mono">
             src/styles/design-tokens.ts
@@ -492,7 +492,7 @@ export default function DesignTokens() {
         >
           CSS custom properties
         </h3>
-        <p className="text-base text-textSubtle max-w-3xl mb-4">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-4">
           Tokens are exposed as CSS variables for use in stylesheets:
         </p>
 
@@ -513,7 +513,7 @@ export default function DesignTokens() {
         >
           Tailwind classes
         </h3>
-        <p className="text-base text-textSubtle max-w-3xl mb-4">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-4">
           Most tokens are mapped to Tailwind utilities for use in JSX:
         </p>
 

@@ -195,7 +195,7 @@ export default function ButtonIconComponent() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">Buttons</p>
+        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">Buttons</p>
         <h1
           id="button-icon"
           className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
@@ -204,7 +204,7 @@ export default function ButtonIconComponent() {
         </h1>
       </div>
 
-      <p className="text-base text-textSubtle max-w-3xl">
+      <p className="text-copy-16 text-textSubtle max-w-3xl">
         For the primary action.
       </p>
 
@@ -303,7 +303,7 @@ export default function ButtonIconComponent() {
           How to use
         </h3>
 
-        <div className="space-y-4 text-base text-textSubtle max-w-3xl">
+        <div className="space-y-4 text-copy-16 text-textSubtle max-w-3xl">
           <p>
             Use <strong>icon buttons</strong> for common actions where the icon
             meaning is universally understood (search, close, menu, settings).
@@ -327,7 +327,7 @@ export default function ButtonIconComponent() {
           Best practices
         </h3>
 
-        <ul className="space-y-3 text-base text-textSubtle max-w-3xl list-disc pl-5">
+        <ul className="space-y-3 text-copy-16 text-textSubtle max-w-3xl list-disc pl-5">
           <li>
             Use icons that are universally recognizable (magnifying glass for
             search, X for close, hamburger for menu)
@@ -362,18 +362,18 @@ export default function ButtonIconComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Property
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Value
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Token
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Size (default)</td>
                 <td className="py-3 px-4">40px x 40px</td>
@@ -421,13 +421,13 @@ export default function ButtonIconComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
               </tr>
@@ -514,18 +514,18 @@ export default function ButtonIconComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   State
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Background
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Icon
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
                 <td className="py-3 px-4 font-mono">asphalt-10</td>
@@ -561,21 +561,21 @@ export default function ButtonIconComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   State
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Background
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Border
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Icon
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
@@ -615,18 +615,18 @@ export default function ButtonIconComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   State
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Background
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Icon
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>

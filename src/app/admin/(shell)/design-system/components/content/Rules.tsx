@@ -3,7 +3,7 @@ export default function Rules() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">
           Foundations
         </p>
         <h1
@@ -17,7 +17,7 @@ export default function Rules() {
       <hr className="border-t-4 border-textDefault" />
 
       {/* Introduction */}
-      <p className="text-base text-textSubtle">
+      <p className="text-copy-16 text-textSubtle">
         Horizontal rules provide visual separation between content sections.
         Different styles convey varying levels of hierarchy and emphasis.
       </p>
@@ -40,7 +40,7 @@ export default function Rules() {
         >
           Rule
         </h3>
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           Default rule for subtle separation between sections.
         </p>
         <div className="p-6 bg-surface border border-borderSubtle rounded mb-4">
@@ -48,7 +48,7 @@ export default function Rules() {
         </div>
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
-            <tbody className="text-sm whitespace-nowrap">
+            <tbody className="text-copy-14 whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4 text-textSubtle">Weight</td>
                 <td className="py-2 px-4">1px</td>
@@ -76,7 +76,7 @@ export default function Rules() {
         >
           Rule (emphasised)
         </h3>
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           Stronger separation using the default text color.
         </p>
         <div className="p-6 bg-surface border border-borderSubtle rounded mb-4">
@@ -84,7 +84,7 @@ export default function Rules() {
         </div>
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
-            <tbody className="text-sm whitespace-nowrap">
+            <tbody className="text-copy-14 whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4 text-textSubtle">Weight</td>
                 <td className="py-2 px-4">1px</td>
@@ -112,7 +112,7 @@ export default function Rules() {
         >
           Rule (heavy)
         </h3>
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           Major section divider for primary content breaks.
         </p>
         <div className="p-6 bg-surface border border-borderSubtle rounded mb-4">
@@ -120,7 +120,7 @@ export default function Rules() {
         </div>
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
-            <tbody className="text-sm whitespace-nowrap">
+            <tbody className="text-copy-14 whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4 text-textSubtle">Weight</td>
                 <td className="py-2 px-4">4px</td>
@@ -148,7 +148,7 @@ export default function Rules() {
         >
           Rule (accent)
         </h3>
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           Brand accent divider for featured content and emphasis.
         </p>
         <div className="p-6 bg-surface border border-borderSubtle rounded mb-4">
@@ -156,7 +156,7 @@ export default function Rules() {
         </div>
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse">
-            <tbody className="text-sm whitespace-nowrap">
+            <tbody className="text-copy-14 whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4 text-textSubtle">Weight</td>
                 <td className="py-2 px-4">4px</td>
@@ -189,7 +189,7 @@ export default function Rules() {
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Rules automatically adapt in dark mode using semantic color tokens.
           The same Tailwind classes work on both light and dark backgrounds.
         </p>
@@ -227,24 +227,24 @@ export default function Rules() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Style
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Weight
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Color token
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Tailwind
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   CSS variable
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm whitespace-nowrap">
+            <tbody className="text-copy-14 whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Rule</td>
                 <td className="py-3 px-4">1px</td>
@@ -303,15 +303,15 @@ export default function Rules() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Style
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   When to use
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Rule</td>
                 <td className="py-3 px-4">

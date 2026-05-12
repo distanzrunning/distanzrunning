@@ -683,7 +683,7 @@ export default function SearchComponent() {
         emptyState={
           typeAheadValue.length === 0 ? null : typeAheadMatches.length ===
             0 ? (
-            <div className="px-6 py-12 text-center text-sm text-textSubtle">
+            <div className="px-6 py-12 text-center text-copy-14 text-textSubtle">
               No matches for &ldquo;{typeAheadValue}&rdquo;.
             </div>
           ) : null

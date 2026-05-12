@@ -3,7 +3,7 @@ export default function UXPrinciples() {
     <div className="space-y-4">
       {/* Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">
           Principles
         </p>
         <h1 className="font-serif text-[40px] leading-[1.15] font-medium mb-0">
@@ -13,7 +13,7 @@ export default function UXPrinciples() {
 
       <hr className="border-t-4 border-textDefault" />
 
-      <p className="text-base text-textSubtle max-w-3xl">
+      <p className="text-copy-16 text-textSubtle max-w-3xl">
         Guidelines for creating intuitive, accessible, and engaging user
         experiences.
       </p>
@@ -28,7 +28,7 @@ export default function UXPrinciples() {
           User-centred design
         </h2>
         <hr className="border-t border-borderDefault mb-6" />
-        <p className="text-base text-textSubtle max-w-3xl mb-8">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-8">
           Put the athlete first. Understand their goals, data needs, and how
           they interact with training tools. Design with empathy, creating
           experiences that feel personal and supportive rather than
@@ -43,7 +43,7 @@ export default function UXPrinciples() {
           Accessible to all
         </h2>
         <hr className="border-t border-borderDefault mb-6" />
-        <p className="text-base text-textSubtle max-w-3xl mb-8">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-8">
           Training data and tools should be accessible to everyone. Ensure
           interfaces are usable across abilities, devices, and contexts. Clear
           contrast, readable typography, and intuitive navigation are essential
@@ -58,7 +58,7 @@ export default function UXPrinciples() {
           Progressive disclosure
         </h2>
         <hr className="border-t border-borderDefault mb-6" />
-        <p className="text-base text-textSubtle max-w-3xl mb-8">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-8">
           Present data when it&apos;s needed. Don&apos;t overwhelm users with
           everything at once. Show key metrics prominently, with detailed
           analytics available on demand. Reveal complexity gradually as users
@@ -73,7 +73,7 @@ export default function UXPrinciples() {
           Feedback and response
         </h2>
         <hr className="border-t border-borderDefault mb-6" />
-        <p className="text-base text-textSubtle max-w-3xl mb-8">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-8">
           Every action deserves acknowledgment. Provide clear, immediate
           feedback for user interactions. Communicate system status, confirm
           actions, and guide users through errors with helpful messaging.
@@ -87,7 +87,7 @@ export default function UXPrinciples() {
           Consistency and familiarity
         </h2>
         <hr className="border-t border-borderDefault mb-6" />
-        <p className="text-base text-textSubtle max-w-3xl mb-8">
+        <p className="text-copy-16 text-textSubtle max-w-3xl mb-8">
           Leverage established patterns and conventions. Users shouldn&apos;t
           need to learn new behaviors for common tasks. Consistent interactions
           across the platform build confidence and reduce cognitive load.
@@ -101,7 +101,7 @@ export default function UXPrinciples() {
           Respect time and attention
         </h2>
         <hr className="border-t border-borderDefault mb-6" />
-        <p className="text-base text-textSubtle max-w-3xl">
+        <p className="text-copy-16 text-textSubtle max-w-3xl">
           Athletes value efficiency. Minimize steps to access data and insights.
           Reduce friction in critical workflows like route planning and activity
           analysis. Make information easy to scan and digest. Every moment saved
