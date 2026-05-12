@@ -72,7 +72,7 @@ function SectionHeader({
       id={id}
       style={{ scrollMarginTop: 32 }}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -197,7 +197,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
+            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
@@ -209,7 +209,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -467,11 +467,11 @@ export default function SearchComponent() {
           Search is a header-level trigger paired with a modal that lets
           users jump between pages. The trigger can be a compact
           input-styled button showing the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             ⌘K
           </code>{" "}
           shortcut, or a square icon button. The modal is built on{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             CommandMenu
           </code>{" "}
           and lists navigable destinations grouped by section.
@@ -509,7 +509,7 @@ export default function SearchComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           The primary placement in a page header. Click or press{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             ⌘K
           </code>{" "}
           to open the modal.
@@ -584,39 +584,39 @@ export default function SearchComponent() {
           e.g. a live search over an external dataset (Algolia, an
           internal API, …) — drive the input externally and render
           items as they come back. The modal idles as a single{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             Search
           </code>{" "}
           field with no result area, then reveals previews as the user
           types. Three new props on{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             CommandMenu
           </code>{" "}
           do the work:
         </p>
         <ul className="m-0 list-disc space-y-2 pl-6 text-copy-16 text-textSubtle">
           <li>
-            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
               value
             </code>{" "}
             +{" "}
-            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
               onValueChange
             </code>{" "}
             — controlled input. Pipe it to your data source.
           </li>
           <li>
-            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
               emptyState
             </code>{" "}
             — ReactNode for a custom empty message, or{" "}
-            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
               null
             </code>{" "}
             to suppress Command.Empty entirely.
           </li>
           <li>
-            <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+            <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
               resultsHidden
             </code>{" "}
             — drops the input-row divider and zeros the list padding
@@ -625,7 +625,7 @@ export default function SearchComponent() {
         </ul>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Pair with{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             filter={"{() => 1}"}
           </code>{" "}
           to disable cmdk&rsquo;s fuzzy filter — your data source has

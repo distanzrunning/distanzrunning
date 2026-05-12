@@ -81,7 +81,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -188,21 +188,21 @@ function ColorSwatch({
             onSelect={handleCopyHex}
           >
             Copy HEX
-            <span className="text-[13px] text-textSubtle">{value}</span>
+            <span className="text-copy-13 text-textSubtle">{value}</span>
           </ContextMenu.Item>
           <ContextMenu.Item
             className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-[var(--ds-gray-100)] rounded-md cursor-pointer outline-none"
             onSelect={handleCopyHsla}
           >
             Copy HSLA
-            <span className="text-[13px] text-textSubtle">{hslaValue}</span>
+            <span className="text-copy-13 text-textSubtle">{hslaValue}</span>
           </ContextMenu.Item>
           <ContextMenu.Item
             className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-[var(--ds-gray-100)] rounded-md cursor-pointer outline-none"
             onSelect={handleCopyToken}
           >
             Copy token
-            <span className="flex items-center gap-1.5 text-[13px] text-textSubtle">
+            <span className="flex items-center gap-1.5 text-copy-13 text-textSubtle">
               Left click <MousePointer size={14} />
             </span>
           </ContextMenu.Item>

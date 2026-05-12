@@ -156,7 +156,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -286,7 +286,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {/* Collapsible code section - no internal rounded corners */}
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
+            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
@@ -301,7 +301,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 
               {/* Code content */}
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -454,7 +454,7 @@ export default function AvatarComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Multiple avatars can be stacked together in a group. Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             limit
           </code>{" "}
           prop to limit the number of visible avatars and show a count for the
@@ -546,7 +546,7 @@ export default function AvatarComponent() {
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Add a custom icon badge to indicate status, role, or any other
           attribute. Customize the background colour using the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             iconBgColor
           </code>{" "}
           prop. The avatar can also use a gradient background instead of an
@@ -597,7 +597,7 @@ export default function AvatarComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           When no image is provided, use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             placeholder
           </code>{" "}
           prop to display a subtle shimmer animation.
@@ -614,7 +614,7 @@ export default function AvatarComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Avatars can be rendered at any size using the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             size
           </code>{" "}
           prop. Common sizes are 24, 32, 40, 48, and 64 pixels.

@@ -140,7 +140,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -265,7 +265,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
+            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
@@ -277,7 +277,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -568,7 +568,7 @@ export default function CollapsibleInputComponent() {
           Collapses to a square showing only the prefix icon when
           empty and unfocused. Click the icon (or focus the input)
           to expand smoothly to the full{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             expandedWidth
           </code>
           . Loses focus with an empty buffer, collapses back.
@@ -587,15 +587,15 @@ export default function CollapsibleInputComponent() {
           style={{ lineHeight: 1.5 }}
         >
           Three sizes:{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             small
           </code>{" "}
           (32 px),{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             default
           </code>{" "}
           (40 px), and{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             large
           </code>{" "}
           (48 px). Mirrors{" "}
@@ -619,16 +619,16 @@ export default function CollapsibleInputComponent() {
           style={{ lineHeight: 1.5 }}
         >
           Pass an{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             expandedSuffix
           </code>{" "}
           to render an X clear-button in the right gutter while the
           input has a value. Adding{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             onMouseDown
           </code>{" "}
           /{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             preventDefault
           </code>{" "}
           to the button keeps focus on the input so the user can
@@ -648,7 +648,7 @@ export default function CollapsibleInputComponent() {
           style={{ lineHeight: 1.5 }}
         >
           Override the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             expandedWidth
           </code>{" "}
           (default 260 px) when the surrounding layout calls for a

@@ -93,7 +93,7 @@ function VariantShowcase({
     <div className="mb-8">
       <h3
         id={id}
-        className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        className="text-heading-20 font-serif mb-3 scroll-mt-32"
       >
         {title}
       </h3>
@@ -298,7 +298,7 @@ export default function ButtonIconComponent() {
 
         <h3
           id="guidelines-how-to-use"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           How to use
         </h3>
@@ -322,7 +322,7 @@ export default function ButtonIconComponent() {
 
         <h3
           id="guidelines-best-practices"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Best practices
         </h3>
@@ -505,7 +505,7 @@ export default function ButtonIconComponent() {
 
         <h3
           id="colours-primary"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Primary icon button
         </h3>
@@ -552,7 +552,7 @@ export default function ButtonIconComponent() {
 
         <h3
           id="colours-secondary"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Secondary icon button
         </h3>
@@ -606,7 +606,7 @@ export default function ButtonIconComponent() {
 
         <h3
           id="colours-tertiary"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Tertiary icon button
         </h3>

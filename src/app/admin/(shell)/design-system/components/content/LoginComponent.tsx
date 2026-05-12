@@ -70,7 +70,7 @@ function SectionHeader({
       id={id}
       style={{ scrollMarginTop: 32 }}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -192,7 +192,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
+            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
@@ -204,7 +204,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -691,7 +691,7 @@ export default function LoginComponent() {
           a built-in password show/hide toggle, error state, and a footer
           slot for links such as "Forgot password?". The same component
           powers the staging gate at{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             /login
           </code>{" "}
           and is suitable for any sign-in surface across the product.
@@ -740,7 +740,7 @@ export default function LoginComponent() {
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           A social-only variant — no email form, just one or more OAuth
           providers. Pass each provider through the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             providers
           </code>{" "}
           prop with a label, icon, and click handler.
@@ -759,11 +759,11 @@ export default function LoginComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           When both a provider and email form are present, pass{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             divider
           </code>{" "}
           to render a separator between them. Use{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             true
           </code>{" "}
           for the default "Or continue with email" label or pass a custom
@@ -784,7 +784,7 @@ export default function LoginComponent() {
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           A sign-up flow combines a Google provider, a name + email form,
           and a legal disclaimer. The{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             disclaimer
           </code>{" "}
           slot renders small, centered text under the submit button — use
@@ -804,7 +804,7 @@ export default function LoginComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Pass any React node to{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             footer
           </code>{" "}
           to render helper links — a forgot-password link, a sign-up link,
@@ -824,7 +824,7 @@ export default function LoginComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Pass an{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             error
           </code>{" "}
           string to render an inline error above the submit button. Fields

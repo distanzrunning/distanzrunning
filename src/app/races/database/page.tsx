@@ -634,7 +634,7 @@ const clearFilters = useCallback(() => {
     return (
       <div className="mx-auto px-10 lg:px-32 pt-32 lg:pt-32 py-16">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <h1 className="text-[68px] font-[550] leading-[75px] font-playfair text-dark mb-4">Race Database</h1>
+          <h1 className="text-heading-64 font-serif text-dark mb-4">Race Database</h1>
           <p className="text-[24px] font-[500] leading-[31px] text-muted">Loading race information...</p>
         </div>
         
@@ -652,7 +652,7 @@ const clearFilters = useCallback(() => {
     return (
       <div className="mx-auto px-10 lg:px-32 pt-32 lg:pt-32 py-16">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <h1 className="text-[68px] font-[550] leading-[75px] font-playfair text-dark mb-4">Race Database</h1>
+          <h1 className="text-heading-64 font-serif text-dark mb-4">Race Database</h1>
           <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded mb-8">
             <p className="font-medium">{error}</p>
             <button 
@@ -672,7 +672,7 @@ const clearFilters = useCallback(() => {
       <div className="mx-auto px-10 lg:px-32 pt-32 lg:pt-32 py-16">
         {/* Header section with consistent spacing and styling */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <h1 className="text-[68px] font-[550] leading-[75px] font-playfair text-dark mb-4">
+          <h1 className="text-heading-64 font-serif text-dark mb-4">
             Race Database
           </h1>
           <p className="text-[24px] font-[450] leading-[31px] text-dark">

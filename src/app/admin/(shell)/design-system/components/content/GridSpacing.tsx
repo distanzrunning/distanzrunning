@@ -150,7 +150,7 @@ export default function GridSpacing() {
         {/* Grid Gap Subsection */}
         <h3
           id="gap-and-gutter-grid-gap"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Grid gap
         </h3>
@@ -224,7 +224,7 @@ export default function GridSpacing() {
         {/* Grid Gutter Subsection */}
         <h3
           id="gap-and-gutter-grid-gutter"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Grid gutter
         </h3>

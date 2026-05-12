@@ -199,7 +199,7 @@ export default function GridLayout() {
         {/* CSS Classes Table */}
         <h3
           id="main-wrapper-classes"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           CSS classes
         </h3>
@@ -246,7 +246,7 @@ export default function GridLayout() {
         {/* Responsive Behavior Table */}
         <h3
           id="main-wrapper-responsive"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Responsive behavior
         </h3>
@@ -291,7 +291,7 @@ export default function GridLayout() {
         {/* Usage Example */}
         <h3
           id="main-wrapper-usage"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Usage
         </h3>
@@ -324,7 +324,7 @@ export default function GridLayout() {
 
         <h3
           id="resources-figma-files"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Figma artboards
         </h3>

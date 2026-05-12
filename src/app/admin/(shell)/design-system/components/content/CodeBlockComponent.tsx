@@ -229,7 +229,7 @@ function CodeBlock({
         >
           <div className="flex items-center gap-2">
             <SiReact size={16} className="text-textSubtle" />
-            <span className="text-[13px] text-textSubtle">{filename}</span>
+            <span className="text-copy-13 text-textSubtle">{filename}</span>
           </div>
           <button
             onClick={handleCopy}
@@ -257,7 +257,7 @@ function CodeBlock({
         className="overflow-x-auto py-4"
         style={{ background: "var(--ds-background-100)" }}
       >
-        <code className="block text-[13px] leading-[20px] font-mono">
+        <code className="block text-copy-13 leading-[20px] font-mono">
           {lines.map((lineTokens, index) => {
             const lineNumber = index + 1;
             const isHighlighted = highlightLines.includes(lineNumber);
@@ -425,7 +425,7 @@ function CodePreview({
         {/* Collapsible code section */}
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
+            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
@@ -440,7 +440,7 @@ function CodePreview({
 
               {/* Component code */}
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {componentCodeLines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -534,7 +534,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -916,7 +916,7 @@ function LanguageSwitcherCodePreview() {
         {/* Collapsible code section */}
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
+            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
@@ -931,7 +931,7 @@ function LanguageSwitcherCodePreview() {
 
               {/* Component code */}
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {componentCodeLines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -1023,7 +1023,7 @@ function LanguageSwitcherPreview() {
       >
         <div className="flex items-center gap-2">
           {getLanguageIcon(language)}
-          <span className="text-[13px] text-textSubtle">{getFilename()}</span>
+          <span className="text-copy-13 text-textSubtle">{getFilename()}</span>
         </div>
         <div className="flex items-center gap-1">
           {/* Language Switcher - Geist style with visible label overlay */}
@@ -1078,7 +1078,7 @@ function LanguageSwitcherPreview() {
         className="overflow-x-auto py-4"
         style={{ background: "var(--ds-background-100)" }}
       >
-        <code className="block text-[13px] leading-[20px] font-mono">
+        <code className="block text-copy-13 leading-[20px] font-mono">
           {lines.map((lineTokens, index) => (
             <div
               key={index}
@@ -1152,7 +1152,7 @@ export default function CodeBlockComponent() {
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Specific lines can be highlighted to draw attention to important code.
           Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             highlightLines
           </code>{" "}
           prop with an array of line numbers.
@@ -1172,11 +1172,11 @@ export default function CodeBlockComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Show diff-style additions and removals using the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             addedLines
           </code>{" "}
           and{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             removedLines
           </code>{" "}
           props.
@@ -1197,7 +1197,7 @@ export default function CodeBlockComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Line numbers can be made clickable using the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             referencedLines
           </code>{" "}
           prop. Click a line number to highlight it with an amber left border.
@@ -1231,7 +1231,7 @@ export default function CodeBlockComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Line numbers can be hidden by setting{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             showLineNumbers={"{false}"}
           </code>
           .
@@ -1377,11 +1377,11 @@ export default function CodeBlockComponent() {
         </h3>
         <p className="text-copy-14 text-textSubtle mb-4">
           When using{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             addedLines
           </code>{" "}
           or{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             removedLines
           </code>
           , syntax highlighting changes to emphasise what is being modified.

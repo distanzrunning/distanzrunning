@@ -495,10 +495,7 @@ function MobileFeaturedCard({
           <span className="text-[12px] leading-4 font-medium text-white/90">
             Featured
           </span>
-          <h3
-            className="mt-1 text-[18px] leading-[22px] font-[550] text-white"
-            style={{ letterSpacing: "-0.005em" }}
-          >
+          <h3 className="mt-1 text-heading-18 text-white">
             <span className="line-clamp-2">{title}</span>
           </h3>
         </div>

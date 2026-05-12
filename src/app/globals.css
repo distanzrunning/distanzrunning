@@ -3364,7 +3364,7 @@
     color: rgb(var(--color-textDefault));
   }
 
-  /* Title exactly matching Distanz: font-playfair font-semibold tracking-tight text-[35px] leading-[40px] md:text-[56px] md:leading-[56px] */
+  /* Title exactly matching Distanz: font-serif font-semibold tracking-tight text-[35px] leading-[40px] md:text-[56px] md:leading-[56px] */
   .text-title-distanz {
     font-family: var(--brand-font);
     font-weight: 600;

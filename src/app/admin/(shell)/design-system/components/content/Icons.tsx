@@ -422,7 +422,7 @@ function IconCard({ icon }: { icon: IconDefinition }) {
               <IconComponent size={16} className="text-current" />
             )}
           </div>
-          <p className="text-[13px] text-textSubtle truncate flex-1 pt-4 max-w-full">
+          <p className="text-copy-13 text-textSubtle truncate flex-1 pt-4 max-w-full">
             {icon.displayName}
           </p>
         </div>
@@ -593,7 +593,7 @@ export default function Icons() {
         <Section>
           <h2
             id="usage"
-            className="text-[24px] leading-[1.2] font-semibold text-textDefault mb-4 scroll-mt-32"
+            className="text-heading-24 text-textDefault mb-4 scroll-mt-32"
           >
             Usage
           </h2>
@@ -764,7 +764,7 @@ export default function Icons() {
         <Section>
           <h2
             id="resources"
-            className="text-[24px] leading-[1.2] font-semibold text-textDefault mb-4 scroll-mt-32"
+            className="text-heading-24 text-textDefault mb-4 scroll-mt-32"
           >
             Resources
           </h2>

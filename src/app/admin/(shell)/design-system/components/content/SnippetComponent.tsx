@@ -141,7 +141,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -266,7 +266,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
+            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
@@ -278,7 +278,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -429,7 +429,7 @@ function ControlledCopiedDemo() {
 
   const cardContent = (
     <div
-      className="font-mono text-[13px] w-96 whitespace-pre-line"
+      className="font-mono text-copy-13 w-96 whitespace-pre-line"
       style={{ color: "var(--ds-gray-1000)" }}
     >
       {`# About\nTemplate for a full-featured Next.js AI chatbot\n\n# Requirements\nThis template uses the Vercel AI Gateway to access multiple AI models through a unified interface. The default model is OpenAI GPT-4.1 Mini, with support for Anthropic, Google, and xAI models.`}

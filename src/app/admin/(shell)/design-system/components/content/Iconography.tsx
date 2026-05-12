@@ -467,7 +467,7 @@ export default function Iconography() {
 
         <div className="space-y-4">
           <div>
-            <h3 className="font-serif text-[22px] leading-[1.3] font-medium mb-2">
+            <h3 className="text-heading-20 font-serif mb-2">
               Import
             </h3>
             <div className="bg-surfaceSubtle p-4 font-mono text-sm">
@@ -480,7 +480,7 @@ export default function Iconography() {
           <hr className="border-t border-borderSubtle" />
 
           <div>
-            <h3 className="font-serif text-[22px] leading-[1.3] font-medium mb-2">
+            <h3 className="text-heading-20 font-serif mb-2">
               Basic usage
             </h3>
             <div className="bg-surfaceSubtle p-4 font-mono text-sm">
@@ -493,7 +493,7 @@ export default function Iconography() {
           <hr className="border-t border-borderSubtle" />
 
           <div>
-            <h3 className="font-serif text-[22px] leading-[1.3] font-medium mb-2">
+            <h3 className="text-heading-20 font-serif mb-2">
               With custom stroke
             </h3>
             <div className="bg-surfaceSubtle p-4 font-mono text-sm">
@@ -506,7 +506,7 @@ export default function Iconography() {
           <hr className="border-t border-borderSubtle" />
 
           <div>
-            <h3 className="font-serif text-[22px] leading-[1.3] font-medium mb-2">
+            <h3 className="text-heading-20 font-serif mb-2">
               Accessibility
             </h3>
             <p className="text-base text-textSubtle mb-4">

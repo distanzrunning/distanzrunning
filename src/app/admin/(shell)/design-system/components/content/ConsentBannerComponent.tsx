@@ -79,7 +79,7 @@ function SectionHeader({
       id={id}
       style={{ scrollMarginTop: 32 }}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -152,13 +152,13 @@ function CodePreview({ children, componentCode, minHeight = 220 }: { children: R
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
-          <div className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]" style={{ background: "var(--ds-background-100)" }}>
+          <div className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13" style={{ background: "var(--ds-background-100)" }}>
             <div className="relative group">
               <button onClick={handleCopy} className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]" aria-label="Copy code">
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div key={index} className="flex px-4" style={{ fontFeatureSettings: '"liga" off' }}>
                       <span className="select-none w-[32px] min-w-[32px] text-right pr-4 text-textSubtler">{index + 1}</span>
@@ -241,7 +241,7 @@ function DemoFloatingBanner({
             >
               {CONSENT_COPY.bannerTitle}
             </h2>
-            <p className="mt-2 text-[13px] leading-[1.55] text-textSubtle">
+            <p className="mt-2 text-copy-13 leading-[1.55] text-textSubtle">
               {CONSENT_COPY.bannerDescription}{" "}
               <a
                 href={CONSENT_COPY.cookiePolicyHref}
@@ -475,7 +475,7 @@ export default function ConsentBannerComponent() {
           tracking, advertising, and other third-party tech. It captures four
           categories (Essential, Marketing, Analytics, Functional) and exposes
           the state via the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             useConsent()
           </code>{" "}
           hook so any component can gate itself on the user&apos;s preferences.
@@ -518,16 +518,16 @@ export default function ConsentBannerComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Wrap the app in{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             ConsentProvider
           </code>{" "}
           and render{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             ConsentBanner
           </code>{" "}
           once at the root. The banner self-hides once a decision has been
           made and re-opens when{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             reset()
           </code>{" "}
           is called.
@@ -548,17 +548,17 @@ export default function ConsentBannerComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Use{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             useConsent()
           </code>{" "}
           to read the full preferences object or trigger the settings modal,
           and{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             useConsentCategory(name)
           </code>{" "}
           when you just need a boolean for a single category. Before the
           user decides, every optional category defaults to{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             false
           </code>{" "}
           — the strict default expected by GDPR.

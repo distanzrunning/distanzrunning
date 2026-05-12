@@ -63,7 +63,7 @@ function VariantShowcase({ title, id, initialText }: VariantShowcaseProps) {
     <div className="mb-8">
       <h3
         id={id}
-        className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        className="text-heading-20 font-serif mb-3 scroll-mt-32"
       >
         {title}
       </h3>
@@ -318,7 +318,7 @@ export default function PullQuoteComponent() {
 
         <h3
           id="guidelines-blockquote-vs-pullquote"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Blockquote vs Pull-quote
         </h3>

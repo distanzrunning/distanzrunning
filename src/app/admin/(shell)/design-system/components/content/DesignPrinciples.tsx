@@ -6,7 +6,7 @@ export default function DesignPrinciples() {
         <p className="text-sm tracking-wide text-electric-pink mb-2">
           Principles
         </p>
-        <h1 className="font-serif text-[40px] leading-[1.15] font-medium mb-0">
+        <h1 className="text-heading-40 font-serif mb-0">
           Design principles
         </h1>
       </div>
@@ -23,7 +23,7 @@ export default function DesignPrinciples() {
         {/* Principle 1 */}
         <h2
           id="less-is-more"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Less is more
         </h2>
@@ -37,7 +37,7 @@ export default function DesignPrinciples() {
         {/* Principle 2 */}
         <h2
           id="deliberate-typography"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Deliberate typography
         </h2>
@@ -52,7 +52,7 @@ export default function DesignPrinciples() {
         {/* Principle 3 */}
         <h2
           id="visual-harmony"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Visual harmony
         </h2>
@@ -67,7 +67,7 @@ export default function DesignPrinciples() {
         {/* Principle 4 */}
         <h2
           id="clear-wayfinding"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Clear wayfinding
         </h2>
@@ -82,7 +82,7 @@ export default function DesignPrinciples() {
         {/* Principle 5 */}
         <h2
           id="performance-and-precision"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Performance and precision
         </h2>
@@ -98,7 +98,7 @@ export default function DesignPrinciples() {
         {/* Principle 6 */}
         <h2
           id="recognisable-consistency"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Recognisable consistency
         </h2>

@@ -71,7 +71,7 @@ function SectionHeader({
       id={id}
       style={{ scrollMarginTop: 32 }}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -194,7 +194,7 @@ function CodePreview({ children, componentCode, minHeight = 200 }: CodePreviewPr
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
+            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
@@ -206,7 +206,7 @@ function CodePreview({ children, componentCode, minHeight = 200 }: CodePreviewPr
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -287,7 +287,7 @@ export default function AdSlotComponent() {
           renders a Google AdSense unit at a standard IAB size, reserves the
           exact pixel space before any network call, lazy-loads the ad only
           when the slot enters the viewport, labels the space as{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             Advertisement
           </code>{" "}
           per IAB guidelines, and falls back to a Distanz-branded card if
@@ -302,15 +302,15 @@ export default function AdSlotComponent() {
             />
             <span>
               Distanz Running is set up under AdSense publisher{" "}
-              <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
                 ca-pub-8457173435004026
               </code>
               . The AdSense script is injected once in{" "}
-              <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
                 layout.tsx
               </code>
               ; every{" "}
-              <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
                 AdSlot
               </code>{" "}
               just passes the ad-unit slot ID it received from the AdSense
@@ -410,7 +410,7 @@ export default function AdSlotComponent() {
           with us&rdquo; card. To show something else instead &mdash; a
           newsletter CTA, a related race, an affiliate product &mdash; pass
           any React node to{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
             fallback
           </code>
           . The dimensions stay fixed so the layout never shifts whether an
@@ -433,12 +433,12 @@ export default function AdSlotComponent() {
                   <h4 className="text-[16px] font-semibold leading-tight text-textDefault">
                     Get the Shakeout
                   </h4>
-                  <p className="text-[13px] leading-snug text-textSubtle">
+                  <p className="text-copy-13 leading-snug text-textSubtle">
                     Weekly running stories, gear, and race news.
                   </p>
                   <a
                     href="/newsletter"
-                    className="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-md font-sans text-[13px] font-semibold no-underline"
+                    className="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-md font-sans text-copy-13 font-semibold no-underline"
                     style={{
                       background: "var(--ds-gray-1000)",
                       color: "var(--ds-background-100)",

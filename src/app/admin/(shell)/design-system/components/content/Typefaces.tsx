@@ -7,7 +7,7 @@ export default function Typefaces() {
           Typography
         </p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
           id="typefaces"
         >
           Typefaces
@@ -20,7 +20,7 @@ export default function Typefaces() {
       <section>
         <h2
           id="eb-garamond"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           EB Garamond
         </h2>
@@ -30,7 +30,7 @@ export default function Typefaces() {
         {/* EB Garamond Regular */}
         <h3
           id="eb-garamond-regular"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           EB Garamond
         </h3>
@@ -120,7 +120,7 @@ export default function Typefaces() {
         {/* Weight spectrum */}
         <h3
           id="eb-garamond-weights"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Weight spectrum
         </h3>
@@ -168,7 +168,7 @@ export default function Typefaces() {
         {/* Italic specimen */}
         <h3
           id="eb-garamond-italic"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           EB Garamond Italic
         </h3>
@@ -200,7 +200,7 @@ export default function Typefaces() {
       <section>
         <h2
           id="inter"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Inter
         </h2>
@@ -210,7 +210,7 @@ export default function Typefaces() {
         {/* Inter */}
         <h3
           id="inter-regular"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Inter
         </h3>
@@ -330,7 +330,7 @@ export default function Typefaces() {
         {/* Weight spectrum */}
         <h3
           id="inter-weights"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Weight spectrum
         </h3>
@@ -403,7 +403,7 @@ export default function Typefaces() {
       <section>
         <h2
           id="font-roles"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Font roles
         </h2>
@@ -487,7 +487,7 @@ export default function Typefaces() {
       <section>
         <h2
           id="reference"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Reference
         </h2>

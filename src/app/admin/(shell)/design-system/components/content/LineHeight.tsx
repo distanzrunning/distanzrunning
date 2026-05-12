@@ -107,7 +107,7 @@ export default function LineHeight() {
         {/* Visual comparison */}
         <h3
           id="visual-comparison"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Visual comparison
         </h3>

@@ -141,7 +141,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -266,7 +266,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
+            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
@@ -278,7 +278,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -748,7 +748,7 @@ export default function InputComponent() {
           Default
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Inputs at three sizes: <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">small</code>, <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">default</code>, and <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">large</code>. Controls height, font size, and padding.
+          Inputs at three sizes: <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">small</code>, <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">default</code>, and <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">large</code>. Controls height, font size, and padding.
         </p>
         <CodePreview componentCode={defaultCode}>
           <DefaultDemo />
@@ -760,7 +760,7 @@ export default function InputComponent() {
           Prefix and suffix
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Inputs with prefix and suffix content. Use <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">prefixStyling=&#123;false&#125;</code> or <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">suffixStyling=&#123;false&#125;</code> to place icons inside the input without a border separator. Text prefixes like <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">https://</code> use the default bordered style.
+          Inputs with prefix and suffix content. Use <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">prefixStyling=&#123;false&#125;</code> or <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">suffixStyling=&#123;false&#125;</code> to place icons inside the input without a border separator. Text prefixes like <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">https://</code> use the default bordered style.
         </p>
         <CodePreview componentCode={prefixSuffixCode}>
           <PrefixSuffixDemo />
@@ -772,7 +772,7 @@ export default function InputComponent() {
           Disabled
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Disabled inputs with reduced opacity and <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">cursor: not-allowed</code>. Works with all variants including prefix, suffix, and text decorations.
+          Disabled inputs with reduced opacity and <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">cursor: not-allowed</code>. Works with all variants including prefix, suffix, and text decorations.
         </p>
         <CodePreview componentCode={disabledCode}>
           <DisabledDemo />
@@ -784,7 +784,7 @@ export default function InputComponent() {
           Search
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          A search input with a magnifying glass icon prefix. Pressing <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">Escape</code> clears the value.
+          A search input with a magnifying glass icon prefix. Pressing <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">Escape</code> clears the value.
         </p>
         <CodePreview componentCode={searchCode}>
           <SearchDemo />
@@ -811,7 +811,7 @@ export default function InputComponent() {
           Error
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Inputs in an error state with a red border and an error message displayed below. Set <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">error</code> and <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">errorMessage</code> props.
+          Inputs in an error state with a red border and an error message displayed below. Set <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">error</code> and <code className="text-copy-13 font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">errorMessage</code> props.
         </p>
         <CodePreview componentCode={errorCode}>
           <ErrorDemo />

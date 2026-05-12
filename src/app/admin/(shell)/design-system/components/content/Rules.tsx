@@ -36,7 +36,7 @@ export default function Rules() {
         {/* Rule - Default */}
         <h3
           id="styles-rule"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Rule
         </h3>
@@ -72,7 +72,7 @@ export default function Rules() {
         {/* Rule - Emphasised */}
         <h3
           id="styles-rule-emphasised"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Rule (emphasised)
         </h3>
@@ -108,7 +108,7 @@ export default function Rules() {
         {/* Rule - Heavy */}
         <h3
           id="styles-rule-heavy"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Rule (heavy)
         </h3>
@@ -144,7 +144,7 @@ export default function Rules() {
         {/* Rule - Accent */}
         <h3
           id="styles-rule-accent"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Rule (accent)
         </h3>

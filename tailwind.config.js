@@ -444,7 +444,6 @@ module.exports = {
         inter: ["var(--font-geist-sans)", "sans-serif"],
         eczar: ["var(--font-eb-garamond)", "Georgia", "serif"],
         franklin: ["var(--font-geist-sans)", "sans-serif"],
-        playfair: ["var(--font-eb-garamond)", "serif"],
         manrope: ["var(--font-geist-sans)", "sans-serif"],
         archivo: ["var(--font-geist-sans)", "sans-serif"],
         bricolage: ["var(--font-geist-sans)", "sans-serif"],
@@ -934,6 +933,13 @@ module.exports = {
         ".text-heading-20": {
           fontSize: "20px",
           lineHeight: "26px",
+          letterSpacing: "-0.02em",
+          fontWeight: "600",
+          "& strong": { fontWeight: "400" },
+        },
+        ".text-heading-18": {
+          fontSize: "18px",
+          lineHeight: "24px",
           letterSpacing: "-0.02em",
           fontWeight: "600",
           "& strong": { fontWeight: "400" },

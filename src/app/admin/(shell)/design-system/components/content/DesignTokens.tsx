@@ -93,7 +93,7 @@ export default function DesignTokens() {
         {/* Global tokens */}
         <h3
           id="global-tokens"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Global tokens
         </h3>
@@ -146,7 +146,7 @@ export default function DesignTokens() {
         {/* Semantic tokens */}
         <h3
           id="semantic-tokens"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Semantic tokens
         </h3>
@@ -199,7 +199,7 @@ export default function DesignTokens() {
         {/* Component tokens */}
         <h3
           id="component-tokens"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Component tokens
         </h3>
@@ -392,7 +392,7 @@ export default function DesignTokens() {
 
         <h3
           id="prefer-semantic"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Prefer semantic tokens
         </h3>
@@ -423,7 +423,7 @@ export default function DesignTokens() {
 
         <h3
           id="use-global-sparingly"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Use global tokens sparingly
         </h3>
@@ -454,7 +454,7 @@ export default function DesignTokens() {
 
         <h3
           id="never-hardcode"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Never hard-code values
         </h3>
@@ -488,7 +488,7 @@ export default function DesignTokens() {
 
         <h3
           id="css-variables"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           CSS custom properties
         </h3>
@@ -509,7 +509,7 @@ export default function DesignTokens() {
 
         <h3
           id="tailwind-classes"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Tailwind classes
         </h3>
