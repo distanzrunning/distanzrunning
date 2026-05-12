@@ -37,7 +37,7 @@ import {
 import type { Hit as AlgoliaHit } from "instantsearch.js";
 import { liteClient as algoliasearch } from "algoliasearch/lite";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Loader2, Search as SearchIcon } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 
 import { CommandMenu } from "@/components/ui/CommandMenu";
 
@@ -165,23 +165,20 @@ function SearchInner({
     );
   }, [hits]);
 
-  // Three result-area states, in priority order:
-  //   1. No query yet → subtle centred search glyph (placeholder
-  //      that signals "type to begin"). Critical: Algolia
-  //      returns a default browse-mode hit set when the query
-  //      is empty, so we have to gate rendering on
-  //      query.length > 0 — otherwise the user would see a
-  //      list of random articles before they typed anything.
-  //   2. Query + Algolia still working → spinner so the modal
-  //      reads as actively searching rather than empty.
-  //   3. Query resolved with no hits → "No results for X".
-  // When hits exist and we're not loading, we render the
-  // grouped items below and cmdk hides Command.Empty automatically.
+  // Search-as-you-type model:
+  //   - Empty query → emptyState={null} so CommandMenu suppresses
+  //     Command.Empty entirely. The modal collapses to just the
+  //     input row — the user sees a single "Search" field, nothing
+  //     else, until they type.
+  //   - Query + Algolia loading → centred spinner so the modal
+  //     reads as actively searching.
+  //   - Query + zero hits → "No results for X" text.
+  //   - Query + hits → grouped list rendered below.
+  // Algolia returns a default browse-mode hit set on empty
+  // queries, so we also gate hit rendering on query.length > 0.
   const hasHits = query.length > 0 && !isLoading && hits.length > 0;
-  const emptyState: ReactNode =
-    query.length === 0 ? (
-      <SearchEmpty />
-    ) : isLoading ? (
+  const emptyState: ReactNode | null =
+    query.length === 0 ? null : isLoading ? (
       <SearchLoading />
     ) : (
       <SearchNoResults query={query} />
@@ -191,7 +188,7 @@ function SearchInner({
     <CommandMenu
       open={isExpanded}
       onClose={handleClose}
-      placeholder="Search articles, gear, races…"
+      placeholder="Search"
       value={query}
       onValueChange={refine}
       // Algolia already ranks results — tell cmdk to render
@@ -221,22 +218,10 @@ function SearchInner({
 
 // ============================================================================
 // Empty-state placeholders. Each fills a ~240 px area inside
-// CommandMenu's Command.Empty so the centred icon / spinner /
-// text reads as occupying the result region rather than a
-// thin 64 px strip at the top.
+// CommandMenu's Command.Empty so the centred spinner / no-
+// results text reads as occupying the result region rather
+// than a thin 64 px strip.
 // ============================================================================
-
-function SearchEmpty() {
-  return (
-    <div className="flex h-60 w-full items-center justify-center">
-      <SearchIcon
-        className="size-12 text-[color:var(--ds-gray-500)]"
-        strokeWidth={1.5}
-        aria-hidden
-      />
-    </div>
-  );
-}
 
 function SearchLoading() {
   return (
