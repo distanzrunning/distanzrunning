@@ -75,28 +75,19 @@ function StatCard({
       }}
     >
       <span
-        style={{
-          fontSize: 12,
-          fontWeight: 500,
-          letterSpacing: 0.2,
-          textTransform: "uppercase",
-          color: "var(--ds-gray-700)",
-        }}
+        className="text-label-12 font-medium uppercase tracking-wide"
+        style={{ color: "var(--ds-gray-700)" }}
       >
         {label}
       </span>
       <span
-        style={{
-          fontSize: 28,
-          fontWeight: 600,
-          lineHeight: 1.1,
-          color: "var(--ds-gray-1000)",
-        }}
+        className="text-heading-32"
+        style={{ color: "var(--ds-gray-1000)" }}
       >
         {value}
       </span>
       {hint && (
-        <span style={{ fontSize: 12, color: "var(--ds-gray-700)" }}>
+        <span className="text-label-12" style={{ color: "var(--ds-gray-700)" }}>
           {hint}
         </span>
       )}
@@ -125,12 +116,8 @@ function Panel({
     >
       <header>
         <h2
-          style={{
-            fontSize: 14,
-            fontWeight: 600,
-            margin: 0,
-            color: "var(--ds-gray-1000)",
-          }}
+          className="text-heading-14"
+          style={{ margin: 0, color: "var(--ds-gray-1000)" }}
         >
           {title}
         </h2>
@@ -181,23 +168,14 @@ export default async function FeedbackDashboardPage() {
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <header style={{ marginBottom: 24 }}>
           <h1
-            style={{
-              fontSize: 24,
-              fontWeight: 600,
-              lineHeight: "32px",
-              margin: 0,
-              color: "var(--ds-gray-1000)",
-            }}
+            className="text-heading-24"
+            style={{ margin: 0, color: "var(--ds-gray-1000)" }}
           >
             Feedback
           </h1>
           <p
-            style={{
-              marginTop: 6,
-              marginBottom: 0,
-              fontSize: 13,
-              color: "var(--ds-gray-700)",
-            }}
+            className="text-copy-13"
+            style={{ marginTop: 6, marginBottom: 0, color: "var(--ds-gray-700)" }}
           >
             {total.toLocaleString()} total submissions
             {rows.length < total
@@ -280,7 +258,8 @@ export default async function FeedbackDashboardPage() {
                 return (
                   <TableRow key={row.id}>
                     <TableCell
-                      style={{ whiteSpace: "nowrap", fontSize: 12 }}
+                      className="text-label-12"
+                      style={{ whiteSpace: "nowrap" }}
                     >
                       {new Date(row.created_at).toLocaleString()}
                     </TableCell>
@@ -290,18 +269,15 @@ export default async function FeedbackDashboardPage() {
                       </Badge>
                     </TableCell>
                     <TableCell
-                      style={{
-                        maxWidth: 360,
-                        fontSize: 13,
-                        color: "var(--ds-gray-1000)",
-                      }}
+                      className="text-copy-13"
+                      style={{ maxWidth: 360, color: "var(--ds-gray-1000)" }}
                     >
                       {snippet}
                     </TableCell>
-                    <TableCell style={{ fontSize: 12 }}>
+                    <TableCell className="text-label-12">
                       {row.topic ?? "—"}
                     </TableCell>
-                    <TableCell style={{ fontSize: 12 }}>
+                    <TableCell className="text-label-12">
                       {row.email ? (
                         <a
                           href={`mailto:${row.email}`}
@@ -317,9 +293,8 @@ export default async function FeedbackDashboardPage() {
                       )}
                     </TableCell>
                     <TableCell
+                      className="text-label-12-mono"
                       style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 12,
                         color: "var(--ds-gray-700)",
                         maxWidth: 180,
                         overflow: "hidden",
@@ -329,7 +304,7 @@ export default async function FeedbackDashboardPage() {
                     >
                       {row.page_path ?? "—"}
                     </TableCell>
-                    <TableCell style={{ fontSize: 12 }}>
+                    <TableCell className="text-label-12">
                       {row.country ?? "—"}
                     </TableCell>
                     <TableCell style={{ width: 48, textAlign: "right" }}>

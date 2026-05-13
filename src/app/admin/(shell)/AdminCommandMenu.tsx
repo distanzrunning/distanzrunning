@@ -53,6 +53,7 @@ export function CommandMenuTrigger({ onOpen }: { onOpen: () => void }) {
       type="button"
       onClick={onOpen}
       aria-label="Find"
+      className="text-copy-14"
       style={{
         position: "relative",
         display: "flex",
@@ -65,7 +66,6 @@ export function CommandMenuTrigger({ onOpen }: { onOpen: () => void }) {
         background: "var(--ds-background-100)",
         color: "var(--ds-gray-1000)",
         cursor: "text",
-        fontSize: 14,
         textAlign: "left",
         fontFamily: "inherit",
       }}
@@ -84,13 +84,12 @@ export function CommandMenuTrigger({ onOpen }: { onOpen: () => void }) {
         <SearchIcon className="w-4 h-4" />
       </span>
       <span
+        className="text-copy-14"
         style={{
           flex: 1,
           textAlign: "left",
           color: "var(--ds-gray-800)",
           paddingLeft: 2,
-          fontSize: 14,
-          lineHeight: "20px",
         }}
       >
         Find…
@@ -105,6 +104,7 @@ export function CommandMenuTrigger({ onOpen }: { onOpen: () => void }) {
         }}
       >
         <kbd
+          className="text-label-11"
           style={{
             display: "inline-flex",
             alignItems: "center",
@@ -112,7 +112,6 @@ export function CommandMenuTrigger({ onOpen }: { onOpen: () => void }) {
             minWidth: 20,
             height: 20,
             padding: "0 4px",
-            fontSize: 11,
             borderRadius: 4,
             boxShadow:
               "var(--ds-gray-alpha-400) 0px 0px 0px 1px, var(--ds-gray-100) 0px 0px 0px 1px",

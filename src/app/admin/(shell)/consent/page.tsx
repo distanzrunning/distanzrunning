@@ -84,28 +84,19 @@ function StatCard({
       }}
     >
       <span
-        style={{
-          fontSize: 12,
-          fontWeight: 500,
-          letterSpacing: 0.2,
-          textTransform: "uppercase",
-          color: "var(--ds-gray-700)",
-        }}
+        className="text-label-12 font-medium uppercase tracking-wide"
+        style={{ color: "var(--ds-gray-700)" }}
       >
         {label}
       </span>
       <span
-        style={{
-          fontSize: 28,
-          fontWeight: 600,
-          lineHeight: 1.1,
-          color: "var(--ds-gray-1000)",
-        }}
+        className="text-heading-32"
+        style={{ color: "var(--ds-gray-1000)" }}
       >
         {value}
       </span>
       {hint && (
-        <span style={{ fontSize: 12, color: "var(--ds-gray-700)" }}>
+        <span className="text-label-12" style={{ color: "var(--ds-gray-700)" }}>
           {hint}
         </span>
       )}
@@ -126,14 +117,10 @@ function CategoryBar({
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
       <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          fontSize: 13,
-          color: "var(--ds-gray-1000)",
-        }}
+        className="flex justify-between text-copy-13"
+        style={{ color: "var(--ds-gray-1000)" }}
       >
-        <span style={{ fontWeight: 500 }}>{label}</span>
+        <span className="font-medium">{label}</span>
         <span style={{ color: "var(--ds-gray-700)" }}>
           {count.toLocaleString()} · {pct(count, total)}
         </span>
@@ -188,12 +175,8 @@ function Panel({
         }}
       >
         <h2
-          style={{
-            fontSize: 14,
-            fontWeight: 600,
-            margin: 0,
-            color: "var(--ds-gray-1000)",
-          }}
+          className="text-heading-14"
+          style={{ margin: 0, color: "var(--ds-gray-1000)" }}
         >
           {title}
         </h2>
@@ -256,23 +239,14 @@ function LookupView({
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <header style={{ marginBottom: 24 }}>
           <h1
-            style={{
-              fontSize: 24,
-              fontWeight: 600,
-              lineHeight: "32px",
-              margin: 0,
-              color: "var(--ds-gray-1000)",
-            }}
+            className="text-heading-24"
+            style={{ margin: 0, color: "var(--ds-gray-1000)" }}
           >
             Consent dashboard
           </h1>
           <p
-            style={{
-              marginTop: 6,
-              marginBottom: 0,
-              fontSize: 13,
-              color: "var(--ds-gray-700)",
-            }}
+            className="text-copy-13"
+            style={{ marginTop: 6, marginBottom: 0, color: "var(--ds-gray-700)" }}
           >
             Lookup for a single anonymous ID · {total.toLocaleString()} total
             decisions across all IDs
@@ -286,11 +260,8 @@ function LookupView({
           action={
             <a
               href="/admin/consent"
-              style={{
-                fontSize: 13,
-                color: "var(--ds-gray-700)",
-                textDecoration: "underline",
-              }}
+              className="text-copy-13"
+              style={{ color: "var(--ds-gray-700)", textDecoration: "underline" }}
             >
               Clear search
             </a>
@@ -298,11 +269,8 @@ function LookupView({
         >
           {rows.length === 0 ? (
             <p
-              style={{
-                margin: 0,
-                fontSize: 13,
-                color: "var(--ds-gray-700)",
-              }}
+              className="text-copy-13"
+              style={{ margin: 0, color: "var(--ds-gray-700)" }}
             >
               No records found for this ID.
             </p>
@@ -317,7 +285,7 @@ function LookupView({
                   flexWrap: "wrap",
                 }}
               >
-                <div style={{ fontSize: 13, color: "var(--ds-gray-700)" }}>
+                <div className="text-copy-13" style={{ color: "var(--ds-gray-700)" }}>
                   {rows.length} decision{rows.length === 1 ? "" : "s"} · latest{" "}
                   {new Date(rows[0].created_at).toLocaleString()}
                 </div>
@@ -448,23 +416,14 @@ export default async function ConsentDashboardPage({
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <header style={{ marginBottom: 24 }}>
           <h1
-            style={{
-              fontSize: 24,
-              fontWeight: 600,
-              lineHeight: "32px",
-              margin: 0,
-              color: "var(--ds-gray-1000)",
-            }}
+            className="text-heading-24"
+            style={{ margin: 0, color: "var(--ds-gray-1000)" }}
           >
             Consent dashboard
           </h1>
           <p
-            style={{
-              marginTop: 6,
-              marginBottom: 0,
-              fontSize: 13,
-              color: "var(--ds-gray-700)",
-            }}
+            className="text-copy-13"
+            style={{ marginTop: 6, marginBottom: 0, color: "var(--ds-gray-700)" }}
           >
             {total.toLocaleString()} total decisions
             {rows.length < total
@@ -584,9 +543,7 @@ export default async function ConsentDashboardPage({
                     <TableCell>{row.analytics ? "✓" : "—"}</TableCell>
                     <TableCell>{row.functional ? "✓" : "—"}</TableCell>
                     <TableCell>{row.country ?? "—"}</TableCell>
-                    <TableCell
-                      style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}
-                    >
+                    <TableCell className="text-label-12-mono">
                       <a
                         href={`/admin/consent?q=${encodeURIComponent(row.anon_id)}`}
                         style={{

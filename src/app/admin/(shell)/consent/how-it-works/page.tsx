@@ -27,22 +27,12 @@ function DocSection({
       }}
     >
       <h2
-        style={{
-          margin: 0,
-          fontSize: 14,
-          fontWeight: 600,
-          color: "var(--ds-gray-1000)",
-        }}
+        className="text-heading-14"
+        style={{ margin: 0, color: "var(--ds-gray-1000)" }}
       >
         {title}
       </h2>
-      <div
-        style={{
-          fontSize: 14,
-          lineHeight: 1.6,
-          color: "var(--ds-gray-900)",
-        }}
-      >
+      <div className="text-copy-14" style={{ color: "var(--ds-gray-900)" }}>
         {children}
       </div>
     </section>
@@ -55,23 +45,14 @@ export default function HowItWorksPage() {
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <header style={{ marginBottom: 24 }}>
           <h1
-            style={{
-              fontSize: 24,
-              fontWeight: 600,
-              lineHeight: "32px",
-              margin: 0,
-              color: "var(--ds-gray-1000)",
-            }}
+            className="text-heading-24"
+            style={{ margin: 0, color: "var(--ds-gray-1000)" }}
           >
             How our CMP works
           </h1>
           <p
-            style={{
-              marginTop: 6,
-              marginBottom: 0,
-              fontSize: 13,
-              color: "var(--ds-gray-700)",
-            }}
+            className="text-copy-13"
+            style={{ marginTop: 6, marginBottom: 0, color: "var(--ds-gray-700)" }}
           >
             Internals of Distanz Running&apos;s self-built consent
             management platform.

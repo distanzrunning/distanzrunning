@@ -148,14 +148,8 @@ export default function AdminPageHeader() {
           <div className="hidden md:flex items-center gap-2 pr-2.5 min-w-0">
             <Link
               href={section.href}
-              className="no-underline truncate min-w-0 hover:underline"
-              style={{
-                fontSize: 14,
-                lineHeight: "20px",
-                letterSpacing: "-0.28px",
-                fontWeight: 500,
-                color: "var(--ds-gray-800)",
-              }}
+              className="no-underline truncate min-w-0 hover:underline text-button-14"
+              style={{ color: "var(--ds-gray-800)" }}
             >
               {section.label}
             </Link>
@@ -163,13 +157,8 @@ export default function AdminPageHeader() {
           </div>
         )}
         <span
-          className="flex items-center gap-0.5 truncate font-medium"
-          style={{
-            fontSize: 14,
-            lineHeight: "20px",
-            letterSpacing: "-0.28px",
-            color: "var(--ds-gray-1000)",
-          }}
+          className="flex items-center gap-0.5 truncate text-button-14"
+          style={{ color: "var(--ds-gray-1000)" }}
         >
           <span className="min-w-0 truncate">{page}</span>
         </span>
@@ -199,7 +188,7 @@ export default function AdminPageHeader() {
             borderRadius: 6,
           }}
         >
-          <span style={{ fontSize: 14, color: "var(--ds-gray-1000)" }}>
+          <span className="text-copy-14" style={{ color: "var(--ds-gray-1000)" }}>
             Theme
           </span>
           <ThemeSwitcher

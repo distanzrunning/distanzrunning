@@ -25,24 +25,14 @@ export default function LoginForm() {
     >
       <div>
         <h1
-          style={{
-            fontSize: 20,
-            fontWeight: 600,
-            lineHeight: "24px",
-            margin: 0,
-            color: "var(--ds-gray-1000)",
-          }}
+          className="text-heading-20"
+          style={{ margin: 0, color: "var(--ds-gray-1000)" }}
         >
           Admin Access
         </h1>
         <p
-          style={{
-            marginTop: 6,
-            marginBottom: 0,
-            fontSize: 13,
-            lineHeight: 1.55,
-            color: "var(--ds-gray-700)",
-          }}
+          className="text-copy-13"
+          style={{ marginTop: 6, marginBottom: 0, color: "var(--ds-gray-700)" }}
         >
           Enter the admin password to continue.
         </p>

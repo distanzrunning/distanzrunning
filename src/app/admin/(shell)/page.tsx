@@ -93,23 +93,14 @@ function SectionCard({
       </div>
       <div className="flex flex-col gap-2">
         <h2
-          style={{
-            margin: 0,
-            fontSize: 16,
-            fontWeight: 600,
-            color: "var(--ds-gray-1000)",
-            letterSpacing: "-0.32px",
-          }}
+          className="text-heading-16"
+          style={{ margin: 0, color: "var(--ds-gray-1000)" }}
         >
           {label}
         </h2>
         <p
-          style={{
-            margin: 0,
-            fontSize: 13,
-            lineHeight: 1.55,
-            color: "var(--ds-gray-700)",
-          }}
+          className="text-copy-13"
+          style={{ margin: 0, color: "var(--ds-gray-700)" }}
         >
           {description}
         </p>
@@ -124,23 +115,14 @@ export default function AdminOverviewPage() {
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <header style={{ marginBottom: 24 }}>
           <h1
-            style={{
-              fontSize: 24,
-              fontWeight: 600,
-              lineHeight: "32px",
-              margin: 0,
-              color: "var(--ds-gray-1000)",
-            }}
+            className="text-heading-24"
+            style={{ margin: 0, color: "var(--ds-gray-1000)" }}
           >
             Overview
           </h1>
           <p
-            style={{
-              marginTop: 6,
-              marginBottom: 0,
-              fontSize: 13,
-              color: "var(--ds-gray-700)",
-            }}
+            className="text-copy-13"
+            style={{ marginTop: 6, marginBottom: 0, color: "var(--ds-gray-700)" }}
           >
             Jump into any area of Stride Admin.
           </p>
