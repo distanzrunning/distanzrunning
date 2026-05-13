@@ -27,7 +27,7 @@ function DocSection({
       }}
     >
       <h2
-        className="text-heading-14"
+        className="text-heading-16"
         style={{ margin: 0, color: "var(--ds-gray-1000)" }}
       >
         {title}
@@ -45,13 +45,13 @@ export default function HowItWorksPage() {
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <header style={{ marginBottom: 24 }}>
           <h1
-            className="text-heading-24"
+            className="text-heading-32"
             style={{ margin: 0, color: "var(--ds-gray-1000)" }}
           >
             How our CMP works
           </h1>
           <p
-            className="text-copy-13"
+            className="text-copy-16"
             style={{ marginTop: 6, marginBottom: 0, color: "var(--ds-gray-700)" }}
           >
             Internals of Distanz Running&apos;s self-built consent

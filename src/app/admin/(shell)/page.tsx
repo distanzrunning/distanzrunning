@@ -99,7 +99,7 @@ function SectionCard({
           {label}
         </h2>
         <p
-          className="text-copy-13"
+          className="text-copy-14"
           style={{ margin: 0, color: "var(--ds-gray-700)" }}
         >
           {description}
@@ -115,13 +115,13 @@ export default function AdminOverviewPage() {
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <header style={{ marginBottom: 24 }}>
           <h1
-            className="text-heading-24"
+            className="text-heading-32"
             style={{ margin: 0, color: "var(--ds-gray-1000)" }}
           >
             Overview
           </h1>
           <p
-            className="text-copy-13"
+            className="text-copy-16"
             style={{ marginTop: 6, marginBottom: 0, color: "var(--ds-gray-700)" }}
           >
             Jump into any area of Stride Admin.
