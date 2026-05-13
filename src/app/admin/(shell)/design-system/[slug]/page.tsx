@@ -90,6 +90,8 @@ import ArticleCardComponent from "../components/content/ArticleCardComponent";
 import RaceCardComponent from "../components/content/RaceCardComponent";
 import ConsentBannerComponent from "../components/content/ConsentBannerComponent";
 import LoginComponent from "../components/content/LoginComponent";
+import PanelCardComponent from "../components/content/PanelCardComponent";
+import StatCardComponent from "../components/content/StatCardComponent";
 import Materials from "../components/content/Materials";
 import DistanzRunningBrand from "../components/content/DistanzRunningBrand";
 import ContentWithTOC from "../components/ContentWithTOC";
@@ -1279,6 +1281,36 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <SplitButtonComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "stat-card") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Stat Card"
+          pageSubtitle="Dashboard surface for headline numbers — label, value, optional hint."
+          mainSectionId="stat-card"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <StatCardComponent />
+        </ContentWithTOC>
+      );
+    }
+
+    if (activeSlug === "panel-card") {
+      return (
+        <ContentWithTOC
+          tocTitle="On this page"
+          pageTitle="Panel Card"
+          pageSubtitle="Generic bordered card with an optional title, action, and body."
+          mainSectionId="panel-card"
+          activeSlug={activeSlug}
+          onNavigate={handleNavigation}
+        >
+          <PanelCardComponent />
         </ContentWithTOC>
       );
     }
