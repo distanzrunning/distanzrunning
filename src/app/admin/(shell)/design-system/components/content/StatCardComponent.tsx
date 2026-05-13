@@ -1,6 +1,7 @@
 "use client";
 
 import { Section } from "../ContentWithTOC";
+import { CodeBlock } from "@/components/ui/CodeBlock";
 import { StatCard } from "@/components/ui/StatCard";
 
 export default function StatCardComponent() {
@@ -72,8 +73,11 @@ export default function StatCardComponent() {
           drop it into a grid container. Every prop is plain text or a React
           node — no children API.
         </p>
-        <pre className="mt-6 p-6 rounded-xl bg-[color:var(--ds-gray-100)] border border-[color:var(--ds-gray-alpha-400)] overflow-x-auto">
-          <code className="text-copy-13-mono text-textDefault">{`import { StatCard } from "@/components/ui/StatCard";
+        <div className="mt-6">
+          <CodeBlock
+            language="tsx"
+            filename="page.tsx"
+            code={`import { StatCard } from "@/components/ui/StatCard";
 
 <div
   style={{
@@ -89,8 +93,9 @@ export default function StatCardComponent() {
     hint="distinct anonymous IDs"
   />
   <StatCard label="Accept all" value="72%" hint="8,986 decisions" />
-</div>`}</code>
-        </pre>
+</div>`}
+          />
+        </div>
       </Section>
 
       {/* Props */}

@@ -1,6 +1,7 @@
 "use client";
 
 import { Section } from "../ContentWithTOC";
+import { CodeBlock } from "@/components/ui/CodeBlock";
 import { PanelCard } from "@/components/ui/PanelCard";
 
 export default function PanelCardComponent() {
@@ -79,8 +80,11 @@ export default function PanelCardComponent() {
           Import from <code className="inline-code">@/components/ui/PanelCard</code>{" "}
           and wrap any content.
         </p>
-        <pre className="mt-6 p-6 rounded-xl bg-[color:var(--ds-gray-100)] border border-[color:var(--ds-gray-alpha-400)] overflow-x-auto">
-          <code className="text-copy-13-mono text-textDefault">{`import { PanelCard } from "@/components/ui/PanelCard";
+        <div className="mt-6">
+          <CodeBlock
+            language="tsx"
+            filename="page.tsx"
+            code={`import { PanelCard } from "@/components/ui/PanelCard";
 
 <PanelCard
   title="Recent decisions"
@@ -97,8 +101,9 @@ export default function PanelCardComponent() {
 // Plain bordered container
 <PanelCard>
   <p>Just a panel.</p>
-</PanelCard>`}</code>
-        </pre>
+</PanelCard>`}
+          />
+        </div>
       </Section>
 
       {/* Props */}
