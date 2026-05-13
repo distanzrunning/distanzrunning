@@ -2,6 +2,8 @@ import { Search } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { Badge, type BadgeVariant } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
+import { PanelCard } from "@/components/ui/PanelCard";
+import { StatCard } from "@/components/ui/StatCard";
 import {
   Table,
   TableBody,
@@ -62,48 +64,6 @@ function buildTrend(rows: ConsentRow[]): TrendPoint[] {
   }));
 }
 
-function StatCard({
-  label,
-  value,
-  hint,
-}: {
-  label: string;
-  value: string;
-  hint?: string;
-}) {
-  return (
-    <div
-      style={{
-        padding: 20,
-        border: "1px solid var(--ds-gray-400)",
-        borderRadius: 12,
-        background: "var(--ds-background-100)",
-        display: "flex",
-        flexDirection: "column",
-        gap: 8,
-      }}
-    >
-      <span
-        className="text-label-12 font-medium uppercase tracking-wide"
-        style={{ color: "var(--ds-gray-700)" }}
-      >
-        {label}
-      </span>
-      <span
-        className="text-heading-32"
-        style={{ color: "var(--ds-gray-1000)" }}
-      >
-        {value}
-      </span>
-      {hint && (
-        <span className="text-label-12" style={{ color: "var(--ds-gray-700)" }}>
-          {hint}
-        </span>
-      )}
-    </div>
-  );
-}
-
 function CategoryBar({
   label,
   count,
@@ -143,47 +103,6 @@ function CategoryBar({
         />
       </div>
     </div>
-  );
-}
-
-function Panel({
-  title,
-  children,
-  action,
-}: {
-  title: string;
-  children: React.ReactNode;
-  action?: React.ReactNode;
-}) {
-  return (
-    <section
-      style={{
-        padding: 20,
-        border: "1px solid var(--ds-gray-400)",
-        borderRadius: 12,
-        background: "var(--ds-background-100)",
-        display: "flex",
-        flexDirection: "column",
-        gap: 16,
-      }}
-    >
-      <header
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <h2
-          className="text-heading-16"
-          style={{ margin: 0, color: "var(--ds-gray-1000)" }}
-        >
-          {title}
-        </h2>
-        {action}
-      </header>
-      {children}
-    </section>
   );
 }
 
@@ -255,7 +174,7 @@ function LookupView({
 
         <SearchForm defaultValue={query} />
 
-        <Panel
+        <PanelCard
           title={`ID: ${query}`}
           action={
             <a
@@ -327,7 +246,7 @@ function LookupView({
               </Table>
             </>
           )}
-        </Panel>
+        </PanelCard>
       </div>
     </div>
   );
@@ -473,10 +392,10 @@ export default async function ConsentDashboardPage({
             marginBottom: 16,
           }}
         >
-          <Panel title="Decisions per day (last 30)">
+          <PanelCard title="Decisions per day (last 30)">
             <TrendChart data={trend} />
-          </Panel>
-          <Panel title="Per-category opt-in">
+          </PanelCard>
+          <PanelCard title="Per-category opt-in">
             <div
               style={{ display: "flex", flexDirection: "column", gap: 16 }}
             >
@@ -496,10 +415,10 @@ export default async function ConsentDashboardPage({
                 total={rows.length}
               />
             </div>
-          </Panel>
+          </PanelCard>
         </div>
 
-        <Panel title="Recent decisions">
+        <PanelCard title="Recent decisions">
           <Table>
             <TableHeader>
               <TableRow>
@@ -559,7 +478,7 @@ export default async function ConsentDashboardPage({
               })}
             </TableBody>
           </Table>
-        </Panel>
+        </PanelCard>
       </div>
     </div>
   );

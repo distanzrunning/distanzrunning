@@ -1,4 +1,6 @@
 import { Badge, type BadgeVariant } from "@/components/ui/Badge";
+import { PanelCard } from "@/components/ui/PanelCard";
+import { StatCard } from "@/components/ui/StatCard";
 import {
   Table,
   TableBody,
@@ -51,80 +53,6 @@ function emotionBadge(
     default:
       return { label: "—", variant: "gray-subtle" };
   }
-}
-
-function StatCard({
-  label,
-  value,
-  hint,
-}: {
-  label: string;
-  value: string;
-  hint?: string;
-}) {
-  return (
-    <div
-      style={{
-        padding: 20,
-        border: "1px solid var(--ds-gray-400)",
-        borderRadius: 12,
-        background: "var(--ds-background-100)",
-        display: "flex",
-        flexDirection: "column",
-        gap: 8,
-      }}
-    >
-      <span
-        className="text-label-12 font-medium uppercase tracking-wide"
-        style={{ color: "var(--ds-gray-700)" }}
-      >
-        {label}
-      </span>
-      <span
-        className="text-heading-32"
-        style={{ color: "var(--ds-gray-1000)" }}
-      >
-        {value}
-      </span>
-      {hint && (
-        <span className="text-label-12" style={{ color: "var(--ds-gray-700)" }}>
-          {hint}
-        </span>
-      )}
-    </div>
-  );
-}
-
-function Panel({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section
-      style={{
-        padding: 20,
-        border: "1px solid var(--ds-gray-400)",
-        borderRadius: 12,
-        background: "var(--ds-background-100)",
-        display: "flex",
-        flexDirection: "column",
-        gap: 16,
-      }}
-    >
-      <header>
-        <h2
-          className="text-heading-16"
-          style={{ margin: 0, color: "var(--ds-gray-1000)" }}
-        >
-          {title}
-        </h2>
-      </header>
-      {children}
-    </section>
-  );
 }
 
 export default async function FeedbackDashboardPage() {
@@ -220,7 +148,7 @@ export default async function FeedbackDashboardPage() {
           />
         </div>
 
-        <Panel title="Recent feedback">
+        <PanelCard title="Recent feedback">
           <Table>
             <TableHeader>
               <TableRow>
@@ -315,7 +243,7 @@ export default async function FeedbackDashboardPage() {
               })}
             </TableBody>
           </Table>
-        </Panel>
+        </PanelCard>
       </div>
     </div>
   );

@@ -1,3 +1,5 @@
+import { PanelCard } from "@/components/ui/PanelCard";
+
 export const metadata = {
   title: "How our CMP works — Stride Admin",
   robots: { index: false, follow: false },
@@ -15,27 +17,11 @@ function DocSection({
   children: React.ReactNode;
 }) {
   return (
-    <section
-      style={{
-        padding: 20,
-        border: "1px solid var(--ds-gray-400)",
-        borderRadius: 12,
-        background: "var(--ds-background-100)",
-        display: "flex",
-        flexDirection: "column",
-        gap: 10,
-      }}
-    >
-      <h2
-        className="text-heading-16"
-        style={{ margin: 0, color: "var(--ds-gray-1000)" }}
-      >
-        {title}
-      </h2>
-      <div className="text-copy-14" style={{ color: "var(--ds-gray-900)" }}>
+    <PanelCard title={title}>
+      <div className="text-copy-14 text-[color:var(--ds-gray-900)]">
         {children}
       </div>
-    </section>
+    </PanelCard>
   );
 }
 
