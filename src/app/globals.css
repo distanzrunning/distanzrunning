@@ -1241,12 +1241,13 @@
 
 @layer components {
   /* Inline code chip — the canonical small `monospaced` token used in
-     body copy across the Admin shell + Design System docs. Canonical
-     style matches /admin/feedback/how-it-works. */
+     body copy across the Admin shell + Design System docs. Sized to
+     sit alongside text-copy-14 / text-copy-16 body copy: 14px / 24px
+     so the chip baseline aligns with the surrounding line. */
   .inline-code {
     font-family: var(--font-mono);
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 14px;
+    line-height: 24px;
     padding: 1px 5px;
     border-radius: 4px;
     background: var(--ds-gray-100);
