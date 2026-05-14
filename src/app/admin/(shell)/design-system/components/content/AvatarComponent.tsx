@@ -937,11 +937,10 @@ export default function AvatarComponent() {
             <code className="inline-code">?</code> in the source name.
           </li>
           <li>
-            Size to match adjacent type: <strong>20–24 px</strong> next to{" "}
-            <code className="inline-code">text-label-14</code>,{" "}
-            <strong>32 px</strong> next to{" "}
-            <code className="inline-code">text-label-16</code>, and{" "}
-            <strong>48–64 px</strong> in page headers or onboarding states.
+            Size to match adjacent type: 20–24 px next to{" "}
+            <code className="inline-code">text-label-14</code>, 32 px next to{" "}
+            <code className="inline-code">text-label-16</code>, and 48–64 px
+            in page headers or onboarding states.
           </li>
         </ul>
       </Section>

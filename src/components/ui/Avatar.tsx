@@ -53,6 +53,12 @@ export interface AvatarGroupProps {
   limit?: number;
   /** Size in pixels for all avatars (default: 32) */
   size?: number;
+  /**
+   * Accessible name for the group as a whole. Read once by screen
+   * readers; the individual avatars are hidden from the SR so the
+   * group doesn't announce N times. Defaults to "{N} avatars".
+   */
+  label?: string;
 }
 
 /** Props for AvatarBrand component */
@@ -212,7 +218,12 @@ export function Avatar({
  *   size={32}
  * />
  */
-export function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
+export function AvatarGroup({
+  members,
+  limit,
+  size = 32,
+  label,
+}: AvatarGroupProps) {
   const visibleMembers = limit ? members.slice(0, limit) : members;
   const remainingCount = limit ? Math.max(0, members.length - limit) : 0;
 
@@ -222,11 +233,15 @@ export function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
   const fontSize = Math.round(innerSize * 0.35);
   const overlap = outerSize * 0.25;
 
+  const groupLabel =
+    label ?? `${members.length} avatar${members.length === 1 ? "" : "s"}`;
+
   return (
-    <div className="flex items-center">
+    <div role="img" aria-label={groupLabel} className="flex items-center">
       {visibleMembers.map((member, index) => (
         <div
           key={index}
+          aria-hidden="true"
           className="relative rounded-full"
           style={{
             marginLeft: index === 0 ? 0 : -overlap,
@@ -248,6 +263,7 @@ export function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
       ))}
       {remainingCount > 0 && (
         <div
+          aria-hidden="true"
           className="relative rounded-full"
           style={{
             marginLeft: -overlap,
