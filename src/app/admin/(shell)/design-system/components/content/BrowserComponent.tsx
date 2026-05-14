@@ -359,6 +359,102 @@ export default function BrowserComponent() {
           <Browser url="distanzrunning.com" />
         </CodePreview>
       </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Browser as marketing chrome around screenshots, demos, and
+            recordings shown on landing pages, docs, and changelog posts.
+          </li>
+          <li>
+            Don&apos;t render real product UI inside a Browser frame; the
+            chrome implies a screenshot, not a live surface.
+          </li>
+          <li>
+            For partial chrome — just the top bar, no inset content area —
+            use{" "}
+            <code className="inline-code">&lt;BrowserHeader&gt;</code>{" "}
+            directly. Don&apos;t fork the chrome.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The chrome reads correct on both light and dark surfaces — the
+            background, border, and text use theme-aware DS tokens
+            (
+            <code className="inline-code">--ds-background-100</code>,{" "}
+            <code className="inline-code">--ds-background-200</code>,{" "}
+            <code className="inline-code">--ds-gray-400</code>) that flip
+            automatically with the page theme. No{" "}
+            <code className="inline-code">variant</code> prop needed.
+          </li>
+          <li>
+            Long URLs truncate with an ellipsis at the end of the address
+            bar. If you need both the host and the path tail visible, pass a
+            pre-shortened display value to{" "}
+            <code className="inline-code">url</code> rather than relying on
+            the truncation.
+          </li>
+          <li>
+            Lock the inner image aspect ratio (e.g. an{" "}
+            <code className="inline-code">aspect-video</code> wrapper or
+            explicit <code className="inline-code">width</code> /{" "}
+            <code className="inline-code">height</code>) so the chrome
+            doesn&apos;t reflow when an image is missing or slow to load.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The chrome decorations (traffic-light dots, navigation icons,
+            URL display) carry{" "}
+            <code className="inline-code">aria-hidden=&quot;true&quot;</code>{" "}
+            automatically. The meaning lives on the inner image or video you
+            pass as <code className="inline-code">children</code>.
+          </li>
+          <li>
+            Give the inner screenshot meaningful alt text that describes
+            what the reader is seeing — e.g.{" "}
+            <code className="inline-code">
+              alt=&quot;Race calendar showing the 2026 Berlin Marathon&quot;
+            </code>{" "}
+            — not just{" "}
+            <code className="inline-code">&quot;browser screenshot&quot;</code>.
+          </li>
+          <li>
+            The dot controls and back/forward icons are non-interactive on
+            purpose — they&apos;re not focusable and don&apos;t fire events.
+            Unreachable controls inside a decorative frame confuse keyboard
+            users. The built-in copy button next to the URL is the only
+            interactive element and stays in the tab order with its own{" "}
+            <code className="inline-code">aria-label</code>.
+          </li>
+        </ul>
+      </Section>
     </>
   );
 }

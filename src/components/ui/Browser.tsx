@@ -39,7 +39,7 @@ export interface BrowserHeaderProps {
 
 function TrafficLights() {
   return (
-    <div className="flex items-center gap-2">
+    <div aria-hidden="true" className="flex items-center gap-2">
       <div className="w-3 h-3 rounded-full bg-[#FE5F57]" />
       <div className="w-3 h-3 rounded-full bg-[#FEBB2E]" />
       <div className="w-3 h-3 rounded-full bg-[#26C941]" />
@@ -53,7 +53,7 @@ function TrafficLights() {
 
 function NavigationButtons() {
   return (
-    <div className="flex items-center gap-4 max-md:hidden">
+    <div aria-hidden="true" className="flex items-center gap-4 max-md:hidden">
       <ArrowLeft size={14} className="text-[var(--ds-gray-900)]" />
       <ArrowRight size={14} className="text-[var(--ds-gray-900)]" />
       <RotateCw size={14} className="text-[var(--ds-gray-900)]" />
@@ -84,7 +84,10 @@ function AddressBar({
 
   return (
     <div className="lg:max-w-xs bg-[var(--ds-background-200)] border border-[var(--ds-gray-400)] w-full rounded-full pl-4 pr-1 py-1 flex items-center justify-between">
-      <div className="text-[13px] text-[var(--ds-gray-1000)] truncate flex-1 min-w-0 text-center">
+      <div
+        aria-hidden="true"
+        className="text-[13px] text-[var(--ds-gray-1000)] truncate flex-1 min-w-0 text-center"
+      >
         {url}
       </div>
       {showCopyButton && (
