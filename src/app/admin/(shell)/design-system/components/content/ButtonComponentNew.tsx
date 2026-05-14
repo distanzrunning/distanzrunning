@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -915,6 +916,98 @@ export default function ButtonComponentNew() {
             </ButtonLink>
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use <code className="inline-code">&lt;Button&gt;</code> for
+            actions that mutate state (deploy, save, delete); use{" "}
+            <code className="inline-code">&lt;ButtonLink&gt;</code> for
+            navigation that changes the URL. Switch to a{" "}
+            <ComponentRef name="Menu" /> or{" "}
+            <ComponentRef name="Split Button" /> when more than one related
+            action shares a row.
+          </li>
+          <li>
+            Default Button is primary. Pass{" "}
+            <code className="inline-code">variant=&quot;secondary&quot;</code>{" "}
+            for the supporting action,{" "}
+            <code className="inline-code">variant=&quot;tertiary&quot;</code>{" "}
+            for the lowest-emphasis action, and{" "}
+            <code className="inline-code">variant=&quot;error&quot;</code>{" "}
+            for destructive confirmations.{" "}
+            <code className="inline-code">primary</code>,{" "}
+            <code className="inline-code">success</code>,{" "}
+            <code className="inline-code">ghost</code>, and{" "}
+            <code className="inline-code">violet</code> are not valid{" "}
+            <code className="inline-code">variant</code> values — drop{" "}
+            <code className="inline-code">variant</code> for the primary
+            default; use <code className="inline-code">tertiary</code>{" "}
+            instead of <code className="inline-code">ghost</code>.
+          </li>
+          <li>
+            For form submits, use{" "}
+            <code className="inline-code">type=&quot;submit&quot;</code> —
+            our Button passes the HTML{" "}
+            <code className="inline-code">type</code> attribute straight
+            through (default <code className="inline-code">&quot;button&quot;</code>).
+            Visual style lives on{" "}
+            <code className="inline-code">variant</code>, so there&apos;s no
+            naming collision.
+          </li>
+          <li>
+            Pass <code className="inline-code">loading</code> instead of
+            swapping in a spinner so the button stays focusable and
+            announces the busy state to assistive tech (the component sets{" "}
+            <code className="inline-code">aria-busy</code> and renders a
+            labelled spinner automatically).
+          </li>
+          <li>
+            Disable a button only when the action is impossible right now
+            (missing input, insufficient permission); pair with a{" "}
+            <ComponentRef name="Tooltip" /> that explains why.
+          </li>
+          <li>
+            Title Case the label and name what happens:{" "}
+            <code className="inline-code">Deploy Project</code>,{" "}
+            <code className="inline-code">Invite Member</code>,{" "}
+            <code className="inline-code">Rotate Key</code>. Avoid bare
+            verbs (<code className="inline-code">Submit</code>) and generic
+            confirms (<code className="inline-code">OK</code>,{" "}
+            <code className="inline-code">Confirm</code>).
+          </li>
+          <li>
+            Destructive buttons follow{" "}
+            <code className="inline-code">Verb + Noun</code> and pair 1:1
+            with their toast:{" "}
+            <code className="inline-code">Delete Project</code> then{" "}
+            <code className="inline-code">Project deleted</code>.
+            Mode-switch buttons append{" "}
+            <code className="inline-code">Instead</code>:{" "}
+            <code className="inline-code">Use a Recovery Code Instead</code>.
+          </li>
+          <li>
+            Icon-only buttons use{" "}
+            <code className="inline-code">shape=&quot;square&quot;</code> or{" "}
+            <code className="inline-code">shape=&quot;circle&quot;</code>{" "}
+            and require an{" "}
+            <code className="inline-code">aria-label</code> that names the
+            action <em>and</em> the target —{" "}
+            <code className="inline-code">Copy deployment URL</code>, not{" "}
+            <code className="inline-code">Copy</code>.
+          </li>
+          <li>
+            Don&apos;t set{" "}
+            <code className="inline-code">aria-label</code> on a button that
+            already has visible text; it overrides the label and creates a
+            screen-reader mismatch.
+          </li>
+        </ul>
       </Section>
     </>
   );

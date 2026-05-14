@@ -340,6 +340,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type={type}
         disabled={isDisabled}
+        aria-busy={loading || undefined}
         className={combinedClasses}
         style={{ "--ds-icon-size": iconSize } as React.CSSProperties}
         {...props}
