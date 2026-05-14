@@ -39,6 +39,13 @@ export interface BadgeProps {
   size?: BadgeSize;
   /** Icon to display before the content */
   icon?: React.ReactNode;
+  /**
+   * Accessible name for ambiguous badges (e.g. `Pro`, `Alpha`,
+   * `Beta`) — applied as both the HTML `title` attribute (hover
+   * tooltip) and `aria-label` (screen reader). Omit when the
+   * children text already reads as self-explanatory.
+   */
+  title?: string;
   /** Additional CSS classes */
   className?: string;
 }
@@ -111,10 +118,22 @@ const iconSizeStyles: Record<BadgeSize, string> = {
  * <Badge variant="green-subtle" size="lg" icon={<Check />}>Verified</Badge>
  */
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ children, variant = "gray", size = "md", icon, className = "" }, ref) => {
+  (
+    {
+      children,
+      variant = "gray",
+      size = "md",
+      icon,
+      title,
+      className = "",
+    },
+    ref,
+  ) => {
     return (
       <span
         ref={ref}
+        title={title}
+        aria-label={title}
         className={`
           inline-flex items-center justify-center rounded-full font-medium whitespace-nowrap
           ${variantStyles[variant]}

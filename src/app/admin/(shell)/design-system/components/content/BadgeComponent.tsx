@@ -976,6 +976,90 @@ export default function BadgeComponent() {
           </table>
         </div>
       </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use <code className="inline-code">&lt;Badge&gt;</code> for short,
+            scannable metadata that sits next to the thing it describes:
+            status, plan tier, environment, or role. One badge per row; two
+            side by side is a sign the row needs a second column.
+          </li>
+          <li>
+            For a colored dot without text, use{" "}
+            <code className="inline-code">&lt;StatusDot&gt;</code>. For
+            clickable filter chips that toggle a query, use{" "}
+            <code className="inline-code">&lt;BadgePill&gt;</code> or a small{" "}
+            <code className="inline-code">&lt;Button&gt;</code>.
+          </li>
+          <li>
+            Badges are static labels.{" "}
+            <code className="inline-code">&lt;Badge&gt;</code> deliberately
+            has no <code className="inline-code">onClick</code> prop — if the
+            user can act on the value, promote it to{" "}
+            <code className="inline-code">&lt;Button&gt;</code>,{" "}
+            <code className="inline-code">&lt;BadgePill&gt;</code>, or a link.
+          </li>
+          <li>
+            Keep badge content to text or{" "}
+            <code className="inline-code">icon</code> + text. Never stack two
+            icons or nest a child{" "}
+            <code className="inline-code">&lt;Badge&gt;</code> inside a Badge.
+          </li>
+          <li>
+            Pair lifecycle badges (
+            <code className="inline-code">Alpha</code>,{" "}
+            <code className="inline-code">Beta</code>,{" "}
+            <code className="inline-code">Early Access</code>) with a{" "}
+            <code className="inline-code">&lt;Tooltip&gt;</code> that names
+            the limit — e.g.{" "}
+            <code className="inline-code">
+              Alpha: API may change before GA
+            </code>
+            .
+          </li>
+          <li>
+            Title Case, one word when possible, two max:{" "}
+            <code className="inline-code">Active</code>,{" "}
+            <code className="inline-code">Pending</code>,{" "}
+            <code className="inline-code">Pro</code>,{" "}
+            <code className="inline-code">Enterprise Trial</code>. Match the
+            canonical API or log term — e.g.{" "}
+            <code className="inline-code">Production</code> not{" "}
+            <code className="inline-code">Prod</code>, and stay consistent
+            with how the data source spells it.
+          </li>
+          <li>
+            Don&apos;t add a checkmark icon for success states or an X for
+            errors — the variant carries that signal. Map meaning to colour:{" "}
+            <code className="inline-code">green</code> for healthy,{" "}
+            <code className="inline-code">red</code> for error,{" "}
+            <code className="inline-code">amber</code> for warning,{" "}
+            <code className="inline-code">blue</code> for informational or
+            production, <code className="inline-code">gray</code> for
+            neutral. The <code className="inline-code">-subtle</code> suffix
+            tones any of them down on dense surfaces.
+          </li>
+          <li>
+            Skip stuffing sentences inside (
+            <code className="inline-code">Currently Active</code>,{" "}
+            <code className="inline-code">You are on Pro</code>); the
+            surrounding row supplies the context.
+          </li>
+          <li>
+            Set <code className="inline-code">title</code> on ambiguous
+            badges (
+            <code className="inline-code">Pro</code>,{" "}
+            <code className="inline-code">Alpha</code>) so screen readers and
+            hover tooltips announce the meaning. Don&apos;t rely on colour
+            alone — the text has to be readable without it.
+          </li>
+        </ul>
+      </Section>
     </>
   );
 }
