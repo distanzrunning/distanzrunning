@@ -1250,8 +1250,8 @@
     font-family: var(--font-mono);
     font-size: 14px;
     line-height: 24px;
-    padding: 1px 5px;
-    border-radius: 4px;
+    padding: 2px 4px;
+    border-radius: 6px;
     background: var(--ds-gray-100);
     color: var(--ds-gray-900);
     border: 1px solid var(--ds-gray-alpha-400);
