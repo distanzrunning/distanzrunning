@@ -1,8 +1,55 @@
 "use client";
 
 import { Section } from "../ContentWithTOC";
-import { CodeBlock } from "@/components/ui/CodeBlock";
+import { CodePreview } from "../CodePreview";
 import { PanelCard } from "@/components/ui/PanelCard";
+
+const withTitleCode = `import { PanelCard } from "@/components/ui/PanelCard";
+
+export function Component() {
+  return (
+    <PanelCard title="Recent decisions">
+      <p className="text-copy-16 text-textSubtle m-0">
+        Panel Card body. The card sits on a hairline-bordered surface
+        with 24 px padding and a 12 px radius.
+      </p>
+    </PanelCard>
+  );
+}`;
+
+const withActionCode = `import { PanelCard } from "@/components/ui/PanelCard";
+
+export function Component() {
+  return (
+    <PanelCard
+      title="ID: abc-123-…"
+      action={
+        <a
+          href="#"
+          className="text-copy-13 text-textSubtle no-underline hover:underline"
+        >
+          Clear search
+        </a>
+      }
+    >
+      <p className="text-copy-16 text-textSubtle m-0">
+        Optional <code>action</code> renders on the right of the title.
+      </p>
+    </PanelCard>
+  );
+}`;
+
+const plainCode = `import { PanelCard } from "@/components/ui/PanelCard";
+
+export function Component() {
+  return (
+    <PanelCard>
+      <p className="text-copy-16 text-textSubtle m-0">
+        Title is optional too — drop it for a plain bordered container.
+      </p>
+    </PanelCard>
+  );
+}`;
 
 export default function PanelCardComponent() {
   return (
@@ -15,7 +62,7 @@ export default function PanelCardComponent() {
         >
           Usage
         </h2>
-        <p className="text-copy-16 text-textSubtle mt-4 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mt-4">
           Panel Card is the generic bordered surface every admin section
           reaches for: an optional h2 title, an optional action on the right
           (a "Clear" link, an "Export" button), and arbitrary body content
@@ -24,25 +71,41 @@ export default function PanelCardComponent() {
         </p>
       </Section>
 
-      {/* Preview */}
+      {/* With title */}
       <Section>
         <h2
-          id="preview"
+          id="with-title"
           className="text-heading-24 text-textDefault scroll-mt-32"
         >
-          Preview
+          With title
         </h2>
-        <div className="mt-6 flex flex-col gap-4 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          The most common shape — a section heading on top of the body
+          content.
+        </p>
+        <CodePreview componentCode={withTitleCode}>
           <PanelCard title="Recent decisions">
             <p className="text-copy-16 text-textSubtle m-0">
-              Panel Card body. The card sits on{" "}
-              <code className="inline-code">var(--ds-background-100)</code>{" "}
-              with a hairline{" "}
-              <code className="inline-code">var(--ds-gray-400)</code> border,
-              24 px padding, and a 12 px radius.
+              Panel Card body. The card sits on a hairline-bordered surface
+              with 24 px padding and a 12 px radius.
             </p>
           </PanelCard>
+        </CodePreview>
+      </Section>
 
+      {/* With action */}
+      <Section>
+        <h2
+          id="with-action"
+          className="text-heading-24 text-textDefault scroll-mt-32"
+        >
+          With action
+        </h2>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          Pass an <code className="inline-code">action</code> node and it
+          renders flush-right of the title — typically a link or button.
+        </p>
+        <CodePreview componentCode={withActionCode}>
           <PanelCard
             title="ID: abc-123-…"
             action={
@@ -59,51 +122,29 @@ export default function PanelCardComponent() {
               the right of the title.
             </p>
           </PanelCard>
+        </CodePreview>
+      </Section>
 
+      {/* Title-less */}
+      <Section>
+        <h2
+          id="plain"
+          className="text-heading-24 text-textDefault scroll-mt-32"
+        >
+          Title-less
+        </h2>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          Drop the title entirely for a plain bordered container — useful for
+          wrapping a single piece of content that already carries its own
+          heading.
+        </p>
+        <CodePreview componentCode={plainCode}>
           <PanelCard>
             <p className="text-copy-16 text-textSubtle m-0">
               Title is optional too — drop it for a plain bordered container.
             </p>
           </PanelCard>
-        </div>
-      </Section>
-
-      {/* Code */}
-      <Section>
-        <h2
-          id="code"
-          className="text-heading-24 text-textDefault scroll-mt-32"
-        >
-          Code
-        </h2>
-        <p className="text-copy-16 text-textSubtle mt-4 max-w-3xl">
-          Import from <code className="inline-code">@/components/ui/PanelCard</code>{" "}
-          and wrap any content.
-        </p>
-        <div className="mt-6">
-          <CodeBlock
-            language="tsx"
-            filename="page.tsx"
-            code={`import { PanelCard } from "@/components/ui/PanelCard";
-
-<PanelCard
-  title="Recent decisions"
-  action={<button>Export</button>}
->
-  <Table>{/* … */}</Table>
-</PanelCard>
-
-// Title-only
-<PanelCard title="Per-category opt-in">
-  <CategoryBar … />
-</PanelCard>
-
-// Plain bordered container
-<PanelCard>
-  <p>Just a panel.</p>
-</PanelCard>`}
-          />
-        </div>
+        </CodePreview>
       </Section>
 
       {/* Props */}
@@ -178,11 +219,11 @@ export default function PanelCardComponent() {
         >
           Foundations
         </h2>
-        <p className="text-copy-16 text-textSubtle mt-4 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mt-4">
           Panel Card uses the same documented foundation as Stat Card. Every
           value maps to a slot in the Foundations sidebar.
         </p>
-        <ul className="text-copy-16 text-textSubtle mt-6 space-y-2 max-w-3xl list-disc pl-6">
+        <ul className="text-copy-16 text-textSubtle mt-6 space-y-2 list-disc pl-6">
           <li>
             <strong className="text-textDefault">Padding</strong> —{" "}
             <code className="inline-code">p-6</code> (24 px, Grid &amp;

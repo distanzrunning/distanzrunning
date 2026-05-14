@@ -1,8 +1,49 @@
 "use client";
 
 import { Section } from "../ContentWithTOC";
-import { CodeBlock } from "@/components/ui/CodeBlock";
+import { CodePreview } from "../CodePreview";
 import { StatCard } from "@/components/ui/StatCard";
+
+const basicCode = `import { StatCard } from "@/components/ui/StatCard";
+
+export function Component() {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+        gap: 16,
+      }}
+    >
+      <StatCard label="Total decisions" value="12,481" />
+      <StatCard
+        label="Unique visitors"
+        value="3,927"
+        hint="distinct anonymous IDs"
+      />
+      <StatCard label="Accept all" value="72%" hint="8,986 decisions" />
+      <StatCard label="Reject all" value="18%" hint="2,247 decisions" />
+    </div>
+  );
+}`;
+
+const withoutHintCode = `import { StatCard } from "@/components/ui/StatCard";
+
+export function Component() {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+        gap: 16,
+      }}
+    >
+      <StatCard label="Total" value="12,481" />
+      <StatCard label="Active" value="3,927" />
+      <StatCard label="Errors" value="42" />
+    </div>
+  );
+}`;
 
 export default function StatCardComponent() {
   return (
@@ -15,7 +56,7 @@ export default function StatCardComponent() {
         >
           Usage
         </h2>
-        <p className="text-copy-16 text-textSubtle mt-4 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mt-4">
           Stat Card is the dashboard surface for headline numbers — a small
           uppercase label, a prominent value, and an optional secondary hint
           line. Use it in a CSS grid of 3–6 tiles at the top of an admin page
@@ -24,78 +65,63 @@ export default function StatCardComponent() {
         </p>
       </Section>
 
-      {/* Preview */}
+      {/* Basic example */}
       <Section>
         <h2
-          id="preview"
+          id="examples"
           className="text-heading-24 text-textDefault scroll-mt-32"
         >
-          Preview
+          Examples
         </h2>
-        <div
-          className="mt-6"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: 16,
-          }}
-        >
-          <StatCard label="Total decisions" value="12,481" />
-          <StatCard
-            label="Unique visitors"
-            value="3,927"
-            hint="distinct anonymous IDs"
-          />
-          <StatCard
-            label="Accept all"
-            value="72%"
-            hint="8,986 decisions"
-          />
-          <StatCard
-            label="Reject all"
-            value="18%"
-            hint="2,247 decisions"
-          />
-        </div>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          Every prop is plain text or a React node — no children API. Drop
+          the cards into a CSS grid sized to your screen.
+        </p>
+        <CodePreview componentCode={basicCode}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: 16,
+            }}
+          >
+            <StatCard label="Total decisions" value="12,481" />
+            <StatCard
+              label="Unique visitors"
+              value="3,927"
+              hint="distinct anonymous IDs"
+            />
+            <StatCard label="Accept all" value="72%" hint="8,986 decisions" />
+            <StatCard label="Reject all" value="18%" hint="2,247 decisions" />
+          </div>
+        </CodePreview>
       </Section>
 
-      {/* Code */}
+      {/* Without hint */}
       <Section>
         <h2
-          id="code"
+          id="without-hint"
           className="text-heading-24 text-textDefault scroll-mt-32"
         >
-          Code
+          Without hint
         </h2>
-        <p className="text-copy-16 text-textSubtle mt-4 max-w-3xl">
-          Import from{" "}
-          <code className="inline-code">@/components/ui/StatCard</code> and
-          drop it into a grid container. Every prop is plain text or a React
-          node — no children API.
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          The <code className="inline-code">hint</code> prop is optional —
+          omit it for a tighter card.
         </p>
-        <div className="mt-6">
-          <CodeBlock
-            language="tsx"
-            filename="page.tsx"
-            code={`import { StatCard } from "@/components/ui/StatCard";
-
-<div
-  style={{
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-    gap: 16,
-  }}
->
-  <StatCard label="Total decisions" value="12,481" />
-  <StatCard
-    label="Unique visitors"
-    value="3,927"
-    hint="distinct anonymous IDs"
-  />
-  <StatCard label="Accept all" value="72%" hint="8,986 decisions" />
-</div>`}
-          />
-        </div>
+        <CodePreview componentCode={withoutHintCode}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+              gap: 16,
+            }}
+          >
+            <StatCard label="Total" value="12,481" />
+            <StatCard label="Active" value="3,927" />
+            <StatCard label="Errors" value="42" />
+          </div>
+        </CodePreview>
       </Section>
 
       {/* Props */}
@@ -168,12 +194,12 @@ export default function StatCardComponent() {
         >
           Foundations
         </h2>
-        <p className="text-copy-16 text-textSubtle mt-4 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mt-4">
           Stat Card is composed entirely from documented DS tokens — no magic
           numbers. Every value below maps to a slot you can reach from the
           Foundations sidebar.
         </p>
-        <ul className="text-copy-16 text-textSubtle mt-6 space-y-2 max-w-3xl list-disc pl-6">
+        <ul className="text-copy-16 text-textSubtle mt-6 space-y-2 list-disc pl-6">
           <li>
             <strong className="text-textDefault">Padding</strong> —{" "}
             <code className="inline-code">p-6</code> (24 px, Grid &amp;
