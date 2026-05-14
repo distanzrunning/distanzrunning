@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { ChevronDown, Shield, Zap } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -984,39 +985,35 @@ export default function BadgeComponent() {
         </SectionHeader>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Use <code className="inline-code">&lt;Badge&gt;</code> for short,
-            scannable metadata that sits next to the thing it describes:
-            status, plan tier, environment, or role. One badge per row; two
-            side by side is a sign the row needs a second column.
+            Use Badge for short, scannable metadata that sits next to the
+            thing it describes: status, plan tier, environment, or role. One
+            badge per row; two side by side is a sign the row needs a second
+            column.
           </li>
           <li>
             For a colored dot without text, use{" "}
-            <code className="inline-code">&lt;StatusDot&gt;</code>. For
-            clickable filter chips that toggle a query, use{" "}
-            <code className="inline-code">&lt;BadgePill&gt;</code> or a small{" "}
-            <code className="inline-code">&lt;Button&gt;</code>.
+            <ComponentRef name="Status Dot" />. For clickable filter chips
+            that toggle a query, use the{" "}
+            <code className="inline-code">pill</code> variant or a small{" "}
+            <ComponentRef name="Button" />.
           </li>
           <li>
-            Badges are static labels.{" "}
-            <code className="inline-code">&lt;Badge&gt;</code> deliberately
-            has no <code className="inline-code">onClick</code> prop — if the
-            user can act on the value, promote it to{" "}
-            <code className="inline-code">&lt;Button&gt;</code>,{" "}
-            <code className="inline-code">&lt;BadgePill&gt;</code>, or a link.
+            Badges are static labels. Don&apos;t wire{" "}
+            <code className="inline-code">onClick</code> onto them; promote
+            to a <ComponentRef name="Button" /> or link if the user can act
+            on the value.
           </li>
           <li>
             Keep badge content to text or{" "}
             <code className="inline-code">icon</code> + text. Never stack two
-            icons or nest a child{" "}
-            <code className="inline-code">&lt;Badge&gt;</code> inside a Badge.
+            icons or a child Badge inside a Badge.
           </li>
           <li>
             Pair lifecycle badges (
             <code className="inline-code">Alpha</code>,{" "}
             <code className="inline-code">Beta</code>,{" "}
             <code className="inline-code">Early Access</code>) with a{" "}
-            <code className="inline-code">&lt;Tooltip&gt;</code> that names
-            the limit — e.g.{" "}
+            <ComponentRef name="Tooltip" /> that names the limit, like{" "}
             <code className="inline-code">
               Alpha: API may change before GA
             </code>
