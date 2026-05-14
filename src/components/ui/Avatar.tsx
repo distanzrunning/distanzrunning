@@ -139,9 +139,24 @@ export function Avatar({
   };
 
   const fontSize = Math.round(size * 0.4);
+  const initials = fallback ? getInitials(fallback) : "";
+
+  // Accessible name: image avatars use the <img alt>; initials avatars
+  // get an explicit aria-label so screen readers announce "Avatar with
+  // initials: XX" rather than reading the bare letterforms; placeholder
+  // shells fall back to the provided alt or a generic "Avatar".
+  const ariaLabel = !showFallback
+    ? undefined // alt on the <img> below carries the SR text
+    : placeholderIcon
+      ? alt || undefined
+      : fallback
+        ? `Avatar with initials: ${initials}`
+        : alt || "Avatar";
 
   return (
     <div
+      role="img"
+      aria-label={ariaLabel}
       className="relative inline-flex items-center justify-center rounded-full text-textSubtle overflow-hidden flex-shrink-0"
       style={{
         width: size,
@@ -158,17 +173,23 @@ export function Avatar({
         />
       ) : placeholderIcon ? (
         <span
+          aria-hidden="true"
           className="flex items-center justify-center text-textSubtle"
           style={{ width: size * 0.5, height: size * 0.5 }}
         >
           {placeholderIcon}
         </span>
       ) : fallback ? (
-        <span className="font-medium text-textSubtle" style={{ fontSize }}>
-          {getInitials(fallback)}
+        <span
+          aria-hidden="true"
+          className="font-medium text-textSubtle"
+          style={{ fontSize }}
+        >
+          {initials}
         </span>
       ) : (
         <User
+          aria-hidden="true"
           className="text-textSubtle"
           style={{ width: size * 0.5, height: size * 0.5 }}
         />

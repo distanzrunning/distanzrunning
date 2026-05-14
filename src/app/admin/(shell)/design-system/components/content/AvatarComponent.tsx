@@ -895,6 +895,56 @@ export default function AvatarComponent() {
           </table>
         </div>
       </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use a single <code className="inline-code">&lt;Avatar&gt;</code>{" "}
+            for one person, team, or organization. For two or more stacked
+            avatars, use{" "}
+            <code className="inline-code">&lt;AvatarGroup&gt;</code> so the
+            cluster gets correct overlap, consistent sizing, and a single{" "}
+            <code className="inline-code">+N</code> overflow indicator.
+          </li>
+          <li>
+            Pass <code className="inline-code">src</code> first and supply{" "}
+            <code className="inline-code">fallback</code> (the entity&apos;s
+            name) when the image is missing. The component derives 1–2
+            uppercase initials automatically. Reserve{" "}
+            <code className="inline-code">placeholder</code> for the loading
+            shell, never as a permanent fallback.
+          </li>
+          <li>
+            Don&apos;t hand-write{" "}
+            <code className="inline-code">aria-label=&quot;Avatar of …&quot;</code>
+            . Initials avatars are announced as{" "}
+            <code className="inline-code">
+              &quot;Avatar with initials: XX&quot;
+            </code>{" "}
+            automatically; image avatars use the{" "}
+            <code className="inline-code">alt</code> string you pass.
+          </li>
+          <li>
+            Pass <code className="inline-code">fallback</code> as a literal
+            name, not the initials themselves —{" "}
+            <code className="inline-code">&quot;Jane Doe&quot;</code> not{" "}
+            <code className="inline-code">&quot;JD&quot;</code>. The component
+            handles casing and reduction. Avoid emoji, punctuation, or{" "}
+            <code className="inline-code">?</code> in the source name.
+          </li>
+          <li>
+            Size to match adjacent type: <strong>20–24 px</strong> next to{" "}
+            <code className="inline-code">text-label-14</code>,{" "}
+            <strong>32 px</strong> next to{" "}
+            <code className="inline-code">text-label-16</code>, and{" "}
+            <strong>48–64 px</strong> in page headers or onboarding states.
+          </li>
+        </ul>
+      </Section>
     </>
   );
 }
