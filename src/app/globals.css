@@ -1243,7 +1243,9 @@
   /* Inline code chip — the canonical small `monospaced` token used in
      body copy across the Admin shell + Design System docs. Sized to
      sit alongside text-copy-14 / text-copy-16 body copy: 14px / 24px
-     so the chip baseline aligns with the surrounding line. */
+     so the chip baseline aligns with the surrounding line. Text uses
+     ds-gray-900 (the "Secondary text" slot) — the chip is supporting
+     content inside body copy, not a primary heading. */
   .inline-code {
     font-family: var(--font-mono);
     font-size: 14px;
@@ -1251,7 +1253,7 @@
     padding: 1px 5px;
     border-radius: 4px;
     background: var(--ds-gray-100);
-    color: var(--ds-gray-1000);
+    color: var(--ds-gray-900);
     border: 1px solid var(--ds-gray-alpha-400);
   }
 
