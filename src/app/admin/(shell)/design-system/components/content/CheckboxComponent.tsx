@@ -552,10 +552,9 @@ export default function CheckboxComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            <code className="inline-code">indeterminate</code> is a visual
-            state, not a third value. Drive it from a parent that knows
-            partial selection, and clear it as soon as every child is fully
-            checked or unchecked.
+            Indeterminate is a visual state, not a third value. Drive it
+            from a parent that knows partial selection, and clear it as
+            soon as every child is fully checked or unchecked.
           </li>
           <li>
             Validation on a required acknowledgment fires on submit, not on
