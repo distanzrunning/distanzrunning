@@ -9,6 +9,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 
 // Toast notification for copy confirmation
 function Toast({
@@ -1453,6 +1454,106 @@ export default function CodeBlockComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use <code className="inline-code">&lt;CodeBlock&gt;</code> for
+            multi-line, syntax-highlighted source the reader will scan or
+            paste.
+          </li>
+          <li>
+            For a single inline token (env var, function name, file path),
+            use the shared chip class:{" "}
+            <code className="inline-code">
+              &lt;code className=&quot;inline-code&quot;&gt;
+            </code>
+            . It pairs the same monospace with body copy so the reference
+            sits inline with the sentence.
+          </li>
+          <li>
+            Pick <ComponentRef name="Snippet" /> for a copy-to-clipboard
+            shell command or one-line key reveal; it ships with the prompt
+            glyph and copy affordance built in.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Always pass <code className="inline-code">language</code> (
+            <code className="inline-code">tsx</code>,{" "}
+            <code className="inline-code">bash</code>,{" "}
+            <code className="inline-code">json</code>,{" "}
+            <code className="inline-code">diff</code>, …). Highlighting is
+            the primary reason to choose{" "}
+            <code className="inline-code">&lt;CodeBlock&gt;</code> over a
+            plain <code className="inline-code">&lt;pre&gt;</code>.
+          </li>
+          <li>
+            Highlight only the lines under discussion via{" "}
+            <code className="inline-code">highlightLines</code>. A block
+            where every line is highlighted reads the same as no highlight
+            at all.
+          </li>
+          <li>
+            Mark added or removed lines with{" "}
+            <code className="inline-code">addedLines</code> /{" "}
+            <code className="inline-code">removedLines</code> (or{" "}
+            <code className="inline-code">language=&quot;diff&quot;</code>{" "}
+            for whole-diff blocks). Faking them with{" "}
+            <code className="inline-code">// added</code> comments breaks
+            copy-paste.
+          </li>
+          <li>
+            Show the <code className="inline-code">filename</code> header
+            when the snippet has a paste destination (
+            <code className="inline-code">app/page.tsx</code>,{" "}
+            <code className="inline-code">vercel.json</code>). Omit it for
+            ephemeral examples.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Snippets stay runnable. Don&apos;t paraphrase real code into
+            pseudo-syntax, and don&apos;t prepend{" "}
+            <code className="inline-code">$</code> to shell commands.{" "}
+            <ComponentRef name="Snippet" /> already renders the prompt, so{" "}
+            <code className="inline-code">text=&quot;$ vercel deploy&quot;</code>{" "}
+            doubles to{" "}
+            <code className="inline-code">$ $ vercel deploy</code>.
+          </li>
+          <li>
+            Keep prose around the block in sentence case and wrap CLI
+            flags in the inline-code chip (
+            <code className="inline-code">--prebuilt</code>) when they
+            appear in a sentence.
+          </li>
+        </ul>
       </Section>
     </>
   );
