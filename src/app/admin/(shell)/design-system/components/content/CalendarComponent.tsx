@@ -1304,10 +1304,10 @@ export default function CalendarComponent() {
             <code className="inline-code">formatTriggerLabel</code>.
           </li>
           <li>
-            Keep the trigger label as the chosen range (e.g.{" "}
-            <code className="inline-code">Apr 1 – Apr 28</code>); don&apos;t
-            fall back to the{" "}
-            <code className="inline-code">placeholder</code> once a value
+            Keep the trigger label as the chosen range (
+            <code className="inline-code">Apr 1 – Apr 28, 2026</code>);
+            don&apos;t fall back to{" "}
+            <code className="inline-code">Pick a date</code> once a value
             is committed.
           </li>
           <li>
