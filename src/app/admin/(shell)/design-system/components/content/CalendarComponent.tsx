@@ -1297,27 +1297,26 @@ export default function CalendarComponent() {
             so users can&apos;t pick outside the retention range.
           </li>
           <li>
-            Dates default to the user&apos;s local timezone — never silently
-            render UTC for a US-Pacific viewer. If you need to surface UTC
-            explicitly (e.g. for log queries), pass the offset-adjusted
-            range yourself and label it in the trigger via{" "}
+            Render dates in the user&apos;s local timezone — never silently
+            in UTC for a US-Pacific viewer. If you need to surface UTC
+            explicitly (for log queries, say), pass the offset-adjusted
+            range yourself and label it via{" "}
             <code className="inline-code">formatTriggerLabel</code>.
           </li>
           <li>
-            The trigger keeps the chosen range as its label (e.g.{" "}
-            <code className="inline-code">Apr 1 – Apr 28</code>) once a
-            value is committed — it doesn&apos;t fall back to{" "}
-            <code className="inline-code">placeholder</code>. Pass a
-            sensible <code className="inline-code">placeholder</code> only
-            for the empty state.
+            Keep the trigger label as the chosen range (e.g.{" "}
+            <code className="inline-code">Apr 1 – Apr 28</code>); don&apos;t
+            fall back to the{" "}
+            <code className="inline-code">placeholder</code> once a value
+            is committed.
           </li>
           <li>
-            The popover persists the selected range when it closes and
-            re-opens so users can tweak the end date without re-picking the
-            start. Drive selection from outside with{" "}
+            Persist the selected range when the popover closes and re-opens
+            so users can tweak the end date without re-picking the start.
+            Drive selection from outside with{" "}
             <code className="inline-code">value</code> /{" "}
-            <code className="inline-code">onChange</code> if you need that
-            state to survive route changes.
+            <code className="inline-code">onChange</code> if that state
+            needs to survive route changes.
           </li>
         </ul>
 
