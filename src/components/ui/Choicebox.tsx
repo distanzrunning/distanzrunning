@@ -180,6 +180,7 @@ export function Choicebox({
         flex flex-1 flex-col
         rounded-md border border-solid
         ${isDisabled ? "cursor-not-allowed" : "cursor-pointer"}
+        ${!isDisabled ? "focus-within:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
         ${className}
       `}
       onMouseEnter={() => setIsHovered(true)}
@@ -193,7 +194,7 @@ export function Choicebox({
         background: showHover
           ? "var(--ds-gray-100)"
           : "var(--ds-background-100)",
-        transition: "background 0.15s ease, border 0.15s ease",
+        transition: "background 0.15s ease, border 0.15s ease, box-shadow 0.15s ease",
       }}
     >
       <input
@@ -222,7 +223,7 @@ export function Choicebox({
         {/* Text content */}
         <div className="flex flex-col gap-1">
           <span
-            className="text-sm font-medium leading-5"
+            className="text-copy-14 font-medium"
             style={{
               color: isDisabled
                 ? "var(--ds-gray-500)"
@@ -234,7 +235,7 @@ export function Choicebox({
             {title}
           </span>
           <span
-            className="text-sm leading-5"
+            className="text-copy-14"
             style={{
               color: isDisabled
                 ? "var(--ds-gray-500)"

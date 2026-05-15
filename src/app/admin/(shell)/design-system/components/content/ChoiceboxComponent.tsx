@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -863,6 +864,135 @@ export default function ChoiceboxComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            A choice that benefits from a larger tap target plus a
+            description or icon, like a framework picker, plan comparison,
+            or deployment region with latency.
+          </li>
+          <li>
+            Single-select for mutually exclusive choices, multi-select for
+            additive ones. Don&apos;t mix the two within one group —{" "}
+            <code className="inline-code">&lt;ChoiceboxGroup&gt;</code>{" "}
+            enforces this with its{" "}
+            <code className="inline-code">type</code> prop.
+          </li>
+          <li>
+            Cap at 4–6 tiles. Past that, switch to{" "}
+            <ComponentRef name="Select" /> or{" "}
+            <ComponentRef name="Combobox" /> so the page doesn&apos;t scroll
+            for a single field. For plain text labels with no description,
+            use <ComponentRef name="Radio" />.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The whole tile is the click and focus target — the component
+            wraps everything in a single{" "}
+            <code className="inline-code">&lt;label htmlFor={"{id}"}&gt;</code>{" "}
+            so tapping anywhere inside selects it. Don&apos;t place nested
+            buttons or links inside a tile that would steal the click.
+          </li>
+          <li>
+            Selected state shows a filled radio dot or checkbox in the
+            corner alongside the highlight border and pink background fill.
+            The border alone isn&apos;t enough on low-contrast screens.
+          </li>
+          <li>
+            Disabled tiles need a <ComponentRef name="Tooltip" /> naming
+            why (<code className="inline-code">Available on Pro</code>). A
+            faded tile with no reason reads as broken.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Titles are parallel: one Title Case{" "}
+            <code className="inline-code">title</code> plus one
+            sentence-case{" "}
+            <code className="inline-code">description</code> per tile,
+            ending in a period.
+          </li>
+          <li>
+            Don&apos;t restate the title in the description. The
+            description adds the differentiator (
+            <code className="inline-code">$20/mo · 100 GB bandwidth</code>),
+            not a synonym.
+          </li>
+          <li>
+            Icons are decorative when paired with a title; if the icon is
+            the only label, give the tile an{" "}
+            <code className="inline-code">aria-label</code> naming the
+            choice.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Tiles render as native{" "}
+            <code className="inline-code">&lt;input type=&quot;radio&quot;&gt;</code>{" "}
+            or{" "}
+            <code className="inline-code">
+              &lt;input type=&quot;checkbox&quot;&gt;
+            </code>{" "}
+            under the hood. The{" "}
+            <code className="inline-code">&lt;ChoiceboxGroup&gt;</code>{" "}
+            wrapper renders with{" "}
+            <code className="inline-code">role=&quot;radiogroup&quot;</code>{" "}
+            (single) or{" "}
+            <code className="inline-code">role=&quot;group&quot;</code>{" "}
+            (multi) and the required{" "}
+            <code className="inline-code">label</code> prop becomes the
+            group&apos;s accessible name — equivalent to a{" "}
+            <code className="inline-code">&lt;fieldset&gt;</code> /{" "}
+            <code className="inline-code">&lt;legend&gt;</code> for screen
+            readers.
+          </li>
+          <li>
+            Arrow keys move within a single-select group and Space toggles
+            in multi-select — both are handled by the native inputs, so
+            don&apos;t override those keys with custom handlers.
+          </li>
+          <li>
+            Color is not the selection signal. The component already pairs
+            the highlight border with the corner check / dot so colorblind
+            users still see what&apos;s active, and a 4 px focus ring
+            appears around the tile when the input is focused via keyboard.
+          </li>
+        </ul>
       </Section>
     </>
   );
