@@ -299,11 +299,20 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       disabled = false,
       className = "",
       type = "button",
+      onClick,
       ...props
     },
     ref,
   ) => {
-    const isDisabled = disabled || loading;
+    // Two "disabled" axes:
+    //   - disabled prop → HTML disabled attribute. Removes the button
+    //     from the tab order and blocks pointer events at the browser
+    //     level. Use when the action is genuinely unavailable.
+    //   - loading prop → keeps the button focusable so the busy state
+    //     is announced when the user lands on it (per the Best
+    //     Practices section). We mark it aria-disabled + aria-busy
+    //     for assistive tech and guard onClick below.
+    const isVisuallyDisabled = disabled || loading;
 
     const baseClasses = `
       inline-flex items-center justify-center
@@ -335,14 +344,29 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const spinnerSize = size === "large" ? 24 : 16;
     const iconSize = getIconSize(size);
 
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (loading) {
+        event.preventDefault();
+        return;
+      }
+      onClick?.(event);
+    };
+
     return (
       <button
         ref={ref}
         type={type}
-        disabled={isDisabled}
+        disabled={disabled}
         aria-busy={loading || undefined}
+        aria-disabled={loading || undefined}
+        onClick={handleClick}
         className={combinedClasses}
-        style={{ "--ds-icon-size": iconSize } as React.CSSProperties}
+        style={
+          {
+            "--ds-icon-size": iconSize,
+            ...(isVisuallyDisabled ? { cursor: "not-allowed" } : null),
+          } as React.CSSProperties
+        }
         {...props}
       >
         {loading && (
