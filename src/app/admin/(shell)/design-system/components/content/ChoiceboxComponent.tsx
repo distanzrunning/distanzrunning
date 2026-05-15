@@ -947,10 +947,13 @@ export default function ChoiceboxComponent() {
             not a synonym.
           </li>
           <li>
-            Icons are decorative when paired with a title; if the icon is
-            the only label, give the tile an{" "}
-            <code className="inline-code">aria-label</code> naming the
-            choice.
+            Pass an <code className="inline-code">icon</code> when the
+            choice benefits from a glyph (framework logo, deployment
+            region flag). It&apos;s decorative when paired with a{" "}
+            <code className="inline-code">title</code>; if the icon is the
+            only label, pass{" "}
+            <code className="inline-code">aria-label</code> too so screen
+            readers announce the choice.
           </li>
         </ul>
 

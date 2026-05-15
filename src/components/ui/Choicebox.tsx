@@ -126,10 +126,21 @@ export function ChoiceboxGroup({
 export interface ChoiceboxProps {
   /** The value this option represents */
   value: string;
-  /** Bold title text */
-  title: string;
-  /** Secondary description text */
-  description: string;
+  /** Bold title text. Optional when `icon` + `aria-label` carry the label. */
+  title?: string;
+  /** Secondary description text. Optional. */
+  description?: string;
+  /**
+   * Decorative icon shown on the left of the title block. Decorative
+   * when paired with a title; if the icon is the only label, pair it
+   * with `aria-label` so screen readers announce the choice.
+   */
+  icon?: ReactNode;
+  /**
+   * Accessible label for the tile — applied as `aria-label` on the
+   * underlying input. Required when there's no visible `title`.
+   */
+  "aria-label"?: string;
   /** Disable this specific item */
   disabled?: boolean;
   /** Custom content shown when selected */
@@ -141,6 +152,8 @@ export function Choicebox({
   value,
   title,
   description,
+  icon,
+  "aria-label": ariaLabel,
   disabled = false,
   children,
   className = "",
@@ -205,6 +218,7 @@ export function Choicebox({
         checked={isSelected}
         disabled={isDisabled}
         onChange={handleChange}
+        aria-label={ariaLabel}
         className="sr-only peer"
       />
 
@@ -220,32 +234,55 @@ export function Choicebox({
           transition: "background 0.15s ease, border 0.15s ease",
         }}
       >
-        {/* Text content */}
-        <div className="flex flex-col gap-1">
-          <span
-            className="text-copy-14 font-medium"
-            style={{
-              color: isDisabled
-                ? "var(--ds-gray-500)"
-                : isSelected
-                  ? "var(--ds-pink-700)"
-                  : "var(--ds-gray-1000)",
-            }}
-          >
-            {title}
-          </span>
-          <span
-            className="text-copy-14"
-            style={{
-              color: isDisabled
-                ? "var(--ds-gray-500)"
-                : isSelected
-                  ? "var(--ds-pink-700)"
-                  : "var(--ds-gray-900)",
-            }}
-          >
-            {description}
-          </span>
+        {/* Icon + text content */}
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          {icon && (
+            <span
+              aria-hidden="true"
+              className="flex items-center justify-center flex-shrink-0"
+              style={{
+                color: isDisabled
+                  ? "var(--ds-gray-500)"
+                  : isSelected
+                    ? "var(--ds-pink-700)"
+                    : "var(--ds-gray-1000)",
+              }}
+            >
+              {icon}
+            </span>
+          )}
+          {(title || description) && (
+            <div className="flex flex-col gap-1 min-w-0">
+              {title && (
+                <span
+                  className="text-copy-14 font-medium"
+                  style={{
+                    color: isDisabled
+                      ? "var(--ds-gray-500)"
+                      : isSelected
+                        ? "var(--ds-pink-700)"
+                        : "var(--ds-gray-1000)",
+                  }}
+                >
+                  {title}
+                </span>
+              )}
+              {description && (
+                <span
+                  className="text-copy-14"
+                  style={{
+                    color: isDisabled
+                      ? "var(--ds-gray-500)"
+                      : isSelected
+                        ? "var(--ds-pink-700)"
+                        : "var(--ds-gray-900)",
+                  }}
+                >
+                  {description}
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Indicator */}
