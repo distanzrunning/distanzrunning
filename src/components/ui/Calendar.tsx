@@ -323,22 +323,31 @@ function isFullMonth(range: DateRange): boolean {
 
 function formatDateRange(range: DateRange): string {
   if (!range.start) return "";
+
+  // Single date selected — "Apr 1, 2026"
   if (!range.end || isSameDay(range.start, range.end)) {
-    // Single date selected
     const month = MONTH_NAMES[range.start.getMonth()].slice(0, 3);
-    return `${month} ${range.start.getDate()}`;
+    return `${month} ${range.start.getDate()}, ${range.start.getFullYear()}`;
   }
-  // Full month selected
+
+  // Full month selected — "April 2026"
   if (isFullMonth(range)) {
     return `${MONTH_NAMES[range.start.getMonth()]} ${range.start.getFullYear()}`;
   }
-  // Range selected
+
+  // Range — always carries both months and a single trailing year when
+  // the span sits in one year ("Apr 1 – Apr 28, 2026"). Cross-year spans
+  // get the year on both sides so it's unambiguous which date sits in
+  // which year ("Dec 28, 2025 – Jan 5, 2026").
   const startMonth = MONTH_NAMES[range.start.getMonth()].slice(0, 3);
   const endMonth = MONTH_NAMES[range.end.getMonth()].slice(0, 3);
-  if (startMonth === endMonth) {
-    return `${startMonth} ${range.start.getDate()} - ${range.end.getDate()}`;
+  const startYear = range.start.getFullYear();
+  const endYear = range.end.getFullYear();
+
+  if (startYear === endYear) {
+    return `${startMonth} ${range.start.getDate()} – ${endMonth} ${range.end.getDate()}, ${endYear}`;
   }
-  return `${startMonth} ${range.start.getDate()} - ${endMonth} ${range.end.getDate()}`;
+  return `${startMonth} ${range.start.getDate()}, ${startYear} – ${endMonth} ${range.end.getDate()}, ${endYear}`;
 }
 
 function getLocalTimezone(): string {
