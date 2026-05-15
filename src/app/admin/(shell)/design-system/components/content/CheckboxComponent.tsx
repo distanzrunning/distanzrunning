@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -513,6 +514,116 @@ export default function CheckboxComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Multi-select inside a list, like table-row pickers, multi-pick
+            filters, and opt-in preference groups.
+          </li>
+          <li>
+            Acknowledgments where the user must affirm a specific statement
+            (terms of service, irreversible export).
+          </li>
+          <li>
+            For a single boolean setting like dark mode or password
+            protection, use <ComponentRef name="Toggle" />. The on/off
+            mechanic is clearer there than a lone checkbox.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">indeterminate</code> is a visual
+            state, not a third value. Drive it from a parent that knows
+            partial selection, and clear it as soon as every child is fully
+            checked or unchecked.
+          </li>
+          <li>
+            Validation on a required acknowledgment fires on submit, not on
+            blur, so checking and unchecking shouldn&apos;t flash an error.
+          </li>
+          <li>
+            Disabled checkboxes still need a{" "}
+            <ComponentRef name="Tooltip" /> naming the reason; a greyed box
+            with no explanation reads as a bug.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Group label above a{" "}
+            <code className="inline-code">&lt;fieldset&gt;</code> is a Title
+            Case noun like{" "}
+            <code className="inline-code">Notifications</code> or{" "}
+            <code className="inline-code">Required Permissions</code>. No
+            trailing colon.
+          </li>
+          <li>
+            Acknowledgment label is a full sentence ending in a period:{" "}
+            <code className="inline-code">
+              I agree to the Terms of Service.
+            </code>
+          </li>
+          <li>
+            Indeterminate copy names the partial count next to the group
+            label (<code className="inline-code">3 of 5 selected</code>).
+            Never leave the dash state unlabeled.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Wrap related checkboxes in{" "}
+            <code className="inline-code">&lt;fieldset&gt;</code> with a{" "}
+            <code className="inline-code">&lt;legend&gt;</code> so screen
+            readers announce the group name before each option.
+          </li>
+          <li>
+            Row-select checkbox in a table has no visible label. Set{" "}
+            <code className="inline-code">
+              aria-label=&quot;Select {"{row name}"}&quot;
+            </code>{" "}
+            so the row stays identifiable out of context.
+          </li>
+          <li>
+            The click target already extends to the label — the component
+            wraps the input and the visible label in a single{" "}
+            <code className="inline-code">&lt;label htmlFor={"{id}"}&gt;</code>{" "}
+            so the whole row is clickable. Don&apos;t override that with a
+            custom wrapper that breaks the click region.
+          </li>
+        </ul>
       </Section>
     </>
   );

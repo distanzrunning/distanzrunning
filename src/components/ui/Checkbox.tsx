@@ -147,7 +147,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           </span>
         </span>
         {label && (
-          <span className={`text-sm select-none ${disabled ? "text-[var(--ds-gray-500)]" : "text-[var(--ds-gray-1000)]"}`}>
+          <span className={`text-copy-14 select-none ${disabled ? "text-[var(--ds-gray-500)]" : "text-[var(--ds-gray-1000)]"}`}>
             {label}
           </span>
         )}
