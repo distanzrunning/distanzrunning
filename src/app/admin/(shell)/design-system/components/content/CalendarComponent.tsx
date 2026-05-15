@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -1233,6 +1234,137 @@ export default function CalendarComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pick <code className="inline-code">&lt;Calendar&gt;</code> for
+            analytics ranges and any picker where day-of-week and month
+            context matter.
+          </li>
+          <li>
+            For ISO dates pasted whole, relative shorthand like{" "}
+            <code className="inline-code">7d</code>, or single-value entry,
+            use a free-form <ComponentRef name="Input" />.
+          </li>
+          <li>
+            Provide <code className="inline-code">presets</code> for the
+            common ranges (<code className="inline-code">Last 7 Days</code>,{" "}
+            <code className="inline-code">Month to Date</code>) so users
+            land on the right window in one click. Pass{" "}
+            <code className="inline-code">defaultPreset</code> to pre-select
+            one.
+          </li>
+          <li>
+            Pair{" "}
+            <code className="inline-code">horizontalLayout</code> with live
+            results next to the calendar; in narrow surfaces like a sidebar,
+            fall back to <code className="inline-code">stacked</code>. For
+            extremely tight rows, use{" "}
+            <code className="inline-code">compact</code>.
+          </li>
+          <li>
+            Override the trigger label with{" "}
+            <code className="inline-code">formatTriggerLabel</code> when the
+            built-in <code className="inline-code">Apr 25 - May 2</code>{" "}
+            format drops the year and the surrounding context needs it
+            (e.g. an admin queue spanning multiple years).
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Set <code className="inline-code">minDate</code> and{" "}
+            <code className="inline-code">maxDate</code> to the data window
+            so users can&apos;t pick outside the retention range.
+          </li>
+          <li>
+            Dates default to the user&apos;s local timezone — never silently
+            render UTC for a US-Pacific viewer. If you need to surface UTC
+            explicitly (e.g. for log queries), pass the offset-adjusted
+            range yourself and label it in the trigger via{" "}
+            <code className="inline-code">formatTriggerLabel</code>.
+          </li>
+          <li>
+            The trigger keeps the chosen range as its label (e.g.{" "}
+            <code className="inline-code">Apr 1 – Apr 28</code>) once a
+            value is committed — it doesn&apos;t fall back to{" "}
+            <code className="inline-code">placeholder</code>. Pass a
+            sensible <code className="inline-code">placeholder</code> only
+            for the empty state.
+          </li>
+          <li>
+            The popover persists the selected range when it closes and
+            re-opens so users can tweak the end date without re-picking the
+            start. Drive selection from outside with{" "}
+            <code className="inline-code">value</code> /{" "}
+            <code className="inline-code">onChange</code> if you need that
+            state to survive route changes.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The popover traps focus while open (via Radix Popover) so{" "}
+            <code className="inline-code">Tab</code> cycles day cells,
+            presets, and the action buttons rather than the page behind.
+          </li>
+          <li>
+            Keyboard navigation follows the WAI-ARIA Authoring Practices
+            for date pickers:{" "}
+            <code className="inline-code">←</code> /{" "}
+            <code className="inline-code">→</code> move by day,{" "}
+            <code className="inline-code">↑</code> /{" "}
+            <code className="inline-code">↓</code> by week,{" "}
+            <code className="inline-code">Page Up</code> /{" "}
+            <code className="inline-code">Page Down</code> by month, and{" "}
+            <code className="inline-code">Shift + Page Up</code> /{" "}
+            <code className="inline-code">Page Down</code> by year.{" "}
+            <code className="inline-code">Home</code> /{" "}
+            <code className="inline-code">End</code> jump to the start /
+            end of the current week.
+          </li>
+          <li>
+            Range changes are announced through an{" "}
+            <code className="inline-code">aria-live=&quot;polite&quot;</code>{" "}
+            region inside the grid — screen readers hear{" "}
+            <code className="inline-code">Start date Apr 1</code> after the
+            first click and{" "}
+            <code className="inline-code">From Apr 1 to Apr 28</code> after
+            the second.
+          </li>
+          <li>
+            Each preset is a real{" "}
+            <code className="inline-code">&lt;button&gt;</code> with a Title
+            Case label (<code className="inline-code">Last 30 Days</code>).
+            Don&apos;t mark presets as menu items without keyboard
+            handling.
+          </li>
+        </ul>
       </Section>
     </>
   );

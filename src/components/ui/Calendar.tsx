@@ -498,6 +498,9 @@ function CalendarContent({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     let newDate: Date | null = null;
 
+    // Keyboard navigation follows the WAI-ARIA Authoring Practices
+    // for date pickers: arrows for day/week, PageUp/Down for month,
+    // Shift+PageUp/Down for year, Home/End for week boundary.
     switch (e.key) {
       case "ArrowLeft":
         e.preventDefault();
@@ -518,6 +521,34 @@ function CalendarContent({
         e.preventDefault();
         newDate = new Date(focusedDate);
         newDate.setDate(newDate.getDate() + 7);
+        break;
+      case "PageUp":
+        e.preventDefault();
+        newDate = new Date(focusedDate);
+        if (e.shiftKey) {
+          newDate.setFullYear(newDate.getFullYear() - 1);
+        } else {
+          newDate.setMonth(newDate.getMonth() - 1);
+        }
+        break;
+      case "PageDown":
+        e.preventDefault();
+        newDate = new Date(focusedDate);
+        if (e.shiftKey) {
+          newDate.setFullYear(newDate.getFullYear() + 1);
+        } else {
+          newDate.setMonth(newDate.getMonth() + 1);
+        }
+        break;
+      case "Home":
+        e.preventDefault();
+        newDate = new Date(focusedDate);
+        newDate.setDate(newDate.getDate() - newDate.getDay());
+        break;
+      case "End":
+        e.preventDefault();
+        newDate = new Date(focusedDate);
+        newDate.setDate(newDate.getDate() + (6 - newDate.getDay()));
         break;
       case "Enter":
       case " ":
@@ -592,6 +623,17 @@ function CalendarContent({
 
       {/* Spacer */}
       <div aria-hidden="true" style={{ marginTop: 11 }} />
+
+      {/* Live announcement for screen readers — fires when the
+          selected range changes so users hear "Start date Apr 1" or
+          "From Apr 1 to Apr 28" after each click. */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {dateRange.start && !dateRange.end
+          ? `Start date ${formatDateRange({ start: dateRange.start, end: null })}`
+          : dateRange.start && dateRange.end
+            ? `From ${formatDateRange({ start: dateRange.start, end: dateRange.start })} to ${formatDateRange({ start: dateRange.end, end: dateRange.end })}`
+            : ""}
+      </div>
 
       {/* Calendar grid */}
       <table
