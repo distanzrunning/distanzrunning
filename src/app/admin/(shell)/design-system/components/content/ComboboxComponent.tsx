@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -946,6 +947,153 @@ export default function ComboboxComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pick <code className="inline-code">&lt;Combobox&gt;</code> when
+            users type to filter a known list of values (regions,
+            frameworks, env-var names).
+          </li>
+          <li>
+            For short, fixed lists where typing adds nothing, switch to{" "}
+            <ComponentRef name="Select" />.
+          </li>
+          <li>
+            When more than one value can be chosen at once, use{" "}
+            <ComponentRef name="Multi Select" slug="multi-select" />.
+          </li>
+          <li>
+            For free-form filter strings that don&apos;t resolve to a single
+            option, drop in <ComponentRef name="Input" />.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            For async results, pass{" "}
+            <code className="inline-code">loading</code> so the dropdown
+            renders a labelled{" "}
+            <code className="inline-code">loadingMessage</code> row
+            (defaults to{" "}
+            <code className="inline-code">Loading…</code>) instead of
+            collapsing while the request is in flight.
+          </li>
+          <li>
+            Pass a templated{" "}
+            <code className="inline-code">emptyMessage</code> when no
+            options match — e.g.{" "}
+            <code className="inline-code">
+              {'`No regions match "${query}"`'}
+            </code>{" "}
+            — rather than the bare default{" "}
+            <code className="inline-code">No results found</code>.
+          </li>
+          <li>
+            Inside a <ComponentRef name="Modal" />, the popover layers via
+            Radix Popover — don&apos;t wrap the Combobox in a second portal
+            or focus trap. Tab + Escape already escape correctly inside the
+            modal.
+          </li>
+          <li>
+            Keep arrow-key navigation through the option list. The
+            component intercepts{" "}
+            <code className="inline-code">Enter</code> only while the list
+            is open so a surrounding form submit never fires by accident.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Visible <code className="inline-code">label</code> is a short
+            Title Case noun (
+            <code className="inline-code">Region</code>,{" "}
+            <code className="inline-code">Environment Variable Name</code>).
+          </li>
+          <li>
+            <code className="inline-code">placeholder</code> is the inline
+            hint:{" "}
+            <code className="inline-code">Search regions</code>,{" "}
+            <code className="inline-code">DATABASE_URL</code>. Never bare{" "}
+            <code className="inline-code">Search…</code> and never the
+            label restated.
+          </li>
+          <li>
+            Option text is Title Case for short values and matches
+            canonical branding (
+            <code className="inline-code">Next.js</code>, not{" "}
+            <code className="inline-code">NextJS</code>); same register
+            across the list.
+          </li>
+          <li>
+            Validation copy names the field and constraint, sentence case
+            with a period:{" "}
+            <code className="inline-code">Select a region.</code>
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Prefer the built-in{" "}
+            <code className="inline-code">label</code> prop — the component
+            renders a real{" "}
+            <code className="inline-code">&lt;label htmlFor={"{id}"}&gt;</code>{" "}
+            associated to the input. For icon-only triggers or toolbar
+            searches where the label isn&apos;t shown, pass{" "}
+            <code className="inline-code">aria-label</code> instead;
+            it&apos;s applied to the input only when{" "}
+            <code className="inline-code">label</code> is omitted, so the
+            two never compete.
+          </li>
+          <li>
+            The dropdown is a Radix Popover and traps focus while open. Tab
+            cycles options inside the listbox rather than the page behind
+            — works correctly inside a{" "}
+            <ComponentRef name="Modal" /> too.
+          </li>
+          <li>
+            When <code className="inline-code">loading</code> is true the
+            listbox carries{" "}
+            <code className="inline-code">aria-busy=&quot;true&quot;</code>{" "}
+            and the loading row is announced via{" "}
+            <code className="inline-code">role=&quot;status&quot;</code>{" "}
+            +{" "}
+            <code className="inline-code">
+              aria-live=&quot;polite&quot;
+            </code>{" "}
+            so screen readers hear the busy state.
+          </li>
+        </ul>
       </Section>
     </>
   );

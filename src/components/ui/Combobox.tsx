@@ -47,8 +47,22 @@ export interface ComboboxProps {
   listWidth?: number | string;
   /** Message shown when no options match the filter */
   emptyMessage?: string;
+  /**
+   * When true, show a loading row inside the dropdown instead of the
+   * empty / option list. Use while async results are in flight so the
+   * popover doesn't collapse — pair with onInputChange to refetch.
+   */
+  loading?: boolean;
+  /** Custom text for the loading row. Defaults to "Loading…". */
+  loadingMessage?: string;
   /** External label text rendered above the combobox */
   label?: string;
+  /**
+   * Accessible name for the input when no visible `label` is rendered
+   * (icon-only triggers, search inputs in toolbars). Ignored when
+   * `label` is set.
+   */
+  "aria-label"?: string;
   /** ID for label/input association */
   id?: string;
   /** Additional CSS class for the outermost wrapper */
@@ -159,7 +173,10 @@ export function Combobox({
   width,
   listWidth,
   emptyMessage = "No results found",
+  loading = false,
+  loadingMessage = "Loading…",
   label,
+  "aria-label": ariaLabel,
   id,
   className = "",
 }: ComboboxProps) {
@@ -470,7 +487,10 @@ export function Combobox({
                 id={inputId}
                 aria-autocomplete="list"
                 aria-controls={listId}
-                aria-label={placeholder}
+                // Accessible name precedence: visible <label htmlFor> wins;
+                // otherwise use the explicit `aria-label` prop; only fall
+                // back to the placeholder when neither is supplied.
+                aria-label={label ? undefined : ariaLabel || placeholder}
                 aria-invalid={error || undefined}
                 autoComplete="off"
                 spellCheck={false}
@@ -641,6 +661,7 @@ export function Combobox({
               ref={listRef}
               id={listId}
               role="listbox"
+              aria-busy={loading || undefined}
               style={{
                 margin: 0,
                 padding: 0,
@@ -649,7 +670,23 @@ export function Combobox({
                 overflowY: "auto",
               }}
             >
-              {filteredOptions.length === 0 ? (
+              {loading ? (
+                <li
+                  role="status"
+                  aria-live="polite"
+                  style={{
+                    height: 36,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "var(--ds-gray-900)",
+                    fontSize: 14,
+                    userSelect: "none",
+                  }}
+                >
+                  {loadingMessage}
+                </li>
+              ) : filteredOptions.length === 0 ? (
                 <li
                   style={{
                     height: 36,
