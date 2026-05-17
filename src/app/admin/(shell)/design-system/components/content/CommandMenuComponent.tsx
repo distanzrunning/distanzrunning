@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -620,6 +621,152 @@ export default function CommandMenuComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use CommandMenu for a global, keyboard-first command palette
+            that finds resources and runs actions across the app.
+          </li>
+          <li>
+            For a menu opened from a visible trigger on a single resource,
+            use <ComponentRef name="Menu" />; for right-click on a row, use{" "}
+            <ComponentRef name="Context Menu" slug="context-menu" />.
+          </li>
+          <li>
+            Split actions into{" "}
+            <code className="inline-code">&lt;CommandMenu.Group heading=&quot;…&quot;&gt;</code>{" "}
+            sections (
+            <code className="inline-code">Actions</code>,{" "}
+            <code className="inline-code">Recent</code>,{" "}
+            <code className="inline-code">Settings</code>) when a single
+            flat list would exceed roughly 30 items or span multiple
+            resource types.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Bind <code className="inline-code">⌘K</code> on macOS and{" "}
+            <code className="inline-code">Ctrl+K</code> elsewhere from
+            outside the component and feed the result into the{" "}
+            <code className="inline-code">open</code> /{" "}
+            <code className="inline-code">onClose</code> props.{" "}
+            <code className="inline-code">SearchContext</code> on the
+            public site is the canonical wiring — don&apos;t reuse the
+            binding for any in-page filter input; it&apos;s a global
+            shortcut.
+          </li>
+          <li>
+            Focus is trapped inside the overlay while it&apos;s open and
+            returned to the previously active element on close — handled
+            by the underlying cmdk{" "}
+            <code className="inline-code">Command.Dialog</code>.
+          </li>
+          <li>
+            Pre-populate <code className="inline-code">children</code> with
+            recent or default items so the menu is useful before the user
+            types. Drive the input from external state with{" "}
+            <code className="inline-code">value</code> /{" "}
+            <code className="inline-code">onValueChange</code> if you want
+            to preserve the query across opens.
+          </li>
+          <li>
+            For search-as-you-type with an external data source (Algolia,
+            an API), pass{" "}
+            <code className="inline-code">filter={"{() => 1}"}</code> so
+            cmdk doesn&apos;t double-filter on top of the relevance ranking
+            you already produced.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">&lt;CommandMenu.Item&gt;</code>{" "}
+            children are Title Case verb phrases (
+            <code className="inline-code">Deploy Project</code>,{" "}
+            <code className="inline-code">Invite Team Member</code>).
+            Avoid navigation phrasing like{" "}
+            <code className="inline-code">Go to project page</code>;
+            CommandMenu commands act, not browse.
+          </li>
+          <li>
+            <code className="inline-code">placeholder</code> is sentence
+            case, action-oriented, and ends with{" "}
+            <code className="inline-code">…</code> (
+            <code className="inline-code">Type a command or search…</code>,{" "}
+            <code className="inline-code">Search articles…</code>). Bare{" "}
+            <code className="inline-code">Search…</code> doesn&apos;t name
+            the scope.
+          </li>
+          <li>
+            <code className="inline-code">&lt;CommandMenu.Group heading&gt;</code>{" "}
+            is Title Case, 1–2 words (
+            <code className="inline-code">Actions</code>,{" "}
+            <code className="inline-code">Recent</code>).
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Result count is announced through a built-in{" "}
+            <code className="inline-code">
+              role=&quot;status&quot; aria-live=&quot;polite&quot;
+            </code>{" "}
+            region — screen readers hear{" "}
+            <code className="inline-code">3 results for &quot;X&quot;</code>{" "}
+            (or{" "}
+            <code className="inline-code">
+              No results for &quot;X&quot;
+            </code>
+            ) as the list narrows. No caller wiring needed.
+          </li>
+          <li>
+            Up / Down arrows move the highlight, Enter activates the
+            highlighted item, and Escape closes the overlay — all handled
+            by cmdk. A visible{" "}
+            <code className="inline-code">Esc</code> button sits next to
+            the input for mouse / touch users.
+          </li>
+          <li>
+            Pass <code className="inline-code">shortcut</code> on{" "}
+            <code className="inline-code">&lt;CommandMenu.Item&gt;</code>{" "}
+            so each item&apos;s keybind renders as a{" "}
+            <code className="inline-code">&lt;kbd&gt;</code> on the right
+            — discoverable to sighted users and announced as a label to
+            screen readers.
+          </li>
+        </ul>
       </Section>
     </>
   );

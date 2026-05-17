@@ -1,6 +1,6 @@
 "use client";
 
-import { Command } from "cmdk";
+import { Command, useCommandState } from "cmdk";
 import { type ReactNode } from "react";
 
 // ============================================================================
@@ -211,6 +211,30 @@ const CMDK_CSS = `
 `;
 
 // ============================================================================
+// Result count announcer — sits inside Command.Dialog so it can read
+// cmdk's filtered state. Renders a visually-hidden polite live region
+// that says "3 results for 'X'" so screen readers hear the list narrow
+// as the user types. Idle (no search) emits nothing.
+// ============================================================================
+
+function ResultCountAnnouncer() {
+  const search = useCommandState((state) => state.search);
+  const count = useCommandState((state) => state.filtered.count);
+
+  const message = !search
+    ? ""
+    : count === 0
+      ? `No results for "${search}"`
+      : `${count} ${count === 1 ? "result" : "results"} for "${search}"`;
+
+  return (
+    <div role="status" aria-live="polite" className="sr-only">
+      {message}
+    </div>
+  );
+}
+
+// ============================================================================
 // Compound Components
 // ============================================================================
 
@@ -397,6 +421,8 @@ export function CommandMenu({
           )}
           {children}
         </Command.List>
+
+        <ResultCountAnnouncer />
       </Command.Dialog>
     </>
   );
