@@ -355,6 +355,131 @@ export function DefaultExample() {
 // Demo Components
 // ============================================================================
 
+const pagesCode = `import { useState } from 'react';
+import { CommandMenu } from '@/components/ui/CommandMenu';
+import { Button } from '@/components/ui/Button';
+
+function Example() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
+      <CommandMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        placeholder="Type a command or search..."
+      >
+        {/* Root page */}
+        <CommandMenu.Group heading="Actions">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Deploy Project
+          </CommandMenu.Item>
+          {/* This item drills into a sub-page instead of acting */}
+          <CommandMenu.Item subPage="projects">
+            View Projects…
+          </CommandMenu.Item>
+          <CommandMenu.Item subPage="settings">
+            Open Settings…
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+
+        {/* Sub-pages — only the matching one renders when active. */}
+        <CommandMenu.Page
+          id="projects"
+          label="Projects"
+          placeholder="Search projects..."
+        >
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Apollo Mission Control
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Berlin Marathon Hub
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Race Database Backend
+          </CommandMenu.Item>
+        </CommandMenu.Page>
+
+        <CommandMenu.Page
+          id="settings"
+          label="Settings"
+          placeholder="Search settings..."
+        >
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Toggle Dark Mode
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Manage Team Members
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Rotate API Key
+          </CommandMenu.Item>
+        </CommandMenu.Page>
+      </CommandMenu>
+    </>
+  );
+}`;
+
+function PagesDemo() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
+      <CommandMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        placeholder="Type a command or search..."
+      >
+        <CommandMenu.Group heading="Actions">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Deploy Project
+          </CommandMenu.Item>
+          <CommandMenu.Item subPage="projects">
+            View Projects…
+          </CommandMenu.Item>
+          <CommandMenu.Item subPage="settings">
+            Open Settings…
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+
+        <CommandMenu.Page
+          id="projects"
+          label="Projects"
+          placeholder="Search projects..."
+        >
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Apollo Mission Control
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Berlin Marathon Hub
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Race Database Backend
+          </CommandMenu.Item>
+        </CommandMenu.Page>
+
+        <CommandMenu.Page
+          id="settings"
+          label="Settings"
+          placeholder="Search settings..."
+        >
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Toggle Dark Mode
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Manage Team Members
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Rotate API Key
+          </CommandMenu.Item>
+        </CommandMenu.Page>
+      </CommandMenu>
+    </>
+  );
+}
+
 function DefaultDemo() {
   const [open, setOpen] = useState(false);
 
@@ -412,6 +537,28 @@ export default function CommandMenuComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <DefaultDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Pages */}
+      <Section>
+        <SectionHeader id="pages" onCopyLink={showToast}>
+          Pages
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          For deep palettes, drill into a sub-page by pairing an item
+          with{" "}
+          <code className="inline-code">subPage=&quot;…&quot;</code> and
+          declaring a matching{" "}
+          <code className="inline-code">&lt;CommandMenu.Page id=&quot;…&quot;&gt;</code>{" "}
+          with its own label and placeholder. A breadcrumb chip appears
+          next to the input; Backspace at an empty input pops back to the
+          previous page, and clicking the chip jumps back to the root.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={pagesCode}>
+            <PagesDemo />
           </CodePreview>
         </div>
       </Section>
@@ -651,9 +798,16 @@ export default function CommandMenuComponent() {
             sections (
             <code className="inline-code">Actions</code>,{" "}
             <code className="inline-code">Recent</code>,{" "}
-            <code className="inline-code">Settings</code>) when a single
-            flat list would exceed roughly 30 items or span multiple
-            resource types.
+            <code className="inline-code">Settings</code>) when items
+            cluster naturally but still belong on one screen.
+          </li>
+          <li>
+            Drill into a{" "}
+            <code className="inline-code">&lt;CommandMenu.Page&gt;</code>{" "}
+            when a single flat list would exceed roughly 30 items or span
+            multiple resource types — pair an item with{" "}
+            <code className="inline-code">subPage=&quot;…&quot;</code> and
+            give the page its own label + placeholder.
           </li>
         </ul>
 
@@ -688,6 +842,12 @@ export default function CommandMenuComponent() {
             <code className="inline-code">value</code> /{" "}
             <code className="inline-code">onValueChange</code> if you want
             to preserve the query across opens.
+          </li>
+          <li>
+            On a sub-page, Backspace at an empty input pops back to the
+            previous page; clicking the page breadcrumb chip next to the
+            input does the same. Closing the dialog resets the page stack
+            so the next open lands on the root.
           </li>
           <li>
             For search-as-you-type with an external data source (Algolia,
@@ -729,6 +889,18 @@ export default function CommandMenuComponent() {
             <code className="inline-code">Actions</code>,{" "}
             <code className="inline-code">Recent</code>).
           </li>
+          <li>
+            <code className="inline-code">&lt;CommandMenu.Page&gt;</code>{" "}
+            takes a Title Case{" "}
+            <code className="inline-code">label</code> that names the
+            scope (
+            <code className="inline-code">Projects</code>,{" "}
+            <code className="inline-code">Settings</code>) and a sentence-
+            case <code className="inline-code">placeholder</code> ending
+            in <code className="inline-code">…</code> — same content rules
+            as the root placeholder, narrowed to the page (
+            <code className="inline-code">Search projects…</code>).
+          </li>
         </ul>
 
         <h3
@@ -751,13 +923,15 @@ export default function CommandMenuComponent() {
             </code>
             ) as the list narrows. No caller wiring needed.
           </li>
-          <li>
-            Up / Down arrows move the highlight, Enter activates the
-            highlighted item, and Escape closes the overlay — all handled
-            by cmdk. A visible{" "}
-            <code className="inline-code">Esc</code> button sits next to
-            the input for mouse / touch users.
-          </li>
+            <li>
+              Up / Down arrows move the highlight, Enter activates the
+              highlighted item, Escape closes the overlay, and Backspace
+              at an empty input pops the page stack — all handled by the
+              component. A visible{" "}
+              <code className="inline-code">Esc</code> button sits next to
+              the input for mouse / touch users, alongside the page
+              breadcrumb chip when a sub-page is active.
+            </li>
           <li>
             Pass <code className="inline-code">shortcut</code> on{" "}
             <code className="inline-code">&lt;CommandMenu.Item&gt;</code>{" "}

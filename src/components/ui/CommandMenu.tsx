@@ -1,7 +1,18 @@
 "use client";
 
 import { Command, useCommandState } from "cmdk";
-import { type ReactNode } from "react";
+import {
+  Children,
+  createContext,
+  isValidElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 
 // ============================================================================
 // Types
@@ -12,9 +23,9 @@ export interface CommandMenuProps {
   open: boolean;
   /** Called when the command menu should close */
   onClose: () => void;
-  /** Command groups and items */
+  /** Command groups, items, and pages */
   children?: ReactNode;
-  /** Placeholder text for the search input */
+  /** Placeholder for the root page's input */
   placeholder?: string;
   /** Additional CSS classes for the wrapper */
   className?: string;
@@ -38,18 +49,13 @@ export interface CommandMenuProps {
    *   - explicit null  → suppresses Command.Empty entirely so
    *                      the result area collapses to its
    *                      padding, leaving just the input row
-   *                      visible. Use when you don't want a
-   *                      "no results" message at all (e.g. a
-   *                      search-as-you-type pattern where the
-   *                      idle state is just the input).
+   *                      visible.
    */
   emptyState?: ReactNode | null;
   /**
    * When true, drops the divider below the input row and
    * removes the result list's padding so the menu collapses
-   * to a flush input-only surface. Pair with
-   * `emptyState={null}` for the cleanest "just a search field"
-   * idle state.
+   * to a flush input-only surface.
    */
   resultsHidden?: boolean;
 }
@@ -78,7 +84,38 @@ interface CommandMenuItemProps {
   value?: string;
   /** Extra terms that should match this item (see cmdk filter) */
   keywords?: string[];
+  /**
+   * Push a sub-page onto the menu stack when the item is selected.
+   * The matching `<CommandMenu.Page id="...">` becomes the active
+   * page; the user can return to the previous page with Backspace at
+   * an empty input. Mutually exclusive with `onSelect` — when both
+   * are passed, `onSelect` fires first and then the page is pushed.
+   */
+  subPage?: string;
 }
+
+interface CommandMenuPageProps {
+  /** Page identifier — matches the `subPage` value on the item that opens it */
+  id: string;
+  /** Title shown as a breadcrumb on the left of the input */
+  label: string;
+  /** Placeholder shown in the input while this page is active */
+  placeholder?: string;
+  /** Page-scoped groups + items */
+  children: ReactNode;
+}
+
+// ============================================================================
+// Page-stack context — drives the sub-page push/pop from anywhere inside
+// the dialog. Consumed by CommandMenuItem when `subPage` is set.
+// ============================================================================
+
+interface CommandMenuStackContextValue {
+  pushPage: (id: string) => void;
+}
+
+const CommandMenuStackContext =
+  createContext<CommandMenuStackContextValue | null>(null);
 
 // ============================================================================
 // Styles — Geist computed values, scoped to .ds-cmdk-content
@@ -195,6 +232,19 @@ const CMDK_CSS = `
     user-select: none;
   }
 
+  .ds-cmdk-page-crumb {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 6px;
+    background: var(--ds-gray-100);
+    color: var(--ds-gray-1000);
+    font-size: 13px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
   .ds-cmdk-esc-button {
     display: none;
     background: var(--ds-background-100);
@@ -251,10 +301,20 @@ function CommandMenuItem({
   subtitle,
   value,
   keywords,
+  subPage,
 }: CommandMenuItemProps) {
+  const stack = useContext(CommandMenuStackContext);
+
+  const handleSelect = useCallback(() => {
+    onSelect?.();
+    if (subPage && stack) {
+      stack.pushPage(subPage);
+    }
+  }, [onSelect, subPage, stack]);
+
   return (
     <Command.Item
-      onSelect={() => onSelect?.()}
+      onSelect={handleSelect}
       disabled={disabled}
       value={value}
       keywords={keywords}
@@ -331,6 +391,17 @@ function CommandMenuItem({
   );
 }
 
+/**
+ * A sub-page within a CommandMenu. The matching item (rendered with
+ * `subPage="<id>"`) pushes the user onto this page; Backspace at an
+ * empty input pops back to the previous page.
+ */
+function CommandMenuPage(_props: CommandMenuPageProps) {
+  // Page is a config carrier — its children are rendered by the
+  // CommandMenu host once the page is active. Nothing to render here.
+  return null;
+}
+
 // ============================================================================
 // CommandMenu
 // ============================================================================
@@ -347,8 +418,100 @@ export function CommandMenu({
   emptyState,
   resultsHidden = false,
 }: CommandMenuProps) {
+  // Split children into root content + page configs by element type.
+  const { rootChildren, pages } = useMemo(() => {
+    const rootChildren: ReactNode[] = [];
+    const pages = new Map<
+      string,
+      { label: string; placeholder?: string; children: ReactNode }
+    >();
+    Children.forEach(children, (child) => {
+      if (
+        isValidElement(child) &&
+        (child as ReactElement).type === CommandMenuPage
+      ) {
+        const props = (child as ReactElement<CommandMenuPageProps>).props;
+        pages.set(props.id, {
+          label: props.label,
+          placeholder: props.placeholder,
+          children: props.children,
+        });
+      } else {
+        rootChildren.push(child);
+      }
+    });
+    return { rootChildren, pages };
+  }, [children]);
+
+  // Page stack. Top of the stack is the active page; empty stack = root.
+  const [pageStack, setPageStack] = useState<string[]>([]);
+  const [internalSearch, setInternalSearch] = useState("");
+
+  // Reset the stack and the search every time the dialog closes so the
+  // next open lands on the root with a clean input.
+  useEffect(() => {
+    if (!open) {
+      setPageStack([]);
+      setInternalSearch("");
+    }
+  }, [open]);
+
+  const activePageId = pageStack[pageStack.length - 1];
+  const activePage = activePageId ? pages.get(activePageId) : undefined;
+
+  const stackValue = useMemo(
+    () => ({
+      pushPage: (id: string) => {
+        setPageStack((prev) => [...prev, id]);
+        // Clear the search when entering a page so the page's own
+        // results aren't filtered by the previous query.
+        if (value === undefined) {
+          setInternalSearch("");
+        } else {
+          onValueChange?.("");
+        }
+      },
+    }),
+    [value, onValueChange],
+  );
+
+  const popPage = useCallback(() => {
+    setPageStack((prev) => prev.slice(0, -1));
+  }, []);
+
+  const isControlled = value !== undefined;
+  const currentSearch = isControlled ? value : internalSearch;
+
+  const handleValueChange = useCallback(
+    (next: string) => {
+      if (!isControlled) {
+        setInternalSearch(next);
+      }
+      onValueChange?.(next);
+    },
+    [isControlled, onValueChange],
+  );
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      // Backspace at empty input pops the page stack.
+      if (
+        event.key === "Backspace" &&
+        !currentSearch &&
+        pageStack.length > 0
+      ) {
+        event.preventDefault();
+        popPage();
+      }
+    },
+    [currentSearch, pageStack.length, popPage],
+  );
+
+  const effectivePlaceholder = activePage?.placeholder ?? placeholder;
+  const visibleChildren = activePage ? activePage.children : rootChildren;
+
   return (
-    <>
+    <CommandMenuStackContext.Provider value={stackValue}>
       <style>{CMDK_CSS}</style>
       <Command.Dialog
         open={open}
@@ -359,6 +522,7 @@ export function CommandMenu({
         overlayClassName="ds-cmdk-overlay"
         contentClassName={`ds-cmdk-content ${className}`.trim()}
         filter={filter}
+        onKeyDown={handleKeyDown}
         loop
       >
         {/* Top section — Geist: topSection */}
@@ -382,10 +546,23 @@ export function CommandMenu({
               padding: "0 4px",
             }}
           >
+            {/* Breadcrumb crumb — shown only when a sub-page is active.
+                Reads the active page's label so the user knows where
+                they are; clicking it pops back. */}
+            {activePage && (
+              <button
+                type="button"
+                className="ds-cmdk-page-crumb"
+                onClick={popPage}
+                aria-label={`Back to previous page (currently in ${activePage.label})`}
+              >
+                {activePage.label}
+              </button>
+            )}
             <Command.Input
-              placeholder={placeholder}
-              value={value}
-              onValueChange={onValueChange}
+              placeholder={effectivePlaceholder}
+              value={currentSearch}
+              onValueChange={handleValueChange}
             />
             <button
               type="button"
@@ -419,14 +596,15 @@ export function CommandMenu({
           {emptyState !== null && (
             <Command.Empty>{emptyState ?? "No results found."}</Command.Empty>
           )}
-          {children}
+          {visibleChildren}
         </Command.List>
 
         <ResultCountAnnouncer />
       </Command.Dialog>
-    </>
+    </CommandMenuStackContext.Provider>
   );
 }
 
 CommandMenu.Group = CommandMenuGroup;
 CommandMenu.Item = CommandMenuItem;
+CommandMenu.Page = CommandMenuPage;
