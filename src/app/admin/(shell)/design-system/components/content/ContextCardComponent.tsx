@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -538,6 +539,117 @@ export default function ContextCardComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Context Card to reveal entity metadata on hover or focus:
+            a user, a deployment, a project, an API key. The trigger is
+            usually a name link or avatar in dense data.
+          </li>
+          <li>
+            For a one-line &quot;why&quot; without metadata rows, use{" "}
+            <ComponentRef name="Tooltip" />. For long-form content, edit
+            forms, or persistent navigation, route to a{" "}
+            <ComponentRef name="Drawer" /> or a detail page.
+          </li>
+          <li>
+            Don&apos;t use Context Card to surface destructive actions; the
+            panel can dismiss on cursor exit before the user commits.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Context Card opens on hover and keyboard focus and closes on
+            cursor exit or blur. The default{" "}
+            <code className="inline-code">delayDuration</code> of 200 ms
+            keeps the card from flashing on a fast mouse sweep — tune via
+            the prop only if the surrounding UX needs a tighter or looser
+            wait.
+          </li>
+          <li>
+            Cap interactive content at one primary action (
+            <code className="inline-code">View Project</code>,{" "}
+            <code className="inline-code">Open Settings</code>). More than
+            one CTA reads as a menu and belongs in{" "}
+            <ComponentRef name="Menu" />.
+          </li>
+          <li>
+            Don&apos;t nest a Context Card inside a{" "}
+            <ComponentRef name="Tooltip" /> or another Context Card; the
+            second layer steals focus and traps keyboard users.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Lead with the entity name as a Title Case heading and one
+            identifying line in sentence case underneath (team slug, owner,
+            deployment URL).
+          </li>
+          <li>
+            Follow with 2–4 metadata rows of{" "}
+            <code className="inline-code">Label: value</code>. Keys are
+            Title Case noun phrases (
+            <code className="inline-code">Last Active</code>,{" "}
+            <code className="inline-code">Created</code>,{" "}
+            <code className="inline-code">Plan</code>); values follow the
+            same formatting rules as table cells. Use the em-dash character{" "}
+            <code className="inline-code">—</code> for unknown values,
+            never <code className="inline-code">N/A</code> or{" "}
+            <code className="inline-code">null</code>.
+          </li>
+          <li>
+            Don&apos;t restate what the trigger already showed. If the row
+            already renders the deployment URL, don&apos;t repeat it as
+            the first card line.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The trigger keeps its own accessible name; the card is
+            supplementary content and doesn&apos;t replace it. Radix
+            Tooltip handles the ARIA role + labelling under the hood, so
+            wrap the trigger element as-is and let it expose its own name.
+          </li>
+          <li>
+            Card content is reachable by keyboard once the trigger has
+            focus; Escape closes the card and returns focus to the
+            trigger.
+          </li>
+        </ul>
       </Section>
     </>
   );
