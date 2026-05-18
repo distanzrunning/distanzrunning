@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -721,6 +722,123 @@ export default function ContextMenuComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use ContextMenu for power-user shortcuts on right-click or
+            long-press over a row, file, or canvas object.
+          </li>
+          <li>
+            ContextMenu must never be the only entry point for an action.
+            Mirror every item in a visible{" "}
+            <ComponentRef name="Menu" /> trigger or row button so
+            mouse-only and keyboard-only users have parity.
+          </li>
+          <li>
+            For a global command palette, use{" "}
+            <ComponentRef name="Command Menu" slug="command-menu" />; for a
+            dropdown opened from a visible trigger, use{" "}
+            <ComponentRef name="Menu" />.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The component binds right-click on desktop and long-press on
+            touch via Radix ContextMenu, and suppresses the native browser
+            menu only on the{" "}
+            <code className="inline-code">&lt;ContextMenu.Trigger&gt;</code>{" "}
+            element — the rest of the page keeps its normal right-click
+            menu.
+          </li>
+          <li>
+            The menu positions at the pointer; if it would overflow the
+            viewport, Radix flips it horizontally then vertically before
+            clipping.
+          </li>
+          <li>
+            Closes on activation, Escape, and outside-click. It does{" "}
+            <em>not</em> close on hover-out — caller doesn&apos;t need to
+            wire dismissal.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Items follow the same rules as{" "}
+            <ComponentRef name="Menu" />: Title Case{" "}
+            <code className="inline-code">Verb + Noun</code> (
+            <code className="inline-code">Open in New Tab</code>,{" "}
+            <code className="inline-code">Copy URL</code>,{" "}
+            <code className="inline-code">Delete Deployment</code>). Bare
+            verbs are wrong.
+          </li>
+          <li>
+            End with <code className="inline-code">…</code> only when
+            activating opens a follow-up dialog (
+            <code className="inline-code">Rename…</code>,{" "}
+            <code className="inline-code">Move to Folder…</code>).
+          </li>
+          <li>
+            Group destructive items at the bottom with a{" "}
+            <code className="inline-code">
+              &lt;ContextMenu.Separator&gt;
+            </code>{" "}
+            and keep the destructive label{" "}
+            <code className="inline-code">Verb + Noun</code>.{" "}
+            <code className="inline-code">Delete</code> alone never ships.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The keyboard menu key opens the same menu without right-click —{" "}
+            <code className="inline-code">Shift + F10</code> on
+            Windows/Linux, the dedicated menu key on any platform that
+            ships one. Radix ContextMenu handles the binding; no caller
+            wiring needed.
+          </li>
+          <li>
+            Up / Down arrows move focus, Enter / Space activates the
+            highlighted item, and Escape closes the menu and returns focus
+            to the trigger row.
+          </li>
+          <li>
+            Don&apos;t bury destructive items behind nested submenus. One
+            level deep keeps keyboard navigation predictable.
+          </li>
+        </ul>
       </Section>
     </>
   );
