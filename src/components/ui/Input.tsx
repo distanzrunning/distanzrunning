@@ -87,6 +87,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     disabled,
     className,
     id: idProp,
+    "aria-describedby": ariaDescribedByProp,
     ...props
   },
   ref,
@@ -96,6 +97,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const config = sizeConfigs[size];
   const hasPrefix = prefix !== undefined;
   const hasSuffix = suffix !== undefined;
+  const errorMessageId =
+    error && errorMessage ? `${inputId}-error` : undefined;
+  const ariaDescribedBy =
+    [ariaDescribedByProp, errorMessageId].filter(Boolean).join(" ") ||
+    undefined;
 
   return (
     <div className="ds-input-wrapper">
@@ -164,6 +170,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           ref={ref}
           id={inputId}
           disabled={disabled}
+          aria-invalid={error || undefined}
+          aria-describedby={ariaDescribedBy}
           className="ds-input-field"
           style={{
             flex: 1,
@@ -223,6 +231,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       {/* Error message */}
       {error && errorMessage && (
         <div
+          id={errorMessageId}
           className="ds-input-error"
           style={{
             display: "flex",

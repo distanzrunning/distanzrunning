@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -828,6 +829,175 @@ export default function InputComponent() {
         <CodePreview componentCode={labelCode}>
           <LabelDemo />
         </CodePreview>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pick <code className="inline-code">&lt;Input&gt;</code> for
+            a single line of free-form text such as names, domains, or
+            tokens.
+          </li>
+          <li>
+            Switch to <ComponentRef name="Textarea" /> the moment
+            content can wrap to multiple lines.
+          </li>
+          <li>
+            Use <ComponentRef name="Combobox" /> when the value comes
+            from a known list the user filters by typing.
+          </li>
+          <li>
+            For an inline search box, compose with a magnifying-glass
+            icon{" "}
+            <code className="inline-code">prefix</code> and a scoped
+            placeholder (<code className="inline-code">Search races</code>
+            ); don&apos;t drop a search-styled Input inside an
+            unrelated form.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Validate on blur, not on every keystroke. Surface the
+            message by toggling{" "}
+            <code className="inline-code">error</code> and passing the
+            string to{" "}
+            <code className="inline-code">errorMessage</code>.
+          </li>
+          <li>
+            Trim leading and trailing whitespace before submit so{" "}
+            <code className="inline-code">{" example.com "}</code> and{" "}
+            <code className="inline-code">example.com</code> resolve to
+            one value.
+          </li>
+          <li>
+            Keep the field focusable while saving; pair{" "}
+            <code className="inline-code">disabled</code> with a
+            spinner only when input is impossible.
+          </li>
+          <li>
+            Don&apos;t wrap a labelled Input in a{" "}
+            <ComponentRef name="Tooltip" />; put the explainer on a
+            sibling icon{" "}
+            <ComponentRef name="Button" /> so the label stays
+            announced.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Labels are short Title Case nouns:{" "}
+            <code className="inline-code">Project Name</code>,{" "}
+            <code className="inline-code">Domain</code>,{" "}
+            <code className="inline-code">
+              Environment Variable Name
+            </code>
+            .
+          </li>
+          <li>
+            Placeholders show an example value (
+            <code className="inline-code">my-awesome-project</code>,{" "}
+            <code className="inline-code">example.com</code>), never
+            instructions like{" "}
+            <code className="inline-code">
+              Enter your project name
+            </code>
+            .
+          </li>
+          <li>
+            Helper text is sentence case, one sentence with a trailing
+            period. Render it on a sibling element with an{" "}
+            <code className="inline-code">id</code> and pass that id to
+            the Input&apos;s{" "}
+            <code className="inline-code">aria-describedby</code> so
+            screen readers announce it with the field.
+          </li>
+          <li>
+            <code className="inline-code">errorMessage</code> names the
+            field and the constraint, ends in a period, and skips{" "}
+            <code className="inline-code">please</code> (
+            <code className="inline-code">
+              Project name is required.
+            </code>
+            ,{" "}
+            <code className="inline-code">
+              Code must be 6 digits.
+            </code>
+            ).
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The component auto-generates an{" "}
+            <code className="inline-code">id</code> via{" "}
+            <code className="inline-code">useId()</code> when one
+            isn&apos;t passed, so the{" "}
+            <code className="inline-code">label</code>&rarr;input link
+            via{" "}
+            <code className="inline-code">htmlFor</code> always works.
+            Pass an explicit{" "}
+            <code className="inline-code">id</code> only when an
+            external element needs to reference it.
+          </li>
+          <li>
+            When{" "}
+            <code className="inline-code">error</code> is on, the input
+            carries{" "}
+            <code className="inline-code">aria-invalid=&quot;true&quot;</code>{" "}
+            and{" "}
+            <code className="inline-code">aria-describedby</code>{" "}
+            points at the rendered{" "}
+            <code className="inline-code">errorMessage</code> — both
+            are wired automatically. Caller-supplied{" "}
+            <code className="inline-code">aria-describedby</code>{" "}
+            (e.g. for sibling helper text) is merged, not replaced.
+          </li>
+          <li>
+            For icon-only affordances next to an input (clear, reveal,
+            copy), use{" "}
+            <code className="inline-code">
+              &lt;Button shape=&quot;circle&quot;
+              aria-label=&quot;&hellip;&quot;&gt;
+            </code>{" "}
+            rather than an unlabeled icon button.
+          </li>
+          <li>
+            A search-composition Input&apos;s placeholder should name
+            the scope (
+            <code className="inline-code">Search races</code>) so the
+            role is clear without sighted context.
+          </li>
+        </ul>
       </Section>
 
       <Toast
