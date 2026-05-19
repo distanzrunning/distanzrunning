@@ -418,6 +418,60 @@ export default function DescriptionComponent() {
           </table>
         </div>
       </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use <code className="inline-code">&lt;Description&gt;</code>{" "}
+            for definition-list metadata: a short Title Case key paired
+            with a single value (
+            <code className="inline-code">Last Deployed</code>,{" "}
+            <code className="inline-code">Region</code>,{" "}
+            <code className="inline-code">Plan</code>). For inline help
+            under a form field, use the input&apos;s helper-text slot
+            instead.
+          </li>
+          <li>
+            The component renders{" "}
+            <code className="inline-code">&lt;dl&gt;</code> /{" "}
+            <code className="inline-code">&lt;dt&gt;</code> /{" "}
+            <code className="inline-code">&lt;dd&gt;</code> so screen
+            readers announce each key/value pair as a definition. Don&apos;t
+            wrap the component in extra paragraphs that break the list
+            semantics.
+          </li>
+          <li>
+            <code className="inline-code">
+              &lt;Description.Title&gt;
+            </code>{" "}
+            content is a Title Case noun (
+            <code className="inline-code">Last Deployed</code>,{" "}
+            <code className="inline-code">Build Duration</code>);{" "}
+            <code className="inline-code">
+              &lt;Description.Content&gt;
+            </code>{" "}
+            is sentence case unless the value is a literal identifier, ID,
+            or timestamp that should be preserved verbatim.
+          </li>
+          <li>
+            Pass <code className="inline-code">tooltip</code> only when
+            the title alone is ambiguous and a one-sentence definition
+            resolves it. The tooltip text is sentence case and ends with
+            a period.
+          </li>
+          <li>
+            Don&apos;t put interactive controls in the title slot.
+            Buttons, menus, and links belong in the content (
+            <code className="inline-code">&lt;dd&gt;</code>) or in the
+            parent layout, not the label (
+            <code className="inline-code">&lt;dt&gt;</code>).
+          </li>
+        </ul>
+      </Section>
     </>
   );
 }
