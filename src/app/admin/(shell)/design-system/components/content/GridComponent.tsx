@@ -647,6 +647,102 @@ export default function GridComponent() {
         </CodePreview>
       </Section>
 
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Grid for two-dimensional cell-and-guide layouts in
+            marketing pages, docs landings, and feature breakdowns where
+            the rule lines and cell borders are part of the design.
+          </li>
+          <li>
+            For plain n-column responsive content (cards, lists), use
+            Tailwind{" "}
+            <code className="inline-code">grid grid-cols-*</code>{" "}
+            utilities directly; Grid is overkill when guides
+            aren&apos;t visible.
+          </li>
+          <li>
+            Don&apos;t nest Grids more than one level; the guide
+            overlap reads as visual noise and breaks the cell math.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">rows</code> and{" "}
+            <code className="inline-code">columns</code> are scalars,
+            not responsive objects. Pick them for the layout&apos;s
+            target breakpoint; reflow across screen sizes is handled at
+            the caller using Tailwind responsive utilities (
+            <code className="inline-code">hidden md:block</code> /{" "}
+            <code className="inline-code">md:hidden</code> on two
+            Grid variants) or a responsive wrapper.
+          </li>
+          <li>
+            Use{" "}
+            <code className="inline-code">
+              &lt;GridCell solid&gt;
+            </code>{" "}
+            to occlude guides behind a tile when content needs an
+            opaque background; without it, guides render through the
+            cell.
+          </li>
+          <li>
+            Hide row or column guides (
+            <code className="inline-code">hideRowGuides</code>,{" "}
+            <code className="inline-code">hideColumnGuides</code>) only
+            when their absence improves clarity (single-axis layouts,
+            hero rows). Hiding both usually means a plain Tailwind grid
+            is the right tool.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Guides are decorative and already carry{" "}
+            <code className="inline-code">
+              aria-hidden=&quot;true&quot;
+            </code>
+            ; let semantics live on cell content.
+          </li>
+          <li>
+            When cells become tappable, give each its own focus ring
+            and keep tab order matching reading order.
+          </li>
+          <li>
+            Confirm guide contrast on both themes. The default{" "}
+            <code className="inline-code">
+              var(--ds-gray-400)
+            </code>{" "}
+            token is tuned, but custom borders can drop below the 3:1
+            minimum.
+          </li>
+        </ul>
+      </Section>
+
       <Toast
         message={toast.message}
         isVisible={toast.isVisible}
