@@ -324,11 +324,11 @@ export function Component(): JSX.Element {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log('edit')}>Edit</MenuItem>
-      <MenuItem onClick={() => console.log('duplicate')}>Duplicate</MenuItem>
+      <MenuItem onClick={() => console.log('edit')}>Edit Race</MenuItem>
+      <MenuItem onClick={() => console.log('duplicate')}>Duplicate Race</MenuItem>
+      <MenuItem onClick={() => console.log('archive')}>Archive Race</MenuItem>
       <MenuSeparator />
-      <MenuItem onClick={() => console.log('archive')}>Archive</MenuItem>
-      <MenuItem onClick={() => console.log('delete')}>Delete</MenuItem>
+      <MenuItem destructive onClick={() => console.log('delete')}>Delete Race</MenuItem>
     </Menu>
   );
 }`;
@@ -340,26 +340,27 @@ export function Component(): JSX.Element {
   return (
     <Menu>
       <MenuButton variant="secondary" chevron>Actions</MenuButton>
-      <MenuItem onClick={() => console.log('edit')}>Edit</MenuItem>
-      <MenuItem onClick={() => console.log('duplicate')}>Duplicate</MenuItem>
+      <MenuItem onClick={() => console.log('edit')}>Edit Race</MenuItem>
+      <MenuItem onClick={() => console.log('duplicate')}>Duplicate Race</MenuItem>
+      <MenuItem onClick={() => console.log('archive')}>Archive Race</MenuItem>
       <MenuSeparator />
-      <MenuItem onClick={() => console.log('archive')}>Archive</MenuItem>
-      <MenuItem onClick={() => console.log('delete')}>Delete</MenuItem>
+      <MenuItem destructive onClick={() => console.log('delete')}>Delete Race</MenuItem>
     </Menu>
   );
 }`;
 
-const disabledItemsCode = `import { Menu, MenuButton, MenuItem } from '@/components/ui/Menu';
+const disabledItemsCode = `import { Menu, MenuButton, MenuItem, MenuSeparator } from '@/components/ui/Menu';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log('edit')}>Edit</MenuItem>
-      <MenuItem disabled>Duplicate</MenuItem>
-      <MenuItem disabled>Archive</MenuItem>
-      <MenuItem onClick={() => console.log('delete')}>Delete</MenuItem>
+      <MenuItem onClick={() => console.log('edit')}>Edit Race</MenuItem>
+      <MenuItem disabled>Duplicate Race</MenuItem>
+      <MenuItem disabled>Archive Race</MenuItem>
+      <MenuSeparator />
+      <MenuItem destructive onClick={() => console.log('delete')}>Delete Race</MenuItem>
     </Menu>
   );
 }`;
@@ -371,9 +372,9 @@ export function Component(): JSX.Element {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log('view')}>View Details</MenuItem>
-      <MenuItem onClick={() => console.log('edit')}>Edit</MenuItem>
-      <MenuItem locked>Delete</MenuItem>
+      <MenuItem onClick={() => console.log('view')}>View Race Details</MenuItem>
+      <MenuItem onClick={() => console.log('edit')}>Edit Race</MenuItem>
+      <MenuItem locked>Delete Race</MenuItem>
     </Menu>
   );
 }`;
@@ -385,9 +386,9 @@ export function Component(): JSX.Element {
   return (
     <Menu>
       <MenuButton>Links</MenuButton>
-      <MenuItem href="/admin/design-system/menu#custom-trigger">One</MenuItem>
-      <MenuItem href="#">Two</MenuItem>
-      <MenuItem href="#">Three</MenuItem>
+      <MenuItem href="/admin/design-system/menu#custom-trigger">View Documentation</MenuItem>
+      <MenuItem href="#">Open GitHub Repo</MenuItem>
+      <MenuItem href="#">Contact Support</MenuItem>
     </Menu>
   );
 }`;
@@ -410,9 +411,9 @@ export function Component(): JSX.Element {
           height={32}
         />
       </MenuButton>
-      <MenuItem onClick={() => console.log('profile')}>Profile</MenuItem>
-      <MenuItem onClick={() => console.log('settings')}>Settings</MenuItem>
-      <MenuItem onClick={() => console.log('logout')}>Log Out</MenuItem>
+      <MenuItem onClick={() => console.log('profile')}>View Profile</MenuItem>
+      <MenuItem onClick={() => console.log('settings')}>Account Settings</MenuItem>
+      <MenuItem onClick={() => console.log('logout')}>Sign Out</MenuItem>
     </Menu>
   );
 }`;
@@ -433,9 +434,9 @@ export function Component(): JSX.Element {
         >
           <MoreHorizontal size={16} />
         </MenuButton>
-        <MenuItem prefix={<Accessibility size={16} />}>Left</MenuItem>
-        <MenuItem prefix={<Accessibility size={16} />}>Center</MenuItem>
-        <MenuItem prefix={<Accessibility size={16} />}>Right</MenuItem>
+        <MenuItem prefix={<Accessibility size={16} />}>Align Left</MenuItem>
+        <MenuItem prefix={<Accessibility size={16} />}>Align Center</MenuItem>
+        <MenuItem prefix={<Accessibility size={16} />}>Align Right</MenuItem>
       </Menu>
       <Menu width={150}>
         <MenuButton
@@ -446,9 +447,9 @@ export function Component(): JSX.Element {
         >
           <MoreHorizontal size={16} />
         </MenuButton>
-        <MenuItem suffix={<Accessibility size={16} />}>Left</MenuItem>
-        <MenuItem suffix={<Accessibility size={16} />}>Center</MenuItem>
-        <MenuItem suffix={<Accessibility size={16} />}>Right</MenuItem>
+        <MenuItem suffix={<Accessibility size={16} />}>Align Left</MenuItem>
+        <MenuItem suffix={<Accessibility size={16} />}>Align Center</MenuItem>
+        <MenuItem suffix={<Accessibility size={16} />}>Align Right</MenuItem>
       </Menu>
     </div>
   );
@@ -461,8 +462,8 @@ export function Component(): JSX.Element {
   return (
     <Menu position="left-start">
       <MenuButton>Left Start</MenuButton>
-      <MenuItem>One</MenuItem>
-      <MenuItem>Two</MenuItem>
+      <MenuItem>Edit Race</MenuItem>
+      <MenuItem>Duplicate Race</MenuItem>
     </Menu>
   );
 }`;
@@ -528,11 +529,11 @@ function DefaultDemo() {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
-      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
-      <MenuItem onClick={() => console.log("three")}>Three</MenuItem>
-      <MenuItem href="https://distanzrunning.com">Test for Link</MenuItem>
-      <MenuItem destructive onClick={() => console.log("delete")}>Delete</MenuItem>
+      <MenuItem onClick={() => console.log("edit")}>Edit Race</MenuItem>
+      <MenuItem onClick={() => console.log("duplicate")}>Duplicate Race</MenuItem>
+      <MenuItem onClick={() => console.log("archive")}>Archive Race</MenuItem>
+      <MenuSeparator />
+      <MenuItem destructive onClick={() => console.log("delete")}>Delete Race</MenuItem>
     </Menu>
   );
 }
@@ -543,11 +544,11 @@ function WithChevronDemo() {
       <MenuButton variant="secondary" chevron>
         Actions
       </MenuButton>
-      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
-      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
-      <MenuItem onClick={() => console.log("three")}>Three</MenuItem>
-      <MenuItem href="https://distanzrunning.com">Test for Link</MenuItem>
-      <MenuItem destructive onClick={() => console.log("delete")}>Delete</MenuItem>
+      <MenuItem onClick={() => console.log("edit")}>Edit Race</MenuItem>
+      <MenuItem onClick={() => console.log("duplicate")}>Duplicate Race</MenuItem>
+      <MenuItem onClick={() => console.log("archive")}>Archive Race</MenuItem>
+      <MenuSeparator />
+      <MenuItem destructive onClick={() => console.log("delete")}>Delete Race</MenuItem>
     </Menu>
   );
 }
@@ -556,10 +557,11 @@ function DisabledItemsDemo() {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
-      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
-      <MenuItem disabled>Three</MenuItem>
-      <MenuItem destructive onClick={() => console.log("delete")}>Delete</MenuItem>
+      <MenuItem onClick={() => console.log("edit")}>Edit Race</MenuItem>
+      <MenuItem disabled>Duplicate Race</MenuItem>
+      <MenuItem disabled>Archive Race</MenuItem>
+      <MenuSeparator />
+      <MenuItem destructive onClick={() => console.log("delete")}>Delete Race</MenuItem>
     </Menu>
   );
 }
@@ -568,9 +570,9 @@ function LockedItemsDemo() {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log("view")}>View Details</MenuItem>
-      <MenuItem onClick={() => console.log("edit")}>Edit</MenuItem>
-      <MenuItem locked>Delete</MenuItem>
+      <MenuItem onClick={() => console.log("view")}>View Race Details</MenuItem>
+      <MenuItem onClick={() => console.log("edit")}>Edit Race</MenuItem>
+      <MenuItem locked>Delete Race</MenuItem>
     </Menu>
   );
 }
@@ -579,9 +581,9 @@ function LinkItemsDemo() {
   return (
     <Menu>
       <MenuButton>Links</MenuButton>
-      <MenuItem href="/admin/design-system/menu#custom-trigger">One</MenuItem>
-      <MenuItem href="#">Two</MenuItem>
-      <MenuItem href="#">Three</MenuItem>
+      <MenuItem href="/admin/design-system/menu#custom-trigger">View Documentation</MenuItem>
+      <MenuItem href="#">Open GitHub Repo</MenuItem>
+      <MenuItem href="#">Contact Support</MenuItem>
     </Menu>
   );
 }
@@ -596,9 +598,9 @@ function CustomTriggerDemo() {
           size={30}
         />
       </MenuButton>
-      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
-      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
-      <MenuItem onClick={() => console.log("three")}>Three</MenuItem>
+      <MenuItem onClick={() => console.log("profile")}>View Profile</MenuItem>
+      <MenuItem onClick={() => console.log("settings")}>Account Settings</MenuItem>
+      <MenuItem onClick={() => console.log("logout")}>Sign Out</MenuItem>
     </Menu>
   );
 }
@@ -619,17 +621,17 @@ function PrefixSuffixDemo() {
         <MenuButton variant="secondary" size="small" shape="square">
           <ThreeDotsIcon />
         </MenuButton>
-        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("left")}>Left</MenuItem>
-        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("center")}>Center</MenuItem>
-        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("right")}>Right</MenuItem>
+        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("left")}>Align Left</MenuItem>
+        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("center")}>Align Center</MenuItem>
+        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("right")}>Align Right</MenuItem>
       </Menu>
       <Menu width={150}>
         <MenuButton variant="secondary" size="small" shape="square">
           <ThreeDotsIcon />
         </MenuButton>
-        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("left")}>Left</MenuItem>
-        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("center")}>Center</MenuItem>
-        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("right")}>Right</MenuItem>
+        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("left")}>Align Left</MenuItem>
+        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("center")}>Align Center</MenuItem>
+        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("right")}>Align Right</MenuItem>
       </Menu>
     </div>
   );
@@ -639,8 +641,8 @@ function MenuPositionDemo() {
   return (
     <Menu position="left-start">
       <MenuButton>Left Start</MenuButton>
-      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
-      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
+      <MenuItem onClick={() => console.log("edit")}>Edit Race</MenuItem>
+      <MenuItem onClick={() => console.log("duplicate")}>Duplicate Race</MenuItem>
     </Menu>
   );
 }
