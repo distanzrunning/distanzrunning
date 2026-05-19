@@ -263,6 +263,15 @@ function MenuDropdown({
   // then handle Up/Down/Home/End at the container level. Roving
   // tabindex isn't needed — each item is tabindex=0 and we just call
   // .focus() on the right one.
+  //
+  // `preventScroll` is essential on this first focus: at the moment
+  // it fires, the dropdown's coords useEffect has scheduled a setState
+  // but the new position hasn't been committed to the DOM, so the
+  // dropdown is still anchored at top:0, left:0. A plain .focus()
+  // would scroll the page to that origin (jumping the viewport to
+  // the top). Subsequent focus() calls from arrow keys happen after
+  // the menu is positioned and should keep their default scroll-into-
+  // view behaviour so long menus reveal the focused row.
   useEffect(() => {
     const el = dropdownRef.current;
     if (!el) return;
@@ -272,7 +281,7 @@ function MenuDropdown({
       ),
     );
     if (items.length === 0) return;
-    items[0].focus();
+    items[0].focus({ preventScroll: true });
 
     function handleKey(e: KeyboardEvent) {
       if (!el) return;
