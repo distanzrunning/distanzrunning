@@ -378,7 +378,7 @@ function ListExample() {
           />
           <Entity.Field>
             <Button size="small" variant="secondary">
-              Remove
+              Remove Race
             </Button>
           </Entity.Field>
         </Entity>
@@ -493,7 +493,7 @@ function ListDemo() {
           <Entity.Content title={race.name} subtitle={race.date} />
           <Entity.Field>
             <Button size="small" variant="secondary">
-              Remove
+              Remove Race
             </Button>
           </Entity.Field>
         </Entity>
