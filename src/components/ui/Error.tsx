@@ -15,6 +15,13 @@ export interface ErrorProps extends HTMLAttributes<HTMLDivElement> {
   label?: string;
   /** Size variant (default: "medium") */
   size?: ErrorSize;
+  /**
+   * Screen-reader announcement urgency. Default `"polite"` lets the
+   * current utterance finish before announcing. Pass `"assertive"`
+   * only for true blocking errors that interrupt input — assertive
+   * announcements cut off whatever a SR was reading.
+   */
+  live?: "polite" | "assertive";
 }
 
 // ============================================================================
@@ -58,6 +65,7 @@ function Error({
   children,
   label,
   size = "medium",
+  live = "polite",
   className = "",
   ...rest
 }: ErrorProps) {
@@ -66,7 +74,8 @@ function Error({
   return (
     <div
       className={`flex flex-row items-stretch ${className}`}
-      role="alert"
+      role={live === "assertive" ? "alert" : "status"}
+      aria-live={live}
       aria-atomic="true"
       {...rest}
     >

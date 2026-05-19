@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -527,6 +528,158 @@ export default function ErrorComponent() {
         <CodePreview componentCode={withLinkCode}>
           <WithLinkDemo />
         </CodePreview>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use <code className="inline-code">&lt;Error&gt;</code> for an
+            inline problem callout adjacent to form content, beneath a
+            card heading, or in a small standalone surface where a full
+            block treatment would be too heavy.
+          </li>
+          <li>
+            For a section or route-level &ldquo;couldn&apos;t load&rdquo;
+            surface that needs a heading and a recovery CTA, compose an{" "}
+            <ComponentRef name="Empty State" /> (error variant) or use{" "}
+            <ComponentRef name="Note" /> instead &mdash; Error is inline,
+            not a block surface.
+          </li>
+          <li>
+            For transient action failures, use a{" "}
+            <ComponentRef name="Toast" /> with{" "}
+            <code className="inline-code">variant=&quot;error&quot;</code>
+            ; for field-level validation, use{" "}
+            <code className="inline-code">&lt;Input error</code>{" "}
+            <code className="inline-code">
+              errorMessage=&quot;...&quot; /&gt;
+            </code>{" "}
+            so the message is announced as part of the field rather than
+            duplicated alongside it.
+          </li>
+          <li>
+            Always pair platform or system errors with a stable
+            identifier (request ID{" "}
+            <code className="inline-code">x-vercel-id</code>, run ID,
+            trace ID). Validation and permission denials are user-state,
+            not system, and don&apos;t need an ID.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pair the Error with a concrete recovery action as a sibling,
+            not inside: a{" "}
+            <code className="inline-code">Try Again</code> button when
+            the operation is retry-safe, a named verb (
+            <code className="inline-code">Reconnect Strava</code>,{" "}
+            <code className="inline-code">Update Payment Method</code>)
+            when it isn&apos;t.
+          </li>
+          <li>
+            Don&apos;t auto-retry in the background; the user came to
+            this surface to decide.
+          </li>
+          <li>
+            For full-page route errors (
+            <code className="inline-code">error.tsx</code>), return focus
+            to the <code className="inline-code">Try Again</code> button
+            on appearance so a keyboard user can retry without hunting
+            for it.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            State what happened and what to do next, in that order. Cut
+            apologetic preambles (
+            <code className="inline-code">Unfortunately</code>,{" "}
+            <code className="inline-code">Oops</code>,{" "}
+            <code className="inline-code">We&apos;re sorry</code>).
+          </li>
+          <li>
+            Use <code className="inline-code">Couldn&apos;t</code> or{" "}
+            <code className="inline-code">Can&apos;t</code> for
+            user-state errors (
+            <code className="inline-code">
+              Couldn&apos;t verify your passkey. Try again.
+            </code>
+            ); use <code className="inline-code">Failed to</code> for
+            system or infra errors that mirror CLI output (
+            <code className="inline-code">
+              Build failed. Bundle exceeds 50 MB.
+            </code>
+            ). <code className="inline-code">Unable to</code> is banned.
+          </li>
+          <li>
+            Don&apos;t fall back to{" "}
+            <code className="inline-code">Something Went Wrong</code> as
+            the <code className="inline-code">label</code>; name the
+            resource that failed (
+            <code className="inline-code">Couldn&apos;t Load Page</code>,{" "}
+            <code className="inline-code">
+              Couldn&apos;t Load Race
+            </code>
+            ).
+          </li>
+          <li>
+            Render the stable ID on a monospace sub-line inside a
+            collapsed{" "}
+            <code className="inline-code">&lt;details&gt;</code> passed
+            as children so the user can copy-paste it into a support
+            thread.
+          </li>
+          <li>
+            Never humor an error. Users hitting an error are frustrated;
+            insincere copy makes it worse.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The component defaults to{" "}
+            <code className="inline-code">live=&quot;polite&quot;</code>{" "}
+            (<code className="inline-code">role=&quot;status&quot;</code>
+            ) so async errors are announced when they replace content
+            without interrupting the user. Pass{" "}
+            <code className="inline-code">
+              live=&quot;assertive&quot;
+            </code>{" "}
+            (<code className="inline-code">role=&quot;alert&quot;</code>)
+            only for true blocking errors that interrupt input &mdash;
+            assertive announcements cut off whatever a screen reader is
+            currently saying.
+          </li>
+        </ul>
       </Section>
 
       <Toast
