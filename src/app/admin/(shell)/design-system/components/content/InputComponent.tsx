@@ -797,7 +797,7 @@ export default function InputComponent() {
           {"\u2318"}K
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3" style={{ lineHeight: 1.5 }}>
-          Displays the <Kbd size="small">{"\u2318"}</Kbd> <Kbd size="small">K</Kbd> shortcut to indicate that the input supports a command palette.
+          Displays the <Kbd size="small" meta /> <Kbd size="small">K</Kbd> shortcut to indicate that the input supports a command palette.
         </p>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
           Transitions to showing <Kbd size="small">Esc</Kbd> when the field is dirty.

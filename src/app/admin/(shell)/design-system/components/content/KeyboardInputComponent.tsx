@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -315,10 +316,10 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Kbd>\u2318</Kbd>
-      <Kbd>\u21E7</Kbd>
-      <Kbd>\u2325</Kbd>
-      <Kbd>\u2303</Kbd>
+      <Kbd meta />
+      <Kbd shift />
+      <Kbd alt />
+      <Kbd ctrl />
     </div>
   );
 }`;
@@ -328,7 +329,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Kbd keys={["\u2318", "\u21E7"]} />
+    <Kbd meta shift>K</Kbd>
   );
 }`;
 
@@ -348,18 +349,16 @@ export function Component(): JSX.Element {
 function ModifiersDemo() {
   return (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Kbd>{"\u2318"}</Kbd>
-      <Kbd>{"\u21E7"}</Kbd>
-      <Kbd>{"\u2325"}</Kbd>
-      <Kbd>{"\u2303"}</Kbd>
+      <Kbd meta />
+      <Kbd shift />
+      <Kbd alt />
+      <Kbd ctrl />
     </div>
   );
 }
 
 function CombinationDemo() {
-  return (
-    <Kbd keys={["\u2318", "\u21E7"]} />
-  );
+  return <Kbd meta shift>K</Kbd>;
 }
 
 function SmallDemo() {
@@ -408,6 +407,66 @@ export default function KeyboardInputComponent() {
             <SmallDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use{" "}
+            <code className="inline-code">&lt;Kbd&gt;</code> for
+            shortcut hints inside prose, menu items, and button
+            suffixes. In long-form docs that narrate a shortcut, write{" "}
+            <code className="inline-code">the ⌘ K shortcut</code>{" "}
+            directly so the page renders the same when copied to plain
+            text.
+          </li>
+          <li>
+            Pass modifiers via boolean props (
+            <code className="inline-code">meta</code>,{" "}
+            <code className="inline-code">shift</code>,{" "}
+            <code className="inline-code">alt</code>,{" "}
+            <code className="inline-code">ctrl</code>). The component
+            swaps <code className="inline-code">⌘</code> for{" "}
+            <code className="inline-code">Ctrl</code> on Windows and
+            Linux, so hard-coding{" "}
+            <code className="inline-code">
+              &lt;Kbd&gt;⌘K&lt;/Kbd&gt;
+            </code>{" "}
+            ships the wrong glyph to half your users.
+          </li>
+          <li>
+            <code className="inline-code">children</code> is one key,
+            digit, or named key (
+            <code className="inline-code">K</code>,{" "}
+            <code className="inline-code">7</code>,{" "}
+            <code className="inline-code">Enter</code>,{" "}
+            <code className="inline-code">Esc</code>). Don&apos;t
+            lowercase it, don&apos;t spell out modifiers inside, and
+            don&apos;t pack a sentence into the element.
+          </li>
+          <li>
+            Use{" "}
+            <code className="inline-code">size=&quot;small&quot;</code>{" "}
+            inside dense surfaces like menu rows,{" "}
+            <ComponentRef name="Command Menu" /> items, or table cells
+            where the default size crowds adjacent text.
+          </li>
+          <li>
+            Punctuation lives outside the element:{" "}
+            <code className="inline-code">
+              Press &lt;Kbd meta&gt;K&lt;/Kbd&gt; to open the command
+              menu.
+            </code>{" "}
+            Period, comma, and{" "}
+            <code className="inline-code">or</code> separators stay in
+            surrounding prose so screen readers don&apos;t announce
+            them as keys.
+          </li>
+        </ul>
       </Section>
 
       <Toast
