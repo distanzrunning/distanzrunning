@@ -647,24 +647,17 @@ function CommandKBadge({ dirty }: { dirty: boolean }) {
         margin: -1,
       }}
     >
-      {/* Meta kbd: slides out to the left when dirty. translate uses
-          calc(-100% - 8px) so the slide distance scales with the
-          element's own width — ⌘ on Mac (~20px) and "Ctrl" on
-          Windows/Linux (~30px) both fully clip past the parent's
-          overflow boundary. */}
+      {/* ⌘ kbd: slides out to the left when dirty */}
       <kbd
         style={{
           ...kbdBase,
           marginLeft: 4,
           textAlign: "center",
-          translate: dirty ? "calc(-100% - 8px)" : "0",
+          translate: dirty ? "-32px" : "0",
           transition: `translate ${duration} ${spring}`,
         }}
       >
-        <span style={textStyle}>
-          <span data-kbd-glyph="mac">\u2318</span>
-          <span data-kbd-glyph="other">Ctrl</span>
-        </span>
+        <span style={textStyle}>\u2318</span>
       </kbd>
       {/* Second kbd: contains both K and Esc, crossfades via translate */}
       <kbd

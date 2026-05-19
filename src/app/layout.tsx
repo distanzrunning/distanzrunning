@@ -116,28 +116,6 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* Platform bootstrap — sets data-platform="mac" or "other" on
-            <html> before paint so the Kbd component (and any custom
-            shortcut hint) can show the right modifier glyphs (⌘ vs
-            Ctrl) on first render without a hydration flash. CSS rules
-            in globals.css hide whichever glyph isn't active. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var p = (navigator.userAgentData && navigator.userAgentData.platform)
-                    || navigator.platform
-                    || navigator.userAgent;
-                  document.documentElement.dataset.platform =
-                    /Mac|iPhone|iPad|iPod/.test(p) ? 'mac' : 'other';
-                } catch (e) {
-                  document.documentElement.dataset.platform = 'mac';
-                }
-              })();
-            `,
-          }}
-        />
         {/* Google Consent Mode v2 — must run before any tracking script so
             every Google product (Analytics, Ads, AdSense, GTM) and any
             custom GTM tags pick up the denied baseline. ConsentSync (in

@@ -429,14 +429,14 @@ export default function KeyboardInputComponent() {
             <code className="inline-code">meta</code>,{" "}
             <code className="inline-code">shift</code>,{" "}
             <code className="inline-code">alt</code>,{" "}
-            <code className="inline-code">ctrl</code>). The component
-            swaps <code className="inline-code">⌘</code> for{" "}
-            <code className="inline-code">Ctrl</code> on Windows and
-            Linux, so hard-coding{" "}
-            <code className="inline-code">
-              &lt;Kbd&gt;⌘K&lt;/Kbd&gt;
-            </code>{" "}
-            ships the wrong glyph to half your users.
+            <code className="inline-code">ctrl</code>) — they render
+            the canonical glyphs (
+            <code className="inline-code">⌘ ⇧ ⌥ ⌃</code>) in the
+            correct order. Don&apos;t hard-code raw glyphs into{" "}
+            <code className="inline-code">children</code>; the boolean
+            API keeps composition consistent and leaves room for the
+            component to evolve (a future opt-in platform-aware mode,
+            for instance) without rewriting every callsite.
           </li>
           <li>
             <code className="inline-code">children</code> is one key,

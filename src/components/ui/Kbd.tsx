@@ -14,23 +14,20 @@ export interface KbdProps {
   /** Keyboard key(s) to display (a single key, digit, or named key like Enter / Esc) */
   children?: React.ReactNode;
   /**
-   * [Legacy] Array of pre-resolved glyphs to render. Prefer the boolean
-   * modifier props below for platform-aware shortcuts — passing
-   * hard-coded glyphs here ships Mac symbols to Windows/Linux users.
+   * [Legacy] Array of pre-resolved glyphs to render. Prefer the
+   * boolean modifier props below — passing raw glyphs here defeats
+   * the canonical render order.
    */
   keys?: string[];
   /** Size of the kbd element */
   size?: KbdSize;
-  /**
-   * Render the Command / Ctrl glyph before children. Resolves to `⌘`
-   * on Mac and `Ctrl` on Windows / Linux.
-   */
+  /** Render the Command glyph (⌘) before children. */
   meta?: boolean;
-  /** Render the Shift glyph (`⇧` on Mac, `Shift` elsewhere) before children. */
+  /** Render the Shift glyph (⇧) before children. */
   shift?: boolean;
-  /** Render the Option / Alt glyph (`⌥` on Mac, `Alt` elsewhere) before children. */
+  /** Render the Option / Alt glyph (⌥) before children. */
   alt?: boolean;
-  /** Render the Control glyph (`⌃` on Mac, `Ctrl` elsewhere) before children. */
+  /** Render the Control glyph (⌃) before children. */
   ctrl?: boolean;
   /** Additional CSS classes */
   className?: string;
@@ -59,42 +56,16 @@ const sizeStyles: Record<KbdSize, React.CSSProperties> = {
   },
 };
 
-const MAC_GLYPHS = {
+const MODIFIER_GLYPHS = {
   meta: "⌘",
   shift: "⇧",
   alt: "⌥",
   ctrl: "⌃",
 } as const;
 
-const OTHER_LABELS = {
-  meta: "Ctrl",
-  shift: "Shift",
-  alt: "Alt",
-  ctrl: "Ctrl",
-} as const;
-
-// Set of Mac modifier glyphs — kept for the legacy `keys` prop so each
+// Set of modifier glyphs — kept for the legacy `keys` prop so each
 // modifier glyph in the array still gets the fixed-width treatment.
-const MODIFIER_GLYPHS = new Set<string>(Object.values(MAC_GLYPHS));
-
-// ============================================================================
-// Platform detection
-// ============================================================================
-
-/**
- * Synchronously returns true on Mac/iOS. Reads the `data-platform`
- * attribute set by the bootstrap script in <head> (see layout.tsx),
- * so it produces the right answer on first render with no flash and
- * no hydration mismatch. Falls back to true (Mac default) on SSR or
- * if the script hasn't run yet.
- *
- * Exported so non-Kbd consumers (custom shortcut badges, animated kbd
- * compositions) can share the same logic.
- */
-export function useIsMac(): boolean {
-  if (typeof document === "undefined") return true;
-  return document.documentElement.dataset.platform !== "other";
-}
+const MODIFIER_GLYPH_SET = new Set<string>(Object.values(MODIFIER_GLYPHS));
 
 // ============================================================================
 // Kbd Component
@@ -103,14 +74,15 @@ export function useIsMac(): boolean {
 /**
  * Keyboard input component for displaying keyboard shortcuts.
  *
- * Renders BOTH the Mac glyph and the Windows/Linux label for each
- * modifier; CSS rules in globals.css hide whichever isn't active
- * based on the `data-platform` attribute set on <html> before paint.
+ * Modifier props render the canonical Mac glyphs (⌘ ⇧ ⌥ ⌃) on every
+ * platform — they double as universally recognisable shortcut symbols
+ * and keep the visual treatment consistent regardless of OS.
  *
  * @example
- * <Kbd meta>K</Kbd>            // ⌘K on Mac, CtrlK on Windows/Linux
- * <Kbd meta shift>K</Kbd>      // ⇧⌘K on Mac, ShiftCtrlK on Windows/Linux
- * <Kbd>Enter</Kbd>             // Plain named key, platform-agnostic
+ * <Kbd meta>K</Kbd>            // ⌘K
+ * <Kbd meta shift>K</Kbd>      // ⇧⌘K
+ * <Kbd meta shift />           // ⇧⌘ (modifier combo, no key)
+ * <Kbd>Enter</Kbd>             // Named key
  * <Kbd size="small">/</Kbd>    // Dense surfaces
  */
 export const Kbd = forwardRef<HTMLElement, KbdProps>(
@@ -149,15 +121,10 @@ export const Kbd = forwardRef<HTMLElement, KbdProps>(
       display: "inline-block",
     };
 
-    // Both glyphs sit in the DOM; CSS hides whichever doesn't match
-    // the current platform. No JS state, no flicker.
-    const renderModifier = (kind: keyof typeof MAC_GLYPHS) => (
-      <React.Fragment key={`mod-${kind}`}>
-        <span data-kbd-glyph="mac" style={modifierSpanStyle}>
-          {MAC_GLYPHS[kind]}
-        </span>
-        <span data-kbd-glyph="other">{OTHER_LABELS[kind]}</span>
-      </React.Fragment>
+    const renderModifier = (kind: keyof typeof MODIFIER_GLYPHS) => (
+      <span key={`mod-${kind}`} style={modifierSpanStyle}>
+        {MODIFIER_GLYPHS[kind]}
+      </span>
     );
 
     // Canonical order: ctrl → alt → shift → meta, then children.
@@ -180,7 +147,7 @@ export const Kbd = forwardRef<HTMLElement, KbdProps>(
       );
     } else if (keys && keys.length > 0) {
       content = keys.map((key, index) => {
-        const isModifier = MODIFIER_GLYPHS.has(key);
+        const isModifier = MODIFIER_GLYPH_SET.has(key);
         return (
           <span key={index} style={isModifier ? modifierSpanStyle : undefined}>
             {key}

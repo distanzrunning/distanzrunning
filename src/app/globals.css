@@ -16,17 +16,6 @@
   color: #000;
 }
 
-/* Platform-aware keyboard glyphs — paired with the inline bootstrap
-   script in <head> that sets data-platform on <html> before paint.
-   Both Mac and "other" glyphs sit in the DOM; CSS hides whichever
-   isn't active so there's no hydration flicker. */
-:root[data-platform="other"] [data-kbd-glyph="mac"] {
-  display: none;
-}
-:root:not([data-platform="other"]) [data-kbd-glyph="other"] {
-  display: none;
-}
-
 
 @property --border-angle {
   inherits: false;
