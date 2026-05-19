@@ -10,7 +10,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Input } from "@/components/ui/Input";
-import { Kbd, useIsMac } from "@/components/ui/Kbd";
+import { Kbd } from "@/components/ui/Kbd";
 
 // ============================================================================
 // Toast Component
@@ -611,7 +611,6 @@ function SearchDemo() {
 }
 
 function CommandKBadge({ dirty }: { dirty: boolean }) {
-  const isMac = useIsMac();
   const spring = "cubic-bezier(0.175, 0.885, 0.32, 1.1)";
   const duration = "0.56s";
 
@@ -662,7 +661,10 @@ function CommandKBadge({ dirty }: { dirty: boolean }) {
           transition: `translate ${duration} ${spring}`,
         }}
       >
-        <span style={textStyle}>{isMac ? "\u2318" : "Ctrl"}</span>
+        <span style={textStyle}>
+          <span data-kbd-glyph="mac">\u2318</span>
+          <span data-kbd-glyph="other">Ctrl</span>
+        </span>
       </kbd>
       {/* Second kbd: contains both K and Esc, crossfades via translate */}
       <kbd

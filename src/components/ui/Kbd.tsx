@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { forwardRef } from "react";
 
 // ============================================================================
 // Types
@@ -60,10 +60,10 @@ const sizeStyles: Record<KbdSize, React.CSSProperties> = {
 };
 
 const MAC_GLYPHS = {
-  meta: "⌘", // ⌘
-  shift: "⇧", // ⇧
-  alt: "⌥", // ⌥
-  ctrl: "⌃", // ⌃
+  meta: "⌘",
+  shift: "⇧",
+  alt: "⌥",
+  ctrl: "⌃",
 } as const;
 
 const OTHER_LABELS = {
@@ -82,28 +82,18 @@ const MODIFIER_GLYPHS = new Set<string>(Object.values(MAC_GLYPHS));
 // ============================================================================
 
 /**
- * Returns true on Mac/iOS. Default `true` so SSR + the first client render
- * both produce Mac glyphs (matching the most common consumer); the effect
- * re-runs on mount and demotes to false on Windows/Linux, causing one
- * rerender at hydration time. No hydration mismatch because the first
- * client render uses the same default as SSR.
+ * Synchronously returns true on Mac/iOS. Reads the `data-platform`
+ * attribute set by the bootstrap script in <head> (see layout.tsx),
+ * so it produces the right answer on first render with no flash and
+ * no hydration mismatch. Falls back to true (Mac default) on SSR or
+ * if the script hasn't run yet.
  *
- * Exported so non-Kbd consumers (custom shortcut badges, title-attribute
- * tooltips, animated kbd compositions) can share the same SSR-safe
- * detection logic.
+ * Exported so non-Kbd consumers (custom shortcut badges, animated kbd
+ * compositions) can share the same logic.
  */
 export function useIsMac(): boolean {
-  const [isMac, setIsMac] = useState(true);
-  useEffect(() => {
-    if (typeof navigator === "undefined") return;
-    const platform =
-      (navigator as Navigator & { userAgentData?: { platform?: string } })
-        .userAgentData?.platform ??
-      navigator.platform ??
-      navigator.userAgent;
-    setIsMac(/Mac|iPhone|iPad|iPod/.test(platform));
-  }, []);
-  return isMac;
+  if (typeof document === "undefined") return true;
+  return document.documentElement.dataset.platform !== "other";
 }
 
 // ============================================================================
@@ -112,6 +102,10 @@ export function useIsMac(): boolean {
 
 /**
  * Keyboard input component for displaying keyboard shortcuts.
+ *
+ * Renders BOTH the Mac glyph and the Windows/Linux label for each
+ * modifier; CSS rules in globals.css hide whichever isn't active
+ * based on the `data-platform` attribute set on <html> before paint.
  *
  * @example
  * <Kbd meta>K</Kbd>            // ⌘K on Mac, CtrlK on Windows/Linux
@@ -134,7 +128,6 @@ export const Kbd = forwardRef<HTMLElement, KbdProps>(
     },
     ref,
   ) => {
-    const isMac = useIsMac();
     const sizeStyle = sizeStyles[size];
 
     const baseStyle: React.CSSProperties = {
@@ -156,14 +149,16 @@ export const Kbd = forwardRef<HTMLElement, KbdProps>(
       display: "inline-block",
     };
 
-    const renderModifier = (kind: keyof typeof MAC_GLYPHS) =>
-      isMac ? (
-        <span key={`mod-${kind}`} style={modifierSpanStyle}>
+    // Both glyphs sit in the DOM; CSS hides whichever doesn't match
+    // the current platform. No JS state, no flicker.
+    const renderModifier = (kind: keyof typeof MAC_GLYPHS) => (
+      <React.Fragment key={`mod-${kind}`}>
+        <span data-kbd-glyph="mac" style={modifierSpanStyle}>
           {MAC_GLYPHS[kind]}
         </span>
-      ) : (
-        <span key={`mod-${kind}`}>{OTHER_LABELS[kind]}</span>
-      );
+        <span data-kbd-glyph="other">{OTHER_LABELS[kind]}</span>
+      </React.Fragment>
+    );
 
     // Canonical order: ctrl → alt → shift → meta, then children.
     const modifiers: React.ReactNode[] = [];
