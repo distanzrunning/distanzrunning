@@ -2844,6 +2844,16 @@
       opacity: 1;
     }
   }
+
+  /* Honor prefers-reduced-motion — pin the dots to their final visible
+     state instead of pulsing. The label still tells the user something
+     is happening. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-geist-loading-dots] > span {
+      animation: none !important;
+      opacity: 1;
+    }
+  }
 }
 
 @layer utilities {

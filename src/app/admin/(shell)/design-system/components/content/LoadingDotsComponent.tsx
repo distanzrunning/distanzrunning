@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -369,6 +370,107 @@ export default function LoadingDotsComponent() {
             <WithTextDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Embed Loading Dots in copy for short indeterminate waits,
+            e.g.{" "}
+            <code className="inline-code">
+              Saving&lt;LoadingDots /&gt;
+            </code>{" "}
+            or{" "}
+            <code className="inline-code">
+              Building&lt;LoadingDots /&gt;
+            </code>
+            .
+          </li>
+          <li>
+            For buttons, set the{" "}
+            <code className="inline-code">loading</code> prop on{" "}
+            <ComponentRef name="Button" /> instead of dropping dots
+            inside the label.
+          </li>
+          <li>
+            For layout placeholders use{" "}
+            <ComponentRef name="Skeleton" />; for known progress use{" "}
+            <ComponentRef name="Progress" />; for icon-sized
+            indeterminate waits use <ComponentRef name="Spinner" />.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pass <code className="inline-code">size</code> (number, dot
+            diameter in px) only when the default doesn&apos;t match
+            adjacent type size.
+          </li>
+          <li>
+            Keep the trailing label specific to the work in flight (
+            <code className="inline-code">Saving</code>,{" "}
+            <code className="inline-code">Deploying</code>,{" "}
+            <code className="inline-code">Uploading</code>) so a wait
+            over ~1s still tells the user what&apos;s happening.
+          </li>
+          <li>
+            Don&apos;t string Loading Dots after a completed verb (
+            <code className="inline-code">
+              Saved&lt;LoadingDots /&gt;
+            </code>
+            ); the dots imply ongoing work.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The wrapping span carries{" "}
+            <code className="inline-code">role=&quot;status&quot;</code>{" "}
+            +{" "}
+            <code className="inline-code">aria-live=&quot;polite&quot;</code>{" "}
+            so screen readers pick up the in-progress label without
+            interrupting; the three dots are marked{" "}
+            <code className="inline-code">aria-hidden</code> so they
+            aren&apos;t announced as content.
+          </li>
+          <li>
+            The dots are decorative and the surrounding text carries
+            the meaning, so don&apos;t add{" "}
+            <code className="inline-code">aria-label</code> to the
+            component itself.
+          </li>
+          <li>
+            The animation is paused under{" "}
+            <code className="inline-code">
+              prefers-reduced-motion: reduce
+            </code>{" "}
+            via a global CSS rule; don&apos;t pair Loading Dots with
+            another animated indicator on the same line.
+          </li>
+        </ul>
       </Section>
 
       <Toast
