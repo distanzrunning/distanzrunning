@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -605,6 +606,143 @@ export default function GaugeComponent() {
         <CodePreview componentCode={indeterminateCode}>
           <IndeterminateDemo />
         </CodePreview>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            A 0&ndash;100 ratio against a fixed maximum where the
+            comparison is the point &mdash; quota usage, build cache hit
+            rate, uptime, billing-period consumption.
+          </li>
+          <li>
+            For determinate task progress with a known total (uploads,
+            multi-step setup), use{" "}
+            <ComponentRef name="Progress" />.
+          </li>
+          <li>
+            For binary or enumerated state, use{" "}
+            <ComponentRef name="Status Dot" /> for deployment-style
+            statuses or <ComponentRef name="Badge" /> for everything
+            else.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use{" "}
+            <code className="inline-code">
+              arcPriority=&quot;equal&quot;
+            </code>{" "}
+            for true ratios so 50% reads as exactly half. Use the
+            default{" "}
+            <code className="inline-code">
+              arcPriority=&quot;primary&quot;
+            </code>{" "}
+            for single-percentage usage where the filled portion is the
+            story.
+          </li>
+          <li>
+            The default <code className="inline-code">color</code> scale
+            treats higher values as healthier (
+            <code className="inline-code">&le;25%</code> red,{" "}
+            <code className="inline-code">&le;50%</code> amber,{" "}
+            <code className="inline-code">&gt;50%</code> green) &mdash;
+            right for uptime / hit-rate gauges. For{" "}
+            higher-is-worse cases (quota usage, billing consumption),
+            pass an explicit{" "}
+            <code className="inline-code">color</code> tied to the same
+            numeric breakpoints used elsewhere in the product. Don&apos;t
+            invent gauge-only thresholds.
+          </li>
+          <li>
+            Pair{" "}
+            <code className="inline-code">indeterminate</code> with
+            explanatory copy nearby (
+            <code className="inline-code">
+              Calculating usage&hellip;
+            </code>
+            ) so the user knows the value is loading, not zero.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Always pair the gauge with an adjacent label or{" "}
+            <ComponentRef name="Tooltip" /> naming what the number
+            represents (
+            <code className="inline-code">Build Cache Hit Rate</code>).
+            The gauge alone is not self-describing.
+          </li>
+          <li>
+            Don&apos;t put units inside{" "}
+            <code className="inline-code">children</code>; the label
+            carries the unit (
+            <code className="inline-code">Uptime &middot; 99.97%</code>).{" "}
+            <code className="inline-code">children</code> is for an icon
+            overlay.
+          </li>
+          <li>
+            When{" "}
+            <code className="inline-code">showLabel</code> is on, the
+            rendered number is the value only. Never inject a{" "}
+            <code className="inline-code">%</code> or unit string into
+            the prop.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The component sets{" "}
+            <code className="inline-code">role=&quot;progressbar&quot;</code>{" "}
+            with{" "}
+            <code className="inline-code">aria-valuemin</code>,{" "}
+            <code className="inline-code">aria-valuemax</code>, and{" "}
+            <code className="inline-code">aria-valuenow</code>.
+            Don&apos;t override those.
+          </li>
+          <li>
+            The adjacent label is the gauge&apos;s accessible name. Tie
+            it with{" "}
+            <code className="inline-code">aria-labelledby</code> on the
+            gauge wrapper so screen readers read &ldquo;Uptime, 99
+            percent.&rdquo;
+          </li>
+          <li>
+            Don&apos;t use color to encode the threshold without
+            redundant text; pair the warning tint with copy below or in
+            the <ComponentRef name="Tooltip" />.
+          </li>
+        </ul>
       </Section>
 
       <Toast

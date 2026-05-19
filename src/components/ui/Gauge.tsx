@@ -6,7 +6,11 @@ import React from "react";
 // Types
 // ============================================================================
 
-export interface GaugeProps {
+export interface GaugeProps
+  extends Omit<
+    React.HTMLAttributes<HTMLDivElement>,
+    "children" | "color"
+  > {
   /** The current value (0-100) */
   value: number;
   /** Rendered size in pixels */
@@ -25,7 +29,6 @@ export interface GaugeProps {
   indeterminate?: boolean;
   /** Content to render in the center (overrides default label) */
   children?: React.ReactNode;
-  className?: string;
 }
 
 // ============================================================================
@@ -93,6 +96,8 @@ export function Gauge({
   indeterminate = false,
   children,
   className,
+  style,
+  ...rest
 }: GaugeProps) {
   const config = sizeConfigs[size] || sizeConfigs[32];
   const gap = gapPercent ?? config.defaultGap;
@@ -155,12 +160,14 @@ export function Gauge({
 
   return (
     <div
+      {...rest}
       className={`gauge-circle ${indeterminate ? "gauge-indeterminate" : ""} ${className || ""}`}
       role="progressbar"
       aria-valuemin={0}
       aria-valuemax={100}
       {...(!indeterminate ? { "aria-valuenow": clampedValue } : {})}
       style={{
+        ...style,
         position: "relative",
         display: "inline-flex",
         alignItems: "center",
