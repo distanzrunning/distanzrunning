@@ -397,9 +397,9 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
-      <Input size="small" placeholder="Small" />
-      <Input placeholder="Default" />
-      <Input size="large" placeholder="Large" />
+      <Input size="small" placeholder="Berlin Marathon" />
+      <Input placeholder="Berlin Marathon" />
+      <Input size="large" placeholder="Berlin Marathon" />
     </div>
   );
 }`;
@@ -410,15 +410,15 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <Input prefix={<SearchIcon />} prefixStyling={false} placeholder="Search..." />
-      <Input suffix={<UserIcon />} suffixStyling={false} placeholder="Username" />
-      <Input prefix="https://" suffix=".com" placeholder="domain" />
+      <Input prefix={<SearchIcon />} prefixStyling={false} placeholder="Search races" />
+      <Input suffix={<UserIcon />} suffixStyling={false} placeholder="sarah.chen" />
+      <Input prefix="https://" suffix=".com" placeholder="distanzrunning" />
       <Input
         prefix={<GlobeIcon />}
         prefixStyling={false}
         suffix={<SearchIcon />}
         suffixStyling={false}
-        placeholder="Search domains..."
+        placeholder="Search domains"
       />
     </div>
   );
@@ -430,10 +430,10 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <Input disabled placeholder="Disabled placeholder" />
-      <Input disabled value="Disabled with value" />
-      <Input disabled prefix={<SearchIcon />} prefixStyling={false} placeholder="Disabled prefix" />
-      <Input disabled prefix="https://" suffix=".com" placeholder="domain" />
+      <Input disabled placeholder="Berlin Marathon" />
+      <Input disabled value="Berlin Marathon 2025" />
+      <Input disabled prefix={<SearchIcon />} prefixStyling={false} placeholder="Search races" />
+      <Input disabled prefix="https://" suffix=".com" placeholder="distanzrunning" />
     </div>
   );
 }`;
@@ -450,7 +450,7 @@ export function Component(): JSX.Element {
       type="search"
       prefix={<SearchIcon />}
       prefixStyling={false}
-      placeholder="Search..."
+      placeholder="Search races"
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={(e) => { if (e.key === "Escape") setValue(""); }}
@@ -477,7 +477,7 @@ export function Component(): JSX.Element {
       prefixStyling={false}
       suffix={badge}
       suffixStyling={false}
-      placeholder="Search..."
+      placeholder="Search races"
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={(e) => { if (e.key === "Escape") setValue(""); }}
@@ -491,9 +491,9 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <Input size="small" error errorMessage="An error message." placeholder="Small" />
-      <Input error errorMessage="An error message." placeholder="Default" />
-      <Input size="large" error errorMessage="An error message." placeholder="Large" />
+      <Input size="small" error errorMessage="Race name is required." placeholder="Berlin Marathon" />
+      <Input error errorMessage="Race name is required." placeholder="Berlin Marathon" />
+      <Input size="large" error errorMessage="Race name is required." placeholder="Berlin Marathon" />
     </div>
   );
 }`;
@@ -503,7 +503,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Input label="Email address" placeholder="you@example.com" />
+    <Input label="Email Address" placeholder="you@example.com" />
   );
 }`;
 
@@ -514,9 +514,9 @@ export function Component(): JSX.Element {
 function DefaultDemo() {
   return (
     <div className="flex flex-col md:flex-row items-start justify-between gap-4 flex-initial">
-      <Input size="small" placeholder="Small" />
-      <Input placeholder="Default" />
-      <Input size="large" placeholder="Large" />
+      <Input size="small" placeholder="Berlin Marathon" />
+      <Input placeholder="Berlin Marathon" />
+      <Input size="large" placeholder="Berlin Marathon" />
     </div>
   );
 }
@@ -524,21 +524,21 @@ function DefaultDemo() {
 function PrefixSuffixDemo() {
   return (
     <div className="flex flex-col items-start justify-start gap-6 flex-initial">
-      <Input prefix={<UploadIcon />} placeholder="Default" />
-      <Input suffix={<UploadIcon />} placeholder="Default" />
-      <Input prefix="https://" suffix=".com" placeholder="Default" />
+      <Input prefix={<UploadIcon />} placeholder="route.gpx" />
+      <Input suffix={<UploadIcon />} placeholder="route.gpx" />
+      <Input prefix="https://" suffix=".com" placeholder="distanzrunning" />
       <Input
         prefix={<UploadIcon />}
         prefixStyling={false}
         suffix={<UploadIcon />}
         suffixStyling={false}
-        placeholder="Default"
+        placeholder="route.gpx"
       />
       <Input
         prefix="distanz/"
         suffix={<UploadIcon />}
         suffixStyling={false}
-        placeholder="Default"
+        placeholder="berlin-marathon"
       />
     </div>
   );
@@ -547,18 +547,18 @@ function PrefixSuffixDemo() {
 function DisabledDemo() {
   return (
     <div className="flex flex-col items-start justify-start gap-4 flex-initial">
-      <Input disabled placeholder="Disabled with placeholder" />
-      <Input disabled value="Disabled with value" readOnly />
-      <Input disabled prefix={<UploadIcon />} placeholder="Disabled with prefix" />
-      <Input disabled suffix={<UploadIcon />} placeholder="Disabled with suffix" />
-      <Input disabled prefix="https://" suffix=".com" placeholder="Disabled with prefix and suffix" />
+      <Input disabled placeholder="Berlin Marathon" />
+      <Input disabled value="Berlin Marathon 2025" readOnly />
+      <Input disabled prefix={<UploadIcon />} placeholder="route.gpx" />
+      <Input disabled suffix={<UploadIcon />} placeholder="route.gpx" />
+      <Input disabled prefix="https://" suffix=".com" placeholder="distanzrunning" />
       <Input
         disabled
         prefix={<UploadIcon />}
         prefixStyling={false}
         suffix={<UploadIcon />}
         suffixStyling={false}
-        placeholder="Disabled with prefix and suffix"
+        placeholder="route.gpx"
       />
     </div>
   );
@@ -594,7 +594,7 @@ function SearchDemo() {
         prefixStyling={false}
         suffix={value ? <EscBadge onClick={() => setValue("")} /> : undefined}
         suffixStyling={false}
-        placeholder="Enter some text..."
+        placeholder="Search races"
         aria-label="Search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -704,7 +704,7 @@ function CommandKDemo() {
         prefixStyling={false}
         suffix={<CommandKBadge dirty={!!value} />}
         suffixStyling={false}
-        placeholder="Enter some text..."
+        placeholder="Search races"
         aria-label="Search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -719,10 +719,10 @@ function CommandKDemo() {
 function ErrorDemo() {
   return (
     <div className="flex flex-col items-start justify-start gap-8 flex-initial">
-      <Input size="xSmall" error errorMessage="An error message." placeholder="long-error@gmail.com" />
-      <Input size="small" error errorMessage="An error message." placeholder="long-error@gmail.com" />
-      <Input error errorMessage="An error message." placeholder="long-error@gmail.com" />
-      <Input size="large" error errorMessage="An error message." placeholder="long-error@gmail.com" />
+      <Input size="xSmall" error errorMessage="Race name is required." placeholder="Berlin Marathon" />
+      <Input size="small" error errorMessage="Race name is required." placeholder="Berlin Marathon" />
+      <Input error errorMessage="Race name is required." placeholder="Berlin Marathon" />
+      <Input size="large" error errorMessage="Race name is required." placeholder="Berlin Marathon" />
     </div>
   );
 }
@@ -730,7 +730,7 @@ function ErrorDemo() {
 function LabelDemo() {
   return (
     <div className="flex flex-col items-start justify-start flex-initial">
-      <Input label="Label" placeholder="Label" />
+      <Input label="Email Address" placeholder="you@example.com" />
     </div>
   );
 }
