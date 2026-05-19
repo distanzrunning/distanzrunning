@@ -329,7 +329,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Kbd meta shift>K</Kbd>
+    <Kbd meta shift />
   );
 }`;
 
@@ -358,7 +358,7 @@ function ModifiersDemo() {
 }
 
 function CombinationDemo() {
-  return <Kbd meta shift>K</Kbd>;
+  return <Kbd meta shift />;
 }
 
 function SmallDemo() {
