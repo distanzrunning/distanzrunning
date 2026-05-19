@@ -314,14 +314,19 @@ const defaultCode = `import { LoadingDots } from '@/components/ui/LoadingDots';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  return <LoadingDots />;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <LoadingDots />
+      <LoadingDots size={4} />
+    </div>
+  );
 }`;
 
 const withTextCode = `import { LoadingDots } from '@/components/ui/LoadingDots';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  return <LoadingDots size={4}>Loading</LoadingDots>;
+  return <LoadingDots size={4}>Saving</LoadingDots>;
 }`;
 
 // ============================================================================
@@ -338,7 +343,7 @@ function DefaultDemo() {
 }
 
 function WithTextDemo() {
-  return <LoadingDots size={4}>Loading</LoadingDots>;
+  return <LoadingDots size={4}>Saving</LoadingDots>;
 }
 
 // ============================================================================
