@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -594,6 +595,102 @@ export default function FeedbackComponent() {
         <CodePreview componentCode={withMetadataCode}>
           <WithMetadataDemo />
         </CodePreview>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Place Feedback at the end of a page, doc, or completed flow
+            where the user has formed an opinion. Don&apos;t front-load
+            it on a surface the user has only opened.
+          </li>
+          <li>
+            Use{" "}
+            <code className="inline-code">&lt;FeedbackWithSelect&gt;</code>{" "}
+            when feedback maps to actionable categories the team triages
+            (<code className="inline-code">Bug</code>,{" "}
+            <code className="inline-code">Pricing</code>,{" "}
+            <code className="inline-code">Documentation</code>); skip it
+            when the open textarea is enough.
+          </li>
+          <li>
+            Don&apos;t use Feedback as a substitute for a support form,
+            a bug report intake, or NPS sampling. Those have dedicated
+            surfaces.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Keep the panel collapsed until the user clicks the trigger;
+            auto-opening derails the work that prompted the feedback.
+          </li>
+          <li>
+            Pair the{" "}
+            <code className="inline-code">metadata</code> prop with
+            non-PII context (route, build ID, plan, viewport) so the
+            team can reproduce the report without a second round-trip.
+          </li>
+          <li>
+            Submit closes the panel and returns focus to the trigger
+            button. Don&apos;t replace the panel with a generic
+            acknowledgment <ComponentRef name="Toast" />; the close
+            itself is the acknowledgment.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">buttonLabel</code> (popover
+            variants) is Title Case and short. Default{" "}
+            <code className="inline-code">Feedback</code> is fine;
+            override only when scoping to a flow:{" "}
+            <code className="inline-code">Feedback on Imports</code>,{" "}
+            <code className="inline-code">Report a Bug</code>.
+            Don&apos;t end the label with{" "}
+            <code className="inline-code">?</code>.
+          </li>
+          <li>
+            <code className="inline-code">&lt;FeedbackInline&gt;</code>
+            &apos;s <code className="inline-code">label</code> sits next
+            to the emoji row and acts as the prompt header — sentence
+            case, may end with{" "}
+            <code className="inline-code">?</code> (
+            <code className="inline-code">
+              How did the import go?
+            </code>
+            ). Cut <code className="inline-code">please</code> and{" "}
+            <code className="inline-code">we&apos;re sorry</code>.
+          </li>
+          <li>
+            The textarea placeholder (
+            <code className="inline-code">Your feedback...</code>) is
+            fixed; don&apos;t override it.
+          </li>
+        </ul>
       </Section>
 
       <Toast

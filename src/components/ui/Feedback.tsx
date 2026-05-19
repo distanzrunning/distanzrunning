@@ -985,6 +985,12 @@ export function FeedbackWithSelect({
       setSubmitted(true);
       setTimeout(() => {
         closeSelf();
+        // In popover mode, restore focus to the trigger button. The
+        // centered (modal) mode is controlled by the caller, who is
+        // responsible for restoring focus when `onClose` fires.
+        if (!centered) {
+          requestAnimationFrame(() => triggerRef.current?.focus());
+        }
         // Reset transient state after the close animation.
         setTimeout(() => {
           setSubmitted(false);
@@ -1006,6 +1012,7 @@ export function FeedbackWithSelect({
       onSubmit,
       closeSelf,
       defaultTopic,
+      centered,
     ],
   );
 
@@ -1533,6 +1540,9 @@ export function Feedback({
       setSubmitted(true);
       setTimeout(() => {
         setIsOpen(false);
+        // Restore focus to the trigger so a keyboard user lands back
+        // where they came from instead of having focus collapse to body.
+        requestAnimationFrame(() => triggerRef.current?.focus());
         // Reset after close animation
         setTimeout(() => {
           setSubmitted(false);
