@@ -401,11 +401,23 @@ const indeterminateCode = `import { Gauge } from '@/components/ui/Gauge';
 
 function IndeterminateExample() {
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Gauge value={25} size={20} indeterminate />
-      <Gauge value={25} size={32} indeterminate />
-      <Gauge value={25} size={64} indeterminate />
-      <Gauge value={25} size={128} indeterminate />
+    <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+      <Gauge
+        value={0}
+        size={32}
+        indeterminate
+        aria-labelledby="quota-label"
+      />
+      <span
+        id="quota-label"
+        style={{
+          fontSize: 14,
+          lineHeight: "20px",
+          color: "var(--ds-gray-900)",
+        }}
+      >
+        Calculating usage...
+      </span>
     </div>
   );
 }`;
@@ -506,11 +518,23 @@ function ArcPriorityDemo() {
 
 function IndeterminateDemo() {
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Gauge value={25} size={20} indeterminate />
-      <Gauge value={25} size={32} indeterminate />
-      <Gauge value={25} size={64} indeterminate />
-      <Gauge value={25} size={128} indeterminate />
+    <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+      <Gauge
+        value={0}
+        size={32}
+        indeterminate
+        aria-labelledby="quota-label-demo"
+      />
+      <span
+        id="quota-label-demo"
+        style={{
+          fontSize: 14,
+          lineHeight: "20px",
+          color: "var(--ds-gray-900)",
+        }}
+      >
+        Calculating usage&hellip;
+      </span>
     </div>
   );
 }
@@ -602,6 +626,9 @@ export default function GaugeComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
           An animated indeterminate state for when the value is unknown.
+          Pair with explanatory copy and tie the label via{" "}
+          <code className="inline-code">aria-labelledby</code> so the
+          gauge isn&apos;t read as &ldquo;0%&rdquo;.
         </p>
         <CodePreview componentCode={indeterminateCode}>
           <IndeterminateDemo />
