@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -416,6 +417,7 @@ function ListCheckboxExample() {
         >
           <Checkbox
             checked={!!checked[cat.name]}
+            aria-label={\`Select \${cat.name}\`}
             onChange={() =>
               setChecked((prev) => ({
                 ...prev,
@@ -526,6 +528,7 @@ function ListCheckboxDemo() {
         >
           <Checkbox
             checked={!!checked[cat.name]}
+            aria-label={`Select ${cat.name}`}
             onChange={() =>
               setChecked((prev) => ({
                 ...prev,
@@ -596,6 +599,95 @@ export default function EntityComponent() {
         <CodePreview componentCode={listCheckboxCode}>
           <ListCheckboxDemo />
         </CodePreview>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use{" "}
+            <code className="inline-code">&lt;Entity&gt;</code> for a row
+            of descriptive content paired with one or two controls (member
+            rows, integration rows, race-list rows).
+          </li>
+          <li>
+            For tabular data with sortable columns and a shared row shape,
+            use <ComponentRef name="Table" /> instead.
+          </li>
+          <li>
+            For a static key/value metadata block on a detail page, use{" "}
+            <ComponentRef name="Description" />.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">&lt;Entity.Field&gt;</code>{" "}
+            holds at most one or two controls. If the row needs more,
+            move secondary actions into a{" "}
+            <ComponentRef name="Menu" /> triggered by a dots button.
+          </li>
+          <li>
+            For multi-select rows, the leading{" "}
+            <ComponentRef name="Checkbox" /> carries{" "}
+            <code className="inline-code">
+              aria-label=&quot;Select {"{entity name}"}&quot;
+            </code>{" "}
+            so the row is selectable without relying on the visual label.
+          </li>
+          <li>
+            Render{" "}
+            <code className="inline-code">&lt;Entity.Skeleton&gt;</code>{" "}
+            during load instead of an empty row, and swap to real content
+            once data resolves.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Lead{" "}
+            <code className="inline-code">&lt;Entity.Content&gt;</code>{" "}
+            with a scannable identifier: an{" "}
+            <ComponentRef name="Avatar" /> or icon{" "}
+            <code className="inline-code">thumbnail</code>, a Title Case{" "}
+            <code className="inline-code">title</code>, then sentence-case{" "}
+            <code className="inline-code">subtitle</code> metadata (
+            <code className="inline-code">
+              Member since Mar 14, 2026
+            </code>
+            ).
+          </li>
+          <li>
+            Keep right-column buttons Title Case Verb + Noun (
+            <code className="inline-code">Remove Member</code>,{" "}
+            <code className="inline-code">Resend Invite</code>). Bare
+            verbs like <code className="inline-code">Remove</code> or{" "}
+            <code className="inline-code">Confirm</code> lose context
+            once the row scrolls offscreen.
+          </li>
+        </ul>
       </Section>
 
       <Toast
