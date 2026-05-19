@@ -87,8 +87,12 @@ const MODIFIER_GLYPHS = new Set<string>(Object.values(MAC_GLYPHS));
  * re-runs on mount and demotes to false on Windows/Linux, causing one
  * rerender at hydration time. No hydration mismatch because the first
  * client render uses the same default as SSR.
+ *
+ * Exported so non-Kbd consumers (custom shortcut badges, title-attribute
+ * tooltips, animated kbd compositions) can share the same SSR-safe
+ * detection logic.
  */
-function useIsMac(): boolean {
+export function useIsMac(): boolean {
   const [isMac, setIsMac] = useState(true);
   useEffect(() => {
     if (typeof navigator === "undefined") return;

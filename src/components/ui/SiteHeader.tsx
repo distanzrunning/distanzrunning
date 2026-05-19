@@ -155,7 +155,7 @@ export default function SiteHeader({
             variant="tertiary"
             size="small"
             aria-label="Open search"
-            title="Search (⌘K)"
+            title="Search (⌘K / Ctrl+K)"
             onClick={openSearch}
           >
             <SearchIcon className="size-4" />

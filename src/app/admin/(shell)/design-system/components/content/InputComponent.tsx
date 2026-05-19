@@ -10,7 +10,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Input } from "@/components/ui/Input";
-import { Kbd } from "@/components/ui/Kbd";
+import { Kbd, useIsMac } from "@/components/ui/Kbd";
 
 // ============================================================================
 // Toast Component
@@ -459,6 +459,7 @@ export function Component(): JSX.Element {
 }`;
 
 const commandKCode = `import { Input } from '@/components/ui/Input';
+import { Kbd } from '@/components/ui/Kbd';
 import { useState } from 'react';
 import type { JSX } from 'react';
 
@@ -466,9 +467,12 @@ export function Component(): JSX.Element {
   const [value, setValue] = useState("");
 
   const badge = value ? (
-    <kbd>Esc</kbd>
+    <Kbd size="small">Esc</Kbd>
   ) : (
-    <span><kbd>\u2318</kbd><kbd>K</kbd></span>
+    <span style={{ display: "inline-flex", gap: 2 }}>
+      <Kbd size="small" meta />
+      <Kbd size="small">K</Kbd>
+    </span>
   );
 
   return (
@@ -607,6 +611,7 @@ function SearchDemo() {
 }
 
 function CommandKBadge({ dirty }: { dirty: boolean }) {
+  const isMac = useIsMac();
   const spring = "cubic-bezier(0.175, 0.885, 0.32, 1.1)";
   const duration = "0.56s";
 
@@ -643,17 +648,21 @@ function CommandKBadge({ dirty }: { dirty: boolean }) {
         margin: -1,
       }}
     >
-      {/* ⌘ kbd: slides out to the left when dirty */}
+      {/* Meta kbd: slides out to the left when dirty. translate uses
+          calc(-100% - 8px) so the slide distance scales with the
+          element's own width — ⌘ on Mac (~20px) and "Ctrl" on
+          Windows/Linux (~30px) both fully clip past the parent's
+          overflow boundary. */}
       <kbd
         style={{
           ...kbdBase,
           marginLeft: 4,
           textAlign: "center",
-          translate: dirty ? "-32px" : "0",
+          translate: dirty ? "calc(-100% - 8px)" : "0",
           transition: `translate ${duration} ${spring}`,
         }}
       >
-        <span style={textStyle}>{"\u2318"}</span>
+        <span style={textStyle}>{isMac ? "\u2318" : "Ctrl"}</span>
       </kbd>
       {/* Second kbd: contains both K and Esc, crossfades via translate */}
       <kbd

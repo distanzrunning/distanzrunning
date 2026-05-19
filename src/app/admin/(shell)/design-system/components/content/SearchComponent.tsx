@@ -10,6 +10,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { CommandMenu } from "@/components/ui/CommandMenu";
+import { Kbd } from "@/components/ui/Kbd";
 import { Note } from "@/components/ui/Note";
 import { useToast } from "@/components/ui/Toast";
 import IconButton from "@/components/ui/IconButton";
@@ -280,6 +281,7 @@ const TYPE_AHEAD_ITEMS: ReadonlyArray<string> = [
 
 const triggerCode = `import { useState } from 'react';
 import { CommandMenu } from '@/components/ui/CommandMenu';
+import { Kbd } from '@/components/ui/Kbd';
 
 export function SearchTrigger() {
   const [open, setOpen] = useState(false);
@@ -292,13 +294,7 @@ export function SearchTrigger() {
         className="flex h-8 w-[220px] items-center justify-between rounded border border-[var(--ds-gray-400)] bg-transparent pl-2 pr-1.5 text-sm text-[var(--ds-gray-700)] hover:bg-[var(--ds-background-200)]"
       >
         Search Stride
-        <kbd
-          className="ml-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded bg-[var(--ds-background-100)] px-1 text-[12px] text-[var(--ds-gray-900)]"
-          style={{ boxShadow: '0 0 0 1px var(--ds-gray-alpha-400)' }}
-        >
-          <span>⌘</span>
-          <span>K</span>
-        </kbd>
+        <Kbd size="small" meta>K</Kbd>
       </button>
 
       <CommandMenu open={open} onClose={() => setOpen(false)} placeholder="Search...">
@@ -522,15 +518,7 @@ export default function SearchComponent() {
               className="flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-[var(--ds-gray-400)] bg-transparent pl-2 pr-1.5 font-sans text-sm text-[var(--ds-gray-700)] outline-none transition-colors hover:bg-[var(--ds-background-200)]"
             >
               Search Stride
-              <kbd
-                className="ml-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded bg-[var(--ds-background-100)] px-1 font-sans text-[12px] leading-5 text-[var(--ds-gray-900)]"
-                style={{ boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)" }}
-              >
-                <span style={{ minWidth: "1em", display: "inline-block" }}>
-                  ⌘
-                </span>
-                <span>K</span>
-              </kbd>
+              <Kbd size="small" meta>K</Kbd>
             </button>
           </CodePreview>
         </div>
