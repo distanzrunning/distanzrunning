@@ -350,23 +350,7 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const responsiveGridCode = `import { Grid, GridCell } from '@/components/ui/Grid';
-import type { JSX } from 'react';
-
-export function Component(): JSX.Element {
-  return (
-    <Grid columns={3} rows={2}>
-      <GridCell>1</GridCell>
-      <GridCell>2</GridCell>
-      <GridCell>3</GridCell>
-      <GridCell>4</GridCell>
-      <GridCell>5</GridCell>
-      <GridCell>6</GridCell>
-    </Grid>
-  );
-}`;
-
-const responsiveClippingCode = `import { Grid, GridCell } from '@/components/ui/Grid';
+const spanningCellsCode = `import { Grid, GridCell } from '@/components/ui/Grid';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
@@ -478,20 +462,7 @@ function SolidCellsDemo() {
   );
 }
 
-function ResponsiveGridDemo() {
-  return (
-    <Grid rows={2} columns={3}>
-      <GridCell>1</GridCell>
-      <GridCell>2</GridCell>
-      <GridCell>3</GridCell>
-      <GridCell>4</GridCell>
-      <GridCell>5</GridCell>
-      <GridCell>6</GridCell>
-    </Grid>
-  );
-}
-
-function ResponsiveClippingDemo() {
+function SpanningCellsDemo() {
   return (
     <Grid rows={2} columns={3}>
       <GridCell row="1" column="1 / 3" solid>1 + 2</GridCell>
@@ -582,26 +553,19 @@ export default function GridComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="responsive-grid" onCopyLink={showToast}>
-          Responsive grid
+        <SectionHeader id="spanning-cells" onCopyLink={showToast}>
+          Spanning cells
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Grid component with responsive <code className="inline-code">rows</code> and <code className="inline-code">columns</code> props at all 3 breakpoints.
+          Cells can span multiple columns or rows with the{" "}
+          <code className="inline-code">column</code> /{" "}
+          <code className="inline-code">row</code> props (e.g.{" "}
+          <code className="inline-code">column=&quot;1 / 3&quot;</code>).
+          Pair with <code className="inline-code">solid</code> so the
+          cell content occludes the guides underneath.
         </p>
-        <CodePreview componentCode={responsiveGridCode}>
-          <ResponsiveGridDemo />
-        </CodePreview>
-      </Section>
-
-      <Section>
-        <SectionHeader id="responsive-grid-with-responsive-guide-clipping-cells" onCopyLink={showToast}>
-          Responsive Grid with responsive guide clipping cells
-        </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Grid component with responsive <code className="inline-code">rows</code> and <code className="inline-code">columns</code> props at all 3 breakpoints as well as guide clipping on specific cells.
-        </p>
-        <CodePreview componentCode={responsiveClippingCode}>
-          <ResponsiveClippingDemo />
+        <CodePreview componentCode={spanningCellsCode}>
+          <SpanningCellsDemo />
         </CodePreview>
       </Section>
 
