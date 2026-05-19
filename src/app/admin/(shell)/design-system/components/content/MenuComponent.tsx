@@ -4,6 +4,7 @@ import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -13,6 +14,7 @@ import {
   Menu,
   MenuButton,
   MenuItem,
+  MenuSection,
   MenuSeparator,
 } from "@/components/ui/Menu";
 
@@ -465,6 +467,26 @@ export function Component(): JSX.Element {
   );
 }`;
 
+const menuSectionCode = `import { Menu, MenuButton, MenuItem, MenuSection, MenuSeparator } from '@/components/ui/Menu';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <Menu>
+      <MenuButton variant="secondary" chevron>Account</MenuButton>
+      <MenuSection title="Workspace">
+        <MenuItem>Switch Workspace</MenuItem>
+        <MenuItem>Invite Members</MenuItem>
+      </MenuSection>
+      <MenuSeparator />
+      <MenuSection title="Account">
+        <MenuItem>Account Settings</MenuItem>
+        <MenuItem>Sign Out</MenuItem>
+      </MenuSection>
+    </Menu>
+  );
+}`;
+
 // ============================================================================
 // SVG Icons for Demos
 // ============================================================================
@@ -623,6 +645,33 @@ function MenuPositionDemo() {
   );
 }
 
+function MenuSectionDemo() {
+  return (
+    <Menu>
+      <MenuButton variant="secondary" chevron>
+        Account
+      </MenuButton>
+      <MenuSection title="Workspace">
+        <MenuItem onClick={() => console.log("switch")}>
+          Switch Workspace
+        </MenuItem>
+        <MenuItem onClick={() => console.log("invite")}>
+          Invite Members
+        </MenuItem>
+      </MenuSection>
+      <MenuSeparator />
+      <MenuSection title="Account">
+        <MenuItem onClick={() => console.log("settings")}>
+          Account Settings
+        </MenuItem>
+        <MenuItem onClick={() => console.log("signout")}>
+          Sign Out
+        </MenuItem>
+      </MenuSection>
+    </Menu>
+  );
+}
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -740,6 +789,162 @@ export default function MenuComponent() {
             <MenuPositionDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="menu-section" onCopyLink={showToast}>
+          Menu sections
+        </SectionHeader>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "var(--ds-gray-900)" }}>
+          Group related items under a Title Case header with{" "}
+          <code className="inline-code">&lt;MenuSection title=&quot;&hellip;&quot;&gt;</code>{" "}
+          when the menu starts to crowd past ~10 items.
+        </p>
+        <div className="mt-6">
+          <CodePreview componentCode={menuSectionCode}>
+            <MenuSectionDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Menu for a discoverable trigger that opens a list of
+            actions on a single resource (a dots menu on a row, a
+            dropdown on a primary entity).
+          </li>
+          <li>
+            For right-click or long-press on a row, use{" "}
+            <ComponentRef name="Context Menu" />. For global commands
+            behind <code className="inline-code">⌘K</code>, use{" "}
+            <ComponentRef name="Command Menu" />. For two related
+            primary actions, use{" "}
+            <ComponentRef name="Split Button" /> rather than burying
+            the secondary action.
+          </li>
+          <li>
+            Cap a Menu around 10 items. Past that, group with{" "}
+            <code className="inline-code">&lt;MenuSection&gt;</code>{" "}
+            or move secondary actions to a settings page.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Open on click, not hover; hover-open menus collide with
+            screen readers and trackpad scrolls.
+          </li>
+          <li>
+            <code className="inline-code">position</code> auto-flips
+            when the requested side would clip against the viewport
+            (e.g.{" "}
+            <code className="inline-code">bottom-start</code> swaps to{" "}
+            <code className="inline-code">top-start</code> near the
+            bottom edge). Pick the preferred side; the component
+            handles the fallback.
+          </li>
+          <li>
+            Closes on item activation, Escape, and outside-click.
+            Doesn&apos;t auto-close on hover-out.
+          </li>
+          <li>
+            Use the{" "}
+            <code className="inline-code">locked</code> prop on a{" "}
+            <code className="inline-code">&lt;MenuItem&gt;</code> for
+            permission-gated actions so the lock icon and disabled
+            state explain why the row is inert.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Item children are Title Case{" "}
+            <code className="inline-code">Verb + Noun</code> (
+            <code className="inline-code">Rename Project</code>,{" "}
+            <code className="inline-code">Duplicate Race</code>). Bare
+            verbs like <code className="inline-code">Rename</code> or{" "}
+            <code className="inline-code">Edit</code> are wrong
+            outside obvious single-object context.
+          </li>
+          <li>
+            End an item with{" "}
+            <code className="inline-code">&hellip;</code> only when
+            activating it opens a follow-up dialog (
+            <code className="inline-code">Rename&hellip;</code>,{" "}
+            <code className="inline-code">
+              Transfer to Team&hellip;
+            </code>
+            ).
+          </li>
+          <li>
+            Group destructive items at the bottom, separated by a{" "}
+            <code className="inline-code">&lt;MenuSeparator /&gt;</code>
+            , and keep the destructive copy as Verb + Noun (
+            <code className="inline-code">Delete Project</code>, never
+            bare <code className="inline-code">Delete</code>).
+          </li>
+          <li>
+            Section headers (
+            <code className="inline-code">
+              &lt;MenuSection title=&quot;&hellip;&quot;&gt;
+            </code>
+            ) are Title Case, 1&ndash;2 words (
+            <code className="inline-code">Workspace</code>,{" "}
+            <code className="inline-code">Recent Projects</code>).
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">Up</code> /{" "}
+            <code className="inline-code">Down</code> arrows move
+            focus through items,{" "}
+            <code className="inline-code">Home</code> /{" "}
+            <code className="inline-code">End</code> jump to first /
+            last,{" "}
+            <code className="inline-code">Enter</code> or{" "}
+            <code className="inline-code">Space</code> activates the
+            focused item.
+          </li>
+          <li>
+            The first non-disabled item receives focus when the menu
+            opens.
+          </li>
+          <li>
+            Focus returns to the trigger button on close, so keyboard
+            users keep their place in the row.
+          </li>
+        </ul>
       </Section>
 
       <Toast
