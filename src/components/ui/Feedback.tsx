@@ -397,6 +397,7 @@ export function FeedbackInline({
   const send = useCallback(
     async (emailValue: string) => {
       setIsSending(true);
+      const emotionAtSubmit = selectedEmotion;
       const trimmedEmail = emailValue.trim() || undefined;
       const payload: FeedbackPayload = {
         emotion: selectedEmotion as FeedbackEmotion,
@@ -415,7 +416,20 @@ export function FeedbackInline({
       setTimeout(() => {
         setIsSending(false);
         setSubmitted(true);
-        setTimeout(close, 2200);
+        setTimeout(() => {
+          close();
+          // Restore focus to the emoji the user picked so a keyboard
+          // user lands on a visible, focusable element instead of body.
+          // Wait past the close animation + state reset (~250 ms).
+          setTimeout(() => {
+            if (!emotionAtSubmit) return;
+            const btn =
+              wrapperRef.current?.querySelector<HTMLButtonElement>(
+                `button[data-emoji-id="${emotionAtSubmit}"]`,
+              );
+            btn?.focus();
+          }, 300);
+        }, 2200);
       }, 650);
     },
     [selectedEmotion, feedbackText, onSubmit, close],
@@ -510,6 +524,7 @@ export function FeedbackInline({
                 key={emoji.id}
                 type="button"
                 role="radio"
+                data-emoji-id={emoji.id}
                 className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
                 aria-checked={selectedEmotion === emoji.id}
                 aria-label={`Select ${emoji.label} emoji`}
