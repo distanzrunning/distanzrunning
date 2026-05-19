@@ -8,6 +8,14 @@ import { type ReactNode } from "react";
 
 export interface EmptyStateProps {
   children: ReactNode;
+  /**
+   * When true, render the container as a polite live region so screen
+   * readers announce the empty state as it appears. Pass for
+   * async-filtered lists where the empty state can replace results
+   * after the user changes the filter; leave false for static "blank
+   * slate" / permission / onboarding states the user navigates to.
+   */
+  live?: boolean;
 }
 
 interface EmptyStateIconProps {
@@ -172,12 +180,15 @@ function EmptyStateActions({ children }: EmptyStateActionsProps) {
 // EmptyState
 // ============================================================================
 
-export function EmptyState({ children }: EmptyStateProps) {
-  // Separate icon, text (title/description), and actions
+export function EmptyState({ children, live = false }: EmptyStateProps) {
   return (
     <>
       <style>{EMPTY_STATE_CSS}</style>
-      <div className="ds-empty-state">
+      <div
+        className="ds-empty-state"
+        role={live ? "status" : undefined}
+        aria-live={live ? "polite" : undefined}
+      >
         {children}
       </div>
     </>

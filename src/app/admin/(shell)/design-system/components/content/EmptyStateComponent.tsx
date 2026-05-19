@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown, FileText, ExternalLink } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -869,6 +870,141 @@ export default function EmptyStateComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Compose the variant from the slots —{" "}
+            <code className="inline-code">&lt;EmptyState.Icon&gt;</code>,{" "}
+            <code className="inline-code">&lt;EmptyState.Title&gt;</code>,{" "}
+            <code className="inline-code">&lt;EmptyState.Description&gt;</code>
+            ,{" "}
+            <code className="inline-code">&lt;EmptyState.Actions&gt;</code>{" "}
+            — by what the user needs: no-results for a filtered list that
+            returned zero rows, blank slate or informational for a
+            resource the user hasn&apos;t created, cleared for completed
+            work, permission for role or tier denials, error for a failed
+            load.
+          </li>
+          <li>
+            Render the permission and tier-denial cases full-page when
+            the user lands on a route they can&apos;t view. Use a{" "}
+            <ComponentRef name="Note" /> only when one tile inside an
+            otherwise-accessible page is gated.
+          </li>
+          <li>
+            Don&apos;t put critical persistent warnings here. Empty states
+            vanish when the list populates; persistent warnings belong in{" "}
+            <ComponentRef name="Note" /> or the page header.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The CTA inside{" "}
+            <code className="inline-code">&lt;EmptyState.Actions&gt;</code>{" "}
+            must be a real <ComponentRef name="Button" /> or a link, not
+            an <code className="inline-code">onClick</code> div, so it
+            joins the tab order and exposes a role.
+          </li>
+          <li>
+            Cap at one primary CTA, plus one secondary when the first
+            action could legitimately be one of two paths (
+            <code className="inline-code">Import Repository</code> and{" "}
+            <code className="inline-code">Deploy Template</code>). Three
+            CTAs is a smell.
+          </li>
+          <li>
+            For async-filtered lists, pass{" "}
+            <code className="inline-code">live</code> on{" "}
+            <code className="inline-code">&lt;EmptyState&gt;</code> so the
+            container carries{" "}
+            <code className="inline-code">role=&quot;status&quot;</code>{" "}
+            +{" "}
+            <code className="inline-code">aria-live=&quot;polite&quot;</code>
+            . Screen readers then announce the new empty state when it
+            replaces the previous result list. Leave it off for static
+            blank-slate / permission / onboarding states the user
+            navigates to.
+          </li>
+          <li>
+            Don&apos;t auto-launch a tour from the educational variant;
+            pair <code className="inline-code">Start Tour</code> with{" "}
+            <code className="inline-code">Skip</code>.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">&lt;EmptyState.Title&gt;</code>{" "}
+            is Title Case (
+            <code className="inline-code">No Logs Match Your Filter</code>
+            );{" "}
+            <code className="inline-code">
+              &lt;EmptyState.Description&gt;
+            </code>{" "}
+            is sentence case and adds new information instead of
+            restating the title.
+          </li>
+          <li>
+            Quote a single typed query verbatim with curly quotes:{" "}
+            <code className="inline-code">
+              No logs match &ldquo;{"${query}"}&rdquo;. Clear the filter
+              to see all logs.
+            </code>{" "}
+            For multi-facet filters use the plural template{" "}
+            <code className="inline-code">
+              No {"{Items}"} Match Your Filters
+            </code>{" "}
+            and suggest widening or clearing.
+          </li>
+          <li>
+            Onboarding bodies name the next action that creates the first
+            item:{" "}
+            <code className="inline-code">
+              Push to your Git repository to create your first one.
+            </code>{" "}
+            Tier-gated bodies follow{" "}
+            <code className="inline-code">
+              {"{Feature value}"} with the {"{Plan}"} plan.
+            </code>
+          </li>
+          <li>
+            Error variant pairs the body with a copyable request ID and a{" "}
+            <code className="inline-code">Try Again</code> button.
+          </li>
+          <li>
+            CTA labels are Title Case{" "}
+            <code className="inline-code">Verb + Noun</code>. Never{" "}
+            <code className="inline-code">Get Started</code>,{" "}
+            <code className="inline-code">Continue</code>, or{" "}
+            <code className="inline-code">OK</code>.
+          </li>
+        </ul>
       </Section>
     </>
   );
