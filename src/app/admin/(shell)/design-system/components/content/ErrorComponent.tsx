@@ -315,7 +315,7 @@ const defaultCode = `import { Error } from '@/components/ui/Error';
 function DefaultExample() {
   return (
     <Error>
-      This email address is already in use.
+      Couldn&rsquo;t load race results. Try again.
     </Error>
   );
 }`;
@@ -324,8 +324,8 @@ const customLabelCode = `import { Error } from '@/components/ui/Error';
 
 function CustomLabelExample() {
   return (
-    <Error label="Email Error">
-      This email address is already in use.
+    <Error label="Strava Sync">
+      Failed to fetch activity. The athlete profile is private.
     </Error>
   );
 }`;
@@ -335,7 +335,7 @@ const noLabelCode = `import { Error } from '@/components/ui/Error';
 function NoLabelExample() {
   return (
     <Error>
-      This email address is already in use.
+      Couldn&rsquo;t reach the events API. Try again.
     </Error>
   );
 }`;
@@ -346,13 +346,13 @@ function SizesExample() {
   return (
     <div className="flex flex-col md:flex-row items-start gap-6">
       <Error size="small">
-        This email is in use.
+        Couldn&rsquo;t connect to Strava.
       </Error>
       <Error>
-        This email is in use.
+        Couldn&rsquo;t connect to Strava.
       </Error>
       <Error size="large">
-        This email is in use.
+        Couldn&rsquo;t connect to Strava.
       </Error>
     </div>
   );
@@ -364,7 +364,7 @@ import { Error } from '@/components/ui/Error';
 function WithLinkExample() {
   return (
     <Error>
-      The request failed.{' '}
+      Couldn&rsquo;t process your registration.{' '}
       <a
         href="/support"
         target="_blank"
@@ -386,15 +386,15 @@ function WithLinkExample() {
 function DefaultDemo() {
   return (
     <Error>
-      This email address is already in use.
+      Couldn&rsquo;t load race results. Try again.
     </Error>
   );
 }
 
 function CustomLabelDemo() {
   return (
-    <Error label="Email Error">
-      This email address is already in use.
+    <Error label="Strava Sync">
+      Failed to fetch activity. The athlete profile is private.
     </Error>
   );
 }
@@ -402,7 +402,7 @@ function CustomLabelDemo() {
 function NoLabelDemo() {
   return (
     <Error>
-      This email address is already in use.
+      Couldn&rsquo;t reach the events API. Try again.
     </Error>
   );
 }
@@ -411,13 +411,13 @@ function SizesDemo() {
   return (
     <div className="flex flex-col md:flex-row items-start gap-6">
       <Error size="small">
-        This email is in use.
+        Couldn&rsquo;t connect to Strava.
       </Error>
       <Error>
-        This email is in use.
+        Couldn&rsquo;t connect to Strava.
       </Error>
       <Error size="large">
-        This email is in use.
+        Couldn&rsquo;t connect to Strava.
       </Error>
     </div>
   );
@@ -446,7 +446,7 @@ function ExternalLinkIcon() {
 function WithLinkDemo() {
   return (
     <Error>
-      The request failed.{" "}
+      Couldn&rsquo;t process your registration.{" "}
       <a
         href="/support"
         target="_blank"
