@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -538,6 +539,125 @@ export default function DrawerComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Drawer renders as a bottom sheet on every viewport via vaul.
+            On desktop, prefer a <ComponentRef name="Modal" /> (or{" "}
+            <ComponentRef name="Sheet" /> for lateral context) — pick the
+            right component at the trigger instead of forcing Drawer.
+          </li>
+          <li>
+            Don&apos;t use Drawer to confirm destructive actions. The
+            overlay dims but the sheet can be swiped or tapped away, so
+            the severity signal is weaker than a Modal — route delete and
+            revoke flows to <ComponentRef name="Modal" />.
+          </li>
+          <li>
+            A Drawer is good for short focused mobile actions: a single
+            form, a filter sheet, a primary CTA paired with{" "}
+            <code className="inline-code">Cancel</code>.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Tap-outside and swipe-down dismiss by default — both wired
+            through vaul. Preserve them unless the form has dirty input;
+            in that case, intercept{" "}
+            <code className="inline-code">onOpenChange</code> and confirm
+            before closing.
+          </li>
+          <li>
+            The drawer body scrolls inside its frame automatically (
+            <code className="inline-code">overflow-y: auto</code> on the
+            inner panel) so the page behind doesn&apos;t scroll when the
+            user drags the content.
+          </li>
+          <li>
+            Cap content with the{" "}
+            <code className="inline-code">height</code> prop on{" "}
+            <code className="inline-code">&lt;Drawer.Content&gt;</code>{" "}
+            only when the default (auto, max 80vh) clips the primary
+            action. The action and{" "}
+            <code className="inline-code">Cancel</code> must stay above the
+            fold.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">&lt;Drawer.Title&gt;</code> is a
+            Title Case statement that names the entity (
+            <code className="inline-code">Deployment Details</code>,{" "}
+            <code className="inline-code">Filter Logs</code>).
+          </li>
+          <li>
+            Body is sentence case prose. One primary{" "}
+            <code className="inline-code">Verb + Noun</code> button and a
+            literal <code className="inline-code">Cancel</code>; don&apos;t
+            cram destructive cascade copy into the smaller frame.
+          </li>
+          <li>
+            Don&apos;t restate the page heading as the drawer title; name
+            what this view does.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Focus is trapped inside the drawer while open and returned to
+            the trigger on close — vaul handles both. Escape closes the
+            drawer, and the system back gesture on mobile dismisses it
+            the same way.
+          </li>
+          <li>
+            Body scroll is locked while the drawer is open (
+            <code className="inline-code">touch-action: none</code> +{" "}
+            <code className="inline-code">overscroll-behavior: none</code>{" "}
+            on the content) so iOS rubber-band scroll doesn&apos;t leak
+            through to the page behind.
+          </li>
+          <li>
+            Always render{" "}
+            <code className="inline-code">&lt;Drawer.Title&gt;</code> —
+            it&apos;s required by vaul for the SR-accessible name; if the
+            title isn&apos;t visible, hide it with{" "}
+            <code className="inline-code">sr-only</code> rather than
+            omitting it.
+          </li>
+        </ul>
       </Section>
     </>
   );
