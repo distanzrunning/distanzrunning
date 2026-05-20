@@ -945,18 +945,15 @@ export default function ButtonComponentNew() {
             <code className="inline-code">success</code>,{" "}
             <code className="inline-code">ghost</code>, and{" "}
             <code className="inline-code">violet</code> are not valid{" "}
-            <code className="inline-code">variant</code> values — drop{" "}
-            <code className="inline-code">variant</code> for the primary
-            default; use <code className="inline-code">tertiary</code>{" "}
-            instead of <code className="inline-code">ghost</code>.
+            <code className="inline-code">variant</code> values.
           </li>
           <li>
             For form submits, use{" "}
-            <code className="inline-code">type=&quot;submit&quot;</code>{" "}
-            &mdash; the HTML{" "}
-            <code className="inline-code">type</code> attribute is
-            passed straight through (default{" "}
-            <code className="inline-code">&quot;button&quot;</code>).
+            <code className="inline-code">type=&quot;submit&quot;</code>.
+            The HTML <code className="inline-code">type</code>{" "}
+            attribute and the{" "}
+            <code className="inline-code">variant</code> prop are
+            separate, so there&apos;s no naming collision.
           </li>
           <li>
             Pass <code className="inline-code">loading</code> instead
