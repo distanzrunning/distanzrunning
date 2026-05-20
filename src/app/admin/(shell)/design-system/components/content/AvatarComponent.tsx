@@ -903,44 +903,47 @@ export default function AvatarComponent() {
         </SectionHeader>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Use a single <code className="inline-code">&lt;Avatar&gt;</code>{" "}
-            for one person, team, or organization. For two or more stacked
-            avatars, use{" "}
-            <code className="inline-code">&lt;AvatarGroup&gt;</code> so the
-            cluster gets correct overlap, consistent sizing, and a single{" "}
-            <code className="inline-code">+N</code> overflow indicator.
+            Use a single{" "}
+            <code className="inline-code">&lt;Avatar&gt;</code> for
+            one person, team, or organization. For two or more
+            stacked avatars, use{" "}
+            <code className="inline-code">&lt;AvatarGroup&gt;</code>{" "}
+            so the cluster gets correct overlap, sizing, and a
+            single accessible label.
           </li>
           <li>
-            Pass <code className="inline-code">src</code> first and supply{" "}
-            <code className="inline-code">fallback</code> (the entity&apos;s
-            name) when the image is missing. The component derives 1–2
-            uppercase initials automatically. Reserve{" "}
-            <code className="inline-code">placeholder</code> for the loading
-            shell, never as a permanent fallback.
+            Pass <code className="inline-code">src</code> first and
+            fall back to{" "}
+            <code className="inline-code">fallback</code> (the
+            entity&apos;s name; the component derives 1&ndash;2
+            uppercase initials) when the image is missing. Reserve{" "}
+            <code className="inline-code">placeholder</code> for the
+            loading shell, never as a permanent fallback.
           </li>
           <li>
-            Don&apos;t hand-write{" "}
-            <code className="inline-code">aria-label=&quot;Avatar of …&quot;</code>
-            . Initials avatars are announced as{" "}
+            <code className="inline-code">fallback</code> is the
+            literal entity name (
+            <code className="inline-code">Acme Inc.</code>,{" "}
+            <code className="inline-code">Jane Doe</code>). Initials
+            avatars are announced as{" "}
             <code className="inline-code">
-              &quot;Avatar with initials: XX&quot;
+              Avatar with initials:
             </code>{" "}
-            automatically; image avatars use the{" "}
-            <code className="inline-code">alt</code> string you pass.
+            for screen readers, so don&apos;t hand-write{" "}
+            <code className="inline-code">Avatar of …</code>.
           </li>
           <li>
-            Pass <code className="inline-code">fallback</code> as a literal
-            name, not the initials themselves —{" "}
-            <code className="inline-code">&quot;Jane Doe&quot;</code> not{" "}
-            <code className="inline-code">&quot;JD&quot;</code>. The component
-            handles casing and reduction. Avoid emoji, punctuation, or{" "}
-            <code className="inline-code">?</code> in the source name.
+            Keep <code className="inline-code">fallback</code>{" "}
+            derived from the entity name. No emoji, no punctuation,
+            no <code className="inline-code">?</code>.
           </li>
           <li>
-            Size to match adjacent type: 20–24 px next to{" "}
-            <code className="inline-code">text-label-14</code>, 32 px next to{" "}
-            <code className="inline-code">text-label-16</code>, and 48–64 px
-            in page headers or onboarding states.
+            Pick a size that matches adjacent type: 20&ndash;24px
+            next to{" "}
+            <code className="inline-code">text-label-14</code>, 32px
+            next to{" "}
+            <code className="inline-code">text-label-16</code>,
+            48&ndash;64px in headers and onboarding states.
           </li>
         </ul>
       </Section>
