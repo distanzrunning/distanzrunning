@@ -989,31 +989,24 @@ export default function ComboboxComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            For async results, pass{" "}
-            <code className="inline-code">loading</code> so the
-            dropdown shows a labelled row instead of collapsing
-            while the request is in flight.
+            Show a loading state for async results; don&apos;t collapse the
+            list while the request is in flight.
           </li>
           <li>
-            Pass a templated{" "}
-            <code className="inline-code">emptyMessage</code> when
-            no options match (
+            Render a custom empty state of the form{" "}
             <code className="inline-code">
-              {'`No regions match "${query}"`'}
-            </code>
-            ), not the bare default{" "}
-            <code className="inline-code">No results found</code>.
+              {'No {items} match "{query}"'}
+            </code>{" "}
+            rather than a bare{" "}
+            <code className="inline-code">No results</code>.
           </li>
           <li>
-            Inside a <ComponentRef name="Modal" />, the popover
-            layers correctly &mdash; don&apos;t wrap the Combobox in
-            a second portal or focus trap.
+            Inside a <ComponentRef name="Modal" />, the popover layers
+            correctly; don&apos;t layer a second portal or focus trap.
           </li>
           <li>
-            Keep arrow-key navigation through the option list.{" "}
-            <code className="inline-code">Enter</code> is intercepted
-            only while the list is open, so a surrounding form
-            submit never fires by accident.
+            Keep arrow-key navigation through options; don&apos;t hijack
+            Enter to submit the surrounding form while the list is open.
           </li>
         </ul>
 
@@ -1025,14 +1018,12 @@ export default function ComboboxComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Visible <code className="inline-code">label</code> is a short
-            Title Case noun (
+            Visible label is a short Title Case noun (
             <code className="inline-code">Region</code>,{" "}
             <code className="inline-code">Environment Variable Name</code>).
           </li>
           <li>
-            <code className="inline-code">placeholder</code> is the inline
-            hint:{" "}
+            Placeholder is the inline hint:{" "}
             <code className="inline-code">Search regions</code>,{" "}
             <code className="inline-code">DATABASE_URL</code>. Never bare{" "}
             <code className="inline-code">Search…</code> and never the
@@ -1046,9 +1037,9 @@ export default function ComboboxComponent() {
             across the list.
           </li>
           <li>
-            Validation copy names the field and constraint, sentence case
-            with a period:{" "}
-            <code className="inline-code">Select a region.</code>
+            Validation names the field and constraint, sentence case with
+            a period (
+            <code className="inline-code">Select a region.</code>).
           </li>
         </ul>
 
@@ -1060,22 +1051,18 @@ export default function ComboboxComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Prefer the built-in{" "}
+            Use the built-in{" "}
             <code className="inline-code">label</code> prop, which
             renders a real{" "}
             <code className="inline-code">&lt;label&gt;</code>{" "}
-            associated to the input. For icon-only triggers where
-            the label isn&apos;t shown, pass{" "}
-            <code className="inline-code">aria-label</code> instead.
+            associated to the input. For icon-only triggers, set{" "}
+            <code className="inline-code">aria-label</code> on the root
+            instead.
           </li>
           <li>
-            The dropdown traps focus while open; Tab cycles options
-            inside the listbox rather than the page behind.
-          </li>
-          <li>
-            When <code className="inline-code">loading</code> is on,
-            the listbox is announced as busy so screen readers hear
-            the loading state.
+            Trap focus inside the popover when nested in a{" "}
+            <ComponentRef name="Modal" /> so Tab cycles options instead
+            of the page behind it.
           </li>
         </ul>
       </Section>
