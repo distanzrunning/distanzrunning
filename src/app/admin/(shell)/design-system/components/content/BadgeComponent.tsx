@@ -1024,36 +1024,38 @@ export default function BadgeComponent() {
             <code className="inline-code">Active</code>,{" "}
             <code className="inline-code">Pending</code>,{" "}
             <code className="inline-code">Pro</code>,{" "}
-            <code className="inline-code">Enterprise Trial</code>. Match the
-            canonical API or log term — e.g.{" "}
+            <code className="inline-code">Enterprise Trial</code>.
+            Match the canonical API or log term:{" "}
             <code className="inline-code">Production</code> not{" "}
-            <code className="inline-code">Prod</code>, and stay consistent
-            with how the data source spells it.
+            <code className="inline-code">Prod</code>,{" "}
+            <code className="inline-code">Deployed</code> not{" "}
+            <code className="inline-code">Live</code>; stay
+            consistent with how the data source spells it.
           </li>
           <li>
-            Don&apos;t add a checkmark icon for success states or an X for
-            errors — the variant carries that signal. Map meaning to colour:{" "}
+            Don&apos;t add a checkmark icon for success states or an
+            X for errors; the variant carries that signal. Map
+            meaning to color:{" "}
             <code className="inline-code">green</code> for healthy,{" "}
             <code className="inline-code">red</code> for error,{" "}
             <code className="inline-code">amber</code> for warning,{" "}
-            <code className="inline-code">blue</code> for informational or
-            production, <code className="inline-code">gray</code> for
-            neutral. The <code className="inline-code">-subtle</code> suffix
+            <code className="inline-code">blue</code> for
+            informational or production,{" "}
+            <code className="inline-code">gray</code> for neutral.
+            The <code className="inline-code">-subtle</code> suffix
             tones any of them down on dense surfaces.
           </li>
           <li>
             Skip stuffing sentences inside (
             <code className="inline-code">Currently Active</code>,{" "}
-            <code className="inline-code">You are on Pro</code>); the
-            surrounding row supplies the context.
+            <code className="inline-code">You are on Pro</code>);
+            the surrounding row supplies the context.
           </li>
           <li>
-            Set <code className="inline-code">title</code> on ambiguous
-            badges (
-            <code className="inline-code">Pro</code>,{" "}
-            <code className="inline-code">Alpha</code>) so screen readers and
-            hover tooltips announce the meaning. Don&apos;t rely on colour
-            alone — the text has to be readable without it.
+            Set <code className="inline-code">title</code> for
+            icon-only or ambiguous badges so screen readers announce
+            the meaning. Don&apos;t rely on color alone; the text
+            has to be readable without it.
           </li>
         </ul>
       </Section>
