@@ -579,11 +579,11 @@
     --ds-overlay-backdrop-opacity: 0.8;
 
     /* Modal backgrounds — panel is the body surface (bg-100, the
-       brighter shade), sections (header / footer / Modal.Inset) are
-       bg-200 so they anchor the body with a softly contrasting tone.
-       Dark mode below mirrors the same semantics with the same
-       tokens (bg-100 is the brighter shade in both themes, just
-       swapped values). */
+       brighter shade in light mode), sections (header / footer /
+       Modal.Inset) are bg-200 so they anchor the body with a softly
+       contrasting tone. Dark mode below uses the *inverted* token
+       assignments to preserve the same "body brighter than footer"
+       semantics, since the shade ordering flips between themes. */
     --ds-modal-panel-bg: var(--ds-background-100);
     --ds-modal-section-bg: var(--ds-background-200);
 
@@ -1074,10 +1074,14 @@
     --ds-overlay-backdrop-opacity: 0.7;
 
     /* Modal backgrounds — same semantics as light mode (panel = the
-       brighter body surface, sections = the softer tone) with the
-       theme's flipped background values. */
-    --ds-modal-panel-bg: var(--ds-background-100);
-    --ds-modal-section-bg: var(--ds-background-200);
+       brighter body surface, sections = the softer tone). Because
+       bg-100 is the *darker* shade in dark mode (#000) and bg-200
+       is the brighter one (#0A0A0A), the token assignments here
+       are inverted relative to light mode — using bg-200 for the
+       panel and bg-100 for the section keeps body brighter than
+       footer in both themes. */
+    --ds-modal-panel-bg: var(--ds-background-200);
+    --ds-modal-section-bg: var(--ds-background-100);
 
     /* Focus ring outer glow */
     --ds-focus-ring: #ffffff3d;
