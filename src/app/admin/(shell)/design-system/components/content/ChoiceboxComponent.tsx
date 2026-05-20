@@ -956,8 +956,8 @@ export default function ChoiceboxComponent() {
           <li>
             Tiles render as radios or checkboxes under the hood, so keep
             them inside a{" "}
-            <code className="inline-code">&lt;fieldset&gt;</code> with a{" "}
-            <code className="inline-code">&lt;legend&gt;</code> so screen
+            <code className="inline-code">&lt;ChoiceboxGroup&gt;</code>{" "}
+            with a <code className="inline-code">label</code> so screen
             readers announce the group.
           </li>
           <li>
