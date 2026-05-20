@@ -420,12 +420,10 @@ export default function MaterialComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Use Material instead of hand-rolling{" "}
-            <code className="inline-code">border-radius</code>, fills,
+            Use Material instead of hand-rolling radii, fills,
             strokes, and shadows on a surface; the{" "}
             <code className="inline-code">type</code> encodes the
-            elevation role and pulls the matching radius and shadow
-            tokens.
+            elevation role.
           </li>
           <li>
             Pick the type from where the element sits in the layered
@@ -469,16 +467,10 @@ export default function MaterialComponent() {
             of visual noise.
           </li>
           <li>
-            Material composes with Tailwind layout utilities &mdash;
-            let the <code className="inline-code">type</code> drive
-            chrome and use{" "}
-            <code className="inline-code">flex</code> /{" "}
-            <code className="inline-code">gap-*</code> /{" "}
-            <code className="inline-code">p-*</code> on the children
-            for layout instead of overriding{" "}
-            <code className="inline-code">box-shadow</code> or{" "}
-            <code className="inline-code">border-radius</code> on the
-            same element.
+            Material composes with Tailwind layout utilities; let
+            the <code className="inline-code">type</code> drive
+            chrome and use spacing utilities for layout instead of
+            overriding shadows on the same element.
           </li>
         </ul>
 
@@ -495,17 +487,17 @@ export default function MaterialComponent() {
             <code className="inline-code">role=&quot;dialog&quot;</code>{" "}
             on a modal,{" "}
             <code className="inline-code">role=&quot;tooltip&quot;</code>{" "}
-            on a tooltip, etc.) rather than on the Material itself.
+            on a tooltip, etc.).
           </li>
           <li>
             Don&apos;t rely on shadow alone to communicate elevation;
-            pair it with the matching focus-visible ring on focusable
+            pair with the matching focus-visible ring on focusable
             children inside.
           </li>
           <li>
-            Test materials in both themes &mdash; shadow contrast on
-            dark backgrounds is weaker than on light, so confirm
-            separation still reads after toggling the dark class.
+            Test materials in both themes: shadow contrast on dark
+            backgrounds is weaker than on light, so confirm
+            separation still reads.
           </li>
         </ul>
       </Section>

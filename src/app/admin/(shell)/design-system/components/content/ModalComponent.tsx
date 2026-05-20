@@ -1136,31 +1136,25 @@ export default function ModalComponent() {
           <li>
             Default focus to{" "}
             <code className="inline-code">Cancel</code> on any
-            destructive Modal by passing the Cancel button&apos;s
-            ref via{" "}
-            <code className="inline-code">initialFocusRef</code>.{" "}
+            destructive Modal.{" "}
             <code className="inline-code">Enter</code> must never
             trigger the destructive action without a typed
             confirmation.
           </li>
           <li>
             Allow Escape and outside-click to dismiss
-            non-destructive Modals (the primitive wires both);
-            gate dismissal on destructive ones with unsaved input
-            by intercepting{" "}
-            <code className="inline-code">onClose</code>.
+            non-destructive Modals; gate dismissal on destructive
+            ones with unsaved input.
           </li>
           <li>
-            Focus is trapped inside the panel while it&apos;s
-            open, and the trigger element receives focus again
-            after close. Body scroll is locked on mount and
-            restored on unmount &mdash; all wired automatically.
+            Trap focus inside the Modal while it&apos;s open and
+            return focus to the trigger after close. Restore body
+            scroll on the same tick the Modal unmounts.
           </li>
           <li>
             For high-stakes destructive actions (delete production
             resource, rotate signing key, downgrade plan), gate the
-            primary button on a typed match of the resource name
-            inside the modal body.
+            primary button on a typed match of the resource name.
           </li>
         </ul>
 
@@ -1172,8 +1166,7 @@ export default function ModalComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The{" "}
-            <code className="inline-code">title</code> prop is a
+            The <code className="inline-code">title</code> is a
             Title Case statement, never a question.{" "}
             <code className="inline-code">Transfer Project</code>{" "}
             is correct;{" "}
@@ -1181,12 +1174,11 @@ export default function ModalComponent() {
             is wrong.
           </li>
           <li>
-            The body (children) is sentence case, 1&ndash;3
-            sentences. State the consequence first, then any
-            cascade.
+            Body is sentence case, 1&ndash;3 sentences. State the
+            consequence first, then any cascade.
           </li>
           <li>
-            Primary button label is{" "}
+            Primary button is{" "}
             <code className="inline-code">Verb + Noun</code> and
             matches the title verb (
             <code className="inline-code">Transfer Project</code>{" "}
@@ -1237,14 +1229,10 @@ export default function ModalComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The panel renders with{" "}
-            <code className="inline-code">role=&quot;dialog&quot;</code>{" "}
-            +{" "}
-            <code className="inline-code">aria-modal=&quot;true&quot;</code>{" "}
-            and ties{" "}
+            Set{" "}
             <code className="inline-code">aria-labelledby</code> to
-            the title element automatically when{" "}
-            <code className="inline-code">title</code> is set.
+            the title id so screen readers announce the title on
+            open.
           </li>
           <li>
             Keep the Cancel button literally{" "}
@@ -1254,8 +1242,8 @@ export default function ModalComponent() {
           </li>
           <li>
             After an error inside the Modal, keep focus inside so
-            the user can retry; after success, the primitive
-            already returns focus to the trigger.
+            the user can retry; after success, return focus to the
+            trigger.
           </li>
         </ul>
       </Section>

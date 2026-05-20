@@ -879,10 +879,8 @@ export default function InputComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Validate on blur, not on every keystroke. Surface the
-            message by toggling{" "}
-            <code className="inline-code">error</code> and passing the
-            string to{" "}
+            Validate on blur, not on every keystroke; surface the
+            message via{" "}
             <code className="inline-code">errorMessage</code>.
           </li>
           <li>
@@ -933,15 +931,12 @@ export default function InputComponent() {
           </li>
           <li>
             Helper text is sentence case, one sentence with a trailing
-            period. Render it on a sibling element with an{" "}
-            <code className="inline-code">id</code> and pass that id to
-            the Input&apos;s{" "}
-            <code className="inline-code">aria-describedby</code> so
-            screen readers announce it with the field.
+            period, on a sibling element wired through{" "}
+            <code className="inline-code">aria-describedby</code>.
           </li>
           <li>
-            <code className="inline-code">errorMessage</code> names the
-            field and the constraint, ends in a period, and skips{" "}
+            Validation names the field and the constraint, ends in a
+            period, and skips{" "}
             <code className="inline-code">please</code> (
             <code className="inline-code">
               Project name is required.
@@ -962,42 +957,23 @@ export default function InputComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The component auto-generates an{" "}
-            <code className="inline-code">id</code> via{" "}
-            <code className="inline-code">useId()</code> when one
-            isn&apos;t passed, so the{" "}
-            <code className="inline-code">label</code>&rarr;input link
-            via{" "}
-            <code className="inline-code">htmlFor</code> always works.
-            Pass an explicit{" "}
-            <code className="inline-code">id</code> only when an
-            external element needs to reference it.
+            <code className="inline-code">id</code> is auto-generated
+            via <code className="inline-code">useId()</code> when one
+            isn&apos;t passed, so the label&rarr;input link always
+            works. Pass an explicit id only when an external element
+            needs to reference it.
           </li>
           <li>
-            When{" "}
-            <code className="inline-code">error</code> is on, the input
-            carries{" "}
-            <code className="inline-code">aria-invalid=&quot;true&quot;</code>{" "}
-            and{" "}
-            <code className="inline-code">aria-describedby</code>{" "}
-            points at the rendered{" "}
-            <code className="inline-code">errorMessage</code> — both
-            are wired automatically. Caller-supplied{" "}
-            <code className="inline-code">aria-describedby</code>{" "}
-            (e.g. for sibling helper text) is merged, not replaced.
-          </li>
-          <li>
-            For icon-only affordances next to an input (clear, reveal,
-            copy), use{" "}
+            For icon-only affordances inside a row of inputs, use{" "}
             <code className="inline-code">
               &lt;Button shape=&quot;circle&quot;
               aria-label=&quot;&hellip;&quot;&gt;
             </code>{" "}
-            rather than an unlabeled icon button.
+            rather than an unlabeled icon.
           </li>
           <li>
-            A search-composition Input&apos;s placeholder should name
-            the scope (
+            A search-composition Input&apos;s placeholder names the
+            scope (
             <code className="inline-code">Search races</code>) so the
             role is clear without sighted context.
           </li>

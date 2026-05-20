@@ -452,28 +452,24 @@ export default function LoadingDotsComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The wrapping span carries{" "}
-            <code className="inline-code">role=&quot;status&quot;</code>{" "}
-            +{" "}
-            <code className="inline-code">aria-live=&quot;polite&quot;</code>{" "}
+            Mark the wrapping span with{" "}
+            <code className="inline-code">
+              aria-live=&quot;polite&quot;
+            </code>{" "}
             so screen readers pick up the in-progress label without
-            interrupting; the three dots are marked{" "}
-            <code className="inline-code">aria-hidden</code> so they
-            aren&apos;t announced as content.
+            interrupting.
           </li>
           <li>
-            The dots are decorative and the surrounding text carries
-            the meaning, so don&apos;t add{" "}
+            The dots are decorative; the surrounding text carries
+            meaning, so don&apos;t add{" "}
             <code className="inline-code">aria-label</code> to the
             component itself.
           </li>
           <li>
-            The animation is paused under{" "}
-            <code className="inline-code">
-              prefers-reduced-motion: reduce
-            </code>{" "}
-            via a global CSS rule; don&apos;t pair Loading Dots with
-            another animated indicator on the same line.
+            Honor{" "}
+            <code className="inline-code">prefers-reduced-motion</code>{" "}
+            and avoid pairing Loading Dots with another animated
+            indicator on the same line.
           </li>
         </ul>
       </Section>

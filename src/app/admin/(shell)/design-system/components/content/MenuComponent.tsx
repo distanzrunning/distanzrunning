@@ -855,24 +855,18 @@ export default function MenuComponent() {
             screen readers and trackpad scrolls.
           </li>
           <li>
-            <code className="inline-code">position</code> auto-flips
-            when the requested side would clip against the viewport
-            (e.g.{" "}
-            <code className="inline-code">bottom-start</code> swaps to{" "}
-            <code className="inline-code">top-start</code> near the
-            bottom edge). Pick the preferred side; the component
-            handles the fallback.
+            Position auto-flips based on window bounds; don&apos;t
+            hardcode a side that clips on narrow viewports.
           </li>
           <li>
-            Closes on item activation, Escape, and outside-click.
-            Doesn&apos;t auto-close on hover-out.
+            Close on item activation, Escape, and outside-click.
+            Don&apos;t auto-close on a hover-out.
           </li>
           <li>
-            Use the{" "}
-            <code className="inline-code">locked</code> prop on a{" "}
-            <code className="inline-code">&lt;MenuItem&gt;</code> for
-            permission-gated actions so the lock icon and disabled
-            state explain why the row is inert.
+            Use{" "}
+            <code className="inline-code">&lt;MenuItem locked&gt;</code>{" "}
+            for permission-gated actions so the lock icon and
+            disabled state explain why the row is inert.
           </li>
         </ul>
 
@@ -903,16 +897,15 @@ export default function MenuComponent() {
             ).
           </li>
           <li>
-            Group destructive items at the bottom, separated by a{" "}
-            <code className="inline-code">&lt;MenuSeparator /&gt;</code>
-            , and keep the destructive copy as Verb + Noun (
+            Group destructive items at the bottom, separated by a
+            divider, and keep the destructive copy as Verb + Noun (
             <code className="inline-code">Delete Project</code>, never
             bare <code className="inline-code">Delete</code>).
           </li>
           <li>
             Section headers (
             <code className="inline-code">
-              &lt;MenuSection title=&quot;&hellip;&quot;&gt;
+              MenuSection title
             </code>
             ) are Title Case, 1&ndash;2 words (
             <code className="inline-code">Workspace</code>,{" "}
@@ -928,23 +921,12 @@ export default function MenuComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            <code className="inline-code">Up</code> /{" "}
-            <code className="inline-code">Down</code> arrows move
-            focus through items,{" "}
-            <code className="inline-code">Home</code> /{" "}
-            <code className="inline-code">End</code> jump to first /
-            last,{" "}
-            <code className="inline-code">Enter</code> or{" "}
-            <code className="inline-code">Space</code> activates the
-            focused item.
+            Up / Down arrows move focus through items, Home / End
+            jump to first / last, Enter or Space activates.
           </li>
           <li>
-            The first non-disabled item receives focus when the menu
-            opens.
-          </li>
-          <li>
-            Focus returns to the trigger button on close, so keyboard
-            users keep their place in the row.
+            Return focus to the trigger on close so keyboard users
+            keep their place in the row.
           </li>
         </ul>
       </Section>
