@@ -616,11 +616,12 @@ export default function CheckboxComponent() {
             so the row stays identifiable out of context.
           </li>
           <li>
-            The click target already extends to the label — the component
-            wraps the input and the visible label in a single{" "}
-            <code className="inline-code">&lt;label htmlFor={"{id}"}&gt;</code>{" "}
-            so the whole row is clickable. Don&apos;t override that with a
-            custom wrapper that breaks the click region.
+            The click target already extends to the label.
+            Don&apos;t override the{" "}
+            <code className="inline-code">&lt;label&gt;</code> /{" "}
+            <code className="inline-code">htmlFor</code>{" "}
+            association with a custom wrapper that breaks the click
+            region.
           </li>
         </ul>
       </Section>
