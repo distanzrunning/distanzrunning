@@ -886,10 +886,7 @@ export default function ChoiceboxComponent() {
           </li>
           <li>
             Single-select for mutually exclusive choices, multi-select for
-            additive ones. Don&apos;t mix the two within one group —{" "}
-            <code className="inline-code">&lt;ChoiceboxGroup&gt;</code>{" "}
-            enforces this with its{" "}
-            <code className="inline-code">type</code> prop.
+            additive ones. Don&apos;t mix the two within one group.
           </li>
           <li>
             Cap at 4–6 tiles. Past that, switch to{" "}
@@ -908,16 +905,14 @@ export default function ChoiceboxComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The whole tile is the click and focus target — the component
-            wraps everything in a single{" "}
-            <code className="inline-code">&lt;label htmlFor={"{id}"}&gt;</code>{" "}
-            so tapping anywhere inside selects it. Don&apos;t place nested
-            buttons or links inside a tile that would steal the click.
+            The whole tile is the click and focus target; tapping anywhere
+            inside selects it. Don&apos;t place nested buttons or links
+            inside a tile that would steal the click.
           </li>
           <li>
-            Selected state shows a filled radio dot or checkbox in the
-            corner alongside the highlight border and pink background fill.
-            The border alone isn&apos;t enough on low-contrast screens.
+            Selected state shows a check or filled dot in the corner. The
+            border highlight alone isn&apos;t enough on low-contrast
+            screens.
           </li>
           <li>
             Disabled tiles need a <ComponentRef name="Tooltip" /> naming
@@ -934,11 +929,8 @@ export default function ChoiceboxComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Titles are parallel: one Title Case{" "}
-            <code className="inline-code">title</code> plus one
-            sentence-case{" "}
-            <code className="inline-code">description</code> per tile,
-            ending in a period.
+            Titles are parallel: one Title Case title plus one sentence-case
+            description per tile, ending in a period.
           </li>
           <li>
             Don&apos;t restate the title in the description. The
@@ -947,13 +939,10 @@ export default function ChoiceboxComponent() {
             not a synonym.
           </li>
           <li>
-            Pass an <code className="inline-code">icon</code> when the
-            choice benefits from a glyph (framework logo, deployment
-            region flag). It&apos;s decorative when paired with a{" "}
-            <code className="inline-code">title</code>; if the icon is the
-            only label, pass{" "}
-            <code className="inline-code">aria-label</code> too so screen
-            readers announce the choice.
+            Icons are decorative when paired with a title; if the icon is
+            the only label, give the tile an{" "}
+            <code className="inline-code">aria-label</code> naming the
+            choice.
           </li>
         </ul>
 
@@ -965,35 +954,21 @@ export default function ChoiceboxComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Tiles render as native{" "}
-            <code className="inline-code">&lt;input type=&quot;radio&quot;&gt;</code>{" "}
-            or{" "}
-            <code className="inline-code">
-              &lt;input type=&quot;checkbox&quot;&gt;
-            </code>{" "}
-            under the hood. The{" "}
-            <code className="inline-code">&lt;ChoiceboxGroup&gt;</code>{" "}
-            wrapper renders with{" "}
-            <code className="inline-code">role=&quot;radiogroup&quot;</code>{" "}
-            (single) or{" "}
-            <code className="inline-code">role=&quot;group&quot;</code>{" "}
-            (multi) and the required{" "}
-            <code className="inline-code">label</code> prop becomes the
-            group&apos;s accessible name — equivalent to a{" "}
-            <code className="inline-code">&lt;fieldset&gt;</code> /{" "}
-            <code className="inline-code">&lt;legend&gt;</code> for screen
-            readers.
+            Tiles render as radios or checkboxes under the hood, so keep
+            them inside a{" "}
+            <code className="inline-code">&lt;fieldset&gt;</code> with a{" "}
+            <code className="inline-code">&lt;legend&gt;</code> so screen
+            readers announce the group.
           </li>
           <li>
-            Arrow keys move within a single-select group and Space toggles
-            in multi-select — both are handled by the native inputs, so
-            don&apos;t override those keys with custom handlers.
+            Arrow keys move within a single-select group, Space toggles in
+            multi-select. Don&apos;t override those keys with custom
+            handlers.
           </li>
           <li>
-            Color is not the selection signal. The component already pairs
-            the highlight border with the corner check / dot so colorblind
-            users still see what&apos;s active, and a 4 px focus ring
-            appears around the tile when the input is focused via keyboard.
+            Color is not the selection signal. Pair the highlight border
+            with the corner check so colorblind users still see what&apos;s
+            active.
           </li>
         </ul>
       </Section>
