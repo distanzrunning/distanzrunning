@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -569,6 +570,122 @@ export default function MultiSelectComponent() {
             <ControlledStateDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pick{" "}
+            <code className="inline-code">&lt;MultiSelect&gt;</code>{" "}
+            when users pick more than one value from a known list
+            (regions, scopes, tags).
+          </li>
+          <li>
+            For a single value from a short list, use{" "}
+            <ComponentRef name="Select" />.
+          </li>
+          <li>
+            When typing to filter is more important than seeing every
+            option at once, use <ComponentRef name="Combobox" />{" "}
+            &mdash; our MultiSelect doesn&apos;t include a search
+            input, so reach for Combobox the moment the list gets
+            past ~15 items or the user knows the value by name.
+          </li>
+          <li>
+            Skip{" "}
+            <code className="inline-code">&lt;MultiSelect&gt;</code>{" "}
+            for boolean settings; <ComponentRef name="Toggle" />{" "}
+            handles those.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Show the selected count in the trigger via{" "}
+            <code className="inline-code">formatSelection</code> (
+            <code className="inline-code">3 regions selected</code>);
+            the default fallback is{" "}
+            <code className="inline-code">{"{count}"} selected</code>.
+            Show the single name when only one is picked.
+          </li>
+          <li>
+            Use controlled mode (
+            <code className="inline-code">selected</code> +{" "}
+            <code className="inline-code">onChange</code>) when state
+            lives in the URL or syncs to the server so the trigger
+            label and stored value stay in lockstep.
+          </li>
+          <li>
+            Checkbox focus and button focus are distinct &mdash; Up /
+            Down navigates rows and Left / Right toggles between the
+            row&apos;s checkbox and the action button. The visible
+            label swaps (
+            <code className="inline-code">Select</code> /{" "}
+            <code className="inline-code">Deselect</code> on the
+            checkbox side,{" "}
+            <code className="inline-code">Select All</code> /{" "}
+            <code className="inline-code">Select Only</code> on the
+            button side) so the action matches what the screen
+            reader speaks.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Each row checkbox renders with{" "}
+            <code className="inline-code">role=&quot;checkbox&quot;</code>{" "}
+            and{" "}
+            <code className="inline-code">
+              aria-label=&quot;Select {"{item.label}"}&quot;
+            </code>
+            , so screen readers name the row instead of announcing a
+            bare &ldquo;checkbox&rdquo;.
+          </li>
+          <li>
+            The trigger button needs a stable accessible name even
+            with zero items selected. The default fallback (
+            <code className="inline-code">placeholder</code>) gets
+            used as the visible label; pair it with a{" "}
+            <code className="inline-code">label</code> sibling and{" "}
+            <code className="inline-code">aria-labelledby</code> when
+            the surrounding context isn&apos;t enough.
+          </li>
+          <li>
+            Focus moves into the dropdown when it opens, and{" "}
+            <code className="inline-code">Escape</code> or{" "}
+            <code className="inline-code">Tab</code> return focus to
+            the trigger on close.
+          </li>
+          <li>
+            Bulk actions surface as visible button labels (
+            <code className="inline-code">Select All</code>,{" "}
+            <code className="inline-code">Select Only</code>) so the
+            announced action matches the button&apos;s text.
+          </li>
+        </ul>
       </Section>
 
       <Toast

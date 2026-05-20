@@ -85,10 +85,10 @@ export function MultiSelect({
       const allSelected = items.every((item) => selected.includes(item.value));
 
       if (allSelected || !isSelected) {
-        // Only: select just this item
+        // Select Only: select just this item
         updateSelected([value]);
       } else {
-        // Check All: select all items
+        // Select All: select all items
         updateSelected(items.map((item) => item.value));
       }
     },
@@ -101,9 +101,9 @@ export function MultiSelect({
       const isSelected = selected.includes(value);
       const allSelected = items.every((item) => selected.includes(item.value));
 
-      if (allSelected) return "Only";
-      if (!isSelected) return "Only";
-      return "Check All";
+      if (allSelected) return "Select Only";
+      if (!isSelected) return "Select Only";
+      return "Select All";
     },
     [selected, items],
   );
@@ -112,7 +112,7 @@ export function MultiSelect({
   const getCheckboxActionLabel = useCallback(
     (value: string): string => {
       const isSelected = selected.includes(value);
-      return isSelected ? "Uncheck" : "Check";
+      return isSelected ? "Deselect" : "Select";
     },
     [selected],
   );
@@ -191,7 +191,11 @@ export function MultiSelect({
           triggerRef.current?.focus();
           break;
         case "Tab":
+          // Tab exits the dropdown. Return focus to the trigger so a
+          // keyboard user lands back at the call site instead of
+          // having focus collapse to body.
           setIsOpen(false);
+          triggerRef.current?.focus();
           break;
       }
     },
@@ -299,8 +303,8 @@ function MultiSelectDropdown({
   onKeyDown,
   setActiveRow,
 }: {
-  containerRef: React.RefObject<HTMLDivElement | null>;
-  dropdownRef: React.RefObject<HTMLDivElement | null>;
+  containerRef: React.RefObject<HTMLDivElement>;
+  dropdownRef: React.RefObject<HTMLDivElement>;
   items: MultiSelectItem[];
   selected: string[];
   activeRow: number;
@@ -439,6 +443,9 @@ function MultiSelectRow({
         }}
       >
         <label
+          role="checkbox"
+          aria-checked={isSelected}
+          aria-label={`Select ${item.label}`}
           onClick={(e) => {
             e.preventDefault();
             onToggle();
