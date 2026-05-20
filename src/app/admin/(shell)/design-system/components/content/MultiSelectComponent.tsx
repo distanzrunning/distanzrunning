@@ -597,10 +597,7 @@ export default function MultiSelectComponent() {
           </li>
           <li>
             When typing to filter is more important than seeing every
-            option at once, use <ComponentRef name="Combobox" />{" "}
-            &mdash; our MultiSelect doesn&apos;t include a search
-            input, so reach for Combobox the moment the list gets
-            past ~15 items or the user knows the value by name.
+            option at once, use <ComponentRef name="Combobox" />.
           </li>
           <li>
             Skip{" "}
@@ -618,32 +615,27 @@ export default function MultiSelectComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Show the selected count in the trigger via{" "}
-            <code className="inline-code">formatSelection</code> (
+            Show the selected count in the trigger (
             <code className="inline-code">3 regions selected</code>);
-            the default fallback is{" "}
-            <code className="inline-code">{"{count}"} selected</code>.
-            Show the single name when only one is picked.
+            show the single name when only one is picked.
           </li>
           <li>
-            Use controlled mode (
-            <code className="inline-code">selected</code> +{" "}
-            <code className="inline-code">onChange</code>) when state
-            lives in the URL or syncs to the server so the trigger
-            label and stored value stay in lockstep.
+            Use controlled mode when state lives in the URL or syncs
+            to the server so the trigger label and stored value stay
+            in lockstep.
           </li>
           <li>
-            Checkbox focus and button focus are distinct &mdash; Up /
+            Keep checkbox focus and button focus distinct so Up /
             Down navigates rows and Left / Right toggles between the
-            row&apos;s checkbox and the action button. The visible
-            label swaps (
-            <code className="inline-code">Select</code> /{" "}
-            <code className="inline-code">Deselect</code> on the
-            checkbox side,{" "}
-            <code className="inline-code">Select All</code> /{" "}
-            <code className="inline-code">Select Only</code> on the
-            button side) so the action matches what the screen
-            reader speaks.
+            row&apos;s checkbox and action button.
+          </li>
+          <li>
+            For empty filters, render{" "}
+            <code className="inline-code">
+              No {"{items}"} match &ldquo;{"{query}"}&rdquo;
+            </code>{" "}
+            rather than{" "}
+            <code className="inline-code">No results</code>.
           </li>
         </ul>
 
@@ -655,35 +647,28 @@ export default function MultiSelectComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Each row checkbox renders with{" "}
-            <code className="inline-code">role=&quot;checkbox&quot;</code>{" "}
-            and{" "}
-            <code className="inline-code">
-              aria-label=&quot;Select {"{item.label}"}&quot;
-            </code>
-            , so screen readers name the row instead of announcing a
-            bare &ldquo;checkbox&rdquo;.
+            Each row checkbox needs an{" "}
+            <code className="inline-code">aria-label</code> that names
+            the item (
+            <code className="inline-code">Select us-east-1</code>); a
+            bare <code className="inline-code">Select</code> is
+            unanchored for screen readers.
           </li>
           <li>
             The trigger button needs a stable accessible name even
-            with zero items selected. The default fallback (
-            <code className="inline-code">placeholder</code>) gets
-            used as the visible label; pair it with a{" "}
-            <code className="inline-code">label</code> sibling and{" "}
-            <code className="inline-code">aria-labelledby</code> when
-            the surrounding context isn&apos;t enough.
+            when zero items are selected; don&apos;t rely on the
+            placeholder alone.
           </li>
           <li>
-            Focus moves into the dropdown when it opens, and{" "}
-            <code className="inline-code">Escape</code> or{" "}
-            <code className="inline-code">Tab</code> return focus to
-            the trigger on close.
+            Trap focus inside the menu while it&apos;s open and
+            return focus to the trigger on close.
           </li>
           <li>
-            Bulk actions surface as visible button labels (
+            Announce bulk actions (
             <code className="inline-code">Select All</code>,{" "}
-            <code className="inline-code">Select Only</code>) so the
-            announced action matches the button&apos;s text.
+            <code className="inline-code">Select Only</code>) through
+            the visible button label so the action matches what the
+            screen reader speaks.
           </li>
         </ul>
       </Section>
