@@ -374,18 +374,22 @@ export default function BrowserComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Use Browser as marketing chrome around screenshots, demos, and
-            recordings shown on landing pages, docs, and changelog posts.
+            Use Browser as marketing chrome around screenshots,
+            demos, and recordings shown on landing pages, docs, and
+            changelog posts.
           </li>
           <li>
-            Don&apos;t render real product UI inside a Browser frame; the
-            chrome implies a screenshot, not a live surface.
+            Don&apos;t render real product UI inside a Browser
+            frame; the chrome implies a screenshot, not a live
+            surface.
           </li>
           <li>
-            For partial chrome — just the top bar, no inset content area —
-            use{" "}
+            Use{" "}
             <code className="inline-code">&lt;BrowserHeader&gt;</code>{" "}
-            directly. Don&apos;t fork the chrome.
+            when the canned{" "}
+            <code className="inline-code">&lt;Browser&gt;</code>{" "}
+            shape doesn&apos;t fit the layout; don&apos;t fork the
+            chrome.
           </li>
         </ul>
 
@@ -399,22 +403,18 @@ export default function BrowserComponent() {
           <li>
             The chrome reads correctly on both light and dark
             surfaces &mdash; background, border, and text colours
-            flip automatically with the page theme. No variant prop
-            needed.
+            flip automatically with the page theme so the frame
+            doesn&apos;t fight the page.
           </li>
           <li>
-            Long URLs truncate with an ellipsis at the end of the address
-            bar. If you need both the host and the path tail visible, pass a
-            pre-shortened display value to{" "}
-            <code className="inline-code">url</code> rather than relying on
-            the truncation.
+            For long URLs, pass a pre-shortened display value to{" "}
+            <code className="inline-code">url</code> so the host and
+            path tail both remain visible.
           </li>
           <li>
-            Lock the inner image aspect ratio (e.g. an{" "}
-            <code className="inline-code">aspect-video</code> wrapper or
-            explicit <code className="inline-code">width</code> /{" "}
-            <code className="inline-code">height</code>) so the chrome
-            doesn&apos;t reflow when an image is missing or slow to load.
+            Lock the inner image aspect ratio so the chrome
+            doesn&apos;t reflow when an image is missing or slow to
+            load.
           </li>
         </ul>
 
@@ -426,28 +426,19 @@ export default function BrowserComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The chrome decorations (traffic-light dots, navigation icons,
-            URL display) carry{" "}
-            <code className="inline-code">aria-hidden=&quot;true&quot;</code>{" "}
-            automatically. The meaning lives on the inner image or video you
-            pass as <code className="inline-code">children</code>.
+            The browser chrome is decorative and carries{" "}
+            <code className="inline-code">aria-hidden=&quot;true&quot;</code>
+            ; meaning lives on the inner image or video.
           </li>
           <li>
-            Give the inner screenshot meaningful alt text that describes
-            what the reader is seeing — e.g.{" "}
-            <code className="inline-code">
-              alt=&quot;Race calendar showing the 2026 Berlin Marathon&quot;
-            </code>{" "}
-            — not just{" "}
-            <code className="inline-code">&quot;browser screenshot&quot;</code>.
+            Give the inner screenshot meaningful alt text describing
+            what the user is seeing, not{" "}
+            <code className="inline-code">browser screenshot</code>.
           </li>
           <li>
-            The dot controls and back/forward icons are non-interactive on
-            purpose — they&apos;re not focusable and don&apos;t fire events.
-            Unreachable controls inside a decorative frame confuse keyboard
-            users. The built-in copy button next to the URL is the only
-            interactive element and stays in the tab order with its own{" "}
-            <code className="inline-code">aria-label</code>.
+            Don&apos;t add focusable dot controls or back/forward
+            buttons; the chrome is a frame, and unreachable controls
+            confuse keyboard users.
           </li>
         </ul>
       </Section>
