@@ -561,12 +561,9 @@ export default function ErrorComponent() {
             <ComponentRef name="Toast" /> with{" "}
             <code className="inline-code">variant=&quot;error&quot;</code>
             ; for field-level validation, use{" "}
-            <code className="inline-code">&lt;Input error</code>{" "}
-            <code className="inline-code">
-              errorMessage=&quot;...&quot; /&gt;
-            </code>{" "}
-            so the message is announced as part of the field rather than
-            duplicated alongside it.
+            <ComponentRef name="Input" />&apos;s{" "}
+            <code className="inline-code">error</code> /{" "}
+            <code className="inline-code">errorMessage</code>.
           </li>
           <li>
             Always pair platform or system errors with a stable
@@ -646,11 +643,10 @@ export default function ErrorComponent() {
             ).
           </li>
           <li>
-            Render the stable ID on a monospace sub-line inside a
+            Render the stable ID on a monospace sub-line under a
             collapsed{" "}
-            <code className="inline-code">&lt;details&gt;</code> passed
-            as children so the user can copy-paste it into a support
-            thread.
+            <code className="inline-code">&lt;details&gt;</code> so
+            the user can copy-paste it into a support thread.
           </li>
           <li>
             Never humor an error. Users hitting an error are frustrated;
@@ -666,18 +662,17 @@ export default function ErrorComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The component defaults to{" "}
-            <code className="inline-code">live=&quot;polite&quot;</code>{" "}
-            (<code className="inline-code">role=&quot;status&quot;</code>
-            ) so async errors are announced when they replace content
-            without interrupting the user. Pass{" "}
+            For async errors (after a failed fetch), wrap the region
+            with{" "}
+            <code className="inline-code">
+              live=&quot;polite&quot;
+            </code>{" "}
+            (the default) so it&apos;s announced when it appears.
+            Reserve{" "}
             <code className="inline-code">
               live=&quot;assertive&quot;
             </code>{" "}
-            (<code className="inline-code">role=&quot;alert&quot;</code>)
-            only for true blocking errors that interrupt input &mdash;
-            assertive announcements cut off whatever a screen reader is
-            currently saying.
+            for true blocking errors that interrupt input.
           </li>
         </ul>
       </Section>

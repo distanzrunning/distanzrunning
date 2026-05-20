@@ -651,13 +651,10 @@ export default function GridComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             <code className="inline-code">rows</code> and{" "}
-            <code className="inline-code">columns</code> are scalars,
-            not responsive objects. Pick them for the layout&apos;s
-            target breakpoint; reflow across screen sizes is handled at
-            the caller using Tailwind responsive utilities (
-            <code className="inline-code">hidden md:block</code> /{" "}
-            <code className="inline-code">md:hidden</code> on two
-            Grid variants) or a responsive wrapper.
+            <code className="inline-code">columns</code> are scalars;
+            handle responsive reflow at the caller with Tailwind
+            utilities or a wrapper that swaps Grid variants per
+            breakpoint.
           </li>
           <li>
             Use{" "}
@@ -686,22 +683,19 @@ export default function GridComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Guides are decorative and already carry{" "}
+            Guides are decorative; mark them{" "}
             <code className="inline-code">
               aria-hidden=&quot;true&quot;
-            </code>
-            ; let semantics live on cell content.
+            </code>{" "}
+            and let semantics live on cell content.
           </li>
           <li>
             When cells become tappable, give each its own focus ring
             and keep tab order matching reading order.
           </li>
           <li>
-            Confirm guide contrast on both themes. The default{" "}
-            <code className="inline-code">
-              var(--ds-gray-400)
-            </code>{" "}
-            token is tuned, but custom borders can drop below the 3:1
+            Confirm guide contrast on both themes; the default tokens
+            are tuned, but custom borders can drop below the 3:1
             minimum.
           </li>
         </ul>

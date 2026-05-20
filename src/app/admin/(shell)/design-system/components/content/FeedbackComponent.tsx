@@ -664,8 +664,8 @@ export default function FeedbackComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            <code className="inline-code">buttonLabel</code> (popover
-            variants) is Title Case and short. Default{" "}
+            <code className="inline-code">buttonLabel</code> is Title
+            Case and short. Default{" "}
             <code className="inline-code">Feedback</code> is fine;
             override only when scoping to a flow:{" "}
             <code className="inline-code">Feedback on Imports</code>,{" "}
@@ -675,10 +675,8 @@ export default function FeedbackComponent() {
           </li>
           <li>
             <code className="inline-code">&lt;FeedbackInline&gt;</code>
-            &apos;s <code className="inline-code">label</code> sits next
-            to the emoji row and acts as the prompt header — sentence
-            case, may end with{" "}
-            <code className="inline-code">?</code> (
+            &apos;s <code className="inline-code">label</code> is the
+            prompt header next to the emoji row, in sentence case (
             <code className="inline-code">
               How did the import go?
             </code>

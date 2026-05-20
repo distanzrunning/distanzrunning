@@ -886,17 +886,11 @@ export default function EmptyStateComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Compose the variant from the slots —{" "}
-            <code className="inline-code">&lt;EmptyState.Icon&gt;</code>,{" "}
-            <code className="inline-code">&lt;EmptyState.Title&gt;</code>,{" "}
-            <code className="inline-code">&lt;EmptyState.Description&gt;</code>
-            ,{" "}
-            <code className="inline-code">&lt;EmptyState.Actions&gt;</code>{" "}
-            — by what the user needs: no-results for a filtered list that
-            returned zero rows, blank slate or informational for a
-            resource the user hasn&apos;t created, cleared for completed
-            work, permission for role or tier denials, error for a failed
-            load.
+            Choose the variant by what the user needs: no-results
+            for a filtered list that returned zero rows, blank slate
+            or informational for a resource the user hasn&apos;t
+            created, cleared for completed work, permission for role
+            or tier denials, error for a failed load.
           </li>
           <li>
             Render the permission and tier-denial cases full-page when
@@ -933,17 +927,11 @@ export default function EmptyStateComponent() {
             CTAs is a smell.
           </li>
           <li>
-            For async-filtered lists, pass{" "}
-            <code className="inline-code">live</code> on{" "}
-            <code className="inline-code">&lt;EmptyState&gt;</code> so the
-            container carries{" "}
-            <code className="inline-code">role=&quot;status&quot;</code>{" "}
-            +{" "}
-            <code className="inline-code">aria-live=&quot;polite&quot;</code>
-            . Screen readers then announce the new empty state when it
-            replaces the previous result list. Leave it off for static
-            blank-slate / permission / onboarding states the user
-            navigates to.
+            For async-filtered lists where the empty state can
+            replace results after a filter change, pass{" "}
+            <code className="inline-code">live</code> so screen
+            readers announce the new state. Leave it off for static
+            blank-slate / permission / onboarding states.
           </li>
           <li>
             Don&apos;t auto-launch a tour from the educational variant;

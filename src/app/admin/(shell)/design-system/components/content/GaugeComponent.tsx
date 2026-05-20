@@ -687,17 +687,12 @@ export default function GaugeComponent() {
             story.
           </li>
           <li>
-            The default <code className="inline-code">color</code> scale
-            treats higher values as healthier (
-            <code className="inline-code">&le;25%</code> red,{" "}
-            <code className="inline-code">&le;50%</code> amber,{" "}
-            <code className="inline-code">&gt;50%</code> green) &mdash;
-            right for uptime / hit-rate gauges. For{" "}
-            higher-is-worse cases (quota usage, billing consumption),
-            pass an explicit{" "}
-            <code className="inline-code">color</code> tied to the same
-            numeric breakpoints used elsewhere in the product. Don&apos;t
-            invent gauge-only thresholds.
+            Threshold colors should match the same numeric
+            breakpoints used elsewhere in the product; don&apos;t
+            invent gauge-only thresholds. Our default scale treats
+            higher values as healthier (uptime, hit rate); pass an
+            explicit <code className="inline-code">color</code> for
+            higher-is-worse cases (quota usage, billing consumption).
           </li>
           <li>
             Pair{" "}
