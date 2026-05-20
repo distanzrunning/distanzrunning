@@ -951,6 +951,141 @@ export default function ModalComponent() {
         </ul>
       </Section>
 
+      {/* Props */}
+      <Section>
+        <SectionHeader id="props" onCopyLink={showToast}>
+          Props
+        </SectionHeader>
+
+        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
+          Available props for the Modal component.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-borderDefault">
+                <th className="text-left py-3 pr-4 text-heading-14">
+                  Prop
+                </th>
+                <th className="text-left py-3 px-4 text-heading-14">
+                  Type
+                </th>
+                <th className="text-left py-3 px-4 text-heading-14">
+                  Default
+                </th>
+                <th className="text-left py-3 px-4 text-heading-14">
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody className="text-copy-14">
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">open</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  boolean
+                </td>
+                <td className="py-3 px-4 text-textSubtle">false</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Whether the modal is visible
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">onClose</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  {"() => void"}
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Called when the modal should close (backdrop click or Escape
+                  key)
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">children</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  ReactNode
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Modal body content rendered inside the scrollable area
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">title</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  string
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Title displayed in the modal header
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">subtitle</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  string
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Subtitle displayed below the title in the header
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">footer</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  ReactNode
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Footer content rendered outside the scrollable body area
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">stickyHeader</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  boolean
+                </td>
+                <td className="py-3 px-4 text-textSubtle">false</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Enable sticky header that stays visible when body scrolls
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">initialFocusRef</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  {"RefObject<HTMLElement>"}
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Ref to an element that receives focus when the modal opens
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">className</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  string
+                </td>
+                <td className="py-3 px-4 text-textSubtle">{`""`}</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Additional CSS classes for the modal dialog element
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">Modal.Inset</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  Component
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Full-width inset section with contrasting background and
+                  borders
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Section>
+
       {/* Best Practices Section */}
       <Section>
         <SectionHeader id="best-practices" onCopyLink={showToast}>
@@ -1115,141 +1250,6 @@ export default function ModalComponent() {
             already returns focus to the trigger.
           </li>
         </ul>
-      </Section>
-
-      {/* Props */}
-      <Section>
-        <SectionHeader id="props" onCopyLink={showToast}>
-          Props
-        </SectionHeader>
-
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
-          Available props for the Modal component.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">open</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Whether the modal is visible
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">onClose</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"() => void"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Called when the modal should close (backdrop click or Escape
-                  key)
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Modal body content rendered inside the scrollable area
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">title</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Title displayed in the modal header
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">subtitle</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Subtitle displayed below the title in the header
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">footer</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Footer content rendered outside the scrollable body area
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">stickyHeader</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Enable sticky header that stays visible when body scrolls
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">initialFocusRef</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"RefObject<HTMLElement>"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Ref to an element that receives focus when the modal opens
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">className</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">{`""`}</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Additional CSS classes for the modal dialog element
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">Modal.Inset</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  Component
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Full-width inset section with contrasting background and
-                  borders
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </Section>
     </>
   );
