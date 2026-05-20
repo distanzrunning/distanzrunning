@@ -952,20 +952,16 @@ export default function ButtonComponentNew() {
           </li>
           <li>
             For form submits, use{" "}
-            <code className="inline-code">type=&quot;submit&quot;</code> —
-            our Button passes the HTML{" "}
-            <code className="inline-code">type</code> attribute straight
-            through (default <code className="inline-code">&quot;button&quot;</code>).
-            Visual style lives on{" "}
-            <code className="inline-code">variant</code>, so there&apos;s no
-            naming collision.
+            <code className="inline-code">type=&quot;submit&quot;</code>{" "}
+            &mdash; the HTML{" "}
+            <code className="inline-code">type</code> attribute is
+            passed straight through (default{" "}
+            <code className="inline-code">&quot;button&quot;</code>).
           </li>
           <li>
-            Pass <code className="inline-code">loading</code> instead of
-            swapping in a spinner so the button stays focusable and
-            announces the busy state to assistive tech (the component sets{" "}
-            <code className="inline-code">aria-busy</code> and renders a
-            labelled spinner automatically).
+            Pass <code className="inline-code">loading</code> instead
+            of swapping in a spinner so the button stays focusable
+            and announces the busy state to assistive tech.
           </li>
           <li>
             Disable a button only when the action is impossible right now

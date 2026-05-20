@@ -397,14 +397,10 @@ export default function BrowserComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The chrome reads correct on both light and dark surfaces — the
-            background, border, and text use theme-aware DS tokens
-            (
-            <code className="inline-code">--ds-background-100</code>,{" "}
-            <code className="inline-code">--ds-background-200</code>,{" "}
-            <code className="inline-code">--ds-gray-400</code>) that flip
-            automatically with the page theme. No{" "}
-            <code className="inline-code">variant</code> prop needed.
+            The chrome reads correctly on both light and dark
+            surfaces &mdash; background, border, and text colours
+            flip automatically with the page theme. No variant prop
+            needed.
           </li>
           <li>
             Long URLs truncate with an ellipsis at the end of the address

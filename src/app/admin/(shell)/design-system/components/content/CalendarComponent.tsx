@@ -1328,9 +1328,10 @@ export default function CalendarComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The popover traps focus while open (via Radix Popover) so{" "}
-            <code className="inline-code">Tab</code> cycles day cells,
-            presets, and the action buttons rather than the page behind.
+            The popover traps focus while open so{" "}
+            <code className="inline-code">Tab</code> cycles day
+            cells, presets, and the action buttons rather than the
+            page behind.
           </li>
           <li>
             Keyboard navigation follows the WAI-ARIA Authoring Practices
