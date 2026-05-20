@@ -820,20 +820,16 @@ export default function CommandMenuComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             Bind <code className="inline-code">⌘K</code> on macOS and{" "}
-            <code className="inline-code">Ctrl+K</code> elsewhere from
-            outside the component and feed the result into the{" "}
+            <code className="inline-code">Ctrl+K</code> elsewhere
+            from outside the component and feed the result into{" "}
             <code className="inline-code">open</code> /{" "}
-            <code className="inline-code">onClose</code> props.{" "}
-            <code className="inline-code">SearchContext</code> on the
-            public site is the canonical wiring — don&apos;t reuse the
-            binding for any in-page filter input; it&apos;s a global
-            shortcut.
+            <code className="inline-code">onClose</code>. Don&apos;t
+            reuse the binding for in-page filter inputs; it&apos;s a
+            global shortcut.
           </li>
           <li>
-            Focus is trapped inside the overlay while it&apos;s open and
-            returned to the previously active element on close — handled
-            by the underlying cmdk{" "}
-            <code className="inline-code">Command.Dialog</code>.
+            Focus is trapped inside the overlay while open and
+            returned to the previously active element on close.
           </li>
           <li>
             Pre-populate <code className="inline-code">children</code> with
@@ -911,25 +907,24 @@ export default function CommandMenuComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Result count is announced through a built-in{" "}
+            Result count is announced via an{" "}
+            <code className="inline-code">aria-live=&quot;polite&quot;</code>{" "}
+            region; screen readers hear{" "}
             <code className="inline-code">
-              role=&quot;status&quot; aria-live=&quot;polite&quot;
+              3 results for &quot;X&quot;
             </code>{" "}
-            region — screen readers hear{" "}
-            <code className="inline-code">3 results for &quot;X&quot;</code>{" "}
             (or{" "}
             <code className="inline-code">
               No results for &quot;X&quot;
             </code>
-            ) as the list narrows. No caller wiring needed.
+            ) as the list narrows.
           </li>
             <li>
-              Up / Down arrows move the highlight, Enter activates the
-              highlighted item, Escape closes the overlay, and Backspace
-              at an empty input pops the page stack — all handled by the
-              component. A visible{" "}
-              <code className="inline-code">Esc</code> button sits next to
-              the input for mouse / touch users, alongside the page
+              Up / Down arrows move the highlight, Enter activates,
+              Escape closes the overlay, Backspace at an empty input
+              pops the page stack. A visible{" "}
+              <code className="inline-code">Esc</code> button sits next
+              to the input for mouse / touch users, alongside the page
               breadcrumb chip when a sub-page is active.
             </li>
           <li>

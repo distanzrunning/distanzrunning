@@ -990,34 +990,30 @@ export default function ComboboxComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             For async results, pass{" "}
-            <code className="inline-code">loading</code> so the dropdown
-            renders a labelled{" "}
-            <code className="inline-code">loadingMessage</code> row
-            (defaults to{" "}
-            <code className="inline-code">Loading…</code>) instead of
-            collapsing while the request is in flight.
+            <code className="inline-code">loading</code> so the
+            dropdown shows a labelled row instead of collapsing
+            while the request is in flight.
           </li>
           <li>
             Pass a templated{" "}
-            <code className="inline-code">emptyMessage</code> when no
-            options match — e.g.{" "}
+            <code className="inline-code">emptyMessage</code> when
+            no options match (
             <code className="inline-code">
               {'`No regions match "${query}"`'}
-            </code>{" "}
-            — rather than the bare default{" "}
+            </code>
+            ), not the bare default{" "}
             <code className="inline-code">No results found</code>.
           </li>
           <li>
-            Inside a <ComponentRef name="Modal" />, the popover layers via
-            Radix Popover — don&apos;t wrap the Combobox in a second portal
-            or focus trap. Tab + Escape already escape correctly inside the
-            modal.
+            Inside a <ComponentRef name="Modal" />, the popover
+            layers correctly &mdash; don&apos;t wrap the Combobox in
+            a second portal or focus trap.
           </li>
           <li>
-            Keep arrow-key navigation through the option list. The
-            component intercepts{" "}
-            <code className="inline-code">Enter</code> only while the list
-            is open so a surrounding form submit never fires by accident.
+            Keep arrow-key navigation through the option list.{" "}
+            <code className="inline-code">Enter</code> is intercepted
+            only while the list is open, so a surrounding form
+            submit never fires by accident.
           </li>
         </ul>
 
@@ -1065,33 +1061,21 @@ export default function ComboboxComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             Prefer the built-in{" "}
-            <code className="inline-code">label</code> prop — the component
+            <code className="inline-code">label</code> prop, which
             renders a real{" "}
-            <code className="inline-code">&lt;label htmlFor={"{id}"}&gt;</code>{" "}
-            associated to the input. For icon-only triggers or toolbar
-            searches where the label isn&apos;t shown, pass{" "}
-            <code className="inline-code">aria-label</code> instead;
-            it&apos;s applied to the input only when{" "}
-            <code className="inline-code">label</code> is omitted, so the
-            two never compete.
+            <code className="inline-code">&lt;label&gt;</code>{" "}
+            associated to the input. For icon-only triggers where
+            the label isn&apos;t shown, pass{" "}
+            <code className="inline-code">aria-label</code> instead.
           </li>
           <li>
-            The dropdown is a Radix Popover and traps focus while open. Tab
-            cycles options inside the listbox rather than the page behind
-            — works correctly inside a{" "}
-            <ComponentRef name="Modal" /> too.
+            The dropdown traps focus while open; Tab cycles options
+            inside the listbox rather than the page behind.
           </li>
           <li>
-            When <code className="inline-code">loading</code> is true the
-            listbox carries{" "}
-            <code className="inline-code">aria-busy=&quot;true&quot;</code>{" "}
-            and the loading row is announced via{" "}
-            <code className="inline-code">role=&quot;status&quot;</code>{" "}
-            +{" "}
-            <code className="inline-code">
-              aria-live=&quot;polite&quot;
-            </code>{" "}
-            so screen readers hear the busy state.
+            When <code className="inline-code">loading</code> is on,
+            the listbox is announced as busy so screen readers hear
+            the loading state.
           </li>
         </ul>
       </Section>

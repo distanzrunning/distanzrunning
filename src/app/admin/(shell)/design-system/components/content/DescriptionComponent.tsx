@@ -436,12 +436,10 @@ export default function DescriptionComponent() {
             instead.
           </li>
           <li>
-            The component renders{" "}
-            <code className="inline-code">&lt;dl&gt;</code> /{" "}
-            <code className="inline-code">&lt;dt&gt;</code> /{" "}
-            <code className="inline-code">&lt;dd&gt;</code> so screen
-            readers announce each key/value pair as a definition. Don&apos;t
-            wrap the component in extra paragraphs that break the list
+            The component renders a{" "}
+            <code className="inline-code">&lt;dl&gt;</code> so each
+            key/value pair is announced as a definition; don&apos;t
+            wrap it in extra paragraphs that break the list
             semantics.
           </li>
           <li>

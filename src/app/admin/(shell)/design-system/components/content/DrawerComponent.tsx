@@ -581,26 +581,21 @@ export default function DrawerComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Tap-outside and swipe-down dismiss by default — both wired
-            through vaul. Preserve them unless the form has dirty input;
-            in that case, intercept{" "}
-            <code className="inline-code">onOpenChange</code> and confirm
-            before closing.
+            Tap-outside and swipe-down dismiss by default. Preserve
+            them unless the form has dirty input; in that case,
+            confirm before closing.
           </li>
           <li>
-            The drawer body scrolls inside its frame automatically (
-            <code className="inline-code">overflow-y: auto</code> on the
-            inner panel) so the page behind doesn&apos;t scroll when the
-            user drags the content.
+            The drawer body scrolls inside its frame so the page
+            behind doesn&apos;t scroll when the user drags the
+            content.
           </li>
           <li>
             Cap content with the{" "}
-            <code className="inline-code">height</code> prop on{" "}
-            <code className="inline-code">&lt;Drawer.Content&gt;</code>{" "}
-            only when the default (auto, max 80vh) clips the primary
-            action. The action and{" "}
-            <code className="inline-code">Cancel</code> must stay above the
-            fold.
+            <code className="inline-code">height</code> prop only
+            when the default clips the primary action. The action
+            and <code className="inline-code">Cancel</code> must
+            stay above the fold.
           </li>
         </ul>
 
@@ -637,23 +632,20 @@ export default function DrawerComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Focus is trapped inside the drawer while open and returned to
-            the trigger on close — vaul handles both. Escape closes the
-            drawer, and the system back gesture on mobile dismisses it
-            the same way.
+            Trap focus inside the drawer while open and return it to
+            the trigger on close. Escape and the system back gesture
+            dismiss the drawer.
           </li>
           <li>
-            Body scroll is locked while the drawer is open (
-            <code className="inline-code">touch-action: none</code> +{" "}
-            <code className="inline-code">overscroll-behavior: none</code>{" "}
-            on the content) so iOS rubber-band scroll doesn&apos;t leak
-            through to the page behind.
+            Body scroll is locked while the drawer is open so iOS
+            rubber-band scroll doesn&apos;t leak through to the
+            page behind.
           </li>
           <li>
             Always render{" "}
-            <code className="inline-code">&lt;Drawer.Title&gt;</code> —
-            it&apos;s required by vaul for the SR-accessible name; if the
-            title isn&apos;t visible, hide it with{" "}
+            <code className="inline-code">&lt;Drawer.Title&gt;</code>{" "}
+            for the accessible name; if the title isn&apos;t
+            visible, hide it with{" "}
             <code className="inline-code">sr-only</code> rather than
             omitting it.
           </li>

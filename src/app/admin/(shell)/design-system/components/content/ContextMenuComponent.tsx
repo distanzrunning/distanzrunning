@@ -763,22 +763,19 @@ export default function ContextMenuComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The component binds right-click on desktop and long-press on
-            touch via Radix ContextMenu, and suppresses the native browser
-            menu only on the{" "}
-            <code className="inline-code">&lt;ContextMenu.Trigger&gt;</code>{" "}
-            element — the rest of the page keeps its normal right-click
-            menu.
+            Right-click on desktop and long-press on touch open the
+            menu; the native browser menu is suppressed only on the
+            trigger element so the rest of the page keeps its normal
+            right-click behaviour.
           </li>
           <li>
-            The menu positions at the pointer; if it would overflow the
-            viewport, Radix flips it horizontally then vertically before
-            clipping.
+            The menu positions at the pointer and auto-flips
+            horizontally then vertically when it would overflow the
+            viewport.
           </li>
           <li>
-            Closes on activation, Escape, and outside-click. It does{" "}
-            <em>not</em> close on hover-out — caller doesn&apos;t need to
-            wire dismissal.
+            Close on activation, Escape, and outside-click. Don&apos;t
+            close on hover-out.
           </li>
         </ul>
 
@@ -823,11 +820,11 @@ export default function ContextMenuComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The keyboard menu key opens the same menu without right-click —{" "}
+            The keyboard menu key opens the same menu without
+            right-click &mdash;{" "}
             <code className="inline-code">Shift + F10</code> on
-            Windows/Linux, the dedicated menu key on any platform that
-            ships one. Radix ContextMenu handles the binding; no caller
-            wiring needed.
+            Windows / Linux, the dedicated menu key on any platform
+            that ships one.
           </li>
           <li>
             Up / Down arrows move focus, Enter / Space activates the
