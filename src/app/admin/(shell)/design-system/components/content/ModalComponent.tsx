@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -946,6 +947,172 @@ export default function ModalComponent() {
                 success.
               </div>
             </a>
+          </li>
+        </ul>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Modal when a decision must block the rest of the
+            page. For persistent associated context where the
+            underlying page stays readable, use{" "}
+            <ComponentRef name="Sheet" /> on desktop or{" "}
+            <ComponentRef name="Drawer" /> on mobile.
+          </li>
+          <li>
+            Confirm destructive actions in a Modal.{" "}
+            <ComponentRef name="Drawer" /> and{" "}
+            <ComponentRef name="Sheet" /> don&apos;t fully dim the
+            page, so they read as too soft for a delete or revoke.
+          </li>
+          <li>
+            Skip Modal for routine create flows that have a
+            dedicated page; route to the page instead.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Default focus to{" "}
+            <code className="inline-code">Cancel</code> on any
+            destructive Modal by passing the Cancel button&apos;s
+            ref via{" "}
+            <code className="inline-code">initialFocusRef</code>.{" "}
+            <code className="inline-code">Enter</code> must never
+            trigger the destructive action without a typed
+            confirmation.
+          </li>
+          <li>
+            Allow Escape and outside-click to dismiss
+            non-destructive Modals (the primitive wires both);
+            gate dismissal on destructive ones with unsaved input
+            by intercepting{" "}
+            <code className="inline-code">onClose</code>.
+          </li>
+          <li>
+            Focus is trapped inside the panel while it&apos;s
+            open, and the trigger element receives focus again
+            after close. Body scroll is locked on mount and
+            restored on unmount &mdash; all wired automatically.
+          </li>
+          <li>
+            For high-stakes destructive actions (delete production
+            resource, rotate signing key, downgrade plan), gate the
+            primary button on a typed match of the resource name
+            inside the modal body.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The{" "}
+            <code className="inline-code">title</code> prop is a
+            Title Case statement, never a question.{" "}
+            <code className="inline-code">Transfer Project</code>{" "}
+            is correct;{" "}
+            <code className="inline-code">Transfer Project?</code>{" "}
+            is wrong.
+          </li>
+          <li>
+            The body (children) is sentence case, 1&ndash;3
+            sentences. State the consequence first, then any
+            cascade.
+          </li>
+          <li>
+            Primary button label is{" "}
+            <code className="inline-code">Verb + Noun</code> and
+            matches the title verb (
+            <code className="inline-code">Transfer Project</code>{" "}
+            title pairs with{" "}
+            <code className="inline-code">Transfer Project</code>{" "}
+            button). Never{" "}
+            <code className="inline-code">Confirm</code>,{" "}
+            <code className="inline-code">OK</code>, or a bare verb
+            on a destructive primary.
+          </li>
+          <li>
+            The Cancel literal stays{" "}
+            <code className="inline-code">Cancel</code>.
+            Acknowledgment-only Modals (after a key reveal, after a
+            one-time-show) use{" "}
+            <code className="inline-code">Done</code>, never{" "}
+            <code className="inline-code">OK</code> or{" "}
+            <code className="inline-code">Close</code>.
+          </li>
+          <li>
+            Close irreversible bodies with{" "}
+            <code className="inline-code">
+              This cannot be undone.
+            </code>
+            ; close cascade-only bodies with{" "}
+            <code className="inline-code">
+              Some effects cannot be undone.
+            </code>
+            . Don&apos;t claim full irreversibility for a partial
+            cascade.
+          </li>
+          <li>
+            Pair the success{" "}
+            <ComponentRef name="Toast" /> verb 1:1 with the primary
+            button:{" "}
+            <code className="inline-code">Delete Project</code>{" "}
+            button,{" "}
+            <code className="inline-code">Project deleted</code>{" "}
+            toast.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The panel renders with{" "}
+            <code className="inline-code">role=&quot;dialog&quot;</code>{" "}
+            +{" "}
+            <code className="inline-code">aria-modal=&quot;true&quot;</code>{" "}
+            and ties{" "}
+            <code className="inline-code">aria-labelledby</code> to
+            the title element automatically when{" "}
+            <code className="inline-code">title</code> is set.
+          </li>
+          <li>
+            Keep the Cancel button literally{" "}
+            <code className="inline-code">Cancel</code> so
+            screen-reader users hear a stable dismissal label
+            across destructive flows.
+          </li>
+          <li>
+            After an error inside the Modal, keep focus inside so
+            the user can retry; after success, the primitive
+            already returns focus to the trigger.
           </li>
         </ul>
       </Section>
