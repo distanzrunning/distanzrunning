@@ -366,12 +366,12 @@ export function Combobox({
           break;
         }
         case "Enter": {
-          e.preventDefault();
           if (
             isOpen &&
             highlightedIndex >= 0 &&
             highlightedIndex < filteredOptions.length
           ) {
+            e.preventDefault();
             handleSelect(filteredOptions[highlightedIndex]);
           }
           break;
