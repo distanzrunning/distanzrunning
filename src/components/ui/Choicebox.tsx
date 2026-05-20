@@ -224,7 +224,9 @@ export function Choicebox({
 
       {/* Option row */}
       <div
-        className="flex items-center justify-between gap-6 rounded-md p-3"
+        className={`flex items-center justify-between gap-6 p-3 ${
+          isSelected && children ? "rounded-t-md" : "rounded-md"
+        }`}
         style={{
           background: isSelected && !isDisabled
             ? isHovered
