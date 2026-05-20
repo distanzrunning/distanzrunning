@@ -338,12 +338,12 @@ export function DefaultExample() {
             bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => setOpen(false)}>Submit</Button>
+            <Button onClick={() => setOpen(false)}>Create Token</Button>
           </footer>
         }
       >
         <p className="text-copy-14">
-          Some content contained within the modal.
+          The token will be shown once after creation. Store it somewhere safe.
         </p>
       </Modal>
     </>
@@ -376,8 +376,8 @@ export function StickyExample() {
             position: "sticky",
             bottom: 0,
           }}>
-            <Button variant="secondary" onClick={() => setOpen(false)}>Decline</Button>
-            <Button onClick={() => setOpen(false)}>Accept</Button>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpen(false)}>Accept Terms</Button>
           </footer>
         }
       >
@@ -407,7 +407,7 @@ export function SingleButtonExample() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Create Token"
+        title="Token Created"
         stickyHeader
         footer={
           <footer style={{
@@ -417,12 +417,12 @@ export function SingleButtonExample() {
             position: "sticky",
             bottom: 0,
           }}>
-            <Button variant="secondary" style={{ width: "100%" }} onClick={() => setOpen(false)}>Cancel</Button>
+            <Button variant="secondary" style={{ width: "100%" }} onClick={() => setOpen(false)}>Done</Button>
           </footer>
         }
       >
         <p className="text-copy-14">
-          Some content contained within the modal.
+          Copy your token now. You won&apos;t be able to see it again after this dialog closes.
         </p>
       </Modal>
     </>
@@ -444,8 +444,8 @@ export function DisabledActionsExample() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Modal"
-        subtitle="This is a modal."
+        title="Create Token"
+        subtitle="Enter a unique name for your token. The primary button stays disabled until the form passes validation."
         footer={
           <footer style={{
             display: "flex",
@@ -456,12 +456,12 @@ export function DisabledActionsExample() {
             bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button disabled>Submit</Button>
+            <Button disabled>Create Token</Button>
           </footer>
         }
       >
         <p className="text-copy-14">
-          Some content contained within the modal.
+          The token will be shown once after creation. Store it somewhere safe.
         </p>
       </Modal>
     </>
@@ -483,8 +483,8 @@ export function InsetExample() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Modal"
-        subtitle="This is a modal."
+        title="Transfer Race"
+        subtitle="Ownership transfers immediately. Some effects cannot be undone."
         footer={
           <footer style={{
             display: "flex",
@@ -495,15 +495,19 @@ export function InsetExample() {
             bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => setOpen(false)}>Submit</Button>
+            <Button onClick={() => setOpen(false)}>Transfer Race</Button>
           </footer>
         }
       >
         <Modal.Inset>
-          <p className="text-copy-14">Content within the inset.</p>
+          <p className="text-copy-14">
+            The new owner gains admin access and can edit, archive, or delete this race.
+          </p>
         </Modal.Inset>
         <div className="pt-6">
-          <p className="text-copy-14">Content outside the inset.</p>
+          <p className="text-copy-14">
+            Type the race name to confirm: <code className="inline-code">berlin-marathon</code>
+          </p>
         </div>
       </Modal>
     </>
@@ -526,8 +530,8 @@ export function InitialFocusExample() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Initial Focus"
-        subtitle="This Modal is set up to programmatically move the focus onto the Submit button, making it possible to promptly continue with the Enter key."
+        title="Save Changes"
+        subtitle="Your edits will be applied to the live race page. Focus is moved to the primary button so you can press Enter to confirm."
         initialFocusRef={initialFocusRef}
         footer={
           <footer style={{
@@ -539,7 +543,7 @@ export function InitialFocusExample() {
             bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button ref={initialFocusRef} onClick={() => setOpen(false)}>Submit</Button>
+            <Button ref={initialFocusRef} onClick={() => setOpen(false)}>Save Changes</Button>
           </footer>
         }
       />
@@ -578,12 +582,12 @@ function DefaultDemo() {
             <Button variant="secondary" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={() => setOpen(false)}>Submit</Button>
+            <Button onClick={() => setOpen(false)}>Create Token</Button>
           </footer>
         }
       >
         <p className="text-copy-14">
-          Some content contained within the modal.
+          The token will be shown once after creation. Store it somewhere safe.
         </p>
       </Modal>
     </>
@@ -626,9 +630,9 @@ function StickyDemo() {
             }}
           >
             <Button variant="secondary" onClick={() => setOpen(false)}>
-              Decline
+              Cancel
             </Button>
-            <Button onClick={() => setOpen(false)}>Accept</Button>
+            <Button onClick={() => setOpen(false)}>Accept Terms</Button>
           </footer>
         }
       >
@@ -659,7 +663,7 @@ function SingleButtonDemo() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Create Token"
+        title="Token Created"
         stickyHeader
         footer={
           <footer
@@ -676,13 +680,13 @@ function SingleButtonDemo() {
               style={{ width: "100%" }}
               onClick={() => setOpen(false)}
             >
-              Cancel
+              Done
             </Button>
           </footer>
         }
       >
         <p className="text-copy-14">
-          Some content contained within the modal.
+          Copy your token now. You won&apos;t be able to see it again after this dialog closes.
         </p>
       </Modal>
     </>
@@ -700,8 +704,8 @@ function DisabledActionsDemo() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Modal"
-        subtitle="This is a modal."
+        title="Create Token"
+        subtitle="Enter a unique name for your token. The primary button stays disabled until the form passes validation."
         footer={
           <footer
             style={{
@@ -716,12 +720,12 @@ function DisabledActionsDemo() {
             <Button variant="secondary" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button disabled>Submit</Button>
+            <Button disabled>Create Token</Button>
           </footer>
         }
       >
         <p className="text-copy-14">
-          Some content contained within the modal.
+          The token will be shown once after creation. Store it somewhere safe.
         </p>
       </Modal>
     </>
@@ -739,8 +743,8 @@ function InsetDemo() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Modal"
-        subtitle="This is a modal."
+        title="Transfer Race"
+        subtitle="Ownership transfers immediately. Some effects cannot be undone."
         footer={
           <footer
             style={{
@@ -755,15 +759,19 @@ function InsetDemo() {
             <Button variant="secondary" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={() => setOpen(false)}>Submit</Button>
+            <Button onClick={() => setOpen(false)}>Transfer Race</Button>
           </footer>
         }
       >
         <Modal.Inset>
-          <p className="text-copy-14">Content within the inset.</p>
+          <p className="text-copy-14">
+            The new owner gains admin access and can edit, archive, or delete this race.
+          </p>
         </Modal.Inset>
         <div className="pt-6">
-          <p className="text-copy-14">Content outside the inset.</p>
+          <p className="text-copy-14">
+            Type the race name to confirm: <code className="inline-code">berlin-marathon</code>
+          </p>
         </div>
       </Modal>
     </>
@@ -782,8 +790,8 @@ function InitialFocusDemo() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Initial Focus"
-        subtitle="This Modal is set up to programmatically move the focus onto the Submit button, making it possible to promptly continue with the Enter key."
+        title="Save Changes"
+        subtitle="Your edits will be applied to the live race page. Focus is moved to the primary button so you can press Enter to confirm."
         initialFocusRef={initialFocusRef}
         footer={
           <footer
@@ -800,7 +808,7 @@ function InitialFocusDemo() {
               Cancel
             </Button>
             <Button ref={initialFocusRef} onClick={() => setOpen(false)}>
-              Submit
+              Save Changes
             </Button>
           </footer>
         }
