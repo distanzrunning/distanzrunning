@@ -9,6 +9,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { CollapseGroup, Collapse } from "@/components/ui/Collapse";
+import { ComponentRef } from "../ComponentRef";
 
 // ============================================================================
 // Toast Component
@@ -705,6 +706,113 @@ export default function CollapseComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Collapse for optional, advanced, or repetitive content that
+            most users skip on most visits (FAQ, advanced settings, request
+            payload preview).
+          </li>
+          <li>
+            For top-level structure that every user reads, use page sections
+            with regular headings; collapsing primary content hides what the
+            page is about.
+          </li>
+          <li>
+            Single Collapse for one optional block.{" "}
+            <code className="inline-code">CollapseGroup</code> for a related
+            set; switch to <ComponentRef name="Tabs" /> when the items are
+            sibling views, not optional drill-downs.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Default state is closed unless the first-time visitor must read
+            the content to act.
+          </li>
+          <li>
+            Inside a <code className="inline-code">CollapseGroup</code>,
+            allow only one panel open at a time when items are mutually
+            exclusive; allow multiple when items are independent.
+          </li>
+          <li>
+            Animate the open/close transition; jump-cuts make the page feel
+            like it teleported.
+          </li>
+          <li>
+            Don&apos;t nest Collapse more than one level deep. Two-level
+            nesting hides too much and breaks the keyboard tab path.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Heading is Title Case and names the topic, not the action (
+            <code className="inline-code">Advanced Settings</code>, not{" "}
+            <code className="inline-code">Show Advanced Settings</code>).
+          </li>
+          <li>
+            Body is sentence case prose with normal section formatting; treat
+            the panel as a small page, not a tooltip.
+          </li>
+          <li>
+            Don&apos;t put primary destructive actions inside a closed
+            Collapse; the user has to click twice to reach the warning.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The trigger is a{" "}
+            <code className="inline-code">&lt;button&gt;</code> with{" "}
+            <code className="inline-code">aria-expanded</code> that flips on
+            toggle and{" "}
+            <code className="inline-code">aria-controls</code> pointing at
+            the panel id.
+          </li>
+          <li>
+            Enter and Space toggle. Don&apos;t bind any other key globally;
+            arrow keys move focus inside the panel content.
+          </li>
+          <li>
+            Render the panel content in the DOM when closed (with{" "}
+            <code className="inline-code">hidden</code> or visibility) so
+            search and find-in-page still hit it; lazy-render only for
+            expensive content.
+          </li>
+        </ul>
       </Section>
     </>
   );
