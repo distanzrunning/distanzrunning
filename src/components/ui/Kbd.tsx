@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 
 // ============================================================================
 // Types
@@ -16,18 +16,18 @@ export interface KbdProps {
   /**
    * [Legacy] Array of pre-resolved glyphs to render. Prefer the
    * boolean modifier props below — passing raw glyphs here defeats
-   * the canonical render order.
+   * the canonical render order and the platform-aware swap.
    */
   keys?: string[];
   /** Size of the kbd element */
   size?: KbdSize;
-  /** Render the Command glyph (⌘) before children. */
+  /** Render the Command glyph (⌘ on Mac, "Ctrl" on Windows/Linux). */
   meta?: boolean;
-  /** Render the Shift glyph (⇧) before children. */
+  /** Render the Shift glyph (⇧ on Mac, "Shift" on Windows/Linux). */
   shift?: boolean;
-  /** Render the Option / Alt glyph (⌥) before children. */
+  /** Render the Option / Alt glyph (⌥ on Mac, "Alt" on Windows/Linux). */
   alt?: boolean;
-  /** Render the Control glyph (⌃) before children. */
+  /** Render the Control glyph (⌃ on Mac, "Ctrl" on Windows/Linux). */
   ctrl?: boolean;
   /** Additional CSS classes */
   className?: string;
@@ -56,16 +56,50 @@ const sizeStyles: Record<KbdSize, React.CSSProperties> = {
   },
 };
 
-const MODIFIER_GLYPHS = {
+const MAC_MODIFIER_GLYPHS = {
   meta: "⌘",
   shift: "⇧",
   alt: "⌥",
   ctrl: "⌃",
 } as const;
 
+const NON_MAC_MODIFIER_GLYPHS = {
+  meta: "Ctrl",
+  shift: "Shift",
+  alt: "Alt",
+  ctrl: "Ctrl",
+} as const;
+
 // Set of modifier glyphs — kept for the legacy `keys` prop so each
 // modifier glyph in the array still gets the fixed-width treatment.
-const MODIFIER_GLYPH_SET = new Set<string>(Object.values(MODIFIER_GLYPHS));
+const MODIFIER_GLYPH_SET = new Set<string>([
+  ...Object.values(MAC_MODIFIER_GLYPHS),
+  ...Object.values(NON_MAC_MODIFIER_GLYPHS),
+]);
+
+// ============================================================================
+// Platform detection
+// ============================================================================
+
+function detectIsMac(): boolean {
+  if (typeof navigator === "undefined") return true; // SSR — default to Mac glyphs
+  const ua = navigator.userAgent || "";
+  // Treat iPad/iPhone/iPod as Mac (same glyph conventions).
+  if (/Mac|iPad|iPhone|iPod/.test(ua)) return true;
+  return false;
+}
+
+/**
+ * Returns true on Mac/iOS, false on Windows/Linux. SSR-safe — defaults to
+ * Mac on the server so initial HTML matches; useEffect swaps after mount.
+ */
+function useIsMac(): boolean {
+  const [isMac, setIsMac] = useState(true);
+  useEffect(() => {
+    setIsMac(detectIsMac());
+  }, []);
+  return isMac;
+}
 
 // ============================================================================
 // Kbd Component
@@ -74,15 +108,16 @@ const MODIFIER_GLYPH_SET = new Set<string>(Object.values(MODIFIER_GLYPHS));
 /**
  * Keyboard input component for displaying keyboard shortcuts.
  *
- * Modifier props render the canonical Mac glyphs (⌘ ⇧ ⌥ ⌃) on every
- * platform — they double as universally recognisable shortcut symbols
- * and keep the visual treatment consistent regardless of OS.
+ * Modifier props render platform-aware glyphs: ⌘ ⇧ ⌥ ⌃ on Mac, and
+ * "Ctrl" / "Shift" / "Alt" text on Windows and Linux. Platform is
+ * detected client-side after mount; SSR output uses Mac glyphs so the
+ * initial HTML matches, then a one-time swap occurs on hydration.
  *
  * @example
- * <Kbd meta>K</Kbd>            // ⌘K
- * <Kbd meta shift>K</Kbd>      // ⇧⌘K
- * <Kbd meta shift />           // ⇧⌘ (modifier combo, no key)
- * <Kbd>Enter</Kbd>             // Named key
+ * <Kbd meta>K</Kbd>            // ⌘K on Mac, "Ctrl K" on Windows
+ * <Kbd meta shift>K</Kbd>      // ⇧⌘K on Mac, "Shift Ctrl K" on Windows
+ * <Kbd meta shift />           // Modifier combo, no key
+ * <Kbd>Enter</Kbd>             // Named key (no platform swap)
  * <Kbd size="small">/</Kbd>    // Dense surfaces
  */
 export const Kbd = forwardRef<HTMLElement, KbdProps>(
@@ -101,6 +136,10 @@ export const Kbd = forwardRef<HTMLElement, KbdProps>(
     ref,
   ) => {
     const sizeStyle = sizeStyles[size];
+    const isMac = useIsMac();
+    const MODIFIER_GLYPHS = isMac
+      ? MAC_MODIFIER_GLYPHS
+      : NON_MAC_MODIFIER_GLYPHS;
 
     const baseStyle: React.CSSProperties = {
       display: "inline-flex",
@@ -116,12 +155,12 @@ export const Kbd = forwardRef<HTMLElement, KbdProps>(
       ...style,
     };
 
-    const modifierSpanStyle: React.CSSProperties = {
-      minWidth: "1em",
-      display: "inline-block",
-    };
+    const modifierSpanStyle: React.CSSProperties = isMac
+      ? { minWidth: "1em", display: "inline-block" }
+      : { display: "inline-block", marginRight: "0.2em" };
 
-    const renderModifier = (kind: keyof typeof MODIFIER_GLYPHS) => (
+    type ModifierKey = keyof typeof MAC_MODIFIER_GLYPHS;
+    const renderModifier = (kind: ModifierKey) => (
       <span key={`mod-${kind}`} style={modifierSpanStyle}>
         {MODIFIER_GLYPHS[kind]}
       </span>

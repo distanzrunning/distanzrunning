@@ -430,11 +430,11 @@ export default function KeyboardInputComponent() {
             <code className="inline-code">shift</code>,{" "}
             <code className="inline-code">alt</code>,{" "}
             <code className="inline-code">ctrl</code>). The component
-            renders the canonical Mac glyphs (
-            <code className="inline-code">⌘ ⇧ ⌥ ⌃</code>) on every
-            platform as universal shortcut symbols, so hard-coding{" "}
+            swaps <code className="inline-code">⌘</code> for{" "}
+            <code className="inline-code">Ctrl</code> on Windows and
+            Linux, so hard-coding{" "}
             <code className="inline-code">&lt;Kbd&gt;Cmd+K&lt;/Kbd&gt;</code>{" "}
-            ships the wrong visual treatment.
+            ships the wrong glyph to half your users.
           </li>
           <li>
             <code className="inline-code">children</code> is one key,
