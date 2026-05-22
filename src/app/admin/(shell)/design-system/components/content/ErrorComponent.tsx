@@ -544,17 +544,9 @@ export default function ErrorComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Use <code className="inline-code">&lt;Error&gt;</code> for an
-            inline problem callout adjacent to form content, beneath a
-            card heading, or in a small standalone surface where a full
-            block treatment would be too heavy.
-          </li>
-          <li>
-            For a section or route-level &ldquo;couldn&apos;t load&rdquo;
-            surface that needs a heading and a recovery CTA, compose an{" "}
-            <ComponentRef name="Empty State" /> (error variant) or use{" "}
-            <ComponentRef name="Note" /> instead &mdash; Error is inline,
-            not a block surface.
+            Use the Error component as a block surface when a section or
+            page-level resource failed to load: a panel, a dashboard
+            card, a route boundary.
           </li>
           <li>
             Pick <ComponentRef name="Toast" /> for transient action
