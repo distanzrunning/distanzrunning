@@ -436,22 +436,18 @@ export default function DescriptionComponent() {
             instead.
           </li>
           <li>
-            The component renders a{" "}
-            <code className="inline-code">&lt;dl&gt;</code> so each
-            key/value pair is announced as a definition; don&apos;t
-            wrap it in extra paragraphs that break the list
-            semantics.
+            Description renders{" "}
+            <code className="inline-code">&lt;dl&gt;</code>/
+            <code className="inline-code">&lt;dt&gt;</code>/
+            <code className="inline-code">&lt;dd&gt;</code> so screen
+            readers announce each key/value pair as a definition.
+            Don&apos;t wrap the component in extra paragraphs that break
+            the list semantics.
           </li>
           <li>
-            <code className="inline-code">
-              &lt;Description.Title&gt;
-            </code>{" "}
-            content is a Title Case noun (
+            Title slot is Title Case noun (
             <code className="inline-code">Last Deployed</code>,{" "}
-            <code className="inline-code">Build Duration</code>);{" "}
-            <code className="inline-code">
-              &lt;Description.Content&gt;
-            </code>{" "}
+            <code className="inline-code">Build Duration</code>); content
             is sentence case unless the value is a literal identifier, ID,
             or timestamp that should be preserved verbatim.
           </li>
