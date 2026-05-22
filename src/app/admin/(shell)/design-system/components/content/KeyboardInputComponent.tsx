@@ -429,11 +429,12 @@ export default function KeyboardInputComponent() {
             <code className="inline-code">meta</code>,{" "}
             <code className="inline-code">shift</code>,{" "}
             <code className="inline-code">alt</code>,{" "}
-            <code className="inline-code">ctrl</code>); they render
-            the canonical glyphs (
-            <code className="inline-code">⌘ ⇧ ⌥ ⌃</code>) in the
-            correct order. Don&apos;t hard-code raw glyphs into{" "}
-            <code className="inline-code">children</code>.
+            <code className="inline-code">ctrl</code>). The component
+            renders the canonical Mac glyphs (
+            <code className="inline-code">⌘ ⇧ ⌥ ⌃</code>) on every
+            platform as universal shortcut symbols, so hard-coding{" "}
+            <code className="inline-code">&lt;Kbd&gt;Cmd+K&lt;/Kbd&gt;</code>{" "}
+            ships the wrong visual treatment.
           </li>
           <li>
             <code className="inline-code">children</code> is one key,
