@@ -579,10 +579,9 @@ export default function ContextCardComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Context Card opens on hover and keyboard focus and
-            closes on cursor exit or blur. Keep the default{" "}
-            <code className="inline-code">delayDuration</code> so the
-            card doesn&apos;t flash on a fast mouse sweep.
+            Context Card opens on hover and keyboard focus and closes on
+            cursor exit or blur. Preserve the default entry delay so it
+            doesn&apos;t flash on a fast mouse sweep.
           </li>
           <li>
             Cap interactive content at one primary action (
@@ -638,9 +637,7 @@ export default function ContextCardComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             The trigger keeps its own accessible name; the card is
-            supplementary content and doesn&apos;t replace it. Wrap
-            the trigger element as-is and let it expose its own
-            name.
+            supplementary and shouldn&apos;t replace it.
           </li>
           <li>
             Card content is reachable by keyboard once the trigger has
