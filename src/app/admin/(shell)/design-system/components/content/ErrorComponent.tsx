@@ -557,20 +557,22 @@ export default function ErrorComponent() {
             not a block surface.
           </li>
           <li>
-            For transient action failures, use a{" "}
-            <ComponentRef name="Toast" /> with{" "}
-            <code className="inline-code">variant=&quot;error&quot;</code>
-            ; for field-level validation, use{" "}
-            <ComponentRef name="Input" />&apos;s{" "}
-            <code className="inline-code">error</code> /{" "}
-            <code className="inline-code">errorMessage</code>.
+            Pick <ComponentRef name="Toast" /> for transient action
+            failures (
+            <code className="inline-code">
+              Couldn&apos;t save settings. Try again.
+            </code>
+            ) and the <code className="inline-code">error</code> prop on{" "}
+            <ComponentRef name="Input" /> for field-level validation.
+            Don&apos;t replace either with this block.
           </li>
           <li>
             Always pair platform or system errors with a stable
             identifier (request ID{" "}
-            <code className="inline-code">x-vercel-id</code>, run ID,
-            trace ID). Validation and permission denials are user-state,
-            not system, and don&apos;t need an ID.
+            <code className="inline-code">x-vercel-id</code>, deployment
+            ID <code className="inline-code">dpl_…</code>, run ID, trace
+            ID). Validation and permission denials are user-state, not
+            system, and don&apos;t need an ID.
           </li>
         </ul>
 
@@ -582,8 +584,7 @@ export default function ErrorComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Pair the Error with a concrete recovery action as a sibling,
-            not inside: a{" "}
+            The recovery action must do something concrete: a{" "}
             <code className="inline-code">Try Again</code> button when
             the operation is retry-safe, a named verb (
             <code className="inline-code">Reconnect Strava</code>,{" "}
@@ -634,8 +635,7 @@ export default function ErrorComponent() {
           <li>
             Don&apos;t fall back to{" "}
             <code className="inline-code">Something Went Wrong</code> as
-            the <code className="inline-code">label</code>; name the
-            resource that failed (
+            a title; name the resource that failed (
             <code className="inline-code">Couldn&apos;t Load Page</code>,{" "}
             <code className="inline-code">
               Couldn&apos;t Load Race
@@ -662,15 +662,14 @@ export default function ErrorComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            For async errors (after a failed fetch), wrap the region
-            with{" "}
+            When the error appears asynchronously (after a failed fetch),
+            wrap the region in{" "}
             <code className="inline-code">
-              live=&quot;polite&quot;
+              aria-live=&quot;polite&quot;
             </code>{" "}
-            (the default) so it&apos;s announced when it appears.
-            Reserve{" "}
+            so it&apos;s announced. Reserve{" "}
             <code className="inline-code">
-              live=&quot;assertive&quot;
+              aria-live=&quot;assertive&quot;
             </code>{" "}
             for true blocking errors that interrupt input.
           </li>
