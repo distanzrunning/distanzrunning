@@ -332,12 +332,33 @@ function ConsentSettingsModal() {
   };
 
   return (
-    <Modal
-      open={settingsOpen}
-      onClose={closeSettings}
-      title={MODAL_TITLE}
-      subtitle={MODAL_DESCRIPTION}
-      footer={
+    <Modal open={settingsOpen} onClose={closeSettings}>
+      <Modal.Title>{MODAL_TITLE}</Modal.Title>
+      <Modal.P>{MODAL_DESCRIPTION}</Modal.P>
+      <div
+        className="overflow-hidden"
+        style={{
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: 6,
+          background: "var(--ds-background-100)",
+          marginTop: 24,
+        }}
+      >
+        {CONSENT_CATEGORIES.map((cat, i) => (
+          <ConsentCategoryRow
+            key={cat.key}
+            category={cat}
+            value={draft[cat.key]}
+            onChange={(next) => {
+              if (cat.required) return;
+              setDraft((d) => ({ ...d, [cat.key]: next }));
+            }}
+            isLast={i === CONSENT_CATEGORIES.length - 1}
+          />
+        ))}
+      </div>
+      <ConsentAnonIdSection anonId={anonId} />
+      <Modal.Footer>
         <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="secondary" onClick={rejectAll}>
@@ -371,30 +392,7 @@ function ConsentSettingsModal() {
             .
           </p>
         </div>
-      }
-    >
-      <div
-        className="overflow-hidden"
-        style={{
-          border: "1px solid var(--ds-gray-400)",
-          borderRadius: 6,
-          background: "var(--ds-background-100)",
-        }}
-      >
-        {CONSENT_CATEGORIES.map((cat, i) => (
-          <ConsentCategoryRow
-            key={cat.key}
-            category={cat}
-            value={draft[cat.key]}
-            onChange={(next) => {
-              if (cat.required) return;
-              setDraft((d) => ({ ...d, [cat.key]: next }));
-            }}
-            isLast={i === CONSENT_CATEGORIES.length - 1}
-          />
-        ))}
-      </div>
-      <ConsentAnonIdSection anonId={anonId} />
+      </Modal.Footer>
     </Modal>
   );
 }

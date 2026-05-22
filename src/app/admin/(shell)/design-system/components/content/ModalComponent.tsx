@@ -323,28 +323,24 @@ export function DefaultExample() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Create Token"
-        subtitle="Enter a unique name for your token to differentiate it from other tokens and then select the scope."
-        footer={
-          <footer style={{
-            display: "flex",
-            justifyContent: "space-between",
-            flexShrink: 0,
-            padding: 16,
-            position: "sticky",
-            bottom: 0,
-          }}>
-            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => setOpen(false)}>Create Token</Button>
-          </footer>
-        }
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Create Token</Modal.Title>
+        <Modal.P>
+          Enter a unique name for your token to differentiate it from other tokens and then select the scope.
+        </Modal.P>
         <p className="text-copy-14">
           The token will be shown once after creation. Store it somewhere safe.
         </p>
+        <Modal.Footer>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: 16,
+          }}>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpen(false)}>Create Token</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -362,31 +358,26 @@ export function StickyExample() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Terms of Service"
-        stickyHeader
-        footer={
-          <footer style={{
-            display: "flex",
-            justifyContent: "space-between",
-            flexShrink: 0,
-            padding: 16,
-            position: "sticky",
-            bottom: 0,
-          }}>
-            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => setOpen(false)}>Accept Terms</Button>
-          </footer>
-        }
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Header sticky>
+          <Modal.Title>Terms of Service</Modal.Title>
+        </Modal.Header>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* Long content that causes scrolling */}
           <p className="text-copy-14" style={{ color: "var(--ds-gray-900)", margin: 0 }}>
             Lorem ipsum dolor sit amet...
           </p>
         </div>
+        <Modal.Footer>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: 16,
+          }}>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpen(false)}>Accept Terms</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -404,26 +395,18 @@ export function SingleButtonExample() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Token Created"
-        stickyHeader
-        footer={
-          <footer style={{
-            display: "flex",
-            flexShrink: 0,
-            padding: 16,
-            position: "sticky",
-            bottom: 0,
-          }}>
-            <Button variant="secondary" style={{ width: "100%" }} onClick={() => setOpen(false)}>Done</Button>
-          </footer>
-        }
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Header sticky>
+          <Modal.Title>Token Created</Modal.Title>
+        </Modal.Header>
         <p className="text-copy-14">
           Copy your token now. You won&apos;t be able to see it again after this dialog closes.
         </p>
+        <Modal.Footer>
+          <div style={{ display: "flex", padding: 16 }}>
+            <Button variant="secondary" style={{ width: "100%" }} onClick={() => setOpen(false)}>Done</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -441,28 +424,24 @@ export function DisabledActionsExample() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Create Token"
-        subtitle="Enter a unique name for your token. The primary button stays disabled until the form passes validation."
-        footer={
-          <footer style={{
-            display: "flex",
-            justifyContent: "space-between",
-            flexShrink: 0,
-            padding: 16,
-            position: "sticky",
-            bottom: 0,
-          }}>
-            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button disabled>Create Token</Button>
-          </footer>
-        }
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Create Token</Modal.Title>
+        <Modal.P>
+          Enter a unique name for your token. The primary button stays disabled until the form passes validation.
+        </Modal.P>
         <p className="text-copy-14">
           The token will be shown once after creation. Store it somewhere safe.
         </p>
+        <Modal.Footer>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: 16,
+          }}>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button disabled>Create Token</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -480,25 +459,11 @@ export function InsetExample() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Transfer Race"
-        subtitle="Ownership transfers immediately. Some effects cannot be undone."
-        footer={
-          <footer style={{
-            display: "flex",
-            justifyContent: "space-between",
-            flexShrink: 0,
-            padding: 16,
-            position: "sticky",
-            bottom: 0,
-          }}>
-            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => setOpen(false)}>Transfer Race</Button>
-          </footer>
-        }
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Transfer Race</Modal.Title>
+        <Modal.P>
+          Ownership transfers immediately. Some effects cannot be undone.
+        </Modal.P>
         <Modal.Inset>
           <p className="text-copy-14">
             The new owner gains admin access and can edit, archive, or delete this race.
@@ -509,6 +474,16 @@ export function InsetExample() {
             Type the race name to confirm: <code className="inline-code">berlin-marathon</code>
           </p>
         </div>
+        <Modal.Footer>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: 16,
+          }}>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpen(false)}>Transfer Race</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -530,23 +505,23 @@ export function InitialFocusExample() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Save Changes"
-        subtitle="Your edits will be applied to the live race page. Focus is moved to the primary button so you can press Enter to confirm."
         initialFocusRef={initialFocusRef}
-        footer={
-          <footer style={{
+      >
+        <Modal.Title>Save Changes</Modal.Title>
+        <Modal.P>
+          Your edits will be applied to the live race page. Focus is moved to the primary button so you can press Enter to confirm.
+        </Modal.P>
+        <Modal.Footer>
+          <div style={{
             display: "flex",
             justifyContent: "space-between",
-            flexShrink: 0,
             padding: 16,
-            position: "sticky",
-            bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
             <Button ref={initialFocusRef} onClick={() => setOpen(false)}>Save Changes</Button>
-          </footer>
-        }
-      />
+          </div>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }`;
@@ -563,32 +538,29 @@ function DefaultDemo() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Create Token"
-        subtitle="Enter a unique name for your token to differentiate it from other tokens and then select the scope."
-        footer={
-          <footer
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Create Token</Modal.Title>
+        <Modal.P>
+          Enter a unique name for your token to differentiate it from other
+          tokens and then select the scope.
+        </Modal.P>
+        <p className="text-copy-14">
+          The token will be shown once after creation. Store it somewhere safe.
+        </p>
+        <Modal.Footer>
+          <div
             style={{
               display: "flex",
               justifyContent: "space-between",
-              flexShrink: 0,
               padding: 16,
-              position: "sticky",
-              bottom: 0,
             }}
           >
             <Button variant="secondary" onClick={() => setOpen(false)}>
               Cancel
             </Button>
             <Button onClick={() => setOpen(false)}>Create Token</Button>
-          </footer>
-        }
-      >
-        <p className="text-copy-14">
-          The token will be shown once after creation. Store it somewhere safe.
-        </p>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -613,29 +585,10 @@ function StickyDemo() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Terms of Service"
-        stickyHeader
-        footer={
-          <footer
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              flexShrink: 0,
-              padding: 16,
-              position: "sticky",
-              bottom: 0,
-            }}
-          >
-            <Button variant="secondary" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={() => setOpen(false)}>Accept Terms</Button>
-          </footer>
-        }
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Header sticky>
+          <Modal.Title>Terms of Service</Modal.Title>
+        </Modal.Header>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {paragraphs.map((text, i) => (
             <p
@@ -647,6 +600,20 @@ function StickyDemo() {
             </p>
           ))}
         </div>
+        <Modal.Footer>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 16,
+            }}
+          >
+            <Button variant="secondary" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setOpen(false)}>Accept Terms</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -660,21 +627,15 @@ function SingleButtonDemo() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Token Created"
-        stickyHeader
-        footer={
-          <footer
-            style={{
-              display: "flex",
-              flexShrink: 0,
-              padding: 16,
-              position: "sticky",
-              bottom: 0,
-            }}
-          >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Header sticky>
+          <Modal.Title>Token Created</Modal.Title>
+        </Modal.Header>
+        <p className="text-copy-14">
+          Copy your token now. You won&apos;t be able to see it again after this dialog closes.
+        </p>
+        <Modal.Footer>
+          <div style={{ display: "flex", padding: 16 }}>
             <Button
               variant="secondary"
               style={{ width: "100%" }}
@@ -682,12 +643,8 @@ function SingleButtonDemo() {
             >
               Done
             </Button>
-          </footer>
-        }
-      >
-        <p className="text-copy-14">
-          Copy your token now. You won&apos;t be able to see it again after this dialog closes.
-        </p>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -701,32 +658,29 @@ function DisabledActionsDemo() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Create Token"
-        subtitle="Enter a unique name for your token. The primary button stays disabled until the form passes validation."
-        footer={
-          <footer
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Create Token</Modal.Title>
+        <Modal.P>
+          Enter a unique name for your token. The primary button stays disabled
+          until the form passes validation.
+        </Modal.P>
+        <p className="text-copy-14">
+          The token will be shown once after creation. Store it somewhere safe.
+        </p>
+        <Modal.Footer>
+          <div
             style={{
               display: "flex",
               justifyContent: "space-between",
-              flexShrink: 0,
               padding: 16,
-              position: "sticky",
-              bottom: 0,
             }}
           >
             <Button variant="secondary" onClick={() => setOpen(false)}>
               Cancel
             </Button>
             <Button disabled>Create Token</Button>
-          </footer>
-        }
-      >
-        <p className="text-copy-14">
-          The token will be shown once after creation. Store it somewhere safe.
-        </p>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -740,29 +694,11 @@ function InsetDemo() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Transfer Race"
-        subtitle="Ownership transfers immediately. Some effects cannot be undone."
-        footer={
-          <footer
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              flexShrink: 0,
-              padding: 16,
-              position: "sticky",
-              bottom: 0,
-            }}
-          >
-            <Button variant="secondary" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={() => setOpen(false)}>Transfer Race</Button>
-          </footer>
-        }
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Transfer Race</Modal.Title>
+        <Modal.P>
+          Ownership transfers immediately. Some effects cannot be undone.
+        </Modal.P>
         <Modal.Inset>
           <p className="text-copy-14">
             The new owner gains admin access and can edit, archive, or delete this race.
@@ -770,9 +706,24 @@ function InsetDemo() {
         </Modal.Inset>
         <div className="pt-6">
           <p className="text-copy-14">
-            Type the race name to confirm: <code className="inline-code">berlin-marathon</code>
+            Type the race name to confirm:{" "}
+            <code className="inline-code">berlin-marathon</code>
           </p>
         </div>
+        <Modal.Footer>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 16,
+            }}
+          >
+            <Button variant="secondary" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setOpen(false)}>Transfer Race</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -790,18 +741,19 @@ function InitialFocusDemo() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Save Changes"
-        subtitle="Your edits will be applied to the live race page. Focus is moved to the primary button so you can press Enter to confirm."
         initialFocusRef={initialFocusRef}
-        footer={
-          <footer
+      >
+        <Modal.Title>Save Changes</Modal.Title>
+        <Modal.P>
+          Your edits will be applied to the live race page. Focus is moved to
+          the primary button so you can press Enter to confirm.
+        </Modal.P>
+        <Modal.Footer>
+          <div
             style={{
               display: "flex",
               justifyContent: "space-between",
-              flexShrink: 0,
               padding: 16,
-              position: "sticky",
-              bottom: 0,
             }}
           >
             <Button variant="secondary" onClick={() => setOpen(false)}>
@@ -810,9 +762,9 @@ function InitialFocusDemo() {
             <Button ref={initialFocusRef} onClick={() => setOpen(false)}>
               Save Changes
             </Button>
-          </footer>
-        }
-      />
+          </div>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
@@ -1019,46 +971,6 @@ export default function ModalComponent() {
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">title</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Title displayed in the modal header
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">subtitle</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Subtitle displayed below the title in the header
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">footer</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Footer content rendered outside the scrollable body area
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">stickyHeader</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Enable sticky header that stays visible when body scrolls
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">initialFocusRef</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
                   {"RefObject<HTMLElement>"}
@@ -1069,6 +981,16 @@ export default function ModalComponent() {
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">maxWidth</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  number | string
+                </td>
+                <td className="py-3 px-4 text-textSubtle">540</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Max width of the modal panel
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">className</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
                   string
@@ -1076,6 +998,51 @@ export default function ModalComponent() {
                 <td className="py-3 px-4 text-textSubtle">{`""`}</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Additional CSS classes for the modal dialog element
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">Modal.Title</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  Component
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Modal title; wires the dialog&apos;s aria-labelledby for screen
+                  readers
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">Modal.P</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  Component
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Body paragraph in the modal header; accepts JSX so you can mix
+                  links, bold spans, or multiple paragraphs
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">Modal.Header</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  Component
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Optional wrapper around Modal.Title + Modal.P; pass{" "}
+                  <code className="inline-code">sticky</code> to keep the header
+                  visible while the body scrolls
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">Modal.Footer</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  Component
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Footer slot pulled out of the scrollable body and rendered
+                  pinned to the panel bottom
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -1164,16 +1131,17 @@ export default function ModalComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            <code className="inline-code">title</code> is a Title Case
-            statement, never a question.{" "}
+            <code className="inline-code">Modal.Title</code> is a Title
+            Case statement, never a question.{" "}
             <code className="inline-code">Transfer Project</code> is
             correct;{" "}
             <code className="inline-code">Transfer Project?</code> is
             wrong.
           </li>
           <li>
-            Body is sentence case, 1&ndash;3 sentences. State the
-            consequence first, then any cascade.
+            <code className="inline-code">Modal.P</code> body is sentence
+            case, 1&ndash;3 sentences. State the consequence first, then
+            any cascade.
           </li>
           <li>
             Primary button is{" "}
@@ -1224,9 +1192,9 @@ export default function ModalComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             Set{" "}
-            <code className="inline-code">aria-labelledby</code> to
-            the title id so screen readers announce the title on
-            open.
+            <code className="inline-code">aria-labelledby</code> to the{" "}
+            <code className="inline-code">Modal.Title</code> id so screen
+            readers announce the title on open.
           </li>
           <li>
             Keep the Cancel button literally{" "}

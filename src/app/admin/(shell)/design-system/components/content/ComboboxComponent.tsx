@@ -525,29 +525,12 @@ function ModalDemo() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Create Token"
-        subtitle="Enter a unique name for your token to differentiate it from other tokens and then select the scope."
-        footer={
-          <footer
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              position: "sticky",
-              bottom: 0,
-              flexShrink: 0,
-              padding: 16,
-            }}
-          >
-            <Button variant="secondary" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={() => setOpen(false)}>Submit</Button>
-          </footer>
-        }
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Create Token</Modal.Title>
+        <Modal.P>
+          Enter a unique name for your token to differentiate it from other
+          tokens and then select the scope.
+        </Modal.P>
         <Modal.Inset>
           <Combobox
             label="Region"
@@ -563,6 +546,20 @@ function ModalDemo() {
             place.
           </p>
         </Modal.Inset>
+        <Modal.Footer>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 16,
+            }}
+          >
+            <Button variant="secondary" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setOpen(false)}>Submit</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );

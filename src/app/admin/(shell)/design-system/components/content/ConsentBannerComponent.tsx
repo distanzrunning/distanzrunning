@@ -309,12 +309,33 @@ function DemoSettingsModal({
   });
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      title={CONSENT_COPY.modalTitle}
-      subtitle={CONSENT_COPY.modalDescription}
-      footer={
+    <Modal open={open} onClose={onClose}>
+      <Modal.Title>{CONSENT_COPY.modalTitle}</Modal.Title>
+      <Modal.P>{CONSENT_COPY.modalDescription}</Modal.P>
+      <div
+        className="overflow-hidden"
+        style={{
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: 6,
+          background: "var(--ds-background-100)",
+          marginTop: 24,
+        }}
+      >
+        {CONSENT_CATEGORIES.map((cat, i) => (
+          <ConsentCategoryRow
+            key={cat.key}
+            category={cat}
+            value={draft[cat.key]}
+            onChange={(next) => {
+              if (cat.required) return;
+              setDraft((d) => ({ ...d, [cat.key]: next }));
+            }}
+            isLast={i === CONSENT_CATEGORIES.length - 1}
+          />
+        ))}
+      </div>
+      <ConsentAnonIdSection anonId="demo-0000-0000-0000-000000000000" />
+      <Modal.Footer>
         <div
           style={{
             padding: 24,
@@ -357,30 +378,7 @@ function DemoSettingsModal({
             .
           </p>
         </div>
-      }
-    >
-      <div
-        className="overflow-hidden"
-        style={{
-          border: "1px solid var(--ds-gray-400)",
-          borderRadius: 6,
-          background: "var(--ds-background-100)",
-        }}
-      >
-        {CONSENT_CATEGORIES.map((cat, i) => (
-          <ConsentCategoryRow
-            key={cat.key}
-            category={cat}
-            value={draft[cat.key]}
-            onChange={(next) => {
-              if (cat.required) return;
-              setDraft((d) => ({ ...d, [cat.key]: next }));
-            }}
-            isLast={i === CONSENT_CATEGORIES.length - 1}
-          />
-        ))}
-      </div>
-      <ConsentAnonIdSection anonId="demo-0000-0000-0000-000000000000" />
+      </Modal.Footer>
     </Modal>
   );
 }
