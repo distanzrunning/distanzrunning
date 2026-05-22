@@ -836,6 +836,157 @@ export default function LoginComponent() {
           </CodePreview>
         </div>
       </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pick <code className="inline-code">&lt;Login&gt;</code> for any
+            sign-in or sign-up surface that combines a brand logo, one or
+            more credential fields, and optional OAuth providers — keeps
+            spacing, button sizing, and password-toggle behaviour
+            consistent across every auth screen.
+          </li>
+          <li>
+            For short single-credential gates (a staging password prompt,
+            a maintenance unlock), inline a{" "}
+            <code className="inline-code">&lt;form&gt;</code> with{" "}
+            <code className="inline-code">&lt;Input&gt;</code> +{" "}
+            <code className="inline-code">&lt;Button&gt;</code> instead;{" "}
+            <code className="inline-code">&lt;Login&gt;</code> is overkill
+            when there&apos;s no title, no providers, and no disclaimer.
+          </li>
+          <li>
+            For passwordless or magic-link flows where the next step is{" "}
+            <code className="inline-code">Check your email</code>, render
+            the post-submit confirmation outside the component; don&apos;t
+            try to swap{" "}
+            <code className="inline-code">&lt;Login&gt;</code>&apos;s
+            internals into a success state.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pass <code className="inline-code">isLoading</code> while the
+            request is in flight; the component swaps the submit label to{" "}
+            <code className="inline-code">loadingLabel</code> and disables
+            every input and provider button so users can&apos;t
+            double-submit.
+          </li>
+          <li>
+            Password fields ship with a built-in show/hide toggle (eye
+            icon in the suffix). Don&apos;t add a second toggle outside
+            the field.
+          </li>
+          <li>
+            Surface server-side errors via the{" "}
+            <code className="inline-code">error</code> string; it renders
+            above the submit button with{" "}
+            <code className="inline-code">role=&quot;alert&quot;</code>{" "}
+            and tints every field red. Don&apos;t render extra error UI
+            elsewhere in the form.
+          </li>
+          <li>
+            OAuth providers render in the order passed. Put the
+            most-likely path first.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">title</code> is a short Title
+            Case noun phrase that names the action (
+            <code className="inline-code">Sign In</code>,{" "}
+            <code className="inline-code">Create Account</code>).{" "}
+            <code className="inline-code">subtitle</code> is sentence case,
+            one sentence with a trailing period.
+          </li>
+          <li>
+            Provider button labels follow the pattern{" "}
+            <code className="inline-code">Continue with [Provider]</code>{" "}
+            (<code className="inline-code">Continue with Google</code>,{" "}
+            <code className="inline-code">Continue with GitHub</code>).
+            Match canonical brand casing.
+          </li>
+          <li>
+            <code className="inline-code">submitLabel</code> is a Title
+            Case verb phrase (
+            <code className="inline-code">Sign In</code>,{" "}
+            <code className="inline-code">Reset Password</code>).{" "}
+            <code className="inline-code">loadingLabel</code> is
+            present-progressive (
+            <code className="inline-code">Signing in&hellip;</code>,{" "}
+            <code className="inline-code">Authenticating&hellip;</code>).
+          </li>
+          <li>
+            Field placeholders show an example value (
+            <code className="inline-code">you@example.com</code>), not
+            instructions like{" "}
+            <code className="inline-code">Enter your email</code>.
+          </li>
+          <li>
+            <code className="inline-code">disclaimer</code> is small print
+            for legal or privacy copy; keep it under two sentences and
+            link the policy by name.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The password show/hide toggle carries an{" "}
+            <code className="inline-code">aria-label</code> that flips
+            between{" "}
+            <code className="inline-code">Show password</code> and{" "}
+            <code className="inline-code">Hide password</code> so screen
+            readers announce the state change.
+          </li>
+          <li>
+            The provider/email divider is{" "}
+            <code className="inline-code">aria-hidden=&quot;true&quot;</code>
+            ; it&apos;s decorative, and the providers and fields carry
+            their own semantics.
+          </li>
+          <li>
+            When a field doesn&apos;t render a visible{" "}
+            <code className="inline-code">label</code>, the component
+            wires the{" "}
+            <code className="inline-code">label</code> prop as an{" "}
+            <code className="inline-code">sr-only</code>{" "}
+            <code className="inline-code">&lt;label htmlFor&gt;</code>.
+            Pass <code className="inline-code">label</code> even when the
+            placeholder feels self-evident.
+          </li>
+        </ul>
+      </Section>
     </div>
   );
 }
