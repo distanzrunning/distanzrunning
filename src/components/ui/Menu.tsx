@@ -272,6 +272,11 @@ function MenuDropdown({
   // the top). Subsequent focus() calls from arrow keys happen after
   // the menu is positioned and should keep their default scroll-into-
   // view behaviour so long menus reveal the focused row.
+  // Typeahead state lives in refs so it persists across keystrokes
+  // without forcing re-renders.
+  const typeaheadBufferRef = useRef("");
+  const typeaheadTimerRef = useRef<number | null>(null);
+
   useEffect(() => {
     const el = dropdownRef.current;
     if (!el) return;
@@ -320,10 +325,64 @@ function MenuDropdown({
           items[items.length - 1].focus();
           break;
         }
+        default: {
+          // Typeahead: printable single-character key, no modifiers,
+          // not Space (which activates the focused item).
+          if (
+            e.key.length !== 1 ||
+            e.key === " " ||
+            e.metaKey ||
+            e.ctrlKey ||
+            e.altKey
+          ) {
+            break;
+          }
+
+          // Append to the buffer and reset the idle timer (500ms is
+          // the standard WAI-ARIA typeahead window).
+          if (typeaheadTimerRef.current !== null) {
+            window.clearTimeout(typeaheadTimerRef.current);
+          }
+          typeaheadBufferRef.current += e.key.toLowerCase();
+          typeaheadTimerRef.current = window.setTimeout(() => {
+            typeaheadBufferRef.current = "";
+            typeaheadTimerRef.current = null;
+          }, 500);
+
+          // When the buffer is a single repeated character, cycle
+          // through items starting with that character. Otherwise match
+          // the full buffered prefix.
+          const buf = typeaheadBufferRef.current;
+          const isRepeatedChar =
+            buf.length > 1 && buf.split("").every((c) => c === buf[0]);
+          const needle = isRepeatedChar ? buf[0] : buf;
+
+          // Start the search at the next item so repeated presses cycle.
+          const startIdx = currentIdx >= 0 ? currentIdx + 1 : 0;
+          for (let i = 0; i < items.length; i++) {
+            const idx = (startIdx + i) % items.length;
+            const label = (items[idx].textContent || "")
+              .trim()
+              .toLowerCase();
+            if (label.startsWith(needle)) {
+              e.preventDefault();
+              items[idx].focus();
+              break;
+            }
+          }
+          break;
+        }
       }
     }
     el.addEventListener("keydown", handleKey);
-    return () => el.removeEventListener("keydown", handleKey);
+    return () => {
+      el.removeEventListener("keydown", handleKey);
+      if (typeaheadTimerRef.current !== null) {
+        window.clearTimeout(typeaheadTimerRef.current);
+        typeaheadTimerRef.current = null;
+      }
+      typeaheadBufferRef.current = "";
+    };
   }, [dropdownRef]);
 
   // For top-anchored positions, we need `bottom` rather than `top`

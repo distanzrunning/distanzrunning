@@ -923,12 +923,17 @@ export default function MenuComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Up / Down arrows move focus through items, Home / End
-            jump to first / last, Enter or Space activates.
+            Up/Down arrows move focus through items, Home/End jump to
+            first/last, Enter or Space activates.
           </li>
           <li>
-            Return focus to the trigger on close so keyboard users
-            keep their place in the row.
+            Typeahead jumps to the next item whose label starts with the
+            typed character; keep the visible label first so typeahead
+            matches what the user sees.
+          </li>
+          <li>
+            Return focus to the trigger on close so keyboard users keep
+            their place in the row.
           </li>
         </ul>
       </Section>
