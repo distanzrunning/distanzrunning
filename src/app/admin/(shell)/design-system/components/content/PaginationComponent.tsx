@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -428,6 +429,54 @@ export default function PaginationComponent() {
             </nav>
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Pagination for sequential navigation between sibling
+            pages (docs articles, blog posts, onboarding steps). For
+            revealing more rows of the same data set, use{" "}
+            <ComponentRef name="Show More" /> or a numbered pager.
+          </li>
+          <li>
+            <code className="inline-code">previous.label</code> and{" "}
+            <code className="inline-code">next.label</code> are the
+            destination page names (
+            <code className="inline-code">Deploy Hooks</code>,{" "}
+            <code className="inline-code">Environment Variables</code>).
+            The component already renders the{" "}
+            <code className="inline-code">Previous</code> /{" "}
+            <code className="inline-code">Next</code> label, the chevron,
+            and the{" "}
+            <code className="inline-code">
+              Go to {"{direction}"} page: {"{label}"}
+            </code>{" "}
+            aria-label; don&apos;t prepend arrows or{" "}
+            <code className="inline-code">Go to</code>.
+          </li>
+          <li>
+            Hide the slot at the start or end of a sequence instead of
+            disabling it; an empty rail reads cleaner than a dimmed link
+            with nowhere to go.
+          </li>
+          <li>
+            Keep labels Title Case and short enough to fit the rail
+            without wrapping; long destination names truncate, so put
+            the distinctive word first.
+          </li>
+          <li>
+            Don&apos;t restate ordinal positions like{" "}
+            <code className="inline-code">Page 3 of 10</code> inside{" "}
+            <code className="inline-code">previous.label</code> or{" "}
+            <code className="inline-code">next.label</code>. Pagination
+            is sibling-link, not a numbered pager.
+          </li>
+        </ul>
       </Section>
     </>
   );
