@@ -457,7 +457,7 @@ export default function ContextCardComponent() {
                 </td>
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Wrap trigger elements to share a tooltip provider
+                  Wrap trigger elements to share delay defaults
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -467,7 +467,17 @@ export default function ContextCardComponent() {
                 </td>
                 <td className="py-3 px-4 text-textSubtle">200</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Delay in ms before the tooltip appears
+                  Delay in ms before the card opens on hover
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">closeDelay</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  number
+                </td>
+                <td className="py-3 px-4 text-textSubtle">150</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Delay in ms before the card closes on cursor exit
                 </td>
               </tr>
             </tbody>
@@ -503,7 +513,7 @@ export default function ContextCardComponent() {
                 </td>
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  The element that triggers the tooltip on hover
+                  The element that triggers the card on hover or focus
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -513,7 +523,7 @@ export default function ContextCardComponent() {
                 </td>
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Content shown inside the tooltip
+                  Content shown inside the card
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">

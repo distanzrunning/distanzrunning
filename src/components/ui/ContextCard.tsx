@@ -1,29 +1,44 @@
 "use client";
 
-import * as Tooltip from "@radix-ui/react-tooltip";
-import { forwardRef, useId, type ReactNode } from "react";
+import * as HoverCard from "@radix-ui/react-hover-card";
+import { createContext, forwardRef, useContext, useId, type ReactNode } from "react";
 
 // ============================================================================
 // Types
 // ============================================================================
 
 export interface ContextCardProps {
-  /** Wrap triggers to share a single tooltip provider */
+  /** Wrap triggers so they share the same delay defaults */
   children: ReactNode;
-  /** Delay in ms before the tooltip appears */
+  /** Delay in ms before the card opens on hover. Defaults to 200. */
   delayDuration?: number;
+  /** Delay in ms before the card closes on cursor exit. Defaults to 150. */
+  closeDelay?: number;
 }
 
 interface ContextCardTriggerProps {
-  /** The element that triggers the tooltip on hover */
+  /** The element that triggers the card on hover or focus */
   children: ReactNode;
-  /** Content shown inside the tooltip */
+  /** Content shown inside the card */
   content: ReactNode;
-  /** Which side of the trigger the tooltip appears on */
+  /** Which side of the trigger the card appears on */
   side?: "top" | "bottom" | "left" | "right";
-  /** Distance in px between trigger and tooltip */
+  /** Distance in px between trigger and card */
   sideOffset?: number;
+  /** Override the open delay for this trigger */
+  openDelay?: number;
+  /** Override the close delay for this trigger */
+  closeDelay?: number;
 }
+
+// ============================================================================
+// Context — shares delay defaults from <ContextCard> down to each trigger
+// ============================================================================
+
+const ContextCardDelaysContext = createContext<{
+  openDelay: number;
+  closeDelay: number;
+}>({ openDelay: 200, closeDelay: 150 });
 
 // ============================================================================
 // Styles
@@ -40,22 +55,21 @@ const CONTEXT_CARD_CSS = `
     background: var(--ds-background-100);
     color: var(--ds-gray-1000);
     box-shadow: var(--ds-shadow-tooltip);
-    user-select: none;
     will-change: transform, opacity;
     animation-duration: 250ms;
     animation-timing-function: cubic-bezier(0.29, -0.31, -0.05, 0.96);
   }
 
-  .ds-context-card[data-state="delayed-open"][data-side="top"] {
+  .ds-context-card[data-state="open"][data-side="top"] {
     animation-name: ds-context-card-slide-down-fade;
   }
-  .ds-context-card[data-state="delayed-open"][data-side="bottom"] {
+  .ds-context-card[data-state="open"][data-side="bottom"] {
     animation-name: ds-context-card-slide-up-fade;
   }
-  .ds-context-card[data-state="delayed-open"][data-side="left"] {
+  .ds-context-card[data-state="open"][data-side="left"] {
     animation-name: ds-context-card-slide-right-fade;
   }
-  .ds-context-card[data-state="delayed-open"][data-side="right"] {
+  .ds-context-card[data-state="open"][data-side="right"] {
     animation-name: ds-context-card-slide-left-fade;
   }
 
@@ -93,11 +107,6 @@ const CONTEXT_CARD_CSS = `
 // Compound Components
 // ============================================================================
 
-/**
- * Custom curved arrow SVG matching Geist's tooltip arrow.
- * The path is clipped to a 14×7 rectangle so the flat-edge stroke is hidden.
- * Uses forwardRef so Radix's asChild can position it correctly.
- */
 const GeistArrow = forwardRef<SVGSVGElement, React.ComponentPropsWithoutRef<"svg">>(
   function GeistArrow(props, ref) {
     const clipId = useId();
@@ -130,10 +139,16 @@ function ContextCardTrigger({
   content,
   side = "top",
   sideOffset = 8,
+  openDelay,
+  closeDelay,
 }: ContextCardTriggerProps) {
+  const delays = useContext(ContextCardDelaysContext);
   return (
-    <Tooltip.Root>
-      <Tooltip.Trigger asChild>
+    <HoverCard.Root
+      openDelay={openDelay ?? delays.openDelay}
+      closeDelay={closeDelay ?? delays.closeDelay}
+    >
+      <HoverCard.Trigger asChild>
         <div
           style={{
             cursor: "pointer",
@@ -143,21 +158,21 @@ function ContextCardTrigger({
         >
           {children}
         </div>
-      </Tooltip.Trigger>
-      <Tooltip.Portal>
-        <Tooltip.Content
+      </HoverCard.Trigger>
+      <HoverCard.Portal>
+        <HoverCard.Content
           className="ds-context-card"
           side={side}
           sideOffset={sideOffset}
           align="center"
         >
           {content}
-          <Tooltip.Arrow asChild width={14} height={7}>
+          <HoverCard.Arrow asChild width={14} height={7}>
             <GeistArrow />
-          </Tooltip.Arrow>
-        </Tooltip.Content>
-      </Tooltip.Portal>
-    </Tooltip.Root>
+          </HoverCard.Arrow>
+        </HoverCard.Content>
+      </HoverCard.Portal>
+    </HoverCard.Root>
   );
 }
 
@@ -168,13 +183,16 @@ function ContextCardTrigger({
 export function ContextCard({
   children,
   delayDuration = 200,
+  closeDelay = 150,
 }: ContextCardProps) {
   return (
     <>
       <style>{CONTEXT_CARD_CSS}</style>
-      <Tooltip.Provider delayDuration={delayDuration}>
+      <ContextCardDelaysContext.Provider
+        value={{ openDelay: delayDuration, closeDelay }}
+      >
         {children}
-      </Tooltip.Provider>
+      </ContextCardDelaysContext.Provider>
     </>
   );
 }
