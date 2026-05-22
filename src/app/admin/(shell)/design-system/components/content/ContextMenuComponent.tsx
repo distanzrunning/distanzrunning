@@ -763,15 +763,13 @@ export default function ContextMenuComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Right-click on desktop and long-press on touch open the
-            menu; the native browser menu is suppressed only on the
-            trigger element so the rest of the page keeps its normal
-            right-click behaviour.
+            Bind to right-click on desktop and long-press on touch.
+            Suppress the native browser menu only on the trigger area,
+            not the whole page.
           </li>
           <li>
-            The menu positions at the pointer and auto-flips
-            horizontally then vertically when it would overflow the
-            viewport.
+            Position the menu at the pointer; if it would overflow the
+            viewport, flip horizontally then vertically before clipping.
           </li>
           <li>
             Close on activation, Escape, and outside-click. Don&apos;t
@@ -802,11 +800,8 @@ export default function ContextMenuComponent() {
             <code className="inline-code">Move to Folder…</code>).
           </li>
           <li>
-            Group destructive items at the bottom with a{" "}
-            <code className="inline-code">
-              &lt;ContextMenu.Separator&gt;
-            </code>{" "}
-            and keep the destructive label{" "}
+            Group destructive items at the bottom with a divider and keep
+            the destructive label{" "}
             <code className="inline-code">Verb + Noun</code>.{" "}
             <code className="inline-code">Delete</code> alone never ships.
           </li>
@@ -820,16 +815,14 @@ export default function ContextMenuComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The keyboard menu key opens the same menu without
-            right-click &mdash;{" "}
-            <code className="inline-code">Shift + F10</code> on
-            Windows / Linux, the dedicated menu key on any platform
-            that ships one.
+            Trigger the keyboard menu key (
+            <code className="inline-code">Shift+F10</code> on
+            Windows/Linux, the menu key, or platform equivalent) to open
+            the same menu without right-click.
           </li>
           <li>
-            Up / Down arrows move focus, Enter / Space activates the
-            highlighted item, and Escape closes the menu and returns focus
-            to the trigger row.
+            Up/Down arrows move focus, Enter/Space activates, Escape closes
+            and returns focus to the row.
           </li>
           <li>
             Don&apos;t bury destructive items behind nested submenus. One
