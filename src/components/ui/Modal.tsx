@@ -74,7 +74,7 @@ function ModalTitle({
   children: ReactNode;
   className?: string;
 }) {
-  const { titleId, inHeader } = useModalContext("Modal.Title");
+  const { titleId } = useModalContext("Modal.Title");
   return (
     <h3
       id={titleId}
@@ -85,10 +85,11 @@ function ModalTitle({
         fontWeight: 600,
         lineHeight: "32px",
         letterSpacing: "-0.029375rem",
-        // Inside <Modal.Header>, the header's `gap` owns spacing.
-        // Standalone (direct child of <Modal>), the title needs its
-        // own bottom rhythm so the body content sits 24px below.
-        margin: inHeader ? 0 : "0 0 24px",
+        // Title sits flush against the next element so it groups
+        // tightly with a following Modal.P. The bottom rhythm to the
+        // body is owned by Modal.P (or Modal.Header's gap when
+        // wrapped).
+        margin: 0,
       }}
     >
       {children}
