@@ -1,7 +1,7 @@
 "use client";
 
 import * as HoverCard from "@radix-ui/react-hover-card";
-import { createContext, forwardRef, useContext, useId, type ReactNode } from "react";
+import { createContext, useContext, useId, type ReactNode } from "react";
 
 // ============================================================================
 // Types
@@ -92,6 +92,8 @@ const CONTEXT_CARD_CSS = `
 
   .ds-context-card-arrow {
     position: absolute;
+    width: 14px;
+    height: 7px;
     pointer-events: none;
   }
 
@@ -101,38 +103,59 @@ const CONTEXT_CARD_CSS = `
     stroke-width: 1px;
     shape-rendering: geometricPrecision;
   }
+
+  /* Always center the arrow on the card edge, regardless of trigger position */
+  .ds-context-card[data-side="top"] .ds-context-card-arrow {
+    bottom: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .ds-context-card[data-side="bottom"] .ds-context-card-arrow {
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+  }
+  .ds-context-card[data-side="left"] .ds-context-card-arrow {
+    right: -10.5px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: center;
+  }
+  .ds-context-card[data-side="right"] .ds-context-card-arrow {
+    left: -10.5px;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    transform-origin: center;
+  }
 `;
 
 // ============================================================================
 // Compound Components
 // ============================================================================
 
-const GeistArrow = forwardRef<SVGSVGElement, React.ComponentPropsWithoutRef<"svg">>(
-  function GeistArrow(props, ref) {
-    const clipId = useId();
-    return (
-      <svg
-        {...props}
-        ref={ref}
-        className={`ds-context-card-arrow ${props.className ?? ""}`}
-        width="14"
-        height="7"
-        viewBox="0 0 14 7"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <clipPath id={clipId}>
-            <rect width="14" height="7" />
-          </clipPath>
-        </defs>
-        <g clipPath={`url(#${clipId})`}>
-          <path d="M15 -0.5V0.5H12.9834L12.8184 0.508789C12.4377 0.550822 12.0853 0.738056 11.8359 1.03418L8.53027 4.95996C7.73114 5.90893 6.26886 5.90892 5.46973 4.95996L2.16406 1.03418C1.87905 0.695733 1.45907 0.5 1.0166 0.5H-1V-0.5H15Z" />
-        </g>
-      </svg>
-    );
-  }
-);
+function GeistArrow() {
+  const clipId = useId();
+  return (
+    <svg
+      className="ds-context-card-arrow"
+      width="14"
+      height="7"
+      viewBox="0 0 14 7"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <clipPath id={clipId}>
+          <rect width="14" height="7" />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${clipId})`}>
+        <path d="M15 -0.5V0.5H12.9834L12.8184 0.508789C12.4377 0.550822 12.0853 0.738056 11.8359 1.03418L8.53027 4.95996C7.73114 5.90893 6.26886 5.90892 5.46973 4.95996L2.16406 1.03418C1.87905 0.695733 1.45907 0.5 1.0166 0.5H-1V-0.5H15Z" />
+      </g>
+    </svg>
+  );
+}
 
 function ContextCardTrigger({
   children,
@@ -167,9 +190,7 @@ function ContextCardTrigger({
           align="center"
         >
           {content}
-          <HoverCard.Arrow asChild width={14} height={7}>
-            <GeistArrow />
-          </HoverCard.Arrow>
+          <GeistArrow />
         </HoverCard.Content>
       </HoverCard.Portal>
     </HoverCard.Root>
