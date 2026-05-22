@@ -838,8 +838,8 @@ export default function MenuComponent() {
           </li>
           <li>
             Cap a Menu around 10 items. Past that, group with{" "}
-            <code className="inline-code">&lt;MenuSection&gt;</code>{" "}
-            or move secondary actions to a settings page.
+            <code className="inline-code">MenuSection</code> or move
+            secondary actions to a settings page.
           </li>
         </ul>
 
@@ -881,10 +881,11 @@ export default function MenuComponent() {
             Item children are Title Case{" "}
             <code className="inline-code">Verb + Noun</code> (
             <code className="inline-code">Rename Project</code>,{" "}
-            <code className="inline-code">Duplicate Race</code>). Bare
-            verbs like <code className="inline-code">Rename</code> or{" "}
-            <code className="inline-code">Edit</code> are wrong
-            outside obvious single-object context.
+            <code className="inline-code">Duplicate Deployment</code>).
+            Bare verbs like{" "}
+            <code className="inline-code">Rename</code> or{" "}
+            <code className="inline-code">Edit</code> are wrong outside
+            obvious single-object context.
           </li>
           <li>
             End an item with{" "}
@@ -898,7 +899,8 @@ export default function MenuComponent() {
           </li>
           <li>
             Group destructive items at the bottom, separated by a
-            divider, and keep the destructive copy as Verb + Noun (
+            divider, and keep the destructive copy as{" "}
+            <code className="inline-code">Verb + Noun</code> (
             <code className="inline-code">Delete Project</code>, never
             bare <code className="inline-code">Delete</code>).
           </li>
