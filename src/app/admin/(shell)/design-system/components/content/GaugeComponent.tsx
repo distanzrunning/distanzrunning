@@ -650,8 +650,8 @@ export default function GaugeComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             A 0&ndash;100 ratio against a fixed maximum where the
-            comparison is the point &mdash; quota usage, build cache hit
-            rate, uptime, billing-period consumption.
+            comparison is the point, like quota usage, build cache hit
+            rate, uptime, or billing-period consumption.
           </li>
           <li>
             For determinate task progress with a known total (uploads,
@@ -660,9 +660,8 @@ export default function GaugeComponent() {
           </li>
           <li>
             For binary or enumerated state, use{" "}
-            <ComponentRef name="Status Dot" /> for deployment-style
-            statuses or <ComponentRef name="Badge" /> for everything
-            else.
+            <ComponentRef name="Status Dot" /> for deployments or{" "}
+            <ComponentRef name="Badge" /> for everything else.
           </li>
         </ul>
 
@@ -680,19 +679,16 @@ export default function GaugeComponent() {
             </code>{" "}
             for true ratios so 50% reads as exactly half. Use the
             default{" "}
-            <code className="inline-code">
-              arcPriority=&quot;primary&quot;
-            </code>{" "}
-            for single-percentage usage where the filled portion is the
+            <code className="inline-code">primary</code> arc for
+            single-percentage usage where the filled portion is the
             story.
           </li>
           <li>
-            Threshold colors should match the same numeric
-            breakpoints used elsewhere in the product; don&apos;t
-            invent gauge-only thresholds. Our default scale treats
-            higher values as healthier (uptime, hit rate); pass an
-            explicit <code className="inline-code">color</code> for
-            higher-is-worse cases (quota usage, billing consumption).
+            Threshold colors should match the same numeric breakpoints
+            used elsewhere in the product (
+            <code className="inline-code">&gt;=80%</code> warning,{" "}
+            <code className="inline-code">&gt;=95%</code> error).
+            Don&apos;t invent gauge-only thresholds.
           </li>
           <li>
             Pair{" "}
@@ -724,8 +720,8 @@ export default function GaugeComponent() {
             <code className="inline-code">children</code>; the label
             carries the unit (
             <code className="inline-code">Uptime &middot; 99.97%</code>).{" "}
-            <code className="inline-code">children</code> is for an icon
-            overlay.
+            <code className="inline-code">children</code> is reserved
+            for an icon overlay.
           </li>
           <li>
             When{" "}
