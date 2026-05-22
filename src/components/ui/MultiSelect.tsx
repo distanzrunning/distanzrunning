@@ -459,7 +459,11 @@ function MultiSelectRow({
             borderRadius: 6,
             cursor: "pointer",
             fontSize: 13,
-            background: isActive && activeFocus === "checkbox" ? "var(--ds-gray-100)" : "transparent",
+            background:
+              hoverArea === "checkbox" ||
+              (isActive && activeFocus === "checkbox")
+                ? "var(--ds-gray-100)"
+                : "transparent",
             transition: "background 150ms ease",
           }}
         >
