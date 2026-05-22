@@ -885,7 +885,7 @@ export default function InputComponent() {
           </li>
           <li>
             Trim leading and trailing whitespace before submit so{" "}
-            <code className="inline-code">{" example.com "}</code> and{" "}
+            <code className="inline-code">{" example.com"}</code> and{" "}
             <code className="inline-code">example.com</code> resolve to
             one value.
           </li>
@@ -895,11 +895,11 @@ export default function InputComponent() {
             spinner only when input is impossible.
           </li>
           <li>
-            Don&apos;t wrap a labelled Input in a{" "}
+            Don&apos;t wrap a labelled{" "}
+            <code className="inline-code">&lt;Input&gt;</code> in a{" "}
             <ComponentRef name="Tooltip" />; put the explainer on a
-            sibling icon{" "}
-            <ComponentRef name="Button" /> so the label stays
-            announced.
+            sibling icon <ComponentRef name="Button" /> so the label
+            stays announced.
           </li>
         </ul>
 
