@@ -147,7 +147,7 @@ export function Login({
   divider,
   fields,
   submitLabel = "Sign in",
-  loadingLabel = "Authenticating...",
+  loadingLabel = "Authenticating…",
   isLoading = false,
   error,
   onSubmit,
@@ -189,8 +189,7 @@ export function Login({
 
   return (
     <div
-      className={`w-full max-w-sm bg-surface rounded-xl p-8 border border-borderSubtle ${className ?? ""}`.trim()}
-      style={{ boxShadow: "0 1px 2px rgba(0, 0, 0, 0.04)" }}
+      className={`w-full max-w-sm bg-surface material-medium p-8 ${className ?? ""}`.trim()}
     >
       <div className="space-y-6">
         {header && <div className="flex justify-center">{header}</div>}
@@ -198,14 +197,10 @@ export function Login({
         {(title || subtitle) && (
           <div className="space-y-2 text-center">
             {title && (
-              <h2 className="text-xl font-semibold text-textDefault leading-tight">
-                {title}
-              </h2>
+              <h2 className="text-heading-20 text-textDefault">{title}</h2>
             )}
             {subtitle && (
-              <p className="text-sm text-textSubtle leading-normal">
-                {subtitle}
-              </p>
+              <p className="text-copy-14 text-textSubtle">{subtitle}</p>
             )}
           </div>
         )}
@@ -220,7 +215,7 @@ export function Login({
                 size="large"
                 className="w-full"
                 onClick={p.onClick}
-                disabled={isLoading}
+                disabled={isLoading || !p.onClick}
                 prefixIcon={p.icon}
               >
                 {p.label}
@@ -239,7 +234,7 @@ export function Login({
               style={{ background: "var(--ds-gray-400)" }}
             />
             <span
-              className="text-xs uppercase tracking-wide"
+              className="text-copy-13 uppercase"
               style={{ color: "var(--ds-gray-700)", letterSpacing: "0.04em" }}
             >
               {dividerLabel}
@@ -299,7 +294,7 @@ export function Login({
 
             {error && (
               <div
-                className="text-sm"
+                className="text-copy-14"
                 style={{ color: "var(--ds-red-900)" }}
                 role="alert"
               >
@@ -307,13 +302,19 @@ export function Login({
               </div>
             )}
 
-            <Button type="submit" className="w-full" size="large" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="w-full"
+              size="large"
+              loading={isLoading}
+              disabled={isLoading}
+            >
               {isLoading ? loadingLabel : submitLabel}
             </Button>
 
             {disclaimer && (
               <p
-                className="text-xs leading-normal text-center"
+                className="text-copy-13 text-center"
                 style={{ color: "var(--ds-gray-700)" }}
               >
                 {disclaimer}
@@ -324,14 +325,14 @@ export function Login({
 
         {!hasFields && disclaimer && (
           <p
-            className="text-xs leading-normal text-center"
+            className="text-copy-13 text-center"
             style={{ color: "var(--ds-gray-700)" }}
           >
             {disclaimer}
           </p>
         )}
 
-        {footer && <div className="text-center text-sm">{footer}</div>}
+        {footer && <div className="text-copy-14 text-center">{footer}</div>}
       </div>
     </div>
   );
