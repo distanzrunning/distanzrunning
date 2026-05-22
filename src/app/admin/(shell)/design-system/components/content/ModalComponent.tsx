@@ -1136,10 +1136,8 @@ export default function ModalComponent() {
           <li>
             Default focus to{" "}
             <code className="inline-code">Cancel</code> on any
-            destructive Modal.{" "}
-            <code className="inline-code">Enter</code> must never
-            trigger the destructive action without a typed
-            confirmation.
+            destructive Modal. Enter must never trigger the destructive
+            action without a typed confirmation.
           </li>
           <li>
             Allow Escape and outside-click to dismiss
@@ -1166,12 +1164,12 @@ export default function ModalComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The <code className="inline-code">title</code> is a
-            Title Case statement, never a question.{" "}
-            <code className="inline-code">Transfer Project</code>{" "}
-            is correct;{" "}
-            <code className="inline-code">Transfer Project?</code>{" "}
-            is wrong.
+            <code className="inline-code">title</code> is a Title Case
+            statement, never a question.{" "}
+            <code className="inline-code">Transfer Project</code> is
+            correct;{" "}
+            <code className="inline-code">Transfer Project?</code> is
+            wrong.
           </li>
           <li>
             Body is sentence case, 1&ndash;3 sentences. State the
@@ -1190,7 +1188,7 @@ export default function ModalComponent() {
             on a destructive primary.
           </li>
           <li>
-            The Cancel literal stays{" "}
+            Cancel literal stays{" "}
             <code className="inline-code">Cancel</code>.
             Acknowledgment-only Modals (after a key reveal, after a
             one-time-show) use{" "}
@@ -1211,13 +1209,9 @@ export default function ModalComponent() {
             cascade.
           </li>
           <li>
-            Pair the success{" "}
-            <ComponentRef name="Toast" /> verb 1:1 with the primary
-            button:{" "}
-            <code className="inline-code">Delete Project</code>{" "}
-            button,{" "}
-            <code className="inline-code">Project deleted</code>{" "}
-            toast.
+            Pair the success toast verb 1:1 with the primary button:{" "}
+            <code className="inline-code">Delete Project</code> button,{" "}
+            <code className="inline-code">Project deleted</code> toast.
           </li>
         </ul>
 
