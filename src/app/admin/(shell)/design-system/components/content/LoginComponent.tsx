@@ -237,6 +237,11 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // ============================================================================
 
 function WordmarkLogo() {
+  // Intrinsic SVG viewBox is 1579.12 × 484.75 (aspect ratio ~3.26:1).
+  // At height 40, width is ~130 — set both explicitly so the browser
+  // reserves the layout slot before the SVG loads (prevents the
+  // logo-pop on first paint).
+  const dims = { width: 130, height: 40 };
   return (
     <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -244,14 +249,21 @@ function WordmarkLogo() {
         src="/brand/wordmark-black.svg"
         alt="Distanz Running"
         className="block dark:hidden"
-        style={{ height: 40, width: "auto" }}
+        width={dims.width}
+        height={dims.height}
+        loading="eager"
+        decoding="async"
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/brand/wordmark-white.svg"
-        alt="Distanz Running"
+        alt=""
+        aria-hidden="true"
         className="hidden dark:block"
-        style={{ height: 40, width: "auto" }}
+        width={dims.width}
+        height={dims.height}
+        loading="eager"
+        decoding="async"
       />
     </>
   );
