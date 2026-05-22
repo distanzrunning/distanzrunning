@@ -21,6 +21,13 @@ const FOCUSABLE_SELECTOR =
 
 interface ModalContextValue {
   titleId: string;
+  /**
+   * True when the component is rendering inside a <Modal.Header>.
+   * Modal.Header uses `gap` to space its children, so Modal.Title's
+   * standalone bottom margin would collide with the gap; we suppress
+   * it here and let the Header own the spacing.
+   */
+  inHeader: boolean;
 }
 
 const ModalContext = createContext<ModalContextValue | null>(null);
@@ -67,7 +74,7 @@ function ModalTitle({
   children: ReactNode;
   className?: string;
 }) {
-  const { titleId } = useModalContext("Modal.Title");
+  const { titleId, inHeader } = useModalContext("Modal.Title");
   return (
     <h3
       id={titleId}
@@ -78,7 +85,10 @@ function ModalTitle({
         fontWeight: 600,
         lineHeight: "32px",
         letterSpacing: "-0.029375rem",
-        margin: 0,
+        // Inside <Modal.Header>, the header's `gap` owns spacing.
+        // Standalone (direct child of <Modal>), the title needs its
+        // own bottom rhythm so the body content sits 24px below.
+        margin: inHeader ? 0 : "0 0 24px",
       }}
     >
       {children}
@@ -93,6 +103,7 @@ function ModalP({
   children: ReactNode;
   className?: string;
 }) {
+  const { inHeader } = useModalContext("Modal.P");
   return (
     <div
       className={className}
@@ -101,7 +112,10 @@ function ModalP({
         fontSize: 16,
         lineHeight: "24px",
         fontWeight: 400,
-        margin: 0,
+        // Inside <Modal.Header>, the header's `gap` owns spacing.
+        // Standalone, the paragraph needs its own bottom rhythm so the
+        // body content below sits 24px clear.
+        margin: inHeader ? 0 : "0 0 24px",
       }}
     >
       {children}
@@ -122,34 +136,37 @@ function ModalHeader({
   sticky?: boolean;
   className?: string;
 }) {
+  const parent = useModalContext("Modal.Header");
   return (
-    <header
-      className={className}
-      style={
-        sticky
-          ? {
-              position: "sticky",
-              top: 0,
-              zIndex: 10,
-              display: "flex",
-              flexDirection: "column",
-              gap: 10,
-              margin: "0 -24px 24px",
-              padding: "20px 24px",
-              background: "var(--ds-modal-section-bg)",
-              borderBottom: "1px solid var(--ds-gray-alpha-400)",
-            }
-          : {
-              display: "flex",
-              flexDirection: "column",
-              gap: 12,
-              marginBottom: 24,
-              zIndex: 10,
-            }
-      }
-    >
-      {children}
-    </header>
+    <ModalContext.Provider value={{ ...parent, inHeader: true }}>
+      <header
+        className={className}
+        style={
+          sticky
+            ? {
+                position: "sticky",
+                top: 0,
+                zIndex: 10,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+                margin: "0 -24px 24px",
+                padding: "20px 24px",
+                background: "var(--ds-modal-section-bg)",
+                borderBottom: "1px solid var(--ds-gray-alpha-400)",
+              }
+            : {
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+                marginBottom: 24,
+                zIndex: 10,
+              }
+        }
+      >
+        {children}
+      </header>
+    </ModalContext.Provider>
   );
 }
 
@@ -361,7 +378,7 @@ export function Modal({
   if (!mounted || typeof document === "undefined") return null;
 
   return createPortal(
-    <ModalContext.Provider value={{ titleId }}>
+    <ModalContext.Provider value={{ titleId, inHeader: false }}>
       {/* Backdrop. backdrop-filter: blur frosts the page behind
           the modal so even when the colour-contrast is subtle
           (notably dark mode, where a pure-black scrim on a
