@@ -649,10 +649,9 @@ export default function FeedbackComponent() {
             team can reproduce the report without a second round-trip.
           </li>
           <li>
-            Submit closes the panel and returns focus to the trigger
-            button. Don&apos;t replace the panel with a generic
-            acknowledgment <ComponentRef name="Toast" />; the close
-            itself is the acknowledgment.
+            Submit closes the panel and returns focus to the trigger.
+            Don&apos;t replace the panel with a generic acknowledgment
+            toast; the close itself is the acknowledgment.
           </li>
         </ul>
 
@@ -675,8 +674,8 @@ export default function FeedbackComponent() {
           </li>
           <li>
             <code className="inline-code">&lt;FeedbackInline&gt;</code>
-            &apos;s <code className="inline-code">label</code> is the
-            prompt header next to the emoji row, in sentence case (
+            &apos;s <code className="inline-code">label</code> overrides
+            the prompt header next to the emoji row in sentence case (
             <code className="inline-code">
               How did the import go?
             </code>
@@ -686,7 +685,8 @@ export default function FeedbackComponent() {
           <li>
             The textarea placeholder (
             <code className="inline-code">Your feedback...</code>) is
-            fixed; don&apos;t override it.
+            fixed by the component; don&apos;t try to override it with
+            rich children.
           </li>
         </ul>
       </Section>
