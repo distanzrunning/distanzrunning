@@ -625,9 +625,9 @@ export default function MultiSelectComponent() {
             in lockstep.
           </li>
           <li>
-            Keep checkbox focus and button focus distinct so Up /
-            Down navigates rows and Left / Right toggles between the
-            row&apos;s checkbox and action button.
+            Keep checkbox focus and button focus distinct so Up/Down
+            navigates rows and Left/Right toggles between the row&apos;s
+            checkbox and action button.
           </li>
           <li>
             For empty filters, render{" "}
