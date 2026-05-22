@@ -615,13 +615,12 @@ export default function EntityComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Use{" "}
-            <code className="inline-code">&lt;Entity&gt;</code> for a row
-            of descriptive content paired with one or two controls (member
-            rows, integration rows, race-list rows).
+            Use <code className="inline-code">&lt;Entity&gt;</code> for a
+            row of descriptive content paired with one or two controls
+            (member rows, integration rows, domain rows).
           </li>
           <li>
-            For tabular data with sortable columns and a shared row shape,
+            For tabular data with sortable columns and shared row shape,
             use <ComponentRef name="Table" /> instead.
           </li>
           <li>
@@ -638,10 +637,9 @@ export default function EntityComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            <code className="inline-code">&lt;Entity.Field&gt;</code>{" "}
-            holds at most one or two controls. If the row needs more,
-            move secondary actions into a{" "}
-            <ComponentRef name="Menu" /> triggered by a dots button.
+            The right column holds at most one or two controls. If the
+            row needs more, move secondary actions into a{" "}
+            <ComponentRef name="Menu" />.
           </li>
           <li>
             For multi-select rows, the leading{" "}
@@ -667,20 +665,16 @@ export default function EntityComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Lead{" "}
-            <code className="inline-code">&lt;Entity.Content&gt;</code>{" "}
-            with a scannable identifier: an{" "}
-            <ComponentRef name="Avatar" /> or icon{" "}
-            <code className="inline-code">thumbnail</code>, a Title Case{" "}
-            <code className="inline-code">title</code>, then sentence-case{" "}
-            <code className="inline-code">subtitle</code> metadata (
+            Lead the left column with a scannable identifier: an{" "}
+            <ComponentRef name="Avatar" /> or icon, a Title Case label,
+            then sentence-case secondary metadata (
             <code className="inline-code">
               Member since Mar 14, 2026
             </code>
             ).
           </li>
           <li>
-            Keep right-column buttons Title Case Verb + Noun (
+            Keep right-column buttons Verb + Noun (
             <code className="inline-code">Remove Member</code>,{" "}
             <code className="inline-code">Resend Invite</code>). Bare
             verbs like <code className="inline-code">Remove</code> or{" "}
