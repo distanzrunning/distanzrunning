@@ -391,8 +391,8 @@ export default function LoadingDotsComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Embed Loading Dots in copy for short indeterminate waits,
-            e.g.{" "}
+            Use Loading Dots embedded in copy for short indeterminate
+            waits, e.g.{" "}
             <code className="inline-code">
               Saving&lt;LoadingDots /&gt;
             </code>{" "}
