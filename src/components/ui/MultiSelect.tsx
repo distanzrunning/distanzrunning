@@ -461,7 +461,7 @@ function MultiSelectRow({
             fontSize: 13,
             background:
               hoverArea === "checkbox" ||
-              (isActive && activeFocus === "checkbox")
+              (hoverArea === null && isActive && activeFocus === "checkbox")
                 ? "var(--ds-gray-100)"
                 : "transparent",
             transition: "background 150ms ease",
@@ -528,7 +528,11 @@ function MultiSelectRow({
           width: "100%",
           padding: 6,
           borderRadius: 6,
-          background: isActive && activeFocus === "button" ? "var(--ds-gray-alpha-100)" : "transparent",
+          background:
+            hoverArea === "button" ||
+            (hoverArea === null && isActive && activeFocus === "button")
+              ? "var(--ds-gray-alpha-100)"
+              : "transparent",
           border: "none",
           cursor: "pointer",
           outline: "none",
