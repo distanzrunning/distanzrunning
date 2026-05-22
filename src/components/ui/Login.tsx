@@ -16,16 +16,20 @@ export interface LoginField {
   id: string;
   /** HTML input type */
   type?: LoginFieldType;
-  /** Accessible label (rendered sr-only when not provided as visible label) */
+  /** Accessible label (rendered sr-only by default; set visibleLabel to show it above the input) */
   label?: string;
   /** Placeholder text */
-  placeholder: string;
+  placeholder?: string;
   /** autoComplete hint */
   autoComplete?: string;
   /** Whether the field is required */
   required?: boolean;
   /** Initial value */
   defaultValue?: string;
+  /** Render the label visibly above the input instead of sr-only (default: false) */
+  visibleLabel?: boolean;
+  /** Autofocus on mount */
+  autoFocus?: boolean;
 }
 
 export interface LoginProvider {
@@ -64,8 +68,14 @@ export interface LoginProps {
   isLoading?: boolean;
   /** Error message rendered above the submit button */
   error?: string;
-  /** Called with { [fieldId]: value } when the form is submitted */
+  /** Called with { [fieldId]: value } when the form is submitted (client mode) */
   onSubmit?: (values: Record<string, string>) => void | Promise<void>;
+  /**
+   * Server Action / form action — when passed, the form posts directly
+   * via React's <form action> instead of calling onSubmit. Use with
+   * useActionState for progressive-enhancement auth flows.
+   */
+  action?: (formData: FormData) => void | Promise<void>;
   /** Small legal / privacy text rendered under the submit button */
   disclaimer?: React.ReactNode;
   /** Footer slot — e.g. "Forgot password?" or sign-up link */
@@ -141,6 +151,7 @@ export function Login({
   isLoading = false,
   error,
   onSubmit,
+  action,
   disclaimer,
   footer,
   className,
@@ -241,7 +252,11 @@ export function Login({
         )}
 
         {hasFields && (
-          <form className="space-y-4" onSubmit={handleSubmit} noValidate>
+          <form
+            className="space-y-4"
+            {...(action ? { action } : { onSubmit: handleSubmit })}
+            noValidate
+          >
             {effectiveFields.map((field) => {
               const type = field.type ?? "text";
               const isPassword = type === "password";
@@ -249,7 +264,7 @@ export function Login({
 
               return (
                 <div key={field.id}>
-                  {field.label && (
+                  {field.label && !field.visibleLabel && (
                     <label htmlFor={field.id} className="sr-only">
                       {field.label}
                     </label>
@@ -258,9 +273,11 @@ export function Login({
                     id={field.id}
                     name={field.id}
                     type={isPassword && visible ? "text" : type}
+                    label={field.visibleLabel ? field.label : undefined}
                     placeholder={field.placeholder}
                     autoComplete={field.autoComplete}
                     required={field.required}
+                    autoFocus={field.autoFocus}
                     value={values[field.id]}
                     onChange={handleChange(field.id)}
                     disabled={isLoading}
