@@ -420,10 +420,9 @@ export default function MaterialComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Use Material instead of hand-rolling radii, fills,
-            strokes, and shadows on a surface; the{" "}
-            <code className="inline-code">type</code> encodes the
-            elevation role.
+            Use Material instead of hand-rolling radii, fills, strokes,
+            and shadows on a surface; the type encodes the elevation
+            role.
           </li>
           <li>
             Pick the type from where the element sits in the layered
