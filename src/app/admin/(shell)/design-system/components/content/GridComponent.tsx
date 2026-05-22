@@ -626,8 +626,9 @@ export default function GridComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             Use Grid for two-dimensional cell-and-guide layouts in
-            marketing pages, docs landings, and feature breakdowns where
-            the rule lines and cell borders are part of the design.
+            marketing pages, docs landing pages, and feature breakdowns
+            where the rule lines and cell borders are part of the
+            design.
           </li>
           <li>
             For plain n-column responsive content (cards, lists), use
@@ -650,28 +651,20 @@ export default function GridComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            <code className="inline-code">rows</code> and{" "}
-            <code className="inline-code">columns</code> are scalars;
-            handle responsive reflow at the caller with Tailwind
-            utilities or a wrapper that swaps Grid variants per
-            breakpoint.
+            Set <code className="inline-code">columns</code> and{" "}
+            <code className="inline-code">rows</code> per breakpoint
+            (swap Grid variants at the caller) so cells reflow
+            predictably between mobile, tablet, and desktop.
           </li>
           <li>
-            Use{" "}
-            <code className="inline-code">
-              &lt;GridCell solid&gt;
-            </code>{" "}
-            to occlude guides behind a tile when content needs an
-            opaque background; without it, guides render through the
-            cell.
+            Use <code className="inline-code">solid</code> cells to
+            occlude guides behind a tile when content needs an opaque
+            background; without it, guides render through the cell.
           </li>
           <li>
-            Hide row or column guides (
-            <code className="inline-code">hideRowGuides</code>,{" "}
-            <code className="inline-code">hideColumnGuides</code>) only
-            when their absence improves clarity (single-axis layouts,
-            hero rows). Hiding both usually means a plain Tailwind grid
-            is the right tool.
+            Hide row or column guides only when their absence improves
+            clarity (single-axis layouts, hero rows). Hiding both usually
+            means a plain Tailwind grid is the right tool.
           </li>
         </ul>
 
