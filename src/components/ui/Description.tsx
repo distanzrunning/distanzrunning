@@ -61,6 +61,7 @@ const DESCRIPTION_CSS = `
   }
 
   .ds-description-tooltip {
+    z-index: 1000000;
     max-width: 250px;
     padding: var(--ds-space-2x) var(--ds-space-3x);
     border-radius: var(--ds-radius-small);
