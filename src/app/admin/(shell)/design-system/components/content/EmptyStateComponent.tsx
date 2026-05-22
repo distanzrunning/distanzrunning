@@ -886,14 +886,14 @@ export default function EmptyStateComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Choose the variant by what the user needs: no-results
-            for a filtered list that returned zero rows, blank slate
-            or informational for a resource the user hasn&apos;t
-            created, cleared for completed work, permission for role
-            or tier denials, error for a failed load.
+            Pick the variant by what the user needs: no-results for a
+            filtered list that returned zero rows, blank slate or
+            informational for a resource the user hasn&apos;t created,
+            cleared for completed work, permission for role or tier
+            denials, error for a failed load.
           </li>
           <li>
-            Render the permission and tier-denial cases full-page when
+            Render the permission and tier-denial variants full-page when
             the user lands on a route they can&apos;t view. Use a{" "}
             <ComponentRef name="Note" /> only when one tile inside an
             otherwise-accessible page is gated.
@@ -913,11 +913,9 @@ export default function EmptyStateComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The CTA inside{" "}
-            <code className="inline-code">&lt;EmptyState.Actions&gt;</code>{" "}
-            must be a real <ComponentRef name="Button" /> or a link, not
-            an <code className="inline-code">onClick</code> div, so it
-            joins the tab order and exposes a role.
+            The CTA must be a real <ComponentRef name="Button" /> or
+            link, not an <code className="inline-code">onClick</code> div,
+            so it joins the tab order and exposes a role.
           </li>
           <li>
             Cap at one primary CTA, plus one secondary when the first
@@ -927,11 +925,9 @@ export default function EmptyStateComponent() {
             CTAs is a smell.
           </li>
           <li>
-            For async-filtered lists where the empty state can
-            replace results after a filter change, pass{" "}
-            <code className="inline-code">live</code> so screen
-            readers announce the new state. Leave it off for static
-            blank-slate / permission / onboarding states.
+            After an async filter change, wrap the region in{" "}
+            <code className="inline-code">aria-live=&quot;polite&quot;</code>{" "}
+            so screen readers announce the new state.
           </li>
           <li>
             Don&apos;t auto-launch a tour from the educational variant;
