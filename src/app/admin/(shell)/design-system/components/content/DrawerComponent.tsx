@@ -555,16 +555,16 @@ export default function DrawerComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Drawer renders as a bottom sheet on every viewport via vaul.
-            On desktop, prefer a <ComponentRef name="Modal" /> (or{" "}
-            <ComponentRef name="Sheet" /> for lateral context) — pick the
-            right component at the trigger instead of forcing Drawer.
+            Drawer is the bottom-sheet pattern for small viewports. On
+            desktop render <ComponentRef name="Modal" /> (or{" "}
+            <ComponentRef name="Sheet" /> for lateral context) directly
+            instead of forcing Drawer.
           </li>
           <li>
-            Don&apos;t use Drawer to confirm destructive actions. The
-            overlay dims but the sheet can be swiped or tapped away, so
-            the severity signal is weaker than a Modal — route delete and
-            revoke flows to <ComponentRef name="Modal" />.
+            Don&apos;t use Drawer to confirm destructive actions. The lack
+            of a fully blocking dim weakens the severity signal that
+            delete and revoke flows need; route to{" "}
+            <ComponentRef name="Modal" />.
           </li>
           <li>
             A Drawer is good for short focused mobile actions: a single
@@ -581,21 +581,19 @@ export default function DrawerComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Tap-outside and swipe-down dismiss by default. Preserve
-            them unless the form has dirty input; in that case,
-            confirm before closing.
+            Tap-outside and swipe-down dismiss by default; preserve both
+            unless the form has dirty input.
           </li>
           <li>
-            The drawer body scrolls inside its frame so the page
-            behind doesn&apos;t scroll when the user drags the
-            content.
+            The drawer body scrolls inside its frame instead of the page
+            behind it.
           </li>
           <li>
-            Cap content with the{" "}
-            <code className="inline-code">height</code> prop only
-            when the default clips the primary action. The action
-            and <code className="inline-code">Cancel</code> must
-            stay above the fold.
+            Cap content height with{" "}
+            <code className="inline-code">height</code> only when the
+            default clips the primary action; the action and{" "}
+            <code className="inline-code">Cancel</code> must stay above
+            the fold.
           </li>
         </ul>
 
@@ -616,7 +614,7 @@ export default function DrawerComponent() {
             Body is sentence case prose. One primary{" "}
             <code className="inline-code">Verb + Noun</code> button and a
             literal <code className="inline-code">Cancel</code>; don&apos;t
-            cram destructive cascade copy into the smaller frame.
+            cram a destructive cascade copy into the smaller frame.
           </li>
           <li>
             Don&apos;t restate the page heading as the drawer title; name
@@ -632,22 +630,17 @@ export default function DrawerComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Trap focus inside the drawer while open and return it to
-            the trigger on close. Escape and the system back gesture
-            dismiss the drawer.
+            Trap focus inside the drawer while open and return focus to
+            the trigger on close.
           </li>
           <li>
-            Body scroll is locked while the drawer is open so iOS
-            rubber-band scroll doesn&apos;t leak through to the
-            page behind.
+            Escape closes the drawer; honor the system back gesture on
+            mobile so users can dismiss without reaching for the close
+            affordance.
           </li>
           <li>
-            Always render{" "}
-            <code className="inline-code">&lt;Drawer.Title&gt;</code>{" "}
-            for the accessible name; if the title isn&apos;t
-            visible, hide it with{" "}
-            <code className="inline-code">sr-only</code> rather than
-            omitting it.
+            Lock body scroll on open and restore it on close so iOS
+            rubber-band scroll doesn&apos;t leak through.
           </li>
         </ul>
       </Section>
