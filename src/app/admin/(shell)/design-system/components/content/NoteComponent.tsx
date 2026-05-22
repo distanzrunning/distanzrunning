@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/useShikiHighlighter";
 import { Note } from "@/components/ui/Note";
 import { Button } from "@/components/ui/Button";
+import { ComponentRef } from "../ComponentRef";
 
 // Toast notification for copy confirmation
 function Toast({
@@ -906,6 +907,103 @@ export default function NoteComponent() {
             </div>
           </div>
         </CodePreview>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use a Note for inline contextual feedback next to the field,
+            card, or section it describes: a region change warning above
+            a region picker, a rate-limit notice next to a usage gauge.
+          </li>
+          <li>
+            Pick a banner when the message is page-level or system-wide
+            and needs a CTA, <ComponentRef name="Toast" /> for transient
+            acknowledgments, <ComponentRef name="Modal" /> for
+            destructive confirmations.
+          </li>
+          <li>
+            Choose <code className="inline-code">type</code> by meaning:{" "}
+            <code className="inline-code">error</code> for a problem the
+            user must fix,{" "}
+            <code className="inline-code">warning</code> for a consequence
+            to acknowledge,{" "}
+            <code className="inline-code">success</code> for a passed
+            check, <code className="inline-code">secondary</code> for
+            neutral information.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            A Note is persistent until the underlying state changes;
+            don&apos;t add an ad hoc dismiss control because it competes
+            with the message.
+          </li>
+          <li>
+            One Note per concept. Stacking three Notes on a card means
+            the page architecture, not the Note copy, is wrong.
+          </li>
+          <li>
+            The optional{" "}
+            <code className="inline-code">action</code> is a single
+            inline CTA. Don&apos;t pair it with a second button.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">label</code> is a 1&ndash;2
+            word Title Case prefix that names the topic:{" "}
+            <code className="inline-code">Region Change</code>,{" "}
+            <code className="inline-code">Rate Limit</code>,{" "}
+            <code className="inline-code">Plan Limit</code>. Cut hedges
+            like <code className="inline-code">Heads Up</code>,{" "}
+            <code className="inline-code">FYI</code>, and{" "}
+            <code className="inline-code">Note</code>.
+          </li>
+          <li>
+            <code className="inline-code">children</code> is one sentence
+            in active voice that names the impact:{" "}
+            <code className="inline-code">
+              Changing this region restarts all functions.
+            </code>
+          </li>
+          <li>
+            No <code className="inline-code">type=&quot;info&quot;</code>{" "}
+            exists; omit <code className="inline-code">type</code> for
+            the default info icon or use{" "}
+            <code className="inline-code">type=&quot;secondary&quot;</code>{" "}
+            for neutral copy.
+          </li>
+          <li>
+            Single-fragment labels take no period; full descriptive
+            sentences in the body do.
+          </li>
+        </ul>
       </Section>
     </>
   );
