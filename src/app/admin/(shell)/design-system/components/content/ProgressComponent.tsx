@@ -582,10 +582,10 @@ export default function ProgressComponent() {
             <code className="inline-code">value / max</code>.
           </li>
           <li>
-            If you swap <code className="inline-code">color</code> at
-            thresholds (warning at 80%, error at 95%), mirror the same
-            breakpoints used elsewhere — warning at the same threshold a
-            quota note fires.
+            Threshold colors via{" "}
+            <code className="inline-code">dynamicColors</code> should
+            mirror the same breakpoints used elsewhere (warning at the
+            same threshold a quota note fires).
           </li>
           <li>
             Use stops for genuine multi-stage work and label the stage
