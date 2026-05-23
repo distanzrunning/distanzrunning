@@ -359,11 +359,11 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <RadioGroup name="headless" defaultValue="one">
-      <label className="text-copy-13" style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <label className="text-copy-16" style={{ display: 'flex', justifyContent: 'space-between' }}>
         <span>Option 1</span>
         <Radio name="headless" value="one" defaultChecked />
       </label>
-      <label className="text-copy-13" style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <label className="text-copy-16" style={{ display: 'flex', justifyContent: 'space-between' }}>
         <span>Option 2</span>
         <Radio name="headless" value="two" />
       </label>
@@ -376,7 +376,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <li className="text-copy-13 flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
+    <li className="text-copy-16 flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
       <span>Option 1</span>
       <Radio defaultChecked value="one" />
     </li>
@@ -428,7 +428,7 @@ function HeadlessDemo() {
     <div role="radiogroup">
       <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
         <label
-          className="text-copy-13"
+          className="text-copy-16"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
           <span>Option 1</span>
@@ -440,7 +440,7 @@ function HeadlessDemo() {
           />
         </label>
         <label
-          className="text-copy-13"
+          className="text-copy-16"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
           <span>Option 2</span>
@@ -458,7 +458,7 @@ function HeadlessDemo() {
 
 function StandaloneDemo() {
   return (
-    <li className="text-copy-13 flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
+    <li className="text-copy-16 flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
       <span>Option 1</span>
       <Radio defaultChecked value="one" />
     </li>
