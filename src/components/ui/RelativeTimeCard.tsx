@@ -8,19 +8,57 @@ import { ContextCard } from "@/components/ui/ContextCard";
 // ============================================================================
 
 interface RelativeTimeCardProps {
-  /** The date to display */
-  date: Date;
-  /** The trigger element */
-  children: React.ReactNode;
+  /** The date to display. Accepts a JS `Date` or Unix-ms timestamp. */
+  date: Date | number;
+  /**
+   * Optional trigger override. Leave empty to render the short formatter
+   * ("2m ago", "Yesterday", "Mar 14"). Use this only for non-time labels
+   * the formatter can't describe ("Pending", "Queued", "Just now").
+   */
+  children?: React.ReactNode;
   /** Popover side */
   side?: "top" | "bottom" | "left" | "right";
-  /** Additional CSS classes */
+  /** Additional CSS classes applied to the default trigger span */
   className?: string;
 }
 
 // ============================================================================
 // Helpers
 // ============================================================================
+
+function toDate(date: Date | number): Date {
+  return typeof date === "number" ? new Date(date) : date;
+}
+
+/**
+ * Short formatter for the trigger label. Output examples:
+ *   "Just now", "2m ago", "5h ago", "Yesterday", "3d ago",
+ *   "Mar 14", "Mar 14, 2024", and future-tense equivalents.
+ */
+function formatShortRelativeTime(date: Date): string {
+  const now = Date.now();
+  const diffMs = now - date.getTime();
+  const absDiffMs = Math.abs(diffMs);
+  const isFuture = diffMs < 0;
+
+  const seconds = Math.floor(absDiffMs / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (seconds < 30) return "Just now";
+  if (minutes < 60) return isFuture ? `in ${minutes}m` : `${minutes}m ago`;
+  if (hours < 24) return isFuture ? `in ${hours}h` : `${hours}h ago`;
+  if (days === 1) return isFuture ? "Tomorrow" : "Yesterday";
+  if (days < 7) return isFuture ? `in ${days}d` : `${days}d ago`;
+
+  const sameYear = date.getFullYear() === new Date().getFullYear();
+  return date.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    ...(sameYear ? {} : { year: "numeric" }),
+  });
+}
 
 function getDetailedRelativeTime(date: Date): string {
   const now = Date.now();
@@ -182,6 +220,33 @@ function RelativeTimeCardContent({ date }: { date: Date }) {
 }
 
 // ============================================================================
+// Default formatted trigger (ticks every 30s so labels stay fresh)
+// ============================================================================
+
+function ShortFormattedTrigger({
+  date,
+  className = "",
+}: {
+  date: Date;
+  className?: string;
+}) {
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => setTick((t) => t + 1), 30_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <span
+      className={`tabular-nums underline decoration-dashed underline-offset-[5px] ${className}`}
+    >
+      {formatShortRelativeTime(date)}
+    </span>
+  );
+}
+
+// ============================================================================
 // RelativeTimeCard
 // ============================================================================
 
@@ -189,16 +254,22 @@ export function RelativeTimeCard({
   date,
   children,
   side = "top",
+  className,
 }: RelativeTimeCardProps) {
+  const targetDate = useMemo(() => toDate(date), [date]);
   const content = useMemo(
-    () => <RelativeTimeCardContent date={date} />,
-    [date],
+    () => <RelativeTimeCardContent date={targetDate} />,
+    [targetDate],
+  );
+
+  const trigger = children ?? (
+    <ShortFormattedTrigger date={targetDate} className={className} />
   );
 
   return (
     <ContextCard>
       <ContextCard.Trigger content={content} side={side}>
-        {children}
+        {trigger}
       </ContextCard.Trigger>
     </ContextCard>
   );
