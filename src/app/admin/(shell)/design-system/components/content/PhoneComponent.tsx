@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -363,6 +364,83 @@ export default function PhoneComponent() {
             </div>
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Phone as marketing chrome around mobile screenshots,
+            recordings, and demo images on landing pages and docs.
+          </li>
+          <li>
+            Don&apos;t render live mobile product UI inside the frame;
+            the chrome implies a captured screen, not an interactive
+            surface.
+          </li>
+          <li>
+            Pair with <ComponentRef name="Browser" /> when showing
+            parallel desktop and mobile views; keep both variants on
+            the same theme.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Match the variant to the surrounding theme so the chrome
+            doesn&apos;t outshine the screenshot it&apos;s framing.
+          </li>
+          <li>
+            Lock the inner image aspect ratio to a real device ratio
+            (typically 19.5:9 for modern phones) so the bezel doesn&apos;t
+            crop content.
+          </li>
+          <li>
+            Avoid stacking shadows on the parent container; the Phone
+            chrome already has its own elevation and additional shadow
+            stacks read as a halo.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Treat the chrome as decorative (
+            <code className="inline-code">aria-hidden=&quot;true&quot;</code>
+            ); accessible naming belongs on the inner screenshot.
+          </li>
+          <li>
+            Give the inner image alt text describing the screen content
+            (<code className="inline-code">Race calendar on iPhone</code>
+            ), not the device.
+          </li>
+          <li>
+            For autoplay video inside the frame, respect{" "}
+            <code className="inline-code">prefers-reduced-motion</code>{" "}
+            and provide a paused poster fallback.
+          </li>
+        </ul>
       </Section>
     </>
   );
