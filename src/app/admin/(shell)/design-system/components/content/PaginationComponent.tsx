@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import { ComponentRef } from "../ComponentRef";
+import { Pagination } from "@/components/ui/Pagination";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -299,60 +300,18 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 }
 
 // ============================================================================
-// Pagination Icons
-// ============================================================================
-
-function ChevronLeftIcon() {
-  return (
-    <svg
-      height="20"
-      width="20"
-      strokeLinejoin="round"
-      viewBox="0 0 16 16"
-      style={{ color: "currentcolor" }}
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M10.5 14.0607L9.96966 13.5303L5.14644 8.7071C4.75592 8.31658 4.75592 7.68341 5.14644 7.29289L9.96966 2.46966L10.5 1.93933L11.5607 2.99999L11.0303 3.53032L6.56065 7.99999L11.0303 12.4697L11.5607 13L10.5 14.0607Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-function ChevronRightIcon() {
-  return (
-    <svg
-      height="20"
-      width="20"
-      strokeLinejoin="round"
-      viewBox="0 0 16 16"
-      style={{ color: "currentcolor" }}
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M5.50001 1.93933L6.03034 2.46966L10.8536 7.29288C11.2441 7.68341 11.2441 8.31657 10.8536 8.7071L6.03034 13.5303L5.50001 14.0607L4.43935 13L4.96968 12.4697L9.43935 7.99999L4.96968 3.53032L4.43935 2.99999L5.50001 1.93933Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-// ============================================================================
 // Code Example
 // ============================================================================
 
 const defaultCode = `import { Pagination } from '@/components/ui/Pagination';
 
 const previous = {
-  label: 'Button',
+  title: 'Button',
   href: '#',
 };
 
 const next = {
-  label: 'Code Block',
+  title: 'Code Block',
   href: '#',
 };
 
@@ -386,47 +345,10 @@ export default function PaginationComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
-            <nav aria-label="pagination">
-              <div className="flex justify-between items-start">
-                {/* Previous page */}
-                <button
-                  onClick={() => {}}
-                  aria-label="Go to previous page: Button"
-                  className="block py-1 pl-7 pr-2 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
-                >
-                  <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
-                    Previous
-                  </span>
-                  <div className="relative flex items-center">
-                    <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
-                      Button
-                    </span>
-                    <span className="absolute left-[-26px] mt-0.5">
-                      <ChevronLeftIcon />
-                    </span>
-                  </div>
-                </button>
-
-                {/* Next page */}
-                <button
-                  onClick={() => {}}
-                  aria-label="Go to next page: Code Block"
-                  className="block py-1 pl-2 pr-7 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
-                >
-                  <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
-                    Next
-                  </span>
-                  <div className="relative flex items-center">
-                    <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
-                      Code Block
-                    </span>
-                    <span className="absolute right-[-26px] mt-0.5">
-                      <ChevronRightIcon />
-                    </span>
-                  </div>
-                </button>
-              </div>
-            </nav>
+            <Pagination
+              previous={{ title: "Button", href: "#" }}
+              next={{ title: "Code Block", href: "#" }}
+            />
           </CodePreview>
         </div>
       </Section>
@@ -444,8 +366,8 @@ export default function PaginationComponent() {
             <ComponentRef name="Show More" /> or a numbered pager.
           </li>
           <li>
-            <code className="inline-code">previous.label</code> and{" "}
-            <code className="inline-code">next.label</code> are the
+            <code className="inline-code">previous.title</code> and{" "}
+            <code className="inline-code">next.title</code> are the
             destination page names (
             <code className="inline-code">Deploy Hooks</code>,{" "}
             <code className="inline-code">Environment Variables</code>).
@@ -454,7 +376,7 @@ export default function PaginationComponent() {
             <code className="inline-code">Next</code> label, the chevron,
             and the{" "}
             <code className="inline-code">
-              Go to {"{direction}"} page: {"{label}"}
+              Go to {"{direction}"} page: {"{title}"}
             </code>{" "}
             aria-label; don&apos;t prepend arrows or{" "}
             <code className="inline-code">Go to</code>.
@@ -465,15 +387,15 @@ export default function PaginationComponent() {
             with nowhere to go.
           </li>
           <li>
-            Keep labels Title Case and short enough to fit the rail
+            Keep titles Title Case and short enough to fit the rail
             without wrapping; long destination names truncate, so put
             the distinctive word first.
           </li>
           <li>
             Don&apos;t restate ordinal positions like{" "}
             <code className="inline-code">Page 3 of 10</code> inside{" "}
-            <code className="inline-code">previous.label</code> or{" "}
-            <code className="inline-code">next.label</code>. Pagination
+            <code className="inline-code">previous.title</code> or{" "}
+            <code className="inline-code">next.title</code>. Pagination
             is sibling-link, not a numbered pager.
           </li>
         </ul>
