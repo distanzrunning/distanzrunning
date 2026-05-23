@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -533,6 +534,130 @@ export default function ProgressComponent() {
             <WithStopsDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Determinate work whose total is knowable, like file uploads,
+            multi-step setup, build steps, or batch deletions.
+          </li>
+          <li>
+            For short indeterminate waits (~1&ndash;3s), use{" "}
+            <ComponentRef name="Spinner" />; for inline copy like{" "}
+            <code className="inline-code">Saving</code>, use{" "}
+            <ComponentRef name="Loading Dots" />.
+          </li>
+          <li>
+            For usage against a quota or ratio, use{" "}
+            <ComponentRef name="Gauge" />; the circle reads as health,
+            the bar reads as progress.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use <code className="inline-code">max</code> for the real
+            ceiling (
+            <code className="inline-code">{"max={files.length}"}</code>),
+            not a hardcoded <code className="inline-code">100</code>. The
+            component computes the percentage from{" "}
+            <code className="inline-code">value / max</code>.
+          </li>
+          <li>
+            If you swap <code className="inline-code">color</code> at
+            thresholds (warning at 80%, error at 95%), mirror the same
+            breakpoints used elsewhere — warning at the same threshold a
+            quota note fires.
+          </li>
+          <li>
+            Use stops for genuine multi-stage work and label the stage
+            next to the bar (
+            <code className="inline-code">Step 2 of 4 · Building</code>
+            ); a stop with no label is decorative noise.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pair the bar with text naming the work and units:{" "}
+            <code className="inline-code">Uploading 12 of 30 files</code>
+            ,{" "}
+            <code className="inline-code">Building · 1.2 GB / 4 GB</code>
+            . The bar alone doesn&apos;t say what&apos;s progressing.
+          </li>
+          <li>
+            Don&apos;t append{" "}
+            <code className="inline-code">successfully</code> or{" "}
+            <code className="inline-code">complete</code> once the bar
+            fills; swap to a completion state (toast, success row,
+            redirect).
+          </li>
+          <li>
+            For long operations, name the work in the surrounding copy (
+            <code className="inline-code">Building deployment&hellip;</code>
+            ) instead of leaving a bare percentage.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The native{" "}
+            <code className="inline-code">&lt;progress&gt;</code> element
+            already exposes{" "}
+            <code className="inline-code">role=&quot;progressbar&quot;</code>{" "}
+            with <code className="inline-code">aria-valuemin</code>,{" "}
+            <code className="inline-code">aria-valuemax</code>, and{" "}
+            <code className="inline-code">aria-valuenow</code>. Pass an
+            accessible name via{" "}
+            <code className="inline-code">aria-label</code> on the
+            wrapper or a sibling{" "}
+            <code className="inline-code">&lt;label&gt;</code> tied with{" "}
+            <code className="inline-code">aria-labelledby</code>.
+          </li>
+          <li>
+            Throttle{" "}
+            <code className="inline-code">value</code> updates to roughly
+            once a second so screen readers don&apos;t announce every
+            increment of a fast upload.
+          </li>
+          <li>
+            Each stop accepts a{" "}
+            <code className="inline-code">label</code>; name them (
+            <code className="inline-code">Build complete</code>,{" "}
+            <code className="inline-code">Tests complete</code>) so the
+            bar is readable at a glance.
+          </li>
+        </ul>
       </Section>
 
       <Toast
