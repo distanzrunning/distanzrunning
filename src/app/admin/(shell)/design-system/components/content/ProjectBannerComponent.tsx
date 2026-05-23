@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -576,6 +577,106 @@ export default function ProjectBannerComponent() {
             <ErrorDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Project Banner for project-wide states that need
+            resolution: overdue billing, an active rollback, attack
+            mitigation, an expiring trial blocking deploys.
+          </li>
+          <li>
+            Pick <ComponentRef name="Note" /> for inline contextual
+            messages tied to a single field or card,{" "}
+            <ComponentRef name="Toast" /> for transient acknowledgments,{" "}
+            <ComponentRef name="Modal" /> for confirmations.
+          </li>
+          <li>
+            Match <code className="inline-code">variant</code> to
+            severity:{" "}
+            <code className="inline-code">error</code> for critical
+            downtime or payment-blocking states,{" "}
+            <code className="inline-code">warning</code> for an
+            exceptional state with non-immediate action,{" "}
+            <code className="inline-code">success</code> for a positive
+            temporary mitigation.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Project Banner is non-dismissible by design. If the message
+            can be dismissed without resolving the underlying state, it
+            isn&apos;t banner-worthy; move it to a{" "}
+            <ComponentRef name="Note" />.
+          </li>
+          <li>
+            Show one Project Banner at a time. Stacking competing banners
+            drowns the most urgent state.
+          </li>
+          <li>
+            Always pass an{" "}
+            <code className="inline-code">action</code> that resolves
+            the state. A banner with no route is a dead end.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Message (
+            <code className="inline-code">children</code>) is one
+            sentence in sentence case that names the impact:{" "}
+            <code className="inline-code">
+              Your Pro trial expires in 3 days.
+            </code>{" "}
+            Don&apos;t open with <code className="inline-code">Heads up</code>{" "}
+            or apologetic preambles.
+          </li>
+          <li>
+            <code className="inline-code">action</code> label is Title
+            Case <code className="inline-code">Verb + Noun</code> and
+            points at the resolver:{" "}
+            <code className="inline-code">Update Payment Method</code>,{" "}
+            <code className="inline-code">Reactivate Project</code>,{" "}
+            <code className="inline-code">Review Tokens</code>.
+          </li>
+          <li>
+            Name the affected entity when the project context isn&apos;t
+            obvious from the surrounding chrome (
+            <code className="inline-code">
+              Production deployments are paused on my-project
+            </code>
+            ).
+          </li>
+          <li>
+            Don&apos;t encode severity in the copy with emoji or
+            interjections; the variant carries that signal.
+          </li>
+        </ul>
       </Section>
 
       <Toast
