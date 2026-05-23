@@ -359,11 +359,11 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <RadioGroup name="headless" defaultValue="one">
-      <label style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <label className="text-copy-13" style={{ display: 'flex', justifyContent: 'space-between' }}>
         <span>Option 1</span>
         <Radio name="headless" value="one" defaultChecked />
       </label>
-      <label style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <label className="text-copy-13" style={{ display: 'flex', justifyContent: 'space-between' }}>
         <span>Option 2</span>
         <Radio name="headless" value="two" />
       </label>
@@ -376,7 +376,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <li className="flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
+    <li className="text-copy-13 flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
       <span>Option 1</span>
       <Radio defaultChecked value="one" />
     </li>
@@ -427,7 +427,10 @@ function HeadlessDemo() {
   return (
     <div role="radiogroup">
       <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
-        <label style={{ display: "flex", justifyContent: "space-between" }}>
+        <label
+          className="text-copy-13"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
           <span>Option 1</span>
           <Radio
             name="headless-demo"
@@ -436,7 +439,10 @@ function HeadlessDemo() {
             onChange={() => setSelected("one")}
           />
         </label>
-        <label style={{ display: "flex", justifyContent: "space-between" }}>
+        <label
+          className="text-copy-13"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
           <span>Option 2</span>
           <Radio
             name="headless-demo"
@@ -452,7 +458,7 @@ function HeadlessDemo() {
 
 function StandaloneDemo() {
   return (
-    <li className="flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
+    <li className="text-copy-13 flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
       <span>Option 1</span>
       <Radio defaultChecked value="one" />
     </li>

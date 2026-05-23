@@ -172,7 +172,7 @@ function RadioGroupItem({ value, children, disabled: itemDisabled }: RadioGroupI
         </span>
       </span>
       <span
-        className={`text-sm select-none ${
+        className={`text-copy-13 select-none ${
           isDisabled ? "text-[var(--ds-gray-500)]" : "text-[var(--ds-gray-1000)]"
         }`}
       >
