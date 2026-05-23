@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -540,6 +541,127 @@ export default function RadioComponent() {
             <StandaloneDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            A single choice from 2–6 mutually exclusive options where
+            seeing every option matters (deploy regions, plan tiers,
+            billing cycle).
+          </li>
+          <li>
+            Past 6 options, switch to <ComponentRef name="Select" /> or{" "}
+            <ComponentRef name="Combobox" /> so the list doesn&apos;t
+            dominate the form.
+          </li>
+          <li>
+            For binary on/off, use <ComponentRef name="Toggle" />. For
+            richer per-option content (icon, description, badge), use{" "}
+            <ComponentRef name="Choicebox" />.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pre-select the safest default so the field reads as
+            configured, never as required-but-empty. Skip the default
+            only when the choice has real consequences and you want a
+            deliberate pick.
+          </li>
+          <li>
+            Required state goes on the{" "}
+            <code className="inline-code">RadioGroup</code>, not on
+            individual options. Required-against-a-single-radio is
+            meaningless.
+          </li>
+          <li>
+            Arrow keys move selection within the group and skip disabled
+            options. Tab moves to the next field, not the next radio.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Group label is a Title Case noun like{" "}
+            <code className="inline-code">Deployment Region</code> or{" "}
+            <code className="inline-code">Billing Cycle</code>. Tie it
+            to the <code className="inline-code">RadioGroup</code> via{" "}
+            <code className="inline-code">aria-labelledby</code>, or
+            wrap the group in{" "}
+            <code className="inline-code">&lt;fieldset&gt;</code> +{" "}
+            <code className="inline-code">&lt;legend&gt;</code>.
+          </li>
+          <li>
+            Option labels are parallel: same part of speech, same length
+            range, same register.{" "}
+            <code className="inline-code">Monthly</code> /{" "}
+            <code className="inline-code">Yearly</code>, not{" "}
+            <code className="inline-code">Monthly</code> /{" "}
+            <code className="inline-code">Pay yearly</code>.
+          </li>
+          <li>
+            Disabled options need a <ComponentRef name="Tooltip" />{" "}
+            naming why (
+            <code className="inline-code">
+              Available on Pro and Enterprise
+            </code>
+            ). A greyed-out radio with no reason reads as broken.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Wrap related radios in{" "}
+            <code className="inline-code">&lt;fieldset&gt;</code> +{" "}
+            <code className="inline-code">&lt;legend&gt;</code>, or
+            point{" "}
+            <code className="inline-code">RadioGroup</code>&apos;s{" "}
+            <code className="inline-code">aria-labelledby</code> at a
+            sibling heading, so screen readers announce the group name
+            before each option.
+          </li>
+          <li>
+            The standalone <code className="inline-code">Radio</code>{" "}
+            (custom UI) needs an{" "}
+            <code className="inline-code">aria-label</code> describing
+            the choice. Never ship a radio with no accessible name.
+          </li>
+          <li>
+            Don&apos;t replace the native focus ring with a CSS hack
+            that drops <code className="inline-code">outline-offset</code>;
+            keyboard users lose track of which option is focused.
+          </li>
+        </ul>
       </Section>
 
       <Toast

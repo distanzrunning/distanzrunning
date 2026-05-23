@@ -40,6 +40,8 @@ export interface RadioGroupProps {
   disabled?: boolean;
   required?: boolean;
   className?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
 }
 
 function RadioGroupRoot({
@@ -51,6 +53,8 @@ function RadioGroupRoot({
   disabled = false,
   required = false,
   className = "",
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
 }: RadioGroupProps) {
   const [uncontrolledValue, setUncontrolledValue] = useState<string | undefined>(
     defaultValue
@@ -79,7 +83,12 @@ function RadioGroupRoot({
         required,
       }}
     >
-      <div role="radiogroup" className={`flex flex-col gap-3 ${className}`}>
+      <div
+        role="radiogroup"
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
+        className={`flex flex-col gap-3 ${className}`}
+      >
         {children}
       </div>
     </RadioGroupContext.Provider>
@@ -185,6 +194,8 @@ export interface RadioProps {
   value?: string;
   name?: string;
   className?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
 }
 
 export const Radio = forwardRef<HTMLInputElement, RadioProps>(
@@ -197,6 +208,8 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
       value,
       name,
       className = "",
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledBy,
     },
     ref
   ) => {
@@ -229,6 +242,8 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
           checked={isChecked}
           onChange={handleChange}
           disabled={disabled}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy}
           className="sr-only peer"
         />
         <span
