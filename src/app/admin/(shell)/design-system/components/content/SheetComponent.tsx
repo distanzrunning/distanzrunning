@@ -563,9 +563,12 @@ export default function SheetComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             Sheet defaults to{" "}
-            <code className="inline-code">modal=false</code> so toasts
-            and other high-z elements stay reachable. Keep that default
-            unless the sheet owns the screen.
+            <code className="inline-code">modal=true</code> — the
+            overlay scrim renders, focus is trapped inside the sheet,
+            and the page underneath is inert. Flip to{" "}
+            <code className="inline-code">modal=false</code> only when
+            the page must stay fully interactive (e.g. a context
+            inspector that pairs with toasts).
           </li>
           <li>
             Pick <code className="inline-code">side</code> from the

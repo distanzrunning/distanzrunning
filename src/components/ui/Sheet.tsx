@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 
 // ============================================================================
@@ -12,14 +12,14 @@ interface SheetProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   /**
-   * Render a blocking overlay and trap focus. Defaults to `false` so
-   * toasts and other high-z elements stay reachable while the sheet
-   * is open. Flip to `true` only when the sheet owns the screen.
+   * Render the blocking overlay scrim and trap focus inside the sheet.
+   * Defaults to `true` — matches Geist's live Sheet behavior (overlay
+   * always shown, outside-click dismisses). Flip to `false` only when
+   * the underlying page must stay fully interactive while the sheet is
+   * open.
    */
   modal?: boolean;
 }
-
-const SheetModalContext = createContext<boolean>(false);
 
 interface SheetTriggerProps {
   children: React.ReactNode;
@@ -140,18 +140,16 @@ function SheetRoot({
   children,
   open,
   onOpenChange,
-  modal = false,
+  modal = true,
 }: SheetProps) {
   useEffect(() => {
     ensureKeyframes();
   }, []);
 
   return (
-    <SheetModalContext.Provider value={modal}>
-      <Dialog.Root open={open} onOpenChange={onOpenChange} modal={modal}>
-        {children}
-      </Dialog.Root>
-    </SheetModalContext.Provider>
+    <Dialog.Root open={open} onOpenChange={onOpenChange} modal={modal}>
+      {children}
+    </Dialog.Root>
   );
 }
 
