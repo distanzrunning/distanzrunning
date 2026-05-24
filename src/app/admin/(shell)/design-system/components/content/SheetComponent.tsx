@@ -317,7 +317,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Sheet>
+    <Sheet modal>
       <Sheet.Trigger>
         <Button>Open Sheet</Button>
       </Sheet.Trigger>
@@ -385,7 +385,7 @@ export function Component(): JSX.Element {
 
 function DefaultDemo() {
   return (
-    <Sheet>
+    <Sheet modal>
       <Sheet.Trigger>
         <Button>Open Sheet</Button>
       </Sheet.Trigger>
