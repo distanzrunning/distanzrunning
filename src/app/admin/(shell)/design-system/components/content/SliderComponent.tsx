@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -427,6 +428,59 @@ export default function SliderComponent() {
             <CustomWidthDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use a slider for ranged numeric input where shape and
+            proximity matter more than precision: bandwidth caps,
+            opacity, audio volume, color channels.
+          </li>
+          <li>
+            For exact values like a port number or memory limit, pair
+            the slider with a numeric <ComponentRef name="Input" />;
+            keyboard users default to typing.
+          </li>
+          <li>
+            Snap to a sensible step (
+            <code className="inline-code">1</code>,{" "}
+            <code className="inline-code">5</code>,{" "}
+            <code className="inline-code">10%</code>) so dragging never
+            produces values like{" "}
+            <code className="inline-code">47.83291</code>. Clamp{" "}
+            <code className="inline-code">min</code> and{" "}
+            <code className="inline-code">max</code> to real product
+            limits.
+          </li>
+          <li>
+            Always render the live value next to the track in tabular
+            nums, and label what the number represents (
+            <code className="inline-code">Sample Rate · 44 kHz</code>).
+            The track alone is not self-describing.
+          </li>
+          <li>
+            Threshold colors (warning, error tints past a limit) should
+            match the same numeric breakpoint surfaced elsewhere in the
+            UI; don&apos;t invent a slider-only threshold.
+          </li>
+          <li>
+            Give the slider an accessible name through a sibling{" "}
+            <code className="inline-code">
+              &lt;label htmlFor&gt;
+            </code>{" "}
+            +{" "}
+            <code className="inline-code">aria-labelledby</code> or an{" "}
+            <code className="inline-code">aria-label</code> prop. Arrow
+            keys, Page Up/Down, and Home/End all move the thumb — let
+            them do the keyboard work and don&apos;t intercept them.
+          </li>
+        </ul>
       </Section>
 
       <Toast

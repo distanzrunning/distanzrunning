@@ -15,6 +15,10 @@ interface SliderBaseProps {
   className?: string;
   name?: string;
   width?: number;
+  /** Accessible name for the slider — required when no sibling label */
+  "aria-label"?: string;
+  /** Id of a sibling label element */
+  "aria-labelledby"?: string;
 }
 
 interface SingleSliderProps extends SliderBaseProps {
@@ -54,6 +58,38 @@ function getPercentFromEvent(
   return clamp((e.clientX - rect.left) / rect.width, 0, 1);
 }
 
+/**
+ * Standard ARIA slider keyboard pattern. Returns the new value for
+ * the recognized keys (Arrow / PageUp/Down / Home / End), or `null`
+ * if the key isn't ours to handle.
+ */
+function getKeyboardDelta(
+  key: string,
+  current: number,
+  min: number,
+  max: number,
+  step: number,
+): number | null {
+  switch (key) {
+    case "ArrowRight":
+    case "ArrowUp":
+      return current + step;
+    case "ArrowLeft":
+    case "ArrowDown":
+      return current - step;
+    case "PageUp":
+      return current + step * 10;
+    case "PageDown":
+      return current - step * 10;
+    case "Home":
+      return min;
+    case "End":
+      return max;
+    default:
+      return null;
+  }
+}
+
 // ============================================================================
 // Single Slider
 // ============================================================================
@@ -72,6 +108,8 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
       className = "",
       name,
       width = 216,
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledBy,
     },
     ref,
   ) => {
@@ -185,6 +223,9 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
               aria-valuemax={max}
               aria-valuenow={currentValue}
               aria-orientation="horizontal"
+              aria-label={ariaLabel}
+              aria-labelledby={ariaLabelledBy}
+              aria-disabled={disabled || undefined}
               style={{
                 display: "block",
                 width: 6,
@@ -199,13 +240,16 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
               }}
               onKeyDown={(e) => {
                 if (disabled) return;
-                if (e.key === "ArrowRight" || e.key === "ArrowUp") {
-                  e.preventDefault();
-                  updateValue(currentValue + step);
-                } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
-                  e.preventDefault();
-                  updateValue(currentValue - step);
-                }
+                const next = getKeyboardDelta(
+                  e.key,
+                  currentValue,
+                  min,
+                  max,
+                  step,
+                );
+                if (next === null) return;
+                e.preventDefault();
+                updateValue(next);
               }}
             />
           </span>
@@ -236,6 +280,8 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
       name,
       width = 216,
       allowCrossover = true,
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledBy,
     },
     ref,
   ) => {
@@ -309,19 +355,20 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
     const handleThumbKeyDown = useCallback(
       (thumbIndex: 0 | 1, e: React.KeyboardEvent) => {
         if (disabled) return;
-        const delta =
-          e.key === "ArrowRight" || e.key === "ArrowUp"
-            ? step
-            : e.key === "ArrowLeft" || e.key === "ArrowDown"
-              ? -step
-              : 0;
-        if (delta === 0) return;
+        const next = getKeyboardDelta(
+          e.key,
+          currentValue[thumbIndex],
+          min,
+          max,
+          step,
+        );
+        if (next === null) return;
         e.preventDefault();
         const newVals: [number, number] = [...currentValue];
-        newVals[thumbIndex] = currentValue[thumbIndex] + delta;
+        newVals[thumbIndex] = next;
         updateValues(newVals);
       },
-      [disabled, step, currentValue, updateValues],
+      [disabled, min, max, step, currentValue, updateValues],
     );
 
     return (
@@ -386,6 +433,9 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
               aria-valuemax={max}
               aria-valuenow={currentValue[0]}
               aria-orientation="horizontal"
+              aria-label={ariaLabel ? `${ariaLabel} (minimum)` : undefined}
+              aria-labelledby={ariaLabelledBy}
+              aria-disabled={disabled || undefined}
               style={{
                 display: "block",
                 width: 6,
@@ -418,6 +468,9 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
               aria-valuemax={max}
               aria-valuenow={currentValue[1]}
               aria-orientation="horizontal"
+              aria-label={ariaLabel ? `${ariaLabel} (maximum)` : undefined}
+              aria-labelledby={ariaLabelledBy}
+              aria-disabled={disabled || undefined}
               style={{
                 display: "block",
                 width: 6,
