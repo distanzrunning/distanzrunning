@@ -15,8 +15,11 @@ import { Button } from "@/components/ui/Button";
 
 interface ScrollerProps {
   children: React.ReactNode;
-  /** Scroll direction */
-  overflow?: "y" | "x" | "both";
+  /**
+   * Scroll direction. `vertical` clips horizontally, `horizontal` clips
+   * vertically, `free` allows scrolling on both axes.
+   */
+  direction?: "vertical" | "horizontal" | "free";
   /** Container width */
   width?: string;
   /** Container height */
@@ -162,7 +165,7 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
   (
     {
       children,
-      overflow = "y",
+      direction = "vertical",
       width,
       height,
       fadeColor = "var(--ds-background-100)",
@@ -197,8 +200,8 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
       const el = innerRef.current;
       if (!el) return;
 
-      const hasVertical = overflow === "y" || overflow === "both";
-      const hasHorizontal = overflow === "x" || overflow === "both";
+      const hasVertical = direction === "vertical" || direction === "free";
+      const hasHorizontal = direction === "horizontal" || direction === "free";
 
       setEdges({
         top: hasVertical && el.scrollTop > 1,
@@ -210,7 +213,7 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
           hasHorizontal &&
           el.scrollLeft < el.scrollWidth - el.clientWidth - 1,
       });
-    }, [overflow]);
+    }, [direction]);
 
     useEffect(() => {
       const el = innerRef.current;
@@ -232,10 +235,10 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
     }, [updateEdges]);
 
     const overflowStyle: React.CSSProperties = {};
-    if (overflow === "y") {
+    if (direction === "vertical") {
       overflowStyle.overflowY = "auto";
       overflowStyle.overflowX = "hidden";
-    } else if (overflow === "x") {
+    } else if (direction === "horizontal") {
       overflowStyle.overflowX = "auto";
       overflowStyle.overflowY = "hidden";
     } else {

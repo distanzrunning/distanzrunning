@@ -314,7 +314,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Scroller height="220px" overflow="y" width="100%">
+    <Scroller height="220px" direction="vertical" width="100%">
       <div
         className="flex flex-col items-stretch justify-start gap-4 flex-initial"
         style={{ width: 400 }}
@@ -331,7 +331,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Scroller height="256px" overflow="x" width="100%">
+    <Scroller height="256px" direction="horizontal" width="100%">
       <div
         className="flex flex-row items-stretch justify-start gap-4 flex-initial"
       >
@@ -349,7 +349,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Scroller height="220px" overflow="both" width="100%">
+    <Scroller height="220px" direction="free" width="100%">
       <div className="grid grid-flow-col grid-rows-2 gap-4">
         {Array.from({ length: 6 }, (_, i) => (
           <div className="bg-[var(--ds-gray-1000)] h-96 w-96" key={i} />
@@ -387,7 +387,7 @@ export function Component(): JSX.Element {
         onScrollPrev={scrollPrev}
         onScrollNext={scrollNext}
       />
-      <Scroller ref={scrollerRef} overflow="y" height="220px" width="384px">
+      <Scroller ref={scrollerRef} direction="vertical" height="220px" width="384px">
         <div className="flex flex-col gap-4">
           <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
           <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
@@ -422,7 +422,7 @@ export function Component(): JSX.Element {
 
   return (
     <div className="flex flex-col gap-4">
-      <Scroller ref={scrollerRef} overflow="x" width="100%" height="256px">
+      <Scroller ref={scrollerRef} direction="horizontal" width="100%" height="256px">
         <div className="flex flex-row gap-4">
           <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
           <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
@@ -445,7 +445,7 @@ export function Component(): JSX.Element {
 
 function VerticalDemo() {
   return (
-    <Scroller height="220px" overflow="y" width="100%">
+    <Scroller height="220px" direction="vertical" width="100%">
       <div
         className="flex flex-col items-stretch justify-start gap-4 flex-initial"
         style={{ width: 400 }}
@@ -459,7 +459,7 @@ function VerticalDemo() {
 
 function HorizontalDemo() {
   return (
-    <Scroller height="256px" overflow="x" width="100%">
+    <Scroller height="256px" direction="horizontal" width="100%">
       <div className="flex flex-row items-stretch justify-start gap-4 flex-initial">
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
         <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
@@ -472,7 +472,7 @@ function HorizontalDemo() {
 
 function FreeDemo() {
   return (
-    <Scroller overflow="both" height="220px" width="100%">
+    <Scroller direction="free" height="220px" width="100%">
       <div className="grid grid-flow-col grid-rows-2 gap-4">
         <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
         <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
@@ -509,7 +509,7 @@ function VerticalWithButtonsDemo() {
         onScrollPrev={scrollPrev}
         onScrollNext={scrollNext}
       />
-      <Scroller ref={scrollerRef} overflow="y" height="220px" width="384px">
+      <Scroller ref={scrollerRef} direction="vertical" height="220px" width="384px">
         <div className="flex flex-col gap-4">
           <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
           <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
@@ -540,7 +540,7 @@ function HorizontalWithButtonsDemo() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Scroller ref={scrollerRef} overflow="x" width="100%" height="256px">
+      <Scroller ref={scrollerRef} direction="horizontal" width="100%" height="256px">
         <div className="flex flex-row gap-4">
           <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
           <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
@@ -666,13 +666,12 @@ export default function ScrollerComponent() {
             palettes.
           </li>
           <li>
-            Pick <code className="inline-code">overflow=&quot;y&quot;</code>{" "}
-            for stacked feeds,{" "}
-            <code className="inline-code">overflow=&quot;x&quot;</code>{" "}
+            Pick <code className="inline-code">vertical</code> for
+            stacked feeds, <code className="inline-code">horizontal</code>{" "}
             for chip and tile rails,{" "}
-            <code className="inline-code">overflow=&quot;both&quot;</code>{" "}
-            only when content genuinely scrolls in both directions (logs
-            with very long lines).
+            <code className="inline-code">free</code> only when content
+            genuinely scrolls in both directions (logs with very long
+            lines).
           </li>
           <li>
             For paginated or virtualized data sets larger than a few
