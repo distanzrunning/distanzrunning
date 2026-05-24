@@ -706,10 +706,14 @@ export default function SwitchComponent() {
             <ComponentRef name="Select" />.
           </li>
           <li>
-            Pass a <code className="inline-code">name</code> so the
-            underlying radios are grouped; without it, more than one
-            option can appear selected at once. (Auto-generated when
-            omitted.)
+            The component auto-generates a{" "}
+            <code className="inline-code">name</code> for the
+            underlying radio group via{" "}
+            <code className="inline-code">useId</code>. Pass an
+            explicit{" "}
+            <code className="inline-code">name</code> only when the
+            Switch participates in form submission and you need a
+            stable field key.
           </li>
           <li>
             Set <code className="inline-code">defaultValue</code> (or
