@@ -313,13 +313,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 const defaultCode = `import { ShowMore } from '@/components/ui/ShowMore';
 
 export function Component(): JSX.Element {
-  return (
-    <ShowMore initiallyVisible={0}>
-      <p className="text-copy-14 text-textDefault">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      </p>
-    </ShowMore>
-  );
+  return <ShowMore />;
 }`;
 
 // ============================================================================
@@ -327,13 +321,7 @@ export function Component(): JSX.Element {
 // ============================================================================
 
 function DefaultDemo() {
-  return (
-    <ShowMore initiallyVisible={0}>
-      <p className="text-copy-14 text-textDefault">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      </p>
-    </ShowMore>
-  );
+  return <ShowMore />;
 }
 
 // ============================================================================

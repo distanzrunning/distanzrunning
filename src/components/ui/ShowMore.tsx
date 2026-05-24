@@ -4,7 +4,12 @@ import { Children, useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 
 interface ShowMoreProps {
-  children: React.ReactNode;
+  /**
+   * The list of children to disclose. Optional — when omitted, the
+   * trigger row renders as a standalone affordance (useful for
+   * documentation / preview surfaces).
+   */
+  children?: React.ReactNode;
   /**
    * How many of the first children to render before the rest is
    * hidden behind the Show More toggle. Defaults to 5. Set to 0 to
@@ -60,9 +65,14 @@ export function ShowMore({
   const visible = childrenArray.slice(0, initiallyVisible);
   const hidden = childrenArray.slice(initiallyVisible);
   const hasHidden = hidden.length > 0;
+  // Render the trigger affordance even with no children — supports
+  // visual-only previews on documentation surfaces.
+  const showTrigger = hasHidden || childrenArray.length === 0;
 
-  // Auto-build the "Show {n} More" label when caller didn't override
-  const computedMoreLabel = moreLabel ?? `Show ${hidden.length} More`;
+  // Auto-build the "Show {n} More" label when caller didn't override.
+  // Falls back to plain "Show More" when there's no count to show.
+  const computedMoreLabel =
+    moreLabel ?? (hidden.length > 0 ? `Show ${hidden.length} More` : "Show More");
 
   const handleToggle = () => {
     const next = !expanded;
@@ -92,7 +102,7 @@ export function ShowMore({
         </div>
       )}
 
-      {hasHidden && (
+      {showTrigger && (
         <div
           style={{
             display: "flex",
