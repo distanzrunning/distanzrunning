@@ -67,21 +67,73 @@ function ensureKeyframes() {
       from { opacity: 0; }
       to { opacity: var(--ds-overlay-backdrop-opacity); }
     }
+    @keyframes sheet-overlay-out {
+      from { opacity: var(--ds-overlay-backdrop-opacity); }
+      to { opacity: 0; }
+    }
     @keyframes sheet-slide-in-right {
       from { transform: translateX(1.25rem); opacity: 0; }
       to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes sheet-slide-out-right {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(1.25rem); opacity: 0; }
     }
     @keyframes sheet-slide-in-left {
       from { transform: translateX(-1.25rem); opacity: 0; }
       to { transform: translateX(0); opacity: 1; }
     }
+    @keyframes sheet-slide-out-left {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(-1.25rem); opacity: 0; }
+    }
     @keyframes sheet-slide-in-top {
       from { transform: translateY(-1.25rem); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
+    @keyframes sheet-slide-out-top {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(-1.25rem); opacity: 0; }
+    }
     @keyframes sheet-slide-in-bottom {
       from { transform: translateY(1.25rem); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes sheet-slide-out-bottom {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(1.25rem); opacity: 0; }
+    }
+
+    .ds-sheet-overlay[data-state="open"] {
+      animation: sheet-overlay-in 200ms ease-out;
+    }
+    .ds-sheet-overlay[data-state="closed"] {
+      animation: sheet-overlay-out 150ms ease-in;
+    }
+
+    .ds-sheet-content[data-state="open"][data-side="right"] {
+      animation: sheet-slide-in-right 200ms ease-out;
+    }
+    .ds-sheet-content[data-state="closed"][data-side="right"] {
+      animation: sheet-slide-out-right 150ms ease-in;
+    }
+    .ds-sheet-content[data-state="open"][data-side="left"] {
+      animation: sheet-slide-in-left 200ms ease-out;
+    }
+    .ds-sheet-content[data-state="closed"][data-side="left"] {
+      animation: sheet-slide-out-left 150ms ease-in;
+    }
+    .ds-sheet-content[data-state="open"][data-side="top"] {
+      animation: sheet-slide-in-top 200ms ease-out;
+    }
+    .ds-sheet-content[data-state="closed"][data-side="top"] {
+      animation: sheet-slide-out-top 150ms ease-in;
+    }
+    .ds-sheet-content[data-state="open"][data-side="bottom"] {
+      animation: sheet-slide-in-bottom 200ms ease-out;
+    }
+    .ds-sheet-content[data-state="closed"][data-side="bottom"] {
+      animation: sheet-slide-out-bottom 150ms ease-in;
     }
   `;
   document.head.appendChild(style);
@@ -92,30 +144,10 @@ function ensureKeyframes() {
 // ============================================================================
 
 const sidePositionStyles: Record<string, React.CSSProperties> = {
-  right: {
-    top: 0,
-    right: 0,
-    bottom: 0,
-    animation: "sheet-slide-in-right 200ms ease-in-out",
-  },
-  left: {
-    top: 0,
-    left: 0,
-    bottom: 0,
-    animation: "sheet-slide-in-left 200ms ease-in-out",
-  },
-  top: {
-    top: 0,
-    left: 0,
-    right: 0,
-    animation: "sheet-slide-in-top 200ms ease-in-out",
-  },
-  bottom: {
-    bottom: 0,
-    left: 0,
-    right: 0,
-    animation: "sheet-slide-in-bottom 200ms ease-in-out",
-  },
+  right: { top: 0, right: 0, bottom: 0 },
+  left: { top: 0, left: 0, bottom: 0 },
+  top: { top: 0, left: 0, right: 0 },
+  bottom: { bottom: 0, left: 0, right: 0 },
 };
 
 const sideClassNames: Record<string, string> = {
@@ -172,6 +204,7 @@ function SheetContent({
   return (
     <Dialog.Portal>
       <Dialog.Overlay
+        className="ds-sheet-overlay"
         style={{
           position: "fixed",
           inset: 0,
@@ -180,11 +213,11 @@ function SheetContent({
           opacity: "var(--ds-overlay-backdrop-opacity)",
           backdropFilter: "blur(8px)",
           WebkitBackdropFilter: "blur(8px)",
-          animation: "sheet-overlay-in 200ms ease-out",
         }}
       />
       <Dialog.Content
-        className={className || sideClassNames[side]}
+        data-side={side}
+        className={`ds-sheet-content ${className || sideClassNames[side]}`}
         style={{
           position: "fixed",
           zIndex: 100,
