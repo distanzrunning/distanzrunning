@@ -140,6 +140,11 @@ export function Skeleton({
         .skeleton-pulse {
           animation: skeletonPulse 1.5s ease-in-out infinite;
         }
+        @media (prefers-reduced-motion: reduce) {
+          .skeleton-pulse {
+            animation: none;
+          }
+        }
       `}</style>
     </span>
   );
