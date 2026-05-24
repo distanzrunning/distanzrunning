@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -508,6 +509,118 @@ export default function SheetComponent() {
             <WithSideDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Sheet for persistent associated context like deployment
+            details, log row inspection, or a member profile, where the
+            underlying page stays useful.
+          </li>
+          <li>
+            For a blocking decision, use <ComponentRef name="Modal" />.
+            For a mobile-only bottom sheet, use{" "}
+            <ComponentRef name="Drawer" />.
+          </li>
+          <li>
+            Don&apos;t use Sheet to confirm destructive actions. The
+            default <code className="inline-code">modal=false</code>{" "}
+            keeps the page interactive, which weakens severity for a
+            delete or revoke.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Sheet defaults to{" "}
+            <code className="inline-code">modal=false</code> so toasts
+            and other high-z elements stay reachable. Keep that default
+            unless the sheet owns the screen.
+          </li>
+          <li>
+            Pick <code className="inline-code">side</code> from the
+            trigger location: a row inspector slides from{" "}
+            <code className="inline-code">right</code>, a global filter
+            from <code className="inline-code">left</code>. Don&apos;t
+            change sides mid-session.
+          </li>
+          <li>
+            Outside-click does not auto-close, so always render an
+            explicit close affordance and honor Escape.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Title is Title Case and names the entity (
+            <code className="inline-code">Deployment Details</code>,{" "}
+            <code className="inline-code">Member Profile</code>), not
+            the page action.
+          </li>
+          <li>
+            Body is read-mostly: sentence case prose with Title Case
+            sub-headings. Action buttons are optional; when present,
+            follow <code className="inline-code">Verb + Noun</code>.
+          </li>
+          <li>
+            Don&apos;t duplicate the page header inside the sheet; the
+            sheet is the detail layer.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Trap focus inside the sheet while it&apos;s open and return
+            focus to the trigger row on close so keyboard users keep
+            their place in the list.
+          </li>
+          <li>
+            Provide a visible close button labeled{" "}
+            <code className="inline-code">Close</code> (or an icon
+            button with{" "}
+            <code className="inline-code">
+              aria-label=&quot;Close&quot;
+            </code>
+            ) since clicking outside doesn&apos;t dismiss.
+          </li>
+          <li>
+            Announce the sheet with{" "}
+            <code className="inline-code">aria-labelledby</code>{" "}
+            pointing at the title; pair it with{" "}
+            <code className="inline-code">aria-describedby</code> only
+            when the body is short and load-bearing.
+          </li>
+        </ul>
       </Section>
 
       <Toast

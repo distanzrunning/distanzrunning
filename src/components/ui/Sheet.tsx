@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 
 // ============================================================================
@@ -11,7 +11,15 @@ interface SheetProps {
   children: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  /**
+   * Render a blocking overlay and trap focus. Defaults to `false` so
+   * toasts and other high-z elements stay reachable while the sheet
+   * is open. Flip to `true` only when the sheet owns the screen.
+   */
+  modal?: boolean;
 }
+
+const SheetModalContext = createContext<boolean>(false);
 
 interface SheetTriggerProps {
   children: React.ReactNode;
@@ -128,15 +136,22 @@ const defaultSizes: Record<string, string> = {
 // Components
 // ============================================================================
 
-function SheetRoot({ children, open, onOpenChange }: SheetProps) {
+function SheetRoot({
+  children,
+  open,
+  onOpenChange,
+  modal = false,
+}: SheetProps) {
   useEffect(() => {
     ensureKeyframes();
   }, []);
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      {children}
-    </Dialog.Root>
+    <SheetModalContext.Provider value={modal}>
+      <Dialog.Root open={open} onOpenChange={onOpenChange} modal={modal}>
+        {children}
+      </Dialog.Root>
+    </SheetModalContext.Provider>
   );
 }
 
@@ -150,6 +165,7 @@ function SheetContent({
   size,
   className,
 }: SheetContentProps) {
+  const modal = useContext(SheetModalContext);
   const isHorizontal = side === "left" || side === "right";
   const resolvedSize = size || defaultSizes[side];
   const sizeStyle: React.CSSProperties = isHorizontal
@@ -158,17 +174,20 @@ function SheetContent({
 
   return (
     <Dialog.Portal>
-      <Dialog.Overlay
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 99,
-          backgroundColor: "rgba(250, 250, 250, 0.5)",
-          animation: "sheet-overlay-in 200ms ease-out",
-        }}
-      />
+      {modal && (
+        <Dialog.Overlay
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 99,
+            backgroundColor: "rgba(250, 250, 250, 0.5)",
+            animation: "sheet-overlay-in 200ms ease-out",
+          }}
+        />
+      )}
       <Dialog.Content
         className={className || sideClassNames[side]}
+        onPointerDownOutside={(e) => e.preventDefault()}
         style={{
           position: "fixed",
           zIndex: 100,
