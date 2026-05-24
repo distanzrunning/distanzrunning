@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -615,6 +616,73 @@ export default function SelectComponent() {
             <LabelDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pick <code className="inline-code">&lt;Select&gt;</code>{" "}
+            for short, fixed lists (under ~10 items) where typing adds
+            nothing; switch to <ComponentRef name="Combobox" /> once
+            filtering helps.
+          </li>
+          <li>
+            Use <ComponentRef name="MultiSelect" /> when more than one
+            value can be chosen at once; use{" "}
+            <ComponentRef name="Switch" /> for a 2–3 option segmented
+            choice.
+          </li>
+          <li>
+            Group options past ~10 items with native{" "}
+            <code className="inline-code">&lt;optgroup&gt;</code>;{" "}
+            <code className="inline-code">&lt;Select&gt;</code> has no{" "}
+            <code className="inline-code">.Group</code> static.
+          </li>
+          <li>
+            Options are Title Case when short and match canonical
+            branding (<code className="inline-code">Next.js</code>, not{" "}
+            <code className="inline-code">NextJS</code>); keep the same
+            register across the list.
+          </li>
+          <li>
+            Label is a short Title Case noun (
+            <code className="inline-code">Framework</code>,{" "}
+            <code className="inline-code">Region</code>); accept the
+            prop directly on{" "}
+            <code className="inline-code">&lt;Select&gt;</code>.
+          </li>
+          <li>
+            Placeholder is action-oriented (
+            <code className="inline-code">Select a framework</code>),
+            never <code className="inline-code">Choose one…</code>,{" "}
+            <code className="inline-code">Pick</code>, or the label
+            restated. Render it as a{" "}
+            <code className="inline-code">
+              &lt;option disabled selected&gt;
+            </code>{" "}
+            since native{" "}
+            <code className="inline-code">&lt;select&gt;</code> has no{" "}
+            <code className="inline-code">placeholder</code> attribute.
+          </li>
+          <li>
+            Validate on blur and pass a message via{" "}
+            <code className="inline-code">errorMessage</code> (with{" "}
+            <code className="inline-code">error</code> set); messages
+            name the field and end in a period (
+            <code className="inline-code">Select a framework.</code>).
+          </li>
+          <li>
+            Don&apos;t wrap a labelled{" "}
+            <code className="inline-code">&lt;Select&gt;</code> in a{" "}
+            <ComponentRef name="Tooltip" />; put the hint on a sibling
+            icon button so the label stays announced.
+          </li>
+        </ul>
       </Section>
 
       <Toast
