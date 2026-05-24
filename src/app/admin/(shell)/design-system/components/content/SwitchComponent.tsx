@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -443,16 +444,16 @@ export function Component(): JSX.Element {
   return (
     <div className="flex items-start gap-6">
       <Switch size="small" options={[
-        { value: 'grid', icon: <GridIcon size={16} /> },
-        { value: 'list', icon: <ListIcon size={16} /> },
+        { value: 'grid', icon: <GridIcon size={16} />, ariaLabel: 'Grid' },
+        { value: 'list', icon: <ListIcon size={16} />, ariaLabel: 'List' },
       ]} defaultValue="grid" />
       <Switch size="default" options={[
-        { value: 'grid', icon: <GridIcon size={16} /> },
-        { value: 'list', icon: <ListIcon size={16} /> },
+        { value: 'grid', icon: <GridIcon size={16} />, ariaLabel: 'Grid' },
+        { value: 'list', icon: <ListIcon size={16} />, ariaLabel: 'List' },
       ]} defaultValue="grid" />
       <Switch size="large" options={[
-        { value: 'grid', icon: <GridIcon size={20} /> },
-        { value: 'list', icon: <ListIcon size={20} /> },
+        { value: 'grid', icon: <GridIcon size={20} />, ariaLabel: 'Grid' },
+        { value: 'list', icon: <ListIcon size={20} />, ariaLabel: 'List' },
       ]} defaultValue="grid" />
     </div>
   );
@@ -572,8 +573,8 @@ function IconDemo() {
         <Switch
           size="small"
           options={[
-            { value: "grid", icon: <GridIcon size={16} /> },
-            { value: "list", icon: <ListIcon size={16} /> },
+            { value: "grid", icon: <GridIcon size={16} />, ariaLabel: "Grid" },
+            { value: "list", icon: <ListIcon size={16} />, ariaLabel: "List" },
           ]}
           defaultValue="grid"
         />
@@ -582,8 +583,8 @@ function IconDemo() {
         <Switch
           size="default"
           options={[
-            { value: "grid", icon: <GridIcon size={16} /> },
-            { value: "list", icon: <ListIcon size={16} /> },
+            { value: "grid", icon: <GridIcon size={16} />, ariaLabel: "Grid" },
+            { value: "list", icon: <ListIcon size={16} />, ariaLabel: "List" },
           ]}
           defaultValue="grid"
         />
@@ -592,8 +593,8 @@ function IconDemo() {
         <Switch
           size="large"
           options={[
-            { value: "grid", icon: <GridIcon size={20} /> },
-            { value: "list", icon: <ListIcon size={20} /> },
+            { value: "grid", icon: <GridIcon size={20} />, ariaLabel: "Grid" },
+            { value: "list", icon: <ListIcon size={20} />, ariaLabel: "List" },
           ]}
           defaultValue="grid"
         />
@@ -678,6 +679,67 @@ export default function SwitchComponent() {
             <IconDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Switch as a segmented selector for 2–3 mutually
+            exclusive options that show different views of the same
+            surface, like <code className="inline-code">Source</code>{" "}
+            vs <code className="inline-code">Output</code>.
+          </li>
+          <li>
+            For a boolean on/off setting, use{" "}
+            <ComponentRef name="Toggle" />. Switch implements radio
+            semantics, so two options stay mutually exclusive rather
+            than reading as a checkbox.
+          </li>
+          <li>
+            Past 3 options or when labels grow beyond a couple of
+            words, switch to <ComponentRef name="Tabs" /> or a{" "}
+            <ComponentRef name="Select" />.
+          </li>
+          <li>
+            Pass a <code className="inline-code">name</code> so the
+            underlying radios are grouped; without it, more than one
+            option can appear selected at once. (Auto-generated when
+            omitted.)
+          </li>
+          <li>
+            Set <code className="inline-code">defaultValue</code> (or
+            controlled <code className="inline-code">value</code>) so
+            the group has a defined initial state.
+          </li>
+          <li>
+            Each option renders at equal flex width, so the active
+            pill won&apos;t resize on selection. Title Case each label
+            and keep them parallel:{" "}
+            <code className="inline-code">Source</code> /{" "}
+            <code className="inline-code">Output</code>, not{" "}
+            <code className="inline-code">Source</code> /{" "}
+            <code className="inline-code">Show output</code>.
+          </li>
+          <li>
+            For icon-only options, set{" "}
+            <code className="inline-code">ariaLabel</code> on each
+            option so screen readers announce the choice. The
+            component renders it as a visually hidden span inside the
+            control.
+          </li>
+          <li>
+            Pair an icon-only Switch with a{" "}
+            <ComponentRef name="Tooltip" /> on each option so sighted
+            users get the same label assistive tech receives — set the{" "}
+            <code className="inline-code">tooltip</code> field on each
+            option.
+          </li>
+        </ul>
       </Section>
 
       <Toast
