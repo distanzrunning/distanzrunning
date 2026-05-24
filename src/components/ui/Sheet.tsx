@@ -65,7 +65,7 @@ function ensureKeyframes() {
   style.textContent = `
     @keyframes sheet-overlay-in {
       from { opacity: 0; }
-      to { opacity: 1; }
+      to { opacity: var(--ds-overlay-backdrop-opacity); }
     }
     @keyframes sheet-slide-in-right {
       from { transform: translateX(1.25rem); opacity: 0; }
