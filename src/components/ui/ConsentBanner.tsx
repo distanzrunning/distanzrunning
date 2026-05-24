@@ -130,9 +130,10 @@ export function ConsentCategoryRow({
             checked={value}
             disabled={category.required}
             onChange={onChange}
-            label={value ? "On" : "Off"}
             labelPosition="left"
-          />
+          >
+            {value ? "On" : "Off"}
+          </Toggle>
         </div>
       </div>
       <div

@@ -1,18 +1,49 @@
 "use client";
 
-import React, { forwardRef, useState, useCallback } from "react";
+import React, { forwardRef, useState, useCallback, useEffect } from "react";
 
 export interface ToggleProps {
+  /** Controlled checked state */
   checked?: boolean;
+  /** Initial state for uncontrolled use */
   defaultChecked?: boolean;
+  /** Callback when toggled */
   onChange?: (checked: boolean) => void;
+  /** Disable interaction */
   disabled?: boolean;
+  /** Track + thumb size */
   size?: "default" | "large";
-  label?: string;
+  /**
+   * Visible label — Title Case noun phrase, 1–4 words, naming what is
+   * true when ON (`Password Protection`, not `Enable Password
+   * Protection`). When omitted, supply `aria-label` or
+   * `aria-labelledby` instead.
+   */
+  children?: React.ReactNode;
+  /**
+   * Optional one-sentence description rendered as a sibling under the
+   * label. Should explain what ON does (don't describe OFF — it's the
+   * negation).
+   */
+  description?: string;
+  /** Render order — label first then toggle (default `right`) or toggle then label. */
   labelPosition?: "left" | "right";
+  /**
+   * `title` (default) applies `text-transform: capitalize` so labels
+   * stay consistent across surfaces; `normal` leaves casing untouched
+   * when sentence-case content sits inline next to the toggle.
+   */
+  labelCasing?: "title" | "normal";
+  /** Optional icon rendered inside the thumb (e.g. lock / lightning). */
   thumbIcon?: React.ReactNode;
+  /** Override the checked-state track color (defaults to `--ds-blue-700`). */
   checkedColor?: string;
+  /** Override the unchecked-state track color (defaults to `--ds-gray-300`). */
   uncheckedColor?: string;
+  /** Accessible name override when no visible label is present */
+  "aria-label"?: string;
+  /** Id of an external label element */
+  "aria-labelledby"?: string;
   className?: string;
 }
 
@@ -24,11 +55,15 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       onChange,
       disabled = false,
       size = "default",
-      label,
+      children,
+      description,
       labelPosition = "right",
+      labelCasing = "title",
       thumbIcon,
       checkedColor,
       uncheckedColor,
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledBy,
       className,
     },
     ref,
@@ -48,30 +83,44 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       [isControlled, onChange],
     );
 
+    // Warn in development if no accessible name is provided. Mirrors
+    // Geist's "warns in development if all three are missing" rule.
+    useEffect(() => {
+      if (process.env.NODE_ENV === "production") return;
+      if (!children && !ariaLabel && !ariaLabelledBy) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          "[Toggle] Missing accessible name. Provide `children`, `aria-label`, or `aria-labelledby`.",
+        );
+      }
+    }, [children, ariaLabel, ariaLabelledBy]);
+
     // Geist sizes: default track 28x14, thumb 12x12; large track 40x24, thumb 22x22
     const trackWidth = size === "large" ? 40 : 28;
     const trackHeight = size === "large" ? 24 : 14;
     const thumbSize = size === "large" ? 22 : 12;
     const thumbTranslate = size === "large" ? 16 : 14;
 
-    // Colors — disabled uses muted grays, normal uses blue/gray
     let trackBg: string;
     let trackBorder: string;
     let thumbBg: string;
     let thumbShadow: string;
 
     if (disabled) {
-      trackBg = isChecked ? "rgb(201, 201, 201)" : "rgb(235, 235, 235)";
-      trackBorder = isChecked ? "rgb(201, 201, 201)" : "rgb(235, 235, 235)";
-      thumbBg = isChecked ? "rgb(242, 242, 242)" : "rgb(250, 250, 250)";
+      trackBg = isChecked ? "var(--ds-gray-500)" : "var(--ds-gray-300)";
+      trackBorder = isChecked ? "var(--ds-gray-500)" : "var(--ds-gray-300)";
+      thumbBg = isChecked
+        ? "var(--ds-gray-200)"
+        : "var(--ds-background-200)";
       thumbShadow = "none";
     } else {
       trackBg = isChecked
-        ? checkedColor || "rgb(0, 112, 243)"
-        : uncheckedColor || "rgb(235, 235, 235)";
-      trackBorder = "rgba(0, 0, 0, 0.1)";
-      thumbBg = isChecked ? "#fff" : "rgb(250, 250, 250)";
-      thumbShadow = "rgba(0, 0, 0, 0.12) 0px 0px 4px 0px, rgba(0, 0, 0, 0.1) 0px 1px 1px 0px";
+        ? checkedColor || "var(--ds-blue-700)"
+        : uncheckedColor || "var(--ds-gray-300)";
+      trackBorder = "var(--ds-gray-alpha-200)";
+      thumbBg = isChecked ? "var(--ds-background-100)" : "var(--ds-background-200)";
+      thumbShadow =
+        "rgba(0, 0, 0, 0.12) 0px 0px 4px 0px, rgba(0, 0, 0, 0.1) 0px 1px 1px 0px";
     }
 
     // Visually hidden input styles
@@ -97,12 +146,12 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       backgroundColor: trackBg,
       border: `1px solid ${trackBorder}`,
       boxSizing: "border-box",
-      transition: "background 0.15s cubic-bezier(0, 0, 0.2, 1), border-color 0.15s cubic-bezier(0, 0, 0.2, 1)",
+      transition:
+        "background 0.15s cubic-bezier(0, 0, 0.2, 1), border-color 0.15s cubic-bezier(0, 0, 0.2, 1)",
       cursor: disabled ? "not-allowed" : "pointer",
       flexShrink: 0,
     };
 
-    // Geist: default top:6 translateY(-6), large top:11 translateY(-11)
     const thumbTop = size === "large" ? 11 : 6;
     const thumbStyle: React.CSSProperties = {
       position: "absolute",
@@ -117,7 +166,8 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       transform: isChecked
         ? `translateX(${thumbTranslate}px) translateY(-${thumbTop}px)`
         : `translateX(0px) translateY(-${thumbTop}px)`,
-      transition: "transform 0.15s cubic-bezier(0, 0, 0.2, 1), background 0.15s cubic-bezier(0, 0, 0.2, 1)",
+      transition:
+        "transform 0.15s cubic-bezier(0, 0, 0.2, 1), background 0.15s cubic-bezier(0, 0, 0.2, 1)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -125,15 +175,11 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
 
     const labelWrapperStyle: React.CSSProperties = {
       display: "flex",
-      alignItems: "center",
+      alignItems: description ? "flex-start" : "center",
       gap: 12,
       cursor: "default",
       position: "relative",
       padding: "3px 0",
-      fontSize: 12,
-      fontWeight: 500,
-      color: "rgb(102, 102, 102)",
-      textTransform: "capitalize",
       whiteSpace: "nowrap",
       userSelect: "none",
     };
@@ -142,6 +188,16 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       fontSize: 14,
       lineHeight: "20px",
       color: "var(--ds-gray-1000)",
+      textTransform: labelCasing === "title" ? "capitalize" : "none",
+    };
+
+    const descriptionStyle: React.CSSProperties = {
+      fontSize: 13,
+      lineHeight: "18px",
+      color: "var(--ds-gray-900)",
+      marginTop: 2,
+      whiteSpace: "normal",
+      maxWidth: 360,
     };
 
     const toggle = (
@@ -164,18 +220,23 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       </span>
     );
 
-    // labelPosition="right" means label text first, then toggle (Geist switchFirst)
-    // labelPosition="left" means toggle first, then label text
-    const content = label ? (
+    const labelBlock = children ? (
+      <span style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+        <span style={labelTextStyle}>{children}</span>
+        {description && <span style={descriptionStyle}>{description}</span>}
+      </span>
+    ) : null;
+
+    const content = labelBlock ? (
       labelPosition === "right" ? (
         <>
-          <span style={labelTextStyle}>{label}</span>
+          {labelBlock}
           {toggle}
         </>
       ) : (
         <>
           {toggle}
-          <span style={labelTextStyle}>{label}</span>
+          {labelBlock}
         </>
       )
     ) : (
@@ -183,7 +244,12 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     );
 
     return (
-      <label style={labelWrapperStyle} className={className} aria-label={!label ? "Enable Firewall" : undefined}>
+      <label
+        style={labelWrapperStyle}
+        className={className}
+        aria-label={!children ? ariaLabel : undefined}
+        aria-labelledby={!children ? ariaLabelledBy : undefined}
+      >
         <input
           ref={ref}
           type="checkbox"

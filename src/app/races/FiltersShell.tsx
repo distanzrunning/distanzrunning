@@ -375,7 +375,6 @@ export default function FiltersShell({
         <div className="ml-auto flex shrink-0 items-center gap-3">
           <Toggle
             size="default"
-            label="Hide past races"
             labelPosition="left"
             // Toggle is "on" by default — i.e., past races are
             // hidden. Flipping off (showPast=true in URL)
@@ -384,7 +383,9 @@ export default function FiltersShell({
             onChange={(checked) =>
               setFilter({ showPast: checked ? undefined : true })
             }
-          />
+          >
+            Hide past races
+          </Toggle>
           <SortFilter
             value={initialFilters.sort ?? DEFAULT_SORT}
             onChange={(sort) =>
