@@ -58,6 +58,32 @@ function getPercentFromEvent(
   return clamp((e.clientX - rect.left) / rect.width, 0, 1);
 }
 
+// ============================================================================
+// Thumb hover/focus styles (injected once)
+// ============================================================================
+
+const THUMB_STYLE_ID = "ds-slider-thumb-style";
+
+function ensureThumbStyles() {
+  if (typeof document === "undefined") return;
+  if (document.getElementById(THUMB_STYLE_ID)) return;
+  const style = document.createElement("style");
+  style.id = THUMB_STYLE_ID;
+  style.textContent = `
+    .ds-slider-thumb {
+      transition: box-shadow 0.15s ease, background 0.15s ease, transform 0.15s ease;
+    }
+    .ds-slider-thumb:hover:not([aria-disabled="true"]),
+    .ds-slider-thumb:focus-visible:not([aria-disabled="true"]) {
+      transform: scale(1.2);
+    }
+    .ds-slider-thumb:focus-visible {
+      outline: none;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 /**
  * Standard ARIA slider keyboard pattern. Returns the new value for
  * the recognized keys (Arrow / PageUp/Down / Home / End), or `null`
@@ -118,6 +144,10 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
     const currentValue = isControlled ? controlledValue : internalValue;
     const trackRef = useRef<HTMLSpanElement>(null);
     const dragging = useRef(false);
+
+    useEffect(() => {
+      ensureThumbStyles();
+    }, []);
 
     useEffect(() => {
       if (isControlled) setInternalValue(controlledValue);
@@ -217,6 +247,7 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
             }}
           >
             <span
+              className="ds-slider-thumb"
               role="slider"
               tabIndex={disabled ? -1 : 0}
               aria-valuemin={min}
@@ -235,7 +266,6 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
                 boxShadow:
                   "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
                 cursor: disabled ? "not-allowed" : "pointer",
-                transition: "box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease",
                 position: "relative",
               }}
               onKeyDown={(e) => {
@@ -290,6 +320,10 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
     const currentValue = isControlled ? controlledValue : internalValue;
     const trackRef = useRef<HTMLSpanElement>(null);
     const activeThumb = useRef<0 | 1 | null>(null);
+
+    useEffect(() => {
+      ensureThumbStyles();
+    }, []);
 
     useEffect(() => {
       if (isControlled) setInternalValue(controlledValue);
@@ -427,6 +461,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
             }}
           >
             <span
+              className="ds-slider-thumb"
               role="slider"
               tabIndex={disabled ? -1 : 0}
               aria-valuemin={min}
@@ -445,7 +480,6 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
                 boxShadow:
                   "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
                 cursor: disabled ? "not-allowed" : "pointer",
-                transition: "box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease",
                 position: "relative",
               }}
               onKeyDown={(e) => handleThumbKeyDown(0, e)}
@@ -462,6 +496,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
             }}
           >
             <span
+              className="ds-slider-thumb"
               role="slider"
               tabIndex={disabled ? -1 : 0}
               aria-valuemin={min}
@@ -480,7 +515,6 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
                 boxShadow:
                   "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
                 cursor: disabled ? "not-allowed" : "pointer",
-                transition: "box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease",
                 position: "relative",
               }}
               onKeyDown={(e) => handleThumbKeyDown(1, e)}
