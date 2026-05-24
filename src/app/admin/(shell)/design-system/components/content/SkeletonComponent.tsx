@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -369,7 +370,7 @@ const roundedCode = `import { Skeleton } from '@/components/ui/Skeleton';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  return <Skeleton width={48} height={48} shape="rounded" />;
+  return <Skeleton width={100} height={32} shape="rounded" />;
 }`;
 
 const squaredCode = `import { Skeleton } from '@/components/ui/Skeleton';
@@ -427,7 +428,7 @@ function PillDemo() {
 }
 
 function RoundedDemo() {
-  return <Skeleton width={48} height={48} shape="rounded" />;
+  return <Skeleton width={100} height={32} shape="rounded" />;
 }
 
 function SquaredDemo() {
@@ -549,6 +550,97 @@ export default function SkeletonComponent() {
             <NoAnimationDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Show a Skeleton when async data fills a known layout: table
+            rows, card grids, profile blocks, sidebars.
+          </li>
+          <li>
+            For a single in-flight action, use{" "}
+            <ComponentRef name="Spinner" />; for an indeterminate
+            inline wait, use <ComponentRef name="Loading Dots" />; for
+            known progress, use <ComponentRef name="Progress" />.
+          </li>
+          <li>
+            Don&apos;t use Skeleton as permanent decoration or as a
+            placeholder for empty states. When there&apos;s no data to
+            load, render an <ComponentRef name="Empty State" />.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Set <code className="inline-code">width</code> and{" "}
+            <code className="inline-code">height</code> to match the
+            final content so the layout doesn&apos;t shift when data
+            resolves. A 200×20 block becoming an 80×16 string reads as
+            a glitch.
+          </li>
+          <li>
+            Pick <code className="inline-code">pill</code>,{" "}
+            <code className="inline-code">rounded</code>, or{" "}
+            <code className="inline-code">squared</code> to mirror the
+            eventual element&apos;s shape (avatars{" "}
+            <code className="inline-code">pill</code>, buttons and
+            chips <code className="inline-code">rounded</code>, image
+            tiles <code className="inline-code">squared</code>).
+          </li>
+          <li>
+            When the skeleton wraps children, keep dimensions stable so
+            the reveal swap doesn&apos;t reflow surrounding content.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Wrap the loading region in{" "}
+            <code className="inline-code">
+              aria-busy=&quot;true&quot;
+            </code>{" "}
+            and announce completion with{" "}
+            <code className="inline-code">
+              aria-live=&quot;polite&quot;
+            </code>{" "}
+            on the destination container, not the skeleton itself.
+          </li>
+          <li>
+            Disable the shimmer with the{" "}
+            <code className="inline-code">noAnimation</code> prop on
+            low-power surfaces. The component already respects{" "}
+            <code className="inline-code">prefers-reduced-motion</code>{" "}
+            automatically.
+          </li>
+          <li>
+            Skeletons are decorative; avoid placing focusable controls
+            inside them while loading.
+          </li>
+        </ul>
       </Section>
 
       <Toast
