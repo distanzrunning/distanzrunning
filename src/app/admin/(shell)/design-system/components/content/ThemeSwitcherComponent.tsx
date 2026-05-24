@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef, useContext } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -354,6 +355,21 @@ export function Component(): JSX.Element {
   );
 }`;
 
+const sizesCode = `import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher';
+import { useContext, type JSX } from 'react';
+import { DarkModeContext } from '@/components/DarkModeProvider';
+
+export function Component(): JSX.Element {
+  const { theme, setTheme } = useContext(DarkModeContext);
+
+  return (
+    <div className="flex flex-row items-center gap-6">
+      <ThemeSwitcher size="small" value={theme} onChange={setTheme} />
+      <ThemeSwitcher size="default" value={theme} onChange={setTheme} />
+    </div>
+  );
+}`;
+
 // ============================================================================
 // Demo Components
 // ============================================================================
@@ -371,6 +387,16 @@ function LightDarkDemo() {
 function DisabledDemo() {
   const { theme } = useContext(DarkModeContext);
   return <ThemeSwitcher disabled value={theme} />;
+}
+
+function SizesDemo() {
+  const { theme, setTheme } = useContext(DarkModeContext);
+  return (
+    <div className="flex flex-row items-center gap-6">
+      <ThemeSwitcher size="small" value={theme} onChange={setTheme} />
+      <ThemeSwitcher size="default" value={theme} onChange={setTheme} />
+    </div>
+  );
 }
 
 // ============================================================================
@@ -413,6 +439,79 @@ export default function ThemeSwitcherComponent() {
             <DisabledDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="sizes" onCopyLink={showToast}>
+          Sizes
+        </SectionHeader>
+        <p
+          className="mt-2 leading-6 xl:mt-4"
+          style={{ color: "var(--ds-gray-900)" }}
+        >
+          Pass <code className="inline-code">size=&quot;small&quot;</code>{" "}
+          for dense chrome (footers, dropdowns); the default size
+          works for settings pages.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={sizesCode}>
+            <SizesDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Theme Switcher for the canonical Light / System / Dark
+            control. Place it once per app, in the footer or settings,
+            not duplicated across pages.
+          </li>
+          <li>
+            Pass <code className="inline-code">size=&quot;small&quot;</code>{" "}
+            for dense chrome (footers, dropdowns); use the default
+            size on a settings page where there&apos;s room for the
+            labels to breathe.
+          </li>
+          <li>
+            Theme Switcher is a controlled component — wire{" "}
+            <code className="inline-code">value</code> and{" "}
+            <code className="inline-code">onChange</code> to our{" "}
+            <code className="inline-code">DarkModeProvider</code>{" "}
+            context (
+            <code className="inline-code">theme</code>,{" "}
+            <code className="inline-code">setTheme</code>) at the
+            root. Don&apos;t mirror its state into local React state.
+          </li>
+          <li>
+            Use <code className="inline-code">disabled</code> for
+            read-only previews of the control itself (e.g.
+            documentation surfaces). For runtime theme locking, gate
+            the wiring at the provider level.
+          </li>
+          <li>
+            Don&apos;t rebuild a theme picker with{" "}
+            <ComponentRef name="Switch" /> or three icon buttons.
+            Theme Switcher already handles the icons, the{" "}
+            <code className="inline-code">aria-label</code> per
+            option, and System detection through{" "}
+            <code className="inline-code">DarkModeProvider</code>.
+          </li>
+          <li>
+            The component renders sun / monitor / moon icons and
+            descriptive{" "}
+            <code className="inline-code">aria-label</code>s (
+            <code className="inline-code">Light theme</code>,{" "}
+            <code className="inline-code">System theme</code>,{" "}
+            <code className="inline-code">Dark theme</code>); leave
+            them alone so they stay consistent across surfaces.
+          </li>
+        </ul>
       </Section>
 
       <Toast
