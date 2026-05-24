@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -358,6 +359,18 @@ export function Component(): JSX.Element {
   );
 }`;
 
+const placeholderCode = `import { Snippet } from '@/components/ui/Snippet';
+
+export function Component(): JSX.Element {
+  return (
+    <Snippet
+      text=""
+      placeholder="Run vercel link to fetch env vars"
+      width={300}
+    />
+  );
+}`;
+
 const controlledCopiedCode = `import { Snippet } from '@/components/ui/Snippet';
 
 export function Component(): JSX.Element {
@@ -415,6 +428,16 @@ function VariantsDemo() {
       <Snippet text="npm init next-app" width={300} variant="error" />
       <Snippet text="npm init next-app" width={300} variant="warning" />
     </div>
+  );
+}
+
+function PlaceholderDemo() {
+  return (
+    <Snippet
+      text=""
+      placeholder="Run vercel link to fetch env vars"
+      width={300}
+    />
   );
 }
 
@@ -536,6 +559,28 @@ export default function SnippetComponent() {
       </Section>
 
       <Section>
+        <SectionHeader id="placeholder" onCopyLink={showToast}>
+          Placeholder
+        </SectionHeader>
+        <p
+          className="mt-2 leading-6 xl:mt-4"
+          style={{ color: "var(--ds-gray-900)" }}
+        >
+          Pair{" "}
+          <code className="inline-code">placeholder</code> with{" "}
+          <code className="inline-code">text=&quot;&quot;</code> for
+          an empty state. The placeholder is informational only — the
+          copy button stays disabled and the clipboard receives
+          nothing.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={placeholderCode}>
+            <PlaceholderDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
         <SectionHeader id="controlled-copied-state" onCopyLink={showToast}>
           Controlled Copied State
         </SectionHeader>
@@ -547,6 +592,70 @@ export default function SnippetComponent() {
             <ControlledCopiedDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Snippet for a runnable shell command the user is meant
+            to copy. For inline tokens (env var names, paths) use the{" "}
+            <code className="inline-code">inline-code</code> chip, and
+            for multi-line source use <ComponentRef name="Code Block" />.
+          </li>
+          <li>
+            Pass the command as{" "}
+            <code className="inline-code">text</code>. Authors never
+            type a leading <code className="inline-code">$</code>; the
+            component renders the prompt, so{" "}
+            <code className="inline-code">
+              text=&quot;$ vercel deploy&quot;
+            </code>{" "}
+            displays as{" "}
+            <code className="inline-code">$ $ vercel deploy</code>.
+          </li>
+          <li>
+            Set <code className="inline-code">prompt={"{false}"}</code>{" "}
+            for non-shell content (URLs, JSON, output you want copied
+            verbatim) so the rendered string matches what gets copied.
+          </li>
+          <li>
+            Pair <code className="inline-code">placeholder</code> with{" "}
+            <code className="inline-code">text=&quot;&quot;</code> for
+            an empty state. Sentence case, no trailing period, no{" "}
+            <code className="inline-code">Please</code>:{" "}
+            <code className="inline-code">
+              Run vercel link to fetch env vars
+            </code>
+            . The placeholder is informational, not copied.
+          </li>
+          <li>
+            Use <code className="inline-code">copyText</code> only when{" "}
+            <code className="inline-code">text</code> contains rich
+            nodes (<code className="inline-code">&lt;span&gt;</code>{" "}
+            highlights, conditional fragments) and the clipboard
+            payload should be plain text. For a string{" "}
+            <code className="inline-code">text</code>,{" "}
+            <code className="inline-code">copyText</code> is redundant.
+          </li>
+          <li>
+            Keep one command per Snippet. Pass an array to{" "}
+            <code className="inline-code">text</code> for a short
+            multi-line block; for longer scripts, switch to{" "}
+            <ComponentRef name="Code Block" /> so users can read before
+            they copy.
+          </li>
+          <li>
+            Use <code className="inline-code">copied</code> plus an{" "}
+            <code className="inline-code">onCopy</code> callback when a
+            parent surface (a card, a tooltip) needs to show the same
+            checkmark feedback while copying different text.
+          </li>
+        </ul>
       </Section>
 
       <Toast

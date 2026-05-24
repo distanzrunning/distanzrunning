@@ -8,8 +8,23 @@ import { Button } from "@/components/ui/Button";
 // ============================================================================
 
 interface SnippetProps {
-  /** Command text (string or array for multi-line) */
-  text: string | string[];
+  /**
+   * Command text. Accepts a string, an array of strings (one per line),
+   * or a ReactNode for rich highlights — pair the ReactNode form with
+   * `copyText` so the clipboard payload is plain text.
+   */
+  text: React.ReactNode;
+  /**
+   * Explicit clipboard payload. Use when `text` contains rich nodes
+   * (highlights, conditional fragments) and you want the clipboard to
+   * receive plain text. Redundant when `text` is already a string.
+   */
+  copyText?: string;
+  /**
+   * Empty-state copy shown when `text === ""`. Sentence case, no
+   * trailing period, informational only (not copied).
+   */
+  placeholder?: string;
   /** Show $ prompt before each line */
   prompt?: boolean;
   /** Dark/inverted theme */
@@ -78,8 +93,25 @@ const variantStyles: Record<string, { bg: string; color: string }> = {
   warning: { bg: "var(--ds-amber-100)", color: "var(--ds-amber-900)" },
 };
 
+function resolveClipboardText(
+  text: React.ReactNode,
+  copyText: string | undefined,
+): string {
+  if (copyText !== undefined) return copyText;
+  if (typeof text === "string") return text;
+  if (
+    Array.isArray(text) &&
+    text.every((item) => typeof item === "string")
+  ) {
+    return (text as string[]).join("\n");
+  }
+  return "";
+}
+
 export function Snippet({
   text,
+  copyText,
+  placeholder,
   prompt = true,
   dark = false,
   variant = "default",
@@ -93,8 +125,24 @@ export function Snippet({
 
   const isCopied = controlledCopied !== undefined ? controlledCopied : internalCopied;
 
-  const lines = Array.isArray(text) ? text : [text];
-  const fullText = lines.join("\n");
+  const isEmpty =
+    text === "" ||
+    (Array.isArray(text) && text.length === 0);
+  const showPlaceholder = isEmpty && placeholder !== undefined;
+
+  // Lines for the string / string[] render paths
+  const lines: string[] = (() => {
+    if (typeof text === "string") return [text];
+    if (
+      Array.isArray(text) &&
+      text.every((item) => typeof item === "string")
+    ) {
+      return text as string[];
+    }
+    return [];
+  })();
+  const isStringText = lines.length > 0 || isEmpty;
+  const fullText = resolveClipboardText(text, copyText);
 
   useEffect(() => {
     return () => {
@@ -132,12 +180,59 @@ export function Snippet({
         position: "relative",
       }}
     >
-      {lines.map((line, i) => (
+      {showPlaceholder ? (
         <pre
-          key={i}
           style={{
             margin: 0,
             padding: 0,
+            fontFamily: "inherit",
+            fontSize: "inherit",
+            lineHeight: "20px",
+            overflowY: "auto",
+            whiteSpace: "nowrap",
+            textAlign: "left",
+            opacity: 0.6,
+            userSelect: "none",
+          }}
+          aria-hidden="true"
+        >
+          {placeholder}
+        </pre>
+      ) : isStringText ? (
+        lines.map((line, i) => (
+          <pre
+            key={i}
+            style={{
+              margin: 0,
+              padding: 0,
+              fontFamily: "inherit",
+              fontSize: "inherit",
+              lineHeight: "20px",
+              overflowY: "auto",
+              whiteSpace: "nowrap",
+              textAlign: "left",
+            }}
+          >
+            {prompt && (
+              <span
+                style={{
+                  color: "inherit",
+                  opacity: 0.7,
+                  userSelect: "none",
+                  marginRight: 8,
+                }}
+              >
+                $
+              </span>
+            )}
+            {line}
+          </pre>
+        ))
+      ) : (
+        // Rich ReactNode — render as-is. Caller should supply copyText
+        // so the clipboard payload matches what users see.
+        <div
+          style={{
             fontFamily: "inherit",
             fontSize: "inherit",
             lineHeight: "20px",
@@ -158,14 +253,15 @@ export function Snippet({
               $
             </span>
           )}
-          {line}
-        </pre>
-      ))}
+          {text}
+        </div>
+      )}
 
       {/* Copy button — absolute positioned */}
       <button
         type="button"
         onClick={handleCopy}
+        disabled={isEmpty}
         aria-label="Copy to clipboard"
         className="ds-snippet-copy-btn"
         style={{
@@ -182,10 +278,12 @@ export function Snippet({
           border: "none",
           background: "transparent",
           color: "inherit",
-          cursor: "pointer",
+          cursor: isEmpty ? "not-allowed" : "pointer",
+          opacity: isEmpty ? 0.4 : 1,
           transition: "opacity 0.15s ease, box-shadow 0.15s ease",
         }}
         onMouseEnter={(e) => {
+          if (isEmpty) return;
           e.currentTarget.style.boxShadow = dark
             ? "0 0 0 1px var(--ds-gray-700)"
             : "0 0 0 1px var(--ds-gray-400)";
