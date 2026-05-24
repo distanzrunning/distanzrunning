@@ -603,9 +603,9 @@ export default function SnippetComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             Use Snippet for a runnable shell command the user is meant
-            to copy. For inline tokens (env var names, paths) use the{" "}
-            <code className="inline-code">inline-code</code> chip, and
-            for multi-line source use <ComponentRef name="Code Block" />.
+            to copy. For inline tokens (env var names, paths) use{" "}
+            <ComponentRef name="Inline Code" />, and for multi-line
+            source use <ComponentRef name="Code Block" />.
           </li>
           <li>
             Pass the command as{" "}
