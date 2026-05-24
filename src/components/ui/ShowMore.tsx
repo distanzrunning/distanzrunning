@@ -107,7 +107,8 @@ export function ShowMore({
           style={{
             display: "flex",
             alignItems: "center",
-            marginTop: visible.length > 0 || expanded ? "16px" : 0,
+            marginTop:
+              visible.length > 0 || (expanded && hasHidden) ? "16px" : 0,
           }}
         >
           <div
