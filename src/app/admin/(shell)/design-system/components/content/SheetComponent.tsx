@@ -365,6 +365,7 @@ export function Component(): JSX.Element {
           <Sheet.Content
             side={side}
             size={side === 'left' || side === 'right' ? '75%' : undefined}
+            dismissOnOutsideClick
           >
             <Sheet.Header>
               <Sheet.Title>Sheet from {side}</Sheet.Title>
@@ -455,6 +456,7 @@ function WithSideDemo() {
           <Sheet.Content
             side={side}
             size={side === "left" || side === "right" ? "75%" : undefined}
+            dismissOnOutsideClick
           >
             <SideSheetContent side={side} />
           </Sheet.Content>

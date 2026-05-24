@@ -32,6 +32,14 @@ interface SheetContentProps {
   /** Custom width/height for the sheet panel (e.g., "75%", "512px", "100%") */
   size?: string;
   className?: string;
+  /**
+   * Allow clicking outside the sheet to dismiss it. Defaults to
+   * `false` because the BP rule is "Outside-click does not auto-close,
+   * so always render an explicit close affordance and honor Escape."
+   * Flip to `true` only when the sheet has no explicit close button
+   * (e.g. lightweight previews / variant demos).
+   */
+  dismissOnOutsideClick?: boolean;
 }
 
 interface SheetHeaderProps {
@@ -164,6 +172,7 @@ function SheetContent({
   side = "right",
   size,
   className,
+  dismissOnOutsideClick = false,
 }: SheetContentProps) {
   const modal = useContext(SheetModalContext);
   const isHorizontal = side === "left" || side === "right";
@@ -187,7 +196,9 @@ function SheetContent({
       )}
       <Dialog.Content
         className={className || sideClassNames[side]}
-        onPointerDownOutside={(e) => e.preventDefault()}
+        onPointerDownOutside={
+          dismissOnOutsideClick ? undefined : (e) => e.preventDefault()
+        }
         style={{
           position: "fixed",
           zIndex: 100,
