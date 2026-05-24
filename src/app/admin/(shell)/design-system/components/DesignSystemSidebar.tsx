@@ -73,7 +73,6 @@ export const navigation: NavSection[] = [
       { id: "footer", label: "Footer" },
       { id: "gauge", label: "Gauge" },
       { id: "grid", label: "Grid" },
-      { id: "inline-code", label: "Inline Code" },
       { id: "input", label: "Input" },
       { id: "keyboard-input", label: "Keyboard Input" },
       { id: "loading-dots", label: "Loading Dots" },

@@ -604,8 +604,8 @@ export default function SnippetComponent() {
           <li>
             Use Snippet for a runnable shell command the user is meant
             to copy. For inline tokens (env var names, paths) use{" "}
-            <ComponentRef name="Inline Code" />, and for multi-line
-            source use <ComponentRef name="Code Block" />.
+            <code className="inline-code">InlineCode</code>, and for
+            multi-line source use <ComponentRef name="Code Block" />.
           </li>
           <li>
             Pass the command as{" "}

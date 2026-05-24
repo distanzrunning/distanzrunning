@@ -49,7 +49,6 @@ import FeedbackComponent from "../components/content/FeedbackComponent";
 import FooterComponent from "../components/content/FooterComponent";
 import GaugeComponent from "../components/content/GaugeComponent";
 import GridComponent from "../components/content/GridComponent";
-import InlineCodeComponent from "../components/content/InlineCodeComponent";
 import InputComponent from "../components/content/InputComponent";
 import KeyboardInputComponent from "../components/content/KeyboardInputComponent";
 import LoadingDotsComponent from "../components/content/LoadingDotsComponent";
@@ -862,21 +861,6 @@ export default function DesignSystemPage() {
           onNavigate={handleNavigation}
         >
           <CollapsibleInputComponent />
-        </ContentWithTOC>
-      );
-    }
-
-    if (activeSlug === "inline-code") {
-      return (
-        <ContentWithTOC
-          tocTitle="On this page"
-          pageTitle="Inline Code"
-          pageSubtitle="Monospace chip for short tokens in body copy — env var names, paths, flag names."
-          mainSectionId="inline-code"
-          activeSlug={activeSlug}
-          onNavigate={handleNavigation}
-        >
-          <InlineCodeComponent />
         </ContentWithTOC>
       );
     }
