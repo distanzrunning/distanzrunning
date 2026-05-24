@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -315,11 +316,12 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
-      <StatusDot status="queued" />
-      <StatusDot status="building" />
-      <StatusDot status="error" />
-      <StatusDot status="ready" />
-      <StatusDot status="canceled" />
+      <StatusDot state="QUEUED" />
+      <StatusDot state="BUILDING" />
+      <StatusDot state="READY" />
+      <StatusDot state="ERROR" />
+      <StatusDot state="CANCELED" />
+      <StatusDot state="DELETED" />
     </div>
   );
 }`;
@@ -330,11 +332,24 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
-      <StatusDot status="queued" label="Queued" />
-      <StatusDot status="building" label="Building" />
-      <StatusDot status="error" label="Error" />
-      <StatusDot status="ready" label="Ready" />
-      <StatusDot status="canceled" label="Canceled" />
+      <StatusDot state="QUEUED" label />
+      <StatusDot state="BUILDING" label />
+      <StatusDot state="READY" label />
+      <StatusDot state="ERROR" label />
+      <StatusDot state="CANCELED" label />
+      <StatusDot state="DELETED" label />
+    </div>
+  );
+}`;
+
+const titlePrefixCode = `import { StatusDot } from '@/components/ui/StatusDot';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
+      <StatusDot state="BUILDING" titlePrefix="vercel-site production" label />
+      <StatusDot state="READY" titlePrefix="vercel-site preview" label />
     </div>
   );
 }`;
@@ -346,11 +361,12 @@ export function Component(): JSX.Element {
 function DefaultDemo() {
   return (
     <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
-      <StatusDot status="queued" />
-      <StatusDot status="building" />
-      <StatusDot status="error" />
-      <StatusDot status="ready" />
-      <StatusDot status="canceled" />
+      <StatusDot state="QUEUED" />
+      <StatusDot state="BUILDING" />
+      <StatusDot state="READY" />
+      <StatusDot state="ERROR" />
+      <StatusDot state="CANCELED" />
+      <StatusDot state="DELETED" />
     </div>
   );
 }
@@ -358,11 +374,21 @@ function DefaultDemo() {
 function LabelDemo() {
   return (
     <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
-      <StatusDot status="queued" label="Queued" />
-      <StatusDot status="building" label="Building" />
-      <StatusDot status="error" label="Error" />
-      <StatusDot status="ready" label="Ready" />
-      <StatusDot status="canceled" label="Canceled" />
+      <StatusDot state="QUEUED" label />
+      <StatusDot state="BUILDING" label />
+      <StatusDot state="READY" label />
+      <StatusDot state="ERROR" label />
+      <StatusDot state="CANCELED" label />
+      <StatusDot state="DELETED" label />
+    </div>
+  );
+}
+
+function TitlePrefixDemo() {
+  return (
+    <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
+      <StatusDot state="BUILDING" titlePrefix="vercel-site production" label />
+      <StatusDot state="READY" titlePrefix="vercel-site preview" label />
     </div>
   );
 }
@@ -391,11 +417,165 @@ export default function StatusDotComponent() {
         <SectionHeader id="label" onCopyLink={showToast}>
           Label
         </SectionHeader>
+        <p
+          className="mt-2 leading-6 xl:mt-4"
+          style={{ color: "var(--ds-gray-900)" }}
+        >
+          Pass <code className="inline-code">label</code> as a boolean
+          to render the sentence-cased state next to the dot. The
+          component handles the casing for you.
+        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={labelCode}>
             <LabelDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="title-prefix" onCopyLink={showToast}>
+          Title prefix
+        </SectionHeader>
+        <p
+          className="mt-2 leading-6 xl:mt-4"
+          style={{ color: "var(--ds-gray-900)" }}
+        >
+          In lists, pass the entity to{" "}
+          <code className="inline-code">titlePrefix</code> so the
+          screen-reader announcement names which deployment is in
+          which state.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={titlePrefixCode}>
+            <TitlePrefixDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Deployment lifecycle only.{" "}
+            <code className="inline-code">state</code> accepts{" "}
+            <code className="inline-code">
+              QUEUED | BUILDING | READY | ERROR | CANCELED | DELETED
+            </code>
+            .
+          </li>
+          <li>
+            For non-deployment statuses (Workflow runs, Queue
+            messages, Sandbox, Cron jobs), use a{" "}
+            <ComponentRef name="Badge" /> with the canonical state
+            vocabulary instead of repurposing the dot.
+          </li>
+          <li>
+            For health summaries that need a number (uptime, hit
+            rate), use <ComponentRef name="Gauge" />; for in-flight
+            work with a knowable total, use{" "}
+            <ComponentRef name="Progress" />.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The dot animates while{" "}
+            <code className="inline-code">BUILDING</code> or{" "}
+            <code className="inline-code">QUEUED</code> and goes
+            static once the deployment reaches a terminal state.
+            Don&apos;t add a separate spinner alongside it.
+          </li>
+          <li>
+            Don&apos;t flash the color through every transitional
+            state on a polling tick; only update when the readyState
+            changes.
+          </li>
+          <li>
+            Pair with <ComponentRef name="Relative Time Card" /> when
+            timing matters (
+            <code className="inline-code">Building · 12s ago</code>);
+            the dot alone doesn&apos;t convey duration.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">titlePrefix</code> is a noun
+            phrase, not a sentence. Default{" "}
+            <code className="inline-code">&quot;This deployment&quot;</code>{" "}
+            works for single-deployment surfaces; in lists, pass the
+            entity (
+            <code className="inline-code">
+              titlePrefix=&quot;vercel-site production&quot;
+            </code>
+            ). Don&apos;t end with a verb or punctuation.
+          </li>
+          <li>
+            Use <code className="inline-code">label</code> only when
+            the dot stands alone without surrounding text; the
+            component sentence-cases the state for you (
+            <code className="inline-code">Building</code>,{" "}
+            <code className="inline-code">Ready</code>,{" "}
+            <code className="inline-code">Error</code>).
+          </li>
+          <li>
+            Don&apos;t wrap the dot in extra prose like{" "}
+            <code className="inline-code">Status: Ready</code>. The
+            label already names the state.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The component composes its own{" "}
+            <code className="inline-code">aria-label</code> from{" "}
+            <code className="inline-code">titlePrefix</code> plus the
+            state message; don&apos;t override it with a generic{" "}
+            <code className="inline-code">
+              aria-label=&quot;status&quot;
+            </code>
+            .
+          </li>
+          <li>
+            When the dot sits inline with text that already names the
+            state, mark the dot decorative with{" "}
+            <code className="inline-code">aria-hidden</code> so screen
+            readers don&apos;t announce it twice.
+          </li>
+          <li>
+            Color is not the only signal: every state ships with a
+            distinct title and label so colorblind users get the same
+            information.
+          </li>
+        </ul>
       </Section>
 
       <Toast
