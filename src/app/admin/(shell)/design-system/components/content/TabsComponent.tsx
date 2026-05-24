@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -321,9 +322,9 @@ export function Component(): JSX.Element {
       value={selected}
       onChange={(t) => setSelected(t)}
       tabs={[
-        { value: 'apple', label: 'Apple' },
-        { value: 'orange', label: 'Orange' },
-        { value: 'mango', label: 'Mango' },
+        { value: 'apple', title: 'Apple' },
+        { value: 'orange', title: 'Orange' },
+        { value: 'mango', title: 'Mango' },
       ]}
     />
   );
@@ -341,9 +342,9 @@ export function Component(): JSX.Element {
       value={selected}
       onChange={(t) => setSelected(t)}
       tabs={[
-        { value: 'apple', label: 'Apple' },
-        { value: 'orange', label: 'Orange' },
-        { value: 'mango', label: 'Mango' },
+        { value: 'apple', title: 'Apple' },
+        { value: 'orange', title: 'Orange' },
+        { value: 'mango', title: 'Mango' },
       ]}
     />
   );
@@ -360,11 +361,11 @@ export function Component(): JSX.Element {
       value={selected}
       onChange={(t) => setSelected(t)}
       tabs={[
-        { value: 'apple', label: 'Apple' },
-        { value: 'orange', label: 'Orange' },
+        { value: 'apple', title: 'Apple' },
+        { value: 'orange', title: 'Orange' },
         {
           value: 'mango',
-          label: 'Mango',
+          title: 'Mango',
           disabled: true,
         },
       ]}
@@ -384,9 +385,9 @@ export function Component(): JSX.Element {
       value={selected}
       onChange={(t) => setSelected(t)}
       tabs={[
-        { value: 'adidas', label: 'Adidas', icon: <SiAdidas size={16} color="#000" /> },
-        { value: 'new-balance', label: 'New Balance', icon: <SiNewbalance size={14} color="#cf0a2c" /> },
-        { value: 'nike', label: 'Nike', icon: <SiNike size={18} color="#000" /> },
+        { value: 'adidas', title: 'Adidas', icon: <SiAdidas size={16} color="#000" /> },
+        { value: 'new-balance', title: 'New Balance', icon: <SiNewbalance size={14} color="#cf0a2c" /> },
+        { value: 'nike', title: 'Nike', icon: <SiNike size={18} color="#000" /> },
       ]}
     />
   );
@@ -403,9 +404,9 @@ export function Component(): JSX.Element {
       value={selected}
       onChange={(t) => setSelected(t)}
       tabs={[
-        { value: 'adidas', label: 'Adidas' },
-        { value: 'new-balance', label: 'New Balance' },
-        { value: 'nike', label: 'Nike', disabled: true },
+        { value: 'adidas', title: 'Adidas' },
+        { value: 'new-balance', title: 'New Balance' },
+        { value: 'nike', title: 'Nike', disabled: true },
       ]}
       variant="secondary"
     />
@@ -420,9 +421,9 @@ function DefaultDemo() {
   return (
     <Tabs
       tabs={[
-        { value: "apple", label: "Apple" },
-        { value: "orange", label: "Orange" },
-        { value: "mango", label: "Mango" },
+        { value: "apple", title: "Apple" },
+        { value: "orange", title: "Orange" },
+        { value: "mango", title: "Mango" },
       ]}
       defaultValue="mango"
     />
@@ -433,9 +434,9 @@ function DisabledDemo() {
   return (
     <Tabs
       tabs={[
-        { value: "apple", label: "Apple" },
-        { value: "orange", label: "Orange" },
-        { value: "mango", label: "Mango" },
+        { value: "apple", title: "Apple" },
+        { value: "orange", title: "Orange" },
+        { value: "mango", title: "Mango" },
       ]}
       value="apple"
       disabled
@@ -447,9 +448,9 @@ function DisableSpecificDemo() {
   return (
     <Tabs
       tabs={[
-        { value: "apple", label: "Apple" },
-        { value: "orange", label: "Orange" },
-        { value: "mango", label: "Mango", disabled: true },
+        { value: "apple", title: "Apple" },
+        { value: "orange", title: "Orange" },
+        { value: "mango", title: "Mango", disabled: true },
       ]}
       defaultValue="apple"
     />
@@ -460,9 +461,9 @@ function WithIconsDemo() {
   return (
     <Tabs
       tabs={[
-        { value: "adidas", label: "Adidas", icon: <SiAdidas size={16} color="#000" /> },
-        { value: "new-balance", label: "New Balance", icon: <SiNewbalance size={14} color="#cf0a2c" /> },
-        { value: "nike", label: "Nike", icon: <SiNike size={18} color="#000" /> },
+        { value: "adidas", title: "Adidas", icon: <SiAdidas size={16} color="#000" /> },
+        { value: "new-balance", title: "New Balance", icon: <SiNewbalance size={14} color="#cf0a2c" /> },
+        { value: "nike", title: "Nike", icon: <SiNike size={18} color="#000" /> },
       ]}
       defaultValue="adidas"
     />
@@ -474,9 +475,9 @@ function SecondaryDemo() {
     <Tabs
       variant="secondary"
       tabs={[
-        { value: "adidas", label: "Adidas" },
-        { value: "new-balance", label: "New Balance" },
-        { value: "nike", label: "Nike", disabled: true },
+        { value: "adidas", title: "Adidas" },
+        { value: "new-balance", title: "New Balance" },
+        { value: "nike", title: "Nike", disabled: true },
       ]}
       defaultValue="adidas"
     />
@@ -545,6 +546,126 @@ export default function TabsComponent() {
             <SecondaryDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Tabs to switch between sibling views inside a single
+            page (<code className="inline-code">Overview</code>,{" "}
+            <code className="inline-code">Logs</code>,{" "}
+            <code className="inline-code">Settings</code>).
+          </li>
+          <li>
+            For navigation between unrelated pages, use a sub-menu,
+            not Tabs. Tabs imply the views share scope, URL parent,
+            and data model.
+          </li>
+          <li>
+            Cap a Tabs row at 5–7 entries on desktop and 3–4 on
+            mobile. Past that, consolidate or move secondary views
+            behind a <ComponentRef name="Menu" />.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Selecting a tab is instant; don&apos;t trigger network
+            confirmation or toast on tab change.
+          </li>
+          <li>
+            Reflect the active tab in the URL (query param or path) so
+            deep-links and refresh restore state.
+          </li>
+          <li>
+            Disable individual tabs only for permission or empty-state
+            reasons; pair the disabled tab with a{" "}
+            <code className="inline-code">tooltip</code> that names
+            the constraint.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">tabs[].title</code> is
+            Title Case, 1–2 words, and names the destination noun (
+            <code className="inline-code">Overview</code>,{" "}
+            <code className="inline-code">Logs</code>,{" "}
+            <code className="inline-code">Settings</code>). Verbs
+            belong on buttons;{" "}
+            <code className="inline-code">View Logs</code> is wrong
+            on a tab.
+          </li>
+          <li>
+            <code className="inline-code">tabs[].tooltip</code> is
+            sentence case and explains the constraint (
+            <code className="inline-code">
+              Only visible to project owners.
+            </code>
+            ), not the tab&apos;s purpose.
+          </li>
+          <li>
+            Don&apos;t append a count to the title (
+            <code className="inline-code">Logs (12)</code>); use the{" "}
+            <code className="inline-code">tabs[].badge</code> slot
+            instead and drop the badge at zero.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Left/Right arrows move focus across tabs (skipping
+            disabled), Home/End jump to first/last, and Enter/Space
+            activate. Don&apos;t hijack those keys with global
+            shortcuts.
+          </li>
+          <li>
+            Label the tablist with{" "}
+            <code className="inline-code">aria-label</code> when no
+            visible heading sits above it (
+            <code className="inline-code">
+              aria-label=&quot;Sections&quot;
+            </code>
+            ).
+          </li>
+          <li>
+            The component renders a visible focus ring on the active
+            tab via{" "}
+            <code className="inline-code">:focus-visible</code>{" "}
+            — don&apos;t override it with{" "}
+            <code className="inline-code">outline: none</code> for
+            visual polish.
+          </li>
+        </ul>
       </Section>
 
       <Toast
