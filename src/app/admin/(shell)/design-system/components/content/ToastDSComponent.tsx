@@ -3,6 +3,7 @@
 import React, { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -822,6 +823,157 @@ export default function ToastDSComponent() {
             <ErrorDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showLinkToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use a toast for non-blocking acknowledgments of
+            user-initiated actions:{" "}
+            <code className="inline-code">Domain added</code>,{" "}
+            <code className="inline-code">Project archived</code>,{" "}
+            <code className="inline-code">Deployment canceled</code>.
+          </li>
+          <li>
+            Don&apos;t use a toast alone for billing failures,
+            permission denials, or build failures the user has to
+            triage. Pair a ≤6-word toast (
+            <code className="inline-code">Build failed</code>) with a
+            persistent row carrying the recovery step and a stable
+            identifier.
+          </li>
+          <li>
+            Field-level validation belongs on the{" "}
+            <ComponentRef name="Input" />, not in a toast. Persistent
+            configuration warnings belong in{" "}
+            <ComponentRef name="Note" /> or{" "}
+            <ComponentRef name="Project Banner" />.
+          </li>
+          <li>
+            Pick the variant by how the user experienced the event,
+            not by HTTP status. A user-canceled deploy is{" "}
+            <code className="inline-code">
+              showToast({"{ message: 'Deployment canceled' }"})
+            </code>{" "}
+            (default variant), not{" "}
+            <code className="inline-code">success</code>. A partial
+            deploy with skipped routes is{" "}
+            <code className="inline-code">variant=&quot;warning&quot;</code>.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Default toasts auto-dismiss after 5 seconds; pass{" "}
+            <code className="inline-code">preserve: true</code> only
+            when the user must read or act on the message before it
+            disappears.
+          </li>
+          <li>
+            Undo snackbars stay on screen long enough to react and
+            pair the past-tense toast with a single{" "}
+            <code className="inline-code">Undo</code> action — pass an{" "}
+            <code className="inline-code">undo</code> callback to wire
+            the rollback.
+          </li>
+          <li>
+            Don&apos;t stack toasts to narrate one async flow; emit
+            the success or error toast at the terminal step. The
+            container caps at 3 visible toasts; older ones drop off.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            One sentence, sentence case, no trailing period when the
+            toast is a single sentence.
+          </li>
+          <li>
+            Completion toasts follow{" "}
+            <code className="inline-code">{"{Noun}"} {"{past-participle}"}</code>:{" "}
+            <code className="inline-code">Blob deleted</code>,{" "}
+            <code className="inline-code">Domain added</code>,{" "}
+            <code className="inline-code">
+              Environment variable saved
+            </code>
+            . Never include{" "}
+            <code className="inline-code">successfully</code>; the
+            action name implies it.
+          </li>
+          <li>
+            Error toasts are two sentences with periods and end with
+            a recovery step:{" "}
+            <code className="inline-code">
+              Couldn&apos;t verify domain. Try again.
+            </code>{" "}
+            Use <code className="inline-code">Couldn&apos;t</code> for
+            user-state errors and{" "}
+            <code className="inline-code">Failed to</code> for system
+            or infra errors; match adjacent shipped copy and don&apos;t
+            flip mid-flow.
+          </li>
+          <li>
+            Pair the toast verb 1:1 with the destructive button verb (
+            <code className="inline-code">Delete Project</code> then{" "}
+            <code className="inline-code">Project deleted</code>,
+            never <code className="inline-code">Project removed</code>
+            ).
+          </li>
+          <li>
+            Undo snackbars use the literal label{" "}
+            <code className="inline-code">Undo</code>, never{" "}
+            <code className="inline-code">Restore</code>,{" "}
+            <code className="inline-code">Bring Back</code>, or{" "}
+            <code className="inline-code">Cancel</code>. Only use the
+            pattern when the rollback is safe.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Each toast card renders with{" "}
+            <code className="inline-code">role=&quot;status&quot;</code>{" "}
+            and{" "}
+            <code className="inline-code">aria-atomic=&quot;true&quot;</code>{" "}
+            so screen readers announce the full message politely. For
+            blocking errors that must interrupt a flow, reach for a{" "}
+            <ComponentRef name="Modal" /> instead.
+          </li>
+          <li>
+            Don&apos;t put primary navigation inside a toast;
+            transient surfaces vanish before keyboard users can reach
+            them.
+          </li>
+        </ul>
       </Section>
 
       <LinkCopyToast
