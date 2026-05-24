@@ -647,6 +647,91 @@ export default function ScrollerComponent() {
         </div>
       </Section>
 
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Scroller for an overflowing list of peer items along a
+            single axis: chip rows, log streams, code snippets, command
+            palettes.
+          </li>
+          <li>
+            Pick <code className="inline-code">overflow=&quot;y&quot;</code>{" "}
+            for stacked feeds,{" "}
+            <code className="inline-code">overflow=&quot;x&quot;</code>{" "}
+            for chip and tile rails,{" "}
+            <code className="inline-code">overflow=&quot;both&quot;</code>{" "}
+            only when content genuinely scrolls in both directions (logs
+            with very long lines).
+          </li>
+          <li>
+            For paginated or virtualized data sets larger than a few
+            hundred items, render with a virtualization library inside
+            the Scroller rather than dumping every node into the DOM.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Auto-scroll buttons target direct children only. If items
+            are wrapped in extra layout nodes the buttons won&apos;t
+            find their target.
+          </li>
+          <li>
+            Show edge fade or shadow affordances on the clipped axis so
+            users see there&apos;s more content past the viewport.
+          </li>
+          <li>
+            Keep item widths and gaps consistent in horizontal
+            scrollers; ragged edges break the snap rhythm and make the
+            rail feel broken.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Tab order follows DOM order, so place items in reading order
+            regardless of visual scroll direction.
+          </li>
+          <li>
+            Scroller buttons need <code className="inline-code">aria-label</code>s
+            that name the direction and content (
+            <code className="inline-code">
+              Scroll customer logos left
+            </code>
+            ), not bare <code className="inline-code">Previous</code>/
+            <code className="inline-code">Next</code>.
+          </li>
+          <li>
+            Make sure focusing an off-screen item scrolls it into view;
+            the default browser behavior covers this, but custom focus
+            traps can break it.
+          </li>
+        </ul>
+      </Section>
+
       <Toast
         message={toast.message}
         isVisible={toast.isVisible}
