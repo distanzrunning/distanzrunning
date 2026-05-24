@@ -178,7 +178,10 @@ function SheetContent({
           position: "fixed",
           inset: 0,
           zIndex: 99,
-          backgroundColor: "rgba(250, 250, 250, 0.5)",
+          backgroundColor: "var(--ds-overlay-backdrop-color)",
+          opacity: "var(--ds-overlay-backdrop-opacity)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
           animation: "sheet-overlay-in 200ms ease-out",
         }}
       />
