@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -374,6 +375,91 @@ export default function SpinnerComponent() {
             <CustomSizesDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use a Spinner for indeterminate, single-action waits of
+            roughly one to three seconds: submit buttons, inline icon
+            refresh, row-level retries.
+          </li>
+          <li>
+            For submit buttons, set the{" "}
+            <code className="inline-code">loading</code> prop on{" "}
+            <ComponentRef name="Button" /> so the spinner, sizing, and
+            busy state stay aligned; don&apos;t hand-roll a Spinner
+            inside a button.
+          </li>
+          <li>
+            Pick <ComponentRef name="Skeleton" /> when async data fills
+            a known layout, <ComponentRef name="Loading Dots" /> for
+            inline copy, and <ComponentRef name="Progress" /> when
+            total work is known.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Mount the Spinner only after the action starts.
+            Pre-rendering and toggling visibility leaves a partial
+            rotation visible at idle and reads as jank.
+          </li>
+          <li>
+            Pair any wait longer than ~1s with copy that names the
+            work (<code className="inline-code">Verifying…</code>,{" "}
+            <code className="inline-code">Deploying…</code>) so the
+            user knows what&apos;s blocking.
+          </li>
+          <li>
+            Match the Spinner size to the surrounding type or icon
+            size, not the parent container.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Set <code className="inline-code">aria-busy=&quot;true&quot;</code>{" "}
+            on the element wrapping the in-flight action so screen
+            readers announce the state change. The Spinner itself
+            already carries <code className="inline-code">role=&quot;status&quot;</code>{" "}
+            and an <code className="inline-code">aria-label</code> of{" "}
+            <code className="inline-code">Loading</code>.
+          </li>
+          <li>
+            Keep the trigger focusable while loading; swapping it for
+            a separate spinner element loses keyboard focus.
+          </li>
+          <li>
+            The component already honors{" "}
+            <code className="inline-code">prefers-reduced-motion</code>{" "}
+            (animation disabled, bars at 50% opacity); don&apos;t stack
+            extra animation around the Spinner.
+          </li>
+        </ul>
       </Section>
 
       <Toast

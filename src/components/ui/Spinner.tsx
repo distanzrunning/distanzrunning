@@ -25,7 +25,7 @@ export function Spinner({ size = 20, className = "" }: SpinnerProps) {
         {Array.from({ length: barCount }).map((_, i) => (
           <div
             key={i}
-            className="absolute rounded-full"
+            className="ds-spinner-bar absolute rounded-full"
             style={{
               left: "-10%",
               top: "-3.9%",
@@ -46,6 +46,12 @@ export function Spinner({ size = 20, className = "" }: SpinnerProps) {
           }
           100% {
             opacity: 0.3;
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .ds-spinner-bar {
+            animation: none !important;
+            opacity: 0.5;
           }
         }
       `}</style>
