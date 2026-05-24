@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -348,6 +349,19 @@ export function Component(): JSX.Element {
   );
 }`;
 
+const labelHelperCode = `import { Textarea } from '@/components/ui/Textarea';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <Textarea
+      label="Release Notes"
+      placeholder="What changed in this release?"
+      helperText="Markdown is supported and rendered on the release page."
+    />
+  );
+}`;
+
 // ============================================================================
 // Demo Components
 // ============================================================================
@@ -366,6 +380,16 @@ function ErrorDemo() {
       error
       errorMessage="There has been an error."
       defaultValue={LOREM}
+    />
+  );
+}
+
+function LabelHelperDemo() {
+  return (
+    <Textarea
+      label="Release Notes"
+      placeholder="What changed in this release?"
+      helperText="Markdown is supported and rendered on the release page."
     />
   );
 }
@@ -410,6 +434,91 @@ export default function TextareaComponent() {
             <ErrorDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="label-and-helper-text" onCopyLink={showToast}>
+          Label and helper text
+        </SectionHeader>
+        <p
+          className="mt-2 leading-6 xl:mt-4"
+          style={{ color: "var(--ds-gray-900)" }}
+        >
+          Pass <code className="inline-code">label</code> for a Title
+          Case noun and <code className="inline-code">helperText</code>{" "}
+          for guidance. The component wires{" "}
+          <code className="inline-code">aria-describedby</code> and
+          hides the helper text when an error message is shown.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={labelHelperCode}>
+            <LabelHelperDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pick{" "}
+            <code className="inline-code">&lt;Textarea&gt;</code> for
+            content that wraps to multiple lines (commit messages,
+            descriptions, notes); use <ComponentRef name="Input" />{" "}
+            for a single value like a name or domain.
+          </li>
+          <li>
+            Set a generous default{" "}
+            <code className="inline-code">rows</code> (or{" "}
+            <code className="inline-code">minHeight</code>) and grow
+            only when the surface has vertical room; don&apos;t let
+            the field push primary actions below the fold.
+          </li>
+          <li>
+            Validate on blur and pass a message via{" "}
+            <code className="inline-code">errorMessage</code> (with{" "}
+            <code className="inline-code">error</code> set) to render
+            the inline message; the validation replaces the helper
+            text on failure.
+          </li>
+          <li>
+            Trim leading and trailing whitespace on submit so empty
+            newlines don&apos;t pass a{" "}
+            <code className="inline-code">required</code> check.
+          </li>
+          <li>
+            Labels are short Title Case nouns (
+            <code className="inline-code">Description</code>,{" "}
+            <code className="inline-code">Release Notes</code>);
+            placeholders show an example value, not instructions like{" "}
+            <code className="inline-code">Enter a description</code>.
+          </li>
+          <li>
+            Validation names the field and constraint, ends in a
+            period, and skips{" "}
+            <code className="inline-code">please</code> (
+            <code className="inline-code">
+              Description is required.
+            </code>
+            ,{" "}
+            <code className="inline-code">
+              Release notes can&apos;t exceed 500 characters.
+            </code>
+            ).
+          </li>
+          <li>
+            Render helper text via the{" "}
+            <code className="inline-code">helperText</code> prop —
+            the component links it to the field through{" "}
+            <code className="inline-code">aria-describedby</code> and
+            hides it when an error message is shown. Sentence case,
+            one sentence, with a period.
+          </li>
+        </ul>
       </Section>
 
       <Toast

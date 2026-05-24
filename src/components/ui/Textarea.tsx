@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef } from "react";
+import React, { forwardRef, useId } from "react";
 
 // ============================================================================
 // Types
@@ -8,6 +8,17 @@ import React, { forwardRef } from "react";
 
 export interface TextareaProps
   extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "className"> {
+  /**
+   * Visible label rendered above the field. Short Title Case noun
+   * (`Description`, `Release Notes`).
+   */
+  label?: string;
+  /**
+   * Helper text rendered as a sibling paragraph below the field and
+   * linked via `aria-describedby`. Sentence case, one sentence,
+   * with a period. Replaced by the error message on failure.
+   */
+  helperText?: string;
   /** Whether the textarea is in an error state */
   error?: boolean;
   /** Error message to display below the textarea */
@@ -48,16 +59,32 @@ function ErrorIcon() {
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   function Textarea(
     {
+      label,
+      helperText,
       error = false,
       errorMessage,
       minHeight = 100,
       disabled,
       className,
       placeholder,
+      "aria-describedby": ariaDescribedByProp,
       ...props
     },
     ref,
   ) {
+    const uid = useId();
+    const helperId = helperText ? `${uid}-helper` : undefined;
+    const errorId = error && errorMessage ? `${uid}-error` : undefined;
+
+    // Compose aria-describedby: error message takes priority over
+    // helper text when both are present (the visible helper is
+    // replaced by the error per the BP), but expose both ids so SRs
+    // can read either.
+    const describedBy =
+      [ariaDescribedByProp, errorId, !errorId ? helperId : undefined]
+        .filter(Boolean)
+        .join(" ") || undefined;
+
     return (
       <label
         className={`ds-textarea-wrapper${className ? ` ${className}` : ""}`}
@@ -66,6 +93,20 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           width: "100%",
         }}
       >
+        {label && (
+          <div
+            className="ds-textarea-label"
+            style={{
+              fontSize: 13,
+              lineHeight: "20px",
+              color: "var(--ds-gray-900)",
+              marginBottom: 8,
+            }}
+          >
+            {label}
+          </div>
+        )}
+
         <div
           className={`ds-textarea-container${error ? " ds-textarea--error" : ""}${disabled ? " ds-textarea--disabled" : ""}`}
           style={{
@@ -84,6 +125,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             autoCapitalize="off"
             autoComplete="off"
             autoCorrect="off"
+            aria-invalid={error || undefined}
+            aria-describedby={describedBy}
             className="ds-textarea-field"
             style={{
               display: "block",
@@ -107,9 +150,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           />
         </div>
 
-        {/* Error message */}
+        {/* Error message — replaces helper text on failure */}
         {error && errorMessage && (
           <div
+            id={errorId}
             className="ds-textarea-error"
             style={{
               display: "flex",
@@ -124,6 +168,23 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             <ErrorIcon />
             <span>{errorMessage}</span>
           </div>
+        )}
+
+        {/* Helper text — hidden when error is shown */}
+        {helperText && !(error && errorMessage) && (
+          <p
+            id={helperId}
+            className="ds-textarea-helper"
+            style={{
+              margin: 0,
+              marginTop: 8,
+              fontSize: 13,
+              lineHeight: "20px",
+              color: "var(--ds-gray-900)",
+            }}
+          >
+            {helperText}
+          </p>
         )}
       </label>
     );
