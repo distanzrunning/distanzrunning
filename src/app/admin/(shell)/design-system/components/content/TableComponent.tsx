@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -812,6 +813,110 @@ export default function TableComponent() {
             <FullFeaturedDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use{" "}
+            <code className="inline-code">&lt;Table&gt;</code> for
+            tabular data where rows share the same shape and at least
+            one column is sortable or comparable across rows.
+          </li>
+          <li>
+            For a row of descriptive content paired with a single
+            action (membership row, integration row), use{" "}
+            <ComponentRef name="Entity" /> instead.
+          </li>
+          <li>
+            For a key/value metadata block on a detail page, use{" "}
+            <ComponentRef name="Description" />, not a two-column
+            table.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            When the underlying list is empty (filter cleared, never
+            created), render <ComponentRef name="Empty State" />{" "}
+            outside the table rather than an empty{" "}
+            <code className="inline-code">
+              &lt;Table.Body&gt;
+            </code>
+            .
+          </li>
+          <li>
+            Render <code className="inline-code">—</code> in cells
+            where a value is unknown or not applicable. Don&apos;t
+            substitute <code className="inline-code">N/A</code>,{" "}
+            <code className="inline-code">null</code>, or an empty
+            string.
+          </li>
+          <li>
+            Sortable column headers are buttons. The visible label
+            stays Title Case; the sort-direction arrow is decorative
+            and the button announces the next sort state to assistive
+            tech.
+          </li>
+          <li>
+            Apply <code className="inline-code">tabular-nums</code>{" "}
+            (or Geist Mono) to numeric columns so digits align across
+            rows for comparison.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Column headers (
+            <code className="inline-code">
+              &lt;Table.Head&gt;
+            </code>
+            ) are Title Case nouns or noun phrases:{" "}
+            <code className="inline-code">Last Used</code>,{" "}
+            <code className="inline-code">Requests (7d)</code>,{" "}
+            <code className="inline-code">Created</code>,{" "}
+            <code className="inline-code">Status</code>. Never
+            sentences.
+          </li>
+          <li>
+            Use the canonical short relative-time form in cells (
+            <code className="inline-code">2m ago</code>,{" "}
+            <code className="inline-code">5h ago</code>); switch to{" "}
+            <code className="inline-code">Mar 14, 2026</code> past 7
+            days. See <ComponentRef name="Relative Time Card" />.
+          </li>
+          <li>
+            Pagination labels are{" "}
+            <code className="inline-code">Previous</code> and{" "}
+            <code className="inline-code">Next</code>. Page-count copy
+            reads <code className="inline-code">Page 2 of 7</code> or{" "}
+            <code className="inline-code">21–40 of 142</code> with an
+            en-dash inside the range.
+          </li>
+        </ul>
       </Section>
 
       <Toast

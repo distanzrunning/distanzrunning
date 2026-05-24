@@ -164,8 +164,20 @@ const TableFooter = forwardRef<
 ));
 TableFooter.displayName = "TableFooter";
 
+// Compound aliases so callers can use `<Table.Body>` / `<Table.Head>`
+// notation that matches Geist's BP wording. Named exports remain for
+// existing consumers.
+const TableWithSubcomponents = Object.assign(Table, {
+  Header: TableHeader,
+  Body: TableBody,
+  Row: TableRow,
+  Head: TableHead,
+  Cell: TableCell,
+  Footer: TableFooter,
+});
+
 export {
-  Table,
+  TableWithSubcomponents as Table,
   TableHeader,
   TableBody,
   TableRow,
