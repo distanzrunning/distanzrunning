@@ -66,12 +66,14 @@ function ensureTabStyles() {
         0 0 0 4px var(--ds-focus-color, var(--ds-gray-alpha-600));
       border-radius: 6px;
     }
-    /* Default-variant hover: non-selected, non-disabled tabs darken
-       to gray-1000. Uses !important to override the inline color
-       (which has higher specificity than a class rule). Scoped to
+    /* Default-variant hover: non-selected tabs (including disabled)
+       darken to gray-1000. Disabled tabs look identical to enabled,
+       differing only by the not-allowed cursor and click being
+       blocked. Uses !important to override the inline color (which
+       has higher specificity than a class rule). Scoped to
        hover-capable input devices so touch screens don't stick. */
     @media (hover: hover) {
-      .ds-tabs-tab[data-variant="default"]:not([aria-selected="true"]):not(:disabled):hover {
+      .ds-tabs-tab[data-variant="default"]:not([aria-selected="true"]):hover {
         color: var(--ds-gray-1000) !important;
       }
     }
@@ -210,11 +212,10 @@ export function Tabs({
               padding: "14px 2px",
               fontSize: 14,
               fontWeight: 400,
-              color: isDisabled
-                ? "var(--ds-gray-600)"
-                : isSelected
-                  ? "var(--ds-gray-1000)"
-                  : "var(--ds-gray-900)",
+              // Disabled inherits the same color/hover as enabled
+              // (default variant) — the only differences are the
+              // not-allowed cursor and click being blocked.
+              color: isSelected ? "var(--ds-gray-1000)" : "var(--ds-gray-900)",
               backgroundColor: "transparent",
               border: "none",
               borderBottom: isSelected
