@@ -310,50 +310,14 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // Code Examples
 // ============================================================================
 
-const branches = [
-  "main",
-  "staging",
-  "feat/auth-rewrite",
-  "feat/race-detail-toc",
-  "feat/results-import",
-  "feat/sanity-image-pipeline",
-  "fix/search-debounce",
-  "fix/sheet-overlay-flash",
-  "chore/upgrade-next-15",
-  "chore/lint-rules",
-  "docs/onboarding",
-  "docs/design-system",
-];
-
 const defaultCode = `import { ShowMore } from '@/components/ui/ShowMore';
-
-const branches = [
-  'main',
-  'staging',
-  'feat/auth-rewrite',
-  'feat/race-detail-toc',
-  'feat/results-import',
-  'feat/sanity-image-pipeline',
-  'fix/search-debounce',
-  'fix/sheet-overlay-flash',
-  'chore/upgrade-next-15',
-  'chore/lint-rules',
-  'docs/onboarding',
-  'docs/design-system',
-];
 
 export function Component(): JSX.Element {
   return (
-    <ShowMore initiallyVisible={5}>
-      {branches.map((name) => (
-        <div
-          key={name}
-          className="text-copy-14 text-textDefault py-2"
-          style={{ borderBottom: '1px solid var(--ds-gray-400)' }}
-        >
-          {name}
-        </div>
-      ))}
+    <ShowMore initiallyVisible={0}>
+      <p className="text-copy-14 text-textDefault">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </p>
     </ShowMore>
   );
 }`;
@@ -364,16 +328,10 @@ export function Component(): JSX.Element {
 
 function DefaultDemo() {
   return (
-    <ShowMore initiallyVisible={5}>
-      {branches.map((name) => (
-        <div
-          key={name}
-          className="text-copy-14 text-textDefault py-2"
-          style={{ borderBottom: "1px solid var(--ds-gray-400)" }}
-        >
-          {name}
-        </div>
-      ))}
+    <ShowMore initiallyVisible={0}>
+      <p className="text-copy-14 text-textDefault">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </p>
     </ShowMore>
   );
 }
