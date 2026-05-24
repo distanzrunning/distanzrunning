@@ -66,6 +66,15 @@ function ensureTabStyles() {
         0 0 0 4px var(--ds-focus-color, var(--ds-gray-alpha-600));
       border-radius: 6px;
     }
+    /* Default-variant hover: non-selected, non-disabled tabs darken
+       to gray-1000. Uses !important to override the inline color
+       (which has higher specificity than a class rule). Scoped to
+       hover-capable input devices so touch screens don't stick. */
+    @media (hover: hover) {
+      .ds-tabs-tab[data-variant="default"]:not([aria-selected="true"]):not(:disabled):hover {
+        color: var(--ds-gray-1000) !important;
+      }
+    }
   `;
   document.head.appendChild(style);
 }
@@ -225,6 +234,7 @@ export function Tabs({
               tabRefs.current[idx] = el;
             }}
             className="ds-tabs-tab"
+            data-variant={variant}
             role="tab"
             type="button"
             aria-selected={isSelected}
