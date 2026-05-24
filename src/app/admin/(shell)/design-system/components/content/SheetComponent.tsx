@@ -317,7 +317,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Sheet modal>
+    <Sheet>
       <Sheet.Trigger>
         <Button>Open Sheet</Button>
       </Sheet.Trigger>
@@ -365,7 +365,6 @@ export function Component(): JSX.Element {
           <Sheet.Content
             side={side}
             size={side === 'left' || side === 'right' ? '75%' : undefined}
-            dismissOnOutsideClick
           >
             <Sheet.Header>
               <Sheet.Title>Sheet from {side}</Sheet.Title>
@@ -386,7 +385,7 @@ export function Component(): JSX.Element {
 
 function DefaultDemo() {
   return (
-    <Sheet modal>
+    <Sheet>
       <Sheet.Trigger>
         <Button>Open Sheet</Button>
       </Sheet.Trigger>
@@ -456,7 +455,6 @@ function WithSideDemo() {
           <Sheet.Content
             side={side}
             size={side === "left" || side === "right" ? "75%" : undefined}
-            dismissOnOutsideClick
           >
             <SideSheetContent side={side} />
           </Sheet.Content>
@@ -565,8 +563,10 @@ export default function SheetComponent() {
             change sides mid-session.
           </li>
           <li>
-            Outside-click does not auto-close, so always render an
-            explicit close affordance and honor Escape.
+            Clicking the overlay dismisses the sheet and Escape closes
+            it. Still render an explicit close affordance for clarity
+            and for keyboard / screen-reader users who can&apos;t reach
+            the overlay.
           </li>
         </ul>
 
@@ -613,7 +613,8 @@ export default function SheetComponent() {
             <code className="inline-code">
               aria-label=&quot;Close&quot;
             </code>
-            ) since clicking outside doesn&apos;t dismiss.
+            ) so keyboard and screen-reader users have a path that
+            doesn&apos;t depend on clicking the overlay.
           </li>
           <li>
             Announce the sheet with{" "}

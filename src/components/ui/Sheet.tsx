@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect } from "react";
+import React, { createContext, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 
 // ============================================================================
@@ -32,14 +32,6 @@ interface SheetContentProps {
   /** Custom width/height for the sheet panel (e.g., "75%", "512px", "100%") */
   size?: string;
   className?: string;
-  /**
-   * Allow clicking outside the sheet to dismiss it. Defaults to
-   * `false` because the BP rule is "Outside-click does not auto-close,
-   * so always render an explicit close affordance and honor Escape."
-   * Flip to `true` only when the sheet has no explicit close button
-   * (e.g. lightweight previews / variant demos).
-   */
-  dismissOnOutsideClick?: boolean;
 }
 
 interface SheetHeaderProps {
@@ -172,9 +164,7 @@ function SheetContent({
   side = "right",
   size,
   className,
-  dismissOnOutsideClick = false,
 }: SheetContentProps) {
-  const modal = useContext(SheetModalContext);
   const isHorizontal = side === "left" || side === "right";
   const resolvedSize = size || defaultSizes[side];
   const sizeStyle: React.CSSProperties = isHorizontal
@@ -183,22 +173,17 @@ function SheetContent({
 
   return (
     <Dialog.Portal>
-      {modal && (
-        <Dialog.Overlay
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 99,
-            backgroundColor: "rgba(250, 250, 250, 0.5)",
-            animation: "sheet-overlay-in 200ms ease-out",
-          }}
-        />
-      )}
+      <Dialog.Overlay
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 99,
+          backgroundColor: "rgba(250, 250, 250, 0.5)",
+          animation: "sheet-overlay-in 200ms ease-out",
+        }}
+      />
       <Dialog.Content
         className={className || sideClassNames[side]}
-        onPointerDownOutside={
-          dismissOnOutsideClick ? undefined : (e) => e.preventDefault()
-        }
         style={{
           position: "fixed",
           zIndex: 100,
