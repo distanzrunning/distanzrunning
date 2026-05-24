@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -309,18 +310,50 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // Code Examples
 // ============================================================================
 
+const branches = [
+  "main",
+  "staging",
+  "feat/auth-rewrite",
+  "feat/race-detail-toc",
+  "feat/results-import",
+  "feat/sanity-image-pipeline",
+  "fix/search-debounce",
+  "fix/sheet-overlay-flash",
+  "chore/upgrade-next-15",
+  "chore/lint-rules",
+  "docs/onboarding",
+  "docs/design-system",
+];
+
 const defaultCode = `import { ShowMore } from '@/components/ui/ShowMore';
+
+const branches = [
+  'main',
+  'staging',
+  'feat/auth-rewrite',
+  'feat/race-detail-toc',
+  'feat/results-import',
+  'feat/sanity-image-pipeline',
+  'fix/search-debounce',
+  'fix/sheet-overlay-flash',
+  'chore/upgrade-next-15',
+  'chore/lint-rules',
+  'docs/onboarding',
+  'docs/design-system',
+];
 
 export function Component(): JSX.Element {
   return (
-    <ShowMore>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur.
-      </p>
+    <ShowMore initiallyVisible={5}>
+      {branches.map((name) => (
+        <div
+          key={name}
+          className="text-copy-14 text-textDefault py-2"
+          style={{ borderBottom: '1px solid var(--ds-gray-400)' }}
+        >
+          {name}
+        </div>
+      ))}
     </ShowMore>
   );
 }`;
@@ -331,14 +364,16 @@ export function Component(): JSX.Element {
 
 function DefaultDemo() {
   return (
-    <ShowMore>
-      <p className="text-copy-16 text-textDefault" style={{ lineHeight: 1.5 }}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur.
-      </p>
+    <ShowMore initiallyVisible={5}>
+      {branches.map((name) => (
+        <div
+          key={name}
+          className="text-copy-14 text-textDefault py-2"
+          style={{ borderBottom: "1px solid var(--ds-gray-400)" }}
+        >
+          {name}
+        </div>
+      ))}
     </ShowMore>
   );
 }
@@ -361,6 +396,54 @@ export default function ShowMoreComponent() {
             <DefaultDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use ShowMore for progressive disclosure of a single long
+            list or block (recent activity, repo branches, attached
+            resources). For sibling pages of the same data set, use{" "}
+            <ComponentRef name="Pagination" />; for optional sections,
+            use <ComponentRef name="Collapse" />.
+          </li>
+          <li>
+            Show enough rows to convey the shape of the list before
+            truncating (5–10 typical). Truncating at 2 makes the
+            affordance feel performative.
+          </li>
+          <li>
+            Pair the trigger with the count of hidden items so the user
+            knows the cost of expanding (
+            <code className="inline-code">Show 12 More</code>, then{" "}
+            <code className="inline-code">Show Less</code> after
+            expand). Title Case both labels.
+          </li>
+          <li>
+            Don&apos;t cycle Show More then Show Less mid-flow on the
+            same data set; collapsing rows after the user expanded them
+            scrolls them away from where they were reading.
+          </li>
+          <li>
+            Render hidden rows in the DOM when the count is small so
+            find-in-page works; lazy-load only when the dataset is
+            large enough to hurt initial render.
+          </li>
+          <li>
+            The trigger is a{" "}
+            <code className="inline-code">&lt;button&gt;</code> with{" "}
+            <code className="inline-code">aria-expanded</code> and{" "}
+            <code className="inline-code">aria-controls</code> pointing
+            at the list. After expansion, move focus to the first newly
+            revealed row so screen readers and keyboard users land in
+            the new content.
+          </li>
+        </ul>
       </Section>
 
       <Toast
