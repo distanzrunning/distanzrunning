@@ -18,16 +18,28 @@ interface SplitButtonProps {
   children: React.ReactNode;
   /** Primary button click handler */
   onClick?: () => void;
-  /** Button variant */
+  /**
+   * Primary button variant. Restricted to non-destructive variants
+   * on purpose — hiding a delete inside a dropdown is a sharp edge.
+   */
   variant?: "default" | "secondary";
   /** Button size */
   size?: "small" | "medium" | "large";
   /** Dropdown menu items */
   menuItems: SplitButtonMenuItem[];
-  /** Menu alignment */
-  menuAlign?: "start" | "end";
-  /** Dropdown trigger aria-label */
-  menuLabel?: string;
+  /**
+   * Menu alignment relative to the trigger. Default `bottom-start`
+   * places the menu under the primary button. Switch to `bottom-end`
+   * only when the button sits flush with the right edge of its
+   * container.
+   */
+  menuAlignment?: "bottom-start" | "bottom-end";
+  /**
+   * Accessible name for the dropdown trigger, e.g.
+   * `More deploy options`. Becomes the `aria-label` on the chevron
+   * button — the only label a screen reader hears for it.
+   */
+  menuButtonLabel?: string;
   /** Additional CSS classes */
   className?: string;
 }
@@ -78,8 +90,8 @@ export function SplitButton({
   variant = "default",
   size = "medium",
   menuItems,
-  menuAlign = "end",
-  menuLabel = "Toggle menu",
+  menuAlignment = "bottom-start",
+  menuButtonLabel = "Toggle menu",
   className = "",
 }: SplitButtonProps) {
   const [open, setOpen] = useState(false);
@@ -176,7 +188,7 @@ export function SplitButton({
   const menuStyle: React.CSSProperties = {
     position: "absolute",
     top: "calc(100% + 4px)",
-    ...(menuAlign === "end" ? { right: 0 } : { left: 0 }),
+    ...(menuAlignment === "bottom-end" ? { right: 0 } : { left: 0 }),
     width: 264,
     background: "var(--ds-background-100)",
     borderRadius: 12,
@@ -223,7 +235,7 @@ export function SplitButton({
         type="button"
         style={triggerStyle}
         onClick={() => setOpen((prev) => !prev)}
-        aria-label={menuLabel}
+        aria-label={menuButtonLabel}
         aria-expanded={open}
         onMouseEnter={(e) => {
           e.currentTarget.style.backgroundColor = isDefault
