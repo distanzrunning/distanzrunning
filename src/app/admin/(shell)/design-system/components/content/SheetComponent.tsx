@@ -372,11 +372,6 @@ export function Component(): JSX.Element {
                 This sheet slides in from the {side}.
               </Sheet.Description>
             </Sheet.Header>
-            <Sheet.Footer>
-              <Sheet.Close>
-                <Button variant="secondary">Close</Button>
-              </Sheet.Close>
-            </Sheet.Footer>
           </Sheet.Content>
         </Sheet>
       ))}
@@ -423,7 +418,7 @@ function DefaultDemo() {
 
 function SideSheetContent({ side }: { side: string }) {
   return (
-    <div className="flex flex-col gap-4 text-center">
+    <div className="flex flex-col text-center">
       <h2
         className="font-semibold"
         style={{ fontSize: 18, lineHeight: "28px", color: "var(--ds-gray-1000)" }}
@@ -433,13 +428,6 @@ function SideSheetContent({ side }: { side: string }) {
       <p style={{ fontSize: 14, lineHeight: "20px", color: "var(--ds-gray-700)" }}>
         This sheet slides in from the {side}.
       </p>
-      <div className="flex justify-center">
-        <Sheet.Close>
-          <Button variant="secondary" size="small">
-            Close
-          </Button>
-        </Sheet.Close>
-      </div>
     </div>
   );
 }
