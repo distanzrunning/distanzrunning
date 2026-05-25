@@ -596,12 +596,11 @@ export default function AdminSidebar({
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <BrandHeader />
       {searchTrigger && (
-        <div style={{ position: "relative", padding: "0 16px 8px" }}>
+        <div style={{ position: "relative", padding: "0 16px" }}>
           {searchTrigger}
-          {/* Soft fade attached to the bottom of the search area —
-              extends downward over the scroll so nav rows fade out
-              as they approach the fixed search instead of hard
-              cutting at the padding edge. */}
+          {/* Soft fade anchored directly to the search button's
+              bottom edge so the boundary between search and nav
+              blurs out instead of showing a hard line. */}
           <div
             aria-hidden="true"
             style={{
@@ -609,7 +608,7 @@ export default function AdminSidebar({
               top: "100%",
               left: 0,
               right: 0,
-              height: 16,
+              height: 24,
               background:
                 "linear-gradient(to bottom, var(--ds-background-200), transparent)",
               pointerEvents: "none",
