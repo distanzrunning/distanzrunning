@@ -72,6 +72,7 @@ export const navigation: NavSection[] = [
     id: "molecules",
     label: "Molecules",
     items: [
+      { id: "accordion", label: "Accordion" },
       { id: "ad-slot", label: "Ad Slot" },
       { id: "article-card", label: "Article Card" },
       { id: "browser", label: "Browser" },
