@@ -95,7 +95,6 @@ import StatCardComponent from "../components/content/StatCardComponent";
 import Materials from "../components/content/Materials";
 import DistanzRunningBrand from "../components/content/DistanzRunningBrand";
 import ContentWithTOC from "../components/ContentWithTOC";
-import { ToastContainer } from "@/components/ui/Toast";
 
 export default function DesignSystemPage() {
   const params = useParams();
@@ -1453,7 +1452,6 @@ export default function DesignSystemPage() {
       style={{ background: "var(--ds-background-200)", minHeight: "calc(100vh - 64px)" }}
     >
       <div className="flex-1 flex flex-col">{renderContent()}</div>
-      <ToastContainer />
     </div>
   );
 }
