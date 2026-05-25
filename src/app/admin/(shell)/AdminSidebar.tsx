@@ -222,13 +222,7 @@ const ADMIN_NAV: {
   },
 ];
 
-function AdminNav({
-  pathname,
-  setLevel,
-}: {
-  pathname: string;
-  setLevel: (level: SidebarLevel) => void;
-}) {
+function AdminNav({ pathname }: { pathname: string }) {
   return (
     <nav style={{ padding: 16, paddingTop: 8 }}>
       <ul
@@ -249,51 +243,33 @@ function AdminNav({
           const stateClasses = active
             ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
             : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
-          const rowStyle = {
-            height: 36,
-            paddingLeft: 12,
-            paddingRight: item.hasSubmenu ? 8 : 12,
-            fontSize: 14,
-          } as const;
-          const content = (
-            <>
-              <span className="flex-1 flex items-center gap-2.5 min-w-0">
-                {item.icon}
-                <span className="truncate">{item.label}</span>
-              </span>
-              {item.hasSubmenu && (
-                <span
-                  className="flex-none grid place-content-center rounded-sm transition-colors group-hover:bg-[var(--ds-gray-alpha-100)] group-active:bg-[var(--ds-gray-alpha-300)]"
-                  style={{ width: 24, height: 24 }}
-                  aria-hidden="true"
-                >
-                  <ChevronRight style={{ width: 12, height: 12 }} />
-                </span>
-              )}
-            </>
-          );
           return (
             <li key={item.id}>
-              {item.hasSubmenu ? (
-                <button
-                  type="button"
-                  onClick={() => setLevel(item.id as SidebarLevel)}
-                  aria-current={active ? "page" : undefined}
-                  className={`${baseClasses} ${stateClasses} w-full text-left bg-transparent border-0 cursor-pointer`}
-                  style={rowStyle}
-                >
-                  {content}
-                </button>
-              ) : (
-                <Link
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  className={`${baseClasses} ${stateClasses}`}
-                  style={rowStyle}
-                >
-                  {content}
-                </Link>
-              )}
+              <Link
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`${baseClasses} ${stateClasses}`}
+                style={{
+                  height: 36,
+                  paddingLeft: 12,
+                  paddingRight: item.hasSubmenu ? 8 : 12,
+                  fontSize: 14,
+                }}
+              >
+                <span className="flex-1 flex items-center gap-2.5 min-w-0">
+                  {item.icon}
+                  <span className="truncate">{item.label}</span>
+                </span>
+                {item.hasSubmenu && (
+                  <span
+                    className="flex-none grid place-content-center rounded-sm transition-colors group-hover:bg-[var(--ds-gray-alpha-100)] group-active:bg-[var(--ds-gray-alpha-300)]"
+                    style={{ width: 24, height: 24 }}
+                    aria-hidden="true"
+                  >
+                    <ChevronRight style={{ width: 12, height: 12 }} />
+                  </span>
+                )}
+              </Link>
             </li>
           );
         })}
@@ -652,7 +628,7 @@ export default function AdminSidebar({
         ) : level === "races" ? (
           <RacesNav pathname={pathname} />
         ) : (
-          <AdminNav pathname={pathname} setLevel={setLevel} />
+          <AdminNav pathname={pathname} />
         )}
       </div>
     </div>
