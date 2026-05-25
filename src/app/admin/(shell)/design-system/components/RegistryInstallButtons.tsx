@@ -30,12 +30,10 @@ export function RegistryInstallButtons({ slug }: RegistryInstallButtonsProps) {
 
   return (
     <Button
-      variant="default"
+      variant="secondary"
       size="small"
       onClick={handleCopy}
-      prefixIcon={
-        copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />
-      }
+      prefixIcon={copied ? <Check /> : <Copy />}
     >
       Copy npx command
     </Button>
