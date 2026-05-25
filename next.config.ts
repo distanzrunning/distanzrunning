@@ -40,6 +40,15 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
 
+  // The /r/* registry routes read component source from the repo at
+  // request time. Vercel's deployment tracing won't include those
+  // .tsx files by default because they're not statically imported,
+  // so name them explicitly here.
+  outputFileTracingIncludes: {
+    "/r": ["./src/components/ui/*.tsx"],
+    "/r/*": ["./src/components/ui/*.tsx"],
+  },
+
   // Permanent redirects for the URL flattening — old paths
   // (/articles/category/X, /articles/post/X, /shoes/category/X,
   // /gear/category/X, /nutrition/category/X) now resolve at the
