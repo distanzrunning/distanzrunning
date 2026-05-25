@@ -26,6 +26,7 @@ import {
   Code2,
   Settings,
 } from "lucide-react";
+import Link from "next/link";
 import Wordmark from "@/components/ui/Wordmark";
 
 interface OverviewCardProps {
@@ -33,7 +34,6 @@ interface OverviewCardProps {
   title: string;
   description: string;
   children: React.ReactNode;
-  onNavigate: (slug: string) => void;
   /** Position in the grid: even index = left column, odd = right column */
   index: number;
   /** Total number of cards */
@@ -45,22 +45,17 @@ function OverviewCard({
   title,
   description,
   children,
-  onNavigate,
   index,
   total,
 }: OverviewCardProps) {
-  const slug = href.replace("/admin/design-system/", "");
   const isLeftColumn = index % 2 === 0;
   const isLastCard = index === total - 1;
   const isSecondLastCard = index === total - 2;
 
   return (
-    <a
+    <Link
+      href={href}
       className={`group relative flex h-full flex-col gap-6 p-8 no-underline cursor-pointer hover:bg-[var(--ds-background-100)] ${isLeftColumn ? "md:border-r" : ""} ${isLastCard ? "border-b-0" : "border-b"} ${isSecondLastCard ? "md:border-b-0" : ""}`}
-      onClick={(e) => {
-        e.preventDefault();
-        onNavigate(slug);
-      }}
       style={{
         backgroundClip: "padding-box",
         borderColor: "var(--ds-gray-alpha-400)",
@@ -79,7 +74,7 @@ function OverviewCard({
         className="pointer-events-none absolute inset-0 opacity-0 group-focus-visible:opacity-100"
         style={{ border: "2px solid var(--ds-blue-700)" }}
       />
-    </a>
+    </Link>
   );
 }
 
@@ -501,12 +496,9 @@ function TypefacePreview() {
 }
 
 interface FoundationsOverviewProps {
-  onNavigate?: (slug: string) => void;
 }
 
-export default function FoundationsOverview({ onNavigate }: FoundationsOverviewProps) {
-  const handleNavigate = onNavigate || (() => {});
-
+export default function FoundationsOverview({}: FoundationsOverviewProps) {
   return (
     <div>
       {/* Cards Grid */}
@@ -518,7 +510,6 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           href="/admin/design-system/distanz-running"
           title="Brand Assets"
           description="Learn how to work with our brand assets."
-          onNavigate={handleNavigate}
           index={0}
           total={6}
         >
@@ -529,7 +520,6 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           href="/admin/design-system/icons"
           title="Icons"
           description="Icon set tailored for running products."
-          onNavigate={handleNavigate}
           index={1}
           total={6}
         >
@@ -540,7 +530,6 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           href="/admin/design-system/avatar"
           title="Components"
           description="Building blocks for React applications."
-          onNavigate={handleNavigate}
           index={2}
           total={6}
         >
@@ -551,7 +540,6 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           href="/admin/design-system/colours"
           title="Colours"
           description="A high contrast, accessible color system."
-          onNavigate={handleNavigate}
           index={3}
           total={6}
         >
@@ -562,7 +550,6 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           href="/admin/design-system/grid"
           title="Grid"
           description="A huge part of the new Distanz aesthetic."
-          onNavigate={handleNavigate}
           index={4}
           total={6}
         >
@@ -573,7 +560,6 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           href="/admin/design-system/typography"
           title="Typeface"
           description="Specifically designed for developers and designers."
-          onNavigate={handleNavigate}
           index={5}
           total={6}
         >
