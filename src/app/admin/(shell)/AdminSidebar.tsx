@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -39,6 +40,31 @@ export function isRacesRoute(pathname: string): boolean {
 function dsSlugFrom(pathname: string): string | null {
   const match = pathname.match(/^\/admin\/design-system\/([^/?#]+)/);
   return match ? match[1] : null;
+}
+
+// ============================================================================
+// Sidebar view state — decoupled from the URL.
+//
+// The sidebar can show one of five "levels" (admin top-level, or a
+// specific section's submenu). The level is derived from the URL on
+// mount and on URL changes, but the user can also navigate the sidebar
+// up/down without changing the URL — e.g. clicking the back button
+// shows the admin top-level nav while the page content stays put.
+// ============================================================================
+
+type SidebarLevel =
+  | "admin"
+  | "design-system"
+  | "consent"
+  | "feedback"
+  | "races";
+
+function levelFromPathname(pathname: string): SidebarLevel {
+  if (isDesignSystemRoute(pathname)) return "design-system";
+  if (isConsentRoute(pathname)) return "consent";
+  if (isFeedbackRoute(pathname)) return "feedback";
+  if (isRacesRoute(pathname)) return "races";
+  return "admin";
 }
 
 export const CONSENT_NAV: { id: string; label: string; href: string }[] = [
@@ -115,20 +141,21 @@ function BrandHeader() {
 function BackHeader({
   leftSlot,
   label,
-  href,
+  onClick,
   ariaLabel,
 }: {
   leftSlot: ReactNode;
   label: string;
-  href: string;
+  onClick: () => void;
   ariaLabel?: string;
 }) {
   return (
     <div style={{ padding: "12px 8px 4px" }}>
-      <Link
-        href={href}
+      <button
+        type="button"
+        onClick={onClick}
         aria-label={ariaLabel ?? label}
-        className="flex items-center justify-between w-full h-9 rounded-md outline-none transition-colors gap-1 text-[var(--ds-gray-900)] hover:text-[var(--ds-gray-1000)] hover:bg-[var(--ds-gray-100)] active:bg-[var(--ds-gray-200)] focus-visible:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)]"
+        className="flex items-center justify-between w-full h-9 rounded-md outline-none transition-colors gap-1 text-[var(--ds-gray-900)] hover:text-[var(--ds-gray-1000)] hover:bg-[var(--ds-gray-100)] active:bg-[var(--ds-gray-200)] focus-visible:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] bg-transparent border-0 cursor-pointer"
       >
         <span
           className="grid place-content-center"
@@ -143,7 +170,7 @@ function BackHeader({
           {label}
         </span>
         <span style={{ width: 36, height: 36, flexShrink: 0 }} />
-      </Link>
+      </button>
     </div>
   );
 }
@@ -195,7 +222,13 @@ const ADMIN_NAV: {
   },
 ];
 
-function AdminNav({ pathname }: { pathname: string }) {
+function AdminNav({
+  pathname,
+  setLevel,
+}: {
+  pathname: string;
+  setLevel: (level: SidebarLevel) => void;
+}) {
   return (
     <nav style={{ padding: 16, paddingTop: 8 }}>
       <ul
@@ -216,33 +249,51 @@ function AdminNav({ pathname }: { pathname: string }) {
           const stateClasses = active
             ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
             : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+          const rowStyle = {
+            height: 36,
+            paddingLeft: 12,
+            paddingRight: item.hasSubmenu ? 8 : 12,
+            fontSize: 14,
+          } as const;
+          const content = (
+            <>
+              <span className="flex-1 flex items-center gap-2.5 min-w-0">
+                {item.icon}
+                <span className="truncate">{item.label}</span>
+              </span>
+              {item.hasSubmenu && (
+                <span
+                  className="flex-none grid place-content-center rounded-sm transition-colors group-hover:bg-[var(--ds-gray-alpha-100)] group-active:bg-[var(--ds-gray-alpha-300)]"
+                  style={{ width: 24, height: 24 }}
+                  aria-hidden="true"
+                >
+                  <ChevronRight style={{ width: 12, height: 12 }} />
+                </span>
+              )}
+            </>
+          );
           return (
             <li key={item.id}>
-              <Link
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                className={`${baseClasses} ${stateClasses}`}
-                style={{
-                  height: 36,
-                  paddingLeft: 12,
-                  paddingRight: item.hasSubmenu ? 8 : 12,
-                  fontSize: 14,
-                }}
-              >
-                <span className="flex-1 flex items-center gap-2.5 min-w-0">
-                  {item.icon}
-                  <span className="truncate">{item.label}</span>
-                </span>
-                {item.hasSubmenu && (
-                  <span
-                    className="flex-none grid place-content-center rounded-sm transition-colors group-hover:bg-[var(--ds-gray-alpha-100)] group-active:bg-[var(--ds-gray-alpha-300)]"
-                    style={{ width: 24, height: 24 }}
-                    aria-hidden="true"
-                  >
-                    <ChevronRight style={{ width: 12, height: 12 }} />
-                  </span>
-                )}
-              </Link>
+              {item.hasSubmenu ? (
+                <button
+                  type="button"
+                  onClick={() => setLevel(item.id as SidebarLevel)}
+                  aria-current={active ? "page" : undefined}
+                  className={`${baseClasses} ${stateClasses} w-full text-left bg-transparent border-0 cursor-pointer`}
+                  style={rowStyle}
+                >
+                  {content}
+                </button>
+              ) : (
+                <Link
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={`${baseClasses} ${stateClasses}`}
+                  style={rowStyle}
+                >
+                  {content}
+                </Link>
+              )}
             </li>
           );
         })}
@@ -541,10 +592,17 @@ export default function AdminSidebar({
   searchTrigger?: ReactNode;
 }) {
   const pathname = usePathname() ?? "";
-  const inDs = isDesignSystemRoute(pathname);
-  const inConsent = isConsentRoute(pathname);
-  const inFeedback = isFeedbackRoute(pathname);
-  const inRaces = isRacesRoute(pathname);
+  const [level, setLevel] = useState<SidebarLevel>(() =>
+    levelFromPathname(pathname),
+  );
+
+  // Re-sync sidebar level when the URL changes externally (leaf-click
+  // navigation, browser back/forward, address-bar edit). The setter
+  // remains free to override this for back-button / submenu-expand
+  // interactions that intentionally leave the URL alone.
+  useEffect(() => {
+    setLevel(levelFromPathname(pathname));
+  }, [pathname]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -552,49 +610,49 @@ export default function AdminSidebar({
       {searchTrigger && (
         <div style={{ padding: "0 16px 8px" }}>{searchTrigger}</div>
       )}
-      {inDs && (
+      {level === "design-system" && (
         <BackHeader
           leftSlot={<ChevronLeft className="w-4 h-4" />}
           label="Design System"
-          href="/admin"
+          onClick={() => setLevel("admin")}
           ariaLabel="Back to admin"
         />
       )}
-      {inConsent && (
+      {level === "consent" && (
         <BackHeader
           leftSlot={<ChevronLeft className="w-4 h-4" />}
           label="Consent"
-          href="/admin"
+          onClick={() => setLevel("admin")}
           ariaLabel="Back to admin"
         />
       )}
-      {inFeedback && (
+      {level === "feedback" && (
         <BackHeader
           leftSlot={<ChevronLeft className="w-4 h-4" />}
           label="Feedback"
-          href="/admin"
+          onClick={() => setLevel("admin")}
           ariaLabel="Back to admin"
         />
       )}
-      {inRaces && (
+      {level === "races" && (
         <BackHeader
           leftSlot={<ChevronLeft className="w-4 h-4" />}
           label="Races"
-          href="/admin"
+          onClick={() => setLevel("admin")}
           ariaLabel="Back to admin"
         />
       )}
       <div style={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
-        {inDs ? (
+        {level === "design-system" ? (
           <DesignSystemNav pathname={pathname} />
-        ) : inConsent ? (
+        ) : level === "consent" ? (
           <ConsentNav pathname={pathname} />
-        ) : inFeedback ? (
+        ) : level === "feedback" ? (
           <FeedbackNav pathname={pathname} />
-        ) : inRaces ? (
+        ) : level === "races" ? (
           <RacesNav pathname={pathname} />
         ) : (
-          <AdminNav pathname={pathname} />
+          <AdminNav pathname={pathname} setLevel={setLevel} />
         )}
       </div>
     </div>
