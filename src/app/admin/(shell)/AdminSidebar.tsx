@@ -596,25 +596,29 @@ export default function AdminSidebar({
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <BrandHeader />
       {searchTrigger && (
-        <div style={{ padding: "0 16px 8px" }}>{searchTrigger}</div>
+        <div style={{ position: "relative", padding: "0 16px 8px" }}>
+          {searchTrigger}
+          {/* Soft fade attached to the bottom of the search area —
+              extends downward over the scroll so nav rows fade out
+              as they approach the fixed search instead of hard
+              cutting at the padding edge. */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              top: "100%",
+              left: 0,
+              right: 0,
+              height: 16,
+              background:
+                "linear-gradient(to bottom, var(--ds-background-200), transparent)",
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          />
+        </div>
       )}
-      <div style={{ position: "relative", flex: 1, minHeight: 0 }}>
-        {/* Soft fade so nav rows scrolling under the fixed search
-            don't have a hard cutoff at the padding edge. */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 16,
-            background:
-              "linear-gradient(to bottom, var(--ds-background-200), transparent)",
-            pointerEvents: "none",
-            zIndex: 1,
-          }}
-        />
+      <div style={{ flex: 1, minHeight: 0 }}>
         <div style={{ height: "100%", overflowY: "auto" }}>
           {level === "design-system" && (
             <BackHeader
