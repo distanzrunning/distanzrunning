@@ -210,10 +210,23 @@ The following live in `src/components/` (some in `src/components/ui/`). When int
 - `@shadcn` (implicit) — the public ui.shadcn.com primitives
 - `@distanz` — our own registry at `distanzrunning.com/r/{name}.json`
 
-To let Claude Code / Cursor / VS Code query both via MCP, each contributor runs once:
+**Per-developer setup (run each once on your machine, not committed):**
 
 ```bash
+# 1. Let AI tools search / install components from either registry via MCP
 npx shadcn mcp init --client claude   # or cursor / vscode / codex / opencode
+# → writes .mcp.json (gitignored — may carry per-dev secrets for other servers)
+
+# 2. Inject project setup (installed components, primitive in use, aliases)
+#    into your AI assistant's context so it stops fighting you on shadcn calls
+npx skills add shadcn/ui              # or pnpm dlx / yarn dlx / bun x
 ```
 
-That writes `.mcp.json` (gitignored — may contain per-dev secrets). Now AI tooling can search and install components from either registry. See `/admin/design-system/registry-mcp` for full setup notes.
+Step 1 (MCP) tells the AI **what could be installed**. Step 2 (the skill) tells the AI **what's already there and how the project is configured** — reads `shadcn info --json`. Together they remove the most common class of "AI invents the wrong API" failure mode. See `/admin/design-system/registry-mcp` for the full registry setup notes.
+
+### Primitives policy: Base UI vs Radix
+
+- **New components → Base UI.** That's what `npx shadcn add <name>` produces today (style `base-nova`), and it matches our registry-first posture: composable, render-prop based, fewer fighting-the-library moments for consumers.
+- **Existing Radix-based molecules** *(Combobox, ContextCard, Description, Sheet, Calendar)* → **leave alone**. They work, they're shipped, the migration is manual. No "let's modernise" sweep.
+- **Migrate opportunistically.** If an existing Radix molecule needs an unrelated update or a bug fix Radix is slow to ship, re-derive it from the Base UI equivalent at that point. Amortise the migration cost into work you'd be doing anyway.
+- **Rationale**: Radix dev has slowed post-WorkOS; Base UI ships actively (~7 engineers) and has components Radix doesn't (Combobox / Autocomplete). One real Base UI tradeoff today: less AI training data, so first-time prompts may need hand-holding. Our registry largely neutralises that — once a component is in `@distanz`, the AI installs *our restyled source* instead of authoring fresh.
