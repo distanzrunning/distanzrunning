@@ -51,6 +51,9 @@ interface ContentWithTOCProps {
   mainSectionId?: string; // Optional h2 id
   pageTitle?: string;
   pageSubtitle?: string;
+  /** Right-aligned slot in the page header — used for install /
+      "Open in v0" buttons on components published to the registry. */
+  headerRight?: React.ReactNode;
 }
 
 // Helper to scan headings from a container
@@ -203,6 +206,7 @@ export default function ContentWithTOC({
   mainSectionId,
   pageTitle,
   pageSubtitle,
+  headerRight,
 }: ContentWithTOCProps) {
   const [activeId, setActiveId] = useState<string>("");
   const isClickScrolling = useRef(false);
@@ -445,20 +449,27 @@ export default function ContentWithTOC({
             style={{ border: "none", borderBottom: "1px solid var(--ds-gray-400)" }}
           >
             <GridCell style={{ margin: 0, overflow: "visible" }}>
-              <h1
-                id={mainSectionId}
-                className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3"
-              >
-                {pageTitle}
-              </h1>
-              {pageSubtitle && (
-                <p
-                  className="text-[16px] md:text-[20px] text-textSubtle"
-                  style={{ lineHeight: 1.5 }}
-                >
-                  {pageSubtitle}
-                </p>
-              )}
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                  <h1
+                    id={mainSectionId}
+                    className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3"
+                  >
+                    {pageTitle}
+                  </h1>
+                  {pageSubtitle && (
+                    <p
+                      className="text-[16px] md:text-[20px] text-textSubtle"
+                      style={{ lineHeight: 1.5 }}
+                    >
+                      {pageSubtitle}
+                    </p>
+                  )}
+                </div>
+                {headerRight && (
+                  <div className="flex-shrink-0">{headerRight}</div>
+                )}
+              </div>
             </GridCell>
           </Grid>
         )}
