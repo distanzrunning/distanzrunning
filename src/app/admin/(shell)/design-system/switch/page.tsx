@@ -6,7 +6,12 @@ export const metadata: Metadata = { title: "Switch" };
 
 export default function SwitchPage() {
   return (
-    <ContentWithTOC tocTitle="On this page">
+    <ContentWithTOC
+      tocTitle="On this page"
+      pageTitle="Switch"
+      pageSubtitle="Toggle between two mutually-exclusive options."
+      mainSectionId="switch"
+    >
       <SwitchComponent />
     </ContentWithTOC>
   );
