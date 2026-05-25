@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ContentWithTOC from "../components/ContentWithTOC";
 import DescriptionComponent from "../components/content/DescriptionComponent";
+import { RegistryInstallButtons } from "../components/RegistryInstallButtons";
 
 export const metadata: Metadata = { title: "Description" };
 
@@ -11,6 +12,7 @@ export default function DescriptionPage() {
       pageTitle="Description"
       pageSubtitle="Displays a brief heading and subheading to communicate any additional information or context a user needs to continue."
       mainSectionId="description"
+      headerRight={<RegistryInstallButtons slug="description" />}
     >
       <DescriptionComponent />
     </ContentWithTOC>
