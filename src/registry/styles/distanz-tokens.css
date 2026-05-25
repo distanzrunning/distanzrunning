@@ -1,15 +1,20 @@
 /* ===========================================================================
    Distanz Running — design tokens
 
-   Light-mode (:root, .light) and dark-mode (.dark) CSS variable
-   definitions for the Stride design system. Paste this file into
-   your app and either @import it from your globals.css or include
-   it directly. Variables prefixed --ds-* are the public token
-   surface; everything else is internal.
+   Single source of truth for the Stride design system's CSS
+   variables. Light-mode values live under :root, .light and dark-
+   mode overrides under .dark. Variables prefixed --ds-* are the
+   public token surface; everything else is internal.
 
-   Generated from src/app/globals.css. Edit the source, not this
-   copy — the registry endpoint reads from src/registry/styles/
-   distanz-tokens.css.
+   This file is loaded two ways:
+   1. By src/app/globals.css via @import — PostCSS inlines the
+      contents inside @layer base so the live site renders against
+      these tokens directly.
+   2. By the /r/tokens.json registry endpoint, which ships this
+      file verbatim to anyone running `npx shadcn add` against
+      the Distanz Running registry.
+
+   Edits made here propagate to both.
    ===========================================================================
    */
 
