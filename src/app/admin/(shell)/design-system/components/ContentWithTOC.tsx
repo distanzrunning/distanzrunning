@@ -449,7 +449,7 @@ export default function ContentWithTOC({
             style={{ border: "none", borderBottom: "1px solid var(--ds-gray-400)" }}
           >
             <GridCell style={{ margin: 0, overflow: "visible" }}>
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex items-end justify-between gap-4">
                 <div className="min-w-0 flex-1">
                   <h1
                     id={mainSectionId}
