@@ -47,10 +47,14 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/r": [
       "./src/components/ui/*.tsx",
+      "./src/components/*.tsx",
+      "./src/contexts/*.tsx",
       "./src/registry/styles/*.css",
     ],
     "/r/*": [
       "./src/components/ui/*.tsx",
+      "./src/components/*.tsx",
+      "./src/contexts/*.tsx",
       "./src/registry/styles/*.css",
     ],
   },

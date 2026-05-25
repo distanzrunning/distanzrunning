@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ContentWithTOC from "../components/ContentWithTOC";
 import SiteHeaderComponent from "../components/content/SiteHeaderComponent";
+import { RegistryInstallButtons } from "../components/RegistryInstallButtons";
 
 export const metadata: Metadata = { title: "Site Header" };
 
@@ -11,6 +12,7 @@ export default function SiteHeaderPage() {
       pageTitle="Site Header"
       pageSubtitle="The 50 px sticky bar above PageFrame: wordmark on the left, primary navigation centred, newsletter + theme actions on the right. Includes the Radix-backed dropdown menu used to surface News, Shoes, Gear, Nutrition, and Races."
       mainSectionId="overview"
+      headerRight={<RegistryInstallButtons slug="site-header" />}
     >
       <SiteHeaderComponent />
     </ContentWithTOC>
