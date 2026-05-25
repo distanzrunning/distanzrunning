@@ -598,39 +598,39 @@ export default function AdminSidebar({
       {searchTrigger && (
         <div style={{ padding: "0 16px 8px" }}>{searchTrigger}</div>
       )}
-      {level === "design-system" && (
-        <BackHeader
-          leftSlot={<ChevronLeft className="w-4 h-4" />}
-          label="Design System"
-          onClick={() => setLevel("admin")}
-          ariaLabel="Back to admin"
-        />
-      )}
-      {level === "consent" && (
-        <BackHeader
-          leftSlot={<ChevronLeft className="w-4 h-4" />}
-          label="Consent"
-          onClick={() => setLevel("admin")}
-          ariaLabel="Back to admin"
-        />
-      )}
-      {level === "feedback" && (
-        <BackHeader
-          leftSlot={<ChevronLeft className="w-4 h-4" />}
-          label="Feedback"
-          onClick={() => setLevel("admin")}
-          ariaLabel="Back to admin"
-        />
-      )}
-      {level === "races" && (
-        <BackHeader
-          leftSlot={<ChevronLeft className="w-4 h-4" />}
-          label="Races"
-          onClick={() => setLevel("admin")}
-          ariaLabel="Back to admin"
-        />
-      )}
       <div style={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
+        {level === "design-system" && (
+          <BackHeader
+            leftSlot={<ChevronLeft className="w-4 h-4" />}
+            label="Design System"
+            onClick={() => setLevel("admin")}
+            ariaLabel="Back to admin"
+          />
+        )}
+        {level === "consent" && (
+          <BackHeader
+            leftSlot={<ChevronLeft className="w-4 h-4" />}
+            label="Consent"
+            onClick={() => setLevel("admin")}
+            ariaLabel="Back to admin"
+          />
+        )}
+        {level === "feedback" && (
+          <BackHeader
+            leftSlot={<ChevronLeft className="w-4 h-4" />}
+            label="Feedback"
+            onClick={() => setLevel("admin")}
+            ariaLabel="Back to admin"
+          />
+        )}
+        {level === "races" && (
+          <BackHeader
+            leftSlot={<ChevronLeft className="w-4 h-4" />}
+            label="Races"
+            onClick={() => setLevel("admin")}
+            ariaLabel="Back to admin"
+          />
+        )}
         {level === "design-system" ? (
           <DesignSystemNav pathname={pathname} />
         ) : level === "consent" ? (
