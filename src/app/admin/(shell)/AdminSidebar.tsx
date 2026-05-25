@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Database,
+  Home,
   Map,
   MessageSquare,
   PanelsTopLeft,
@@ -185,7 +186,17 @@ const ADMIN_NAV: {
   href: string;
   icon: ReactNode;
   hasSubmenu?: boolean;
+  /** Match the route exactly — used by Overview so it doesn't stay
+      active on every nested admin page. */
+  exact?: boolean;
 }[] = [
+  {
+    id: "overview",
+    label: "Overview",
+    href: "/admin",
+    icon: <Home className="w-4 h-4" />,
+    exact: true,
+  },
   {
     id: "consent",
     label: "Consent",
@@ -236,8 +247,9 @@ function AdminNav({ pathname }: { pathname: string }) {
         }}
       >
         {ADMIN_NAV.map((item) => {
-          const active =
-            pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const active = item.exact
+            ? pathname === item.href
+            : pathname === item.href || pathname.startsWith(`${item.href}/`);
           const baseClasses =
             "group flex items-center rounded-md outline-none transition-colors";
           const stateClasses = active
