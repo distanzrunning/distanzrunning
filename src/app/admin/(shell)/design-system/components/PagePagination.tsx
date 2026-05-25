@@ -1,20 +1,21 @@
 "use client";
 
 import { useMemo } from "react";
+import { usePathname } from "next/navigation";
 import { navigation, type NavItem } from "./DesignSystemSidebar";
 import { FeedbackInline } from "@/components/ui/Feedback";
 import { Pagination } from "@/components/ui/Pagination";
 
-interface PagePaginationProps {
-  activeSlug: string;
-  onNavigate: (slug: string) => void;
+function slugFromPathname(pathname: string | null): string | null {
+  if (!pathname) return null;
+  const match = pathname.match(/^\/admin\/design-system\/([^/?#]+)/);
+  return match ? match[1] : null;
 }
 
-export default function PagePagination({
-  activeSlug,
-  onNavigate,
-}: PagePaginationProps) {
-  // Flatten navigation to get ordered list of all pages
+export default function PagePagination() {
+  const pathname = usePathname();
+  const activeSlug = slugFromPathname(pathname);
+
   const { prevPage, nextPage } = useMemo(() => {
     const allPages: NavItem[] = [];
     navigation.forEach((section) => {
@@ -25,6 +26,7 @@ export default function PagePagination({
       });
     });
 
+    if (!activeSlug) return { prevPage: null, nextPage: null };
     const currentIndex = allPages.findIndex((page) => page.id === activeSlug);
 
     return {
@@ -38,15 +40,21 @@ export default function PagePagination({
     <Pagination
       previous={
         prevPage
-          ? { title: prevPage.label, onClick: () => onNavigate(prevPage.id) }
+          ? {
+              title: prevPage.label,
+              href: `/admin/design-system/${prevPage.id}`,
+            }
           : undefined
       }
       next={
         nextPage
-          ? { title: nextPage.label, onClick: () => onNavigate(nextPage.id) }
+          ? {
+              title: nextPage.label,
+              href: `/admin/design-system/${nextPage.id}`,
+            }
           : undefined
       }
-      center={<FeedbackInline key={activeSlug} />}
+      center={<FeedbackInline key={activeSlug ?? "none"} />}
     />
   );
 }

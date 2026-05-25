@@ -51,8 +51,6 @@ interface ContentWithTOCProps {
   mainSectionId?: string; // Optional h2 id
   pageTitle?: string;
   pageSubtitle?: string;
-  activeSlug?: string;
-  onNavigate?: (slug: string) => void;
 }
 
 // Helper to scan headings from a container
@@ -205,8 +203,6 @@ export default function ContentWithTOC({
   mainSectionId,
   pageTitle,
   pageSubtitle,
-  activeSlug,
-  onNavigate,
 }: ContentWithTOCProps) {
   const [activeId, setActiveId] = useState<string>("");
   const isClickScrolling = useRef(false);
@@ -474,12 +470,11 @@ export default function ContentWithTOC({
           </SectionContext.Provider>
         </article>
 
-        {/* Page Pagination - flex-1 to fill remaining space, mt-auto pushes to bottom */}
-        {activeSlug && onNavigate && (
-          <div className="flex-1 flex flex-col justify-end px-12 pb-8">
-            <PagePagination activeSlug={activeSlug} onNavigate={onNavigate} />
-          </div>
-        )}
+        {/* Page Pagination - flex-1 to fill remaining space, mt-auto pushes to bottom.
+            Derives prev/next from usePathname() — no props needed. */}
+        <div className="flex-1 flex flex-col justify-end px-12 pb-8">
+          <PagePagination />
+        </div>
       </div>
 
       {/* Table of Contents - Right Sidebar (≥1280px) */}
