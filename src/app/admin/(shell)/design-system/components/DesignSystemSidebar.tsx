@@ -30,6 +30,7 @@ export const navigation: NavSection[] = [
     label: "Foundations",
     items: [
       { id: "introduction", label: "Introduction" },
+      { id: "registry-mcp", label: "Registry & MCP" },
       { id: "colours", label: "Colours" },
       { id: "icons", label: "Icons" },
       { id: "typography", label: "Typography" },
