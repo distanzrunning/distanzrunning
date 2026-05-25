@@ -45,8 +45,14 @@ const nextConfig: NextConfig = {
   // .tsx files by default because they're not statically imported,
   // so name them explicitly here.
   outputFileTracingIncludes: {
-    "/r": ["./src/components/ui/*.tsx"],
-    "/r/*": ["./src/components/ui/*.tsx"],
+    "/r": [
+      "./src/components/ui/*.tsx",
+      "./src/registry/styles/*.css",
+    ],
+    "/r/*": [
+      "./src/components/ui/*.tsx",
+      "./src/registry/styles/*.css",
+    ],
   },
 
   // Permanent redirects for the URL flattening — old paths
