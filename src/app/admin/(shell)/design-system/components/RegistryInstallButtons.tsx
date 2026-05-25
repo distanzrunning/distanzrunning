@@ -30,8 +30,7 @@ export function RegistryInstallButtons({ slug }: RegistryInstallButtonsProps) {
 
   return (
     <Button
-      variant="secondary"
-      shape="rounded"
+      variant="default"
       size="small"
       onClick={handleCopy}
       prefixIcon={
