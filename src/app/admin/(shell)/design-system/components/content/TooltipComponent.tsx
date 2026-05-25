@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -838,6 +839,126 @@ export default function TooltipComponent() {
             <OtherDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use a Tooltip to explain{" "}
+            <strong className="text-textDefault font-normal">why</strong>{" "}
+            something exists, not{" "}
+            <strong className="text-textDefault font-normal">what</strong>{" "}
+            it is. The visible label names the thing; the tooltip adds
+            the constraint, scope, or limit.
+          </li>
+          <li>
+            For an entity preview with metadata rows (avatar,
+            identifier, 2–4 facts, optional action), use{" "}
+            <ComponentRef name="Context Card" />. For long-form
+            content or actions that need persistence, route to a{" "}
+            <ComponentRef name="Drawer" /> or page navigation.
+          </li>
+          <li>
+            Use lifecycle Tooltips (
+            <code className="inline-code">Alpha</code>,{" "}
+            <code className="inline-code">Experimental</code>,{" "}
+            <code className="inline-code">Beta</code>,{" "}
+            <code className="inline-code">Early Access</code>) to name
+            the limits that apply: API stability, SLA, support,
+            pricing, retention.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Tooltips open on hover and on keyboard focus. Keep the
+            default 150ms entry delay so the tooltip doesn&apos;t
+            flicker on a sweeping mouse.
+          </li>
+          <li>
+            Don&apos;t wrap a labelled{" "}
+            <ComponentRef name="Input" /> in a Tooltip. The trigger
+            lands on the{" "}
+            <code className="inline-code">&lt;label&gt;</code>, not
+            the field, and the tooltip text becomes a second invisible
+            label for screen readers. Put help on a sibling icon
+            button.
+          </li>
+          <li>
+            Keep primary actions outside the Tooltip; touch users
+            can&apos;t reach a hover-revealed control.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            One sentence or fragment in{" "}
+            <code className="inline-code">content</code>. Sentence
+            case, no period for a single fragment.
+          </li>
+          <li>
+            Skip tooltips that repeat the visible label (
+            <code className="inline-code">
+              content=&quot;Rate Limit&quot;
+            </code>{" "}
+            on a <code className="inline-code">Rate Limit</code>{" "}
+            button) or describe the interaction (
+            <code className="inline-code">
+              content=&quot;Click to override&quot;
+            </code>
+            ).
+          </li>
+          <li>
+            Lifecycle Tooltips follow{" "}
+            <code className="inline-code">
+              {"{Label}: {one-line meaning}. {Specific limit}."}
+            </code>{" "}
+            For a paid Beta feature, combine the lifecycle and pricing
+            in one Tooltip rather than stacking two badges.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            An icon-only trigger needs an{" "}
+            <code className="inline-code">aria-label</code> that
+            names the action; the Tooltip body adds context, it
+            doesn&apos;t replace the label.
+          </li>
+          <li>
+            Escape closes the tooltip and returns focus to the
+            trigger.
+          </li>
+        </ul>
       </Section>
 
       <Toast

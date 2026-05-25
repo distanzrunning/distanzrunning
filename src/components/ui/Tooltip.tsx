@@ -61,7 +61,7 @@ export function Tooltip({
   content,
   side = "top",
   align = "center",
-  delay = 200,
+  delay = 150,
   showArrow = true,
   type = "default",
   textAlign = "center",
@@ -316,11 +316,25 @@ export function Tooltip({
       )
     : null;
 
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key !== "Escape" || !isActive) return;
+      e.stopPropagation();
+      hide();
+      // Return focus to the trigger so keyboard users keep their
+      // place. cloneElement / span fallback both forward the ref so
+      // triggerRef points at whichever element receives focus.
+      triggerRef.current?.focus();
+    },
+    [isActive, hide],
+  );
+
   const triggerProps = {
     onMouseEnter: show,
     onMouseLeave: hide,
     onFocus: show,
     onBlur: hide,
+    onKeyDown: handleKeyDown,
   };
 
   const trigger = isValidElement(children) ? (
