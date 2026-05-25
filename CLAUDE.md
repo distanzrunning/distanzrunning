@@ -201,3 +201,19 @@ The following live in `src/components/` (some in `src/components/ui/`). When int
 2. Grep `globals.css` (`grep '\-\-ds-' src/app/globals.css`) for a token that fits.
 3. Check `tailwind.config.js` for a custom utility (`text-heading-*`, `text-copy-*`, `material-*`).
 4. Only fall back to magic numbers if no token / class fits — and flag it in the PR.
+
+---
+
+## Registry & MCP (for AI-assisted work in this repo)
+
+`components.json` registers two shadcn registries:
+- `@shadcn` (implicit) — the public ui.shadcn.com primitives
+- `@distanz` — our own registry at `distanzrunning.com/r/{name}.json`
+
+To let Claude Code / Cursor / VS Code query both via MCP, each contributor runs once:
+
+```bash
+npx shadcn mcp init --client claude   # or cursor / vscode / codex / opencode
+```
+
+That writes `.mcp.json` (gitignored — may contain per-dev secrets). Now AI tooling can search and install components from either registry. See `/admin/design-system/registry-mcp` for full setup notes.
