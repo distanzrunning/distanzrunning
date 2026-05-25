@@ -1339,8 +1339,18 @@
       max-height: var(--max-height) !important;
       transform: translate3d(0, var(--y), var(--z)) scale(1) !important;
     }
+    /* Exiting toasts must stay invisible even under the hover
+       override above — otherwise their stale stack position renders
+       a phantom card below the bottom toast for 350ms. */
+    .ds-toast-area [role="status"][data-exiting] {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
     .ds-toast-area:hover .ds-toast-message {
       opacity: 1 !important;
+    }
+    .ds-toast-area:hover [role="status"][data-exiting] .ds-toast-message {
+      opacity: 0 !important;
     }
     .ds-toast-area:hover [role="status"]:after {
       content: "";

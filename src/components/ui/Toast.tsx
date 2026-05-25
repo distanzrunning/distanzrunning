@@ -227,6 +227,7 @@ function ToastCard({
       ref={cardRef}
       role="status"
       aria-atomic="true"
+      data-exiting={item.exiting || undefined}
       style={{
         position: "absolute",
         bottom: 0,
@@ -470,25 +471,54 @@ export function ToastContainer() {
     };
   }, []);
 
+  // Drop heights for toasts that no longer exist so the dict doesn't
+  // grow unbounded across a long session.
+  useEffect(() => {
+    setHeights((prev) => {
+      const liveIds = new Set(toasts.map((t) => t.id));
+      const next: Record<number, number> = {};
+      for (const [idStr, h] of Object.entries(prev)) {
+        const id = Number(idStr);
+        if (liveIds.has(id)) next[id] = h;
+      }
+      return next;
+    });
+  }, [toasts]);
+
   const handleHeightMeasured = useCallback((id: number, height: number) => {
     setHeights((prev) => ({ ...prev, [id]: height }));
   }, []);
 
   if (!mounted || toasts.length === 0) return null;
 
-  const hasMultiple = toasts.filter((t) => !t.exiting).length > 1;
+  // Exiting toasts must not influence the stack layout — otherwise
+  // their slot stays reserved during the 350ms exit animation, the
+  // hover-state CSS forces them visible at a stale stack position,
+  // and you see phantom cards below the bottom toast.
+  const activeIndexById = new Map<number, number>();
+  let activeCount = 0;
+  for (const t of toasts) {
+    if (!t.exiting) {
+      activeIndexById.set(t.id, activeCount);
+      activeCount += 1;
+    }
+  }
+  const hasMultiple = activeCount > 1;
 
-  // Compute cumulative stack offsets based on actual heights
+  // Compute cumulative stack offsets based on active toasts only.
   const gap = 16;
-  const stackOffsets: number[] = [];
+  const activeStackOffsets: number[] = [];
   let cumulative = 0;
-  for (let i = 0; i < toasts.length; i++) {
-    stackOffsets.push(cumulative);
-    cumulative += (heights[toasts[i].id] || 63) + gap;
+  const activeToasts = toasts.filter((t) => !t.exiting);
+  for (let i = 0; i < activeToasts.length; i++) {
+    activeStackOffsets.push(cumulative);
+    cumulative += (heights[activeToasts[i].id] || 63) + gap;
   }
 
-  // Total height of all toasts expanded (for hover hit area)
+  // Total height of all active toasts expanded (for hover hit area)
   const totalExpandedHeight = cumulative - gap; // remove last gap
+
+  const frontHeight = heights[activeToasts[0]?.id] || 63;
 
   return createPortal(
     <div
@@ -506,19 +536,30 @@ export function ToastContainer() {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {toasts.map((item, index) => (
-        <ToastCard
-          key={item.id}
-          item={item}
-          index={index}
-          total={toasts.length}
-          isHovered={isHovered && hasMultiple}
-          stackOffset={stackOffsets[index]}
-          frontHeight={heights[toasts[0]?.id] || 63}
-          onDismiss={() => removeToast(item.id)}
-          onHeightMeasured={handleHeightMeasured}
-        />
-      ))}
+      {toasts.map((item) => {
+        // Exiting toasts keep their last-known visual position
+        // (whatever stack slot they were in) but contribute nothing
+        // to the live layout — see activeStackOffsets above.
+        const activeIndex = activeIndexById.get(item.id);
+        const isExiting = item.exiting === true;
+        const effectiveIndex = isExiting ? activeCount : (activeIndex ?? 0);
+        const stackOffset = isExiting
+          ? cumulative
+          : activeStackOffsets[activeIndex ?? 0] ?? 0;
+        return (
+          <ToastCard
+            key={item.id}
+            item={item}
+            index={effectiveIndex}
+            total={activeCount}
+            isHovered={isHovered && hasMultiple}
+            stackOffset={stackOffset}
+            frontHeight={frontHeight}
+            onDismiss={() => removeToast(item.id)}
+            onHeightMeasured={handleHeightMeasured}
+          />
+        );
+      })}
     </div>,
     document.body,
   );
