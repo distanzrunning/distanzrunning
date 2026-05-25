@@ -263,11 +263,16 @@ export default async function ConsentDashboardPage({
 
   const supabase = getSupabaseAdmin();
 
+  const pageStart = performance.now();
+
+  console.time("[consent] count");
   const { count: totalCount } = await supabase
     .from("consent_records")
     .select("*", { count: "exact", head: true });
+  console.timeEnd("[consent] count");
 
   if (query) {
+    console.time("[consent] lookup");
     const { data: lookupData, error: lookupError } = await supabase
       .from("consent_records")
       .select(
@@ -275,6 +280,10 @@ export default async function ConsentDashboardPage({
       )
       .eq("anon_id", query)
       .order("created_at", { ascending: false });
+    console.timeEnd("[consent] lookup");
+    console.log(
+      `[consent] total page (lookup): ${(performance.now() - pageStart).toFixed(1)}ms`,
+    );
 
     if (lookupError) {
       return (
@@ -298,6 +307,7 @@ export default async function ConsentDashboardPage({
     );
   }
 
+  console.time("[consent] select 10k");
   const { data, error } = await supabase
     .from("consent_records")
     .select(
@@ -305,6 +315,10 @@ export default async function ConsentDashboardPage({
     )
     .order("created_at", { ascending: false })
     .limit(FETCH_LIMIT);
+  console.timeEnd("[consent] select 10k");
+  console.log(
+    `[consent] total page: ${(performance.now() - pageStart).toFixed(1)}ms`,
+  );
 
   if (error) {
     return (

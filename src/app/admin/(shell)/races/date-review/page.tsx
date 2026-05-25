@@ -53,6 +53,9 @@ function rowStateFor(race: RaceRowData): RowState {
 }
 
 export default async function RaceDateReviewPage() {
+  const pageStart = performance.now();
+
+  console.time("[races] sanity fetch");
   const past: RaceRowData[] = await sanityClient.fetch(
     // GROQ doesn't accept boolean expressions inline in order(),
     // so we project a sort-priority key first (pending → 0, others
@@ -74,6 +77,10 @@ export default async function RaceDateReviewPage() {
       lastScanAt,
       "_pendingPriority": select(suggestedNextDateStatus == "pending" => 0, 1)
     } | order(_pendingPriority asc, eventDate desc)`,
+  );
+  console.timeEnd("[races] sanity fetch");
+  console.log(
+    `[races] total page: ${(performance.now() - pageStart).toFixed(1)}ms`,
   );
 
   const pendingCount = past.filter(

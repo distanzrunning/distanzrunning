@@ -57,11 +57,15 @@ function emotionBadge(
 
 export default async function FeedbackDashboardPage() {
   const supabase = getSupabaseAdmin();
+  const pageStart = performance.now();
 
+  console.time("[feedback] count");
   const { count: totalCount } = await supabase
     .from("feedback_records")
     .select("*", { count: "exact", head: true });
+  console.timeEnd("[feedback] count");
 
+  console.time("[feedback] select 10k");
   const { data, error } = await supabase
     .from("feedback_records")
     .select(
@@ -69,6 +73,10 @@ export default async function FeedbackDashboardPage() {
     )
     .order("created_at", { ascending: false })
     .limit(FETCH_LIMIT);
+  console.timeEnd("[feedback] select 10k");
+  console.log(
+    `[feedback] total page: ${(performance.now() - pageStart).toFixed(1)}ms`,
+  );
 
   if (error) {
     return (
