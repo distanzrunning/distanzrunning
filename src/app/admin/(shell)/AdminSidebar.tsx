@@ -151,7 +151,7 @@ function BackHeader({
   ariaLabel?: string;
 }) {
   return (
-    <div style={{ padding: "12px 8px 4px" }}>
+    <div style={{ padding: "16px 8px 4px" }}>
       <button
         type="button"
         onClick={onClick}
@@ -235,7 +235,7 @@ const ADMIN_NAV: {
 
 function AdminNav({ pathname }: { pathname: string }) {
   return (
-    <nav style={{ padding: 16, paddingTop: 8 }}>
+    <nav style={{ padding: 16, paddingTop: 16 }}>
       <ul
         style={{
           listStyle: "none",
@@ -327,7 +327,7 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
   const activeSlug = dsSlugFrom(pathname);
 
   return (
-    <nav style={{ padding: 16, paddingTop: 8 }}>
+    <nav style={{ padding: 16, paddingTop: 16 }}>
       <ul
         style={{
           listStyle: "none",
@@ -420,7 +420,7 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
 
 function ConsentNav({ pathname }: { pathname: string }) {
   return (
-    <nav style={{ padding: 16, paddingTop: 8 }}>
+    <nav style={{ padding: 16, paddingTop: 16 }}>
       <ul
         style={{
           listStyle: "none",
@@ -472,7 +472,7 @@ function ConsentNav({ pathname }: { pathname: string }) {
 
 function FeedbackNav({ pathname }: { pathname: string }) {
   return (
-    <nav style={{ padding: 16, paddingTop: 8 }}>
+    <nav style={{ padding: 16, paddingTop: 16 }}>
       <ul
         style={{
           listStyle: "none",
@@ -524,7 +524,7 @@ function FeedbackNav({ pathname }: { pathname: string }) {
 
 function RacesNav({ pathname }: { pathname: string }) {
   return (
-    <nav style={{ padding: 16, paddingTop: 8 }}>
+    <nav style={{ padding: 16, paddingTop: 16 }}>
       <ul
         style={{
           listStyle: "none",
@@ -608,7 +608,7 @@ export default function AdminSidebar({
               top: "100%",
               left: 0,
               right: 0,
-              height: 24,
+              height: 16,
               background:
                 "linear-gradient(to bottom, var(--ds-background-200), transparent)",
               pointerEvents: "none",
