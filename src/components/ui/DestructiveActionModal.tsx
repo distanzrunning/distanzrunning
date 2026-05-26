@@ -143,7 +143,12 @@ export function DestructiveActionModal({
   const errMsg = errorText(error);
 
   return (
-    <Modal open={open} onClose={handleClose} initialFocusRef={inputRef}>
+    <Modal
+      open={open}
+      onClose={handleClose}
+      initialFocusRef={inputRef}
+      maxWidth={480}
+    >
       <Modal.Header>
         <Modal.Title>{title}</Modal.Title>
         <Modal.P>{description}</Modal.P>

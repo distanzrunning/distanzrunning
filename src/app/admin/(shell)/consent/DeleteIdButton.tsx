@@ -47,7 +47,7 @@ export default function DeleteIdButton({
         onClick={() => setOpen(true)}
         prefixIcon={<Trash2 className="w-4 h-4" />}
       >
-        Delete {count} {recordWord}
+        Delete Record
       </Button>
       <DestructiveActionModal
         open={open}
@@ -56,7 +56,7 @@ export default function DeleteIdButton({
           setOpen(next);
         }}
         onConfirm={handleConfirm}
-        title="Delete Consent Records"
+        title="Delete Record"
         description={
           <>
             All {count} consent {recordWord} for{" "}
@@ -72,7 +72,7 @@ export default function DeleteIdButton({
         irreversibleDescription={`Deleting these ${count} ${recordWord} cannot be undone.`}
         verificationPhrase={anonId}
         verificationLabel="anonymous ID"
-        confirmLabel="Delete Consent Records"
+        confirmLabel="Delete Record"
         loading={pending}
         error={error}
       />
