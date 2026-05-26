@@ -290,33 +290,29 @@ export async function ConsentDashboardContent({
           }}
         >
           <StatTile
-            label={`Last ${WINDOW_DAYS} days`}
+            label={`Last ${WINDOW_DAYS} days (${total.toLocaleString()} all-time)`}
             value={currentCount.toLocaleString()}
-            hint={`${total.toLocaleString()} all-time`}
             change={changeFrom(currentCount, previousCount)}
             href={BASE_PATH}
             active={!filter}
           />
           <StatTile
-            label="Accept rate"
+            label={`Accept rate (${currentAccepts.toLocaleString()} of ${currentCount.toLocaleString()})`}
             value={fmtPct(currentAcceptRate)}
-            hint={`${currentAccepts.toLocaleString()} of ${currentCount.toLocaleString()}`}
             change={pointChange(currentAcceptRate, previousAcceptRate)}
             href={tileHref("accept_all", filter === "accept_all")}
             active={filter === "accept_all"}
           />
           <StatTile
-            label="Reject rate"
+            label={`Reject rate (${currentRejects.toLocaleString()} of ${currentCount.toLocaleString()})`}
             value={fmtPct(currentRejectRate)}
-            hint={`${currentRejects.toLocaleString()} of ${currentCount.toLocaleString()}`}
             change={pointChange(currentRejectRate, previousRejectRate)}
             href={tileHref("reject_all", filter === "reject_all")}
             active={filter === "reject_all"}
           />
           <StatTile
-            label="Custom rate"
+            label={`Custom rate (${currentCustoms.toLocaleString()} of ${currentCount.toLocaleString()})`}
             value={fmtPct(currentCustomRate)}
-            hint={`${currentCustoms.toLocaleString()} of ${currentCount.toLocaleString()}`}
             change={pointChange(currentCustomRate, previousCustomRate)}
             href={tileHref("custom", filter === "custom")}
             active={filter === "custom"}
@@ -444,22 +440,11 @@ export async function ConsentDashboardContent({
 
 const block = { display: "block" } as const;
 
-function StatTileSkeleton({
-  label,
-  hintWidth,
-}: {
-  label: string;
-  hintWidth?: number;
-}) {
+function StatTileSkeleton({ label }: { label: string }) {
   return (
     <StatTile
       label={label}
       value={<Skeleton width={120} height={32} style={block} />}
-      hint={
-        hintWidth ? (
-          <Skeleton width={hintWidth} height={14} style={block} />
-        ) : undefined
-      }
     />
   );
 }
@@ -497,10 +482,10 @@ export function ConsentDashboardSkeleton() {
             background: "var(--ds-background-200)",
           }}
         >
-          <StatTileSkeleton label={`Last ${WINDOW_DAYS} days`} hintWidth={100} />
-          <StatTileSkeleton label="Accept rate" hintWidth={120} />
-          <StatTileSkeleton label="Reject rate" hintWidth={120} />
-          <StatTileSkeleton label="Custom rate" hintWidth={120} />
+          <StatTileSkeleton label={`Last ${WINDOW_DAYS} days`} />
+          <StatTileSkeleton label="Accept rate" />
+          <StatTileSkeleton label="Reject rate" />
+          <StatTileSkeleton label="Custom rate" />
         </div>
         <div style={{ padding: "24px 24px 16px" }}>
           <Skeleton
