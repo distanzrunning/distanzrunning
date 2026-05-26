@@ -274,7 +274,7 @@ export async function ConsentDashboardContent({
       <div
         style={{
           border: "1px solid var(--ds-gray-400)",
-          borderRadius: 12,
+          borderRadius: 10,
           overflow: "hidden",
           background: "var(--ds-background-100)",
           marginBottom: 16,
@@ -285,6 +285,7 @@ export async function ConsentDashboardContent({
             display: "grid",
             gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
             borderBottom: "1px solid var(--ds-gray-400)",
+            background: "var(--ds-background-200)",
           }}
         >
           <StatTile
@@ -489,7 +490,7 @@ export function ConsentDashboardSkeleton() {
       <div
         style={{
           border: "1px solid var(--ds-gray-400)",
-          borderRadius: 12,
+          borderRadius: 10,
           overflow: "hidden",
           background: "var(--ds-background-100)",
           marginBottom: 16,
@@ -500,6 +501,7 @@ export function ConsentDashboardSkeleton() {
             display: "grid",
             gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
             borderBottom: "1px solid var(--ds-gray-400)",
+            background: "var(--ds-background-200)",
           }}
         >
           <StatTileSkeleton label={`Last ${WINDOW_DAYS} days`} hintWidth={100} />

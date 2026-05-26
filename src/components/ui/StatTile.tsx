@@ -64,7 +64,7 @@ const directionStyles: Record<
 };
 
 const baseClass =
-  "relative flex flex-col gap-2 p-6 transition-colors box-border";
+  "relative flex flex-col gap-2 p-4 transition-colors box-border";
 const linkClass =
   "no-underline outline-none cursor-pointer focus-visible:bg-[var(--ds-gray-100)]";
 
@@ -78,26 +78,28 @@ export function StatTile({
   anchorProps,
 }: StatTileProps) {
   const isTab = !!href;
-  // Standalone: stay on the group's canvas (background-100).
-  // Tab inactive: recess to background-200 with a muted title.
+  // Standalone: paint background-100 (the group's canvas).
+  // Tab inactive: transparent — let the parent tab-row's bg-200
+  //   show through so all inactive tabs share one continuous canvas.
   // Tab active: pop to background-100 with a black bottom rule.
   const background = isTab
     ? active
       ? "var(--ds-background-100)"
-      : "var(--ds-background-200)"
+      : "transparent"
     : "var(--ds-background-100)";
   const muted = isTab && !active;
 
   const body = (
     <>
       <span
-        className="text-label-12 font-medium uppercase tracking-wide text-[color:var(--ds-gray-700)]"
+        className="text-heading-14 text-[color:var(--ds-gray-900)] truncate"
         style={muted ? { opacity: 0.8 } : undefined}
+        title={label}
       >
         {label}
       </span>
       <div
-        className="flex flex-row items-center gap-3"
+        className="flex flex-row items-center gap-4"
         style={muted ? { opacity: 0.8 } : undefined}
       >
         <span className="text-heading-32 text-[color:var(--ds-gray-1000)]">
