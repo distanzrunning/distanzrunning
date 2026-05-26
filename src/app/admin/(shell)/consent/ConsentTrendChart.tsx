@@ -12,7 +12,6 @@ import {
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/Chart";
 
@@ -121,6 +120,74 @@ interface CursorLineProps {
   points?: { x: number; y: number }[];
 }
 
+// Custom tooltip — mirrors Vercel's chart tooltip:
+//   [● Label  Value]
+//   [    Date     ]
+// 6px rounded box, ds-shadow-tooltip (1px border layer + soft drop),
+// 8/16 padding. Value is rendered in the mono family so single-digit
+// vs multi-digit numbers don't shuffle layout when hovering.
+interface TooltipPayloadEntry {
+  value?: number;
+}
+interface TrendTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayloadEntry[];
+  label?: string;
+  metricLabel: string;
+  format: "count" | "percent";
+}
+
+function TrendTooltip({
+  active,
+  payload,
+  label,
+  metricLabel,
+  format,
+}: TrendTooltipProps) {
+  if (!active || !payload?.[0] || payload[0].value == null) return null;
+  const v = payload[0].value;
+  const formattedValue =
+    format === "percent" ? `${v.toFixed(1)}%` : v.toLocaleString();
+  const formattedDate = label ? formatTickDate(label) : "";
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 4,
+        padding: "8px 16px",
+        borderRadius: 6,
+        background: "var(--ds-background-100)",
+        boxShadow: "var(--ds-shadow-tooltip)",
+        whiteSpace: "nowrap",
+        pointerEvents: "none",
+        fontSize: 14,
+        lineHeight: "20px",
+        color: "var(--ds-gray-1000)",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span
+          style={{
+            display: "inline-block",
+            width: 8,
+            height: 8,
+            borderRadius: 9999,
+            background: "var(--ds-blue-900)",
+          }}
+        />
+        <span style={{ fontWeight: 400 }}>{metricLabel}</span>
+        <span style={{ fontFamily: "var(--font-mono)", fontWeight: 500 }}>
+          {formattedValue}
+        </span>
+      </div>
+      <span style={{ color: "var(--ds-gray-900)" }}>{formattedDate}</span>
+    </div>
+  );
+}
+
 function CursorLine({ points }: CursorLineProps) {
   if (!points || points.length < 2) return null;
   const x = points[0].x;
@@ -159,8 +226,6 @@ export default function ConsentTrendChart({
   } satisfies ChartConfig;
 
   const isPercent = format === "percent";
-  const valueFormatter = (v: number) =>
-    isPercent ? `${v.toFixed(1)}%` : v.toLocaleString();
 
   const showOverlay = activeLabel !== null && cursorX !== null;
 
@@ -230,6 +295,10 @@ export default function ConsentTrendChart({
             tickMargin={4}
             tick={{ fill: "var(--ds-gray-700)", fontSize: 12 }}
             domain={isPercent ? [0, 100] : ["auto", "auto"]}
+            // Integer ticks only — without this Recharts picks 0.5
+            // increments when the count range is small (e.g. 0–3),
+            // which reads as "0.5 visitors" nonsense.
+            allowDecimals={false}
             tickFormatter={(v: number) =>
               isPercent ? `${v}%` : v.toLocaleString()
             }
@@ -237,10 +306,9 @@ export default function ConsentTrendChart({
           <ChartTooltip
             cursor={<CursorLine />}
             content={
-              <ChartTooltipContent
-                hideLabel={false}
-                labelFormatter={(label) => formatTickDate(String(label))}
-                formatter={(value) => valueFormatter(value as number)}
+              <TrendTooltip
+                metricLabel={metricLabel}
+                format={format}
               />
             }
           />
@@ -252,14 +320,13 @@ export default function ConsentTrendChart({
             fill="url(#consent-trend-fill)"
             connectNulls={false}
             isAnimationActive={false}
-            // Solid dot at the hovered data point — matches Vercel's
-            // visx-circle (4px radius, primary fill, white ring so
-            // the dot reads against either grid or area fill).
+            // Solid blue dot at the hovered data point — no ring,
+            // matches Vercel's visx-circle (4px radius, primary fill
+            // only).
             activeDot={{
               r: 4,
               fill: "var(--ds-blue-900)",
-              stroke: "var(--ds-background-100)",
-              strokeWidth: 2,
+              stroke: "none",
             }}
           />
         </AreaChart>
@@ -267,47 +334,29 @@ export default function ConsentTrendChart({
 
       {showOverlay && (
         <div
-          // Pill HTML overlay for the "N days ago" label — mirrors
-          // Vercel's visx-tooltip markup (rounded-[99px], px-2 py-1,
-          // ds-shadow-tooltip, font-medium gray-1000 12/16 text).
-          // Rendered outside the SVG so it always stacks above the
-          // chart, and its solid background reliably masks any
-          // X-axis tick text sitting underneath.
-          //
-          // The -7 on `top` aligns the overlay's text-glyph top with
-          // where the SVG tick text top renders — combination of
-          // SVG's `dy="0.71em"` baseline offset and the HTML
-          // line-box's own centering means top + TICK_TEXT_Y lands
-          // ~7px below the SVG glyph top by default. Bake the
-          // correction in instead of using a percent-based transform
-          // (which scales with text length and drifts).
+          // Flat HTML knockout for the "N days ago" label — same
+          // background as the panel, slight rounded corners, no
+          // shadow, no border. Sits in the X-axis tick row;
+          // background-100 fill masks any underlying tick label
+          // without an obvious "tooltip" treatment that would read
+          // as a separate UI surface.
           style={{
             position: "absolute",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
             left: WRAPPER_PADDING_LEFT + (cursorX ?? 0),
             top: WRAPPER_PADDING_TOP + TICK_TEXT_Y - 7,
             transform: "translateX(-50%)",
             background: "var(--ds-background-100)",
-            borderRadius: 99,
-            padding: "4px 8px",
-            boxShadow: "var(--ds-shadow-tooltip)",
+            color: "var(--ds-gray-1000)",
+            fontSize: 12,
+            lineHeight: "16px",
+            fontWeight: 600,
+            padding: "0 6px",
+            borderRadius: 4,
             whiteSpace: "nowrap",
             pointerEvents: "none",
           }}
         >
-          <span
-            style={{
-              fontSize: 12,
-              lineHeight: "16px",
-              fontWeight: 500,
-              color: "var(--ds-gray-1000)",
-            }}
-          >
-            {daysAgoLabel(activeLabel)}
-          </span>
+          {daysAgoLabel(activeLabel)}
         </div>
       )}
     </div>
