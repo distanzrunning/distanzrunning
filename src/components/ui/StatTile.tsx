@@ -96,35 +96,38 @@ export function StatTile({
       >
         {label}
       </span>
-      <span
-        className="text-heading-32 text-[color:var(--ds-gray-1000)]"
+      <div
+        className="flex flex-row items-center gap-3"
         style={muted ? { opacity: 0.8 } : undefined}
       >
-        {value}
-      </span>
+        <span className="text-heading-32 text-[color:var(--ds-gray-1000)]">
+          {value}
+        </span>
+        {change && (
+          <span
+            aria-label={change.ariaLabel ?? change.value}
+            className="font-semibold text-center"
+            style={{
+              minWidth: 46,
+              padding: 6,
+              borderRadius: 6,
+              fontSize: 12,
+              lineHeight: "16px",
+              background: directionStyles[change.direction].bg,
+              color: directionStyles[change.direction].color,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {change.value}
+          </span>
+        )}
+      </div>
       {hint && (
         <span
-          className="text-copy-13 text-[color:var(--ds-gray-700)] pr-16"
+          className="text-copy-13 text-[color:var(--ds-gray-700)]"
           style={muted ? { opacity: 0.8 } : undefined}
         >
           {hint}
-        </span>
-      )}
-      {change && (
-        <span
-          aria-label={change.ariaLabel ?? change.value}
-          className="text-label-12 font-medium absolute"
-          style={{
-            right: 16,
-            bottom: 16,
-            padding: "2px 8px",
-            borderRadius: 9999,
-            background: directionStyles[change.direction].bg,
-            color: directionStyles[change.direction].color,
-            whiteSpace: "nowrap",
-          }}
-        >
-          {change.value}
         </span>
       )}
     </>
