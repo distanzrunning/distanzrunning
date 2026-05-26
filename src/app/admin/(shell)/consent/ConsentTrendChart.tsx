@@ -129,7 +129,10 @@ function CursorLine({ points }: CursorLineProps) {
       x1={x}
       y1={points[0].y}
       x2={x}
-      y2={points[1].y}
+      // Extend 7px past plot bottom into the X-axis area so the
+      // line visually anchors the pill label sitting just below —
+      // matches Vercel's chart cursor (y2 = plotBottom + 7).
+      y2={points[1].y + 7}
       stroke="var(--ds-gray-1000)"
       strokeWidth={2}
       style={{ pointerEvents: "none" }}
@@ -249,6 +252,15 @@ export default function ConsentTrendChart({
             fill="url(#consent-trend-fill)"
             connectNulls={false}
             isAnimationActive={false}
+            // Solid dot at the hovered data point — matches Vercel's
+            // visx-circle (4px radius, primary fill, white ring so
+            // the dot reads against either grid or area fill).
+            activeDot={{
+              r: 4,
+              fill: "var(--ds-blue-900)",
+              stroke: "var(--ds-background-100)",
+              strokeWidth: 2,
+            }}
           />
         </AreaChart>
       </ChartContainer>
