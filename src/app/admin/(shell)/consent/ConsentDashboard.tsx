@@ -14,6 +14,12 @@ import { Tooltip } from "@/components/ui/Tooltip";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import ConsentTrendChart from "./ConsentTrendChart";
 import { CountryCell } from "./CountryCell";
+import {
+  isoOf,
+  previousWindow,
+  windowDays,
+  type DateWindow,
+} from "./presets";
 import { WhenCell } from "./WhenCell";
 
 type Decision = "accept_all" | "reject_all" | "custom";
@@ -27,9 +33,15 @@ const DECISION_LABEL: Record<Decision, string> = {
 
 const BASE_PATH = "/admin/consent";
 
-function tileHref(target: Decision, active: boolean): string {
-  if (active) return BASE_PATH;
-  return `${BASE_PATH}?filter=${target}`;
+function buildHref(
+  params: { from: string; to: string },
+  filter: Decision | null,
+): string {
+  const usp = new URLSearchParams();
+  usp.set("from", params.from);
+  usp.set("to", params.to);
+  if (filter) usp.set("filter", filter);
+  return `${BASE_PATH}?${usp.toString()}`;
 }
 
 interface ConsentRow {
@@ -44,7 +56,6 @@ interface ConsentRow {
 }
 
 const FETCH_LIMIT = 10_000;
-const WINDOW_DAYS = 30;
 
 function pct(num: number, denom: number): number {
   if (denom === 0) return 0;
@@ -55,7 +66,11 @@ function fmtPct(value: number, fractionDigits = 0): string {
   return `${value.toFixed(fractionDigits)}%`;
 }
 
-function changeFrom(current: number, previous: number): StatTileChange {
+function changeFrom(
+  current: number,
+  previous: number,
+  windowLabel: string,
+): StatTileChange {
   if (previous === 0 && current === 0) {
     return { value: "—", direction: "flat" };
   }
@@ -68,11 +83,15 @@ function changeFrom(current: number, previous: number): StatTileChange {
   return {
     value: `${sign}${diff.toFixed(1)}%`,
     direction,
-    ariaLabel: `${diff.toFixed(1)}% versus the previous ${WINDOW_DAYS} days`,
+    ariaLabel: `${diff.toFixed(1)}% versus ${windowLabel}`,
   };
 }
 
-function pointChange(currentPct: number, previousPct: number): StatTileChange {
+function pointChange(
+  currentPct: number,
+  previousPct: number,
+  windowLabel: string,
+): StatTileChange {
   const diff = currentPct - previousPct;
   if (Math.abs(diff) < 0.05) return { value: "0 pts", direction: "flat" };
   const direction = diff > 0 ? "up" : "down";
@@ -80,7 +99,7 @@ function pointChange(currentPct: number, previousPct: number): StatTileChange {
   return {
     value: `${sign}${diff.toFixed(1)} pts`,
     direction,
-    ariaLabel: `${diff.toFixed(1)} percentage points versus the previous ${WINDOW_DAYS} days`,
+    ariaLabel: `${diff.toFixed(1)} percentage points versus ${windowLabel}`,
   };
 }
 
@@ -89,17 +108,24 @@ interface TrendPoint {
   count: number;
 }
 
-function buildTrend(rows: ConsentRow[], windowStart: Date): TrendPoint[] {
+function buildTrend(
+  rows: ConsentRow[],
+  window: DateWindow,
+): TrendPoint[] {
   const days = new Map<string, number>();
-  for (let i = 0; i < WINDOW_DAYS; i++) {
-    const d = new Date(windowStart);
-    d.setUTCDate(windowStart.getUTCDate() + i);
+  const dayCount = windowDays(window);
+  for (let i = 0; i < dayCount; i++) {
+    const d = new Date(window.start);
+    d.setUTCDate(window.start.getUTCDate() + i);
     days.set(d.toISOString().slice(0, 10), 0);
   }
   for (const row of rows) {
     const key = row.created_at.slice(0, 10);
     if (days.has(key)) days.set(key, (days.get(key) ?? 0) + 1);
   }
+  // For long ranges, the X-axis stride is too dense to show every
+  // day — Recharts handles axis ticks via minTickGap, so we keep
+  // the same shape (date label per point) and let the chart thin.
   return [...days.entries()].map(([date, count]) => ({
     date: date.slice(5),
     count,
@@ -168,10 +194,22 @@ const TWO_COL_GRID = {
 
 export async function ConsentDashboardContent({
   filter,
+  windowStart,
+  windowEnd,
 }: {
   filter?: DecisionFilter | null;
+  windowStart: Date;
+  windowEnd: Date;
 }) {
   const supabase = getSupabaseAdmin();
+  const currentWindow: DateWindow = { start: windowStart, end: windowEnd };
+  const previous = previousWindow(currentWindow);
+  const days = windowDays(currentWindow);
+  const previousLabel =
+    days === 1 ? "the previous day" : `the previous ${days} days`;
+  const urlParams = { from: isoOf(windowStart), to: isoOf(windowEnd) };
+  const tileHref = (target: Decision) =>
+    buildHref(urlParams, filter === target ? null : target);
 
   const [{ count: totalCount }, { data, error }] = await Promise.all([
     supabase
@@ -197,21 +235,16 @@ export async function ConsentDashboardContent({
   const rows = (data ?? []) as ConsentRow[];
   const total = totalCount ?? rows.length;
 
-  // Slice rows into "current 30-day window" and "previous 30-day
-  // window" so we can compute MoM trend pills from one DB hit.
-  const now = new Date();
-  now.setUTCHours(0, 0, 0, 0);
-  const currentStart = new Date(now);
-  currentStart.setUTCDate(now.getUTCDate() - (WINDOW_DAYS - 1));
-  const previousStart = new Date(currentStart);
-  previousStart.setUTCDate(currentStart.getUTCDate() - WINDOW_DAYS);
-
-  const currentRows = rows.filter(
-    (r) => new Date(r.created_at) >= currentStart,
-  );
+  // Slice the fetched rows into "current window" and the same-
+  // length window immediately before, so trend pills come from one
+  // DB hit regardless of the user's selected range.
+  const currentRows = rows.filter((r) => {
+    const d = new Date(r.created_at);
+    return d >= currentWindow.start && d <= currentWindow.end;
+  });
   const previousRows = rows.filter((r) => {
     const d = new Date(r.created_at);
-    return d >= previousStart && d < currentStart;
+    return d >= previous.start && d <= previous.end;
   });
 
   const currentCount = currentRows.length;
@@ -253,7 +286,7 @@ export async function ConsentDashboardContent({
   const trendRows = filter
     ? currentRows.filter((r) => r.decision === filter)
     : currentRows;
-  const trend = buildTrend(trendRows, currentStart);
+  const trend = buildTrend(trendRows, currentWindow);
   const chartLabel = filter
     ? `${DECISION_LABEL[filter].charAt(0).toUpperCase()}${DECISION_LABEL[filter].slice(1)}`
     : "Decisions";
@@ -290,31 +323,43 @@ export async function ConsentDashboardContent({
           }}
         >
           <StatTile
-            label={`Last ${WINDOW_DAYS} days (${total.toLocaleString()} all-time)`}
+            label={`Decisions (${total.toLocaleString()} all-time)`}
             value={currentCount.toLocaleString()}
-            change={changeFrom(currentCount, previousCount)}
-            href={BASE_PATH}
+            change={changeFrom(currentCount, previousCount, previousLabel)}
+            href={buildHref(urlParams, null)}
             active={!filter}
           />
           <StatTile
             label={`Accept rate (${currentAccepts.toLocaleString()} of ${currentCount.toLocaleString()})`}
             value={fmtPct(currentAcceptRate)}
-            change={pointChange(currentAcceptRate, previousAcceptRate)}
-            href={tileHref("accept_all", filter === "accept_all")}
+            change={pointChange(
+              currentAcceptRate,
+              previousAcceptRate,
+              previousLabel,
+            )}
+            href={tileHref("accept_all")}
             active={filter === "accept_all"}
           />
           <StatTile
             label={`Reject rate (${currentRejects.toLocaleString()} of ${currentCount.toLocaleString()})`}
             value={fmtPct(currentRejectRate)}
-            change={pointChange(currentRejectRate, previousRejectRate)}
-            href={tileHref("reject_all", filter === "reject_all")}
+            change={pointChange(
+              currentRejectRate,
+              previousRejectRate,
+              previousLabel,
+            )}
+            href={tileHref("reject_all")}
             active={filter === "reject_all"}
           />
           <StatTile
             label={`Custom rate (${currentCustoms.toLocaleString()} of ${currentCount.toLocaleString()})`}
             value={fmtPct(currentCustomRate)}
-            change={pointChange(currentCustomRate, previousCustomRate)}
-            href={tileHref("custom", filter === "custom")}
+            change={pointChange(
+              currentCustomRate,
+              previousCustomRate,
+              previousLabel,
+            )}
+            href={tileHref("custom")}
             active={filter === "custom"}
           />
         </div>
@@ -482,7 +527,7 @@ export function ConsentDashboardSkeleton() {
             background: "var(--ds-background-200)",
           }}
         >
-          <StatTileSkeleton label={`Last ${WINDOW_DAYS} days`} />
+          <StatTileSkeleton label="Decisions" />
           <StatTileSkeleton label="Accept rate" />
           <StatTileSkeleton label="Reject rate" />
           <StatTileSkeleton label="Custom rate" />

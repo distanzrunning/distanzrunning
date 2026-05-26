@@ -6,10 +6,12 @@ import {
   ConsentDashboardContent,
   ConsentDashboardSkeleton,
 } from "./ConsentDashboard";
+import ConsentDateRangePicker from "./ConsentDateRangePicker";
 import {
   ConsentLookupContent,
   ConsentLookupSkeleton,
 } from "./ConsentLookup";
+import { isoOf, windowFromParams } from "./presets";
 
 export const metadata = {
   title: "Consent — Stride Admin",
@@ -51,11 +53,18 @@ function normaliseFilter(raw: string | undefined): DecisionFilter | null {
 export default async function ConsentDashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; filter?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    filter?: string;
+    from?: string;
+    to?: string;
+  }>;
 }) {
   const params = await searchParams;
   const query = params.q?.trim() ?? "";
   const filter = normaliseFilter(params.filter);
+  const window = windowFromParams({ from: params.from, to: params.to });
+  const windowKey = `${isoOf(window.start)}_${isoOf(window.end)}`;
 
   return (
     <div style={{ padding: "32px 24px" }}>
@@ -114,12 +123,21 @@ export default async function ConsentDashboardPage({
             <ConsentLookupContent query={query} />
           </Suspense>
         ) : (
-          <Suspense
-            key={filter ?? "all"}
-            fallback={<ConsentDashboardSkeleton />}
-          >
-            <ConsentDashboardContent filter={filter} />
-          </Suspense>
+          <>
+            <div style={{ marginBottom: 16 }}>
+              <ConsentDateRangePicker />
+            </div>
+            <Suspense
+              key={`${windowKey}_${filter ?? "all"}`}
+              fallback={<ConsentDashboardSkeleton />}
+            >
+              <ConsentDashboardContent
+                filter={filter}
+                windowStart={window.start}
+                windowEnd={window.end}
+              />
+            </Suspense>
+          </>
         )}
       </div>
     </div>
