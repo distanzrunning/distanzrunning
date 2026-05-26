@@ -109,15 +109,33 @@ interface CursorPayloadEntry {
 interface ActiveCursorProps {
   points?: { x: number; y: number }[];
   payload?: CursorPayloadEntry[];
+  top?: number;
+  height?: number;
 }
 
-function ActiveCursor({ points, payload }: ActiveCursorProps) {
+// Has to match the XAxis tickMargin prop below — both numbers feed
+// the same vertical position for tick + cursor text.
+const TICK_MARGIN = 8;
+
+function ActiveCursor({
+  points,
+  payload,
+  top = 0,
+  height = 0,
+}: ActiveCursorProps) {
   if (!points || points.length < 2) return null;
   const iso = payload?.[0]?.payload?.date;
   if (!iso) return null;
   const x = points[0].x;
   const yTop = points[0].y;
   const yBottom = points[1].y;
+  // Compute the tick-text y directly from the plot geometry
+  // (top + height + tickMargin) rather than from points[1].y.
+  // points[1].y is the cursor *line* terminus, which Recharts can
+  // shift independently of where it positions axis tick text;
+  // anchoring to top + height keeps the "N days ago" label sitting
+  // in the exact row a tick would occupy.
+  const tickTextY = top + height + TICK_MARGIN;
 
   return (
     <g style={{ pointerEvents: "none" }}>
@@ -131,10 +149,7 @@ function ActiveCursor({ points, payload }: ActiveCursorProps) {
       />
       <text
         x={x}
-        // Match the X-axis tick text baseline (yBottom + tickMargin)
-        // so the "N days ago" label sits in the row a normal tick
-        // would occupy — visually it reads as a tick swap.
-        y={yBottom + 8}
+        y={tickTextY}
         dy="0.71em"
         textAnchor="middle"
         fontSize={12}
@@ -204,7 +219,7 @@ export default function ConsentTrendChart({
             dataKey="date"
             tickLine={false}
             axisLine={false}
-            tickMargin={8}
+            tickMargin={TICK_MARGIN}
             // Always show roughly seven ticks regardless of window
             // length — 7-day windows get every day, 30-day windows
             // get every fifth day, 90-day windows get every
