@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -121,24 +121,46 @@ const TICK_MARGIN = 8;
 // to mirror that offset to land in the same row as the real ticks.
 const TICK_SIZE = 6;
 
+// Fallback label width used on the first paint, before useLayoutEffect
+// has measured the actual rendered text. Covers the longest realistic
+// label ("365 days ago" ≈ 85px @ 12px semibold) with a small buffer.
+const FALLBACK_LABEL_WIDTH = 90;
+const LABEL_HORIZONTAL_PADDING = 6;
+const LABEL_VERTICAL_PADDING = 3;
+
 function ActiveCursor({
   points,
   payload,
   top = 0,
   height = 0,
 }: ActiveCursorProps) {
-  if (!points || points.length < 2) return null;
+  const textRef = useRef<SVGTextElement>(null);
+  const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
+
   const iso = payload?.[0]?.payload?.date;
+
+  // Re-measure the rendered text whenever the active day changes —
+  // useLayoutEffect commits the measurement before the next browser
+  // paint, so the background <rect> snaps to the right width without
+  // a visible frame of "text without background". The fallback width
+  // covers the first render before the effect runs.
+  useLayoutEffect(() => {
+    if (!textRef.current) return;
+    setMeasuredWidth(textRef.current.getBBox().width);
+  }, [iso]);
+
+  if (!points || points.length < 2) return null;
   if (!iso) return null;
   const x = points[0].x;
   const yTop = points[0].y;
   const yBottom = points[1].y;
-  // Compute the tick-text y directly from the plot geometry. Mirror
-  // Recharts' own tick formula: axisLineY (= top + height) plus
-  // tickSize plus tickMargin. tickSize counts even though we hide
-  // the tick line; without it the cursor label lands roughly 6px
-  // above the real tick row.
+  // Mirror Recharts' tick text y: axisLineY (= top + height) plus
+  // tickSize plus tickMargin. tickSize counts even when tickLine is
+  // hidden — without it the label lands ~6px above the tick row.
   const tickTextY = top + height + TICK_SIZE + TICK_MARGIN;
+  const labelWidth = measuredWidth ?? FALLBACK_LABEL_WIDTH;
+  const rectWidth = labelWidth + LABEL_HORIZONTAL_PADDING * 2;
+  const rectHeight = 12 + LABEL_VERTICAL_PADDING * 2;
 
   return (
     <g style={{ pointerEvents: "none" }}>
@@ -150,7 +172,19 @@ function ActiveCursor({
         stroke="var(--ds-gray-1000)"
         strokeWidth={2}
       />
+      {/* Knockout rect — paints the panel background behind the
+          label so an underlying X-axis tick label (e.g. "May 7") is
+          obscured when the cursor sits close to it. Sits *between*
+          the cursor line and the text so the line still reads. */}
+      <rect
+        x={x - rectWidth / 2}
+        y={tickTextY - LABEL_VERTICAL_PADDING}
+        width={rectWidth}
+        height={rectHeight}
+        fill="var(--ds-background-100)"
+      />
       <text
+        ref={textRef}
         x={x}
         y={tickTextY}
         dy="0.71em"
