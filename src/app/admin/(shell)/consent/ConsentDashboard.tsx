@@ -293,55 +293,68 @@ export async function ConsentDashboardContent({
           marginBottom: 16,
         }}
       >
+        {/* Vercel-style tab row: tiles sit at a fixed min-width
+            (220px) and don't grow to fill the panel. Any extra
+            horizontal space stays empty, painted by the row's
+            background-200, so the data reads at its natural
+            density rather than spreading thin on wide viewports. */}
         <div
           className="divide-x divide-[color:var(--ds-gray-400)]"
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+            display: "flex",
             borderBottom: "1px solid var(--ds-gray-400)",
             background: "var(--ds-background-200)",
+            overflowX: "auto",
           }}
         >
-          <StatTile
-            label="Decisions"
-            value={currentCount.toLocaleString()}
-            change={changeFrom(currentCount, previousCount, previousLabel)}
-            href={buildHref(urlParams, null)}
-            active={!filter}
-          />
-          <StatTile
-            label="Accept rate"
-            value={fmtPct(currentAcceptRate)}
-            change={pointChange(
-              currentAcceptRate,
-              previousAcceptRate,
-              previousLabel,
-            )}
-            href={tileHref("accept_all")}
-            active={filter === "accept_all"}
-          />
-          <StatTile
-            label="Reject rate"
-            value={fmtPct(currentRejectRate)}
-            change={pointChange(
-              currentRejectRate,
-              previousRejectRate,
-              previousLabel,
-            )}
-            href={tileHref("reject_all")}
-            active={filter === "reject_all"}
-          />
-          <StatTile
-            label="Custom rate"
-            value={fmtPct(currentCustomRate)}
-            change={pointChange(
-              currentCustomRate,
-              previousCustomRate,
-              previousLabel,
-            )}
-            href={tileHref("custom")}
-            active={filter === "custom"}
-          />
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
+            <StatTile
+              label="Decisions"
+              value={currentCount.toLocaleString()}
+              change={changeFrom(currentCount, previousCount, previousLabel)}
+              href={buildHref(urlParams, null)}
+              active={!filter}
+            />
+          </div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
+            <StatTile
+              label="Accept rate"
+              value={fmtPct(currentAcceptRate)}
+              change={pointChange(
+                currentAcceptRate,
+                previousAcceptRate,
+                previousLabel,
+              )}
+              href={tileHref("accept_all")}
+              active={filter === "accept_all"}
+            />
+          </div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
+            <StatTile
+              label="Reject rate"
+              value={fmtPct(currentRejectRate)}
+              change={pointChange(
+                currentRejectRate,
+                previousRejectRate,
+                previousLabel,
+              )}
+              href={tileHref("reject_all")}
+              active={filter === "reject_all"}
+            />
+          </div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
+            <StatTile
+              label="Custom rate"
+              value={fmtPct(currentCustomRate)}
+              change={pointChange(
+                currentCustomRate,
+                previousCustomRate,
+                previousLabel,
+              )}
+              href={tileHref("custom")}
+              active={filter === "custom"}
+            />
+          </div>
         </div>
 
         <ConsentTrendChart trend={trend} metricLabel={chartLabel} />

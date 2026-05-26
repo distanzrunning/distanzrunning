@@ -45,7 +45,7 @@ export default async function ConsentDashboardPage({
 
   return (
     <div style={{ padding: "32px 24px" }}>
-      <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto" }}>
         {query && (
           <div style={{ marginBottom: 8 }}>
             <ButtonLink
