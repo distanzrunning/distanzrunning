@@ -281,6 +281,7 @@ export async function ConsentDashboardContent({
         }}
       >
         <div
+          className="divide-x divide-[color:var(--ds-gray-400)]"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
@@ -303,9 +304,6 @@ export async function ConsentDashboardContent({
             change={pointChange(currentAcceptRate, previousAcceptRate)}
             href={tileHref("accept_all", filter === "accept_all")}
             active={filter === "accept_all"}
-            anchorProps={{
-              style: { borderLeft: "1px solid var(--ds-gray-400)" },
-            }}
           />
           <StatTile
             label="Reject rate"
@@ -314,9 +312,6 @@ export async function ConsentDashboardContent({
             change={pointChange(currentRejectRate, previousRejectRate)}
             href={tileHref("reject_all", filter === "reject_all")}
             active={filter === "reject_all"}
-            anchorProps={{
-              style: { borderLeft: "1px solid var(--ds-gray-400)" },
-            }}
           />
           <StatTile
             label="Custom rate"
@@ -325,9 +320,6 @@ export async function ConsentDashboardContent({
             change={pointChange(currentCustomRate, previousCustomRate)}
             href={tileHref("custom", filter === "custom")}
             active={filter === "custom"}
-            anchorProps={{
-              style: { borderLeft: "1px solid var(--ds-gray-400)" },
-            }}
           />
         </div>
 
@@ -497,6 +489,7 @@ export function ConsentDashboardSkeleton() {
         }}
       >
         <div
+          className="divide-x divide-[color:var(--ds-gray-400)]"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
