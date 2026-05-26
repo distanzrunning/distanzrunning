@@ -69,26 +69,81 @@ interface CustomTickProps {
 function CustomTick({ x = 0, y = 0, payload, activeLabel }: CustomTickProps) {
   if (!payload) return null;
   const isActive = activeLabel !== null && payload.value === activeLabel;
-  const text = isActive
-    ? daysAgoLabel(payload.value)
-    : formatTickDate(payload.value);
+  // When the day is active we hide the tick entirely — the custom
+  // cursor draws the "N days ago" label at exactly this position, so
+  // rendering the tick too would either duplicate or fight it.
+  // Critically this also lets the cursor work for *thinned* days that
+  // never had a tick to begin with: one label path covers both cases.
+  if (isActive) return null;
   return (
     <text
       x={x}
-      // dy="0.71em" matches Recharts' default tick baseline — rendering
-      // at y + literal offset (e.g. y+16) pushed the text past the SVG
-      // viewBox and (a) clipped its descenders, (b) put the text outside
-      // the chart's mouse-event area so hovering the label didn't fire
-      // the tooltip swap.
+      // dy="0.71em" matches Recharts' default tick baseline.
       y={y}
       dy="0.71em"
       textAnchor="middle"
       fontSize={12}
-      fontWeight={isActive ? 600 : 400}
-      fill={isActive ? "var(--ds-gray-1000)" : "var(--ds-gray-700)"}
+      fontWeight={400}
+      fill="var(--ds-gray-700)"
+      // pointer-events: none so hovering directly on the label lets
+      // the mouse event reach the chart's onMouseMove handler instead
+      // of being swallowed by the <text> element.
+      style={{ pointerEvents: "none" }}
     >
-      {text}
+      {formatTickDate(payload.value)}
     </text>
+  );
+}
+
+// Custom cursor — replaces Recharts' default `.recharts-tooltip-cursor`
+// element (which Chart.tsx forces to stroke gray-400 via a wrapper
+// CSS rule that we can't override inline). Renders a solid gray-1000
+// 2px vertical line plus a bold "N days ago" label at the bottom of
+// the plot area, positioned where the X-axis tick would sit. The
+// label appears for every hovered day, whether or not that day has
+// a rendered tick (long windows thin the ticks; the cursor's label
+// still surfaces "N days ago" in that case).
+interface CursorPayloadEntry {
+  payload?: { date?: string };
+}
+interface ActiveCursorProps {
+  points?: { x: number; y: number }[];
+  payload?: CursorPayloadEntry[];
+}
+
+function ActiveCursor({ points, payload }: ActiveCursorProps) {
+  if (!points || points.length < 2) return null;
+  const iso = payload?.[0]?.payload?.date;
+  if (!iso) return null;
+  const x = points[0].x;
+  const yTop = points[0].y;
+  const yBottom = points[1].y;
+
+  return (
+    <g style={{ pointerEvents: "none" }}>
+      <line
+        x1={x}
+        y1={yTop}
+        x2={x}
+        y2={yBottom}
+        stroke="var(--ds-gray-1000)"
+        strokeWidth={2}
+      />
+      <text
+        x={x}
+        // Match the X-axis tick text baseline (yBottom + tickMargin)
+        // so the "N days ago" label sits in the row a normal tick
+        // would occupy — visually it reads as a tick swap.
+        y={yBottom + 8}
+        dy="0.71em"
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight={600}
+        fill="var(--ds-gray-1000)"
+      >
+        {daysAgoLabel(iso)}
+      </text>
+    </g>
   );
 }
 
@@ -176,10 +231,10 @@ export default function ConsentTrendChart({
             }
           />
           <ChartTooltip
-            cursor={{
-              stroke: "var(--ds-gray-1000)",
-              strokeWidth: 1,
-            }}
+            // Custom cursor element rather than the default-shaped
+            // `{ stroke, strokeWidth }` config: see ActiveCursor's
+            // header comment for why (wrapper CSS forces gray-400).
+            cursor={<ActiveCursor />}
             content={
               <ChartTooltipContent
                 hideLabel={false}
