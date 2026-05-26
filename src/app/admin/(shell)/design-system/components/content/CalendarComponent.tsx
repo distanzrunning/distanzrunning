@@ -474,6 +474,61 @@ export function CompactDateRangePicker() {
   );
 }`;
 
+const compactPresetLabelCode = `import { Calendar, DateRange, CalendarPreset } from '@/components/ui/Calendar';
+import { useState } from 'react';
+import { startOfDay, endOfDay, subDays } from 'date-fns';
+
+const presets: CalendarPreset[] = [
+  { label: 'Last 7 days',  value: 'last-7d',  getRange: () => ({ start: startOfDay(subDays(new Date(), 7)),  end: endOfDay(new Date()) }) },
+  { label: 'Last 30 days', value: 'last-30d', getRange: () => ({ start: startOfDay(subDays(new Date(), 30)), end: endOfDay(new Date()) }) },
+  { label: 'Last 90 days', value: 'last-90d', getRange: () => ({ start: startOfDay(subDays(new Date(), 90)), end: endOfDay(new Date()) }) },
+];
+
+export function CompactPresetLabelPicker() {
+  const [dateRange, setDateRange] = useState<DateRange>({ start: null, end: null });
+
+  // compactPresetLabel collapses the date trigger to an icon-only
+  // button — the preset combobox alongside carries the active label
+  // ("Last 7 days" rather than an explicit date span). Popover
+  // expands right-to-left so it stays anchored to its container's
+  // trailing edge. Used on /admin/consent.
+  return (
+    <Calendar
+      compact
+      compactPresetLabel
+      popoverAlignment="end"
+      presets={presets}
+      defaultPreset="last-7d"
+      value={dateRange}
+      onChange={setDateRange}
+    />
+  );
+}`;
+
+const backdropCode = `import { Calendar, DateRange } from '@/components/ui/Calendar';
+import { useState } from 'react';
+
+export function OverlayDateRangePicker() {
+  const [dateRange, setDateRange] = useState<DateRange>({ start: null, end: null });
+
+  // \`backdrop\` opts the picker into a page-dim overlay + document
+  // scroll-lock while open. Off by default so most dashboards don't
+  // lock scroll on every open; on for focal contexts like the /races
+  // search filter row where the picker reads as the primary action.
+  return (
+    <Calendar
+      placeholder="Date"
+      value={dateRange}
+      onChange={setDateRange}
+      size="small"
+      width={140}
+      showMonthTab
+      showTimeInput={false}
+      backdrop
+    />
+  );
+}`;
+
 const minMaxDatesCode = `import { Calendar, DateRange } from '@/components/ui/Calendar';
 import { useState } from 'react';
 
@@ -862,6 +917,35 @@ export default function CalendarComponent() {
         </div>
       </Section>
 
+      {/* Compact with preset label */}
+      <Section>
+        <SectionHeader id="compact-preset-label" onCopyLink={showToast}>
+          Compact with preset label
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+          Pair <code className="inline-code">compact</code> with{" "}
+          <code className="inline-code">compactPresetLabel</code> to collapse
+          the date trigger to an icon-only button and let the preset
+          combobox carry the active label. Useful when the resting state
+          should read <em>&ldquo;Last 7 days&rdquo;</em> rather than a date
+          span. Used on{" "}
+          <code className="inline-code">/admin/consent</code>.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={compactPresetLabelCode}>
+            <div className="flex justify-end py-12 pr-8">
+              <Calendar
+                compact
+                compactPresetLabel
+                popoverAlignment="end"
+                presets={defaultPresets}
+                defaultPreset="last-7-days"
+              />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* Stacked Section */}
       <Section>
         <SectionHeader id="stacked" onCopyLink={showToast}>
@@ -953,6 +1037,35 @@ export default function CalendarComponent() {
                 placeholder="Select Date Range"
                 showMonthTab
                 width={250}
+              />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Backdrop / overlay variant */}
+      <Section>
+        <SectionHeader id="backdrop" onCopyLink={showToast}>
+          With overlay
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+          Pass <code className="inline-code">backdrop</code> to render a
+          page-dim overlay behind the open popover and lock document
+          scroll while it&rsquo;s open. Off by default so most dashboards
+          don&rsquo;t lock scroll on every open; on for focal contexts
+          where the picker reads as the primary action. Used on{" "}
+          <code className="inline-code">/races</code> in the filter row.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={backdropCode}>
+            <div className="flex justify-center py-12">
+              <Calendar
+                placeholder="Date"
+                size="small"
+                width={140}
+                showMonthTab
+                showTimeInput={false}
+                backdrop
               />
             </div>
           </CodePreview>
