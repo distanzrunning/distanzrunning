@@ -1,15 +1,10 @@
 // src/components/ui/DestructiveActionModal.tsx
 //
 // Type-to-confirm modal for destructive actions: delete, revoke,
-// disconnect, rotate, downgrade. Mirrors the Geist DS spec.
-//
-// Anatomy:
-//   - Modal.Title  (title prop, Title Case Verb + Noun, statement)
-//   - Modal.P      (description prop, names the consequence)
-//   - Irreversibility band (optional, red — irreversibleDescription)
-//   - Verification prompt + Input (verificationPhrase / verificationLabel)
-//   - Inline error (optional — error prop)
-//   - Footer: Cancel (secondary) + Confirm (error/red filled)
+// disconnect, rotate, downgrade. Composes the canonical Modal
+// surface — Modal.Header / footer flex wrapper / etc. — and reuses
+// the DS Note (error + fill) for the irreversibility band plus
+// the DS Error component for the inline submit error.
 //
 // Behaviour:
 //   - Input auto-focuses on open (via Modal's initialFocusRef).
@@ -18,17 +13,18 @@
 //   - Cancel / Esc / outside-click dismiss (Esc + outside ignored
 //     while `loading` so an in-flight API call isn't orphaned).
 //   - Caller owns `open`. Don't self-dismiss from onConfirm; close
-//     after the API call settles (or keep open on error so the user
-//     can retry).
+//     after the API call settles (or keep open on error so the
+//     user can retry).
 
 "use client";
 
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
-import { TriangleAlert } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
+import { Error } from "@/components/ui/Error";
 import { Input } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
+import { Note } from "@/components/ui/Note";
 
 export interface DestructiveActionModalProps {
   /** Controlled open state. */
@@ -49,7 +45,7 @@ export interface DestructiveActionModalProps {
   /** The exact string the user must type to unlock submit. */
   verificationPhrase: string;
   /** What the user is typing, e.g. "project name" — renders as part
-   *  of the prompt: "To confirm, type the project name ...". */
+   *  of the prompt: "To confirm, type the project name …". */
   verificationLabel?: string;
   /** Confirm button label. Must match the title 1:1 — "Delete Project". */
   confirmLabel: string;
@@ -145,34 +141,9 @@ export function DestructiveActionModal({
 
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           {irreversibleDescription && (
-            <div
-              role="note"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                padding: "10px 12px",
-                borderRadius: 6,
-                background: "var(--ds-red-100)",
-                border: "1px solid var(--ds-red-200)",
-              }}
-            >
-              <TriangleAlert
-                aria-hidden="true"
-                style={{
-                  width: 16,
-                  height: 16,
-                  flexShrink: 0,
-                  color: "var(--ds-red-900)",
-                }}
-              />
-              <span
-                className="text-copy-13"
-                style={{ color: "var(--ds-red-900)" }}
-              >
-                {irreversibleDescription}
-              </span>
-            </div>
+            <Note type="error" fill label={false} size="small">
+              {irreversibleDescription}
+            </Note>
           )}
 
           <div
@@ -202,34 +173,40 @@ export function DestructiveActionModal({
               translate="no"
             />
             {errMsg && (
-              <p
-                role="alert"
-                className="text-copy-13"
-                style={{ color: "var(--ds-red-900)", margin: "4px 0 0" }}
-              >
-                {errMsg}
-              </p>
+              <div style={{ marginTop: 4 }}>
+                <Error size="small" live="assertive">
+                  {errMsg}
+                </Error>
+              </div>
             )}
           </div>
         </div>
 
         <Modal.Footer>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={handleClose}
-            disabled={loading}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 16,
+            }}
           >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="error"
-            disabled={!gateOpen || loading}
-            loading={loading}
-          >
-            {confirmLabel}
-          </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={handleClose}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="error"
+              disabled={!gateOpen || loading}
+              loading={loading}
+            >
+              {confirmLabel}
+            </Button>
+          </div>
         </Modal.Footer>
       </form>
     </Modal>

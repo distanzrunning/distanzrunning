@@ -10,8 +10,8 @@ export async function buildDestructiveActionModalItem(): Promise<RegistryItem> {
     title: "Destructive Action Modal",
     description:
       "Type-to-confirm modal for destructive actions — delete, revoke, disconnect. Includes an optional red irreversibility band, loading state, and inline error.",
-    dependencies: ["react", "lucide-react"],
-    registryDependencies: ["tokens", "modal", "button", "input"],
+    dependencies: ["react"],
+    registryDependencies: ["tokens", "modal", "button", "input", "note", "error"],
     files: [
       {
         path: "components/ui/DestructiveActionModal.tsx",
