@@ -15,8 +15,10 @@
 //   - Confirm disabled until typed value === verificationPhrase.
 //   - Enter inside the input fires onConfirm when the gate is open;
 //     no-op otherwise.
-//   - Cancel / Esc / outside-click dismiss (ignored while `loading`
-//     so an in-flight API call isn't orphaned).
+//   - Cancel / Esc / outside-click always dismiss. While `loading`,
+//     the Cancel + Confirm buttons are disabled (visual signal that
+//     the request is in flight), but Esc and outside-click still
+//     work so the user can always escape the overlay.
 //   - Caller owns `open`. Don't self-dismiss from onConfirm; close
 //     after the API call settles (or keep open on error so the
 //     user can retry).
@@ -101,7 +103,6 @@ export function DestructiveActionModal({
   };
 
   const handleClose = () => {
-    if (loading) return;
     onOpenChange(false);
   };
 
