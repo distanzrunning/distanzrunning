@@ -48,6 +48,33 @@ function formatTickDate(iso: string): string {
   });
 }
 
+// Build integer-only Y-axis ticks the way Vercel's analytics chart does:
+// pick a nice step (1, 2, 5, 10, 20, …) targeting ~5 ticks and let the
+// tick count fall out. Recharts' built-in algorithm fixes the tick
+// count instead, which inflates the upper bound on small ranges
+// (e.g. max=2 becomes 0,1,2,3,4 to fit 5 ticks).
+function niceIntegerTicks(points: TrendPoint[]): number[] {
+  const dataMax = points.reduce(
+    (max, p) => (p.value != null && p.value > max ? p.value : max),
+    0,
+  );
+  if (dataMax <= 0) return [0, 1];
+  const targetTicks = 5;
+  const rawStep = Math.max(dataMax / (targetTicks - 1), 1);
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  const normalized = rawStep / magnitude;
+  let niceNorm: number;
+  if (normalized <= 1) niceNorm = 1;
+  else if (normalized <= 2) niceNorm = 2;
+  else if (normalized <= 5) niceNorm = 5;
+  else niceNorm = 10;
+  const step = Math.max(1, Math.round(niceNorm * magnitude));
+  const max = Math.ceil(dataMax / step) * step;
+  const ticks: number[] = [];
+  for (let v = 0; v <= max; v += step) ticks.push(v);
+  return ticks;
+}
+
 function daysAgoLabel(iso: string): string {
   const target = new Date(`${iso}T00:00:00.000Z`);
   const todayUTC = new Date();
@@ -253,6 +280,16 @@ export default function ConsentTrendChart({
 
   const isPercent = format === "percent";
 
+  // Vercel-style y-axis: pick a nice integer step and let the tick count
+  // fall out (max=2 → 0,1,2; max=7 → 0,2,4,6,8). Recharts' default
+  // targets a fixed tick count, which inflates the upper bound when
+  // the data range is tiny (max=2 ends up as 0,1,2,3,4).
+  const countTicks = isPercent ? undefined : niceIntegerTicks(trend);
+  const countDomain: [number, number] | undefined =
+    countTicks && countTicks.length > 0
+      ? [0, countTicks[countTicks.length - 1]]
+      : undefined;
+
   const showOverlay =
     activeLabel !== null && cursorX !== null && tickRowTop !== null;
 
@@ -322,7 +359,8 @@ export default function ConsentTrendChart({
             width={48}
             tickMargin={4}
             tick={{ fill: "var(--ds-gray-700)", fontSize: 12 }}
-            domain={isPercent ? [0, 100] : [0, "auto"]}
+            domain={isPercent ? [0, 100] : (countDomain ?? [0, "auto"])}
+            ticks={countTicks}
             // Integer ticks only — without this Recharts picks 0.5
             // increments when the count range is small (e.g. 0–3),
             // which reads as "0.5 visitors" nonsense.
