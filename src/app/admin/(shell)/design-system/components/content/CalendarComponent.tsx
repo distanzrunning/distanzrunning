@@ -933,7 +933,7 @@ export default function CalendarComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={compactPresetLabelCode}>
-            <div className="flex justify-end py-12 pr-8">
+            <div className="flex justify-center py-12">
               <Calendar
                 compact
                 compactPresetLabel
