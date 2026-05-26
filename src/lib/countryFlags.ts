@@ -85,9 +85,16 @@ const COUNTRY_TO_CODE: Record<string, string> = {
  * null when the country has no mapping (e.g. a new country we
  * haven't added yet). Sub-national codes fall back to the parent
  * country's flag.
+ *
+ * Accepts either a country name (looked up against the mapping
+ * above) or a bare 2-letter ISO 3166-1 alpha-2 code — the consent
+ * dashboard stores ISO codes directly, while race data carries
+ * full names from Sanity.
  */
-export function getCountryFlag(country: string): FlagComponent | null {
-  const code = COUNTRY_TO_CODE[country];
+export function getCountryFlag(input: string): FlagComponent | null {
+  if (!input) return null;
+  const looksLikeIso = /^[A-Za-z]{2}$/.test(input);
+  const code = looksLikeIso ? input.toUpperCase() : COUNTRY_TO_CODE[input];
   if (!code) return null;
   const flagCode = code.includes("-") ? code.split("-")[0] : code;
   const Flag = (flags as Record<string, FlagComponent>)[flagCode];

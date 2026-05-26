@@ -1,20 +1,9 @@
-// Renders an ISO-3166 alpha-2 country code as a flag emoji + the
-// code itself. Emoji renders correctly on macOS / iOS / Android;
-// Windows falls back to the letter pair (acceptable for admin UI).
-// Lives next to the consent table because that's the only surface
-// that needs it today — promote to a shared util when feedback /
-// races adopt the same treatment.
+// Renders an ISO-3166 alpha-2 country code as the SVG flag (from
+// `country-flag-icons` via the shared `getCountryFlag` helper) plus
+// the code itself. Same flag treatment used on the /races filters
+// so visual language stays consistent across the site.
 
-function flagEmoji(iso: string): string | null {
-  if (!iso || iso.length !== 2 || !/^[A-Za-z]{2}$/.test(iso)) {
-    return null;
-  }
-  const codePoints = iso
-    .toUpperCase()
-    .split("")
-    .map((c) => 0x1f1e6 + c.charCodeAt(0) - 65);
-  return String.fromCodePoint(...codePoints);
-}
+import { getCountryFlag } from "@/lib/countryFlags";
 
 interface CountryCellProps {
   iso: string | null;
@@ -24,13 +13,20 @@ export function CountryCell({ iso }: CountryCellProps) {
   if (!iso) {
     return <span style={{ color: "var(--ds-gray-700)" }}>—</span>;
   }
-  const flag = flagEmoji(iso);
+  const Flag = getCountryFlag(iso);
   return (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-      {flag && (
-        <span aria-hidden="true" style={{ fontSize: "1.05em" }}>
-          {flag}
-        </span>
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+      {Flag && (
+        <Flag
+          aria-hidden="true"
+          style={{
+            width: 18,
+            height: 12,
+            display: "block",
+            borderRadius: 2,
+            objectFit: "cover",
+          }}
+        />
       )}
       <span>{iso.toUpperCase()}</span>
     </span>
