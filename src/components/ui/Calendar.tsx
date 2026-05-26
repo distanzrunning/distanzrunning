@@ -788,6 +788,32 @@ export function Calendar({
     }
   };
 
+  // Auto-derive `selectedPreset` from the current dateRange when it
+  // matches one of the configured presets. Lets a controlled caller
+  // (e.g. ConsentDateRangePicker — value driven by URL params) get
+  // the preset highlighted in the dropdown without having to wire a
+  // separate `selectedPreset` prop. Clears on a custom range.
+  React.useEffect(() => {
+    const allPresets = [...(presets ?? []), ...(futurePresets ?? [])];
+    if (allPresets.length === 0) return;
+    if (!dateRange.start || !dateRange.end) {
+      if (selectedPreset !== "") setSelectedPreset("");
+      return;
+    }
+    const match = allPresets.find((p) => {
+      const r = p.getRange();
+      return (
+        r.start &&
+        r.end &&
+        isSameDay(r.start, dateRange.start as Date) &&
+        isSameDay(r.end, dateRange.end as Date)
+      );
+    });
+    const next = match?.value ?? "";
+    if (next !== selectedPreset) setSelectedPreset(next);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dateRange.start, dateRange.end, presets, futurePresets]);
+
   const getTimezoneDisplayText = useCallback((tz: TimezoneOption) => {
     return tz === "UTC" ? "UTC" : `Local (${getLocalTimezone()})`;
   }, []);
