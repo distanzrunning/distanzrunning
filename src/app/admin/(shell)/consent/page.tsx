@@ -66,19 +66,14 @@ export default async function ConsentDashboardPage({
         <header style={{ marginBottom: 24 }}>
           {query ? (
             <h1
-              className="text-heading-32"
+              className="text-heading-32 font-mono"
               style={{
                 margin: 0,
                 color: "var(--ds-gray-1000)",
                 wordBreak: "break-all",
               }}
             >
-              <span
-                style={{ color: "var(--ds-gray-700)", fontWeight: 500 }}
-              >
-                ANON ID:
-              </span>{" "}
-              <span className="font-mono">{query}</span>
+              {query}
             </h1>
           ) : (
             <>
@@ -102,7 +97,7 @@ export default async function ConsentDashboardPage({
           )}
         </header>
 
-        <SearchForm defaultValue={query} />
+        {!query && <SearchForm defaultValue={query} />}
 
         {query ? (
           <Suspense fallback={<ConsentLookupSkeleton query={query} />}>
