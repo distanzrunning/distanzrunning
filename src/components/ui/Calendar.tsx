@@ -384,10 +384,10 @@ function CalendarDayButton(props: DayButtonProps) {
         if (!modifiers.disabled) setHoveredDate(day.date);
         buttonProps.onMouseEnter?.(e);
       }}
-      onMouseLeave={(e) => {
-        setHoveredDate(null);
-        buttonProps.onMouseLeave?.(e);
-      }}
+      // Intentionally NO per-cell onMouseLeave handler — clearing
+      // hoveredDate here flashed the preview off in the brief gap
+      // between leaving one cell and entering the next. The grid
+      // wrapper clears it on its own mouseleave instead.
     />
   );
 }
@@ -537,6 +537,7 @@ function CalendarGrid({
       <div aria-hidden="true" style={{ marginTop: 11 }} />
 
       <CalendarHoverContext.Provider value={setHoveredDate}>
+       <div onMouseLeave={() => setHoveredDate(null)}>
         <DayPicker
           mode="range"
           selected={selected}
@@ -579,6 +580,7 @@ function CalendarGrid({
             range_end: "calendar-cell-last-in-range",
           }}
         />
+       </div>
       </CalendarHoverContext.Provider>
     </>
   );
