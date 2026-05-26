@@ -338,12 +338,19 @@ export default function ConsentTrendChart({
           // background as the panel, slight rounded corners, no
           // shadow, no border. Sits in the X-axis tick row;
           // background-100 fill masks any underlying tick label
-          // without an obvious "tooltip" treatment that would read
-          // as a separate UI surface.
+          // without an obvious "tooltip" treatment.
+          //
+          // The -4 on `top` re-aligns the label's text baseline with
+          // the SVG tick text baseline. SVG ticks render at
+          // `y={TICK_TEXT_Y} dy="0.71em"`, putting the baseline at
+          // ~+8.5px past TICK_TEXT_Y. The HTML element's text
+          // baseline sits at element-top + ~12.6px (line-box
+          // centering for 12/16 text). Subtract the difference so
+          // both baselines land in the same outer y.
           style={{
             position: "absolute",
             left: WRAPPER_PADDING_LEFT + (cursorX ?? 0),
-            top: WRAPPER_PADDING_TOP + TICK_TEXT_Y - 7,
+            top: WRAPPER_PADDING_TOP + TICK_TEXT_Y - 4,
             transform: "translateX(-50%)",
             background: "var(--ds-background-100)",
             color: "var(--ds-gray-1000)",
