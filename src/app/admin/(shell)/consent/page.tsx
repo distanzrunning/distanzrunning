@@ -59,8 +59,12 @@ export default async function ConsentDashboardPage({
           </div>
         )}
 
-        <header style={{ marginBottom: 24 }}>
-          {query ? (
+        {/* Lookup view keeps a heading so the anonymous ID is visible
+            as the page identity. Dashboard view drops the heading
+            entirely — the sidebar + shell top bar already name the
+            route, and dropping it gives the data more vertical room. */}
+        {query && (
+          <header style={{ marginBottom: 24 }}>
             <h1
               className="text-heading-32 font-mono"
               style={{
@@ -71,27 +75,8 @@ export default async function ConsentDashboardPage({
             >
               {query}
             </h1>
-          ) : (
-            <>
-              <h1
-                className="text-heading-32"
-                style={{ margin: 0, color: "var(--ds-gray-1000)" }}
-              >
-                Consent dashboard
-              </h1>
-              <p
-                className="text-copy-16"
-                style={{
-                  marginTop: 6,
-                  marginBottom: 0,
-                  color: "var(--ds-gray-700)",
-                }}
-              >
-                Privacy choices made by visitors
-              </p>
-            </>
-          )}
-        </header>
+          </header>
+        )}
 
         {query ? (
           <Suspense fallback={<ConsentLookupSkeleton query={query} />}>
