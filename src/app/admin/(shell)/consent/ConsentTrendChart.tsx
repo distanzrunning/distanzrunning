@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useState } from "react";
 import {
   Area,
   AreaChart,
@@ -30,6 +30,29 @@ interface ConsentTrendChartProps {
   format: "count" | "percent";
 }
 
+// Outer-wrapper padding (must match the inline style on the wrapping
+// <div> below). Used to translate Recharts' chart-relative cursor X
+// into outer-div coordinates for the HTML overlay.
+const WRAPPER_PADDING_LEFT = 24;
+const WRAPPER_PADDING_TOP = 24;
+
+// Chart layout — chart height + bottom margin reserved for the
+// X-axis row. Kept here so the HTML overlay can compute its vertical
+// position deterministically (rather than guessing from Recharts'
+// rendered output).
+const CHART_HEIGHT = 240;
+const CHART_BOTTOM_MARGIN = 24;
+const TICK_MARGIN = 8;
+// Recharts' tickSize default (6) factors into tick text y even when
+// tickLine is hidden.
+const TICK_SIZE = 6;
+
+// Y position of the X-axis tick text within the chart SVG, relative
+// to its top. Plot bottom + tickSize + tickMargin. Used by the HTML
+// overlay to land at the same row as the regular ticks.
+const TICK_TEXT_Y =
+  CHART_HEIGHT - CHART_BOTTOM_MARGIN + TICK_SIZE + TICK_MARGIN;
+
 function formatTickDate(iso: string): string {
   const d = new Date(`${iso}T00:00:00.000Z`);
   return d.toLocaleDateString("en-US", {
@@ -49,7 +72,6 @@ function daysAgoLabel(iso: string): string {
   if (days === 0) return "Today";
   if (days === 1) return "Yesterday";
   if (days > 1) return `${days} days ago`;
-  // Future dates can't appear in our data, but fall back gracefully.
   return formatTickDate(iso);
 }
 
@@ -61,33 +83,28 @@ interface CustomTickProps {
 }
 
 // Renders each X-axis tick. When the hovered point's date matches the
-// tick's date, swap the formatted date ("May 19") for the relative
-// "N days ago". Comparing by date (Recharts' `activeLabel`) rather
-// than by index avoids ambiguity when long windows trigger tick
-// thinning — `payload.index` can refer to the tick's *rendered*
-// position, not its data index, which broke the swap in practice.
+// tick's date, we hide the tick — the HTML overlay below the chart
+// renders the "N days ago" label at exactly this position instead,
+// with a solid background that masks any neighbouring tick text that
+// would otherwise show through. Comparing by date (not by index)
+// matters because Recharts' tick index can refer to rendered position
+// rather than data index once interval thinning kicks in.
 function CustomTick({ x = 0, y = 0, payload, activeLabel }: CustomTickProps) {
   if (!payload) return null;
   const isActive = activeLabel !== null && payload.value === activeLabel;
-  // When the day is active we hide the tick entirely — the custom
-  // cursor draws the "N days ago" label at exactly this position, so
-  // rendering the tick too would either duplicate or fight it.
-  // Critically this also lets the cursor work for *thinned* days that
-  // never had a tick to begin with: one label path covers both cases.
   if (isActive) return null;
   return (
     <text
       x={x}
-      // dy="0.71em" matches Recharts' default tick baseline.
       y={y}
       dy="0.71em"
       textAnchor="middle"
       fontSize={12}
       fontWeight={400}
       fill="var(--ds-gray-700)"
-      // pointer-events: none so hovering directly on the label lets
-      // the mouse event reach the chart's onMouseMove handler instead
-      // of being swallowed by the <text> element.
+      // pointer-events: none so hovering the label lets the mouse
+      // event reach the chart's onMouseMove handler rather than being
+      // swallowed by the <text> element.
       style={{ pointerEvents: "none" }}
     >
       {formatTickDate(payload.value)}
@@ -95,118 +112,28 @@ function CustomTick({ x = 0, y = 0, payload, activeLabel }: CustomTickProps) {
   );
 }
 
-// Custom cursor — replaces Recharts' default `.recharts-tooltip-cursor`
-// element (which Chart.tsx forces to stroke gray-400 via a wrapper
-// CSS rule that we can't override inline). Renders a solid gray-1000
-// 2px vertical line plus a bold "N days ago" label at the bottom of
-// the plot area, positioned where the X-axis tick would sit. The
-// label appears for every hovered day, whether or not that day has
-// a rendered tick (long windows thin the ticks; the cursor's label
-// still surfaces "N days ago" in that case).
-interface CursorPayloadEntry {
-  payload?: { date?: string };
-}
-interface ActiveCursorProps {
+// SVG cursor — just the vertical line. The "N days ago" label is no
+// longer rendered in SVG; it's an HTML overlay sibling of the chart
+// (see ConsentTrendChart's return JSX) so it always stacks above the
+// chart's SVG content regardless of how Recharts orders cursor vs
+// axis elements internally.
+interface CursorLineProps {
   points?: { x: number; y: number }[];
-  payload?: CursorPayloadEntry[];
-  top?: number;
-  height?: number;
 }
 
-// Has to match the XAxis tickMargin prop below — both numbers feed
-// the same vertical position for tick + cursor text.
-const TICK_MARGIN = 8;
-// Recharts default tickSize (6) — factors into the tick text y
-// position even when tickLine is hidden, so the cursor label has
-// to mirror that offset to land in the same row as the real ticks.
-const TICK_SIZE = 6;
-
-// Fallback label width used on the first paint, before useLayoutEffect
-// has measured the actual rendered text. Covers the longest realistic
-// label ("365 days ago" ≈ 85px @ 12px semibold) with a small buffer.
-const FALLBACK_LABEL_WIDTH = 90;
-const LABEL_HORIZONTAL_PADDING = 10;
-const LABEL_VERTICAL_PADDING = 3;
-
-function ActiveCursor({
-  points,
-  payload,
-  top = 0,
-  height = 0,
-}: ActiveCursorProps) {
-  const textRef = useRef<SVGTextElement>(null);
-  const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
-
-  const iso = payload?.[0]?.payload?.date;
-
-  // Re-measure the rendered text whenever the active day changes —
-  // useLayoutEffect commits the measurement before the next browser
-  // paint, so the background <rect> snaps to the right width without
-  // a visible frame of "text without background". The fallback width
-  // covers the first render before the effect runs.
-  useLayoutEffect(() => {
-    if (!textRef.current) return;
-    setMeasuredWidth(textRef.current.getBBox().width);
-  }, [iso]);
-
+function CursorLine({ points }: CursorLineProps) {
   if (!points || points.length < 2) return null;
-  if (!iso) return null;
   const x = points[0].x;
-  const yTop = points[0].y;
-  const yBottom = points[1].y;
-  // Mirror Recharts' tick text y: axisLineY (= top + height) plus
-  // tickSize plus tickMargin. tickSize counts even when tickLine is
-  // hidden — without it the label lands ~6px above the tick row.
-  const tickTextY = top + height + TICK_SIZE + TICK_MARGIN;
-  const labelWidth = measuredWidth ?? FALLBACK_LABEL_WIDTH;
-  const rectWidth = labelWidth + LABEL_HORIZONTAL_PADDING * 2;
-  const rectHeight = 12 + LABEL_VERTICAL_PADDING * 2;
-
   return (
-    <g style={{ pointerEvents: "none" }}>
-      <line
-        x1={x}
-        y1={yTop}
-        x2={x}
-        y2={yBottom}
-        stroke="var(--ds-gray-1000)"
-        strokeWidth={2}
-      />
-      {/* Knockout rect — paints the panel background behind the
-          label so an underlying X-axis tick label (e.g. "May 7") is
-          obscured when the cursor sits close to it. Sits *between*
-          the cursor line and the text so the line still reads. */}
-      <rect
-        x={x - rectWidth / 2}
-        y={tickTextY - LABEL_VERTICAL_PADDING}
-        width={rectWidth}
-        height={rectHeight}
-        fill="var(--ds-background-100)"
-      />
-      <text
-        ref={textRef}
-        x={x}
-        y={tickTextY}
-        dy="0.71em"
-        textAnchor="middle"
-        fontSize={12}
-        fontWeight={600}
-        fill="var(--ds-gray-1000)"
-        // Per-glyph paint-order halo as a defensive second layer
-        // beneath the knockout rect. If for any reason the rect
-        // fails to mask an underlying tick label (z-order quirks
-        // across recharts releases, etc.), the stroke-first paint
-        // order still wraps each glyph in a 4px panel-coloured
-        // halo, masking any tick text that bleeds through between
-        // the cursor characters.
-        stroke="var(--ds-background-100)"
-        strokeWidth={4}
-        strokeLinejoin="round"
-        paintOrder="stroke"
-      >
-        {daysAgoLabel(iso)}
-      </text>
-    </g>
+    <line
+      x1={x}
+      y1={points[0].y}
+      x2={x}
+      y2={points[1].y}
+      stroke="var(--ds-gray-1000)"
+      strokeWidth={2}
+      style={{ pointerEvents: "none" }}
+    />
   );
 }
 
@@ -216,6 +143,10 @@ export default function ConsentTrendChart({
   format,
 }: ConsentTrendChartProps) {
   const [activeLabel, setActiveLabel] = useState<string | null>(null);
+  // Cursor x position within the chart SVG (chart-relative pixels).
+  // Captured from Recharts' activeCoordinate so we can place the HTML
+  // overlay at the same column the cursor line draws on.
+  const [cursorX, setCursorX] = useState<number | null>(null);
 
   const chartConfig = {
     value: {
@@ -228,8 +159,15 @@ export default function ConsentTrendChart({
   const valueFormatter = (v: number) =>
     isPercent ? `${v.toFixed(1)}%` : v.toLocaleString();
 
+  const showOverlay = activeLabel !== null && cursorX !== null;
+
   return (
-    <div style={{ padding: "24px 24px 16px" }}>
+    <div
+      style={{
+        padding: `${WRAPPER_PADDING_TOP}px ${WRAPPER_PADDING_LEFT}px 16px`,
+        position: "relative",
+      }}
+    >
       <ChartContainer
         config={chartConfig}
         className="aspect-auto h-[240px] w-full"
@@ -237,16 +175,22 @@ export default function ConsentTrendChart({
         <AreaChart
           accessibilityLayer
           data={trend}
-          // bottom margin reserves vertical room for the X-axis tick
-          // labels so they render inside the SVG (not clipped) and
-          // remain inside the chart's hover-detection rectangle.
-          margin={{ left: 8, right: 12, top: 8, bottom: 24 }}
+          margin={{ left: 8, right: 12, top: 8, bottom: CHART_BOTTOM_MARGIN }}
           onMouseMove={(state) => {
-            const al = (state as unknown as { activeLabel?: string })
-              .activeLabel;
-            setActiveLabel(typeof al === "string" ? al : null);
+            const s = state as unknown as {
+              activeLabel?: string;
+              activeCoordinate?: { x?: number };
+            };
+            setActiveLabel(
+              typeof s.activeLabel === "string" ? s.activeLabel : null,
+            );
+            const x = s.activeCoordinate?.x;
+            setCursorX(typeof x === "number" ? x : null);
           }}
-          onMouseLeave={() => setActiveLabel(null)}
+          onMouseLeave={() => {
+            setActiveLabel(null);
+            setCursorX(null);
+          }}
         >
           <defs>
             <linearGradient id="consent-trend-fill" x1="0" y1="0" x2="0" y2="1">
@@ -268,12 +212,6 @@ export default function ConsentTrendChart({
             tickLine={false}
             axisLine={false}
             tickMargin={TICK_MARGIN}
-            // Always show roughly seven ticks regardless of window
-            // length — 7-day windows get every day, 30-day windows
-            // get every fifth day, 90-day windows get every
-            // ~thirteenth. Keeps the X-axis density predictable
-            // instead of leaving the spacing to Recharts' built-in
-            // collision-based thinning.
             interval={Math.max(0, Math.ceil(trend.length / 7) - 1)}
             tick={(props) => (
               <CustomTick
@@ -294,10 +232,7 @@ export default function ConsentTrendChart({
             }
           />
           <ChartTooltip
-            // Custom cursor element rather than the default-shaped
-            // `{ stroke, strokeWidth }` config: see ActiveCursor's
-            // header comment for why (wrapper CSS forces gray-400).
-            cursor={<ActiveCursor />}
+            cursor={<CursorLine />}
             content={
               <ChartTooltipContent
                 hideLabel={false}
@@ -317,6 +252,35 @@ export default function ConsentTrendChart({
           />
         </AreaChart>
       </ChartContainer>
+
+      {showOverlay && (
+        <div
+          // HTML overlay for the "N days ago" label. Sits outside the
+          // SVG so it stacks above every chart element by default —
+          // no z-order tug-of-war with Recharts. Positioned by
+          // translating the chart-relative cursor X back into outer
+          // coordinates (cursorX is from chart's SVG origin; the
+          // wrapper's padding-left adds the SVG's offset within the
+          // outer div). The vertical position locks to the same row
+          // as the regular X-axis ticks.
+          style={{
+            position: "absolute",
+            left: WRAPPER_PADDING_LEFT + (cursorX ?? 0),
+            top: WRAPPER_PADDING_TOP + TICK_TEXT_Y,
+            transform: "translate(-50%, -10%)",
+            background: "var(--ds-background-100)",
+            color: "var(--ds-gray-1000)",
+            fontSize: 12,
+            lineHeight: "16px",
+            fontWeight: 600,
+            padding: "0 6px",
+            whiteSpace: "nowrap",
+            pointerEvents: "none",
+          }}
+        >
+          {daysAgoLabel(activeLabel)}
+        </div>
+      )}
     </div>
   );
 }
