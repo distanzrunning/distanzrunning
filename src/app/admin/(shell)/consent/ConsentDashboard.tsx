@@ -1,7 +1,8 @@
 import { Badge, type BadgeVariant } from "@/components/ui/Badge";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { StatCard } from "@/components/ui/StatCard";
+import { StatTile, type StatTileChange } from "@/components/ui/StatTile";
+import { StatTileGroup } from "@/components/ui/StatTileGroup";
 import {
   Table,
   TableBody,
@@ -11,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
-import TrendChart, { type TrendPoint } from "./TrendChart";
+import ConsentTrendChart from "./ConsentTrendChart";
 
 type Decision = "accept_all" | "reject_all" | "custom";
 
@@ -27,27 +28,60 @@ interface ConsentRow {
 }
 
 const FETCH_LIMIT = 10_000;
+const WINDOW_DAYS = 30;
 
-function pct(num: number, denom: number): string {
-  if (denom === 0) return "0%";
-  return `${Math.round((num / denom) * 100)}%`;
+function pct(num: number, denom: number): number {
+  if (denom === 0) return 0;
+  return (num / denom) * 100;
 }
 
-function formatDay(iso: string): string {
-  return iso.slice(0, 10);
+function fmtPct(value: number, fractionDigits = 0): string {
+  return `${value.toFixed(fractionDigits)}%`;
 }
 
-function buildTrend(rows: ConsentRow[]): TrendPoint[] {
+function changeFrom(current: number, previous: number): StatTileChange {
+  if (previous === 0 && current === 0) {
+    return { value: "—", direction: "flat" };
+  }
+  if (previous === 0) {
+    return { value: "new", direction: "up" };
+  }
+  const diff = ((current - previous) / previous) * 100;
+  const direction = diff > 0.5 ? "up" : diff < -0.5 ? "down" : "flat";
+  const sign = diff > 0 ? "+" : "";
+  return {
+    value: `${sign}${diff.toFixed(1)}%`,
+    direction,
+    ariaLabel: `${diff.toFixed(1)}% versus the previous ${WINDOW_DAYS} days`,
+  };
+}
+
+function pointChange(currentPct: number, previousPct: number): StatTileChange {
+  const diff = currentPct - previousPct;
+  if (Math.abs(diff) < 0.05) return { value: "0 pts", direction: "flat" };
+  const direction = diff > 0 ? "up" : "down";
+  const sign = diff > 0 ? "+" : "";
+  return {
+    value: `${sign}${diff.toFixed(1)} pts`,
+    direction,
+    ariaLabel: `${diff.toFixed(1)} percentage points versus the previous ${WINDOW_DAYS} days`,
+  };
+}
+
+interface TrendPoint {
+  date: string;
+  count: number;
+}
+
+function buildTrend(rows: ConsentRow[], windowStart: Date): TrendPoint[] {
   const days = new Map<string, number>();
-  const today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
-  for (let i = 29; i >= 0; i--) {
-    const d = new Date(today);
-    d.setUTCDate(today.getUTCDate() - i);
+  for (let i = 0; i < WINDOW_DAYS; i++) {
+    const d = new Date(windowStart);
+    d.setUTCDate(windowStart.getUTCDate() + i);
     days.set(d.toISOString().slice(0, 10), 0);
   }
   for (const row of rows) {
-    const key = formatDay(row.created_at);
+    const key = row.created_at.slice(0, 10);
     if (days.has(key)) days.set(key, (days.get(key) ?? 0) + 1);
   }
   return [...days.entries()].map(([date, count]) => ({
@@ -74,7 +108,7 @@ function CategoryBar({
       >
         <span className="font-medium">{label}</span>
         <span style={{ color: "var(--ds-gray-700)" }}>
-          {count.toLocaleString()} · {pct(count, total)}
+          {count.toLocaleString()} · {fmtPct(pct(count, total))}
         </span>
       </div>
       <div
@@ -108,13 +142,6 @@ function decisionBadge(d: Decision): { label: string; variant: BadgeVariant } {
       return { label: "Custom", variant: "amber-subtle" };
   }
 }
-
-const STAT_GRID = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-  gap: 16,
-  marginBottom: 16,
-} as const;
 
 const TWO_COL_GRID = {
   display: "grid",
@@ -150,47 +177,101 @@ export async function ConsentDashboardContent() {
   const rows = (data ?? []) as ConsentRow[];
   const total = totalCount ?? rows.length;
 
-  const accepts = rows.filter((r) => r.decision === "accept_all").length;
-  const rejects = rows.filter((r) => r.decision === "reject_all").length;
-  const customs = rows.filter((r) => r.decision === "custom").length;
+  // Slice rows into "current 30-day window" and "previous 30-day
+  // window" so we can compute MoM trend pills from one DB hit.
+  const now = new Date();
+  now.setUTCHours(0, 0, 0, 0);
+  const currentStart = new Date(now);
+  currentStart.setUTCDate(now.getUTCDate() - (WINDOW_DAYS - 1));
+  const previousStart = new Date(currentStart);
+  previousStart.setUTCDate(currentStart.getUTCDate() - WINDOW_DAYS);
+
+  const currentRows = rows.filter(
+    (r) => new Date(r.created_at) >= currentStart,
+  );
+  const previousRows = rows.filter((r) => {
+    const d = new Date(r.created_at);
+    return d >= previousStart && d < currentStart;
+  });
+
+  const currentCount = currentRows.length;
+  const previousCount = previousRows.length;
+
+  const currentAccepts = currentRows.filter(
+    (r) => r.decision === "accept_all",
+  ).length;
+  const currentRejects = currentRows.filter(
+    (r) => r.decision === "reject_all",
+  ).length;
+  const currentCustoms = currentRows.filter(
+    (r) => r.decision === "custom",
+  ).length;
+  const previousAccepts = previousRows.filter(
+    (r) => r.decision === "accept_all",
+  ).length;
+  const previousRejects = previousRows.filter(
+    (r) => r.decision === "reject_all",
+  ).length;
+  const previousCustoms = previousRows.filter(
+    (r) => r.decision === "custom",
+  ).length;
+
+  const currentAcceptRate = pct(currentAccepts, currentCount);
+  const currentRejectRate = pct(currentRejects, currentCount);
+  const currentCustomRate = pct(currentCustoms, currentCount);
+  const previousAcceptRate = pct(previousAccepts, previousCount);
+  const previousRejectRate = pct(previousRejects, previousCount);
+  const previousCustomRate = pct(previousCustoms, previousCount);
+
   const marketingOn = rows.filter((r) => r.marketing).length;
   const analyticsOn = rows.filter((r) => r.analytics).length;
   const functionalOn = rows.filter((r) => r.functional).length;
   const uniqueVisitors = new Set(rows.map((r) => r.anon_id)).size;
-  const trend = buildTrend(rows);
+  const trend = buildTrend(currentRows, currentStart);
   const recent = rows.slice(0, 20);
 
   return (
     <>
-      <div style={STAT_GRID}>
-        <StatCard label="Total decisions" value={total.toLocaleString()} />
-        <StatCard
-          label="Unique visitors"
-          value={uniqueVisitors.toLocaleString()}
-          hint="distinct anonymous IDs"
-        />
-        <StatCard
-          label="Accept all"
-          value={pct(accepts, rows.length)}
-          hint={`${accepts.toLocaleString()} decisions`}
-        />
-        <StatCard
-          label="Reject all"
-          value={pct(rejects, rows.length)}
-          hint={`${rejects.toLocaleString()} decisions`}
-        />
-        <StatCard
-          label="Custom"
-          value={pct(customs, rows.length)}
-          hint={`${customs.toLocaleString()} decisions`}
+      <div style={{ marginBottom: 16 }}>
+        <StatTileGroup>
+          <StatTile
+            label={`Last ${WINDOW_DAYS} days`}
+            value={currentCount.toLocaleString()}
+            hint={`${total.toLocaleString()} all-time`}
+            change={changeFrom(currentCount, previousCount)}
+          />
+          <StatTile
+            label="Accept rate"
+            value={fmtPct(currentAcceptRate)}
+            hint={`${currentAccepts.toLocaleString()} of ${currentCount.toLocaleString()}`}
+            change={pointChange(currentAcceptRate, previousAcceptRate)}
+          />
+          <StatTile
+            label="Reject rate"
+            value={fmtPct(currentRejectRate)}
+            hint={`${currentRejects.toLocaleString()} of ${currentCount.toLocaleString()}`}
+            change={pointChange(currentRejectRate, previousRejectRate)}
+          />
+          <StatTile
+            label="Custom rate"
+            value={fmtPct(currentCustomRate)}
+            hint={`${currentCustoms.toLocaleString()} of ${currentCount.toLocaleString()}`}
+            change={pointChange(currentCustomRate, previousCustomRate)}
+          />
+        </StatTileGroup>
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <ConsentTrendChart
+          trend={trend}
+          currentCount={currentCount}
+          uniqueVisitors={uniqueVisitors}
+          windowDays={WINDOW_DAYS}
         />
       </div>
 
       <div style={TWO_COL_GRID}>
-        <PanelCard title="Decisions per day (last 30)">
-          <TrendChart data={trend} />
-        </PanelCard>
-        <PanelCard title="Per-category opt-in">
+        <PanelCard title="Per-category opt-in (all-time)">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <CategoryBar
               label="Marketing"
@@ -207,6 +288,29 @@ export async function ConsentDashboardContent() {
               count={functionalOn}
               total={rows.length}
             />
+          </div>
+        </PanelCard>
+        <PanelCard title="Unique visitors">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+              padding: "12px 0",
+            }}
+          >
+            <span
+              className="text-heading-32"
+              style={{ color: "var(--ds-gray-1000)" }}
+            >
+              {uniqueVisitors.toLocaleString()}
+            </span>
+            <span
+              className="text-copy-13"
+              style={{ color: "var(--ds-gray-700)" }}
+            >
+              Distinct anonymous IDs across all decisions.
+            </span>
           </div>
         </PanelCard>
       </div>
@@ -278,18 +382,22 @@ export async function ConsentDashboardContent() {
 
 const block = { display: "block" } as const;
 
-function StatCardSkeleton({
+function StatTileSkeleton({
   label,
-  hint,
+  hintWidth,
 }: {
   label: string;
-  hint?: string;
+  hintWidth?: number;
 }) {
   return (
-    <StatCard
+    <StatTile
       label={label}
       value={<Skeleton width={120} height={32} style={block} />}
-      hint={hint ? <Skeleton width={100} height={14} style={block} /> : undefined}
+      hint={
+        hintWidth ? (
+          <Skeleton width={hintWidth} height={14} style={block} />
+        ) : undefined
+      }
     />
   );
 }
@@ -309,19 +417,23 @@ function TableRowSkeleton({ cols }: { cols: number }) {
 export function ConsentDashboardSkeleton() {
   return (
     <div aria-busy="true" aria-live="polite">
-      <div style={STAT_GRID}>
-        <StatCardSkeleton label="Total decisions" />
-        <StatCardSkeleton label="Unique visitors" hint="distinct anonymous IDs" />
-        <StatCardSkeleton label="Accept all" hint="decisions" />
-        <StatCardSkeleton label="Reject all" hint="decisions" />
-        <StatCardSkeleton label="Custom" hint="decisions" />
+      <div style={{ marginBottom: 16 }}>
+        <StatTileGroup>
+          <StatTileSkeleton label={`Last ${WINDOW_DAYS} days`} hintWidth={100} />
+          <StatTileSkeleton label="Accept rate" hintWidth={120} />
+          <StatTileSkeleton label="Reject rate" hintWidth={120} />
+          <StatTileSkeleton label="Custom rate" hintWidth={120} />
+        </StatTileGroup>
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <PanelCard title={`Decisions per day (last ${WINDOW_DAYS})`}>
+          <Skeleton width="100%" height={220} shape="rounded" style={block} />
+        </PanelCard>
       </div>
 
       <div style={TWO_COL_GRID}>
-        <PanelCard title="Decisions per day (last 30)">
-          <Skeleton width="100%" height={200} shape="rounded" style={block} />
-        </PanelCard>
-        <PanelCard title="Per-category opt-in">
+        <PanelCard title="Per-category opt-in (all-time)">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {["Marketing", "Analytics", "Functional"].map((label) => (
               <div
@@ -343,6 +455,11 @@ export function ConsentDashboardSkeleton() {
                 />
               </div>
             ))}
+          </div>
+        </PanelCard>
+        <PanelCard title="Unique visitors">
+          <div style={{ padding: "12px 0" }}>
+            <Skeleton width={120} height={32} style={block} />
           </div>
         </PanelCard>
       </div>

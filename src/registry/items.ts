@@ -7,6 +7,7 @@ import { buildBrowserItem } from "./items/browser";
 import { buildButtonItem } from "./items/button";
 import { buildCalendarItem } from "./items/calendar";
 import { buildCardImageItem } from "./items/card-image";
+import { buildChartItem } from "./items/chart";
 import { buildCheckboxItem } from "./items/checkbox";
 import { buildChoiceboxItem } from "./items/choicebox";
 import { buildCodeBlockItem } from "./items/code-block";
@@ -64,6 +65,8 @@ import { buildSnippetItem } from "./items/snippet";
 import { buildSpinnerItem } from "./items/spinner";
 import { buildSplitButtonItem } from "./items/split-button";
 import { buildStatCardItem } from "./items/stat-card";
+import { buildStatTileItem } from "./items/stat-tile";
+import { buildStatTileGroupItem } from "./items/stat-tile-group";
 import { buildStatusDotItem } from "./items/status-dot";
 import { buildSwitchItem } from "./items/switch";
 import { buildTableItem } from "./items/table";
@@ -122,6 +125,7 @@ const BUILDERS: Record<string, Builder> = {
   "article-card": buildArticleCardItem,
   browser: buildBrowserItem,
   calendar: buildCalendarItem,
+  chart: buildChartItem,
   choicebox: buildChoiceboxItem,
   "code-block": buildCodeBlockItem,
   collapse: buildCollapseItem,
@@ -147,6 +151,8 @@ const BUILDERS: Record<string, Builder> = {
   snippet: buildSnippetItem,
   "split-button": buildSplitButtonItem,
   "stat-card": buildStatCardItem,
+  "stat-tile": buildStatTileItem,
+  "stat-tile-group": buildStatTileGroupItem,
   tabs: buildTabsItem,
   "theme-switcher": buildThemeSwitcherItem,
   tooltip: buildTooltipItem,
