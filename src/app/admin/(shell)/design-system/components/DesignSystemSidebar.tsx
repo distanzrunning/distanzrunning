@@ -114,6 +114,7 @@ export const navigation: NavSection[] = [
       { id: "command-menu", label: "Command Menu" },
       { id: "consent-banner", label: "Consent Banner" },
       { id: "context-menu", label: "Context Menu" },
+      { id: "destructive-action-modal", label: "Destructive Action Modal" },
       { id: "drawer", label: "Drawer" },
       { id: "feedback", label: "Feedback" },
       { id: "footer", label: "Footer" },

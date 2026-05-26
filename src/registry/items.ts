@@ -21,6 +21,7 @@ import { buildContextCardItem } from "./items/context-card";
 import { buildContextMenuItem } from "./items/context-menu";
 import { buildDarkModeProviderItem } from "./items/dark-mode-provider";
 import { buildDescriptionItem } from "./items/description";
+import { buildDestructiveActionModalItem } from "./items/destructive-action-modal";
 import { buildDrawerItem } from "./items/drawer";
 import { buildEmptyStateItem } from "./items/empty-state";
 import { buildEntityItem } from "./items/entity";
@@ -164,6 +165,7 @@ const BUILDERS: Record<string, Builder> = {
   "command-menu": buildCommandMenuItem,
   "consent-banner": buildConsentBannerItem,
   "context-menu": buildContextMenuItem,
+  "destructive-action-modal": buildDestructiveActionModalItem,
   drawer: buildDrawerItem,
   feedback: buildFeedbackItem,
   footer: buildFooterItem,

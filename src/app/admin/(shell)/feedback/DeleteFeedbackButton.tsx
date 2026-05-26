@@ -1,7 +1,10 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { Trash2 } from "lucide-react";
+
+import { DestructiveActionModal } from "@/components/ui/DestructiveActionModal";
+
 import { deleteFeedbackRecord } from "./actions";
 
 export default function DeleteFeedbackButton({
@@ -11,53 +14,83 @@ export default function DeleteFeedbackButton({
   id: number;
   snippet: string;
 }) {
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | undefined>();
   const [pending, start] = useTransition();
 
-  const handleClick = () => {
-    const preview =
-      snippet.length > 80 ? `${snippet.slice(0, 80).trim()}…` : snippet;
-    const confirmed = window.confirm(
-      `Delete this feedback?\n\n"${preview}"\n\nThis cannot be undone.`,
-    );
-    if (!confirmed) return;
+  const preview =
+    snippet.length > 100 ? `${snippet.slice(0, 100).trim()}…` : snippet;
+
+  const handleConfirm = () => {
+    setError(undefined);
     start(async () => {
-      const fd = new FormData();
-      fd.set("id", String(id));
-      await deleteFeedbackRecord(fd);
+      try {
+        const fd = new FormData();
+        fd.set("id", String(id));
+        await deleteFeedbackRecord(fd);
+        setOpen(false);
+      } catch (e) {
+        setError(
+          e instanceof Error
+            ? e.message
+            : "Couldn't delete the feedback. Try again.",
+        );
+      }
     });
   };
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      disabled={pending}
-      aria-label={pending ? "Deleting feedback" : "Delete feedback"}
-      title="Delete feedback"
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: 28,
-        height: 28,
-        borderRadius: 6,
-        border: "1px solid var(--ds-gray-400)",
-        background: "var(--ds-background-100)",
-        color: pending ? "var(--ds-gray-700)" : "var(--ds-red-900)",
-        cursor: pending ? "not-allowed" : "pointer",
-        opacity: pending ? 0.6 : 1,
-        transition: "background 0.15s ease, color 0.15s ease",
-      }}
-      onMouseEnter={(e) => {
-        if (pending) return;
-        e.currentTarget.style.background = "var(--ds-red-100)";
-      }}
-      onMouseLeave={(e) => {
-        if (pending) return;
-        e.currentTarget.style.background = "var(--ds-background-100)";
-      }}
-    >
-      <Trash2 className="w-3.5 h-3.5" />
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="Delete feedback"
+        title="Delete feedback"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 28,
+          height: 28,
+          borderRadius: 6,
+          border: "1px solid var(--ds-gray-400)",
+          background: "var(--ds-background-100)",
+          color: "var(--ds-red-900)",
+          cursor: "pointer",
+          transition: "background 0.15s ease, color 0.15s ease",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = "var(--ds-red-100)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = "var(--ds-background-100)";
+        }}
+      >
+        <Trash2 className="w-3.5 h-3.5" />
+      </button>
+      <DestructiveActionModal
+        open={open}
+        onOpenChange={(next) => {
+          if (!next) setError(undefined);
+          setOpen(next);
+        }}
+        onConfirm={handleConfirm}
+        title="Delete Feedback"
+        description={
+          <>
+            The feedback message{" "}
+            <strong className="font-semibold">
+              &ldquo;{preview}&rdquo;
+            </strong>{" "}
+            will be permanently deleted.
+          </>
+        }
+        irreversibleDescription="Deleting this feedback cannot be undone."
+        verificationPhrase="delete feedback"
+        confirmLabel="Delete Feedback"
+        loading={pending}
+        error={error}
+      />
+    </>
   );
 }
