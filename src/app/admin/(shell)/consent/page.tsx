@@ -124,7 +124,13 @@ export default async function ConsentDashboardPage({
           </Suspense>
         ) : (
           <>
-            <div style={{ marginBottom: 16 }}>
+            <div
+              style={{
+                marginBottom: 16,
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
               <ConsentDateRangePicker />
             </div>
             <Suspense
