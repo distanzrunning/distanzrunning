@@ -75,11 +75,17 @@ function CustomTick({ x = 0, y = 0, payload, activeLabel }: CustomTickProps) {
   return (
     <text
       x={x}
-      y={y + 16}
+      // dy="0.71em" matches Recharts' default tick baseline — rendering
+      // at y + literal offset (e.g. y+16) pushed the text past the SVG
+      // viewBox and (a) clipped its descenders, (b) put the text outside
+      // the chart's mouse-event area so hovering the label didn't fire
+      // the tooltip swap.
+      y={y}
+      dy="0.71em"
       textAnchor="middle"
       fontSize={12}
       fontWeight={isActive ? 600 : 400}
-      fill="var(--ds-gray-700)"
+      fill={isActive ? "var(--ds-gray-1000)" : "var(--ds-gray-700)"}
     >
       {text}
     </text>
@@ -113,7 +119,10 @@ export default function ConsentTrendChart({
         <AreaChart
           accessibilityLayer
           data={trend}
-          margin={{ left: 8, right: 12, top: 8, bottom: 0 }}
+          // bottom margin reserves vertical room for the X-axis tick
+          // labels so they render inside the SVG (not clipped) and
+          // remain inside the chart's hover-detection rectangle.
+          margin={{ left: 8, right: 12, top: 8, bottom: 24 }}
           onMouseMove={(state) => {
             const al = (state as unknown as { activeLabel?: string })
               .activeLabel;
@@ -141,7 +150,13 @@ export default function ConsentTrendChart({
             tickLine={false}
             axisLine={false}
             tickMargin={8}
-            minTickGap={24}
+            // Always show roughly seven ticks regardless of window
+            // length — 7-day windows get every day, 30-day windows
+            // get every fifth day, 90-day windows get every
+            // ~thirteenth. Keeps the X-axis density predictable
+            // instead of leaving the spacing to Recharts' built-in
+            // collision-based thinning.
+            interval={Math.max(0, Math.ceil(trend.length / 7) - 1)}
             tick={(props) => (
               <CustomTick
                 {...(props as unknown as CustomTickProps)}
@@ -162,9 +177,8 @@ export default function ConsentTrendChart({
           />
           <ChartTooltip
             cursor={{
-              stroke: "var(--ds-gray-500)",
+              stroke: "var(--ds-gray-1000)",
               strokeWidth: 1,
-              strokeDasharray: "3 3",
             }}
             content={
               <ChartTooltipContent
