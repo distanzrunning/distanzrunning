@@ -27,23 +27,20 @@ export default function PopoverBackdrop({
   open,
   zIndex = 2000,
 }: PopoverBackdropProps) {
-  // Lock body scroll while open. Compensate for the disappearing
-  // scrollbar so the page doesn't jump ~15 px when the overflow
-  // flips to hidden.
+  // Lock document scroll while open. We set overflow: hidden on the
+  // <html> element (not body) because `scrollbar-gutter: stable` in
+  // globals.css applies to <html> — combining overflow: hidden with
+  // scrollbar-gutter: stable on the same element is the spec-defined
+  // way to reserve a gutter while suppressing the scrollbar, with
+  // zero layout shift. Locking on <body> instead lets the scrollbar
+  // gutter collapse and the page jumps right by ~15 px.
   useEffect(() => {
     if (!open) return;
-    const body = document.body;
-    const prevOverflow = body.style.overflow;
-    const prevPaddingRight = body.style.paddingRight;
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
-    body.style.overflow = "hidden";
-    if (scrollbarWidth > 0) {
-      body.style.paddingRight = `${scrollbarWidth}px`;
-    }
+    const html = document.documentElement;
+    const prevOverflow = html.style.overflow;
+    html.style.overflow = "hidden";
     return () => {
-      body.style.overflow = prevOverflow;
-      body.style.paddingRight = prevPaddingRight;
+      html.style.overflow = prevOverflow;
     };
   }, [open]);
 

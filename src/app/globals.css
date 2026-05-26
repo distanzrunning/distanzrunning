@@ -589,6 +589,29 @@
     text-align: center;
     touch-action: manipulation;
     z-index: 1;
+    /* `<button>` resets — DayPicker emits a native button. Keep the
+       background transparent (so the parent `<td>` in-range fill can
+       show through) and inherit fonts/colors from our day styles. */
+    background: transparent;
+    font-family: inherit;
+    padding: 0;
+  }
+
+  /* Hide DayPicker's empty MonthCaption + label — we render our own
+     header (label + prev/next) outside DayPicker so we can keep the
+     original layout pattern. The classNames above target the slots
+     emitted by react-day-picker. */
+  .calendar-rdp-month-caption-hidden,
+  .calendar-rdp-caption-label-hidden {
+    display: none;
+  }
+
+  /* DayPicker wrappers we don't otherwise style — keep them as
+     simple block containers so the table + custom header stack. */
+  .calendar-rdp-root,
+  .calendar-rdp-months,
+  .calendar-rdp-month {
+    display: block;
   }
 
   .calendar-day:hover {
@@ -596,42 +619,65 @@
     color: var(--ds-gray-1000);
   }
 
+  /* Day-state styling — driven by data-* attributes that
+     CalendarDayButton (the custom react-day-picker DayButton) mirrors
+     from each day's modifiers onto the inner `<button>`. Attribute
+     selectors keep the visual treatment on the button itself, which
+     means we don't have to chain through the parent `<td>` and don't
+     have to disambiguate boundary vs middle days with `:not()` —
+     `data-range-middle` is its own attribute. The legacy
+     `.calendar-day-*` class selectors are retained underneath as a
+     fallback for the hand-rolled `MonthGrid` (month-tab variant). */
+  .calendar-day[data-outside],
   .calendar-day-outside {
     color: var(--calendar-day-outside-color);
   }
 
+  .calendar-day[data-weekend],
   .calendar-day-weekend {
     color: var(--calendar-day-outside-color);
   }
 
+  .calendar-day[data-disabled],
   .calendar-day-disabled {
     color: var(--calendar-day-outside-color);
     opacity: 0.4;
     cursor: not-allowed;
   }
 
+  .calendar-day[data-disabled]:hover,
   .calendar-day-disabled:hover {
     border-color: transparent;
   }
 
+  .calendar-day[data-today],
   .calendar-day-today {
     background: var(--ds-blue-900);
     color: var(--ds-background-100);
   }
 
+  /* `selected` applies to every day in the range. Middle days keep
+     the light in-range fill on the parent <td> with a transparent
+     button on top; only boundary / standalone selected days get the
+     dark solid fill. `:not([data-range-middle])` is the explicit
+     guard — same idea as shadcn's `data-selected-single`. */
+  .calendar-day[data-selected]:not([data-range-middle]),
   .calendar-day-selected {
     background: var(--ds-gray-1000);
     color: var(--ds-background-100);
   }
 
   /* Prevent hover border on today and selected states, preserve text color */
+  .calendar-day[data-today]:hover,
+  .calendar-day[data-selected]:not([data-range-middle]):hover,
   .calendar-day-today:hover,
   .calendar-day-selected:hover {
     border-color: transparent;
     color: var(--ds-background-100);
   }
 
-  /* Today when selected - keep blue ring */
+  /* Today when selected — keep blue ring */
+  .calendar-day[data-today][data-selected]:not([data-range-middle]),
   .calendar-day.calendar-day-today.calendar-day-selected {
     box-shadow:
       0 0 0 2px var(--ds-background-100),

@@ -89,6 +89,7 @@ export default function DateFilter({ value, onChange }: DateFilterProps) {
       width={140}
       showMonthTab
       showTimeInput={false}
+      backdrop
     />
   );
 }
