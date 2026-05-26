@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -35,22 +35,9 @@ interface ConsentTrendChartProps {
 const WRAPPER_PADDING_LEFT = 24;
 const WRAPPER_PADDING_TOP = 24;
 
-// Chart layout — chart height + bottom margin reserved for the
-// X-axis row. Kept here so the HTML overlay can compute its vertical
-// position deterministically (rather than guessing from Recharts'
-// rendered output).
-const CHART_HEIGHT = 240;
+// Chart bottom margin reserved for the X-axis row.
 const CHART_BOTTOM_MARGIN = 24;
 const TICK_MARGIN = 8;
-// Recharts' tickSize default (6) factors into tick text y even when
-// tickLine is hidden.
-const TICK_SIZE = 6;
-
-// Y position of the X-axis tick text within the chart SVG, relative
-// to its top. Plot bottom + tickSize + tickMargin. Used by the HTML
-// overlay to land at the same row as the regular ticks.
-const TICK_TEXT_Y =
-  CHART_HEIGHT - CHART_BOTTOM_MARGIN + TICK_SIZE + TICK_MARGIN;
 
 function formatTickDate(iso: string): string {
   const d = new Date(`${iso}T00:00:00.000Z`);
@@ -218,6 +205,37 @@ export default function ConsentTrendChart({
   // overlay at the same column the cursor line draws on.
   const [cursorX, setCursorX] = useState<number | null>(null);
 
+  // Outer-relative geometry of the X-axis tick text row, measured from
+  // a real rendered SVG tick element. We track both top and height so
+  // the HTML overlay can match the SVG tick's exact vertical extent —
+  // setting only `top` (with the overlay's own line-height defining
+  // its box) leaves a ~2px leading offset, so the label sits a touch
+  // below the tick row instead of on top of it.
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [tickRowTop, setTickRowTop] = useState<number | null>(null);
+  const [tickRowHeight, setTickRowHeight] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    if (!wrapperRef.current) return;
+    const wrapper = wrapperRef.current;
+
+    const measure = () => {
+      const tick = wrapper.querySelector(
+        ".recharts-xAxis .recharts-cartesian-axis-tick text",
+      );
+      if (!tick) return;
+      const wrapperRect = wrapper.getBoundingClientRect();
+      const tickRect = tick.getBoundingClientRect();
+      setTickRowTop(tickRect.top - wrapperRect.top);
+      setTickRowHeight(tickRect.height);
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(wrapper);
+    return () => ro.disconnect();
+  }, [trend]);
+
   const chartConfig = {
     value: {
       label: metricLabel,
@@ -227,10 +245,15 @@ export default function ConsentTrendChart({
 
   const isPercent = format === "percent";
 
-  const showOverlay = activeLabel !== null && cursorX !== null;
+  const showOverlay =
+    activeLabel !== null &&
+    cursorX !== null &&
+    tickRowTop !== null &&
+    tickRowHeight !== null;
 
   return (
     <div
+      ref={wrapperRef}
       style={{
         padding: `${WRAPPER_PADDING_TOP}px ${WRAPPER_PADDING_LEFT}px 16px`,
         position: "relative",
@@ -336,26 +359,26 @@ export default function ConsentTrendChart({
         <div
           // Flat HTML knockout for the "N days ago" label — same
           // background as the panel, slight rounded corners, no
-          // shadow, no border. Sits in the X-axis tick row;
+          // shadow, no border. Sits exactly in the X-axis tick row;
           // background-100 fill masks any underlying tick label
           // without an obvious "tooltip" treatment.
           //
-          // The -4 on `top` re-aligns the label's text baseline with
-          // the SVG tick text baseline. SVG ticks render at
-          // `y={TICK_TEXT_Y} dy="0.71em"`, putting the baseline at
-          // ~+8.5px past TICK_TEXT_Y. The HTML element's text
-          // baseline sits at element-top + ~12.6px (line-box
-          // centering for 12/16 text). Subtract the difference so
-          // both baselines land in the same outer y.
+          // The box matches the measured SVG tick's top + height, and
+          // centers its text with flex. Aligning by box (not by
+          // line-height) keeps the HTML glyphs on the same baseline as
+          // the SVG tick glyphs across font/zoom changes.
           style={{
             position: "absolute",
             left: WRAPPER_PADDING_LEFT + (cursorX ?? 0),
-            top: WRAPPER_PADDING_TOP + TICK_TEXT_Y - 4,
+            top: tickRowTop ?? 0,
+            height: tickRowHeight ?? 0,
             transform: "translateX(-50%)",
+            display: "flex",
+            alignItems: "center",
             background: "var(--ds-background-100)",
             color: "var(--ds-gray-1000)",
             fontSize: 12,
-            lineHeight: "16px",
+            lineHeight: 1,
             fontWeight: 600,
             padding: "0 6px",
             borderRadius: 4,
