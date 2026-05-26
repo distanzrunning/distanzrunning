@@ -197,18 +197,13 @@ export async function ConsentDashboardContent({
   const tileHref = (target: Decision) =>
     buildHref(urlParams, filter === target ? null : target);
 
-  const [{ count: totalCount }, { data, error }] = await Promise.all([
-    supabase
-      .from("consent_records")
-      .select("*", { count: "exact", head: true }),
-    supabase
-      .from("consent_records")
-      .select(
-        "id, anon_id, marketing, analytics, functional, decision, country, created_at",
-      )
-      .order("created_at", { ascending: false })
-      .limit(FETCH_LIMIT),
-  ]);
+  const { data, error } = await supabase
+    .from("consent_records")
+    .select(
+      "id, anon_id, marketing, analytics, functional, decision, country, created_at",
+    )
+    .order("created_at", { ascending: false })
+    .limit(FETCH_LIMIT);
 
   if (error) {
     return (
@@ -219,7 +214,6 @@ export async function ConsentDashboardContent({
   }
 
   const rows = (data ?? []) as ConsentRow[];
-  const total = totalCount ?? rows.length;
 
   // Slice the fetched rows into "current window" and the same-
   // length window immediately before, so trend pills come from one
@@ -309,14 +303,14 @@ export async function ConsentDashboardContent({
           }}
         >
           <StatTile
-            label={`Decisions (${total.toLocaleString()} all-time)`}
+            label="Decisions"
             value={currentCount.toLocaleString()}
             change={changeFrom(currentCount, previousCount, previousLabel)}
             href={buildHref(urlParams, null)}
             active={!filter}
           />
           <StatTile
-            label={`Accept rate (${currentAccepts.toLocaleString()} of ${currentCount.toLocaleString()})`}
+            label="Accept rate"
             value={fmtPct(currentAcceptRate)}
             change={pointChange(
               currentAcceptRate,
@@ -327,7 +321,7 @@ export async function ConsentDashboardContent({
             active={filter === "accept_all"}
           />
           <StatTile
-            label={`Reject rate (${currentRejects.toLocaleString()} of ${currentCount.toLocaleString()})`}
+            label="Reject rate"
             value={fmtPct(currentRejectRate)}
             change={pointChange(
               currentRejectRate,
@@ -338,7 +332,7 @@ export async function ConsentDashboardContent({
             active={filter === "reject_all"}
           />
           <StatTile
-            label={`Custom rate (${currentCustoms.toLocaleString()} of ${currentCount.toLocaleString()})`}
+            label="Custom rate"
             value={fmtPct(currentCustomRate)}
             change={pointChange(
               currentCustomRate,
