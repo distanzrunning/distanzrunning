@@ -322,7 +322,7 @@ export default function ConsentTrendChart({
             width={48}
             tickMargin={4}
             tick={{ fill: "var(--ds-gray-700)", fontSize: 12 }}
-            domain={isPercent ? [0, 100] : ["auto", "auto"]}
+            domain={isPercent ? [0, 100] : [0, "auto"]}
             // Integer ticks only — without this Recharts picks 0.5
             // increments when the count range is small (e.g. 0–3),
             // which reads as "0.5 visitors" nonsense.
