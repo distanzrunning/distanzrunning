@@ -57,18 +57,18 @@ interface CustomTickProps {
   x?: number;
   y?: number;
   payload?: { value: string; index: number };
-  activeIndex: number | null;
+  activeLabel: string | null;
 }
 
-// Renders each X-axis tick. When the hovered data index matches the
-// tick's data index, swap the formatted date ("May 19") for the
-// relative "N days ago" — matches the Vercel analytics pattern.
-// Note: when long windows trigger Recharts' minTickGap thinning,
-// some days don't have a rendered tick to swap; the tooltip still
-// carries the date so the info isn't lost.
-function CustomTick({ x = 0, y = 0, payload, activeIndex }: CustomTickProps) {
+// Renders each X-axis tick. When the hovered point's date matches the
+// tick's date, swap the formatted date ("May 19") for the relative
+// "N days ago". Comparing by date (Recharts' `activeLabel`) rather
+// than by index avoids ambiguity when long windows trigger tick
+// thinning — `payload.index` can refer to the tick's *rendered*
+// position, not its data index, which broke the swap in practice.
+function CustomTick({ x = 0, y = 0, payload, activeLabel }: CustomTickProps) {
   if (!payload) return null;
-  const isActive = activeIndex !== null && payload.index === activeIndex;
+  const isActive = activeLabel !== null && payload.value === activeLabel;
   const text = isActive
     ? daysAgoLabel(payload.value)
     : formatTickDate(payload.value);
@@ -79,7 +79,7 @@ function CustomTick({ x = 0, y = 0, payload, activeIndex }: CustomTickProps) {
       textAnchor="middle"
       fontSize={12}
       fontWeight={isActive ? 600 : 400}
-      fill={isActive ? "var(--ds-gray-1000)" : "var(--ds-gray-700)"}
+      fill="var(--ds-gray-700)"
     >
       {text}
     </text>
@@ -91,7 +91,7 @@ export default function ConsentTrendChart({
   metricLabel,
   format,
 }: ConsentTrendChartProps) {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [activeLabel, setActiveLabel] = useState<string | null>(null);
 
   const chartConfig = {
     value: {
@@ -115,12 +115,11 @@ export default function ConsentTrendChart({
           data={trend}
           margin={{ left: 8, right: 12, top: 8, bottom: 0 }}
           onMouseMove={(state) => {
-            const idx = (
-              state as unknown as { activeTooltipIndex?: number }
-            ).activeTooltipIndex;
-            setActiveIndex(typeof idx === "number" ? idx : null);
+            const al = (state as unknown as { activeLabel?: string })
+              .activeLabel;
+            setActiveLabel(typeof al === "string" ? al : null);
           }}
-          onMouseLeave={() => setActiveIndex(null)}
+          onMouseLeave={() => setActiveLabel(null)}
         >
           <defs>
             <linearGradient id="consent-trend-fill" x1="0" y1="0" x2="0" y2="1">
@@ -146,7 +145,7 @@ export default function ConsentTrendChart({
             tick={(props) => (
               <CustomTick
                 {...(props as unknown as CustomTickProps)}
-                activeIndex={activeIndex}
+                activeLabel={activeLabel}
               />
             )}
           />
