@@ -255,31 +255,47 @@ export default function ConsentTrendChart({
 
       {showOverlay && (
         <div
-          // Pill-shaped HTML overlay for the "N days ago" label —
-          // matches Vercel's chart tooltip styling (fully rounded
-          // background, subtle drop shadow, 12/16 medium text). Sits
-          // outside the SVG so it stacks above every chart element
-          // by default; no z-order tug-of-war with Recharts. The
-          // pill's solid background reliably masks any X-axis tick
-          // label sitting underneath.
+          // Pill HTML overlay for the "N days ago" label — mirrors
+          // Vercel's visx-tooltip markup (rounded-[99px], px-2 py-1,
+          // ds-shadow-tooltip, font-medium gray-1000 12/16 text).
+          // Rendered outside the SVG so it always stacks above the
+          // chart, and its solid background reliably masks any
+          // X-axis tick text sitting underneath.
+          //
+          // The -7 on `top` aligns the overlay's text-glyph top with
+          // where the SVG tick text top renders — combination of
+          // SVG's `dy="0.71em"` baseline offset and the HTML
+          // line-box's own centering means top + TICK_TEXT_Y lands
+          // ~7px below the SVG glyph top by default. Bake the
+          // correction in instead of using a percent-based transform
+          // (which scales with text length and drifts).
           style={{
             position: "absolute",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
             left: WRAPPER_PADDING_LEFT + (cursorX ?? 0),
-            top: WRAPPER_PADDING_TOP + TICK_TEXT_Y,
-            transform: "translate(-50%, -25%)",
+            top: WRAPPER_PADDING_TOP + TICK_TEXT_Y - 7,
+            transform: "translateX(-50%)",
             background: "var(--ds-background-100)",
-            color: "var(--ds-gray-1000)",
-            fontSize: 12,
-            lineHeight: "16px",
-            fontWeight: 500,
+            borderRadius: 99,
             padding: "4px 8px",
-            borderRadius: 999,
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+            boxShadow: "var(--ds-shadow-tooltip)",
             whiteSpace: "nowrap",
             pointerEvents: "none",
           }}
         >
-          {daysAgoLabel(activeLabel)}
+          <span
+            style={{
+              fontSize: 12,
+              lineHeight: "16px",
+              fontWeight: 500,
+              color: "var(--ds-gray-1000)",
+            }}
+          >
+            {daysAgoLabel(activeLabel)}
+          </span>
         </div>
       )}
     </div>
