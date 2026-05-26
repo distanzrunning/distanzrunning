@@ -116,6 +116,10 @@ interface ActiveCursorProps {
 // Has to match the XAxis tickMargin prop below — both numbers feed
 // the same vertical position for tick + cursor text.
 const TICK_MARGIN = 8;
+// Recharts default tickSize (6) — factors into the tick text y
+// position even when tickLine is hidden, so the cursor label has
+// to mirror that offset to land in the same row as the real ticks.
+const TICK_SIZE = 6;
 
 function ActiveCursor({
   points,
@@ -129,13 +133,12 @@ function ActiveCursor({
   const x = points[0].x;
   const yTop = points[0].y;
   const yBottom = points[1].y;
-  // Compute the tick-text y directly from the plot geometry
-  // (top + height + tickMargin) rather than from points[1].y.
-  // points[1].y is the cursor *line* terminus, which Recharts can
-  // shift independently of where it positions axis tick text;
-  // anchoring to top + height keeps the "N days ago" label sitting
-  // in the exact row a tick would occupy.
-  const tickTextY = top + height + TICK_MARGIN;
+  // Compute the tick-text y directly from the plot geometry. Mirror
+  // Recharts' own tick formula: axisLineY (= top + height) plus
+  // tickSize plus tickMargin. tickSize counts even though we hide
+  // the tick line; without it the cursor label lands roughly 6px
+  // above the real tick row.
+  const tickTextY = top + height + TICK_SIZE + TICK_MARGIN;
 
   return (
     <g style={{ pointerEvents: "none" }}>
