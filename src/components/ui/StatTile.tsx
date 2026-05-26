@@ -11,13 +11,16 @@
 //   - hint    optional secondary line below the value
 //   - change  optional trend pill (green = up, red = down,
 //             gray = flat) absolute-positioned to the bottom-right
-//             so the pill sits flush with the hint baseline
 //
-// Interactivity:
-//   - Pass `href` to render the tile as an <a>; the whole cell
-//     becomes a hit target. Use it to filter the dashboard below
-//     the tile group — set `active` on the matching tile and clear
-//     by linking back to the un-filtered URL when active.
+// Two modes:
+//   - Standalone (no `href`)  — passive display tile.
+//   - Tab (`href` set)        — clickable; renders as <a>. Inactive
+//                                tabs sit on background-200 with a
+//                                muted title; the active tab pops to
+//                                background-100 with a gray-1000 bar
+//                                along its bottom edge, the canonical
+//                                "selected" treatment that pairs with
+//                                a chart / detail surface below.
 
 "use client";
 
@@ -43,12 +46,9 @@ export interface StatTileProps {
   hint?: ReactNode;
   /** Optional change pill (positive / negative / flat). */
   change?: StatTileChange;
-  /** When set, the tile renders as an <a> and the entire cell is
-   *  clickable — used by dashboards to toggle a filter. */
+  /** When set, the tile renders as an <a> and is a clickable tab. */
   href?: string;
-  /** Visual emphasis for the currently-applied filter / selection.
-   *  Slightly darker background + ring; combine with `href` so the
-   *  active tile links back to the un-filtered URL. */
+  /** Marks the currently-selected tab — pairs with `href`. */
   active?: boolean;
   /** Forwarded to the underlying <a> for analytics, rel, target. */
   anchorProps?: AnchorHTMLAttributes<HTMLAnchorElement>;
@@ -63,9 +63,10 @@ const directionStyles: Record<
   flat: { bg: "var(--ds-gray-200)", color: "var(--ds-gray-900)" },
 };
 
-const baseClass = "relative flex flex-col gap-2 p-6 transition-colors";
+const baseClass =
+  "relative flex flex-col gap-2 p-6 transition-colors box-border";
 const linkClass =
-  "no-underline outline-none cursor-pointer hover:bg-[var(--ds-gray-100)] focus-visible:bg-[var(--ds-gray-100)]";
+  "no-underline outline-none cursor-pointer focus-visible:bg-[var(--ds-gray-100)]";
 
 export function StatTile({
   label,
@@ -76,35 +77,36 @@ export function StatTile({
   active,
   anchorProps,
 }: StatTileProps) {
-  const background = active
-    ? "var(--ds-gray-100)"
+  const isTab = !!href;
+  // Standalone: stay on the group's canvas (background-100).
+  // Tab inactive: recess to background-200 with a muted title.
+  // Tab active: pop to background-100 with a black bottom rule.
+  const background = isTab
+    ? active
+      ? "var(--ds-background-100)"
+      : "var(--ds-background-200)"
     : "var(--ds-background-100)";
+  const muted = isTab && !active;
 
   const body = (
     <>
-      {/* Active accent — 2px top bar; positioned inside the tile so
-          it doesn't fight the group's outer border. */}
-      {active && (
-        <span
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 2,
-            background: "var(--ds-gray-1000)",
-          }}
-        />
-      )}
-      <span className="text-label-12 font-medium uppercase tracking-wide text-[color:var(--ds-gray-700)]">
+      <span
+        className="text-label-12 font-medium uppercase tracking-wide text-[color:var(--ds-gray-700)]"
+        style={muted ? { opacity: 0.8 } : undefined}
+      >
         {label}
       </span>
-      <span className="text-heading-32 text-[color:var(--ds-gray-1000)]">
+      <span
+        className="text-heading-32 text-[color:var(--ds-gray-1000)]"
+        style={muted ? { opacity: 0.8 } : undefined}
+      >
         {value}
       </span>
       {hint && (
-        <span className="text-copy-13 text-[color:var(--ds-gray-700)] pr-16">
+        <span
+          className="text-copy-13 text-[color:var(--ds-gray-700)] pr-16"
+          style={muted ? { opacity: 0.8 } : undefined}
+        >
           {hint}
         </span>
       )}
@@ -135,7 +137,13 @@ export function StatTile({
         aria-current={active ? "true" : undefined}
         {...anchorProps}
         className={`${baseClass} ${linkClass} ${anchorProps?.className ?? ""}`}
-        style={{ background, color: "inherit" }}
+        style={{
+          background,
+          color: "inherit",
+          borderBottom: active
+            ? "2px solid var(--ds-gray-1000)"
+            : "2px solid transparent",
+        }}
       >
         {body}
       </a>

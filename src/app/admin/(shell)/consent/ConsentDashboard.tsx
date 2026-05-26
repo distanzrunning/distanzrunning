@@ -2,7 +2,6 @@ import { Badge, type BadgeVariant } from "@/components/ui/Badge";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { StatTile, type StatTileChange } from "@/components/ui/StatTile";
-import { StatTileGroup } from "@/components/ui/StatTileGroup";
 import {
   Table,
   TableBody,
@@ -248,7 +247,16 @@ export async function ConsentDashboardContent({
   const analyticsOn = rows.filter((r) => r.analytics).length;
   const functionalOn = rows.filter((r) => r.functional).length;
   const uniqueVisitors = new Set(rows.map((r) => r.anon_id)).size;
-  const trend = buildTrend(currentRows, currentStart);
+
+  // Chart trend follows the active tab — switching to "Accept rate"
+  // shows accepts/day, etc. Default = total decisions per day.
+  const trendRows = filter
+    ? currentRows.filter((r) => r.decision === filter)
+    : currentRows;
+  const trend = buildTrend(trendRows, currentStart);
+  const chartLabel = filter
+    ? `${DECISION_LABEL[filter].charAt(0).toUpperCase()}${DECISION_LABEL[filter].slice(1)}`
+    : "Decisions";
 
   // Recent table mirrors the active filter — filtering happens on
   // the already-fetched 10k rows, so no extra DB query.
@@ -260,8 +268,25 @@ export async function ConsentDashboardContent({
 
   return (
     <>
-      <div style={{ marginBottom: 16 }}>
-        <StatTileGroup>
+      {/* Tabs + chart joined in a single bordered container —
+          the active tile's bottom rule meets the chart edge so the
+          two surfaces read as one panel. */}
+      <div
+        style={{
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: 12,
+          overflow: "hidden",
+          background: "var(--ds-background-100)",
+          marginBottom: 16,
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+            borderBottom: "1px solid var(--ds-gray-400)",
+          }}
+        >
           <StatTile
             label={`Last ${WINDOW_DAYS} days`}
             value={currentCount.toLocaleString()}
@@ -277,6 +302,9 @@ export async function ConsentDashboardContent({
             change={pointChange(currentAcceptRate, previousAcceptRate)}
             href={tileHref("accept_all", filter === "accept_all")}
             active={filter === "accept_all"}
+            anchorProps={{
+              style: { borderLeft: "1px solid var(--ds-gray-400)" },
+            }}
           />
           <StatTile
             label="Reject rate"
@@ -285,6 +313,9 @@ export async function ConsentDashboardContent({
             change={pointChange(currentRejectRate, previousRejectRate)}
             href={tileHref("reject_all", filter === "reject_all")}
             active={filter === "reject_all"}
+            anchorProps={{
+              style: { borderLeft: "1px solid var(--ds-gray-400)" },
+            }}
           />
           <StatTile
             label="Custom rate"
@@ -293,17 +324,13 @@ export async function ConsentDashboardContent({
             change={pointChange(currentCustomRate, previousCustomRate)}
             href={tileHref("custom", filter === "custom")}
             active={filter === "custom"}
+            anchorProps={{
+              style: { borderLeft: "1px solid var(--ds-gray-400)" },
+            }}
           />
-        </StatTileGroup>
-      </div>
+        </div>
 
-      <div style={{ marginBottom: 16 }}>
-        <ConsentTrendChart
-          trend={trend}
-          currentCount={currentCount}
-          uniqueVisitors={uniqueVisitors}
-          windowDays={WINDOW_DAYS}
-        />
+        <ConsentTrendChart trend={trend} metricLabel={chartLabel} />
       </div>
 
       <div style={TWO_COL_GRID}>
@@ -459,19 +486,35 @@ function TableRowSkeleton({ cols }: { cols: number }) {
 export function ConsentDashboardSkeleton() {
   return (
     <div aria-busy="true" aria-live="polite">
-      <div style={{ marginBottom: 16 }}>
-        <StatTileGroup>
+      <div
+        style={{
+          border: "1px solid var(--ds-gray-400)",
+          borderRadius: 12,
+          overflow: "hidden",
+          background: "var(--ds-background-100)",
+          marginBottom: 16,
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+            borderBottom: "1px solid var(--ds-gray-400)",
+          }}
+        >
           <StatTileSkeleton label={`Last ${WINDOW_DAYS} days`} hintWidth={100} />
           <StatTileSkeleton label="Accept rate" hintWidth={120} />
           <StatTileSkeleton label="Reject rate" hintWidth={120} />
           <StatTileSkeleton label="Custom rate" hintWidth={120} />
-        </StatTileGroup>
-      </div>
-
-      <div style={{ marginBottom: 16 }}>
-        <PanelCard title={`Decisions per day (last ${WINDOW_DAYS})`}>
-          <Skeleton width="100%" height={220} shape="rounded" style={block} />
-        </PanelCard>
+        </div>
+        <div style={{ padding: "24px 24px 16px" }}>
+          <Skeleton
+            width="100%"
+            height={240}
+            shape="rounded"
+            style={block}
+          />
+        </div>
       </div>
 
       <div style={TWO_COL_GRID}>
