@@ -107,7 +107,7 @@ export default function ConsentTrendChart({
             }
           />
           <Area
-            type="monotone"
+            type="linear"
             dataKey="value"
             stroke="var(--color-value)"
             strokeWidth={2}
