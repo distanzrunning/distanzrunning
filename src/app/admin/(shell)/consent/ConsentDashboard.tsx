@@ -102,31 +102,49 @@ function pointChange(
 
 interface TrendPoint {
   date: string;
-  count: number;
+  /** Either a raw daily count (when no filter) or a daily rate
+   *  (count of `filter` / total decisions × 100). `null` marks
+   *  days with zero decisions in rate mode — Recharts breaks the
+   *  area at null so we don't show a misleading 0% for empty
+   *  days that simply had no traffic. */
+  value: number | null;
 }
 
 function buildTrend(
   rows: ConsentRow[],
   window: DateWindow,
+  filter: DecisionFilter | null,
 ): TrendPoint[] {
-  const days = new Map<string, number>();
+  const days = new Map<string, { total: number; matched: number }>();
   const dayCount = windowDays(window);
   for (let i = 0; i < dayCount; i++) {
     const d = new Date(window.start);
     d.setUTCDate(window.start.getUTCDate() + i);
-    days.set(d.toISOString().slice(0, 10), 0);
+    days.set(d.toISOString().slice(0, 10), { total: 0, matched: 0 });
   }
   for (const row of rows) {
     const key = row.created_at.slice(0, 10);
-    if (days.has(key)) days.set(key, (days.get(key) ?? 0) + 1);
+    const entry = days.get(key);
+    if (!entry) continue;
+    entry.total += 1;
+    if (!filter || row.decision === filter) {
+      entry.matched += 1;
+    }
   }
   // For long ranges, the X-axis stride is too dense to show every
   // day — Recharts handles axis ticks via minTickGap, so we keep
   // the same shape (date label per point) and let the chart thin.
-  return [...days.entries()].map(([date, count]) => ({
-    date: date.slice(5),
-    count,
-  }));
+  return [...days.entries()].map(([date, { total, matched }]) => {
+    if (filter) {
+      // Rate mode — null on zero-traffic days so the area breaks
+      // rather than misleadingly showing 0%.
+      return {
+        date: date.slice(5),
+        value: total === 0 ? null : (matched / total) * 100,
+      };
+    }
+    return { date: date.slice(5), value: matched };
+  });
 }
 
 function CategoryBar({
@@ -261,15 +279,16 @@ export async function ConsentDashboardContent({
   const functionalOn = rows.filter((r) => r.functional).length;
   const uniqueVisitors = new Set(rows.map((r) => r.anon_id)).size;
 
-  // Chart trend follows the active tab — switching to "Accept rate"
-  // shows accepts/day, etc. Default = total decisions per day.
-  const trendRows = filter
-    ? currentRows.filter((r) => r.decision === filter)
-    : currentRows;
-  const trend = buildTrend(trendRows, currentWindow);
+  // Chart trend follows the active tab. When a decision filter is
+  // set, the chart shows the *rate* per day (matches the tile's
+  // headline percentage); the unfiltered Decisions tab shows the
+  // raw daily count. Pass `currentRows` (not a pre-filtered set)
+  // so buildTrend can use the day totals as the rate denominator.
+  const trend = buildTrend(currentRows, currentWindow, filter ?? null);
   const chartLabel = filter
-    ? `${DECISION_LABEL[filter].charAt(0).toUpperCase()}${DECISION_LABEL[filter].slice(1)}`
+    ? `${DECISION_LABEL[filter].charAt(0).toUpperCase()}${DECISION_LABEL[filter].slice(1)} rate`
     : "Decisions";
+  const chartFormat: "count" | "percent" = filter ? "percent" : "count";
 
   // Recent table mirrors the active filter — filtering happens on
   // the already-fetched 10k rows, so no extra DB query.
@@ -368,7 +387,11 @@ export async function ConsentDashboardContent({
           </div>
         </div>
 
-        <ConsentTrendChart trend={trend} metricLabel={chartLabel} />
+        <ConsentTrendChart
+          trend={trend}
+          metricLabel={chartLabel}
+          format={chartFormat}
+        />
       </div>
 
       <div style={TWO_COL_GRID}>
