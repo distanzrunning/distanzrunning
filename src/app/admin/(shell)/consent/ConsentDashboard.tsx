@@ -1,4 +1,3 @@
-import { Badge, type BadgeVariant } from "@/components/ui/Badge";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { StatTile, type StatTileChange } from "@/components/ui/StatTile";
@@ -10,17 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
-import { Tooltip } from "@/components/ui/Tooltip";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import ConsentTrendChart from "./ConsentTrendChart";
-import { CountryCell } from "./CountryCell";
+import RecentDecisionsTable from "./RecentDecisionsTable";
 import {
   isoOf,
   previousWindow,
   windowDays,
   type DateWindow,
 } from "./presets";
-import { WhenCell } from "./WhenCell";
 
 type Decision = "accept_all" | "reject_all" | "custom";
 export type DecisionFilter = Decision;
@@ -172,17 +169,6 @@ function CategoryBar({
       </div>
     </div>
   );
-}
-
-function decisionBadge(d: Decision): { label: string; variant: BadgeVariant } {
-  switch (d) {
-    case "accept_all":
-      return { label: "Accept all", variant: "green-subtle" };
-    case "reject_all":
-      return { label: "Reject all", variant: "red-subtle" };
-    default:
-      return { label: "Custom", variant: "amber-subtle" };
-  }
 }
 
 const TWO_COL_GRID = {
@@ -412,73 +398,11 @@ export async function ConsentDashboardContent({
         </PanelCard>
       </div>
 
-      <PanelCard title={recentTitle}>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>When</TableHead>
-              <TableHead>Decision</TableHead>
-              <TableHead>Marketing</TableHead>
-              <TableHead>Analytics</TableHead>
-              <TableHead>Functional</TableHead>
-              <TableHead>Country</TableHead>
-              <TableHead>Anon ID</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {recent.length === 0 && (
-              <TableRow>
-                <TableCell
-                  colSpan={7}
-                  style={{
-                    padding: 24,
-                    textAlign: "center",
-                    color: "var(--ds-gray-700)",
-                  }}
-                >
-                  {filter
-                    ? `No ${DECISION_LABEL[filter]} in this window.`
-                    : "No decisions yet."}
-                </TableCell>
-              </TableRow>
-            )}
-            {recent.map((row) => {
-              const b = decisionBadge(row.decision);
-              return (
-                <TableRow key={row.id}>
-                  <TableCell>
-                    <WhenCell iso={row.created_at} />
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={b.variant} size="sm">
-                      {b.label}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{row.marketing ? "✓" : "—"}</TableCell>
-                  <TableCell>{row.analytics ? "✓" : "—"}</TableCell>
-                  <TableCell>{row.functional ? "✓" : "—"}</TableCell>
-                  <TableCell>
-                    <CountryCell iso={row.country} />
-                  </TableCell>
-                  <TableCell className="text-label-12-mono">
-                    <Tooltip content={row.anon_id}>
-                      <a
-                        href={`/admin/consent?q=${encodeURIComponent(row.anon_id)}`}
-                        style={{
-                          color: "var(--ds-gray-700)",
-                          textDecoration: "underline",
-                        }}
-                      >
-                        {row.anon_id.slice(0, 8)}…
-                      </a>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </PanelCard>
+      <RecentDecisionsTable
+        rows={recent}
+        title={recentTitle}
+        filter={filter ?? null}
+      />
     </>
   );
 }

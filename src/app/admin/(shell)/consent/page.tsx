@@ -1,12 +1,12 @@
 import { Suspense } from "react";
-import { ChevronLeft, Search } from "lucide-react";
-import { Button, ButtonLink } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+import { ChevronLeft } from "lucide-react";
+import { ButtonLink } from "@/components/ui/Button";
 import {
   ConsentDashboardContent,
   ConsentDashboardSkeleton,
 } from "./ConsentDashboard";
-import ConsentDateRangePicker from "./ConsentDateRangePicker";
+import ConsentFilterRow from "./ConsentFilterRow";
+import { ConsentFilterShell } from "./ConsentFilterShell";
 import {
   ConsentLookupContent,
   ConsentLookupSkeleton,
@@ -17,29 +17,6 @@ export const metadata = {
   title: "Consent — Stride Admin",
   robots: { index: false, follow: false },
 };
-
-function SearchForm({ defaultValue = "" }: { defaultValue?: string }) {
-  return (
-    <form
-      method="GET"
-      action="/admin/consent"
-      style={{ display: "flex", gap: 8, marginBottom: 16 }}
-    >
-      <div style={{ flex: 1 }}>
-        <Input
-          name="q"
-          type="text"
-          defaultValue={defaultValue}
-          placeholder="Look up by anonymous ID…"
-          spellCheck={false}
-          autoComplete="off"
-          prefix={<Search className="w-4 h-4" />}
-        />
-      </div>
-      <Button type="submit">Search</Button>
-    </form>
-  );
-}
 
 type DecisionFilter = "accept_all" | "reject_all" | "custom";
 
@@ -116,23 +93,13 @@ export default async function ConsentDashboardPage({
           )}
         </header>
 
-        {!query && <SearchForm defaultValue={query} />}
-
         {query ? (
           <Suspense fallback={<ConsentLookupSkeleton query={query} />}>
             <ConsentLookupContent query={query} />
           </Suspense>
         ) : (
-          <>
-            <div
-              style={{
-                marginBottom: 16,
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-            >
-              <ConsentDateRangePicker />
-            </div>
+          <ConsentFilterShell>
+            <ConsentFilterRow />
             <Suspense
               key={`${windowKey}_${filter ?? "all"}`}
               fallback={<ConsentDashboardSkeleton />}
@@ -143,7 +110,7 @@ export default async function ConsentDashboardPage({
                 windowEnd={window.end}
               />
             </Suspense>
-          </>
+          </ConsentFilterShell>
         )}
       </div>
     </div>
