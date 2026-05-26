@@ -18,6 +18,20 @@ import { CountryCell } from "./CountryCell";
 import { WhenCell } from "./WhenCell";
 
 type Decision = "accept_all" | "reject_all" | "custom";
+export type DecisionFilter = Decision;
+
+const DECISION_LABEL: Record<Decision, string> = {
+  accept_all: "accepts",
+  reject_all: "rejects",
+  custom: "custom decisions",
+};
+
+const BASE_PATH = "/admin/consent";
+
+function tileHref(target: Decision, active: boolean): string {
+  if (active) return BASE_PATH;
+  return `${BASE_PATH}?filter=${target}`;
+}
 
 interface ConsentRow {
   id: number;
@@ -153,7 +167,11 @@ const TWO_COL_GRID = {
   marginBottom: 16,
 } as const;
 
-export async function ConsentDashboardContent() {
+export async function ConsentDashboardContent({
+  filter,
+}: {
+  filter?: DecisionFilter | null;
+}) {
   const supabase = getSupabaseAdmin();
 
   const [{ count: totalCount }, { data, error }] = await Promise.all([
@@ -231,7 +249,14 @@ export async function ConsentDashboardContent() {
   const functionalOn = rows.filter((r) => r.functional).length;
   const uniqueVisitors = new Set(rows.map((r) => r.anon_id)).size;
   const trend = buildTrend(currentRows, currentStart);
-  const recent = rows.slice(0, 20);
+
+  // Recent table mirrors the active filter — filtering happens on
+  // the already-fetched 10k rows, so no extra DB query.
+  const recent = (filter ? rows.filter((r) => r.decision === filter) : rows)
+    .slice(0, 20);
+  const recentTitle = filter
+    ? `Recent ${DECISION_LABEL[filter]}`
+    : "Recent decisions";
 
   return (
     <>
@@ -242,24 +267,32 @@ export async function ConsentDashboardContent() {
             value={currentCount.toLocaleString()}
             hint={`${total.toLocaleString()} all-time`}
             change={changeFrom(currentCount, previousCount)}
+            href={BASE_PATH}
+            active={!filter}
           />
           <StatTile
             label="Accept rate"
             value={fmtPct(currentAcceptRate)}
             hint={`${currentAccepts.toLocaleString()} of ${currentCount.toLocaleString()}`}
             change={pointChange(currentAcceptRate, previousAcceptRate)}
+            href={tileHref("accept_all", filter === "accept_all")}
+            active={filter === "accept_all"}
           />
           <StatTile
             label="Reject rate"
             value={fmtPct(currentRejectRate)}
             hint={`${currentRejects.toLocaleString()} of ${currentCount.toLocaleString()}`}
             change={pointChange(currentRejectRate, previousRejectRate)}
+            href={tileHref("reject_all", filter === "reject_all")}
+            active={filter === "reject_all"}
           />
           <StatTile
             label="Custom rate"
             value={fmtPct(currentCustomRate)}
             hint={`${currentCustoms.toLocaleString()} of ${currentCount.toLocaleString()}`}
             change={pointChange(currentCustomRate, previousCustomRate)}
+            href={tileHref("custom", filter === "custom")}
+            active={filter === "custom"}
           />
         </StatTileGroup>
       </div>
@@ -318,7 +351,7 @@ export async function ConsentDashboardContent() {
         </PanelCard>
       </div>
 
-      <PanelCard title="Recent decisions">
+      <PanelCard title={recentTitle}>
         <Table>
           <TableHeader>
             <TableRow>
@@ -342,7 +375,9 @@ export async function ConsentDashboardContent() {
                     color: "var(--ds-gray-700)",
                   }}
                 >
-                  No decisions yet.
+                  {filter
+                    ? `No ${DECISION_LABEL[filter]} in this window.`
+                    : "No decisions yet."}
                 </TableCell>
               </TableRow>
             )}

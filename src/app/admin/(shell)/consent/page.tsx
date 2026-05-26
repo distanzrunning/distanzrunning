@@ -39,13 +39,23 @@ function SearchForm({ defaultValue = "" }: { defaultValue?: string }) {
   );
 }
 
+type DecisionFilter = "accept_all" | "reject_all" | "custom";
+
+function normaliseFilter(raw: string | undefined): DecisionFilter | null {
+  if (raw === "accept_all" || raw === "reject_all" || raw === "custom") {
+    return raw;
+  }
+  return null;
+}
+
 export default async function ConsentDashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; filter?: string }>;
 }) {
   const params = await searchParams;
   const query = params.q?.trim() ?? "";
+  const filter = normaliseFilter(params.filter);
 
   return (
     <div style={{ padding: "32px 24px" }}>
@@ -104,8 +114,11 @@ export default async function ConsentDashboardPage({
             <ConsentLookupContent query={query} />
           </Suspense>
         ) : (
-          <Suspense fallback={<ConsentDashboardSkeleton />}>
-            <ConsentDashboardContent />
+          <Suspense
+            key={filter ?? "all"}
+            fallback={<ConsentDashboardSkeleton />}
+          >
+            <ConsentDashboardContent filter={filter} />
           </Suspense>
         )}
       </div>
