@@ -696,13 +696,20 @@
     background-color: var(--ds-gray-200);
   }
 
-  /* Row start/end rounding for multi-row ranges */
-  .calendar-cell-in-range.calendar-cell-row-start {
+  /* Row start/end rounding for multi-row ranges — the gray ribbon
+     should look like one continuous pill that wraps across week rows.
+     DayPicker doesn't emit row-edge modifier classes, so we pick the
+     row's first/last `<td>` via :first-child / :last-child of the
+     `<tr>`. The legacy `.calendar-cell-row-start/-end` selectors stay
+     alongside as a fallback for any non-DayPicker caller. */
+  .calendar-cell-in-range.calendar-cell-row-start,
+  .calendar-body-row > .calendar-cell-in-range:first-child {
     border-top-left-radius: var(--calendar-day-radius);
     border-bottom-left-radius: var(--calendar-day-radius);
   }
 
-  .calendar-cell-in-range.calendar-cell-row-end {
+  .calendar-cell-in-range.calendar-cell-row-end,
+  .calendar-body-row > .calendar-cell-in-range:last-child {
     border-top-right-radius: var(--calendar-day-radius);
     border-bottom-right-radius: var(--calendar-day-radius);
   }
@@ -736,12 +743,14 @@
     background-color: var(--ds-gray-200);
   }
 
-  .calendar-cell-in-preview-range.calendar-cell-row-start {
+  .calendar-cell-in-preview-range.calendar-cell-row-start,
+  .calendar-body-row > .calendar-cell-in-preview-range:first-child {
     border-top-left-radius: var(--calendar-day-radius);
     border-bottom-left-radius: var(--calendar-day-radius);
   }
 
-  .calendar-cell-in-preview-range.calendar-cell-row-end {
+  .calendar-cell-in-preview-range.calendar-cell-row-end,
+  .calendar-body-row > .calendar-cell-in-preview-range:last-child {
     border-top-right-radius: var(--calendar-day-radius);
     border-bottom-right-radius: var(--calendar-day-radius);
   }
