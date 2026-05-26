@@ -376,6 +376,10 @@ export default function ConsentTrendChart({
             // matches the AreaChart's top margin so the box sits at
             // the chart's top edge.
             position={cursorX !== null ? { x: cursorX + 8, y: 8 } : undefined}
+            // Recharts CSS-transitions the tooltip between positions
+            // by default, which reads as the tooltip lagging behind
+            // the cursor line. Snap to position instead.
+            isAnimationActive={false}
             cursor={<CursorLine />}
             content={
               <TrendTooltip
