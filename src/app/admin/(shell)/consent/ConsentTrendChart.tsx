@@ -69,7 +69,10 @@ function niceIntegerTicks(points: TrendPoint[]): number[] {
   else if (normalized <= 5) niceNorm = 5;
   else niceNorm = 10;
   const step = Math.max(1, Math.round(niceNorm * magnitude));
-  const max = Math.ceil(dataMax / step) * step;
+  // Always leave at least one step of headroom so the highest data
+  // point doesn't sit flush with the top tick — looks less cramped
+  // and matches the headroom Vercel's chart gives.
+  const max = Math.floor(dataMax / step) * step + step;
   const ticks: number[] = [];
   for (let v = 0; v <= max; v += step) ticks.push(v);
   return ticks;
