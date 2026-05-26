@@ -370,6 +370,12 @@ export default function ConsentTrendChart({
             }
           />
           <ChartTooltip
+            // Pin the tooltip near the top of the plot area, just to
+            // the right of the cursor line, rather than floating with
+            // the cursor. `position` is in chart-relative pixels; y=8
+            // matches the AreaChart's top margin so the box sits at
+            // the chart's top edge.
+            position={cursorX !== null ? { x: cursorX + 8, y: 8 } : undefined}
             cursor={<CursorLine />}
             content={
               <TrendTooltip
