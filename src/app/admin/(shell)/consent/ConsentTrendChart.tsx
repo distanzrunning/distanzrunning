@@ -218,12 +218,21 @@ export default function ConsentTrendChart({
   useLayoutEffect(() => {
     if (!wrapperRef.current) return;
     const wrapper = wrapperRef.current;
+    let raf = 0;
 
     const measure = () => {
       const tick = wrapper.querySelector(
         ".recharts-xAxis .recharts-cartesian-axis-tick text",
       );
-      if (!tick) return;
+      if (!tick) {
+        // Recharts' ResponsiveContainer paints async after measuring
+        // its own size, so the SVG may not be in the DOM on the first
+        // layout pass. Retry next frame until we find a tick — the
+        // wrapper itself never resizes, so we can't rely on the
+        // ResizeObserver to catch this.
+        raf = requestAnimationFrame(measure);
+        return;
+      }
       const wrapperRect = wrapper.getBoundingClientRect();
       const tickRect = tick.getBoundingClientRect();
       setTickRowTop(tickRect.top - wrapperRect.top);
@@ -233,7 +242,10 @@ export default function ConsentTrendChart({
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(wrapper);
-    return () => ro.disconnect();
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
   }, [trend]);
 
   const chartConfig = {
