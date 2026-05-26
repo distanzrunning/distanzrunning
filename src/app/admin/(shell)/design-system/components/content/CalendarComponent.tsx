@@ -517,14 +517,11 @@ export function OverlayDateRangePicker() {
   // search filter row where the picker reads as the primary action.
   return (
     <Calendar
-      placeholder="Date"
+      placeholder="Select Date Range"
       value={dateRange}
       onChange={setDateRange}
-      size="small"
-      width={140}
-      showMonthTab
-      showTimeInput={false}
       backdrop
+      width={250}
     />
   );
 }`;
@@ -1060,12 +1057,9 @@ export default function CalendarComponent() {
           <CodePreview componentCode={backdropCode}>
             <div className="flex justify-center py-12">
               <Calendar
-                placeholder="Date"
-                size="small"
-                width={140}
-                showMonthTab
-                showTimeInput={false}
+                placeholder="Select Date Range"
                 backdrop
+                width={250}
               />
             </div>
           </CodePreview>
