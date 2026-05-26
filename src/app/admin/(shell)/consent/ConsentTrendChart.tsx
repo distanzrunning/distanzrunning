@@ -125,7 +125,7 @@ const TICK_SIZE = 6;
 // has measured the actual rendered text. Covers the longest realistic
 // label ("365 days ago" ≈ 85px @ 12px semibold) with a small buffer.
 const FALLBACK_LABEL_WIDTH = 90;
-const LABEL_HORIZONTAL_PADDING = 6;
+const LABEL_HORIZONTAL_PADDING = 10;
 const LABEL_VERTICAL_PADDING = 3;
 
 function ActiveCursor({
@@ -192,6 +192,17 @@ function ActiveCursor({
         fontSize={12}
         fontWeight={600}
         fill="var(--ds-gray-1000)"
+        // Per-glyph paint-order halo as a defensive second layer
+        // beneath the knockout rect. If for any reason the rect
+        // fails to mask an underlying tick label (z-order quirks
+        // across recharts releases, etc.), the stroke-first paint
+        // order still wraps each glyph in a 4px panel-coloured
+        // halo, masking any tick text that bleeds through between
+        // the cursor characters.
+        stroke="var(--ds-background-100)"
+        strokeWidth={4}
+        strokeLinejoin="round"
+        paintOrder="stroke"
       >
         {daysAgoLabel(iso)}
       </text>
