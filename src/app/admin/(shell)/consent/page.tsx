@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { Search } from "lucide-react";
-import Button from "@/components/ui/Button";
+import { ChevronLeft, Search } from "lucide-react";
+import { Button, ButtonLink } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import {
   ConsentDashboardContent,
@@ -50,23 +50,56 @@ export default async function ConsentDashboardPage({
   return (
     <div style={{ padding: "32px 24px" }}>
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+        {query && (
+          <div style={{ marginBottom: 8 }}>
+            <ButtonLink
+              href="/admin/consent"
+              variant="tertiary"
+              size="small"
+              prefixIcon={<ChevronLeft />}
+            >
+              Back to dashboard
+            </ButtonLink>
+          </div>
+        )}
+
         <header style={{ marginBottom: 24 }}>
-          <h1
-            className="text-heading-32"
-            style={{ margin: 0, color: "var(--ds-gray-1000)" }}
-          >
-            Consent dashboard
-          </h1>
-          <p
-            className="text-copy-16"
-            style={{
-              marginTop: 6,
-              marginBottom: 0,
-              color: "var(--ds-gray-700)",
-            }}
-          >
-            Privacy choices made by visitors
-          </p>
+          {query ? (
+            <h1
+              className="text-heading-32"
+              style={{
+                margin: 0,
+                color: "var(--ds-gray-1000)",
+                wordBreak: "break-all",
+              }}
+            >
+              <span
+                style={{ color: "var(--ds-gray-700)", fontWeight: 500 }}
+              >
+                ANON ID:
+              </span>{" "}
+              <span className="font-mono">{query}</span>
+            </h1>
+          ) : (
+            <>
+              <h1
+                className="text-heading-32"
+                style={{ margin: 0, color: "var(--ds-gray-1000)" }}
+              >
+                Consent dashboard
+              </h1>
+              <p
+                className="text-copy-16"
+                style={{
+                  marginTop: 6,
+                  marginBottom: 0,
+                  color: "var(--ds-gray-700)",
+                }}
+              >
+                Privacy choices made by visitors
+              </p>
+            </>
+          )}
         </header>
 
         <SearchForm defaultValue={query} />

@@ -1,5 +1,3 @@
-import { ChevronLeft } from "lucide-react";
-
 import { Badge, type BadgeVariant } from "@/components/ui/Badge";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -40,23 +38,6 @@ function decisionBadge(d: Decision): { label: string; variant: BadgeVariant } {
   }
 }
 
-function BackLink() {
-  return (
-    <a
-      href="/admin/consent"
-      className="text-copy-13 inline-flex items-center gap-1 transition-colors"
-      style={{
-        color: "var(--ds-gray-900)",
-        textDecoration: "none",
-        marginBottom: 12,
-      }}
-    >
-      <ChevronLeft className="w-4 h-4" />
-      Back to dashboard
-    </a>
-  );
-}
-
 const block = { display: "block" } as const;
 
 export async function ConsentLookupContent({ query }: { query: string }) {
@@ -81,10 +62,8 @@ export async function ConsentLookupContent({ query }: { query: string }) {
   const rows = (data ?? []) as ConsentRow[];
 
   return (
-    <>
-      <BackLink />
-      <PanelCard title={`ID: ${query}`}>
-        {rows.length === 0 ? (
+    <PanelCard>
+      {rows.length === 0 ? (
         <p
           className="text-copy-13"
           style={{ margin: 0, color: "var(--ds-gray-700)" }}
@@ -149,16 +128,14 @@ export async function ConsentLookupContent({ query }: { query: string }) {
           </Table>
         </>
       )}
-      </PanelCard>
-    </>
+    </PanelCard>
   );
 }
 
-export function ConsentLookupSkeleton({ query }: { query: string }) {
+export function ConsentLookupSkeleton(_props: { query: string }) {
   return (
     <div aria-busy="true" aria-live="polite">
-      <BackLink />
-      <PanelCard title={`ID: ${query}`}>
+      <PanelCard>
         <Skeleton width={220} height={14} style={block} />
         <Table>
           <TableHeader>
