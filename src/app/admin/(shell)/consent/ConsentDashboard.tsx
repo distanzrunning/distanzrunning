@@ -139,11 +139,11 @@ function buildTrend(
       // Rate mode — null on zero-traffic days so the area breaks
       // rather than misleadingly showing 0%.
       return {
-        date: date.slice(5),
+        date,
         value: total === 0 ? null : (matched / total) * 100,
       };
     }
-    return { date: date.slice(5), value: matched };
+    return { date, value: matched };
   });
 }
 
