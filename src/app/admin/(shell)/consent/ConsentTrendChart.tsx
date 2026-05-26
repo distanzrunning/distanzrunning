@@ -255,25 +255,26 @@ export default function ConsentTrendChart({
 
       {showOverlay && (
         <div
-          // HTML overlay for the "N days ago" label. Sits outside the
-          // SVG so it stacks above every chart element by default —
-          // no z-order tug-of-war with Recharts. Positioned by
-          // translating the chart-relative cursor X back into outer
-          // coordinates (cursorX is from chart's SVG origin; the
-          // wrapper's padding-left adds the SVG's offset within the
-          // outer div). The vertical position locks to the same row
-          // as the regular X-axis ticks.
+          // Pill-shaped HTML overlay for the "N days ago" label —
+          // matches Vercel's chart tooltip styling (fully rounded
+          // background, subtle drop shadow, 12/16 medium text). Sits
+          // outside the SVG so it stacks above every chart element
+          // by default; no z-order tug-of-war with Recharts. The
+          // pill's solid background reliably masks any X-axis tick
+          // label sitting underneath.
           style={{
             position: "absolute",
             left: WRAPPER_PADDING_LEFT + (cursorX ?? 0),
             top: WRAPPER_PADDING_TOP + TICK_TEXT_Y,
-            transform: "translate(-50%, -10%)",
+            transform: "translate(-50%, -25%)",
             background: "var(--ds-background-100)",
             color: "var(--ds-gray-1000)",
             fontSize: 12,
             lineHeight: "16px",
-            fontWeight: 600,
-            padding: "0 6px",
+            fontWeight: 500,
+            padding: "4px 8px",
+            borderRadius: 999,
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
             whiteSpace: "nowrap",
             pointerEvents: "none",
           }}
