@@ -19,7 +19,7 @@ export type PresetId =
   | "last-month"
   | "all-time";
 
-const DEFAULT_PRESET: PresetId = "last-7-days";
+const DEFAULT_PRESET: PresetId = "last-90-days";
 // "All time" picks a date far enough back that every row qualifies.
 // We don't have data older than 2020, so 2000-01-01 is a safe
 // sentinel and keeps the URL simple (no special-case for "no upper").
