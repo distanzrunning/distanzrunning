@@ -2,16 +2,21 @@
 //
 // Type-to-confirm modal for destructive actions: delete, revoke,
 // disconnect, rotate, downgrade. Composes the canonical Modal
-// surface — Modal.Header / footer flex wrapper / etc. — and reuses
-// the DS Note (error + fill) for the irreversibility band plus
-// the DS Error component for the inline submit error.
+// surface — Modal.Header / Modal.Footer / etc. — and reuses the
+// DS Note (error + fill) for the irreversibility band plus the DS
+// Error component for the inline submit error.
+//
+// Note: no <form> wrapper. Modal.Footer is detected by Modal via
+// React.Children, so it must be a direct child of <Modal>. Enter-
+// to-submit lives on the input via onKeyDown instead.
 //
 // Behaviour:
 //   - Input auto-focuses on open (via Modal's initialFocusRef).
-//   - Submit disabled until typed value === verificationPhrase.
-//   - Enter submits when the gate is open; no-op otherwise.
-//   - Cancel / Esc / outside-click dismiss (Esc + outside ignored
-//     while `loading` so an in-flight API call isn't orphaned).
+//   - Confirm disabled until typed value === verificationPhrase.
+//   - Enter inside the input fires onConfirm when the gate is open;
+//     no-op otherwise.
+//   - Cancel / Esc / outside-click dismiss (ignored while `loading`
+//     so an in-flight API call isn't orphaned).
 //   - Caller owns `open`. Don't self-dismiss from onConfirm; close
 //     after the API call settles (or keep open on error so the
 //     user can retry).
@@ -90,8 +95,7 @@ export function DestructiveActionModal({
   const gateOpen =
     verificationPhrase.length > 0 && typed === verificationPhrase;
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleConfirm = () => {
     if (!gateOpen || loading) return;
     onConfirm();
   };
@@ -99,6 +103,13 @@ export function DestructiveActionModal({
   const handleClose = () => {
     if (loading) return;
     onOpenChange(false);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleConfirm();
+    }
   };
 
   const prompt = verificationLabel ? (
@@ -133,82 +144,80 @@ export function DestructiveActionModal({
 
   return (
     <Modal open={open} onClose={handleClose} initialFocusRef={inputRef}>
-      <form onSubmit={handleSubmit}>
-        <Modal.Header>
-          <Modal.Title>{title}</Modal.Title>
-          <Modal.P>{description}</Modal.P>
-        </Modal.Header>
+      <Modal.Header>
+        <Modal.Title>{title}</Modal.Title>
+        <Modal.P>{description}</Modal.P>
+      </Modal.Header>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          {irreversibleDescription && (
-            <Note type="error" fill label={false} size="small">
-              {irreversibleDescription}
-            </Note>
+      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        {irreversibleDescription && (
+          <Note type="error" fill size="small">
+            {irreversibleDescription}
+          </Note>
+        )}
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <label
+            id={labelId}
+            htmlFor={inputId}
+            className="text-copy-14"
+            style={{ color: "var(--ds-gray-1000)" }}
+          >
+            {prompt}
+          </label>
+          <Input
+            id={inputId}
+            ref={inputRef}
+            type="text"
+            value={typed}
+            onChange={(event) => setTyped(event.target.value)}
+            onKeyDown={handleKeyDown}
+            aria-labelledby={labelId}
+            aria-invalid={errMsg ? true : undefined}
+            autoComplete="off"
+            spellCheck={false}
+            autoCorrect="off"
+            autoCapitalize="off"
+            disabled={loading}
+            translate="no"
+          />
+          {errMsg && (
+            <div style={{ marginTop: 4 }}>
+              <Error size="small" live="assertive">
+                {errMsg}
+              </Error>
+            </div>
           )}
-
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: 8 }}
-          >
-            <label
-              id={labelId}
-              htmlFor={inputId}
-              className="text-copy-14"
-              style={{ color: "var(--ds-gray-1000)" }}
-            >
-              {prompt}
-            </label>
-            <Input
-              id={inputId}
-              ref={inputRef}
-              type="text"
-              value={typed}
-              onChange={(event) => setTyped(event.target.value)}
-              aria-labelledby={labelId}
-              aria-invalid={errMsg ? true : undefined}
-              autoComplete="off"
-              spellCheck={false}
-              autoCorrect="off"
-              autoCapitalize="off"
-              disabled={loading}
-              translate="no"
-            />
-            {errMsg && (
-              <div style={{ marginTop: 4 }}>
-                <Error size="small" live="assertive">
-                  {errMsg}
-                </Error>
-              </div>
-            )}
-          </div>
         </div>
+      </div>
 
-        <Modal.Footer>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: 16,
-            }}
+      <Modal.Footer>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: 16,
+          }}
+        >
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={handleClose}
+            disabled={loading}
           >
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={handleClose}
-              disabled={loading}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="error"
-              disabled={!gateOpen || loading}
-              loading={loading}
-            >
-              {confirmLabel}
-            </Button>
-          </div>
-        </Modal.Footer>
-      </form>
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            variant="error"
+            onClick={handleConfirm}
+            disabled={!gateOpen || loading}
+            loading={loading}
+          >
+            {confirmLabel}
+          </Button>
+        </div>
+      </Modal.Footer>
     </Modal>
   );
 }
