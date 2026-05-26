@@ -342,7 +342,18 @@ export async function ConsentDashboardContent({
               active={filter === "reject_all"}
             />
           </div>
-          <div style={{ minWidth: 220, flexShrink: 0 }}>
+          <div
+            style={{
+              minWidth: 220,
+              flexShrink: 0,
+              // Trailing divider after the last tile — `divide-x` only
+              // adds rules between siblings, so without this the empty
+              // space to the right would butt up against the last tile
+              // with no separator. Matches Vercel's `!border-r` on the
+              // final tab.
+              borderRight: "1px solid var(--ds-gray-400)",
+            }}
+          >
             <StatTile
               label="Custom rate"
               value={fmtPct(currentCustomRate)}
