@@ -205,15 +205,12 @@ export default function ConsentTrendChart({
   // overlay at the same column the cursor line draws on.
   const [cursorX, setCursorX] = useState<number | null>(null);
 
-  // Outer-relative geometry of the X-axis tick text row, measured from
-  // a real rendered SVG tick element. We track both top and height so
-  // the HTML overlay can match the SVG tick's exact vertical extent —
-  // setting only `top` (with the overlay's own line-height defining
-  // its box) leaves a ~2px leading offset, so the label sits a touch
-  // below the tick row instead of on top of it.
+  // Outer-relative top of the X-axis tick text row, measured from a
+  // real rendered SVG tick element. We let the overlay size to its
+  // content vertically — constraining height by the measured tick
+  // rect collapsed the box in some cases and hid the text.
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [tickRowTop, setTickRowTop] = useState<number | null>(null);
-  const [tickRowHeight, setTickRowHeight] = useState<number | null>(null);
 
   useLayoutEffect(() => {
     if (!wrapperRef.current) return;
@@ -236,7 +233,6 @@ export default function ConsentTrendChart({
       const wrapperRect = wrapper.getBoundingClientRect();
       const tickRect = tick.getBoundingClientRect();
       setTickRowTop(tickRect.top - wrapperRect.top);
-      setTickRowHeight(tickRect.height);
     };
 
     measure();
@@ -258,10 +254,7 @@ export default function ConsentTrendChart({
   const isPercent = format === "percent";
 
   const showOverlay =
-    activeLabel !== null &&
-    cursorX !== null &&
-    tickRowTop !== null &&
-    tickRowHeight !== null;
+    activeLabel !== null && cursorX !== null && tickRowTop !== null;
 
   return (
     <div
@@ -371,22 +364,20 @@ export default function ConsentTrendChart({
         <div
           // Flat HTML knockout for the "N days ago" label — same
           // background as the panel, slight rounded corners, no
-          // shadow, no border. Sits exactly in the X-axis tick row;
+          // shadow, no border. Sits in the X-axis tick row;
           // background-100 fill masks any underlying tick label
           // without an obvious "tooltip" treatment.
           //
-          // The box matches the measured SVG tick's top + height, and
-          // centers its text with flex. Aligning by box (not by
-          // line-height) keeps the HTML glyphs on the same baseline as
-          // the SVG tick glyphs across font/zoom changes.
+          // `top` is the measured top of the SVG tick text rect; the
+          // box sizes to its content vertically so the text always
+          // renders. SVG <text dy="0.71em"> and HTML <div lineHeight:1>
+          // share a near-identical glyph-top, so anchoring by top
+          // lands the label on the tick row without a magic offset.
           style={{
             position: "absolute",
             left: WRAPPER_PADDING_LEFT + (cursorX ?? 0),
             top: tickRowTop ?? 0,
-            height: tickRowHeight ?? 0,
             transform: "translateX(-50%)",
-            display: "flex",
-            alignItems: "center",
             background: "var(--ds-background-100)",
             color: "var(--ds-gray-1000)",
             fontSize: 12,
