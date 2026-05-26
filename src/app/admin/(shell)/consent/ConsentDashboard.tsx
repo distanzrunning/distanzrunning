@@ -15,6 +15,7 @@ import { Tooltip } from "@/components/ui/Tooltip";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import ConsentTrendChart from "./ConsentTrendChart";
 import { CountryCell } from "./CountryCell";
+import { WhenCell } from "./WhenCell";
 
 type Decision = "accept_all" | "reject_all" | "custom";
 
@@ -350,7 +351,7 @@ export async function ConsentDashboardContent() {
               return (
                 <TableRow key={row.id}>
                   <TableCell>
-                    {new Date(row.created_at).toLocaleString()}
+                    <WhenCell iso={row.created_at} />
                   </TableCell>
                   <TableCell>
                     <Badge variant={b.variant} size="sm">

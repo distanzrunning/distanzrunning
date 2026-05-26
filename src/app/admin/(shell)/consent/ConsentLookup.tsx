@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/Table";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { CountryCell } from "./CountryCell";
+import { WhenCell } from "./WhenCell";
 import DeleteIdButton from "./DeleteIdButton";
 
 type Decision = "accept_all" | "reject_all" | "custom";
@@ -128,7 +129,7 @@ export async function ConsentLookupContent({ query }: { query: string }) {
                 return (
                   <TableRow key={row.id}>
                     <TableCell>
-                      {new Date(row.created_at).toLocaleString()}
+                      <WhenCell iso={row.created_at} />
                     </TableCell>
                     <TableCell>
                       <Badge variant={b.variant} size="sm">
