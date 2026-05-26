@@ -766,7 +766,11 @@
     border-bottom-left-radius: var(--calendar-day-radius);
   }
 
-  /* Hover preview day style (the hovered cell during range selection) */
+  /* Hover preview day style (the hovered cell during range selection).
+     `data-hover-preview` is set by CalendarDayButton when its date
+     matches the parent CalendarGrid's hovered cursor; the legacy
+     `.calendar-day-hover-preview` selector is kept as a fallback. */
+  .calendar-day[data-hover-preview],
   .calendar-day.calendar-day-hover-preview {
     background: var(--ds-gray-1000);
     color: var(--ds-background-100);
@@ -775,7 +779,8 @@
       0 0 0 2.5px var(--ds-gray-1000);
   }
 
-  /* Today cell hover preview - blue ring */
+  /* Today cell hover preview — blue ring */
+  .calendar-day[data-today][data-hover-preview],
   .calendar-day.calendar-day-today.calendar-day-hover-preview {
     box-shadow:
       0 0 0 2px var(--ds-background-100),

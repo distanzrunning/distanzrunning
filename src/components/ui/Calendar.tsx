@@ -348,8 +348,17 @@ function addMonths(date: Date, n: number): Date {
 // `classNames` prop, since the styling now lives on the button.
 // react-day-picker still emits its own data-* attrs on the `<td>` (Day);
 // these duplicate a subset of those on the button for selector reach.
+// Hover-preview state lives on the parent CalendarGrid but the
+// per-day mouseenter/leave handlers fire from CalendarDayButton.
+// Context bridges the two without re-creating the DayButton component
+// on every render (which would unmount focus + reset internal state).
+const CalendarHoverContext = React.createContext<
+  (date: Date | null) => void
+>(() => {});
+
 function CalendarDayButton(props: DayButtonProps) {
-  const { day: _day, modifiers, ...buttonProps } = props;
+  const { day, modifiers, ...buttonProps } = props;
+  const setHoveredDate = React.useContext(CalendarHoverContext);
   const ref = React.useRef<HTMLButtonElement>(null);
   React.useEffect(() => {
     if (modifiers.focused) ref.current?.focus();
@@ -369,7 +378,16 @@ function CalendarDayButton(props: DayButtonProps) {
       data-outside={dataAttr(modifiers.outside)}
       data-disabled={dataAttr(modifiers.disabled)}
       data-weekend={dataAttr(modifiers.weekend)}
+      data-hover-preview={dataAttr(modifiers.hover_preview)}
       {...buttonProps}
+      onMouseEnter={(e) => {
+        if (!modifiers.disabled) setHoveredDate(day.date);
+        buttonProps.onMouseEnter?.(e);
+      }}
+      onMouseLeave={(e) => {
+        setHoveredDate(null);
+        buttonProps.onMouseLeave?.(e);
+      }}
     />
   );
 }
@@ -416,6 +434,44 @@ function CalendarGrid({
     (date: Date) => date.getDay() === 0 || date.getDay() === 6,
     [],
   );
+
+  // Hover preview while picking the end date — once the user has
+  // committed a start but no end yet, hovering a day highlights the
+  // range that *would* be selected so they don't have to drag-guess
+  // the end. Cleared the moment a complete range exists.
+  const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
+  const isSelectingEnd = Boolean(dateRange.start) && !dateRange.end;
+
+  const previewModifiers = React.useMemo(() => {
+    if (!isSelectingEnd || !hoveredDate || !dateRange.start) {
+      return {};
+    }
+    if (isSameDay(dateRange.start, hoveredDate)) {
+      // Hovering the start day itself — no preview to show.
+      return { hover_preview: (date: Date) => isSameDay(date, hoveredDate) };
+    }
+    const startDay = dateRange.start;
+    const hover = hoveredDate;
+    const previewLeft = startDay < hover ? startDay : hover;
+    const previewRight = startDay < hover ? hover : startDay;
+
+    return {
+      // Half-fill on the leftmost boundary of the preview (whichever
+      // of start/hover sits earliest in the calendar).
+      preview_start: (date: Date) => isSameDay(date, previewLeft),
+      // Half-fill on the rightmost boundary, EXCEPT when that boundary
+      // is the cursor itself — the hovered cell already paints a
+      // solid dark button, no gradient overlap needed.
+      preview_end: (date: Date) =>
+        isSameDay(date, previewRight) && !isSameDay(date, hover),
+      // Light in-range fill on the cells strictly between the bounds.
+      preview_middle: (date: Date) =>
+        date > previewLeft && date < previewRight,
+      // The cursor cell — solid dark button on top of whatever td
+      // background applies.
+      hover_preview: (date: Date) => isSameDay(date, hover),
+    };
+  }, [dateRange.start, hoveredDate, isSelectingEnd]);
 
   // We render our own caption (label + prev/next) outside DayPicker
   // so the header keeps the original layout (label flex-left, nav
@@ -480,43 +536,50 @@ function CalendarGrid({
 
       <div aria-hidden="true" style={{ marginTop: 11 }} />
 
-      <DayPicker
-        mode="range"
-        selected={selected}
-        onDayClick={(day, modifiers) => {
-          if (modifiers.disabled) return;
-          onDateSelect(day);
-        }}
-        month={month}
-        onMonthChange={setMonth}
-        disabled={disabledMatcher}
-        showOutsideDays
-        weekStartsOn={0}
-        hideNavigation
-        modifiers={{ weekend: weekendModifier }}
-        components={{ DayButton: CalendarDayButton }}
-        classNames={{
-          root: "calendar-rdp-root",
-          months: "calendar-rdp-months",
-          month: "calendar-rdp-month",
-          month_caption: "calendar-rdp-month-caption-hidden",
-          caption_label: "calendar-rdp-caption-label-hidden",
-          month_grid: "calendar-table",
-          weekdays: "calendar-header-row",
-          weekday: "calendar-rdp-weekday",
-          weeks: "calendar-body",
-          week: "calendar-body-row",
-          // Day cell (<td>) — range-state classes drive the half-fill /
-          // light-fill background. Day-state styling (selected, today,
-          // outside, disabled, weekend) is on the inner <button> via
-          // data-* attrs (see CalendarDayButton).
-          day: "calendar-cell",
-          day_button: "calendar-day",
-          range_start: "calendar-cell-first-in-range",
-          range_middle: "calendar-cell-in-range",
-          range_end: "calendar-cell-last-in-range",
-        }}
-      />
+      <CalendarHoverContext.Provider value={setHoveredDate}>
+        <DayPicker
+          mode="range"
+          selected={selected}
+          onDayClick={(day, modifiers) => {
+            if (modifiers.disabled) return;
+            onDateSelect(day);
+          }}
+          month={month}
+          onMonthChange={setMonth}
+          disabled={disabledMatcher}
+          showOutsideDays
+          weekStartsOn={0}
+          hideNavigation
+          modifiers={{ weekend: weekendModifier, ...previewModifiers }}
+          modifiersClassNames={{
+            preview_start: "calendar-cell-preview-start",
+            preview_end: "calendar-cell-preview-end",
+            preview_middle: "calendar-cell-in-preview-range",
+          }}
+          components={{ DayButton: CalendarDayButton }}
+          classNames={{
+            root: "calendar-rdp-root",
+            months: "calendar-rdp-months",
+            month: "calendar-rdp-month",
+            month_caption: "calendar-rdp-month-caption-hidden",
+            caption_label: "calendar-rdp-caption-label-hidden",
+            month_grid: "calendar-table",
+            weekdays: "calendar-header-row",
+            weekday: "calendar-rdp-weekday",
+            weeks: "calendar-body",
+            week: "calendar-body-row",
+            // Day cell (<td>) — range-state classes drive the half-fill /
+            // light-fill background. Day-state styling (selected, today,
+            // outside, disabled, weekend) is on the inner <button> via
+            // data-* attrs (see CalendarDayButton).
+            day: "calendar-cell",
+            day_button: "calendar-day",
+            range_start: "calendar-cell-first-in-range",
+            range_middle: "calendar-cell-in-range",
+            range_end: "calendar-cell-last-in-range",
+          }}
+        />
+      </CalendarHoverContext.Provider>
     </>
   );
 }
