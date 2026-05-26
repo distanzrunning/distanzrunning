@@ -1331,29 +1331,36 @@
   }
 
   /* ===== OPEN STATE: when preset dropdown is open ===== */
-  /* Hide the date text when open */
+  /* Also applied permanently when compactPresetLabel is set — the
+     preset combobox becomes the primary label and the calendar
+     trigger collapses to its icon. */
   .calendar-compact-container[data-preset-open="true"]
+    .calendar-compact-date-text,
+  .calendar-compact-container[data-preset-label="true"]
     .calendar-compact-date-text {
     display: none;
   }
 
-  /* Collapse calendar trigger to just icon when open — match chevron area width (40px) */
   .calendar-compact-container[data-preset-open="true"]
+    .calendar-compact-calendar-trigger,
+  .calendar-compact-container[data-preset-label="true"]
     .calendar-compact-calendar-trigger {
     padding: 0;
     flex: 0 0 40px;
     justify-content: center;
   }
 
-  /* Expand preset trigger when open */
   .calendar-compact-container[data-preset-open="true"]
+    .calendar-compact-preset-trigger,
+  .calendar-compact-container[data-preset-label="true"]
     .calendar-compact-preset-trigger {
     flex: 1;
     min-width: 0;
   }
 
-  /* Show the preset text when open */
   .calendar-compact-container[data-preset-open="true"]
+    .calendar-compact-preset-text,
+  .calendar-compact-container[data-preset-label="true"]
     .calendar-compact-preset-text {
     display: block;
     color: var(--ds-gray-1000);

@@ -182,6 +182,11 @@ export interface CalendarProps {
   futurePresets?: CalendarPreset[];
   presetPlaceholder?: string;
   compact?: boolean;
+  /** When `compact` and `presets` are also set, collapse the date
+   *  trigger to an icon-only button (40px) and let the preset
+   *  combobox carry the label. Useful when the resting state
+   *  should read "Last 7 days" rather than an explicit date range. */
+  compactPresetLabel?: boolean;
   stacked?: boolean;
   defaultPreset?: string;
   minDate?: Date;
@@ -942,6 +947,7 @@ export function Calendar({
   futurePresets,
   presetPlaceholder = "Select Period",
   compact = false,
+  compactPresetLabel = false,
   stacked = false,
   defaultPreset,
   minDate,
@@ -1128,6 +1134,7 @@ export function Calendar({
           <div
             className="calendar-compact-container"
             data-preset-open={isPresetDropdownOpen}
+            data-preset-label={compactPresetLabel || undefined}
           >
             {/* Calendar trigger - covers icon + "Select Date Range" text, opens calendar popover */}
             <Popover.Root open={isOpen} onOpenChange={setIsOpen}>

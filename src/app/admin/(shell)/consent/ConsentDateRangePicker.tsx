@@ -11,7 +11,6 @@ import {
 
 import {
   isoOf,
-  matchPreset,
   presetWindow,
   type PresetId,
   windowFromParams,
@@ -26,10 +25,6 @@ const PRESETS: { label: string; id: PresetId }[] = [
   { label: "All time", id: "all-time" },
 ];
 
-const PRESET_LABELS: Record<PresetId, string> = Object.fromEntries(
-  PRESETS.map(({ id, label }) => [id, label]),
-) as Record<PresetId, string>;
-
 const calendarPresets: CalendarPreset[] = PRESETS.map(({ label, id }) => {
   const window = presetWindow(id);
   return {
@@ -38,19 +33,6 @@ const calendarPresets: CalendarPreset[] = PRESETS.map(({ label, id }) => {
     getRange: () => ({ start: window.start, end: window.end }),
   };
 });
-
-// Show the preset name on the trigger when the current range
-// matches one of our presets — keeps the resting state reading
-// "Last 7 days" instead of an explicit date range. Falls back to
-// "Mar 19 – Mar 26" when the user picks an arbitrary range.
-function formatTriggerLabel(range: DateRange): string {
-  if (!range.start || !range.end) return "Date range";
-  const preset = matchPreset({ start: range.start, end: range.end });
-  if (preset) return PRESET_LABELS[preset];
-  const fmt = (d: Date) =>
-    d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-  return `${fmt(range.start)} – ${fmt(range.end)}`;
-}
 
 export default function ConsentDateRangePicker() {
   const router = useRouter();
@@ -86,8 +68,8 @@ export default function ConsentDateRangePicker() {
         onChange={handleChange}
         presets={calendarPresets}
         compact
+        compactPresetLabel
         popoverAlignment="end"
-        formatTriggerLabel={formatTriggerLabel}
       />
     </div>
   );
