@@ -1,3 +1,5 @@
+import { ChevronLeft } from "lucide-react";
+
 import { Badge, type BadgeVariant } from "@/components/ui/Badge";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -10,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { CountryCell } from "./CountryCell";
 import DeleteIdButton from "./DeleteIdButton";
 
 type Decision = "accept_all" | "reject_all" | "custom";
@@ -36,15 +39,22 @@ function decisionBadge(d: Decision): { label: string; variant: BadgeVariant } {
   }
 }
 
-const ClearAction = () => (
-  <a
-    href="/admin/consent"
-    className="text-copy-13"
-    style={{ color: "var(--ds-gray-700)", textDecoration: "underline" }}
-  >
-    Clear search
-  </a>
-);
+function BackLink() {
+  return (
+    <a
+      href="/admin/consent"
+      className="text-copy-13 inline-flex items-center gap-1 transition-colors"
+      style={{
+        color: "var(--ds-gray-900)",
+        textDecoration: "none",
+        marginBottom: 12,
+      }}
+    >
+      <ChevronLeft className="w-4 h-4" />
+      Back to dashboard
+    </a>
+  );
+}
 
 const block = { display: "block" } as const;
 
@@ -70,8 +80,10 @@ export async function ConsentLookupContent({ query }: { query: string }) {
   const rows = (data ?? []) as ConsentRow[];
 
   return (
-    <PanelCard title={`ID: ${query}`} action={<ClearAction />}>
-      {rows.length === 0 ? (
+    <>
+      <BackLink />
+      <PanelCard title={`ID: ${query}`}>
+        {rows.length === 0 ? (
         <p
           className="text-copy-13"
           style={{ margin: 0, color: "var(--ds-gray-700)" }}
@@ -126,7 +138,9 @@ export async function ConsentLookupContent({ query }: { query: string }) {
                     <TableCell>{row.marketing ? "✓" : "—"}</TableCell>
                     <TableCell>{row.analytics ? "✓" : "—"}</TableCell>
                     <TableCell>{row.functional ? "✓" : "—"}</TableCell>
-                    <TableCell>{row.country ?? "—"}</TableCell>
+                    <TableCell>
+                      <CountryCell iso={row.country} />
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -134,14 +148,16 @@ export async function ConsentLookupContent({ query }: { query: string }) {
           </Table>
         </>
       )}
-    </PanelCard>
+      </PanelCard>
+    </>
   );
 }
 
 export function ConsentLookupSkeleton({ query }: { query: string }) {
   return (
     <div aria-busy="true" aria-live="polite">
-      <PanelCard title={`ID: ${query}`} action={<ClearAction />}>
+      <BackLink />
+      <PanelCard title={`ID: ${query}`}>
         <Skeleton width={220} height={14} style={block} />
         <Table>
           <TableHeader>

@@ -11,8 +11,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
+import { Tooltip } from "@/components/ui/Tooltip";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import ConsentTrendChart from "./ConsentTrendChart";
+import { CountryCell } from "./CountryCell";
 
 type Decision = "accept_all" | "reject_all" | "custom";
 
@@ -358,17 +360,21 @@ export async function ConsentDashboardContent() {
                   <TableCell>{row.marketing ? "✓" : "—"}</TableCell>
                   <TableCell>{row.analytics ? "✓" : "—"}</TableCell>
                   <TableCell>{row.functional ? "✓" : "—"}</TableCell>
-                  <TableCell>{row.country ?? "—"}</TableCell>
+                  <TableCell>
+                    <CountryCell iso={row.country} />
+                  </TableCell>
                   <TableCell className="text-label-12-mono">
-                    <a
-                      href={`/admin/consent?q=${encodeURIComponent(row.anon_id)}`}
-                      style={{
-                        color: "var(--ds-gray-700)",
-                        textDecoration: "underline",
-                      }}
-                    >
-                      {row.anon_id.slice(0, 8)}…
-                    </a>
+                    <Tooltip content={row.anon_id}>
+                      <a
+                        href={`/admin/consent?q=${encodeURIComponent(row.anon_id)}`}
+                        style={{
+                          color: "var(--ds-gray-700)",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {row.anon_id.slice(0, 8)}…
+                      </a>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               );
