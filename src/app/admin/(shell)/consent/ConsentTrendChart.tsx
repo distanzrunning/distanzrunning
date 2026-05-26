@@ -266,7 +266,7 @@ export default function ConsentTrendChart({
     >
       <ChartContainer
         config={chartConfig}
-        className="aspect-auto h-[240px] w-full"
+        className="aspect-auto h-[400px] w-full"
       >
         <AreaChart
           accessibilityLayer
