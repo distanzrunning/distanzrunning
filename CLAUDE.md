@@ -204,6 +204,53 @@ The following live in `src/components/` (some in `src/components/ui/`). When int
 
 ---
 
+## DS docs page convention (when adding a new component page)
+
+Every component page under `src/app/admin/(shell)/design-system/<slug>/page.tsx` follows the same shape. Use **`ModalComponent.tsx`** or **`AccordionComponent.tsx`** as the reference when copying.
+
+**Page wrapper (`<slug>/page.tsx`):**
+```tsx
+<ContentWithTOC
+  tocTitle="On this page"
+  pageTitle="Name"
+  pageSubtitle="One-line description in sentence case."
+  mainSectionId="<slug>"
+  headerRight={<RegistryInstallButtons slug="<slug>" />}  // if published
+>
+  <NameComponent />
+</ContentWithTOC>
+```
+
+**Content (`components/content/<Name>Component.tsx`):**
+
+1. **Page chrome** — inline these helpers at the top of the file: `Toast`, `LinkIcon`, `SectionHeader`, `CopyIconButton`, `RenderShikiToken`, `CodePreview`. Copy verbatim from `AccordionComponent.tsx` — they're identical across pages. *(TODO: extract into a shared module once we touch more than one of these in a single PR.)*
+
+2. **Each example** lives inside a `<CodePreview componentCode={…}>` card so the reader gets a Show-code toggle plus a Shiki-highlighted snippet with line numbers + copy button. Pair every demo component with a code string constant — the string is what the user sees in the panel.
+
+3. **`SectionHeader`** on every `<Section>` — hover surfaces a link icon, click copies the URL + smooth-scrolls. Pass `onCopyLink={showToast}` so the copy fires the toast.
+
+4. **Best Practices** section is required and follows this exact structure (in order):
+   - `<h3 id="when-to-use" className="text-heading-20 text-textDefault mt-8 scroll-mt-32">When to use</h3>`
+   - `<h3 id="behavior">Behavior</h3>`
+   - `<h3 id="content">Content</h3>`
+   - `<h3 id="accessibility">Accessibility</h3>`
+
+   Each followed by:
+   ```tsx
+   <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+     <li>…</li>
+   </ul>
+   ```
+
+5. **Inline references in body copy:**
+   - Component cross-refs → `<ComponentRef name="Modal" />` (from `../ComponentRef`) — never plain text like "Modal".
+   - Code literals (prop names, variant names, string examples) → `<code className="inline-code">…</code>` — `.inline-code` is defined in `globals.css`, gives the gray-100 pill treatment with mono font.
+   - Italic for example sentences (toast strings, label copy) → `<em>…</em>`.
+
+The same convention applies whether the component is hand-rolled, derived from Base UI via `npx shadcn add`, or wrapping a Radix primitive. The docs page reads identically; only the component source differs.
+
+---
+
 ## Registry & MCP (for AI-assisted work in this repo)
 
 `components.json` registers two shadcn registries:
