@@ -308,7 +308,7 @@ export default function ConsentTrendChart({
         <AreaChart
           accessibilityLayer
           data={trend}
-          margin={{ left: 8, right: 12, top: 8, bottom: CHART_BOTTOM_MARGIN }}
+          margin={{ left: 8, right: 12, top: 16, bottom: CHART_BOTTOM_MARGIN }}
           onMouseMove={(state) => {
             const s = state as unknown as {
               activeLabel?: string;
@@ -371,11 +371,11 @@ export default function ConsentTrendChart({
           />
           <ChartTooltip
             // Pin the tooltip near the top of the plot area, just to
-            // the right of the cursor line, rather than floating with
-            // the cursor. `position` is in chart-relative pixels; y=8
-            // matches the AreaChart's top margin so the box sits at
-            // the chart's top edge.
-            position={cursorX !== null ? { x: cursorX + 8, y: 8 } : undefined}
+            // the right of the cursor line. `position` is in
+            // chart-relative pixels; y=32 drops the box just below
+            // the top tick label so it has breathing room from the
+            // panel's top edge.
+            position={cursorX !== null ? { x: cursorX + 8, y: 32 } : undefined}
             // Recharts CSS-transitions the tooltip between positions
             // by default, which reads as the tooltip lagging behind
             // the cursor line. Snap to position instead.
