@@ -299,15 +299,11 @@ function ChartInner({
             hideTicks
             tickValues={xTickValues}
             tickFormat={(d) => formatTickDate(d as string)}
-            tickLabelProps={(d) => ({
+            tickLabelProps={() => ({
               fill: "var(--ds-gray-700)",
               fontSize: 12,
               textAnchor: "middle",
               dy: 12,
-              // Hide the tick at the hovered x — the SVG <text> below
-              // replaces it with "N days ago" at the same baseline.
-              opacity:
-                tooltipData && tooltipData.date === d ? 0 : 1,
             })}
           />
           {activeX != null && (
@@ -355,20 +351,6 @@ function ChartInner({
                 fill="var(--ds-blue-900)"
               />
             </g>
-          )}
-          {tooltipData && activeX != null && (
-            <text
-              x={activeX}
-              y={plotHeight}
-              dy={12}
-              textAnchor="middle"
-              fontSize={12}
-              fontWeight={600}
-              fill="var(--ds-gray-1000)"
-              pointerEvents="none"
-            >
-              {daysAgoLabel(tooltipData.date)}
-            </text>
           )}
           <Bar
             x={0}
@@ -448,6 +430,31 @@ function ChartInner({
         </TooltipWithBounds>
       )}
 
+      {tooltipData && tooltipLeft != null && (
+        <div
+          // Floating "N days ago" pill, sits below the date row at
+          // the cursor's x. Matches Vercel — they keep tick labels
+          // visible at all times and float this as a separate chip.
+          style={{
+            position: "absolute",
+            left: tooltipLeft,
+            top: MARGIN.top + plotHeight + 28,
+            transform: "translateX(-50%)",
+            background: "var(--ds-background-100)",
+            boxShadow: "var(--ds-shadow-tooltip)",
+            color: "var(--ds-gray-1000)",
+            fontSize: 12,
+            lineHeight: "16px",
+            fontWeight: 500,
+            padding: "4px 8px",
+            borderRadius: 9999,
+            whiteSpace: "nowrap",
+            pointerEvents: "none",
+          }}
+        >
+          {daysAgoLabel(tooltipData.date)}
+        </div>
+      )}
     </>
   );
 }
