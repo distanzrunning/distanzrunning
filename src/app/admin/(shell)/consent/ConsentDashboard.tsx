@@ -325,17 +325,18 @@ export async function ConsentDashboardContent({
             horizontal space stays empty, painted by the row's
             background-200, so the data reads at its natural
             density rather than spreading thin on wide viewports. */}
+        {/* Scroll wrapper around the tile row: matches Vercel's
+            tabs structure where `padding-bottom: 6` sits BELOW the
+            row's border-bottom (not inside the row), giving the
+            chart a 6px gap and leaving room for a horizontal
+            scrollbar when tiles overflow on narrow viewports. */}
+        <div style={{ overflowX: "auto", paddingBottom: 6 }}>
         <div
           className="divide-x divide-[color:var(--ds-gray-400)]"
           style={{
             display: "flex",
             borderBottom: "1px solid var(--ds-gray-400)",
             background: "var(--ds-background-200)",
-            overflowX: "auto",
-            // DS spacing-6 below the stat tiles — visually drops the
-            // chart further from the panel header without inflating
-            // the SVG's own MARGIN.top.
-            paddingBottom: 24,
           }}
         >
           <div style={{ minWidth: 220, flexShrink: 0 }}>
@@ -397,6 +398,7 @@ export async function ConsentDashboardContent({
               active={filter === "custom"}
             />
           </div>
+        </div>
         </div>
 
         <ConsentTrendChart
