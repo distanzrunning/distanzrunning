@@ -37,6 +37,10 @@ const WRAPPER_PADDING_TOP = 24;
 
 // Chart bottom margin reserved for the X-axis row.
 const CHART_BOTTOM_MARGIN = 24;
+// Chart top margin (reserved blank above the plot area). Also the y
+// where the cursor line should start so it always spans the full plot
+// height regardless of where the hovered data point sits.
+const CHART_TOP_MARGIN = 16;
 const TICK_MARGIN = 8;
 
 function formatTickDate(iso: string): string {
@@ -208,7 +212,11 @@ function CursorLine({ points }: CursorLineProps) {
   return (
     <line
       x1={x}
-      y1={points[0].y}
+      // Span the full plot height regardless of the hovered data
+      // point's y, matching Vercel's chart cursor. Recharts'
+      // default custom-cursor points[0].y is the data y, which
+      // makes the line short for low values.
+      y1={CHART_TOP_MARGIN}
       x2={x}
       // Extend 7px past plot bottom into the X-axis area so the
       // line visually anchors the pill label sitting just below —
@@ -309,7 +317,12 @@ export default function ConsentTrendChart({
         <AreaChart
           accessibilityLayer
           data={trend}
-          margin={{ left: 8, right: 12, top: 16, bottom: CHART_BOTTOM_MARGIN }}
+          margin={{
+            left: 8,
+            right: 12,
+            top: CHART_TOP_MARGIN,
+            bottom: CHART_BOTTOM_MARGIN,
+          }}
           onMouseMove={(state) => {
             const s = state as unknown as {
               activeLabel?: string;
