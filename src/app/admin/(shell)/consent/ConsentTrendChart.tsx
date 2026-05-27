@@ -375,7 +375,10 @@ function ChartInner({
 
       {tooltipData && tooltipLeft != null && (
         <TooltipWithBounds
-          top={MARGIN.top}
+          // Drop the tooltip a touch into the plot so it doesn't sit
+          // flush with the panel's top edge — visx's flip logic still
+          // mirrors it left of the cursor when it would overflow.
+          top={MARGIN.top + 24}
           left={tooltipLeft}
           // Symmetric gap on both sides of the cursor: TooltipWithBounds
           // applies offsetLeft as +offsetLeft when placed right and
