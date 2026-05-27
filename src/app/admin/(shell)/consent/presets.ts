@@ -107,8 +107,11 @@ export function previousWindow(current: DateWindow): DateWindow {
 
 /** Days in the window (inclusive). */
 export function windowDays(w: DateWindow): number {
-  const ms = w.end.getTime() - w.start.getTime();
-  return Math.round(ms / (1000 * 60 * 60 * 24)) + 1;
+  // Normalise both endpoints to start-of-day so a window ending at
+  // 23:59:59.999 doesn't round up an extra day.
+  const startMs = startOfDay(w.start).getTime();
+  const endMs = startOfDay(w.end).getTime();
+  return Math.round((endMs - startMs) / (1000 * 60 * 60 * 24)) + 1;
 }
 
 /** Match a {start, end} against the known presets — returns the id
