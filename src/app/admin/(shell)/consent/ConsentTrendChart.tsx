@@ -112,18 +112,17 @@ function ChartInner({
   const plotHeight = Math.max(height - MARGIN.top - MARGIN.bottom, 0);
 
   // Y-axis: nice integer ticks (counts) or fixed 0/25/50/75/100
-  // (percent). Domain extends one step above the last tick so the
-  // line has visible headroom above the highest labelled value.
+  // (percent). Domain ends exactly at the top tick value — visible
+  // headroom above the highest labelled value comes from the SVG's
+  // top margin, not from inflating the domain. Inflating the domain
+  // pushes the top tick well below the chart edge and squashes the
+  // line; Vercel matches the top tick with the top of the plot
+  // area and lets the top margin be the breathing room.
   const yTicks = useMemo(
     () => (isPercent ? [0, 25, 50, 75, 100] : niceIntegerTicks(trend)),
     [isPercent, trend],
   );
-  const yDomainMax = useMemo(() => {
-    if (isPercent) return 100;
-    if (yTicks.length < 2) return yTicks[yTicks.length - 1] ?? 1;
-    const step = yTicks[1] - yTicks[0];
-    return yTicks[yTicks.length - 1] + step;
-  }, [isPercent, yTicks]);
+  const yDomainMax = isPercent ? 100 : (yTicks[yTicks.length - 1] ?? 1);
 
   const xScale = useMemo(
     () =>
