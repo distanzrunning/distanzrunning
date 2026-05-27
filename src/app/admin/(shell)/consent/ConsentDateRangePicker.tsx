@@ -11,6 +11,7 @@ import {
 
 import {
   isoOf,
+  matchPreset,
   presetWindow,
   type PresetId,
   windowFromParams,
@@ -39,9 +40,14 @@ export default function ConsentDateRangePicker() {
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
+  const periodParam = searchParams.get("period") ?? undefined;
   const fromParam = searchParams.get("from") ?? undefined;
   const toParam = searchParams.get("to") ?? undefined;
-  const currentWindow = windowFromParams({ from: fromParam, to: toParam });
+  const currentWindow = windowFromParams({
+    period: periodParam,
+    from: fromParam,
+    to: toParam,
+  });
 
   const value: DateRange = {
     start: currentWindow.start,
@@ -51,11 +57,22 @@ export default function ConsentDateRangePicker() {
   const handleChange = (range: DateRange) => {
     if (!range.start || !range.end) return;
     const next = new URLSearchParams(searchParams.toString());
-    next.set("from", isoOf(range.start));
-    next.set("to", isoOf(range.end));
     // Reset the filter when the window changes — staying on
     // "accept_all" with a different window is usually noise.
     next.delete("filter");
+    // If the chosen range matches a preset, store it by id so the
+    // link stays relative-to-today on revisit; otherwise fall back
+    // to absolute from/to for a custom range.
+    const preset = matchPreset({ start: range.start, end: range.end });
+    if (preset) {
+      next.set("period", preset);
+      next.delete("from");
+      next.delete("to");
+    } else {
+      next.set("from", isoOf(range.start));
+      next.set("to", isoOf(range.end));
+      next.delete("period");
+    }
     startTransition(() => {
       router.push(`/admin/consent?${next.toString()}`);
     });

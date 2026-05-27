@@ -14,6 +14,7 @@ import ConsentTrendChart from "./ConsentTrendChart";
 import RecentDecisionsTable from "./RecentDecisionsTable";
 import {
   isoOf,
+  matchPreset,
   previousWindow,
   windowDays,
   type DateWindow,
@@ -31,14 +32,20 @@ const DECISION_LABEL: Record<Decision, string> = {
 const BASE_PATH = "/admin/consent";
 
 function buildHref(
-  params: { from: string; to: string },
+  window: DateWindow,
   filter: Decision | null,
 ): string {
   const usp = new URLSearchParams();
-  usp.set("from", params.from);
-  usp.set("to", params.to);
+  const preset = matchPreset(window);
+  if (preset) {
+    usp.set("period", preset);
+  } else {
+    usp.set("from", isoOf(window.start));
+    usp.set("to", isoOf(window.end));
+  }
   if (filter) usp.set("filter", filter);
-  return `${BASE_PATH}?${usp.toString()}`;
+  const qs = usp.toString();
+  return qs ? `${BASE_PATH}?${qs}` : BASE_PATH;
 }
 
 interface ConsentRow {
@@ -211,9 +218,8 @@ export async function ConsentDashboardContent({
   const days = windowDays(currentWindow);
   const previousLabel =
     days === 1 ? "the previous day" : `the previous ${days} days`;
-  const urlParams = { from: isoOf(windowStart), to: isoOf(windowEnd) };
   const tileHref = (target: Decision) =>
-    buildHref(urlParams, filter === target ? null : target);
+    buildHref(currentWindow, filter === target ? null : target);
 
   const { data, error } = await supabase
     .from("consent_records")
@@ -331,7 +337,7 @@ export async function ConsentDashboardContent({
               label="Decisions"
               value={currentCount.toLocaleString()}
               change={changeFrom(currentCount, previousCount, previousLabel)}
-              href={buildHref(urlParams, null)}
+              href={buildHref(currentWindow, null)}
               active={!filter}
             />
           </div>

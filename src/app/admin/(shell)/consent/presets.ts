@@ -73,6 +73,14 @@ export function presetWindow(id: PresetId): DateWindow {
 }
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const PRESET_IDS: readonly PresetId[] = [
+  "last-7-days",
+  "last-30-days",
+  "last-90-days",
+  "this-month",
+  "last-month",
+  "all-time",
+];
 
 function parseIsoDate(raw: string | undefined): Date | null {
   if (!raw || !ISO_DATE.test(raw)) return null;
@@ -80,15 +88,27 @@ function parseIsoDate(raw: string | undefined): Date | null {
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
+export function parsePresetId(raw: string | undefined): PresetId | null {
+  if (!raw) return null;
+  return (PRESET_IDS as readonly string[]).includes(raw)
+    ? (raw as PresetId)
+    : null;
+}
+
 export function isoOf(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
-/** Resolve the active window from URL search params. */
+/** Resolve the active window from URL search params. `period` takes
+ *  precedence over `from`/`to`, so preset links stay relative-to-today
+ *  even if shared / bookmarked. */
 export function windowFromParams(params: {
+  period?: string;
   from?: string;
   to?: string;
 }): DateWindow {
+  const preset = parsePresetId(params.period);
+  if (preset) return presetWindow(preset);
   const from = parseIsoDate(params.from);
   const to = parseIsoDate(params.to);
   if (from && to && from <= to) {
@@ -118,15 +138,7 @@ export function windowDays(w: DateWindow): number {
  *  if the window equals one of them (used by the picker to show
  *  which preset, if any, is currently active). */
 export function matchPreset(w: DateWindow): PresetId | null {
-  const ids: PresetId[] = [
-    "last-7-days",
-    "last-30-days",
-    "last-90-days",
-    "this-month",
-    "last-month",
-    "all-time",
-  ];
-  for (const id of ids) {
+  for (const id of PRESET_IDS) {
     const candidate = presetWindow(id);
     if (
       isoOf(candidate.start) === isoOf(w.start) &&

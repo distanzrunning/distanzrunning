@@ -33,6 +33,7 @@ export default async function ConsentDashboardPage({
   searchParams: Promise<{
     q?: string;
     filter?: string;
+    period?: string;
     from?: string;
     to?: string;
   }>;
@@ -40,7 +41,11 @@ export default async function ConsentDashboardPage({
   const params = await searchParams;
   const query = params.q?.trim() ?? "";
   const filter = normaliseFilter(params.filter);
-  const window = windowFromParams({ from: params.from, to: params.to });
+  const window = windowFromParams({
+    period: params.period,
+    from: params.from,
+    to: params.to,
+  });
   const windowKey = `${isoOf(window.start)}_${isoOf(window.end)}`;
 
   return (
