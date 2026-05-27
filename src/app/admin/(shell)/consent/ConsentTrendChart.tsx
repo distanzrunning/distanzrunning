@@ -308,7 +308,10 @@ function ChartInner({
         <TooltipWithBounds
           top={MARGIN.top}
           left={tooltipLeft + 8}
-          unstyled
+          // `unstyled` on visx Tooltip suppresses the style prop
+          // entirely (`!unstyled && style`), so we must NOT set it
+          // — otherwise our custom styles below never apply and the
+          // tooltip box ends up un-positioned and invisible.
           style={{
             position: "absolute",
             background: "var(--ds-background-100)",
