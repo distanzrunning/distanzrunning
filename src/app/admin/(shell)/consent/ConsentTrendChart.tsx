@@ -303,13 +303,9 @@ function ChartInner({
               fill: "var(--ds-gray-700)",
               fontSize: 12,
               textAnchor: "middle",
-              // `hanging` baseline puts the text's top at y+dy, so it
-              // shares an anchor with the HTML "N days ago" overlay
-              // below — both texts then visually sit on the same row.
-              dominantBaseline: "hanging",
               dy: 12,
-              // Hide the tick at the hovered x — the HTML overlay
-              // below replaces it with "N days ago".
+              // Hide the tick at the hovered x — the SVG <text> below
+              // replaces it with "N days ago" at the same baseline.
               opacity:
                 tooltipData && tooltipData.date === d ? 0 : 1,
             })}
@@ -359,6 +355,20 @@ function ChartInner({
                 fill="var(--ds-blue-900)"
               />
             </g>
+          )}
+          {tooltipData && activeX != null && (
+            <text
+              x={activeX}
+              y={plotHeight}
+              dy={12}
+              textAnchor="middle"
+              fontSize={12}
+              fontWeight={600}
+              fill="var(--ds-gray-1000)"
+              pointerEvents="none"
+            >
+              {daysAgoLabel(tooltipData.date)}
+            </text>
           )}
           <Bar
             x={0}
@@ -438,31 +448,6 @@ function ChartInner({
         </TooltipWithBounds>
       )}
 
-      {tooltipData && tooltipLeft != null && (
-        <div
-          // "N days ago" overlay — flat HTML knockout that replaces
-          // the SVG tick at the hovered x. background-100 fill masks
-          // any underlying tick label without an obvious tooltip
-          // treatment.
-          style={{
-            position: "absolute",
-            left: tooltipLeft,
-            top: MARGIN.top + plotHeight + 12,
-            transform: "translateX(-50%)",
-            background: "var(--ds-background-100)",
-            color: "var(--ds-gray-1000)",
-            fontSize: 12,
-            lineHeight: 1,
-            fontWeight: 600,
-            padding: "0 6px",
-            borderRadius: 4,
-            whiteSpace: "nowrap",
-            pointerEvents: "none",
-          }}
-        >
-          {daysAgoLabel(tooltipData.date)}
-        </div>
-      )}
     </>
   );
 }
