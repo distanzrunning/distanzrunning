@@ -42,10 +42,12 @@ const CHART_BOTTOM_MARGIN = 24;
 // height regardless of where the hovered data point sits.
 const CHART_TOP_MARGIN = 16;
 const TICK_MARGIN = 8;
-// Generous estimate of the rendered tooltip width — only used to
-// decide whether to flip the tooltip to the left of the cursor near
-// the right edge. The tooltip itself sizes to its content.
-const TOOLTIP_WIDTH_ESTIMATE = 240;
+// Estimate of the rendered tooltip width — used both to decide when
+// to flip the tooltip to the left of the cursor, and (when flipped)
+// to place the box so its right edge sits one gap from the cursor.
+// Tooltip sizes to content; 180px is roughly the widest label set
+// ("Accept rate 75.0%" + padding + dot).
+const TOOLTIP_WIDTH_ESTIMATE = 180;
 // Gap between the cursor line and the tooltip's near edge.
 const TOOLTIP_CURSOR_GAP = 8;
 
