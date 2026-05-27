@@ -153,18 +153,21 @@ function ChartInner({
 
   // Visible X-axis tick dates. Matches Vercel Analytics' cadence:
   //   - short ranges (≤ 10 points): every single day, edges included
-  //   - longer ranges: every 7th day, edges suppressed to keep the
-  //     label row from crowding the chart's left/right edges
+  //   - longer ranges: every 7th day, anchored so the last label sits
+  //     a few days inset from the right edge and the rest step
+  //     backwards. Vercel's 30-day view shows May 24/17/10/3 with
+  //     today=May 27 — i.e. last label at index length − 4, then
+  //     step back by 7 while > 0 (drops index 0 too).
   const xTickValues = useMemo(() => {
     if (trend.length <= 2) return trend.map((p) => p.date);
     const step = trend.length <= 10 ? 1 : 7;
-    const dropEdges = step > 1;
-    return trend
-      .map((p) => p.date)
-      .filter((_, i, arr) => {
-        if (dropEdges && (i === 0 || i === arr.length - 1)) return false;
-        return i % step === 0;
-      });
+    if (step === 1) return trend.map((p) => p.date);
+    const RIGHT_GAP = 4;
+    const indices: number[] = [];
+    for (let i = trend.length - RIGHT_GAP; i > 0; i -= step) {
+      indices.push(i);
+    }
+    return indices.reverse().map((i) => trend[i].date);
   }, [trend]);
 
   const {
