@@ -276,10 +276,11 @@ export default function ConsentTrendChart({
       const wrapperRect = wrapper.getBoundingClientRect();
       const tickRect = tick.getBoundingClientRect();
       setTickRowTop(tickRect.top - wrapperRect.top);
-      const svg = wrapper.querySelector(".recharts-surface");
-      if (svg) {
-        setChartWidth(svg.getBoundingClientRect().width);
-      }
+      // Chart SVG width = wrapper inner width (our wrapper has equal
+      // left/right padding via WRAPPER_PADDING_LEFT, so the SVG fills
+      // wrapper.clientWidth - 2 * padding). More reliable than
+      // querying for the Recharts SVG class.
+      setChartWidth(wrapper.clientWidth - 2 * WRAPPER_PADDING_LEFT);
     };
 
     measure();
@@ -331,7 +332,11 @@ export default function ConsentTrendChart({
           data={trend}
           margin={{
             left: 8,
-            right: 12,
+            // Enough room for the rightmost X-axis tick label, which
+            // centers on the last data point. With margin.right=12
+            // the label (e.g. "May 26") overflowed the SVG and got
+            // clipped at the panel edge.
+            right: 32,
             top: CHART_TOP_MARGIN,
             bottom: CHART_BOTTOM_MARGIN,
           }}
