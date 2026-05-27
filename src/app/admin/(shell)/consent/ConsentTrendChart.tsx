@@ -53,8 +53,23 @@ function daysAgoLabel(iso: string): string {
   );
   if (days === 0) return "Today";
   if (days === 1) return "Yesterday";
-  if (days > 1) return `${days} days ago`;
-  return formatTickDate(iso);
+  if (days < 1) return formatTickDate(iso);
+  // Promote whole-week / month / year multiples to the natural unit
+  // so a 30d view reads "1 month ago" instead of "30 days ago".
+  // Order matters: check years → months → weeks → days.
+  if (days % 365 === 0) {
+    const n = days / 365;
+    return n === 1 ? "1 year ago" : `${n} years ago`;
+  }
+  if (days % 30 === 0) {
+    const n = days / 30;
+    return n === 1 ? "1 month ago" : `${n} months ago`;
+  }
+  if (days % 7 === 0) {
+    const n = days / 7;
+    return n === 1 ? "1 week ago" : `${n} weeks ago`;
+  }
+  return `${days} days ago`;
 }
 
 // Build integer-only Y-axis ticks Vercel-style: pick a nice step
