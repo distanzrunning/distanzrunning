@@ -315,7 +315,13 @@ function ChartInner({
       {tooltipData && tooltipLeft != null && (
         <TooltipWithBounds
           top={MARGIN.top}
-          left={tooltipLeft + 8}
+          left={tooltipLeft}
+          // Symmetric gap on both sides of the cursor: TooltipWithBounds
+          // applies offsetLeft as +offsetLeft when placed right and
+          // -offsetLeft when flipped left, so passing the gap here
+          // (instead of adding +8 to `left`) keeps both sides equal.
+          offsetLeft={8}
+          offsetTop={0}
           // `unstyled` on visx Tooltip suppresses the style prop
           // entirely (`!unstyled && style`), so we must NOT set it
           // — otherwise our custom styles below never apply and the
