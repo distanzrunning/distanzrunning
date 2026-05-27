@@ -284,11 +284,12 @@ export default function ConsentTrendChart({
   // fall out (max=2 → 0,1,2; max=7 → 0,2,4,6,8). Recharts' default
   // targets a fixed tick count, which inflates the upper bound when
   // the data range is tiny (max=2 ends up as 0,1,2,3,4).
-  const countTicks = isPercent ? undefined : niceIntegerTicks(trend);
-  const countDomain: [number, number] | undefined =
-    countTicks && countTicks.length > 0
-      ? [0, countTicks[countTicks.length - 1]]
-      : undefined;
+  const yTicks: number[] = isPercent
+    ? [0, 25, 50, 75, 100]
+    : niceIntegerTicks(trend);
+  const yDomain: [number, number] = isPercent
+    ? [0, 100]
+    : [0, yTicks[yTicks.length - 1]];
 
   const showOverlay =
     activeLabel !== null && cursorX !== null && tickRowTop !== null;
@@ -339,7 +340,20 @@ export default function ConsentTrendChart({
               />
             </linearGradient>
           </defs>
-          <CartesianGrid vertical={false} stroke="var(--ds-gray-400)" />
+          <CartesianGrid
+            vertical={false}
+            stroke="var(--ds-gray-400)"
+            // Restrict horizontal gridlines to our labelled ticks.
+            // Recharts otherwise also draws a line at the padded-top
+            // of the plot area, which looks like an unlabelled tick.
+            horizontalCoordinatesGenerator={({ yAxis }) => {
+              const scale = (
+                yAxis as { scale?: (value: number) => number } | undefined
+              )?.scale;
+              if (!scale) return [];
+              return yTicks.map((t) => scale(t));
+            }}
+          />
           <XAxis
             dataKey="date"
             tickLine={false}
@@ -359,8 +373,8 @@ export default function ConsentTrendChart({
             width={48}
             tickMargin={4}
             tick={{ fill: "var(--ds-gray-700)", fontSize: 12 }}
-            domain={isPercent ? [0, 100] : (countDomain ?? [0, "auto"])}
-            ticks={countTicks}
+            domain={yDomain}
+            ticks={yTicks}
             // Pushes the top tick down inside the plot area so the
             // line has visible headroom above the highest labelled
             // value — top tick stops being the chart's top edge.
