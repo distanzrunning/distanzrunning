@@ -151,17 +151,19 @@ function ChartInner({
     [yDomainMax, plotHeight],
   );
 
-  // Visible X-axis tick dates: every ~7th data point, skipping the
-  // very first and very last so the row of dates doesn't crowd the
-  // chart's left/right edges.
+  // Visible X-axis tick dates. Matches Vercel Analytics' cadence:
+  //   - short ranges (≤ 10 points): every single day, edges included
+  //   - longer ranges: every 7th day, edges suppressed to keep the
+  //     label row from crowding the chart's left/right edges
   const xTickValues = useMemo(() => {
-    if (trend.length <= 2) return [];
-    const interval = Math.max(1, Math.ceil(trend.length / 7));
+    if (trend.length <= 2) return trend.map((p) => p.date);
+    const step = trend.length <= 10 ? 1 : 7;
+    const dropEdges = step > 1;
     return trend
       .map((p) => p.date)
       .filter((_, i, arr) => {
-        if (i === 0 || i === arr.length - 1) return false;
-        return i % interval === 0;
+        if (dropEdges && (i === 0 || i === arr.length - 1)) return false;
+        return i % step === 0;
       });
   }, [trend]);
 
