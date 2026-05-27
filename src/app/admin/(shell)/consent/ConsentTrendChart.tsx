@@ -231,6 +231,14 @@ function ChartInner({
   const solidTrend = lastIsToday ? trend.slice(0, -1) : trend;
   const dashedTrend = lastIsToday ? trend.slice(-2) : [];
 
+  const todayPoint = lastIsToday ? trend[trend.length - 1] : null;
+  const todayX =
+    todayPoint != null ? (xScale(todayPoint.date) ?? null) : null;
+  const todayY =
+    todayPoint != null && todayPoint.value != null
+      ? yScale(todayPoint.value)
+      : null;
+
   return (
     <>
       <svg width={width} height={height} style={{ display: "block" }}>
@@ -329,6 +337,42 @@ function ChartInner({
                 tooltipData && tooltipData.date === d ? 0 : 1,
             })}
           />
+          {todayX != null && todayY != null && (
+            <g pointerEvents="none">
+              {/* Pulsing ring behind the today dot — Vercel convention,
+                  signals "this bucket is still live". SMIL <animate>
+                  keeps the animation local to the SVG so we don't
+                  need a global keyframe rule. */}
+              <circle
+                cx={todayX}
+                cy={todayY}
+                r={4}
+                fill="var(--ds-blue-900)"
+                opacity={0.4}
+              >
+                <animate
+                  attributeName="r"
+                  values="4;12;12"
+                  keyTimes="0;0.7;1"
+                  dur="1.8s"
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="opacity"
+                  values="0.4;0;0"
+                  keyTimes="0;0.7;1"
+                  dur="1.8s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+              <circle
+                cx={todayX}
+                cy={todayY}
+                r={4}
+                fill="var(--ds-blue-900)"
+              />
+            </g>
+          )}
           {activeX != null && (
             <Line
               from={{ x: activeX, y: 0 }}
