@@ -42,6 +42,10 @@ const CHART_BOTTOM_MARGIN = 24;
 // height regardless of where the hovered data point sits.
 const CHART_TOP_MARGIN = 16;
 const TICK_MARGIN = 8;
+// Generous estimate of the rendered tooltip width — only used to
+// decide whether to flip the tooltip to the left of the cursor near
+// the right edge. The tooltip itself sizes to its content.
+const TOOLTIP_WIDTH_ESTIMATE = 220;
 
 function formatTickDate(iso: string): string {
   const d = new Date(`${iso}T00:00:00.000Z`);
@@ -246,6 +250,10 @@ export default function ConsentTrendChart({
   // rect collapsed the box in some cases and hid the text.
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [tickRowTop, setTickRowTop] = useState<number | null>(null);
+  // Rendered SVG width so we can flip the tooltip to the left of the
+  // cursor when the cursor is near the right edge and the tooltip
+  // would otherwise overflow.
+  const [chartWidth, setChartWidth] = useState<number>(0);
 
   useLayoutEffect(() => {
     if (!wrapperRef.current) return;
@@ -268,6 +276,10 @@ export default function ConsentTrendChart({
       const wrapperRect = wrapper.getBoundingClientRect();
       const tickRect = tick.getBoundingClientRect();
       setTickRowTop(tickRect.top - wrapperRect.top);
+      const svg = wrapper.querySelector(".recharts-surface");
+      if (svg) {
+        setChartWidth(svg.getBoundingClientRect().width);
+      }
     };
 
     measure();
@@ -414,7 +426,23 @@ export default function ConsentTrendChart({
             // chart-relative pixels; y=32 drops the box just below
             // the top tick label so it has breathing room from the
             // panel's top edge.
-            position={cursorX !== null ? { x: cursorX + 8, y: 32 } : undefined}
+            //
+            // Flip to the left of the cursor when there isn't enough
+            // room on the right so the box doesn't clip past the
+            // chart edge. Tooltip width is an estimate (content
+            // varies); 220px covers the longest labels we render.
+            position={
+              cursorX !== null
+                ? {
+                    x:
+                      chartWidth > 0 &&
+                      cursorX + 8 + TOOLTIP_WIDTH_ESTIMATE > chartWidth
+                        ? cursorX - 8 - TOOLTIP_WIDTH_ESTIMATE
+                        : cursorX + 8,
+                    y: 32,
+                  }
+                : undefined
+            }
             // Recharts CSS-transitions the tooltip between positions
             // by default, which reads as the tooltip lagging behind
             // the cursor line. Snap to position instead.
