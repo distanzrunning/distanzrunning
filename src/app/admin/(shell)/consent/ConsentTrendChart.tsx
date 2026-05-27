@@ -287,7 +287,8 @@ function ChartInner({
               y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
               stroke="var(--ds-blue-900)"
               strokeWidth={2}
-              strokeDasharray="3 6"
+              strokeDasharray="4 8"
+              strokeLinecap="round"
               curve={curveLinear}
               defined={(d) => d.value != null}
             />
