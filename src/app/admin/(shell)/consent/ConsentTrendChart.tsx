@@ -303,7 +303,12 @@ function ChartInner({
               fill: "var(--ds-gray-700)",
               fontSize: 12,
               textAnchor: "middle",
-              dy: 12,
+              // Match Vercel's visx pattern: text `y={20}` inside the
+              // visx-text wrapper's `y="0.25em"` shim renders the
+              // baseline at plotHeight + 23 (≈ optical centre +19).
+              // The pill below anchors to that same +19 so the two
+              // strings sit on a single row.
+              y: 20,
             })}
           />
           {activeX != null && (
@@ -437,11 +442,13 @@ function ChartInner({
           // surface) masks any tick text underneath, so the pill and
           // the date row can share the same baseline without the two
           // strings reading as overlapping. Centred on the tick label's
-          // vertical centre (12px text, baseline at +12 → centre ≈ +7).
+          // optical centre (visx renders the label baseline at
+          // plotHeight + 23 via y=20 + the 0.25em wrapper shim, so
+          // 12px Geist puts the optical centre at ~+19).
           style={{
             position: "absolute",
             left: tooltipLeft,
-            top: MARGIN.top + plotHeight + 7,
+            top: MARGIN.top + plotHeight + 19,
             transform: "translate(-50%, -50%)",
             background: "var(--ds-background-100)",
             boxShadow: "var(--ds-shadow-tooltip)",
