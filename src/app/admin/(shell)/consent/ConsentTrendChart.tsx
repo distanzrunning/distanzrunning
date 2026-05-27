@@ -255,6 +255,29 @@ export default function ConsentTrendChart({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [tickRowTop, setTickRowTop] = useState<number | null>(null);
 
+  // Measured rendered tooltip width, so we can position the flipped
+  // (left-of-cursor) box with the same 8px gap as the unflipped one.
+  // Starts at the estimate so the very first hover is roughly right;
+  // the layout effect below updates it to the real width after the
+  // first render.
+  const [tooltipWidth, setTooltipWidth] = useState<number>(
+    TOOLTIP_WIDTH_ESTIMATE,
+  );
+
+  useLayoutEffect(() => {
+    if (!wrapperRef.current) return;
+    const tip = wrapperRef.current.querySelector<HTMLElement>(
+      ".recharts-tooltip-wrapper > *",
+    );
+    if (!tip) return;
+    const w = tip.getBoundingClientRect().width;
+    // Only update if it changed materially, to avoid an update loop
+    // when this effect re-runs each render.
+    if (w > 0 && Math.abs(w - tooltipWidth) > 1) {
+      setTooltipWidth(w);
+    }
+  });
+
   // Compute tooltip x with flip-when-near-right-edge. Read the
   // wrapper width directly from the ref each render rather than
   // tracking via state — state updates lag a render behind the
@@ -264,8 +287,8 @@ export default function ConsentTrendChart({
     const chartWidth = wrapperRef.current
       ? wrapperRef.current.clientWidth - 2 * WRAPPER_PADDING_LEFT
       : 0;
-    if (chartWidth > 0 && cx + TOOLTIP_CURSOR_GAP + TOOLTIP_WIDTH_ESTIMATE > chartWidth) {
-      return cx - TOOLTIP_CURSOR_GAP - TOOLTIP_WIDTH_ESTIMATE;
+    if (chartWidth > 0 && cx + TOOLTIP_CURSOR_GAP + tooltipWidth > chartWidth) {
+      return cx - TOOLTIP_CURSOR_GAP - tooltipWidth;
     }
     return cx + TOOLTIP_CURSOR_GAP;
   };
