@@ -361,7 +361,11 @@ function ChartInner({
             x={0}
             y={0}
             width={plotWidth}
-            height={plotHeight}
+            // Extend the hit area down through the bottom margin so
+            // the date row / pill region is hoverable too — without
+            // this the cursor "loses" the tooltip the moment it drops
+            // below the plot onto the x-axis labels.
+            height={plotHeight + MARGIN.bottom}
             fill="transparent"
             onMouseMove={handleMouseMove}
             onMouseLeave={hideTooltip}
