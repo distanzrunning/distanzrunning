@@ -346,12 +346,20 @@ export default function ConsentTrendChart({
             // Restrict horizontal gridlines to our labelled ticks.
             // Recharts otherwise also draws a line at the padded-top
             // of the plot area, which looks like an unlabelled tick.
+            //
+            // Recharts wraps the underlying d3 scale in a RechartsScale
+            // interface (`scale.map(value)` instead of `scale(value)`)
+            // — calling it like a d3 scale crashes the chart.
             horizontalCoordinatesGenerator={({ yAxis }) => {
               const scale = (
-                yAxis as { scale?: (value: number) => number } | undefined
+                yAxis as
+                  | { scale?: { map?: (value: number) => number | undefined } }
+                  | undefined
               )?.scale;
-              if (!scale) return [];
-              return yTicks.map((t) => scale(t));
+              if (!scale?.map) return [];
+              return yTicks
+                .map((t) => scale.map?.(t))
+                .filter((y): y is number => typeof y === "number");
             }}
           />
           <XAxis
