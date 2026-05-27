@@ -234,26 +234,6 @@ function ChartInner({
   return (
     <>
       <svg width={width} height={height} style={{ display: "block" }}>
-        <defs>
-          <linearGradient
-            id="consent-trend-fill"
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="1"
-          >
-            <stop
-              offset="0%"
-              stopColor="var(--ds-blue-900)"
-              stopOpacity={0.22}
-            />
-            <stop
-              offset="100%"
-              stopColor="var(--ds-blue-900)"
-              stopOpacity={0.02}
-            />
-          </linearGradient>
-        </defs>
         <Group left={MARGIN.left} top={MARGIN.top}>
           <GridRows
             scale={yScale}
@@ -267,7 +247,8 @@ function ChartInner({
             x={(d) => xScale(d.date) ?? 0}
             y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
             yScale={yScale}
-            fill="url(#consent-trend-fill)"
+            fill="var(--ds-blue-900)"
+            fillOpacity={0.1}
             curve={curveLinear}
             defined={(d) => d.value != null}
           />
