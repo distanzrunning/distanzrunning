@@ -284,10 +284,17 @@ export default function ConsentTrendChart({
   // fall out (max=2 → 0,1,2; max=7 → 0,2,4,6,8). Recharts' default
   // targets a fixed tick count, which inflates the upper bound when
   // the data range is tiny (max=2 ends up as 0,1,2,3,4).
+  //
+  // Domain extends one step above the last tick so the top tick label
+  // doesn't sit at the chart's top edge and the line has headroom to
+  // visibly peak above the highest labelled tick.
   const countTicks = isPercent ? undefined : niceIntegerTicks(trend);
   const countDomain: [number, number] | undefined =
-    countTicks && countTicks.length > 0
-      ? [0, countTicks[countTicks.length - 1]]
+    countTicks && countTicks.length > 1
+      ? [
+          0,
+          countTicks[countTicks.length - 1] + (countTicks[1] - countTicks[0]),
+        ]
       : undefined;
 
   const showOverlay =
