@@ -80,16 +80,17 @@ function niceIntegerTicks(points: TrendPoint[]): number[] {
 
 export default function ConsentTrendChart(props: ConsentTrendChartProps) {
   return (
-    <div style={{ padding: "24px 24px 16px" }}>
-      <div style={{ position: "relative", height: CHART_HEIGHT }}>
-        <ParentSize>
-          {({ width }) =>
-            width > 0 ? (
-              <ChartInner {...props} width={width} height={CHART_HEIGHT} />
-            ) : null
-          }
-        </ParentSize>
-      </div>
+    // No outer padding — Vercel's chart panel runs SVG flush against
+    // the tile-row's bottom border. Breathing room is provided by the
+    // SVG's own MARGIN values.
+    <div style={{ position: "relative", height: CHART_HEIGHT }}>
+      <ParentSize>
+        {({ width }) =>
+          width > 0 ? (
+            <ChartInner {...props} width={width} height={CHART_HEIGHT} />
+          ) : null
+        }
+      </ParentSize>
     </div>
   );
 }
