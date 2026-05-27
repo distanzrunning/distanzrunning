@@ -47,11 +47,11 @@ export function presetWindow(id: PresetId): DateWindow {
   const today = startOfDay(new Date());
   switch (id) {
     case "last-7-days":
-      return { start: addDays(today, -6), end: endOfDay(today) };
+      return { start: addDays(today, -7), end: endOfDay(today) };
     case "last-30-days":
-      return { start: addDays(today, -29), end: endOfDay(today) };
+      return { start: addDays(today, -30), end: endOfDay(today) };
     case "last-90-days":
-      return { start: addDays(today, -89), end: endOfDay(today) };
+      return { start: addDays(today, -90), end: endOfDay(today) };
     case "this-month": {
       const start = new Date(
         Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1),
