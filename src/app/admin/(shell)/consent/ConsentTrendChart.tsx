@@ -217,6 +217,20 @@ function ChartInner({
   const activeY =
     tooltipData && tooltipData.value != null ? yScale(tooltipData.value) : null;
 
+  // Today's segment is dashed (Vercel convention) — today's bucket is
+  // still filling, so the slope into it isn't final. Only dash when
+  // the trend actually ends today; a historical custom range stays
+  // fully solid.
+  const todayIso = useMemo(() => {
+    const d = new Date();
+    d.setUTCHours(0, 0, 0, 0);
+    return d.toISOString().slice(0, 10);
+  }, []);
+  const lastIsToday =
+    trend.length >= 2 && trend[trend.length - 1].date === todayIso;
+  const solidTrend = lastIsToday ? trend.slice(0, -1) : trend;
+  const dashedTrend = lastIsToday ? trend.slice(-2) : [];
+
   return (
     <>
       <svg width={width} height={height} style={{ display: "block" }}>
@@ -258,7 +272,7 @@ function ChartInner({
             defined={(d) => d.value != null}
           />
           <LinePath<TrendPoint>
-            data={trend}
+            data={solidTrend}
             x={(d) => xScale(d.date) ?? 0}
             y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
             stroke="var(--ds-blue-900)"
@@ -266,6 +280,18 @@ function ChartInner({
             curve={curveLinear}
             defined={(d) => d.value != null}
           />
+          {dashedTrend.length === 2 && (
+            <LinePath<TrendPoint>
+              data={dashedTrend}
+              x={(d) => xScale(d.date) ?? 0}
+              y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
+              stroke="var(--ds-blue-900)"
+              strokeWidth={2}
+              strokeDasharray="3 3"
+              curve={curveLinear}
+              defined={(d) => d.value != null}
+            />
+          )}
           <AxisLeft
             scale={yScale}
             tickValues={yTicks}
