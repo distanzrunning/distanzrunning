@@ -299,11 +299,15 @@ function ChartInner({
             hideTicks
             tickValues={xTickValues}
             tickFormat={(d) => formatTickDate(d as string)}
-            tickLabelProps={() => ({
+            tickLabelProps={(d) => ({
               fill: "var(--ds-gray-700)",
               fontSize: 12,
               textAnchor: "middle",
               dy: 12,
+              // Hide the tick at the hovered x — the pill below sits
+              // on the same row and visually replaces it.
+              opacity:
+                tooltipData && tooltipData.date === d ? 0 : 1,
             })}
           />
           {activeX != null && (
@@ -432,14 +436,16 @@ function ChartInner({
 
       {tooltipData && tooltipLeft != null && (
         <div
-          // Floating "N days ago" pill, sits below the date row at
-          // the cursor's x. Matches Vercel — they keep tick labels
-          // visible at all times and float this as a separate chip.
+          // Floating "N days ago" pill — sits on the SAME row as the
+          // SVG tick labels and visually replaces the tick at the
+          // hovered x (which is opacity-hidden). Centered on the date
+          // baseline by anchoring to the tick label's vertical center
+          // (text spans roughly +2..+12 below plot bottom, centre ≈ +7).
           style={{
             position: "absolute",
             left: tooltipLeft,
-            top: MARGIN.top + plotHeight + 28,
-            transform: "translateX(-50%)",
+            top: MARGIN.top + plotHeight + 7,
+            transform: "translate(-50%, -50%)",
             background: "var(--ds-background-100)",
             boxShadow: "var(--ds-shadow-tooltip)",
             color: "var(--ds-gray-1000)",
