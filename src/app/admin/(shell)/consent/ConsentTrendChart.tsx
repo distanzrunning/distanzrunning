@@ -45,7 +45,9 @@ const TICK_MARGIN = 8;
 // Generous estimate of the rendered tooltip width — only used to
 // decide whether to flip the tooltip to the left of the cursor near
 // the right edge. The tooltip itself sizes to its content.
-const TOOLTIP_WIDTH_ESTIMATE = 220;
+const TOOLTIP_WIDTH_ESTIMATE = 240;
+// Gap between the cursor line and the tooltip's near edge.
+const TOOLTIP_CURSOR_GAP = 8;
 
 function formatTickDate(iso: string): string {
   const d = new Date(`${iso}T00:00:00.000Z`);
@@ -250,10 +252,21 @@ export default function ConsentTrendChart({
   // rect collapsed the box in some cases and hid the text.
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [tickRowTop, setTickRowTop] = useState<number | null>(null);
-  // Rendered SVG width so we can flip the tooltip to the left of the
-  // cursor when the cursor is near the right edge and the tooltip
-  // would otherwise overflow.
-  const [chartWidth, setChartWidth] = useState<number>(0);
+
+  // Compute tooltip x with flip-when-near-right-edge. Read the
+  // wrapper width directly from the ref each render rather than
+  // tracking via state — state updates lag a render behind the
+  // mousemove, and the flip then doesn't trigger until the next
+  // movement.
+  const tooltipX = (cx: number): number => {
+    const chartWidth = wrapperRef.current
+      ? wrapperRef.current.clientWidth - 2 * WRAPPER_PADDING_LEFT
+      : 0;
+    if (chartWidth > 0 && cx + TOOLTIP_CURSOR_GAP + TOOLTIP_WIDTH_ESTIMATE > chartWidth) {
+      return cx - TOOLTIP_CURSOR_GAP - TOOLTIP_WIDTH_ESTIMATE;
+    }
+    return cx + TOOLTIP_CURSOR_GAP;
+  };
 
   useLayoutEffect(() => {
     if (!wrapperRef.current) return;
@@ -276,11 +289,6 @@ export default function ConsentTrendChart({
       const wrapperRect = wrapper.getBoundingClientRect();
       const tickRect = tick.getBoundingClientRect();
       setTickRowTop(tickRect.top - wrapperRect.top);
-      // Chart SVG width = wrapper inner width (our wrapper has equal
-      // left/right padding via WRAPPER_PADDING_LEFT, so the SVG fills
-      // wrapper.clientWidth - 2 * padding). More reliable than
-      // querying for the Recharts SVG class.
-      setChartWidth(wrapper.clientWidth - 2 * WRAPPER_PADDING_LEFT);
     };
 
     measure();
@@ -430,22 +438,12 @@ export default function ConsentTrendChart({
             // the right of the cursor line. `position` is in
             // chart-relative pixels; y=32 drops the box just below
             // the top tick label so it has breathing room from the
-            // panel's top edge.
-            //
-            // Flip to the left of the cursor when there isn't enough
-            // room on the right so the box doesn't clip past the
-            // chart edge. Tooltip width is an estimate (content
-            // varies); 220px covers the longest labels we render.
+            // panel's top edge. `tooltipX` flips to the left of the
+            // cursor when the box would otherwise overflow the
+            // chart's right edge.
             position={
               cursorX !== null
-                ? {
-                    x:
-                      chartWidth > 0 &&
-                      cursorX + 8 + TOOLTIP_WIDTH_ESTIMATE > chartWidth
-                        ? cursorX - 8 - TOOLTIP_WIDTH_ESTIMATE
-                        : cursorX + 8,
-                    y: 32,
-                  }
+                ? { x: tooltipX(cursorX), y: 32 }
                 : undefined
             }
             // Recharts CSS-transitions the tooltip between positions
