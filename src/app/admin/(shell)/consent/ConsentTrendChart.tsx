@@ -29,6 +29,11 @@ interface ConsentTrendChartProps {
 const CHART_HEIGHT = 400;
 // SVG margins reserve room for axis labels.
 const MARGIN = { top: 24, right: 32, bottom: 44, left: 56 };
+// Fixed pixel gap between the top of the plot area and the top tick
+// — gives the line visible headroom and lets a data value above the
+// top tick visibly peak into that gap (range padding rather than
+// domain inflation: doesn't compress the scaling).
+const Y_RANGE_TOP_PADDING = 24;
 
 function formatTickDate(iso: string): string {
   const d = new Date(`${iso}T00:00:00.000Z`);
@@ -137,7 +142,10 @@ function ChartInner({
     () =>
       scaleLinear<number>({
         domain: [0, yDomainMax],
-        range: [plotHeight, 0],
+        // Range tops out at Y_RANGE_TOP_PADDING instead of 0, so the
+        // top tick sits that many pixels below the plot area's top
+        // and the line has room to peak above the top tick.
+        range: [plotHeight, Y_RANGE_TOP_PADDING],
         nice: false,
       }),
     [yDomainMax, plotHeight],
