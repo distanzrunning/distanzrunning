@@ -1,24 +1,20 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-} from "recharts";
-
-import {
-  ChartContainer,
-  ChartTooltip,
-  type ChartConfig,
-} from "@/components/ui/Chart";
+import { useCallback, useMemo } from "react";
+import { AxisBottom, AxisLeft } from "@visx/axis";
+import { curveLinear } from "@visx/curve";
+import { localPoint } from "@visx/event";
+import { GridRows } from "@visx/grid";
+import { Group } from "@visx/group";
+import { ParentSize } from "@visx/responsive";
+import { scaleLinear, scalePoint } from "@visx/scale";
+import { AreaClosed, Bar, Line, LinePath } from "@visx/shape";
+import { TooltipWithBounds, useTooltip } from "@visx/tooltip";
 
 interface TrendPoint {
   /** Full ISO YYYY-MM-DD — kept whole (rather than sliced to MM-DD)
-   *  so the tick formatter can build "May 19" and the active-tick
-   *  swap can compute "N days ago" without re-parsing. */
+   *  so the tick formatter can build "May 19" and the active overlay
+   *  can compute "N days ago" without re-parsing. */
   date: string;
   value: number | null;
 }
@@ -29,27 +25,10 @@ interface ConsentTrendChartProps {
   format: "count" | "percent";
 }
 
-// Outer-wrapper padding (must match the inline style on the wrapping
-// <div> below). Used to translate Recharts' chart-relative cursor X
-// into outer-div coordinates for the HTML overlay.
-const WRAPPER_PADDING_LEFT = 24;
-const WRAPPER_PADDING_TOP = 24;
-
-// Chart bottom margin reserved for the X-axis row.
-const CHART_BOTTOM_MARGIN = 24;
-// Chart top margin (reserved blank above the plot area). Also the y
-// where the cursor line should start so it always spans the full plot
-// height regardless of where the hovered data point sits.
-const CHART_TOP_MARGIN = 16;
-const TICK_MARGIN = 8;
-// Estimate of the rendered tooltip width — used both to decide when
-// to flip the tooltip to the left of the cursor, and (when flipped)
-// to place the box so its right edge sits one gap from the cursor.
-// Tooltip sizes to content; 180px is roughly the widest label set
-// ("Accept rate 75.0%" + padding + dot).
-const TOOLTIP_WIDTH_ESTIMATE = 180;
-// Gap between the cursor line and the tooltip's near edge.
-const TOOLTIP_CURSOR_GAP = 8;
+// Total drawn height of the chart, including all margins / axes.
+const CHART_HEIGHT = 400;
+// SVG margins reserve room for axis labels.
+const MARGIN = { top: 24, right: 32, bottom: 44, left: 56 };
 
 function formatTickDate(iso: string): string {
   const d = new Date(`${iso}T00:00:00.000Z`);
@@ -60,11 +39,23 @@ function formatTickDate(iso: string): string {
   });
 }
 
-// Build integer-only Y-axis ticks the way Vercel's analytics chart does:
-// pick a nice step (1, 2, 5, 10, 20, …) targeting ~5 ticks and let the
-// tick count fall out. Recharts' built-in algorithm fixes the tick
-// count instead, which inflates the upper bound on small ranges
-// (e.g. max=2 becomes 0,1,2,3,4 to fit 5 ticks).
+function daysAgoLabel(iso: string): string {
+  const target = new Date(`${iso}T00:00:00.000Z`);
+  const todayUTC = new Date();
+  todayUTC.setUTCHours(0, 0, 0, 0);
+  const days = Math.round(
+    (todayUTC.getTime() - target.getTime()) / 86_400_000,
+  );
+  if (days === 0) return "Today";
+  if (days === 1) return "Yesterday";
+  if (days > 1) return `${days} days ago`;
+  return formatTickDate(iso);
+}
+
+// Build integer-only Y-axis ticks Vercel-style: pick a nice step
+// (1, 2, 5, 10, 20, …) targeting ~5 ticks and let the tick count fall
+// out. A fixed tick-count algorithm inflates the upper bound on small
+// ranges (max=2 ends up 0,1,2,3,4).
 function niceIntegerTicks(points: TrendPoint[]): number[] {
   const dataMax = points.reduce(
     (max, p) => (p.value != null && p.value > max ? p.value : max),
@@ -87,452 +78,299 @@ function niceIntegerTicks(points: TrendPoint[]): number[] {
   return ticks;
 }
 
-function daysAgoLabel(iso: string): string {
-  const target = new Date(`${iso}T00:00:00.000Z`);
-  const todayUTC = new Date();
-  todayUTC.setUTCHours(0, 0, 0, 0);
-  const days = Math.round(
-    (todayUTC.getTime() - target.getTime()) / 86_400_000,
-  );
-  if (days === 0) return "Today";
-  if (days === 1) return "Yesterday";
-  if (days > 1) return `${days} days ago`;
-  return formatTickDate(iso);
-}
-
-interface CustomTickProps {
-  x?: number;
-  y?: number;
-  payload?: { value: string; index: number };
-  activeLabel: string | null;
-  totalPoints: number;
-}
-
-// Renders each X-axis tick. When the hovered point's date matches the
-// tick's date, we hide the tick — the HTML overlay below the chart
-// renders the "N days ago" label at exactly this position instead,
-// with a solid background that masks any neighbouring tick text that
-// would otherwise show through. Comparing by date (not by index)
-// matters because Recharts' tick index can refer to rendered position
-// rather than data index once interval thinning kicks in.
-//
-// Also suppresses labels at the very first and very last data points
-// so the row of dates doesn't crowd the chart's left/right edges —
-// matches Vercel's analytics chart pattern.
-function CustomTick({
-  x = 0,
-  y = 0,
-  payload,
-  activeLabel,
-  totalPoints,
-}: CustomTickProps) {
-  if (!payload) return null;
-  if (payload.index === 0 || payload.index >= totalPoints - 1) return null;
-  const isActive = activeLabel !== null && payload.value === activeLabel;
-  if (isActive) return null;
+export default function ConsentTrendChart(props: ConsentTrendChartProps) {
   return (
-    <text
-      x={x}
-      y={y}
-      dy="0.71em"
-      textAnchor="middle"
-      fontSize={12}
-      fontWeight={400}
-      fill="var(--ds-gray-700)"
-      // pointer-events: none so hovering the label lets the mouse
-      // event reach the chart's onMouseMove handler rather than being
-      // swallowed by the <text> element.
-      style={{ pointerEvents: "none" }}
-    >
-      {formatTickDate(payload.value)}
-    </text>
-  );
-}
-
-// SVG cursor — just the vertical line. The "N days ago" label is no
-// longer rendered in SVG; it's an HTML overlay sibling of the chart
-// (see ConsentTrendChart's return JSX) so it always stacks above the
-// chart's SVG content regardless of how Recharts orders cursor vs
-// axis elements internally.
-interface CursorLineProps {
-  points?: { x: number; y: number }[];
-}
-
-// Custom tooltip — mirrors Vercel's chart tooltip:
-//   [● Label  Value]
-//   [    Date     ]
-// 6px rounded box, ds-shadow-tooltip (1px border layer + soft drop),
-// 8/16 padding. Value is rendered in the mono family so single-digit
-// vs multi-digit numbers don't shuffle layout when hovering.
-interface TooltipPayloadEntry {
-  value?: number;
-}
-interface TrendTooltipProps {
-  active?: boolean;
-  payload?: TooltipPayloadEntry[];
-  label?: string;
-  metricLabel: string;
-  format: "count" | "percent";
-}
-
-function TrendTooltip({
-  active,
-  payload,
-  label,
-  metricLabel,
-  format,
-}: TrendTooltipProps) {
-  if (!active || !payload?.[0] || payload[0].value == null) return null;
-  const v = payload[0].value;
-  const formattedValue =
-    format === "percent" ? `${v.toFixed(1)}%` : v.toLocaleString();
-  const formattedDate = label ? formatTickDate(label) : "";
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 4,
-        padding: "8px 16px",
-        borderRadius: 6,
-        background: "var(--ds-background-100)",
-        boxShadow: "var(--ds-shadow-tooltip)",
-        whiteSpace: "nowrap",
-        pointerEvents: "none",
-        fontSize: 14,
-        lineHeight: "20px",
-        color: "var(--ds-gray-1000)",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span
-          style={{
-            display: "inline-block",
-            width: 8,
-            height: 8,
-            borderRadius: 9999,
-            background: "var(--ds-blue-900)",
-          }}
-        />
-        <span style={{ fontWeight: 400 }}>{metricLabel}</span>
-        <span style={{ fontFamily: "var(--font-mono)", fontWeight: 500 }}>
-          {formattedValue}
-        </span>
+    <div style={{ padding: "24px 24px 16px" }}>
+      <div style={{ position: "relative", height: CHART_HEIGHT }}>
+        <ParentSize>
+          {({ width }) =>
+            width > 0 ? (
+              <ChartInner {...props} width={width} height={CHART_HEIGHT} />
+            ) : null
+          }
+        </ParentSize>
       </div>
-      <span style={{ color: "var(--ds-gray-900)" }}>{formattedDate}</span>
     </div>
   );
 }
 
-function CursorLine({ points }: CursorLineProps) {
-  if (!points || points.length < 2) return null;
-  const x = points[0].x;
-  return (
-    <line
-      x1={x}
-      // Span the full plot height regardless of the hovered data
-      // point's y, matching Vercel's chart cursor. Recharts'
-      // default custom-cursor points[0].y is the data y, which
-      // makes the line short for low values.
-      y1={CHART_TOP_MARGIN}
-      x2={x}
-      // Extend 7px past plot bottom into the X-axis area so the
-      // line visually anchors the pill label sitting just below —
-      // matches Vercel's chart cursor (y2 = plotBottom + 7).
-      y2={points[1].y + 7}
-      stroke="var(--ds-gray-1000)"
-      strokeWidth={2}
-      style={{ pointerEvents: "none" }}
-    />
-  );
+interface ChartInnerProps extends ConsentTrendChartProps {
+  width: number;
+  height: number;
 }
 
-export default function ConsentTrendChart({
+function ChartInner({
   trend,
   metricLabel,
   format,
-}: ConsentTrendChartProps) {
-  const [activeLabel, setActiveLabel] = useState<string | null>(null);
-  // Cursor x position within the chart SVG (chart-relative pixels).
-  // Captured from Recharts' activeCoordinate so we can place the HTML
-  // overlay at the same column the cursor line draws on.
-  const [cursorX, setCursorX] = useState<number | null>(null);
+  width,
+  height,
+}: ChartInnerProps) {
+  const isPercent = format === "percent";
+  const plotWidth = Math.max(width - MARGIN.left - MARGIN.right, 0);
+  const plotHeight = Math.max(height - MARGIN.top - MARGIN.bottom, 0);
 
-  // Outer-relative top of the X-axis tick text row, measured from a
-  // real rendered SVG tick element. We let the overlay size to its
-  // content vertically — constraining height by the measured tick
-  // rect collapsed the box in some cases and hid the text.
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const [tickRowTop, setTickRowTop] = useState<number | null>(null);
+  // Y-axis: nice integer ticks (counts) or fixed 0/25/50/75/100
+  // (percent). Domain extends one step above the last tick so the
+  // line has visible headroom above the highest labelled value.
+  const yTicks = useMemo(
+    () => (isPercent ? [0, 25, 50, 75, 100] : niceIntegerTicks(trend)),
+    [isPercent, trend],
+  );
+  const yDomainMax = useMemo(() => {
+    if (isPercent) return 100;
+    if (yTicks.length < 2) return yTicks[yTicks.length - 1] ?? 1;
+    const step = yTicks[1] - yTicks[0];
+    return yTicks[yTicks.length - 1] + step;
+  }, [isPercent, yTicks]);
 
-  // Measured rendered tooltip width, so we can position the flipped
-  // (left-of-cursor) box with the same 8px gap as the unflipped one.
-  // Starts at the estimate so the very first hover is roughly right;
-  // the layout effect below updates it to the real width after the
-  // first render.
-  const [tooltipWidth, setTooltipWidth] = useState<number>(
-    TOOLTIP_WIDTH_ESTIMATE,
+  const xScale = useMemo(
+    () =>
+      scalePoint<string>({
+        domain: trend.map((p) => p.date),
+        range: [0, plotWidth],
+      }),
+    [trend, plotWidth],
   );
 
-  useLayoutEffect(() => {
-    if (!wrapperRef.current) return;
-    const tip = wrapperRef.current.querySelector<HTMLElement>(
-      ".recharts-tooltip-wrapper > *",
-    );
-    if (!tip) return;
-    const w = tip.getBoundingClientRect().width;
-    // Only update if it changed materially, to avoid an update loop
-    // when this effect re-runs each render.
-    if (w > 0 && Math.abs(w - tooltipWidth) > 1) {
-      setTooltipWidth(w);
-    }
-  });
+  const yScale = useMemo(
+    () =>
+      scaleLinear<number>({
+        domain: [0, yDomainMax],
+        range: [plotHeight, 0],
+        nice: false,
+      }),
+    [yDomainMax, plotHeight],
+  );
 
-  // Compute tooltip x with flip-when-near-right-edge. Read the
-  // wrapper width directly from the ref each render rather than
-  // tracking via state — state updates lag a render behind the
-  // mousemove, and the flip then doesn't trigger until the next
-  // movement.
-  const tooltipX = (cx: number): number => {
-    const chartWidth = wrapperRef.current
-      ? wrapperRef.current.clientWidth - 2 * WRAPPER_PADDING_LEFT
-      : 0;
-    if (chartWidth > 0 && cx + TOOLTIP_CURSOR_GAP + tooltipWidth > chartWidth) {
-      return cx - TOOLTIP_CURSOR_GAP - tooltipWidth;
-    }
-    return cx + TOOLTIP_CURSOR_GAP;
-  };
-
-  useLayoutEffect(() => {
-    if (!wrapperRef.current) return;
-    const wrapper = wrapperRef.current;
-    let raf = 0;
-
-    const measure = () => {
-      const tick = wrapper.querySelector(
-        ".recharts-xAxis .recharts-cartesian-axis-tick text",
-      );
-      if (!tick) {
-        // Recharts' ResponsiveContainer paints async after measuring
-        // its own size, so the SVG may not be in the DOM on the first
-        // layout pass. Retry next frame until we find a tick — the
-        // wrapper itself never resizes, so we can't rely on the
-        // ResizeObserver to catch this.
-        raf = requestAnimationFrame(measure);
-        return;
-      }
-      const wrapperRect = wrapper.getBoundingClientRect();
-      const tickRect = tick.getBoundingClientRect();
-      setTickRowTop(tickRect.top - wrapperRect.top);
-    };
-
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(wrapper);
-    return () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-    };
+  // Visible X-axis tick dates: every ~7th data point, skipping the
+  // very first and very last so the row of dates doesn't crowd the
+  // chart's left/right edges.
+  const xTickValues = useMemo(() => {
+    if (trend.length <= 2) return [];
+    const interval = Math.max(1, Math.ceil(trend.length / 7));
+    return trend
+      .map((p) => p.date)
+      .filter((_, i, arr) => {
+        if (i === 0 || i === arr.length - 1) return false;
+        return i % interval === 0;
+      });
   }, [trend]);
 
-  const chartConfig = {
-    value: {
-      label: metricLabel,
-      color: "var(--ds-blue-900)",
+  const {
+    tooltipData,
+    tooltipLeft,
+    showTooltip,
+    hideTooltip,
+  } = useTooltip<TrendPoint>();
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<SVGRectElement>) => {
+      const point = localPoint(e);
+      if (!point || trend.length === 0) return;
+      // Snap to nearest data point by x (scalePoint puts data at
+      // even steps across [0, plotWidth]).
+      const xInPlot = point.x - MARGIN.left;
+      const step = plotWidth / Math.max(trend.length - 1, 1);
+      const i = Math.round(xInPlot / step);
+      const clamped = Math.max(0, Math.min(trend.length - 1, i));
+      const d = trend[clamped];
+      const x = xScale(d.date) ?? 0;
+      showTooltip({
+        tooltipData: d,
+        tooltipLeft: MARGIN.left + x,
+        tooltipTop: MARGIN.top,
+      });
     },
-  } satisfies ChartConfig;
+    [plotWidth, trend, xScale, showTooltip],
+  );
 
-  const isPercent = format === "percent";
-
-  // Vercel-style y-axis: pick a nice integer step and let the tick count
-  // fall out (max=2 → 0,1,2; max=7 → 0,2,4,6,8). Recharts' default
-  // targets a fixed tick count, which inflates the upper bound when
-  // the data range is tiny (max=2 ends up as 0,1,2,3,4).
-  const yTicks: number[] = isPercent
-    ? [0, 25, 50, 75, 100]
-    : niceIntegerTicks(trend);
-  const yDomain: [number, number] = isPercent
-    ? [0, 100]
-    : [0, yTicks[yTicks.length - 1]];
-
-  const showOverlay =
-    activeLabel !== null && cursorX !== null && tickRowTop !== null;
+  const activeX = tooltipData ? (xScale(tooltipData.date) ?? 0) : null;
+  const activeY =
+    tooltipData && tooltipData.value != null ? yScale(tooltipData.value) : null;
 
   return (
-    <div
-      ref={wrapperRef}
-      style={{
-        padding: `${WRAPPER_PADDING_TOP}px ${WRAPPER_PADDING_LEFT}px 16px`,
-        position: "relative",
-      }}
-    >
-      <ChartContainer
-        config={chartConfig}
-        className="aspect-auto h-[400px] w-full"
-      >
-        <AreaChart
-          accessibilityLayer
-          data={trend}
-          margin={{
-            left: 8,
-            // Enough room for the rightmost X-axis tick label, which
-            // centers on the last data point. With margin.right=12
-            // the label (e.g. "May 26") overflowed the SVG and got
-            // clipped at the panel edge.
-            right: 32,
-            top: CHART_TOP_MARGIN,
-            bottom: CHART_BOTTOM_MARGIN,
-          }}
-          onMouseMove={(state) => {
-            const s = state as unknown as {
-              activeLabel?: string;
-              activeCoordinate?: { x?: number };
-            };
-            setActiveLabel(
-              typeof s.activeLabel === "string" ? s.activeLabel : null,
-            );
-            const x = s.activeCoordinate?.x;
-            setCursorX(typeof x === "number" ? x : null);
-          }}
-          onMouseLeave={() => {
-            setActiveLabel(null);
-            setCursorX(null);
-          }}
-        >
-          <defs>
-            <linearGradient id="consent-trend-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop
-                offset="0%"
-                stopColor="var(--ds-blue-900)"
-                stopOpacity={0.22}
-              />
-              <stop
-                offset="100%"
-                stopColor="var(--ds-blue-900)"
-                stopOpacity={0.02}
-              />
-            </linearGradient>
-          </defs>
-          <CartesianGrid
-            vertical={false}
+    <>
+      <svg width={width} height={height} style={{ display: "block" }}>
+        <defs>
+          <linearGradient
+            id="consent-trend-fill"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="1"
+          >
+            <stop
+              offset="0%"
+              stopColor="var(--ds-blue-900)"
+              stopOpacity={0.22}
+            />
+            <stop
+              offset="100%"
+              stopColor="var(--ds-blue-900)"
+              stopOpacity={0.02}
+            />
+          </linearGradient>
+        </defs>
+        <Group left={MARGIN.left} top={MARGIN.top}>
+          <GridRows
+            scale={yScale}
+            width={plotWidth}
+            tickValues={yTicks}
             stroke="var(--ds-gray-400)"
-            // Restrict horizontal gridlines to our labelled ticks.
-            // Recharts otherwise also draws a line at the padded-top
-            // of the plot area, which looks like an unlabelled tick.
-            //
-            // Recharts wraps the underlying d3 scale in a RechartsScale
-            // interface (`scale.map(value)` instead of `scale(value)`)
-            // — calling it like a d3 scale crashes the chart.
-            horizontalCoordinatesGenerator={({ yAxis }) => {
-              const scale = (
-                yAxis as
-                  | { scale?: { map?: (value: number) => number | undefined } }
-                  | undefined
-              )?.scale;
-              if (!scale?.map) return [];
-              return yTicks
-                .map((t) => scale.map?.(t))
-                .filter((y): y is number => typeof y === "number");
-            }}
+            strokeWidth={1}
           />
-          <XAxis
-            dataKey="date"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={TICK_MARGIN}
-            interval={Math.max(0, Math.ceil(trend.length / 7) - 1)}
-            tick={(props) => (
-              <CustomTick
-                {...(props as unknown as CustomTickProps)}
-                activeLabel={activeLabel}
-                totalPoints={trend.length}
-              />
-            )}
-          />
-          <YAxis
-            tickLine={false}
-            axisLine={false}
-            width={48}
-            tickMargin={4}
-            tick={{ fill: "var(--ds-gray-700)", fontSize: 12 }}
-            domain={yDomain}
-            ticks={yTicks}
-            // Pushes the top tick down inside the plot area so the
-            // line has visible headroom above the highest labelled
-            // value — top tick stops being the chart's top edge.
-            padding={{ top: 24, bottom: 0 }}
-            // Integer ticks only — without this Recharts picks 0.5
-            // increments when the count range is small (e.g. 0–3),
-            // which reads as "0.5 visitors" nonsense.
-            allowDecimals={false}
-            tickFormatter={(v: number) =>
-              isPercent ? `${v}%` : v.toLocaleString()
-            }
-          />
-          <ChartTooltip
-            // Pin the tooltip near the top of the plot area, just to
-            // the right of the cursor line. `position` is in
-            // chart-relative pixels; y=32 drops the box just below
-            // the top tick label so it has breathing room from the
-            // panel's top edge. `tooltipX` flips to the left of the
-            // cursor when the box would otherwise overflow the
-            // chart's right edge.
-            position={
-              cursorX !== null
-                ? { x: tooltipX(cursorX), y: 32 }
-                : undefined
-            }
-            // Recharts CSS-transitions the tooltip between positions
-            // by default, which reads as the tooltip lagging behind
-            // the cursor line. Snap to position instead.
-            isAnimationActive={false}
-            cursor={<CursorLine />}
-            content={
-              <TrendTooltip
-                metricLabel={metricLabel}
-                format={format}
-              />
-            }
-          />
-          <Area
-            type="linear"
-            dataKey="value"
-            stroke="var(--color-value)"
-            strokeWidth={2}
+          <AreaClosed<TrendPoint>
+            data={trend}
+            x={(d) => xScale(d.date) ?? 0}
+            y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
+            yScale={yScale}
             fill="url(#consent-trend-fill)"
-            connectNulls={false}
-            isAnimationActive={false}
-            // Solid blue dot at the hovered data point — no ring,
-            // matches Vercel's visx-circle (4px radius, primary fill
-            // only).
-            activeDot={{
-              r: 4,
-              fill: "var(--ds-blue-900)",
-              stroke: "none",
-            }}
+            curve={curveLinear}
+            defined={(d) => d.value != null}
           />
-        </AreaChart>
-      </ChartContainer>
+          <LinePath<TrendPoint>
+            data={trend}
+            x={(d) => xScale(d.date) ?? 0}
+            y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
+            stroke="var(--ds-blue-900)"
+            strokeWidth={2}
+            curve={curveLinear}
+            defined={(d) => d.value != null}
+          />
+          <AxisLeft
+            scale={yScale}
+            tickValues={yTicks}
+            hideAxisLine
+            hideTicks
+            tickFormat={(v) =>
+              isPercent
+                ? `${v as number}%`
+                : (v as number).toLocaleString()
+            }
+            tickLabelProps={() => ({
+              fill: "var(--ds-gray-700)",
+              fontSize: 12,
+              textAnchor: "end",
+              dx: -8,
+              dy: 4,
+            })}
+          />
+          <AxisBottom
+            top={plotHeight}
+            scale={xScale}
+            hideAxisLine
+            hideTicks
+            tickValues={xTickValues}
+            tickFormat={(d) => formatTickDate(d as string)}
+            tickLabelProps={(d) => ({
+              fill: "var(--ds-gray-700)",
+              fontSize: 12,
+              textAnchor: "middle",
+              dy: 12,
+              // Hide the tick at the hovered x — the HTML overlay
+              // below replaces it with "N days ago".
+              opacity:
+                tooltipData && tooltipData.date === d ? 0 : 1,
+            })}
+          />
+          {activeX != null && (
+            <Line
+              from={{ x: activeX, y: 0 }}
+              to={{ x: activeX, y: plotHeight + 7 }}
+              stroke="var(--ds-gray-1000)"
+              strokeWidth={2}
+              pointerEvents="none"
+            />
+          )}
+          {activeX != null && activeY != null && (
+            <circle
+              cx={activeX}
+              cy={activeY}
+              r={4}
+              fill="var(--ds-blue-900)"
+              pointerEvents="none"
+            />
+          )}
+          <Bar
+            x={0}
+            y={0}
+            width={plotWidth}
+            height={plotHeight}
+            fill="transparent"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={hideTooltip}
+          />
+        </Group>
+      </svg>
 
-      {showOverlay && (
-        <div
-          // Flat HTML knockout for the "N days ago" label — same
-          // background as the panel, slight rounded corners, no
-          // shadow, no border. Sits in the X-axis tick row;
-          // background-100 fill masks any underlying tick label
-          // without an obvious "tooltip" treatment.
-          //
-          // `top` is the measured top of the SVG tick text rect; the
-          // box sizes to its content vertically so the text always
-          // renders. SVG <text dy="0.71em"> and HTML <div lineHeight:1>
-          // share a near-identical glyph-top, so anchoring by top
-          // lands the label on the tick row without a magic offset.
+      {tooltipData && tooltipLeft != null && (
+        <TooltipWithBounds
+          top={MARGIN.top}
+          left={tooltipLeft + 8}
+          unstyled
           style={{
             position: "absolute",
-            left: WRAPPER_PADDING_LEFT + (cursorX ?? 0),
-            top: tickRowTop ?? 0,
+            background: "var(--ds-background-100)",
+            boxShadow: "var(--ds-shadow-tooltip)",
+            borderRadius: 6,
+            padding: "8px 16px",
+            color: "var(--ds-gray-1000)",
+            fontSize: 14,
+            lineHeight: "20px",
+            pointerEvents: "none",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span
+                style={{
+                  display: "inline-block",
+                  width: 8,
+                  height: 8,
+                  borderRadius: 9999,
+                  background: "var(--ds-blue-900)",
+                }}
+              />
+              <span style={{ fontWeight: 400 }}>{metricLabel}</span>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontWeight: 500,
+                }}
+              >
+                {tooltipData.value != null
+                  ? isPercent
+                    ? `${tooltipData.value.toFixed(1)}%`
+                    : tooltipData.value.toLocaleString()
+                  : "—"}
+              </span>
+            </div>
+            <span style={{ color: "var(--ds-gray-900)" }}>
+              {formatTickDate(tooltipData.date)}
+            </span>
+          </div>
+        </TooltipWithBounds>
+      )}
+
+      {tooltipData && tooltipLeft != null && (
+        <div
+          // "N days ago" overlay — flat HTML knockout that replaces
+          // the SVG tick at the hovered x. background-100 fill masks
+          // any underlying tick label without an obvious tooltip
+          // treatment.
+          style={{
+            position: "absolute",
+            left: tooltipLeft,
+            top: MARGIN.top + plotHeight + 12,
             transform: "translateX(-50%)",
             background: "var(--ds-background-100)",
             color: "var(--ds-gray-1000)",
@@ -545,9 +383,9 @@ export default function ConsentTrendChart({
             pointerEvents: "none",
           }}
         >
-          {daysAgoLabel(activeLabel)}
+          {daysAgoLabel(tooltipData.date)}
         </div>
       )}
-    </div>
+    </>
   );
 }
