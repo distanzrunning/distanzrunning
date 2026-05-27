@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/Calendar";
 
 import {
+  DEFAULT_PRESET,
   isoOf,
   matchPreset,
   presetWindow,
@@ -18,12 +19,12 @@ import {
 } from "./presets";
 
 const PRESETS: { label: string; id: PresetId }[] = [
-  { label: "Last 7 days", id: "last-7-days" },
-  { label: "Last 30 days", id: "last-30-days" },
-  { label: "Last 90 days", id: "last-90-days" },
-  { label: "This month", id: "this-month" },
+  { label: "Last 7 days", id: "7d" },
+  { label: "Last 30 days", id: "30d" },
+  { label: "Last 90 days", id: "90d" },
+  { label: "This month", id: "mtd" },
   { label: "Last month", id: "last-month" },
-  { label: "All time", id: "all-time" },
+  { label: "All time", id: "all" },
 ];
 
 const calendarPresets: CalendarPreset[] = PRESETS.map(({ label, id }) => {
@@ -62,12 +63,17 @@ export default function ConsentDateRangePicker() {
     next.delete("filter");
     // If the chosen range matches a preset, store it by id so the
     // link stays relative-to-today on revisit; otherwise fall back
-    // to absolute from/to for a custom range.
+    // to absolute from/to for a custom range. The default preset is
+    // the bare URL, so we omit the param in that case.
     const preset = matchPreset({ start: range.start, end: range.end });
     if (preset) {
-      next.set("period", preset);
       next.delete("from");
       next.delete("to");
+      if (preset === DEFAULT_PRESET) {
+        next.delete("period");
+      } else {
+        next.set("period", preset);
+      }
     } else {
       next.set("from", isoOf(range.start));
       next.set("to", isoOf(range.end));

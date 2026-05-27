@@ -12,14 +12,14 @@ export interface DateWindow {
 }
 
 export type PresetId =
-  | "last-7-days"
-  | "last-30-days"
-  | "last-90-days"
-  | "this-month"
+  | "7d"
+  | "30d"
+  | "90d"
+  | "mtd"
   | "last-month"
-  | "all-time";
+  | "all";
 
-const DEFAULT_PRESET: PresetId = "last-90-days";
+export const DEFAULT_PRESET: PresetId = "7d";
 // "All time" picks a date far enough back that every row qualifies.
 // We don't have data older than 2020, so 2000-01-01 is a safe
 // sentinel and keeps the URL simple (no special-case for "no upper").
@@ -46,13 +46,13 @@ function addDays(d: Date, days: number): Date {
 export function presetWindow(id: PresetId): DateWindow {
   const today = startOfDay(new Date());
   switch (id) {
-    case "last-7-days":
+    case "7d":
       return { start: addDays(today, -7), end: endOfDay(today) };
-    case "last-30-days":
+    case "30d":
       return { start: addDays(today, -30), end: endOfDay(today) };
-    case "last-90-days":
+    case "90d":
       return { start: addDays(today, -90), end: endOfDay(today) };
-    case "this-month": {
+    case "mtd": {
       const start = new Date(
         Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1),
       );
@@ -67,19 +67,19 @@ export function presetWindow(id: PresetId): DateWindow {
       );
       return { start, end };
     }
-    case "all-time":
+    case "all":
       return { start: ALL_TIME_START, end: endOfDay(today) };
   }
 }
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const PRESET_IDS: readonly PresetId[] = [
-  "last-7-days",
-  "last-30-days",
-  "last-90-days",
-  "this-month",
+  "7d",
+  "30d",
+  "90d",
+  "mtd",
   "last-month",
-  "all-time",
+  "all",
 ];
 
 function parseIsoDate(raw: string | undefined): Date | null {
@@ -149,5 +149,3 @@ export function matchPreset(w: DateWindow): PresetId | null {
   }
   return null;
 }
-
-export const DEFAULT_RANGE_ID = DEFAULT_PRESET;

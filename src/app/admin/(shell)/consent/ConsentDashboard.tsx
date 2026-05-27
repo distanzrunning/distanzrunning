@@ -13,6 +13,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/server";
 import ConsentTrendChart from "./ConsentTrendChart";
 import RecentDecisionsTable from "./RecentDecisionsTable";
 import {
+  DEFAULT_PRESET,
   isoOf,
   matchPreset,
   previousWindow,
@@ -38,7 +39,8 @@ function buildHref(
   const usp = new URLSearchParams();
   const preset = matchPreset(window);
   if (preset) {
-    usp.set("period", preset);
+    // Default preset is the bare URL — keep links clean.
+    if (preset !== DEFAULT_PRESET) usp.set("period", preset);
   } else {
     usp.set("from", isoOf(window.start));
     usp.set("to", isoOf(window.end));
