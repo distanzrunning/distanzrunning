@@ -303,6 +303,10 @@ function ChartInner({
               fill: "var(--ds-gray-700)",
               fontSize: 12,
               textAnchor: "middle",
+              // `hanging` baseline puts the text's top at y+dy, so it
+              // shares an anchor with the HTML "N days ago" overlay
+              // below — both texts then visually sit on the same row.
+              dominantBaseline: "hanging",
               dy: 12,
               // Hide the tick at the hovered x — the HTML overlay
               // below replaces it with "N days ago".
