@@ -105,6 +105,7 @@ interface CustomTickProps {
   y?: number;
   payload?: { value: string; index: number };
   activeLabel: string | null;
+  totalPoints: number;
 }
 
 // Renders each X-axis tick. When the hovered point's date matches the
@@ -114,8 +115,19 @@ interface CustomTickProps {
 // would otherwise show through. Comparing by date (not by index)
 // matters because Recharts' tick index can refer to rendered position
 // rather than data index once interval thinning kicks in.
-function CustomTick({ x = 0, y = 0, payload, activeLabel }: CustomTickProps) {
+//
+// Also suppresses labels at the very first and very last data points
+// so the row of dates doesn't crowd the chart's left/right edges —
+// matches Vercel's analytics chart pattern.
+function CustomTick({
+  x = 0,
+  y = 0,
+  payload,
+  activeLabel,
+  totalPoints,
+}: CustomTickProps) {
   if (!payload) return null;
+  if (payload.index === 0 || payload.index >= totalPoints - 1) return null;
   const isActive = activeLabel !== null && payload.value === activeLabel;
   if (isActive) return null;
   return (
@@ -435,6 +447,7 @@ export default function ConsentTrendChart({
               <CustomTick
                 {...(props as unknown as CustomTickProps)}
                 activeLabel={activeLabel}
+                totalPoints={trend.length}
               />
             )}
           />
