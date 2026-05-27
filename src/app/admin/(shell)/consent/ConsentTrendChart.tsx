@@ -28,7 +28,7 @@ interface ConsentTrendChartProps {
 // Total drawn height of the chart, including all margins / axes.
 const CHART_HEIGHT = 400;
 // SVG margins reserve room for axis labels.
-const MARGIN = { top: 40, right: 32, bottom: 44, left: 56 };
+const MARGIN = { top: 24, right: 32, bottom: 44, left: 56 };
 // Fixed pixel gap between the top of the plot area and the top tick
 // — gives the line visible headroom and lets a data value above the
 // top tick visibly peak into that gap (range padding rather than
@@ -375,11 +375,10 @@ function ChartInner({
 
       {tooltipData && tooltipLeft != null && (
         <TooltipWithBounds
-          // Anchor at the top of the plot area — MARGIN.top already
-          // gives breathing room from the panel's top edge, so no
-          // further offset is needed. visx's flip logic still
+          // Drop the tooltip a touch into the plot so it doesn't sit
+          // flush with the panel's top edge. visx's flip logic still
           // mirrors it left of the cursor when it would overflow.
-          top={MARGIN.top}
+          top={MARGIN.top + 12}
           left={tooltipLeft}
           // Symmetric gap on both sides of the cursor: TooltipWithBounds
           // applies offsetLeft as +offsetLeft when placed right and

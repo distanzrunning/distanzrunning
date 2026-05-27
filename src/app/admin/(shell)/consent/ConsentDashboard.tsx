@@ -332,6 +332,10 @@ export async function ConsentDashboardContent({
             borderBottom: "1px solid var(--ds-gray-400)",
             background: "var(--ds-background-200)",
             overflowX: "auto",
+            // DS spacing-6 below the stat tiles — visually drops the
+            // chart further from the panel header without inflating
+            // the SVG's own MARGIN.top.
+            paddingBottom: 24,
           }}
         >
           <div style={{ minWidth: 220, flexShrink: 0 }}>
