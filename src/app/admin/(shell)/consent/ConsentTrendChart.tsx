@@ -386,7 +386,7 @@ export default function ConsentTrendChart({
             // Pushes the top tick down inside the plot area so the
             // line has visible headroom above the highest labelled
             // value — top tick stops being the chart's top edge.
-            padding={{ top: 40, bottom: 0 }}
+            padding={{ top: 24, bottom: 0 }}
             // Integer ticks only — without this Recharts picks 0.5
             // increments when the count range is small (e.g. 0–3),
             // which reads as "0.5 visitors" nonsense.
