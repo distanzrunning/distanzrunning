@@ -12,7 +12,7 @@ import { useConsentFilter } from "./ConsentFilterShell";
 // client-side instantly (no navigation). Pressing Enter commits the
 // query and navigates to the per-ID lookup view (which filters the
 // charts too — full-history scope).
-export default function ConsentFilterRow() {
+export default function ConsentFilterRow({ tz }: { tz: string }) {
   const router = useRouter();
   const { filterText, setFilterText } = useConsentFilter();
 
@@ -43,7 +43,7 @@ export default function ConsentFilterRow() {
           prefix={<Search className="w-4 h-4" />}
         />
       </div>
-      <ConsentDateRangePicker />
+      <ConsentDateRangePicker tz={tz} />
     </div>
   );
 }

@@ -4,19 +4,17 @@
 // renders these as Calendar presets; the page reads URL params and
 // resolves them to a {start, end} window the dashboard consumes.
 //
-// All day-bucketing is anchored to BUSINESS_TZ (Europe/Brussels), not
-// UTC. The DB stores timestamps in UTC, but business reporting groups
-// rows by the local calendar day they fall on — so a decision at
-// 23:30 UTC counts toward the next Brussels day during DST, not the
-// previous one. When the admin settings page lands, replace the
-// hard-coded constant with the configured value.
+// All day-bucketing is anchored to a configurable IANA timezone
+// (loaded server-side from site_settings → getSiteSettings()). The
+// DB stores timestamps in UTC, but business reporting groups rows by
+// the local calendar day they fall on. Every helper that touches
+// "what day is this?" takes `tz` as a parameter so the consent
+// dashboard, picker, and chart all agree on a single tz per request.
 
 export interface DateWindow {
-  /** Inclusive start. UTC instant at 00:00 BUSINESS_TZ on the
-   *  start day. */
+  /** Inclusive start. UTC instant at 00:00 (tz) on the start day. */
   start: Date;
-  /** Inclusive end. UTC instant at 23:59:59.999 BUSINESS_TZ on the
-   *  end day. */
+  /** Inclusive end. UTC instant at 23:59:59.999 (tz) on the end day. */
   end: Date;
 }
 
@@ -36,26 +34,34 @@ const ALL_TIME_START = new Date("2000-01-01T00:00:00.000Z");
 
 // ---------- Timezone helpers ----------
 
-export const BUSINESS_TZ = "Europe/Brussels";
-
-// 'en-CA' formats as YYYY-MM-DD, exactly the shape we want for
-// day-keys and ISO URL params.
-const businessDayFormatter = new Intl.DateTimeFormat("en-CA", {
-  timeZone: BUSINESS_TZ,
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-});
-
-/** "YYYY-MM-DD" for the BUSINESS_TZ-local day containing `date`. */
-export function formatBusinessDay(date: Date): string {
-  return businessDayFormatter.format(date);
+// Cache Intl.DateTimeFormat instances by tz — constructing them on
+// every call is measurable in tight loops.
+const dayFormatterCache = new Map<string, Intl.DateTimeFormat>();
+function getDayFormatter(tz: string): Intl.DateTimeFormat {
+  let f = dayFormatterCache.get(tz);
+  if (!f) {
+    // 'en-CA' formats as YYYY-MM-DD — exactly the shape we want for
+    // day-keys and ISO URL params.
+    f = new Intl.DateTimeFormat("en-CA", {
+      timeZone: tz,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    dayFormatterCache.set(tz, f);
+  }
+  return f;
 }
 
-/** Today's BUSINESS_TZ day as "YYYY-MM-DD". Recomputed on every
- *  call so callers behave correctly across midnight. */
-export function businessTodayKey(): string {
-  return formatBusinessDay(new Date());
+/** "YYYY-MM-DD" for the `tz`-local day containing `date`. */
+export function formatBusinessDay(date: Date, tz: string): string {
+  return getDayFormatter(tz).format(date);
+}
+
+/** Today's `tz` day as "YYYY-MM-DD". Recomputed on every call so
+ *  callers behave correctly across midnight. */
+export function businessTodayKey(tz: string): string {
+  return formatBusinessDay(new Date(), tz);
 }
 
 // Returns minutes the tz is ahead of UTC at the given instant.
@@ -86,33 +92,34 @@ function tzOffsetMinutes(date: Date, tz: string): number {
   return Math.round((asUTC - date.getTime()) / 60_000);
 }
 
-/** UTC instant at 00:00 BUSINESS_TZ on the given day-key. */
-export function businessDayStart(dayKey: string): Date {
+/** UTC instant at 00:00 (tz) on the given day-key. */
+export function businessDayStart(dayKey: string, tz: string): Date {
   const [y, m, d] = dayKey.split("-").map(Number);
   const naive = new Date(Date.UTC(y, m - 1, d, 0, 0, 0, 0));
-  const offset = tzOffsetMinutes(naive, BUSINESS_TZ);
+  const offset = tzOffsetMinutes(naive, tz);
   return new Date(naive.getTime() - offset * 60_000);
 }
 
-/** UTC instant at 23:59:59.999 BUSINESS_TZ on the given day-key. */
-export function businessDayEnd(dayKey: string): Date {
+/** UTC instant at 23:59:59.999 (tz) on the given day-key. */
+export function businessDayEnd(dayKey: string, tz: string): Date {
   const [y, m, d] = dayKey.split("-").map(Number);
   const naive = new Date(Date.UTC(y, m - 1, d, 23, 59, 59, 999));
-  const offset = tzOffsetMinutes(naive, BUSINESS_TZ);
+  const offset = tzOffsetMinutes(naive, tz);
   return new Date(naive.getTime() - offset * 60_000);
 }
 
 /** Step a day-key forward/backward by N calendar days. Operates on
- *  the date label, not real time — DST-safe. */
-export function addBusinessDays(dayKey: string, n: number): string {
+ *  the date label, not real time — DST-safe and tz-independent. */
+export function addBusinessDays(dayKey: string, n: number, tz: string): string {
   const [y, m, d] = dayKey.split("-").map(Number);
-  // Noon UTC representative: well inside the same Brussels day at
-  // both UTC+1 (winter) and UTC+2 (summer).
+  // Noon UTC representative — at any tz this falls well inside the
+  // same calendar day, so formatting it in tz gives the same date.
   const date = new Date(Date.UTC(y, m - 1, d + n, 12, 0, 0, 0));
-  return formatBusinessDay(date);
+  return formatBusinessDay(date, tz);
 }
 
-/** Calendar-day diff between two BUSINESS_TZ day-keys (a − b). */
+/** Calendar-day diff between two day-keys (a − b). Pure string math,
+ *  no tz needed since both inputs are already calendar dates. */
 export function diffBusinessDays(a: string, b: string): number {
   const [ay, am, ad] = a.split("-").map(Number);
   const [by, bm, bd] = b.split("-").map(Number);
@@ -121,40 +128,40 @@ export function diffBusinessDays(a: string, b: string): number {
   );
 }
 
-/** Milliseconds from `Date.now()` until the next BUSINESS_TZ
- *  midnight — handy for scheduling a one-shot timer that refreshes
+/** Milliseconds from `Date.now()` until the next `tz` midnight —
+ *  handy for scheduling a one-shot timer that refreshes
  *  "today"-dependent UI exactly when the calendar day rolls. */
-export function msUntilNextBusinessDay(): number {
-  const nextKey = addBusinessDays(businessTodayKey(), 1);
-  return businessDayStart(nextKey).getTime() - Date.now();
+export function msUntilNextBusinessDay(tz: string): number {
+  const nextKey = addBusinessDays(businessTodayKey(tz), 1, tz);
+  return businessDayStart(nextKey, tz).getTime() - Date.now();
 }
 
 // ---------- Window construction ----------
 
-export function presetWindow(id: PresetId): DateWindow {
-  const todayKey = businessTodayKey();
+export function presetWindow(id: PresetId, tz: string): DateWindow {
+  const todayKey = businessTodayKey(tz);
   switch (id) {
     case "7d":
       return {
-        start: businessDayStart(addBusinessDays(todayKey, -7)),
-        end: businessDayEnd(todayKey),
+        start: businessDayStart(addBusinessDays(todayKey, -7, tz), tz),
+        end: businessDayEnd(todayKey, tz),
       };
     case "30d":
       return {
-        start: businessDayStart(addBusinessDays(todayKey, -30)),
-        end: businessDayEnd(todayKey),
+        start: businessDayStart(addBusinessDays(todayKey, -30, tz), tz),
+        end: businessDayEnd(todayKey, tz),
       };
     case "90d":
       return {
-        start: businessDayStart(addBusinessDays(todayKey, -90)),
-        end: businessDayEnd(todayKey),
+        start: businessDayStart(addBusinessDays(todayKey, -90, tz), tz),
+        end: businessDayEnd(todayKey, tz),
       };
     case "mtd": {
       const [y, m] = todayKey.split("-").map(Number);
       const firstKey = `${y}-${String(m).padStart(2, "0")}-01`;
       return {
-        start: businessDayStart(firstKey),
-        end: businessDayEnd(todayKey),
+        start: businessDayStart(firstKey, tz),
+        end: businessDayEnd(todayKey, tz),
       };
     }
     case "last-month": {
@@ -166,12 +173,12 @@ export function presetWindow(id: PresetId): DateWindow {
       const startKey = `${prevY}-${String(prevM).padStart(2, "0")}-01`;
       const endKey = `${prevY}-${String(prevM).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
       return {
-        start: businessDayStart(startKey),
-        end: businessDayEnd(endKey),
+        start: businessDayStart(startKey, tz),
+        end: businessDayEnd(endKey, tz),
       };
     }
     case "all":
-      return { start: ALL_TIME_START, end: businessDayEnd(todayKey) };
+      return { start: ALL_TIME_START, end: businessDayEnd(todayKey, tz) };
   }
 }
 
@@ -185,14 +192,17 @@ const PRESET_IDS: readonly PresetId[] = [
   "all",
 ];
 
-function parseIsoDateAsStart(raw: string | undefined): Date | null {
+function parseIsoDateAsStart(
+  raw: string | undefined,
+  tz: string,
+): Date | null {
   if (!raw || !ISO_DATE.test(raw)) return null;
-  return businessDayStart(raw);
+  return businessDayStart(raw, tz);
 }
 
-function parseIsoDateAsEnd(raw: string | undefined): Date | null {
+function parseIsoDateAsEnd(raw: string | undefined, tz: string): Date | null {
   if (!raw || !ISO_DATE.test(raw)) return null;
-  return businessDayEnd(raw);
+  return businessDayEnd(raw, tz);
 }
 
 export function parsePresetId(raw: string | undefined): PresetId | null {
@@ -202,58 +212,63 @@ export function parsePresetId(raw: string | undefined): PresetId | null {
     : null;
 }
 
-/** BUSINESS_TZ day-key for a window endpoint — used for URL params
- *  so links survive bookmarking across timezones. */
-export function isoOf(d: Date): string {
-  return formatBusinessDay(d);
+/** `tz` day-key for a window endpoint — used for URL params so
+ *  links survive bookmarking across timezones. */
+export function isoOf(d: Date, tz: string): string {
+  return formatBusinessDay(d, tz);
 }
 
 /** Resolve the active window from URL search params. `period` takes
  *  precedence over `from`/`to`, so preset links stay relative-to-today
  *  even if shared / bookmarked. */
-export function windowFromParams(params: {
-  period?: string;
-  from?: string;
-  to?: string;
-}): DateWindow {
+export function windowFromParams(
+  params: {
+    period?: string;
+    from?: string;
+    to?: string;
+  },
+  tz: string,
+): DateWindow {
   const preset = parsePresetId(params.period);
-  if (preset) return presetWindow(preset);
-  const from = parseIsoDateAsStart(params.from);
-  const to = parseIsoDateAsEnd(params.to);
+  if (preset) return presetWindow(preset, tz);
+  const from = parseIsoDateAsStart(params.from, tz);
+  const to = parseIsoDateAsEnd(params.to, tz);
   if (from && to && from <= to) {
     return { start: from, end: to };
   }
-  return presetWindow(DEFAULT_PRESET);
+  return presetWindow(DEFAULT_PRESET, tz);
 }
 
 /** Same-length window immediately preceding `current`, snapped to
- *  BUSINESS_TZ day boundaries. */
-export function previousWindow(current: DateWindow): DateWindow {
-  const lengthDays = windowDays(current);
-  const prevEndKey = addBusinessDays(formatBusinessDay(current.start), -1);
-  const prevStartKey = addBusinessDays(prevEndKey, -(lengthDays - 1));
+ *  `tz` day boundaries. */
+export function previousWindow(current: DateWindow, tz: string): DateWindow {
+  const lengthDays = windowDays(current, tz);
+  const prevEndKey = addBusinessDays(formatBusinessDay(current.start, tz), -1, tz);
+  const prevStartKey = addBusinessDays(prevEndKey, -(lengthDays - 1), tz);
   return {
-    start: businessDayStart(prevStartKey),
-    end: businessDayEnd(prevEndKey),
+    start: businessDayStart(prevStartKey, tz),
+    end: businessDayEnd(prevEndKey, tz),
   };
 }
 
 /** Days in the window (inclusive). */
-export function windowDays(w: DateWindow): number {
-  return diffBusinessDays(formatBusinessDay(w.end), formatBusinessDay(w.start)) + 1;
+export function windowDays(w: DateWindow, tz: string): number {
+  return (
+    diffBusinessDays(formatBusinessDay(w.end, tz), formatBusinessDay(w.start, tz)) + 1
+  );
 }
 
 /** Match a {start, end} against the known presets — returns the id
  *  if the window equals one of them (used by the picker to show
  *  which preset, if any, is currently active). */
-export function matchPreset(w: DateWindow): PresetId | null {
-  const startKey = formatBusinessDay(w.start);
-  const endKey = formatBusinessDay(w.end);
+export function matchPreset(w: DateWindow, tz: string): PresetId | null {
+  const startKey = formatBusinessDay(w.start, tz);
+  const endKey = formatBusinessDay(w.end, tz);
   for (const id of PRESET_IDS) {
-    const candidate = presetWindow(id);
+    const candidate = presetWindow(id, tz);
     if (
-      formatBusinessDay(candidate.start) === startKey &&
-      formatBusinessDay(candidate.end) === endKey
+      formatBusinessDay(candidate.start, tz) === startKey &&
+      formatBusinessDay(candidate.end, tz) === endKey
     ) {
       return id;
     }

@@ -12,17 +12,15 @@ import { AreaClosed, Bar, Line, LinePath } from "@visx/shape";
 import { TooltipWithBounds, useTooltip } from "@visx/tooltip";
 
 import {
-  BUSINESS_TZ,
   businessTodayKey,
   diffBusinessDays,
   msUntilNextBusinessDay,
 } from "./presets";
 
 interface TrendPoint {
-  /** Full BUSINESS_TZ day-key "YYYY-MM-DD" — kept whole (rather
-   *  than sliced to MM-DD) so the tick formatter can build "May 19"
-   *  and the active overlay can compute "N days ago" without
-   *  re-parsing. */
+  /** Full tz day-key "YYYY-MM-DD" — kept whole (rather than sliced
+   *  to MM-DD) so the tick formatter can build "May 19" and the
+   *  active overlay can compute "N days ago" without re-parsing. */
   date: string;
   value: number | null;
 }
@@ -31,6 +29,10 @@ interface ConsentTrendChartProps {
   trend: TrendPoint[];
   metricLabel: string;
   format: "count" | "percent";
+  /** IANA timezone — drives today-detection, tick-label formatting,
+   *  and the days-ago pill. Loaded from site_settings server-side
+   *  and passed down so server/client agree on a single tz. */
+  tz: string;
 }
 
 // Total drawn height of the chart, including all margins / axes.
@@ -53,26 +55,26 @@ const AXIS_TICK_STYLE = {
   fontSize: 12,
 } as const;
 
-function formatTickDate(iso: string): string {
-  // `iso` is a BUSINESS_TZ day-key. Render the label in BUSINESS_TZ
-  // too — noon UTC is a safe representative of that day in Brussels
-  // (always the same calendar day at UTC+1 and UTC+2).
+function formatTickDate(iso: string, tz: string): string {
+  // `iso` is a tz day-key. Render the label in the same tz — noon
+  // UTC is a safe representative of that day at almost any offset
+  // (well inside the same calendar day at UTC±12).
   const d = new Date(`${iso}T12:00:00.000Z`);
   return d.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
-    timeZone: BUSINESS_TZ,
+    timeZone: tz,
   });
 }
 
-function daysAgoLabel(iso: string): string {
-  // `iso` and `businessTodayKey()` are both Brussels day-keys, so
+function daysAgoLabel(iso: string, tz: string): string {
+  // `iso` and `businessTodayKey(tz)` are both tz day-keys, so
   // diffBusinessDays gives a clean calendar-day diff (no DST drift).
-  const todayKey = businessTodayKey();
+  const todayKey = businessTodayKey(tz);
   const days = diffBusinessDays(todayKey, iso);
   if (days === 0) return "Today";
   if (days === 1) return "Yesterday";
-  if (days < 1) return formatTickDate(iso);
+  if (days < 1) return formatTickDate(iso, tz);
   // Calendar-exact month/year promotion: only label a date as
   // "N months ago" if it actually sits N calendar months back
   // (same day-of-month). A 60-day historical view no longer
@@ -167,6 +169,7 @@ function ChartInner({
   trend,
   metricLabel,
   format,
+  tz,
   width,
   height,
 }: ChartInnerProps) {
@@ -271,20 +274,20 @@ function ChartInner({
   // Today's segment is dashed (Vercel convention) — today's bucket is
   // still filling, so the slope into it isn't final. Only dash when
   // the trend actually ends today; a historical custom range stays
-  // fully solid. "Today" is the BUSINESS_TZ day, matching how the
-  // dashboard buckets rows. A one-shot timer fires at the next
-  // BUSINESS_TZ midnight so a long-open tab rolls over instead of
+  // fully solid. "Today" is the tz day, matching how the dashboard
+  // buckets rows. A one-shot timer fires at the next tz midnight so
+  // a long-open tab rolls over instead of
   // sticking on yesterday.
-  const [todayIso, setTodayIso] = useState<string>(() => businessTodayKey());
+  const [todayIso, setTodayIso] = useState<string>(() => businessTodayKey(tz));
   useEffect(() => {
-    // +1s buffer so we read businessTodayKey() *after* the boundary
-    // — avoids a race where the timer fires a few ms early and
-    // re-reads the same key.
+    // +1s buffer so we read businessTodayKey(tz) *after* the
+    // boundary — avoids a race where the timer fires a few ms
+    // early and re-reads the same key.
     const timer = setTimeout(() => {
-      setTodayIso(businessTodayKey());
-    }, msUntilNextBusinessDay() + 1000);
+      setTodayIso(businessTodayKey(tz));
+    }, msUntilNextBusinessDay(tz) + 1000);
     return () => clearTimeout(timer);
-  }, [todayIso]);
+  }, [todayIso, tz]);
   const lastIsToday =
     trend.length >= 2 && trend[trend.length - 1].date === todayIso;
   const solidTrend = lastIsToday ? trend.slice(0, -1) : trend;
@@ -302,12 +305,12 @@ function ChartInner({
   // empty.
   const ariaLabel = useMemo(() => {
     if (trend.length === 0) return `${metricLabel} chart, no data`;
-    const first = formatTickDate(trend[0].date);
-    const last = formatTickDate(trend[trend.length - 1].date);
+    const first = formatTickDate(trend[0].date, tz);
+    const last = formatTickDate(trend[trend.length - 1].date, tz);
     return isEmpty
       ? `${metricLabel} from ${first} to ${last}, no data`
       : `${metricLabel} from ${first} to ${last}`;
-  }, [trend, metricLabel, isEmpty]);
+  }, [trend, metricLabel, isEmpty, tz]);
 
   return (
     <>
@@ -384,7 +387,7 @@ function ChartInner({
             hideAxisLine
             hideTicks
             tickValues={xTickValues}
-            tickFormat={(d) => formatTickDate(d as string)}
+            tickFormat={(d) => formatTickDate(d as string, tz)}
             tickLabelProps={() => ({
               ...AXIS_TICK_STYLE,
               textAnchor: "middle",
@@ -550,7 +553,7 @@ function ChartInner({
               </span>
             </div>
             <span style={{ color: "var(--ds-gray-900)" }}>
-              {formatTickDate(tooltipData.date)}
+              {formatTickDate(tooltipData.date, tz)}
             </span>
           </div>
         </TooltipWithBounds>
@@ -582,7 +585,7 @@ function ChartInner({
             pointerEvents: "none",
           }}
         >
-          {daysAgoLabel(tooltipData.date)}
+          {daysAgoLabel(tooltipData.date, tz)}
         </div>
       )}
     </>

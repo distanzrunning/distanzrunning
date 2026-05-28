@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { ChevronLeft } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
+import { getSiteSettings } from "@/lib/site-settings";
 import {
   ConsentDashboardContent,
   ConsentDashboardSkeleton,
@@ -41,12 +42,16 @@ export default async function ConsentDashboardPage({
   const params = await searchParams;
   const query = params.q?.trim() ?? "";
   const filter = normaliseFilter(params.filter);
-  const window = windowFromParams({
-    period: params.period,
-    from: params.from,
-    to: params.to,
-  });
-  const windowKey = `${isoOf(window.start)}_${isoOf(window.end)}`;
+  const { timezone: tz } = await getSiteSettings();
+  const window = windowFromParams(
+    {
+      period: params.period,
+      from: params.from,
+      to: params.to,
+    },
+    tz,
+  );
+  const windowKey = `${isoOf(window.start, tz)}_${isoOf(window.end, tz)}`;
 
   return (
     <div>
@@ -99,7 +104,7 @@ export default async function ConsentDashboardPage({
           </Suspense>
         ) : (
           <ConsentFilterShell>
-            <ConsentFilterRow />
+            <ConsentFilterRow tz={tz} />
             <Suspense
               key={`${windowKey}_${filter ?? "all"}`}
               fallback={<ConsentDashboardSkeleton />}
@@ -108,6 +113,7 @@ export default async function ConsentDashboardPage({
                 filter={filter}
                 windowStart={window.start}
                 windowEnd={window.end}
+                tz={tz}
               />
             </Suspense>
           </ConsentFilterShell>

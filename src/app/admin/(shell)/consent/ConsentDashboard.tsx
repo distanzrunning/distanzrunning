@@ -23,6 +23,10 @@ import {
   type DateWindow,
 } from "./presets";
 
+interface BuildHrefContext {
+  tz: string;
+}
+
 type Decision = "accept_all" | "reject_all" | "custom";
 export type DecisionFilter = Decision;
 
@@ -37,15 +41,16 @@ const BASE_PATH = "/admin/consent";
 function buildHref(
   window: DateWindow,
   filter: Decision | null,
+  { tz }: BuildHrefContext,
 ): string {
   const usp = new URLSearchParams();
-  const preset = matchPreset(window);
+  const preset = matchPreset(window, tz);
   if (preset) {
     // Default preset is the bare URL — keep links clean.
     if (preset !== DEFAULT_PRESET) usp.set("period", preset);
   } else {
-    usp.set("from", isoOf(window.start));
-    usp.set("to", isoOf(window.end));
+    usp.set("from", isoOf(window.start, tz));
+    usp.set("to", isoOf(window.end, tz));
   }
   if (filter) usp.set("filter", filter);
   const qs = usp.toString();
@@ -125,21 +130,22 @@ function buildTrend(
   rows: ConsentRow[],
   window: DateWindow,
   filter: DecisionFilter | null,
+  tz: string,
 ): TrendPoint[] {
   const days = new Map<string, { total: number; matched: number }>();
-  // Iterate Brussels-day keys from the window's start day → end day.
+  // Iterate tz-day keys from the window's start day → end day.
   // String comparison is safe because the keys are zero-padded
   // YYYY-MM-DD (ISO-shaped).
-  const endKey = formatBusinessDay(window.end);
-  let cursor = formatBusinessDay(window.start);
+  const endKey = formatBusinessDay(window.end, tz);
+  let cursor = formatBusinessDay(window.start, tz);
   while (cursor <= endKey) {
     days.set(cursor, { total: 0, matched: 0 });
-    cursor = addBusinessDays(cursor, 1);
+    cursor = addBusinessDays(cursor, 1, tz);
   }
   for (const row of rows) {
-    // Bucket each row by its Brussels-local day. Slicing the UTC ISO
-    // would group a 23:30 UTC row into the previous Brussels day.
-    const key = formatBusinessDay(new Date(row.created_at));
+    // Bucket each row by its tz-local day. Slicing the UTC ISO
+    // would group a 23:30 UTC row into the previous tz day.
+    const key = formatBusinessDay(new Date(row.created_at), tz);
     const entry = days.get(key);
     if (!entry) continue;
     entry.total += 1;
@@ -216,19 +222,21 @@ export async function ConsentDashboardContent({
   filter,
   windowStart,
   windowEnd,
+  tz,
 }: {
   filter?: DecisionFilter | null;
   windowStart: Date;
   windowEnd: Date;
+  tz: string;
 }) {
   const supabase = getSupabaseAdmin();
   const currentWindow: DateWindow = { start: windowStart, end: windowEnd };
-  const previous = previousWindow(currentWindow);
-  const days = windowDays(currentWindow);
+  const previous = previousWindow(currentWindow, tz);
+  const days = windowDays(currentWindow, tz);
   const previousLabel =
     days === 1 ? "the previous day" : `the previous ${days} days`;
   const tileHref = (target: Decision) =>
-    buildHref(currentWindow, filter === target ? null : target);
+    buildHref(currentWindow, filter === target ? null : target, { tz });
 
   const { data, error } = await supabase
     .from("consent_records")
@@ -251,18 +259,18 @@ export async function ConsentDashboardContent({
   // Slice the fetched rows into "current window" and the same-
   // length window immediately before, so trend pills come from one
   // DB hit regardless of the user's selected range. Comparison is
-  // by Brussels-day key (not raw timestamp) so the window edges
-  // line up with how the chart buckets each row.
-  const currentStartKey = formatBusinessDay(currentWindow.start);
-  const currentEndKey = formatBusinessDay(currentWindow.end);
-  const previousStartKey = formatBusinessDay(previous.start);
-  const previousEndKey = formatBusinessDay(previous.end);
+  // by tz-day key (not raw timestamp) so the window edges line up
+  // with how the chart buckets each row.
+  const currentStartKey = formatBusinessDay(currentWindow.start, tz);
+  const currentEndKey = formatBusinessDay(currentWindow.end, tz);
+  const previousStartKey = formatBusinessDay(previous.start, tz);
+  const previousEndKey = formatBusinessDay(previous.end, tz);
   const currentRows = rows.filter((r) => {
-    const key = formatBusinessDay(new Date(r.created_at));
+    const key = formatBusinessDay(new Date(r.created_at), tz);
     return key >= currentStartKey && key <= currentEndKey;
   });
   const previousRows = rows.filter((r) => {
-    const key = formatBusinessDay(new Date(r.created_at));
+    const key = formatBusinessDay(new Date(r.created_at), tz);
     return key >= previousStartKey && key <= previousEndKey;
   });
 
@@ -305,7 +313,7 @@ export async function ConsentDashboardContent({
   // headline percentage); the unfiltered Decisions tab shows the
   // raw daily count. Pass `currentRows` (not a pre-filtered set)
   // so buildTrend can use the day totals as the rate denominator.
-  const trend = buildTrend(currentRows, currentWindow, filter ?? null);
+  const trend = buildTrend(currentRows, currentWindow, filter ?? null, tz);
   const chartLabel = filter
     ? `${DECISION_LABEL[filter].charAt(0).toUpperCase()}${DECISION_LABEL[filter].slice(1)} rate`
     : "Decisions";
@@ -357,7 +365,7 @@ export async function ConsentDashboardContent({
               label="Decisions"
               value={currentCount.toLocaleString()}
               change={changeFrom(currentCount, previousCount, previousLabel)}
-              href={buildHref(currentWindow, null)}
+              href={buildHref(currentWindow, null, { tz })}
               active={!filter}
             />
           </div>
@@ -418,6 +426,7 @@ export async function ConsentDashboardContent({
           trend={trend}
           metricLabel={chartLabel}
           format={chartFormat}
+          tz={tz}
         />
       </div>
 
