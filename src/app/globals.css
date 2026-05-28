@@ -1237,9 +1237,11 @@
     background: var(--ds-gray-300);
   }
 
-  .calendar-preset-item-selected {
-    background: var(--ds-gray-300);
-  }
+  /* Selected preset intentionally has no background — the trigger
+     button already names the active preset, so a fill in the
+     dropdown is redundant and collides with the hover treatment.
+     The .calendar-preset-item-selected class stays in the DOM for
+     a11y / future styling hooks. */
 
   /* Future presets column (right side) */
   .calendar-preset-future {
