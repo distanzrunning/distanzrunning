@@ -36,11 +36,7 @@ export function SettingsForm({
         id="timezone"
         title="Website timezone"
         subtitle="Used to bucket admin analytics by local website day. Charts on the consent dashboard re-bucket on the next page load."
-        status={
-          <span>
-            Currently <code className="inline-code">{savedTz}</code>
-          </span>
-        }
+        status={<span>Currently {savedTz}</span>}
         action={
           <Button
             type="submit"

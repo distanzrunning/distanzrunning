@@ -58,9 +58,20 @@ export function Fieldset({
       }}
     >
       <div style={{ padding: "24px" }}>
+        {/* Title and subtitle use Vercel's Fieldset typography
+            verbatim — 20/32 and 14/24 — rather than our DS slots
+            (text-heading-20 is 20/26 and text-copy-14 is 14/20,
+            both tighter than the Vercel reference this primitive
+            is modelled on). Inline values are deliberate. */}
         <h2
-          className="text-heading-20"
-          style={{ color: "var(--ds-gray-1000)" }}
+          style={{
+            color: "var(--ds-gray-1000)",
+            margin: 0,
+            fontSize: 20,
+            lineHeight: "32px",
+            letterSpacing: "-0.0165em",
+            fontWeight: 600,
+          }}
         >
           {id ? (
             <a
@@ -80,10 +91,13 @@ export function Fieldset({
         </h2>
         {subtitle && (
           <p
-            className="text-copy-14"
             style={{
               marginTop: 8,
+              marginBottom: 0,
               color: "var(--ds-gray-900)",
+              fontSize: 14,
+              lineHeight: "24px",
+              fontWeight: 400,
             }}
           >
             {subtitle}
