@@ -433,29 +433,39 @@ function ChartInner({
           // (instead of adding +8 to `left`) keeps both sides equal.
           offsetLeft={8}
           offsetTop={0}
-          // `unstyled` on visx Tooltip suppresses the style prop
-          // entirely (`!unstyled && style`), so we must NOT set it
-          // — otherwise our custom styles below never apply and the
-          // tooltip box ends up un-positioned and invisible.
+          // `material-tooltip` (DS class) adds the 1px border that
+          // visx's default style + our overrides would otherwise
+          // omit. The other material-tooltip values (background,
+          // box-shadow, border-radius) are redundantly set inline
+          // because visx merges its own defaults (white bg, 1em
+          // line-height, etc.) over the className and inline style
+          // wins where they overlap.
+          // `unstyled` would drop the style prop entirely — but visx
+          // also writes positional `top`/`left` into the same style
+          // prop, so the tooltip would end up un-positioned. Keep
+          // it off.
+          className="material-tooltip"
           style={{
             position: "absolute",
             background: "var(--ds-background-100)",
             boxShadow: "var(--ds-shadow-tooltip)",
             borderRadius: 6,
             padding: "8px 16px",
-            color: "var(--ds-gray-1000)",
-            fontSize: 14,
-            lineHeight: "20px",
             pointerEvents: "none",
             whiteSpace: "nowrap",
           }}
         >
+          {/* Typography lives on this inner div: text-copy-14 wins
+              cleanly here without competing with visx's inline
+              font defaults. */}
           <div
+            className="text-copy-14"
             style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               gap: 4,
+              color: "var(--ds-gray-1000)",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -469,12 +479,7 @@ function ChartInner({
                 }}
               />
               <span style={{ fontWeight: 400 }}>{metricLabel}</span>
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontWeight: 500,
-                }}
-              >
+              <span className="font-mono" style={{ fontWeight: 500 }}>
                 {tooltipData.value != null
                   ? isPercent
                     ? `${tooltipData.value.toFixed(1)}%`
