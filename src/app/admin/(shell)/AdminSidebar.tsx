@@ -12,6 +12,7 @@ import {
   Map,
   MessageSquare,
   PanelsTopLeft,
+  Settings,
   SquareCheckBig,
 } from "lucide-react";
 import { navigation as dsNavigation } from "./design-system/components/DesignSystemSidebar";
@@ -230,6 +231,12 @@ const ADMIN_NAV: {
     label: "Sanity Studio",
     href: "/admin/studio",
     icon: <Database className="w-4 h-4" />,
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    href: "/admin/settings",
+    icon: <Settings className="w-4 h-4" />,
   },
 ];
 
