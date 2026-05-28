@@ -34,7 +34,7 @@ export function SettingsForm({
     >
       <Fieldset
         id="timezone"
-        title="Business timezone"
+        title="Website timezone"
         subtitle="Used to bucket admin analytics by local business day. Charts on the consent dashboard re-bucket on the next page load."
         status={
           <span>
