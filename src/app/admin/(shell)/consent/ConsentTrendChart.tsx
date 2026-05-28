@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { curveLinear } from "@visx/curve";
 import { localPoint } from "@visx/event";
@@ -15,6 +15,7 @@ import {
   BUSINESS_TZ,
   businessTodayKey,
   diffBusinessDays,
+  msUntilNextBusinessDay,
 } from "./presets";
 
 interface TrendPoint {
@@ -228,8 +229,19 @@ function ChartInner({
   // still filling, so the slope into it isn't final. Only dash when
   // the trend actually ends today; a historical custom range stays
   // fully solid. "Today" is the BUSINESS_TZ day, matching how the
-  // dashboard buckets rows.
-  const todayIso = useMemo(() => businessTodayKey(), []);
+  // dashboard buckets rows. A one-shot timer fires at the next
+  // BUSINESS_TZ midnight so a long-open tab rolls over instead of
+  // sticking on yesterday.
+  const [todayIso, setTodayIso] = useState<string>(() => businessTodayKey());
+  useEffect(() => {
+    // +1s buffer so we read businessTodayKey() *after* the boundary
+    // — avoids a race where the timer fires a few ms early and
+    // re-reads the same key.
+    const timer = setTimeout(() => {
+      setTodayIso(businessTodayKey());
+    }, msUntilNextBusinessDay() + 1000);
+    return () => clearTimeout(timer);
+  }, [todayIso]);
   const lastIsToday =
     trend.length >= 2 && trend[trend.length - 1].date === todayIso;
   const solidTrend = lastIsToday ? trend.slice(0, -1) : trend;

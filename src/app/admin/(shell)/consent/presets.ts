@@ -121,6 +121,14 @@ export function diffBusinessDays(a: string, b: string): number {
   );
 }
 
+/** Milliseconds from `Date.now()` until the next BUSINESS_TZ
+ *  midnight — handy for scheduling a one-shot timer that refreshes
+ *  "today"-dependent UI exactly when the calendar day rolls. */
+export function msUntilNextBusinessDay(): number {
+  const nextKey = addBusinessDays(businessTodayKey(), 1);
+  return businessDayStart(nextKey).getTime() - Date.now();
+}
+
 // ---------- Window construction ----------
 
 export function presetWindow(id: PresetId): DateWindow {
