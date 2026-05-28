@@ -35,10 +35,10 @@ export function SettingsForm({
       <Fieldset
         id="timezone"
         title="Website timezone"
-        subtitle="Used to bucket admin analytics by local business day. Charts on the consent dashboard re-bucket on the next page load."
+        subtitle="Used to bucket admin analytics by local website day. Charts on the consent dashboard re-bucket on the next page load."
         status={
           <span>
-            Currently <strong>{savedTz}</strong>
+            Currently <code className="inline-code">{savedTz}</code>
           </span>
         }
         action={
