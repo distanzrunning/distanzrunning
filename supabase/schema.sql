@@ -59,3 +59,26 @@ create index if not exists feedback_records_created_at_idx
 alter table public.feedback_records enable row level security;
 revoke all on public.feedback_records from anon;
 revoke all on public.feedback_records from authenticated;
+
+-- ============================================================================
+-- Site settings
+-- ============================================================================
+-- Singleton row of admin-tunable settings — currently just the business
+-- timezone used to bucket analytics (consent dashboard etc.). Enforced as
+-- single-row via a check on id = 1; updates target that row.
+-- Written server-side by /admin/settings actions; reads are server-side
+-- via getSiteSettings() in src/lib/site-settings.ts.
+
+create table if not exists public.site_settings (
+  id         integer     primary key check (id = 1),
+  timezone   text        not null default 'Europe/Brussels',
+  updated_at timestamptz not null default now()
+);
+
+-- Seed the singleton row on first apply; no-op on subsequent runs.
+insert into public.site_settings (id) values (1)
+on conflict (id) do nothing;
+
+alter table public.site_settings enable row level security;
+revoke all on public.site_settings from anon;
+revoke all on public.site_settings from authenticated;
