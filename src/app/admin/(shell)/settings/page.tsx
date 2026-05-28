@@ -29,14 +29,6 @@ export default async function SettingsPage() {
           gap: 24,
         }}
       >
-        <header>
-          <h1
-            className="text-heading-32"
-            style={{ margin: 0, color: "var(--ds-gray-1000)" }}
-          >
-            Settings
-          </h1>
-        </header>
         <SettingsForm
           initialTimezone={settings.timezone}
           timeZones={timeZones}

@@ -23,6 +23,7 @@ const ADMIN_FEEDBACK_TOPICS = [
   { label: "Overview", value: "Overview" },
   { label: "Consent", value: "Consent" },
   { label: "Feedback", value: "Feedback" },
+  { label: "Settings", value: "Settings" },
   { label: "Design System", value: "Design System" },
   { label: "Other", value: "Other" },
 ];
@@ -30,6 +31,7 @@ const ADMIN_FEEDBACK_TOPICS = [
 function defaultAdminTopic(pathname: string): string {
   if (pathname.startsWith("/admin/consent")) return "Consent";
   if (pathname.startsWith("/admin/feedback")) return "Feedback";
+  if (pathname.startsWith("/admin/settings")) return "Settings";
   if (pathname.startsWith("/admin/design-system")) return "Design System";
   if (pathname === "/admin" || pathname === "/admin/") return "Overview";
   return "Other";
@@ -73,6 +75,9 @@ function getTitleParts(pathname: string): TitleParts {
         page: item.label,
       };
     }
+  }
+  if (pathname === "/admin/settings" || pathname === "/admin/settings/") {
+    return { section: null, page: "Settings" };
   }
   if (
     pathname === "/admin/design-system" ||
