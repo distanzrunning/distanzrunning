@@ -48,7 +48,15 @@ export default function ConsentEnvFilterMenu({
   return (
     <div style={{ opacity: isPending ? 0.6 : 1, transition: "opacity 0.15s" }}>
       <Menu position="bottom-start" width={200}>
-        <MenuButton variant="secondary" size="default" chevron>
+        {/* min-width sized to fit the widest label ("All environments")
+            so changing the selection doesn't shift the search input
+            to its left. */}
+        <MenuButton
+          variant="secondary"
+          size="default"
+          chevron
+          style={{ minWidth: 200 }}
+        >
           {currentLabel}
         </MenuButton>
         {OPTIONS.map((option) => (
