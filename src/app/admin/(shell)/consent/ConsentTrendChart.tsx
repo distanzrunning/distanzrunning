@@ -433,18 +433,15 @@ function ChartInner({
           // (instead of adding +8 to `left`) keeps both sides equal.
           offsetLeft={8}
           offsetTop={0}
-          // `material-tooltip` (DS class) adds the 1px border that
-          // visx's default style + our overrides would otherwise
-          // omit. The other material-tooltip values (background,
-          // box-shadow, border-radius) are redundantly set inline
-          // because visx merges its own defaults (white bg, 1em
-          // line-height, etc.) over the className and inline style
-          // wins where they overlap.
+          // No `material-tooltip` className — that utility layers a
+          // 1px gray-400 border on top of --ds-shadow-tooltip, which
+          // already opens with a `0 0 0 1px rgba(0,0,0,0.08)`
+          // hairline. The shipped DS Tooltip (src/components/ui/
+          // Tooltip.tsx) follows the same shadow-only pattern.
           // `unstyled` would drop the style prop entirely — but visx
           // also writes positional `top`/`left` into the same style
           // prop, so the tooltip would end up un-positioned. Keep
           // it off.
-          className="material-tooltip"
           style={{
             position: "absolute",
             background: "var(--ds-background-100)",
