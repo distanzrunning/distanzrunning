@@ -398,7 +398,7 @@ export async function ConsentDashboardContent({
           <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Decisions"
-              value={<NumberTicker value={currentCount} />}
+              value={<NumberTicker value={currentCount} minWidth="5ch" />}
               change={changeFrom(currentCount, previousCount, previousLabel)}
               href={buildHref(currentWindow, null, { tz })}
               active={!filter}
@@ -407,7 +407,7 @@ export async function ConsentDashboardContent({
           <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Accept rate"
-              value={<NumberTicker value={currentAcceptRate} suffix="%" />}
+              value={<NumberTicker value={currentAcceptRate} suffix="%" minWidth="4ch" />}
               change={pointChange(
                 currentAcceptRate,
                 previousAcceptRate,
@@ -420,7 +420,7 @@ export async function ConsentDashboardContent({
           <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Reject rate"
-              value={<NumberTicker value={currentRejectRate} suffix="%" />}
+              value={<NumberTicker value={currentRejectRate} suffix="%" minWidth="4ch" />}
               change={pointChange(
                 currentRejectRate,
                 previousRejectRate,
@@ -444,7 +444,7 @@ export async function ConsentDashboardContent({
           >
             <StatTile
               label="Custom rate"
-              value={<NumberTicker value={currentCustomRate} suffix="%" />}
+              value={<NumberTicker value={currentCustomRate} suffix="%" minWidth="4ch" />}
               change={pointChange(
                 currentCustomRate,
                 previousCustomRate,
