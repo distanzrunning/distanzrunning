@@ -27,11 +27,6 @@ export interface NumberTickerProps {
   suffix?: string;
   /** Tween duration in ms. Defaults to 400. */
   duration?: number;
-  /** Reserve a minimum width on the rendered span so adjacent
-   *  elements (like a trend chip) don't slide as the digit count
-   *  changes during a tween. Pass a CSS value — typically `ch`
-   *  units, sized for the max value the caller expects. */
-  minWidth?: string | number;
 }
 
 // Smooth ease-out — fast at the start, settles into the new value.
@@ -45,7 +40,6 @@ export function NumberTicker({
   prefix = "",
   suffix = "",
   duration = 400,
-  minWidth,
 }: NumberTickerProps) {
   const [displayed, setDisplayed] = useState(value);
   // Snapshot the displayed value at the moment a new tween starts —
@@ -87,20 +81,10 @@ export function NumberTicker({
     : "0";
 
   return (
-    <span
-      style={{
-        // tabular-nums keeps each digit the same width during the
-        // tween — without it, proportional digits (1 vs 0 etc.) make
-        // the total width breathe by ~1px per frame and anything
-        // anchored to the number's right edge slides.
-        display: "inline-block",
-        fontVariantNumeric: "tabular-nums",
-        minWidth,
-      }}
-    >
+    <>
       {prefix}
       {formatted}
       {suffix}
-    </span>
+    </>
   );
 }
