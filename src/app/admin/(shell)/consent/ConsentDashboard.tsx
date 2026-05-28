@@ -15,10 +15,8 @@ import ConsentTrendChart from "./ConsentTrendChart";
 import RecentDecisionsTable from "./RecentDecisionsTable";
 import {
   addBusinessDays,
-  businessDayStart,
   DEFAULT_PRESET,
   formatBusinessDay,
-  isAllTimeStart,
   isoOf,
   matchPreset,
   previousWindow,
@@ -28,6 +26,7 @@ import {
 
 interface BuildHrefContext {
   tz: string;
+  earliestDate: Date | null;
 }
 
 type Decision = "accept_all" | "reject_all" | "custom";
@@ -46,10 +45,10 @@ function buildHref(
   window: DateWindow,
   filter: Decision | null,
   metric: Metric,
-  { tz }: BuildHrefContext,
+  { tz, earliestDate }: BuildHrefContext,
 ): string {
   const usp = new URLSearchParams();
-  const preset = matchPreset(window, tz);
+  const preset = matchPreset(window, tz, earliestDate);
   if (preset) {
     // Default preset is the bare URL — keep links clean.
     if (preset !== DEFAULT_PRESET) usp.set("period", preset);
@@ -285,35 +284,20 @@ export async function ConsentDashboardContent({
   windowStart,
   windowEnd,
   tz,
+  earliestDate,
 }: {
   filter?: DecisionFilter | null;
   metric: Metric;
   windowStart: Date;
   windowEnd: Date;
   tz: string;
+  earliestDate: Date | null;
 }) {
   const supabase = getSupabaseAdmin();
-  // Narrow the "All time" sentinel (2000-01-01) to the first
-  // actually-stored decision date so the chart's x-axis spans real
-  // data rather than 25 years of empty. Cheap query — single row,
-  // indexed on created_at. Other presets reach this point with
-  // their natural starts and skip the lookup.
-  let resolvedStart = windowStart;
-  if (isAllTimeStart(windowStart)) {
-    const { data: earliest } = await supabase
-      .from("consent_records")
-      .select("created_at")
-      .order("created_at", { ascending: true })
-      .limit(1)
-      .maybeSingle();
-    if (earliest?.created_at) {
-      resolvedStart = businessDayStart(
-        formatBusinessDay(new Date(earliest.created_at), tz),
-        tz,
-      );
-    }
-  }
-  const currentWindow: DateWindow = { start: resolvedStart, end: windowEnd };
+  // The "All time" sentinel is already narrowed in page.tsx via
+  // getEarliestDecisionDate, so windowStart here is always real-data
+  // bound. No further preprocessing needed.
+  const currentWindow: DateWindow = { start: windowStart, end: windowEnd };
   const previous = previousWindow(currentWindow, tz);
   const days = windowDays(currentWindow, tz);
   const previousLabel =
@@ -325,7 +309,7 @@ export async function ConsentDashboardContent({
       currentWindow,
       filter === target ? null : target,
       "decisions",
-      { tz },
+      { tz, earliestDate },
     );
 
   const { data, error } = await supabase
@@ -471,7 +455,7 @@ export async function ConsentDashboardContent({
               label="Unique visitors"
               value={<NumberTicker value={currentUnique} />}
               change={changeFrom(currentUnique, previousUnique, previousLabel)}
-              href={buildHref(currentWindow, null, "visitors", { tz })}
+              href={buildHref(currentWindow, null, "visitors", { tz, earliestDate })}
               active={metric === "visitors"}
             />
           </div>
@@ -480,7 +464,7 @@ export async function ConsentDashboardContent({
               label="Decisions"
               value={<NumberTicker value={currentCount} />}
               change={changeFrom(currentCount, previousCount, previousLabel)}
-              href={buildHref(currentWindow, null, "decisions", { tz })}
+              href={buildHref(currentWindow, null, "decisions", { tz, earliestDate })}
               active={metric === "decisions" && !filter}
             />
           </div>

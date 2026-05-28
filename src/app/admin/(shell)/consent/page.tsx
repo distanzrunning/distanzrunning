@@ -12,6 +12,7 @@ import {
   ConsentLookupContent,
   ConsentLookupSkeleton,
 } from "./ConsentLookup";
+import { getEarliestDecisionDate } from "./data";
 import { windowFromParams } from "./presets";
 
 export const metadata = {
@@ -54,6 +55,11 @@ export default async function ConsentDashboardPage({
   const filter =
     metric === "visitors" ? null : normaliseFilter(params.filter);
   const { timezone: tz } = await getSiteSettings();
+  // Earliest stored decision date — drives the "All time" preset
+  // for both server-side window resolution and the client picker's
+  // visual range. Cached per request via React's cache(), so calling
+  // it from ConsentDashboardContent in parallel is free.
+  const earliestDate = await getEarliestDecisionDate();
   const window = windowFromParams(
     {
       period: params.period,
@@ -61,6 +67,7 @@ export default async function ConsentDashboardPage({
       to: params.to,
     },
     tz,
+    earliestDate,
   );
   return (
     <div>
@@ -113,7 +120,7 @@ export default async function ConsentDashboardPage({
           </Suspense>
         ) : (
           <ConsentFilterShell>
-            <ConsentFilterRow tz={tz} />
+            <ConsentFilterRow tz={tz} earliestDate={earliestDate} />
             {/* No `key` on this Suspense — keeping the boundary
                 stable across filter/window changes means React
                 preserves the existing dashboard tree during a
@@ -129,6 +136,7 @@ export default async function ConsentDashboardPage({
                 windowStart={window.start}
                 windowEnd={window.end}
                 tz={tz}
+                earliestDate={earliestDate}
               />
             </Suspense>
           </ConsentFilterShell>

@@ -146,7 +146,15 @@ export function msUntilNextBusinessDay(tz: string): number {
 
 // ---------- Window construction ----------
 
-export function presetWindow(id: PresetId, tz: string): DateWindow {
+/** `earliestDate` (optional) lets the "all" preset resolve to a real
+ *  data-bound start instead of the 2000-01-01 sentinel. Pass it on
+ *  both the server (page.tsx, from getEarliestDecisionDate) and the
+ *  client picker so windows + preset matching stay in sync. */
+export function presetWindow(
+  id: PresetId,
+  tz: string,
+  earliestDate?: Date | null,
+): DateWindow {
   const todayKey = businessTodayKey(tz);
   switch (id) {
     case "7d":
@@ -185,8 +193,12 @@ export function presetWindow(id: PresetId, tz: string): DateWindow {
         end: businessDayEnd(endKey, tz),
       };
     }
-    case "all":
-      return { start: ALL_TIME_START, end: businessDayEnd(todayKey, tz) };
+    case "all": {
+      const start = earliestDate
+        ? businessDayStart(formatBusinessDay(earliestDate, tz), tz)
+        : ALL_TIME_START;
+      return { start, end: businessDayEnd(todayKey, tz) };
+    }
   }
 }
 
@@ -236,15 +248,16 @@ export function windowFromParams(
     to?: string;
   },
   tz: string,
+  earliestDate?: Date | null,
 ): DateWindow {
   const preset = parsePresetId(params.period);
-  if (preset) return presetWindow(preset, tz);
+  if (preset) return presetWindow(preset, tz, earliestDate);
   const from = parseIsoDateAsStart(params.from, tz);
   const to = parseIsoDateAsEnd(params.to, tz);
   if (from && to && from <= to) {
     return { start: from, end: to };
   }
-  return presetWindow(DEFAULT_PRESET, tz);
+  return presetWindow(DEFAULT_PRESET, tz, earliestDate);
 }
 
 /** Same-length window immediately preceding `current`, snapped to
@@ -269,11 +282,15 @@ export function windowDays(w: DateWindow, tz: string): number {
 /** Match a {start, end} against the known presets — returns the id
  *  if the window equals one of them (used by the picker to show
  *  which preset, if any, is currently active). */
-export function matchPreset(w: DateWindow, tz: string): PresetId | null {
+export function matchPreset(
+  w: DateWindow,
+  tz: string,
+  earliestDate?: Date | null,
+): PresetId | null {
   const startKey = formatBusinessDay(w.start, tz);
   const endKey = formatBusinessDay(w.end, tz);
   for (const id of PRESET_IDS) {
-    const candidate = presetWindow(id, tz);
+    const candidate = presetWindow(id, tz, earliestDate);
     if (
       formatBusinessDay(candidate.start, tz) === startKey &&
       formatBusinessDay(candidate.end, tz) === endKey
