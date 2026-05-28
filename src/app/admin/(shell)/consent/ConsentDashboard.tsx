@@ -81,7 +81,9 @@ function fmtPct(value: number, fractionDigits = 0): string {
 
 // Tooltip text always uses absolute numbers with a directional word
 // ("more than" / "fewer than") rather than a signed value. The chip
-// still shows the signed form ("+8.4%") for at-a-glance reading.
+// still shows the signed form ("+8%") for at-a-glance reading.
+// Numbers round to integers — matches Vercel's chip style and
+// avoids visual noise like "+8.4%" when "8%" reads just as well.
 // Every branch populates `ariaLabel` so the chip is always
 // focusable + hover-tooltipable, including the "—" and "new" cases.
 function changeFrom(
@@ -104,10 +106,10 @@ function changeFrom(
       ariaLabel: `${current.toLocaleString()} ${noun} this window, none in ${windowLabel}`,
     };
   }
-  const diff = ((current - previous) / previous) * 100;
-  const direction = diff > 0.5 ? "up" : diff < -0.5 ? "down" : "flat";
-  const sign = diff > 0 ? "+" : "";
-  const abs = Math.abs(diff).toFixed(1);
+  const rounded = Math.round(((current - previous) / previous) * 100);
+  const direction = rounded > 0 ? "up" : rounded < 0 ? "down" : "flat";
+  const sign = rounded > 0 ? "+" : "";
+  const abs = Math.abs(rounded);
   const ariaLabel =
     direction === "up"
       ? `${abs}% more than ${windowLabel}`
@@ -115,7 +117,7 @@ function changeFrom(
         ? `${abs}% fewer than ${windowLabel}`
         : `No change versus ${windowLabel}`;
   return {
-    value: `${sign}${diff.toFixed(1)}%`,
+    value: `${sign}${rounded}%`,
     direction,
     ariaLabel,
   };
@@ -126,23 +128,23 @@ function pointChange(
   previousPct: number,
   windowLabel: string,
 ): StatTileChange {
-  const diff = currentPct - previousPct;
-  if (Math.abs(diff) < 0.05) {
+  const rounded = Math.round(currentPct - previousPct);
+  if (rounded === 0) {
     return {
       value: "0 pts",
       direction: "flat",
       ariaLabel: `No change versus ${windowLabel}`,
     };
   }
-  const direction = diff > 0 ? "up" : "down";
-  const sign = diff > 0 ? "+" : "";
-  const abs = Math.abs(diff).toFixed(1);
+  const direction = rounded > 0 ? "up" : "down";
+  const sign = rounded > 0 ? "+" : "";
+  const abs = Math.abs(rounded);
   const ariaLabel =
     direction === "up"
       ? `${abs} percentage points higher than ${windowLabel}`
       : `${abs} percentage points lower than ${windowLabel}`;
   return {
-    value: `${sign}${diff.toFixed(1)} pts`,
+    value: `${sign}${rounded} pts`,
     direction,
     ariaLabel,
   };
