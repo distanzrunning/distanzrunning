@@ -25,6 +25,7 @@
 "use client";
 
 import { type AnchorHTMLAttributes, type ReactNode } from "react";
+import Link from "next/link";
 
 import { Tooltip } from "./Tooltip";
 
@@ -176,8 +177,13 @@ export function StatTile({
   );
 
   if (href) {
+    // Next's Link triggers an in-app transition (rather than a full
+    // browser navigation), so child Suspense boundaries can stream
+    // new data while the previous tile content stays visible —
+    // letting NumberTicker tween between old and new values instead
+    // of flashing a skeleton.
     return (
-      <a
+      <Link
         href={href}
         aria-current={active ? "true" : undefined}
         {...anchorProps}
@@ -191,7 +197,7 @@ export function StatTile({
         }}
       >
         {body}
-      </a>
+      </Link>
     );
   }
 

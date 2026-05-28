@@ -1,3 +1,4 @@
+import { NumberTicker } from "@/components/ui/NumberTicker";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { StatTile, type StatTileChange } from "@/components/ui/StatTile";
@@ -397,7 +398,7 @@ export async function ConsentDashboardContent({
           <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Decisions"
-              value={currentCount.toLocaleString()}
+              value={<NumberTicker value={currentCount} />}
               change={changeFrom(currentCount, previousCount, previousLabel)}
               href={buildHref(currentWindow, null, { tz })}
               active={!filter}
@@ -406,7 +407,7 @@ export async function ConsentDashboardContent({
           <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Accept rate"
-              value={fmtPct(currentAcceptRate)}
+              value={<NumberTicker value={currentAcceptRate} suffix="%" />}
               change={pointChange(
                 currentAcceptRate,
                 previousAcceptRate,
@@ -419,7 +420,7 @@ export async function ConsentDashboardContent({
           <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Reject rate"
-              value={fmtPct(currentRejectRate)}
+              value={<NumberTicker value={currentRejectRate} suffix="%" />}
               change={pointChange(
                 currentRejectRate,
                 previousRejectRate,
@@ -443,7 +444,7 @@ export async function ConsentDashboardContent({
           >
             <StatTile
               label="Custom rate"
-              value={fmtPct(currentCustomRate)}
+              value={<NumberTicker value={currentCustomRate} suffix="%" />}
               change={pointChange(
                 currentCustomRate,
                 previousCustomRate,

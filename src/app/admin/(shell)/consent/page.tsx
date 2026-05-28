@@ -12,7 +12,7 @@ import {
   ConsentLookupContent,
   ConsentLookupSkeleton,
 } from "./ConsentLookup";
-import { isoOf, windowFromParams } from "./presets";
+import { windowFromParams } from "./presets";
 
 export const metadata = {
   title: "Consent — Stride Admin",
@@ -51,8 +51,6 @@ export default async function ConsentDashboardPage({
     },
     tz,
   );
-  const windowKey = `${isoOf(window.start, tz)}_${isoOf(window.end, tz)}`;
-
   return (
     <div>
       <div
@@ -105,10 +103,15 @@ export default async function ConsentDashboardPage({
         ) : (
           <ConsentFilterShell>
             <ConsentFilterRow tz={tz} />
-            <Suspense
-              key={`${windowKey}_${filter ?? "all"}`}
-              fallback={<ConsentDashboardSkeleton />}
-            >
+            {/* No `key` on this Suspense — keeping the boundary
+                stable across filter/window changes means React
+                preserves the existing dashboard tree during a
+                transition (Link click / picker startTransition),
+                so the previous tile values stay on screen while
+                the new data streams in and NumberTicker animates
+                between old and new readings instead of the row
+                flashing a skeleton. */}
+            <Suspense fallback={<ConsentDashboardSkeleton />}>
               <ConsentDashboardContent
                 filter={filter}
                 windowStart={window.start}
