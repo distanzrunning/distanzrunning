@@ -79,24 +79,45 @@ function fmtPct(value: number, fractionDigits = 0): string {
   return `${value.toFixed(fractionDigits)}%`;
 }
 
+// Tooltip text always uses absolute numbers with a directional word
+// ("more than" / "fewer than") rather than a signed value. The chip
+// still shows the signed form ("+8.4%") for at-a-glance reading.
+// Every branch populates `ariaLabel` so the chip is always
+// focusable + hover-tooltipable, including the "—" and "new" cases.
 function changeFrom(
   current: number,
   previous: number,
   windowLabel: string,
 ): StatTileChange {
   if (previous === 0 && current === 0) {
-    return { value: "—", direction: "flat" };
+    return {
+      value: "—",
+      direction: "flat",
+      ariaLabel: `No decisions in this window or ${windowLabel}`,
+    };
   }
   if (previous === 0) {
-    return { value: "new", direction: "up" };
+    const noun = current === 1 ? "decision" : "decisions";
+    return {
+      value: "new",
+      direction: "up",
+      ariaLabel: `${current.toLocaleString()} ${noun} this window, none in ${windowLabel}`,
+    };
   }
   const diff = ((current - previous) / previous) * 100;
   const direction = diff > 0.5 ? "up" : diff < -0.5 ? "down" : "flat";
   const sign = diff > 0 ? "+" : "";
+  const abs = Math.abs(diff).toFixed(1);
+  const ariaLabel =
+    direction === "up"
+      ? `${abs}% more than ${windowLabel}`
+      : direction === "down"
+        ? `${abs}% fewer than ${windowLabel}`
+        : `No change versus ${windowLabel}`;
   return {
     value: `${sign}${diff.toFixed(1)}%`,
     direction,
-    ariaLabel: `${diff.toFixed(1)}% versus ${windowLabel}`,
+    ariaLabel,
   };
 }
 
@@ -106,13 +127,24 @@ function pointChange(
   windowLabel: string,
 ): StatTileChange {
   const diff = currentPct - previousPct;
-  if (Math.abs(diff) < 0.05) return { value: "0 pts", direction: "flat" };
+  if (Math.abs(diff) < 0.05) {
+    return {
+      value: "0 pts",
+      direction: "flat",
+      ariaLabel: `No change versus ${windowLabel}`,
+    };
+  }
   const direction = diff > 0 ? "up" : "down";
   const sign = diff > 0 ? "+" : "";
+  const abs = Math.abs(diff).toFixed(1);
+  const ariaLabel =
+    direction === "up"
+      ? `${abs} percentage points higher than ${windowLabel}`
+      : `${abs} percentage points lower than ${windowLabel}`;
   return {
     value: `${sign}${diff.toFixed(1)} pts`,
     direction,
-    ariaLabel: `${diff.toFixed(1)} percentage points versus ${windowLabel}`,
+    ariaLabel,
   };
 }
 
