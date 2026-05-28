@@ -58,24 +58,30 @@ function formatTickDate(iso: string): string {
 function daysAgoLabel(iso: string): string {
   // `iso` and `businessTodayKey()` are both Brussels day-keys, so
   // diffBusinessDays gives a clean calendar-day diff (no DST drift).
-  const days = diffBusinessDays(businessTodayKey(), iso);
+  const todayKey = businessTodayKey();
+  const days = diffBusinessDays(todayKey, iso);
   if (days === 0) return "Today";
   if (days === 1) return "Yesterday";
   if (days < 1) return formatTickDate(iso);
-  // Promote whole-week / month / year multiples to the natural unit
-  // so a 30d view reads "1 month ago" instead of "30 days ago".
-  // Order matters: check years → months → weeks → days.
-  if (days % 365 === 0) {
-    const n = days / 365;
-    return n === 1 ? "1 year ago" : `${n} years ago`;
-  }
-  if (days % 30 === 0) {
-    const n = days / 30;
-    return n === 1 ? "1 month ago" : `${n} months ago`;
+  // Calendar-exact month/year promotion: only label a date as
+  // "N months ago" if it actually sits N calendar months back
+  // (same day-of-month). A 60-day historical view no longer
+  // misreads as "2 months ago" — it stays "60 days ago".
+  const [ty, tm, td] = todayKey.split("-").map(Number);
+  const [iy, im, id] = iso.split("-").map(Number);
+  if (td === id) {
+    const monthDiff = (ty - iy) * 12 + (tm - im);
+    if (monthDiff > 0 && monthDiff % 12 === 0) {
+      const years = monthDiff / 12;
+      return years === 1 ? "1 year ago" : `${years} years ago`;
+    }
+    if (monthDiff > 0) {
+      return monthDiff === 1 ? "1 month ago" : `${monthDiff} months ago`;
+    }
   }
   if (days % 7 === 0) {
-    const n = days / 7;
-    return n === 1 ? "1 week ago" : `${n} weeks ago`;
+    const weeks = days / 7;
+    return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
   }
   return `${days} days ago`;
 }
