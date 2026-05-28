@@ -25,7 +25,7 @@ export interface NumberTickerProps {
   prefix?: string;
   /** Optional suffix (e.g. "%"). */
   suffix?: string;
-  /** Tween duration in ms. Defaults to 600. */
+  /** Tween duration in ms. Defaults to 400. */
   duration?: number;
 }
 
@@ -39,7 +39,7 @@ export function NumberTicker({
   decimals = 0,
   prefix = "",
   suffix = "",
-  duration = 600,
+  duration = 400,
 }: NumberTickerProps) {
   const [displayed, setDisplayed] = useState(value);
   // Snapshot the displayed value at the moment a new tween starts —
