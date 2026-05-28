@@ -42,6 +42,14 @@ const MARGIN = { top: 24, right: 32, bottom: 44, left: 56 };
 // top tick visibly peak into that gap (range padding rather than
 // domain inflation: doesn't compress the scaling).
 const Y_RANGE_TOP_PADDING = 24;
+// Shared axis tick styling. 12px isn't a DS text-copy-* slot — it's
+// the chart-axis convention used across Vercel-style data viz. Both
+// axes spread these into their tickLabelProps so any future change
+// (e.g. swapping gray-700 for gray-800) happens in one place.
+const AXIS_TICK_STYLE = {
+  fill: "var(--ds-gray-700)",
+  fontSize: 12,
+} as const;
 
 function formatTickDate(iso: string): string {
   // `iso` is a BUSINESS_TZ day-key. Render the label in BUSINESS_TZ
@@ -335,8 +343,7 @@ function ChartInner({
                 : (v as number).toLocaleString()
             }
             tickLabelProps={() => ({
-              fill: "var(--ds-gray-700)",
-              fontSize: 12,
+              ...AXIS_TICK_STYLE,
               textAnchor: "end",
               dx: -8,
               dy: 4,
@@ -350,8 +357,7 @@ function ChartInner({
             tickValues={xTickValues}
             tickFormat={(d) => formatTickDate(d as string)}
             tickLabelProps={() => ({
-              fill: "var(--ds-gray-700)",
-              fontSize: 12,
+              ...AXIS_TICK_STYLE,
               textAnchor: "middle",
               // Match Vercel's visx pattern: text `y={20}` inside the
               // visx-text wrapper's `y="0.25em"` shim renders the
