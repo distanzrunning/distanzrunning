@@ -30,6 +30,7 @@ interface BuildHrefContext {
 
 type Decision = "accept_all" | "reject_all" | "custom";
 export type DecisionFilter = Decision;
+export type Metric = "decisions" | "visitors";
 
 const DECISION_LABEL: Record<Decision, string> = {
   accept_all: "accepts",
@@ -42,6 +43,7 @@ const BASE_PATH = "/admin/consent";
 function buildHref(
   window: DateWindow,
   filter: Decision | null,
+  metric: Metric,
   { tz }: BuildHrefContext,
 ): string {
   const usp = new URLSearchParams();
@@ -53,7 +55,15 @@ function buildHref(
     usp.set("from", isoOf(window.start, tz));
     usp.set("to", isoOf(window.end, tz));
   }
-  if (filter) usp.set("filter", filter);
+  // metric and filter are mutually exclusive — visitors lives at
+  // ?metric=visitors with no filter; decision tiles use ?filter=...
+  // with no metric. Default metric ("decisions") stays omitted from
+  // the URL for clean links.
+  if (metric === "visitors") {
+    usp.set("metric", "visitors");
+  } else if (filter) {
+    usp.set("filter", filter);
+  }
   const qs = usp.toString();
   return qs ? `${BASE_PATH}?${qs}` : BASE_PATH;
 }
@@ -165,8 +175,29 @@ function buildTrend(
   rows: ConsentRow[],
   window: DateWindow,
   filter: DecisionFilter | null,
+  metric: Metric,
   tz: string,
 ): TrendPoint[] {
+  // visitors mode: track a Set of anon_ids per day instead of a
+  // matched/total pair. The final value is the cardinality.
+  if (metric === "visitors") {
+    const days = new Map<string, Set<string>>();
+    const endKey = formatBusinessDay(window.end, tz);
+    let cursor = formatBusinessDay(window.start, tz);
+    while (cursor <= endKey) {
+      days.set(cursor, new Set());
+      cursor = addBusinessDays(cursor, 1, tz);
+    }
+    for (const row of rows) {
+      const key = formatBusinessDay(new Date(row.created_at), tz);
+      days.get(key)?.add(row.anon_id);
+    }
+    return [...days.entries()].map(([date, set]) => ({
+      date,
+      value: set.size,
+    }));
+  }
+
   const days = new Map<string, { total: number; matched: number }>();
   // Iterate tz-day keys from the window's start day → end day.
   // String comparison is safe because the keys are zero-padded
@@ -246,20 +277,15 @@ function CategoryBar({
   );
 }
 
-const TWO_COL_GRID = {
-  display: "grid",
-  gridTemplateColumns: "2fr 1fr",
-  gap: 16,
-  marginBottom: 16,
-} as const;
-
 export async function ConsentDashboardContent({
   filter,
+  metric,
   windowStart,
   windowEnd,
   tz,
 }: {
   filter?: DecisionFilter | null;
+  metric: Metric;
   windowStart: Date;
   windowEnd: Date;
   tz: string;
@@ -270,8 +296,15 @@ export async function ConsentDashboardContent({
   const days = windowDays(currentWindow, tz);
   const previousLabel =
     days === 1 ? "the previous day" : `the previous ${days} days`;
+  // Decision-type tile href: toggle the filter on/off, always reset
+  // metric back to "decisions" so the chart switches modes.
   const tileHref = (target: Decision) =>
-    buildHref(currentWindow, filter === target ? null : target, { tz });
+    buildHref(
+      currentWindow,
+      filter === target ? null : target,
+      "decisions",
+      { tz },
+    );
 
   const { data, error } = await supabase
     .from("consent_records")
@@ -341,18 +374,34 @@ export async function ConsentDashboardContent({
   const marketingOn = rows.filter((r) => r.marketing).length;
   const analyticsOn = rows.filter((r) => r.analytics).length;
   const functionalOn = rows.filter((r) => r.functional).length;
-  const uniqueVisitors = new Set(rows.map((r) => r.anon_id)).size;
 
-  // Chart trend follows the active tab. When a decision filter is
-  // set, the chart shows the *rate* per day (matches the tile's
-  // headline percentage); the unfiltered Decisions tab shows the
-  // raw daily count. Pass `currentRows` (not a pre-filtered set)
-  // so buildTrend can use the day totals as the rate denominator.
-  const trend = buildTrend(currentRows, currentWindow, filter ?? null, tz);
-  const chartLabel = filter
-    ? `${DECISION_LABEL[filter].charAt(0).toUpperCase()}${DECISION_LABEL[filter].slice(1)} rate`
-    : "Decisions";
-  const chartFormat: "count" | "percent" = filter ? "percent" : "count";
+  // Window-scoped unique visitors — distinct anon_ids in the
+  // current/previous windows so the tile's trend pill compares like
+  // for like with Decisions and the three rate tiles.
+  const currentUnique = new Set(currentRows.map((r) => r.anon_id)).size;
+  const previousUnique = new Set(previousRows.map((r) => r.anon_id)).size;
+
+  // Chart trend follows the active tab. With metric=visitors, the
+  // chart shows daily distinct anon_ids (count). With a decision
+  // filter set, the chart shows the *rate* per day (matches the
+  // tile's headline percentage). Unfiltered Decisions tab shows the
+  // raw daily count. Pass `currentRows` so buildTrend can use the
+  // day totals as the rate denominator in decisions mode.
+  const trend = buildTrend(
+    currentRows,
+    currentWindow,
+    filter ?? null,
+    metric,
+    tz,
+  );
+  const chartLabel =
+    metric === "visitors"
+      ? "Unique visitors"
+      : filter
+        ? `${DECISION_LABEL[filter].charAt(0).toUpperCase()}${DECISION_LABEL[filter].slice(1)} rate`
+        : "Decisions";
+  const chartFormat: "count" | "percent" =
+    metric === "visitors" ? "count" : filter ? "percent" : "count";
 
   // Recent table mirrors the active filter — filtering happens on
   // the already-fetched 10k rows, so no extra DB query.
@@ -400,8 +449,8 @@ export async function ConsentDashboardContent({
               label="Decisions"
               value={<NumberTicker value={currentCount} />}
               change={changeFrom(currentCount, previousCount, previousLabel)}
-              href={buildHref(currentWindow, null, { tz })}
-              active={!filter}
+              href={buildHref(currentWindow, null, "decisions", { tz })}
+              active={metric === "decisions" && !filter}
             />
           </div>
           <div style={{ minWidth: 220, flexShrink: 0 }}>
@@ -414,7 +463,7 @@ export async function ConsentDashboardContent({
                 previousLabel,
               )}
               href={tileHref("accept_all")}
-              active={filter === "accept_all"}
+              active={metric === "decisions" && filter === "accept_all"}
             />
           </div>
           <div style={{ minWidth: 220, flexShrink: 0 }}>
@@ -427,7 +476,20 @@ export async function ConsentDashboardContent({
                 previousLabel,
               )}
               href={tileHref("reject_all")}
-              active={filter === "reject_all"}
+              active={metric === "decisions" && filter === "reject_all"}
+            />
+          </div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
+            <StatTile
+              label="Custom rate"
+              value={<NumberTicker value={currentCustomRate} suffix="%" />}
+              change={pointChange(
+                currentCustomRate,
+                previousCustomRate,
+                previousLabel,
+              )}
+              href={tileHref("custom")}
+              active={metric === "decisions" && filter === "custom"}
             />
           </div>
           <div
@@ -443,15 +505,11 @@ export async function ConsentDashboardContent({
             }}
           >
             <StatTile
-              label="Custom rate"
-              value={<NumberTicker value={currentCustomRate} suffix="%" />}
-              change={pointChange(
-                currentCustomRate,
-                previousCustomRate,
-                previousLabel,
-              )}
-              href={tileHref("custom")}
-              active={filter === "custom"}
+              label="Unique visitors"
+              value={<NumberTicker value={currentUnique} />}
+              change={changeFrom(currentUnique, previousUnique, previousLabel)}
+              href={buildHref(currentWindow, null, "visitors", { tz })}
+              active={metric === "visitors"}
             />
           </div>
         </div>
@@ -465,7 +523,11 @@ export async function ConsentDashboardContent({
         />
       </div>
 
-      <div style={TWO_COL_GRID}>
+      {/* Per-category opt-in is the only secondary panel now that
+          "Unique visitors" has moved up into the tile row. Wrapped
+          in a single-column container with the same vertical
+          spacing the old two-col grid carried. */}
+      <div style={{ marginBottom: 16 }}>
         <PanelCard title="Per-category opt-in (all-time)">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <CategoryBar
@@ -483,29 +545,6 @@ export async function ConsentDashboardContent({
               count={functionalOn}
               total={rows.length}
             />
-          </div>
-        </PanelCard>
-        <PanelCard title="Unique visitors">
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 4,
-              padding: "12px 0",
-            }}
-          >
-            <span
-              className="text-heading-32"
-              style={{ color: "var(--ds-gray-1000)" }}
-            >
-              {uniqueVisitors.toLocaleString()}
-            </span>
-            <span
-              className="text-copy-13"
-              style={{ color: "var(--ds-gray-700)" }}
-            >
-              Distinct anonymous IDs across all decisions.
-            </span>
           </div>
         </PanelCard>
       </div>
@@ -558,7 +597,7 @@ export function ConsentDashboardSkeleton() {
           className="divide-x divide-[color:var(--ds-gray-400)]"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+            gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
             borderBottom: "1px solid var(--ds-gray-400)",
             background: "var(--ds-background-200)",
           }}
@@ -567,6 +606,7 @@ export function ConsentDashboardSkeleton() {
           <StatTileSkeleton label="Accept rate" />
           <StatTileSkeleton label="Reject rate" />
           <StatTileSkeleton label="Custom rate" />
+          <StatTileSkeleton label="Unique visitors" />
         </div>
         <div style={{ padding: "24px 24px 16px" }}>
           <Skeleton
@@ -578,7 +618,7 @@ export function ConsentDashboardSkeleton() {
         </div>
       </div>
 
-      <div style={TWO_COL_GRID}>
+      <div style={{ marginBottom: 16 }}>
         <PanelCard title="Per-category opt-in (all-time)">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {["Marketing", "Analytics", "Functional"].map((label) => (
@@ -601,11 +641,6 @@ export function ConsentDashboardSkeleton() {
                 />
               </div>
             ))}
-          </div>
-        </PanelCard>
-        <PanelCard title="Unique visitors">
-          <div style={{ padding: "12px 0" }}>
-            <Skeleton width={120} height={32} style={block} />
           </div>
         </PanelCard>
       </div>

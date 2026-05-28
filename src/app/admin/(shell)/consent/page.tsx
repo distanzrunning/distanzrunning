@@ -20,6 +20,7 @@ export const metadata = {
 };
 
 type DecisionFilter = "accept_all" | "reject_all" | "custom";
+type Metric = "decisions" | "visitors";
 
 function normaliseFilter(raw: string | undefined): DecisionFilter | null {
   if (raw === "accept_all" || raw === "reject_all" || raw === "custom") {
@@ -28,12 +29,17 @@ function normaliseFilter(raw: string | undefined): DecisionFilter | null {
   return null;
 }
 
+function normaliseMetric(raw: string | undefined): Metric {
+  return raw === "visitors" ? "visitors" : "decisions";
+}
+
 export default async function ConsentDashboardPage({
   searchParams,
 }: {
   searchParams: Promise<{
     q?: string;
     filter?: string;
+    metric?: string;
     period?: string;
     from?: string;
     to?: string;
@@ -41,7 +47,12 @@ export default async function ConsentDashboardPage({
 }) {
   const params = await searchParams;
   const query = params.q?.trim() ?? "";
-  const filter = normaliseFilter(params.filter);
+  const metric = normaliseMetric(params.metric);
+  // `filter` and `metric=visitors` are mutually exclusive — visitors
+  // is a separate metric, not a decision-type filter. If both are in
+  // the URL, metric wins and filter is dropped.
+  const filter =
+    metric === "visitors" ? null : normaliseFilter(params.filter);
   const { timezone: tz } = await getSiteSettings();
   const window = windowFromParams(
     {
@@ -114,6 +125,7 @@ export default async function ConsentDashboardPage({
             <Suspense fallback={<ConsentDashboardSkeleton />}>
               <ConsentDashboardContent
                 filter={filter}
+                metric={metric}
                 windowStart={window.start}
                 windowEnd={window.end}
                 tz={tz}
