@@ -40,7 +40,9 @@ const MARGIN = { top: 24, right: 32, bottom: 44, left: 56 };
 // Fixed pixel gap between the top of the plot area and the top tick
 // — gives the line visible headroom and lets a data value above the
 // top tick visibly peak into that gap (range padding rather than
-// domain inflation: doesn't compress the scaling).
+// domain inflation: doesn't compress the scaling). Only applied in
+// count mode — percent mode is capped at 100% and can never peak
+// above the top tick, so the headroom would just waste plot area.
 const Y_RANGE_TOP_PADDING = 24;
 // Shared axis tick styling. 12px isn't a DS text-copy-* slot — it's
 // the chart-axis convention used across Vercel-style data viz. Both
@@ -194,17 +196,19 @@ function ChartInner({
     [trend, plotWidth],
   );
 
+  const yRangeTop = isPercent ? 0 : Y_RANGE_TOP_PADDING;
   const yScale = useMemo(
     () =>
       scaleLinear<number>({
         domain: [0, yDomainMax],
-        // Range tops out at Y_RANGE_TOP_PADDING instead of 0, so the
-        // top tick sits that many pixels below the plot area's top
-        // and the line has room to peak above the top tick.
-        range: [plotHeight, Y_RANGE_TOP_PADDING],
+        // Range tops out at yRangeTop instead of 0, so the top tick
+        // sits that many pixels below the plot area's top and the
+        // line has room to peak above the top tick. Zero in percent
+        // mode (no peaking possible past 100%).
+        range: [plotHeight, yRangeTop],
         nice: false,
       }),
-    [yDomainMax, plotHeight],
+    [yDomainMax, plotHeight, yRangeTop],
   );
 
   // Visible X-axis tick dates. Anchored on real calendar boundaries
