@@ -294,8 +294,11 @@ function ChartInner({
             x={(d) => xScale(d.date) ?? 0}
             y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
             yScale={yScale}
-            fill="var(--ds-blue-900)"
-            fillOpacity={0.1}
+            // rgba(token-rgb, alpha) is the project's preferred shape
+            // for theme-aware semi-transparent fills (per CLAUDE.md).
+            // --ds-blue-900-rgb flips with the .dark class so the
+            // tint stays balanced against either background.
+            fill="rgba(var(--ds-blue-900-rgb), 0.10)"
             curve={curveLinear}
             defined={(d) => d.value != null}
           />
