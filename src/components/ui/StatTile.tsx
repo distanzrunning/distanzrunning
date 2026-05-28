@@ -77,16 +77,31 @@ function ChangeChip({ change }: { change: StatTileChange }) {
   const chip = (
     <span
       tabIndex={change.ariaLabel ? 0 : undefined}
+      role={change.ariaLabel ? "button" : undefined}
       aria-label={change.ariaLabel ?? change.value}
-      className="font-semibold text-center outline-none focus-visible:[--chip-alpha:0.5] focus-visible:shadow-[0_0_0_1px_var(--ds-gray-1000)]"
+      // Stop the click from bubbling into the parent <a> (when the
+      // tile is acting as a tab) — clicking the chip should reveal
+      // its tooltip, not navigate. preventDefault keeps the focus
+      // ring visible without the parent link stealing the click.
+      onClick={
+        change.ariaLabel
+          ? (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          : undefined
+      }
+      // Vercel uses :focus (mouse + keyboard) so clicking shows the
+      // ring too — :focus-visible would skip the mouse case.
+      className="font-semibold text-center outline-none focus:[--chip-alpha:0.5] focus:shadow-[0_0_0_1px_var(--ds-gray-1000)]"
       style={{
         minWidth: 46,
         padding: 6,
         borderRadius: 6,
         fontSize: 12,
         lineHeight: "16px",
-        // Custom property defaults to 0.2; bumps to 0.5 on
-        // focus-visible via the className above.
+        // Custom property defaults to 0.2; bumps to 0.5 on focus
+        // via the className above (CSS variable cascade, no state).
         ["--chip-alpha" as string]: 0.2,
         background: `rgba(${rgb}, var(--chip-alpha))`,
         color,
