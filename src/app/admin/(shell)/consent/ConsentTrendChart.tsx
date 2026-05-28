@@ -11,10 +11,17 @@ import { scaleLinear, scalePoint } from "@visx/scale";
 import { AreaClosed, Bar, Line, LinePath } from "@visx/shape";
 import { TooltipWithBounds, useTooltip } from "@visx/tooltip";
 
+import {
+  BUSINESS_TZ,
+  businessTodayKey,
+  diffBusinessDays,
+} from "./presets";
+
 interface TrendPoint {
-  /** Full ISO YYYY-MM-DD — kept whole (rather than sliced to MM-DD)
-   *  so the tick formatter can build "May 19" and the active overlay
-   *  can compute "N days ago" without re-parsing. */
+  /** Full BUSINESS_TZ day-key "YYYY-MM-DD" — kept whole (rather
+   *  than sliced to MM-DD) so the tick formatter can build "May 19"
+   *  and the active overlay can compute "N days ago" without
+   *  re-parsing. */
   date: string;
   value: number | null;
 }
@@ -36,21 +43,21 @@ const MARGIN = { top: 24, right: 32, bottom: 44, left: 56 };
 const Y_RANGE_TOP_PADDING = 24;
 
 function formatTickDate(iso: string): string {
-  const d = new Date(`${iso}T00:00:00.000Z`);
+  // `iso` is a BUSINESS_TZ day-key. Render the label in BUSINESS_TZ
+  // too — noon UTC is a safe representative of that day in Brussels
+  // (always the same calendar day at UTC+1 and UTC+2).
+  const d = new Date(`${iso}T12:00:00.000Z`);
   return d.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
-    timeZone: "UTC",
+    timeZone: BUSINESS_TZ,
   });
 }
 
 function daysAgoLabel(iso: string): string {
-  const target = new Date(`${iso}T00:00:00.000Z`);
-  const todayUTC = new Date();
-  todayUTC.setUTCHours(0, 0, 0, 0);
-  const days = Math.round(
-    (todayUTC.getTime() - target.getTime()) / 86_400_000,
-  );
+  // `iso` and `businessTodayKey()` are both Brussels day-keys, so
+  // diffBusinessDays gives a clean calendar-day diff (no DST drift).
+  const days = diffBusinessDays(businessTodayKey(), iso);
   if (days === 0) return "Today";
   if (days === 1) return "Yesterday";
   if (days < 1) return formatTickDate(iso);
@@ -220,12 +227,9 @@ function ChartInner({
   // Today's segment is dashed (Vercel convention) — today's bucket is
   // still filling, so the slope into it isn't final. Only dash when
   // the trend actually ends today; a historical custom range stays
-  // fully solid.
-  const todayIso = useMemo(() => {
-    const d = new Date();
-    d.setUTCHours(0, 0, 0, 0);
-    return d.toISOString().slice(0, 10);
-  }, []);
+  // fully solid. "Today" is the BUSINESS_TZ day, matching how the
+  // dashboard buckets rows.
+  const todayIso = useMemo(() => businessTodayKey(), []);
   const lastIsToday =
     trend.length >= 2 && trend[trend.length - 1].date === todayIso;
   const solidTrend = lastIsToday ? trend.slice(0, -1) : trend;

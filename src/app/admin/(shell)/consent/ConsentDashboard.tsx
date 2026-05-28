@@ -13,7 +13,9 @@ import { getSupabaseAdmin } from "@/lib/supabase/server";
 import ConsentTrendChart from "./ConsentTrendChart";
 import RecentDecisionsTable from "./RecentDecisionsTable";
 import {
+  addBusinessDays,
   DEFAULT_PRESET,
+  formatBusinessDay,
   isoOf,
   matchPreset,
   previousWindow,
@@ -125,14 +127,19 @@ function buildTrend(
   filter: DecisionFilter | null,
 ): TrendPoint[] {
   const days = new Map<string, { total: number; matched: number }>();
-  const dayCount = windowDays(window);
-  for (let i = 0; i < dayCount; i++) {
-    const d = new Date(window.start);
-    d.setUTCDate(window.start.getUTCDate() + i);
-    days.set(d.toISOString().slice(0, 10), { total: 0, matched: 0 });
+  // Iterate Brussels-day keys from the window's start day → end day.
+  // String comparison is safe because the keys are zero-padded
+  // YYYY-MM-DD (ISO-shaped).
+  const endKey = formatBusinessDay(window.end);
+  let cursor = formatBusinessDay(window.start);
+  while (cursor <= endKey) {
+    days.set(cursor, { total: 0, matched: 0 });
+    cursor = addBusinessDays(cursor, 1);
   }
   for (const row of rows) {
-    const key = row.created_at.slice(0, 10);
+    // Bucket each row by its Brussels-local day. Slicing the UTC ISO
+    // would group a 23:30 UTC row into the previous Brussels day.
+    const key = formatBusinessDay(new Date(row.created_at));
     const entry = days.get(key);
     if (!entry) continue;
     entry.total += 1;
@@ -243,14 +250,20 @@ export async function ConsentDashboardContent({
 
   // Slice the fetched rows into "current window" and the same-
   // length window immediately before, so trend pills come from one
-  // DB hit regardless of the user's selected range.
+  // DB hit regardless of the user's selected range. Comparison is
+  // by Brussels-day key (not raw timestamp) so the window edges
+  // line up with how the chart buckets each row.
+  const currentStartKey = formatBusinessDay(currentWindow.start);
+  const currentEndKey = formatBusinessDay(currentWindow.end);
+  const previousStartKey = formatBusinessDay(previous.start);
+  const previousEndKey = formatBusinessDay(previous.end);
   const currentRows = rows.filter((r) => {
-    const d = new Date(r.created_at);
-    return d >= currentWindow.start && d <= currentWindow.end;
+    const key = formatBusinessDay(new Date(r.created_at));
+    return key >= currentStartKey && key <= currentEndKey;
   });
   const previousRows = rows.filter((r) => {
-    const d = new Date(r.created_at);
-    return d >= previous.start && d <= previous.end;
+    const key = formatBusinessDay(new Date(r.created_at));
+    return key >= previousStartKey && key <= previousEndKey;
   });
 
   const currentCount = currentRows.length;
