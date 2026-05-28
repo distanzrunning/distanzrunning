@@ -17,7 +17,7 @@ export default async function SettingsPage() {
     <div>
       <div
         style={{
-          maxWidth: 768,
+          maxWidth: 1248,
           marginLeft: "auto",
           marginRight: "auto",
           paddingLeft: 24,
