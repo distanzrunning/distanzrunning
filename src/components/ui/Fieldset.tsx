@@ -94,7 +94,7 @@ export function Fieldset({
             style={{
               marginTop: 8,
               marginBottom: 0,
-              color: "var(--ds-gray-900)",
+              color: "var(--ds-gray-1000)",
               fontSize: 14,
               lineHeight: "24px",
               fontWeight: 400,
