@@ -15,8 +15,10 @@ import ConsentTrendChart from "./ConsentTrendChart";
 import RecentDecisionsTable from "./RecentDecisionsTable";
 import {
   addBusinessDays,
+  businessDayStart,
   DEFAULT_PRESET,
   formatBusinessDay,
+  isAllTimeStart,
   isoOf,
   matchPreset,
   previousWindow,
@@ -291,7 +293,27 @@ export async function ConsentDashboardContent({
   tz: string;
 }) {
   const supabase = getSupabaseAdmin();
-  const currentWindow: DateWindow = { start: windowStart, end: windowEnd };
+  // Narrow the "All time" sentinel (2000-01-01) to the first
+  // actually-stored decision date so the chart's x-axis spans real
+  // data rather than 25 years of empty. Cheap query — single row,
+  // indexed on created_at. Other presets reach this point with
+  // their natural starts and skip the lookup.
+  let resolvedStart = windowStart;
+  if (isAllTimeStart(windowStart)) {
+    const { data: earliest } = await supabase
+      .from("consent_records")
+      .select("created_at")
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    if (earliest?.created_at) {
+      resolvedStart = businessDayStart(
+        formatBusinessDay(new Date(earliest.created_at), tz),
+        tz,
+      );
+    }
+  }
+  const currentWindow: DateWindow = { start: resolvedStart, end: windowEnd };
   const previous = previousWindow(currentWindow, tz);
   const days = windowDays(currentWindow, tz);
   const previousLabel =

@@ -30,7 +30,15 @@ export const DEFAULT_PRESET: PresetId = "7d";
 // "All time" picks a date far enough back that every row qualifies.
 // We don't have data older than 2020, so 2000-01-01 is a safe
 // sentinel and keeps the URL simple (no special-case for "no upper").
-const ALL_TIME_START = new Date("2000-01-01T00:00:00.000Z");
+// Consumers can call isAllTimeStart() to detect this case and swap
+// in a more useful start (e.g. the date of the first stored row)
+// before rendering.
+export const ALL_TIME_START = new Date("2000-01-01T00:00:00.000Z");
+
+/** True if the given Date is the sentinel used by the "all" preset. */
+export function isAllTimeStart(d: Date): boolean {
+  return d.getTime() === ALL_TIME_START.getTime();
+}
 
 // ---------- Timezone helpers ----------
 
