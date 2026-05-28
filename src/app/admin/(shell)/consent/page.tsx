@@ -12,7 +12,7 @@ import {
   ConsentLookupContent,
   ConsentLookupSkeleton,
 } from "./ConsentLookup";
-import { getEarliestDecisionDate } from "./data";
+import { getEarliestDecisionDate, type ConsentEnvFilter } from "./data";
 import { windowFromParams } from "./presets";
 
 export const metadata = {
@@ -43,6 +43,13 @@ function resolveMetric(
   return filter ? "decisions" : "visitors";
 }
 
+function normaliseEnv(raw: string | undefined): ConsentEnvFilter {
+  if (raw === "production" || raw === "staging" || raw === "development") {
+    return raw;
+  }
+  return "all";
+}
+
 export default async function ConsentDashboardPage({
   searchParams,
 }: {
@@ -50,6 +57,7 @@ export default async function ConsentDashboardPage({
     q?: string;
     filter?: string;
     metric?: string;
+    env?: string;
     period?: string;
     from?: string;
     to?: string;
@@ -63,12 +71,13 @@ export default async function ConsentDashboardPage({
   const rawFilter = normaliseFilter(params.filter);
   const metric = resolveMetric(params.metric, rawFilter);
   const filter = metric === "visitors" ? null : rawFilter;
+  const env = normaliseEnv(params.env);
   const { timezone: tz } = await getSiteSettings();
   // Earliest stored decision date — drives the "All time" preset
   // for both server-side window resolution and the client picker's
-  // visual range. Cached per request via React's cache(), so calling
+  // visual range. Cached per (env) by unstable_cache, so calling
   // it from ConsentDashboardContent in parallel is free.
-  const earliestDate = await getEarliestDecisionDate();
+  const earliestDate = await getEarliestDecisionDate(env);
   const window = windowFromParams(
     {
       period: params.period,
@@ -129,7 +138,11 @@ export default async function ConsentDashboardPage({
           </Suspense>
         ) : (
           <ConsentFilterShell>
-            <ConsentFilterRow tz={tz} earliestDate={earliestDate} />
+            <ConsentFilterRow
+              tz={tz}
+              earliestDate={earliestDate}
+              env={env}
+            />
             {/* No `key` on this Suspense — keeping the boundary
                 stable across filter/window changes means React
                 preserves the existing dashboard tree during a
@@ -146,6 +159,7 @@ export default async function ConsentDashboardPage({
                 windowEnd={window.end}
                 tz={tz}
                 earliestDate={earliestDate}
+                env={env}
               />
             </Suspense>
           </ConsentFilterShell>

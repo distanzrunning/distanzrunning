@@ -5,7 +5,10 @@ import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/Input";
 import ConsentDateRangePicker from "./ConsentDateRangePicker";
+import ConsentEnvFilterMenu from "./ConsentEnvFilter";
 import { useConsentFilter } from "./ConsentFilterShell";
+
+import type { ConsentEnvFilter } from "./data";
 
 // One-row filter bar: free-text search on the left, date-range
 // picker on the right. Typing filters the Recent decisions table
@@ -15,9 +18,11 @@ import { useConsentFilter } from "./ConsentFilterShell";
 export default function ConsentFilterRow({
   tz,
   earliestDate,
+  env,
 }: {
   tz: string;
   earliestDate: Date | null;
+  env: ConsentEnvFilter;
 }) {
   const router = useRouter();
   const { filterText, setFilterText } = useConsentFilter();
@@ -49,6 +54,7 @@ export default function ConsentFilterRow({
           prefix={<Search className="w-4 h-4" />}
         />
       </div>
+      <ConsentEnvFilterMenu current={env} />
       <ConsentDateRangePicker tz={tz} earliestDate={earliestDate} />
     </div>
   );

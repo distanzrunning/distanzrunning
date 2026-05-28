@@ -13,17 +13,30 @@ create table if not exists public.consent_records (
   ip_hash      text,
   country      text,
   gpc          boolean,
+  environment  text        not null check (environment in ('production', 'staging', 'development')),
   created_at   timestamptz not null default now()
 );
 
 -- Safe to re-run on existing deployments.
 alter table public.consent_records add column if not exists gpc boolean;
+-- Environment column migration (production / staging / development).
+-- Backfills existing rows as 'staging' since all current data is
+-- from staging testing pre-launch.
+alter table public.consent_records add column if not exists environment text;
+update public.consent_records set environment = 'staging' where environment is null;
+alter table public.consent_records alter column environment set not null;
+alter table public.consent_records drop constraint if exists consent_records_environment_check;
+alter table public.consent_records add constraint consent_records_environment_check
+  check (environment in ('production', 'staging', 'development'));
 
 create index if not exists consent_records_created_at_idx
   on public.consent_records (created_at desc);
 
 create index if not exists consent_records_anon_id_idx
   on public.consent_records (anon_id);
+
+create index if not exists consent_records_environment_created_at_idx
+  on public.consent_records (environment, created_at desc);
 
 -- Lock down the table. Writes happen server-side via the service role key,
 -- which bypasses RLS. The anon key on the client has no access.

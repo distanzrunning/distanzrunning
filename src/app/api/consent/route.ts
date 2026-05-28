@@ -42,6 +42,18 @@ function hashIp(ip: string | null): string | null {
   return createHash("sha256").update(`${salt}:${ip}`).digest("hex");
 }
 
+// Vercel sets VERCEL_ENV to "production" | "preview" | "development".
+// We map preview → "staging" so the consent dashboard's filter only
+// has to think in production / staging / development buckets.
+type ConsentEnv = "production" | "staging" | "development";
+function resolveEnvironment(): ConsentEnv {
+  const vercelEnv = process.env.VERCEL_ENV;
+  if (vercelEnv === "production") return "production";
+  if (vercelEnv === "preview") return "staging";
+  // No VERCEL_ENV → local dev, or NODE_ENV says so.
+  return "development";
+}
+
 export async function POST(request: Request) {
   let body: unknown;
   try {
@@ -74,6 +86,7 @@ export async function POST(request: Request) {
       ip_hash: hashIp(ip),
       country,
       gpc: body.gpc ?? null,
+      environment: resolveEnvironment(),
     });
     if (error) {
       console.error("[consent] insert failed", error);

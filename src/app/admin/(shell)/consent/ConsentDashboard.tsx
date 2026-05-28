@@ -10,7 +10,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
-import { getConsentRowsInRange, type ConsentRowRaw } from "./data";
+import {
+  getConsentRowsInRange,
+  type ConsentEnvFilter,
+  type ConsentRowRaw,
+} from "./data";
 import ConsentTrendChart from "./ConsentTrendChart";
 import RecentDecisionsTable from "./RecentDecisionsTable";
 import {
@@ -27,6 +31,7 @@ import {
 interface BuildHrefContext {
   tz: string;
   earliestDate: Date | null;
+  env: ConsentEnvFilter;
 }
 
 type Decision = "accept_all" | "reject_all" | "custom";
@@ -45,7 +50,7 @@ function buildHref(
   window: DateWindow,
   filter: Decision | null,
   metric: Metric,
-  { tz, earliestDate }: BuildHrefContext,
+  { tz, earliestDate, env }: BuildHrefContext,
 ): string {
   const usp = new URLSearchParams();
   const preset = matchPreset(window, tz, earliestDate);
@@ -68,6 +73,9 @@ function buildHref(
       usp.set("metric", "decisions");
     }
   }
+  // env is preserved on every tile/picker link — default "all" stays
+  // off the URL for clean links.
+  if (env !== "all") usp.set("env", env);
   const qs = usp.toString();
   return qs ? `${BASE_PATH}?${qs}` : BASE_PATH;
 }
@@ -279,6 +287,7 @@ export async function ConsentDashboardContent({
   windowEnd,
   tz,
   earliestDate,
+  env,
 }: {
   filter?: DecisionFilter | null;
   metric: Metric;
@@ -286,6 +295,7 @@ export async function ConsentDashboardContent({
   windowEnd: Date;
   tz: string;
   earliestDate: Date | null;
+  env: ConsentEnvFilter;
 }) {
   // The "All time" sentinel is already narrowed in page.tsx via
   // getEarliestDecisionDate, so windowStart here is always real-data
@@ -302,16 +312,18 @@ export async function ConsentDashboardContent({
       currentWindow,
       filter === target ? null : target,
       "decisions",
-      { tz, earliestDate },
+      { tz, earliestDate, env },
     );
 
   // Single DB hit covering the union of the previous + current
   // window so the trend pills, tile values, and chart all come from
-  // one cached read. Cache key is (previous.start, currentWindow.end)
-  // so identical tile clicks within the same window reuse the cache.
+  // one cached read. Cache key is (previous.start, currentWindow.end,
+  // env) so identical tile clicks within the same window + env reuse
+  // the cache.
   const rows = await getConsentRowsInRange(
     previous.start.toISOString(),
     currentWindow.end.toISOString(),
+    env,
   );
 
   // Slice the fetched rows into "current window" and the same-
@@ -445,7 +457,7 @@ export async function ConsentDashboardContent({
               label="Unique visitors"
               value={<NumberTicker value={currentUnique} />}
               change={changeFrom(currentUnique, previousUnique, previousLabel)}
-              href={buildHref(currentWindow, null, "visitors", { tz, earliestDate })}
+              href={buildHref(currentWindow, null, "visitors", { tz, earliestDate, env })}
               active={metric === "visitors"}
             />
           </div>
@@ -454,7 +466,7 @@ export async function ConsentDashboardContent({
               label="Decisions"
               value={<NumberTicker value={currentCount} />}
               change={changeFrom(currentCount, previousCount, previousLabel)}
-              href={buildHref(currentWindow, null, "decisions", { tz, earliestDate })}
+              href={buildHref(currentWindow, null, "decisions", { tz, earliestDate, env })}
               active={metric === "decisions" && !filter}
             />
           </div>
