@@ -1,9 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { CONSENT_CACHE_TAG } from "./data";
 
 export async function deleteConsentRecordsByAnonId(formData: FormData) {
   if (!(await isAdminAuthenticated())) {
@@ -23,6 +24,9 @@ export async function deleteConsentRecordsByAnonId(formData: FormData) {
     throw new Error(error.message);
   }
 
+  // Invalidate every cached consent-data entry (rows + earliest)
+  // so the dashboard reflects the deletion on the next render.
+  revalidateTag(CONSENT_CACHE_TAG);
   revalidatePath("/admin/consent");
   redirect("/admin/consent");
 }

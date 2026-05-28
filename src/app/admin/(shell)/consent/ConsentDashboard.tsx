@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { getConsentRowsInRange, type ConsentRowRaw } from "./data";
 import ConsentTrendChart from "./ConsentTrendChart";
 import RecentDecisionsTable from "./RecentDecisionsTable";
 import {
@@ -72,18 +72,9 @@ function buildHref(
   return qs ? `${BASE_PATH}?${qs}` : BASE_PATH;
 }
 
-interface ConsentRow {
-  id: number;
-  anon_id: string;
-  marketing: boolean;
-  analytics: boolean;
-  functional: boolean;
-  decision: Decision;
-  country: string | null;
-  created_at: string;
-}
-
-const FETCH_LIMIT = 10_000;
+// ConsentRow shape lives in ./data alongside the cached query that
+// returns it.
+type ConsentRow = ConsentRowRaw;
 
 function pct(num: number, denom: number): number {
   if (denom === 0) return 0;
@@ -296,7 +287,6 @@ export async function ConsentDashboardContent({
   tz: string;
   earliestDate: Date | null;
 }) {
-  const supabase = getSupabaseAdmin();
   // The "All time" sentinel is already narrowed in page.tsx via
   // getEarliestDecisionDate, so windowStart here is always real-data
   // bound. No further preprocessing needed.
@@ -315,23 +305,14 @@ export async function ConsentDashboardContent({
       { tz, earliestDate },
     );
 
-  const { data, error } = await supabase
-    .from("consent_records")
-    .select(
-      "id, anon_id, marketing, analytics, functional, decision, country, created_at",
-    )
-    .order("created_at", { ascending: false })
-    .limit(FETCH_LIMIT);
-
-  if (error) {
-    return (
-      <p style={{ color: "var(--ds-red-900)" }}>
-        Could not load data: {error.message}
-      </p>
-    );
-  }
-
-  const rows = (data ?? []) as ConsentRow[];
+  // Single DB hit covering the union of the previous + current
+  // window so the trend pills, tile values, and chart all come from
+  // one cached read. Cache key is (previous.start, currentWindow.end)
+  // so identical tile clicks within the same window reuse the cache.
+  const rows = await getConsentRowsInRange(
+    previous.start.toISOString(),
+    currentWindow.end.toISOString(),
+  );
 
   // Slice the fetched rows into "current window" and the same-
   // length window immediately before, so trend pills come from one

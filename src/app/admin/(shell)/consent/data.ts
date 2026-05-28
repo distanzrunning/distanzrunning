@@ -1,13 +1,30 @@
-import { cache } from "react";
+import { unstable_cache } from "next/cache";
 
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 
-/** Earliest consent_records.created_at (UTC). Cached per request via
- *  React's `cache`, so page.tsx and ConsentDashboardContent share a
- *  single DB hit. Returns null on error or when the table is empty
- *  — callers should treat that as "no earliest known" and fall back
- *  to the ALL_TIME_START sentinel. */
-export const getEarliestDecisionDate = cache(
+/** Tag used by every consent-data unstable_cache entry. The delete
+ *  action calls revalidateTag(CONSENT_CACHE_TAG) so admin writes
+ *  flush the dashboard cache immediately. */
+export const CONSENT_CACHE_TAG = "consent_records";
+
+export type ConsentDecision = "accept_all" | "reject_all" | "custom";
+
+export interface ConsentRowRaw {
+  id: number;
+  anon_id: string;
+  marketing: boolean;
+  analytics: boolean;
+  functional: boolean;
+  decision: ConsentDecision;
+  country: string | null;
+  created_at: string;
+}
+
+const FETCH_LIMIT = 10_000;
+
+/** Earliest consent_records.created_at (UTC). New earliest only
+ *  happens on the first-ever record, so we cache for 5 min. */
+export const getEarliestDecisionDate = unstable_cache(
   async (): Promise<Date | null> => {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -23,4 +40,35 @@ export const getEarliestDecisionDate = cache(
     if (!data?.created_at) return null;
     return new Date(data.created_at);
   },
+  ["consent-earliest"],
+  { revalidate: 300, tags: [CONSENT_CACHE_TAG] },
+);
+
+/** Fetch consent records within [startIso, endIso] inclusive,
+ *  ordered desc. Cached per (startIso, endIso) for 30s so clicking
+ *  between tiles / filters within the same window after the first
+ *  load hits the cache instead of re-fetching from Supabase.
+ *
+ *  ISO strings (not Date objects) so unstable_cache can serialise
+ *  the args into a stable cache key. */
+export const getConsentRowsInRange = unstable_cache(
+  async (startIso: string, endIso: string): Promise<ConsentRowRaw[]> => {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase
+      .from("consent_records")
+      .select(
+        "id, anon_id, marketing, analytics, functional, decision, country, created_at",
+      )
+      .gte("created_at", startIso)
+      .lte("created_at", endIso)
+      .order("created_at", { ascending: false })
+      .limit(FETCH_LIMIT);
+    if (error) {
+      console.error("[consent] rows lookup failed", error.message);
+      return [];
+    }
+    return (data ?? []) as ConsentRowRaw[];
+  },
+  ["consent-rows"],
+  { revalidate: 30, tags: [CONSENT_CACHE_TAG] },
 );
