@@ -286,9 +286,34 @@ function ChartInner({
   const solidTrend = lastIsToday ? trend.slice(0, -1) : trend;
   const dashedTrend = lastIsToday ? trend.slice(-2) : [];
 
+  // Empty state — every bucket is null. Only happens in rate mode
+  // (a window with zero traffic in every day), since count mode
+  // backfills 0 for empty days. We keep the axes drawn for context
+  // and overlay a centred message instead of swapping in a blank
+  // panel.
+  const isEmpty =
+    trend.length === 0 || trend.every((p) => p.value === null);
+
+  // SVG description for screen readers. Falls back gracefully when
+  // empty.
+  const ariaLabel = useMemo(() => {
+    if (trend.length === 0) return `${metricLabel} chart, no data`;
+    const first = formatTickDate(trend[0].date);
+    const last = formatTickDate(trend[trend.length - 1].date);
+    return isEmpty
+      ? `${metricLabel} from ${first} to ${last}, no data`
+      : `${metricLabel} from ${first} to ${last}`;
+  }, [trend, metricLabel, isEmpty]);
+
   return (
     <>
-      <svg width={width} height={height} style={{ display: "block" }}>
+      <svg
+        width={width}
+        height={height}
+        style={{ display: "block" }}
+        role="img"
+        aria-label={ariaLabel}
+      >
         <Group left={MARGIN.left} top={MARGIN.top}>
           <GridRows
             scale={yScale}
@@ -420,16 +445,43 @@ function ChartInner({
             // Extend the hit area down through the bottom margin so
             // the date row / pill region is hoverable too — without
             // this the cursor "loses" the tooltip the moment it drops
-            // below the plot onto the x-axis labels.
+            // below the plot onto the x-axis labels. Skip handlers
+            // when empty so hovers don't surface "—" tooltips.
             height={plotHeight + MARGIN.bottom}
             fill="transparent"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={hideTooltip}
+            onMouseMove={isEmpty ? undefined : handleMouseMove}
+            onMouseLeave={isEmpty ? undefined : hideTooltip}
           />
         </Group>
       </svg>
 
-      {tooltipData && tooltipLeft != null && (
+      {isEmpty && (
+        <div
+          // Centred over the plot area (not the full chart) so the
+          // axes still anchor the message in context. Pointer-events
+          // off so it doesn't capture the cursor.
+          style={{
+            position: "absolute",
+            left: MARGIN.left,
+            top: MARGIN.top,
+            width: Math.max(width - MARGIN.left - MARGIN.right, 0),
+            height: Math.max(height - MARGIN.top - MARGIN.bottom, 0),
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            pointerEvents: "none",
+          }}
+        >
+          <span
+            className="text-copy-14"
+            style={{ color: "var(--ds-gray-700)" }}
+          >
+            No decisions in this range
+          </span>
+        </div>
+      )}
+
+      {!isEmpty && tooltipData && tooltipLeft != null && (
         <TooltipWithBounds
           // Drop the tooltip a touch into the plot so it doesn't sit
           // flush with the panel's top edge. visx's flip logic still
@@ -500,7 +552,7 @@ function ChartInner({
         </TooltipWithBounds>
       )}
 
-      {tooltipData && tooltipLeft != null && (
+      {!isEmpty && tooltipData && tooltipLeft != null && (
         <div
           // Floating "N days ago" pill — sits on the SAME row as the
           // SVG tick labels. Its solid background (matches the panel
