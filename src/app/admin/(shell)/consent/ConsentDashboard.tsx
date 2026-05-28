@@ -56,14 +56,17 @@ function buildHref(
     usp.set("from", isoOf(window.start, tz));
     usp.set("to", isoOf(window.end, tz));
   }
-  // metric and filter are mutually exclusive — visitors lives at
-  // ?metric=visitors with no filter; decision tiles use ?filter=...
-  // with no metric. Default metric ("decisions") stays omitted from
-  // the URL for clean links.
-  if (metric === "visitors") {
-    usp.set("metric", "visitors");
-  } else if (filter) {
-    usp.set("filter", filter);
+  // URL canonicalisation around metric / filter:
+  //   - visitors (the default) → omit both, bare URL
+  //   - decisions + no filter   → ?metric=decisions (explicit)
+  //   - decisions + filter      → ?filter=…       (filter implies
+  //                               decisions, no `metric` param needed)
+  if (metric === "decisions") {
+    if (filter) {
+      usp.set("filter", filter);
+    } else {
+      usp.set("metric", "decisions");
+    }
   }
   const qs = usp.toString();
   return qs ? `${BASE_PATH}?${qs}` : BASE_PATH;

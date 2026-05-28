@@ -30,8 +30,17 @@ function normaliseFilter(raw: string | undefined): DecisionFilter | null {
   return null;
 }
 
-function normaliseMetric(raw: string | undefined): Metric {
-  return raw === "visitors" ? "visitors" : "decisions";
+// Visitors is the default — the bare `/admin/consent` URL renders
+// the broadest "what's happening" view. Explicit `?metric=decisions`
+// switches to decisions mode; a present `?filter=` also implies
+// decisions (you can't filter visitors by decision type).
+function resolveMetric(
+  raw: string | undefined,
+  filter: DecisionFilter | null,
+): Metric {
+  if (raw === "decisions") return "decisions";
+  if (raw === "visitors") return "visitors";
+  return filter ? "decisions" : "visitors";
 }
 
 export default async function ConsentDashboardPage({
@@ -48,12 +57,12 @@ export default async function ConsentDashboardPage({
 }) {
   const params = await searchParams;
   const query = params.q?.trim() ?? "";
-  const metric = normaliseMetric(params.metric);
-  // `filter` and `metric=visitors` are mutually exclusive — visitors
-  // is a separate metric, not a decision-type filter. If both are in
-  // the URL, metric wins and filter is dropped.
-  const filter =
-    metric === "visitors" ? null : normaliseFilter(params.filter);
+  // Filter parses first; metric is derived from explicit param or
+  // implied by the filter. If metric ends up as visitors, drop any
+  // filter the URL still carries (defensive against manual edits).
+  const rawFilter = normaliseFilter(params.filter);
+  const metric = resolveMetric(params.metric, rawFilter);
+  const filter = metric === "visitors" ? null : rawFilter;
   const { timezone: tz } = await getSiteSettings();
   // Earliest stored decision date — drives the "All time" preset
   // for both server-side window resolution and the client picker's
