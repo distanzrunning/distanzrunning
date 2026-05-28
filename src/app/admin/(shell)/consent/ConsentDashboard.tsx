@@ -377,9 +377,11 @@ export async function ConsentDashboardContent({
   const previousRejectRate = pct(previousRejects, previousCount);
   const previousCustomRate = pct(previousCustoms, previousCount);
 
-  const marketingOn = rows.filter((r) => r.marketing).length;
-  const analyticsOn = rows.filter((r) => r.analytics).length;
-  const functionalOn = rows.filter((r) => r.functional).length;
+  // Per-category opt-in is window-scoped — mirrors the active date
+  // range so the bars move with the picker.
+  const marketingOn = currentRows.filter((r) => r.marketing).length;
+  const analyticsOn = currentRows.filter((r) => r.analytics).length;
+  const functionalOn = currentRows.filter((r) => r.functional).length;
 
   // Window-scoped unique visitors — distinct anon_ids in the
   // current/previous windows so the tile's trend pill compares like
@@ -523,27 +525,26 @@ export async function ConsentDashboardContent({
         />
       </div>
 
-      {/* Per-category opt-in is the only secondary panel now that
-          "Unique visitors" has moved up into the tile row. Wrapped
-          in a single-column container with the same vertical
-          spacing the old two-col grid carried. */}
+      {/* Per-category opt-in mirrors the active window — bars
+          tween via the CategoryBar's CSS width transition when
+          the picker / tile selection changes the window. */}
       <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-category opt-in (all-time)">
+        <PanelCard title="Per-category opt-in">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <CategoryBar
               label="Marketing"
               count={marketingOn}
-              total={rows.length}
+              total={currentRows.length}
             />
             <CategoryBar
               label="Analytics"
               count={analyticsOn}
-              total={rows.length}
+              total={currentRows.length}
             />
             <CategoryBar
               label="Functional"
               count={functionalOn}
-              total={rows.length}
+              total={currentRows.length}
             />
           </div>
         </PanelCard>
@@ -621,7 +622,7 @@ export function ConsentDashboardSkeleton() {
       </div>
 
       <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-category opt-in (all-time)">
+        <PanelCard title="Per-category opt-in">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {["Marketing", "Analytics", "Functional"].map((label) => (
               <div
