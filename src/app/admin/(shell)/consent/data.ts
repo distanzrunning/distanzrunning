@@ -22,10 +22,13 @@ export interface ConsentRowRaw {
 
 const FETCH_LIMIT = 10_000;
 
-/** Earliest consent_records.created_at (UTC). New earliest only
- *  happens on the first-ever record, so we cache for 5 min. */
-export const getEarliestDecisionDate = unstable_cache(
-  async (): Promise<Date | null> => {
+/** Internal cached fetcher — returns the raw ISO string so the
+ *  value round-trips JSON safely through unstable_cache (Date
+ *  objects don't survive the cache's JSON serialisation; reads
+ *  after the first write come back as strings, blowing up any
+ *  downstream Date.format() call). */
+const getEarliestDecisionDateIso = unstable_cache(
+  async (): Promise<string | null> => {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("consent_records")
@@ -37,12 +40,19 @@ export const getEarliestDecisionDate = unstable_cache(
       console.error("[consent] earliest lookup failed", error.message);
       return null;
     }
-    if (!data?.created_at) return null;
-    return new Date(data.created_at);
+    return data?.created_at ?? null;
   },
   ["consent-earliest"],
   { revalidate: 300, tags: [CONSENT_CACHE_TAG] },
 );
+
+/** Earliest consent_records.created_at as a real Date — wraps the
+ *  cached ISO-string fetcher above. New earliest only happens on
+ *  the first-ever record, so the underlying cache TTL is 5 min. */
+export async function getEarliestDecisionDate(): Promise<Date | null> {
+  const iso = await getEarliestDecisionDateIso();
+  return iso ? new Date(iso) : null;
+}
 
 /** Fetch consent records within [startIso, endIso] inclusive,
  *  ordered desc. Cached per (startIso, endIso) for 30s so clicking
