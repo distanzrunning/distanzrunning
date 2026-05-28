@@ -446,6 +446,15 @@ export async function ConsentDashboardContent({
         >
           <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
+              label="Unique visitors"
+              value={<NumberTicker value={currentUnique} />}
+              change={changeFrom(currentUnique, previousUnique, previousLabel)}
+              href={buildHref(currentWindow, null, "visitors", { tz })}
+              active={metric === "visitors"}
+            />
+          </div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
+            <StatTile
               label="Decisions"
               value={<NumberTicker value={currentCount} />}
               change={changeFrom(currentCount, previousCount, previousLabel)}
@@ -479,19 +488,6 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && filter === "reject_all"}
             />
           </div>
-          <div style={{ minWidth: 220, flexShrink: 0 }}>
-            <StatTile
-              label="Custom rate"
-              value={<NumberTicker value={currentCustomRate} suffix="%" />}
-              change={pointChange(
-                currentCustomRate,
-                previousCustomRate,
-                previousLabel,
-              )}
-              href={tileHref("custom")}
-              active={metric === "decisions" && filter === "custom"}
-            />
-          </div>
           <div
             style={{
               minWidth: 220,
@@ -505,11 +501,15 @@ export async function ConsentDashboardContent({
             }}
           >
             <StatTile
-              label="Unique visitors"
-              value={<NumberTicker value={currentUnique} />}
-              change={changeFrom(currentUnique, previousUnique, previousLabel)}
-              href={buildHref(currentWindow, null, "visitors", { tz })}
-              active={metric === "visitors"}
+              label="Custom rate"
+              value={<NumberTicker value={currentCustomRate} suffix="%" />}
+              change={pointChange(
+                currentCustomRate,
+                previousCustomRate,
+                previousLabel,
+              )}
+              href={tileHref("custom")}
+              active={metric === "decisions" && filter === "custom"}
             />
           </div>
         </div>
@@ -602,11 +602,11 @@ export function ConsentDashboardSkeleton() {
             background: "var(--ds-background-200)",
           }}
         >
+          <StatTileSkeleton label="Unique visitors" />
           <StatTileSkeleton label="Decisions" />
           <StatTileSkeleton label="Accept rate" />
           <StatTileSkeleton label="Reject rate" />
           <StatTileSkeleton label="Custom rate" />
-          <StatTileSkeleton label="Unique visitors" />
         </div>
         <div style={{ padding: "24px 24px 16px" }}>
           <Skeleton
