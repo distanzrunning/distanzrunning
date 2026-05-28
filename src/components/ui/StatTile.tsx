@@ -26,6 +26,8 @@
 
 import { type AnchorHTMLAttributes, type ReactNode } from "react";
 
+import { Tooltip } from "./Tooltip";
+
 export type StatTileChangeDirection = "up" | "down" | "flat";
 
 export interface StatTileChange {
@@ -54,14 +56,54 @@ export interface StatTileProps {
   anchorProps?: AnchorHTMLAttributes<HTMLAnchorElement>;
 }
 
+// Chip color per direction. Background uses the `-rgb` companion of
+// the same hue's 900 token, scaled by --chip-alpha (0.2 default, 0.5
+// on focus) — matches Vercel's `rgba(R,G,B,var(--trend-background-
+// opacity))` pattern and flips correctly in dark mode.
 const directionStyles: Record<
   StatTileChangeDirection,
-  { bg: string; color: string }
+  { rgb: string; color: string }
 > = {
-  up: { bg: "var(--ds-green-200)", color: "var(--ds-green-900)" },
-  down: { bg: "var(--ds-red-200)", color: "var(--ds-red-900)" },
-  flat: { bg: "var(--ds-gray-200)", color: "var(--ds-gray-900)" },
+  up: { rgb: "var(--ds-green-900-rgb)", color: "var(--ds-green-900)" },
+  down: { rgb: "var(--ds-red-900-rgb)", color: "var(--ds-red-900)" },
+  flat: { rgb: "var(--ds-gray-900-rgb)", color: "var(--ds-gray-900)" },
 };
+
+// Tiny focus-aware pill that holds the trend %. Bg alpha is driven
+// by a custom property so the focus-visible bump can change it
+// declaratively (CSS variable cascade) rather than via state.
+function ChangeChip({ change }: { change: StatTileChange }) {
+  const { rgb, color } = directionStyles[change.direction];
+  const chip = (
+    <span
+      tabIndex={change.ariaLabel ? 0 : undefined}
+      aria-label={change.ariaLabel ?? change.value}
+      className="font-semibold text-center outline-none focus-visible:[--chip-alpha:0.5] focus-visible:shadow-[0_0_0_1px_var(--ds-gray-1000)]"
+      style={{
+        minWidth: 46,
+        padding: 6,
+        borderRadius: 6,
+        fontSize: 12,
+        lineHeight: "16px",
+        // Custom property defaults to 0.2; bumps to 0.5 on
+        // focus-visible via the className above.
+        ["--chip-alpha" as string]: 0.2,
+        background: `rgba(${rgb}, var(--chip-alpha))`,
+        color,
+        whiteSpace: "nowrap",
+        cursor: change.ariaLabel ? "pointer" : "default",
+      }}
+    >
+      {change.value}
+    </span>
+  );
+  if (!change.ariaLabel) return chip;
+  return (
+    <Tooltip content={change.ariaLabel} side="top" align="center">
+      {chip}
+    </Tooltip>
+  );
+}
 
 const baseClass =
   "relative flex flex-col gap-2 p-4 transition-colors box-border";
@@ -105,24 +147,7 @@ export function StatTile({
         <span className="text-heading-32 text-[color:var(--ds-gray-1000)]">
           {value}
         </span>
-        {change && (
-          <span
-            aria-label={change.ariaLabel ?? change.value}
-            className="font-semibold text-center"
-            style={{
-              minWidth: 46,
-              padding: 6,
-              borderRadius: 6,
-              fontSize: 12,
-              lineHeight: "16px",
-              background: directionStyles[change.direction].bg,
-              color: directionStyles[change.direction].color,
-              whiteSpace: "nowrap",
-            }}
-          >
-            {change.value}
-          </span>
-        )}
+        {change && <ChangeChip change={change} />}
       </div>
       {hint && (
         <span
