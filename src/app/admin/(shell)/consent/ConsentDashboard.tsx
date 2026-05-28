@@ -431,26 +431,27 @@ export async function ConsentDashboardContent({
           marginBottom: 16,
         }}
       >
-        {/* Vercel-style tab row: tiles sit at a fixed min-width
-            (220px) and don't grow to fill the panel. Any extra
-            horizontal space stays empty, painted by the row's
-            background-200, so the data reads at its natural
-            density rather than spreading thin on wide viewports. */}
-        {/* Scroll wrapper around the tile row: matches Vercel's
-            tabs structure where `padding-bottom: 6` sits BELOW the
-            row's border-bottom (not inside the row), giving the
-            chart a 6px gap and leaving room for a horizontal
-            scrollbar when tiles overflow on narrow viewports. */}
+        {/* Tile row laid out as a 6-column grid: 5 tiles + 1 empty
+            placeholder. The empty cell gives the trailing gap the
+            same width as a tile (slot for a future 6th metric) and
+            lets `divide-x` paint a divider after the last tile
+            without the old borderRight hack. minmax(200px, 1fr)
+            keeps each column above 200px, flexing equally above
+            that — overflowX:auto on the wrapper handles the
+            narrow-viewport case. paddingBottom:6 on the wrapper
+            sits below the row's border (matches Vercel's tabs
+            structure) and leaves room for a horizontal scrollbar. */}
         <div style={{ overflowX: "auto", paddingBottom: 6 }}>
         <div
           className="divide-x divide-[color:var(--ds-gray-400)]"
           style={{
-            display: "flex",
+            display: "grid",
+            gridTemplateColumns: "repeat(6, minmax(200px, 1fr))",
             borderBottom: "1px solid var(--ds-gray-400)",
             background: "var(--ds-background-200)",
           }}
         >
-          <div style={{ minWidth: 220, flexShrink: 0 }}>
+          <div>
             <StatTile
               label="Unique visitors"
               value={<NumberTicker value={currentUnique} />}
@@ -459,7 +460,7 @@ export async function ConsentDashboardContent({
               active={metric === "visitors"}
             />
           </div>
-          <div style={{ minWidth: 220, flexShrink: 0 }}>
+          <div>
             <StatTile
               label="Decisions"
               value={<NumberTicker value={currentCount} />}
@@ -468,7 +469,7 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && !filter}
             />
           </div>
-          <div style={{ minWidth: 220, flexShrink: 0 }}>
+          <div>
             <StatTile
               label="Accept rate"
               value={<NumberTicker value={currentAcceptRate} suffix="%" />}
@@ -481,7 +482,7 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && filter === "accept_all"}
             />
           </div>
-          <div style={{ minWidth: 220, flexShrink: 0 }}>
+          <div>
             <StatTile
               label="Reject rate"
               value={<NumberTicker value={currentRejectRate} suffix="%" />}
@@ -494,18 +495,7 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && filter === "reject_all"}
             />
           </div>
-          <div
-            style={{
-              minWidth: 220,
-              flexShrink: 0,
-              // Trailing divider after the last tile — `divide-x` only
-              // adds rules between siblings, so without this the empty
-              // space to the right would butt up against the last tile
-              // with no separator. Matches Vercel's `!border-r` on the
-              // final tab.
-              borderRight: "1px solid var(--ds-gray-400)",
-            }}
-          >
+          <div>
             <StatTile
               label="Custom rate"
               value={<NumberTicker value={currentCustomRate} suffix="%" />}
@@ -518,6 +508,10 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && filter === "custom"}
             />
           </div>
+          {/* Empty 6th cell — reserves the trailing gap as one
+              tile-width, gives divide-x a sibling to paint a
+              divider against, and slots a future tile in cleanly. */}
+          <div aria-hidden />
         </div>
         </div>
 
@@ -603,7 +597,7 @@ export function ConsentDashboardSkeleton() {
           className="divide-x divide-[color:var(--ds-gray-400)]"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+            gridTemplateColumns: "repeat(6, minmax(200px, 1fr))",
             borderBottom: "1px solid var(--ds-gray-400)",
             background: "var(--ds-background-200)",
           }}
@@ -613,6 +607,8 @@ export function ConsentDashboardSkeleton() {
           <StatTileSkeleton label="Accept rate" />
           <StatTileSkeleton label="Reject rate" />
           <StatTileSkeleton label="Custom rate" />
+          {/* Empty 6th cell — see ConsentDashboardContent comment. */}
+          <div aria-hidden />
         </div>
         <div style={{ padding: "24px 24px 16px" }}>
           <Skeleton
