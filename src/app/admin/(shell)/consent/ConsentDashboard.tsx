@@ -414,10 +414,13 @@ export async function ConsentDashboardContent({
   const chartFormat: "count" | "percent" =
     metric === "visitors" ? "count" : filter ? "percent" : "count";
 
-  // Recent table mirrors the active filter — filtering happens on
-  // the already-fetched 10k rows, so no extra DB query.
-  const recent = (filter ? rows.filter((r) => r.decision === filter) : rows)
-    .slice(0, 20);
+  // Recent table mirrors the active window + decision filter.
+  // currentRows is already window-scoped and (since the underlying
+  // query orders by created_at desc) the slice picks the 20 most
+  // recent rows within the active range.
+  const recent = (
+    filter ? currentRows.filter((r) => r.decision === filter) : currentRows
+  ).slice(0, 20);
   const recentTitle = filter
     ? `Recent ${DECISION_LABEL[filter]}`
     : "Recent decisions";
