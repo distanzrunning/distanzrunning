@@ -80,6 +80,25 @@ function daysAgoLabel(iso: string): string {
   return `${days} days ago`;
 }
 
+// Predicate that decides whether a Brussels day-key qualifies as an
+// X-axis tick. Cadence widens with window length so the axis never
+// holds more than ~15 labels.
+function pickTickCadence(lengthDays: number): (iso: string) => boolean {
+  if (lengthDays < 120) {
+    return (iso) =>
+      // Noon-UTC representative — same Brussels day at UTC+1/+2.
+      // getUTCDay: 0=Sun, 1=Mon, …, 6=Sat.
+      new Date(`${iso}T12:00:00.000Z`).getUTCDay() === 1;
+  }
+  if (lengthDays < 730) {
+    return (iso) => iso.slice(8, 10) === "01";
+  }
+  return (iso) => {
+    const month = iso.slice(5, 7);
+    return iso.slice(8, 10) === "01" && (month === "01" || month === "07");
+  };
+}
+
 // Build integer-only Y-axis ticks Vercel-style: pick a nice step
 // (1, 2, 5, 10, 20, …) targeting ~5 ticks and let the tick count fall
 // out. A fixed tick-count algorithm inflates the upper bound on small
@@ -174,23 +193,29 @@ function ChartInner({
     [yDomainMax, plotHeight],
   );
 
-  // Visible X-axis tick dates. Matches Vercel Analytics' cadence:
-  //   - short ranges (≤ 10 points): every single day, edges included
-  //   - longer ranges: every 7th day, anchored so the last label sits
-  //     a few days inset from the right edge and the rest step
-  //     backwards. Vercel's 30-day view shows May 24/17/10/3 with
-  //     today=May 27 — i.e. last label at index length − 4, then
-  //     step back by 7 while > 0 (drops index 0 too).
+  // Visible X-axis tick dates. Anchored on real calendar boundaries
+  // (Mondays / month starts / half-year starts) rather than walked
+  // back from "today", so a historical custom range gets the same
+  // clean cadence as a trailing-today range.
+  //   - ≤ 10 points: every day, edges included
+  //   - < ~120 days: every Monday (EU week start)
+  //   - < ~730 days: 1st of each month
+  //   - longer: Jan 1 / Jul 1
+  // EDGE_GAP drops ticks within 2 days of either edge so labels
+  // don't crowd the chart border.
   const xTickValues = useMemo(() => {
     if (trend.length <= 2) return trend.map((p) => p.date);
-    const step = trend.length <= 10 ? 1 : 7;
-    if (step === 1) return trend.map((p) => p.date);
-    const RIGHT_GAP = 4;
+    if (trend.length <= 10) return trend.map((p) => p.date);
+    const EDGE_GAP = 2;
+    const matches = pickTickCadence(trend.length);
     const indices: number[] = [];
-    for (let i = trend.length - RIGHT_GAP; i > 0; i -= step) {
+    for (let i = 0; i < trend.length; i++) {
+      if (!matches(trend[i].date)) continue;
+      if (i < EDGE_GAP) continue;
+      if (i > trend.length - 1 - EDGE_GAP) continue;
       indices.push(i);
     }
-    return indices.reverse().map((i) => trend[i].date);
+    return indices.map((i) => trend[i].date);
   }, [trend]);
 
   const {
