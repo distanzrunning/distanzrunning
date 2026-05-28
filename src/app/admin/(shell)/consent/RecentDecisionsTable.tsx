@@ -7,9 +7,11 @@
 // inside a Suspense boundary; the filter context lives outside it,
 // so the filter row stays mounted across data refetches.
 
-import { useMemo } from "react";
+import { type ReactNode, useMemo } from "react";
+import { Inbox, Search } from "lucide-react";
 
 import { Badge, type BadgeVariant } from "@/components/ui/Badge";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { PanelCard } from "@/components/ui/PanelCard";
 import {
   Table,
@@ -74,42 +76,62 @@ export default function RecentDecisionsTable({
     return rows.filter((r) => r.anon_id.toLowerCase().includes(q));
   }, [rows, filterText]);
 
-  const emptyMessage = filterText.trim()
-    ? `No anonymous IDs match “${filterText.trim()}”.`
-    : filter
-      ? `No ${DECISION_LABEL[filter]} in this window.`
-      : "No decisions yet.";
+  // Three empty-state shapes, in priority order:
+  //   - typed search with no matches → search icon, refer to the query
+  //   - decision filter active, no rows in window → inbox, name the filter
+  //   - no rows at all in window → inbox, generic copy
+  const trimmedFilterText = filterText.trim();
+  const empty: {
+    icon: ReactNode;
+    title: string;
+    description: string;
+  } | null =
+    visible.length > 0
+      ? null
+      : trimmedFilterText
+        ? {
+            icon: <Search />,
+            title: "No matches",
+            description: `No anonymous IDs match “${trimmedFilterText}”. Try a different query or clear the search.`,
+          }
+        : filter
+          ? {
+              icon: <Inbox />,
+              title: `No ${DECISION_LABEL[filter]}`,
+              description: `No ${DECISION_LABEL[filter]} in this window. Try a wider date range.`,
+            }
+          : {
+              icon: <Inbox />,
+              title: "No decisions",
+              description:
+                "No decisions in this window. Try a wider date range, or check back after visitors interact with the consent banner.",
+            };
 
   return (
     <PanelCard title={title}>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>When</TableHead>
-            <TableHead>Decision</TableHead>
-            <TableHead>Marketing</TableHead>
-            <TableHead>Analytics</TableHead>
-            <TableHead>Functional</TableHead>
-            <TableHead>Country</TableHead>
-            <TableHead>Anon ID</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {visible.length === 0 && (
+      {empty ? (
+        <EmptyState live>
+          <EmptyState.Icon>{empty.icon}</EmptyState.Icon>
+          <EmptyState.Text>
+            <EmptyState.Title>{empty.title}</EmptyState.Title>
+            <EmptyState.Description>{empty.description}</EmptyState.Description>
+          </EmptyState.Text>
+        </EmptyState>
+      ) : (
+        <Table>
+          <TableHeader>
             <TableRow>
-              <TableCell
-                colSpan={7}
-                style={{
-                  padding: 24,
-                  textAlign: "center",
-                  color: "var(--ds-gray-700)",
-                }}
-              >
-                {emptyMessage}
-              </TableCell>
+              <TableHead>When</TableHead>
+              <TableHead>Decision</TableHead>
+              <TableHead>Marketing</TableHead>
+              <TableHead>Analytics</TableHead>
+              <TableHead>Functional</TableHead>
+              <TableHead>Country</TableHead>
+              <TableHead>Anon ID</TableHead>
             </TableRow>
-          )}
-          {visible.map((row) => {
+          </TableHeader>
+          <TableBody>
+            {visible.map((row) => {
             const b = decisionBadge(row.decision);
             return (
               <TableRow key={row.id}>
@@ -143,8 +165,9 @@ export default function RecentDecisionsTable({
               </TableRow>
             );
           })}
-        </TableBody>
-      </Table>
+          </TableBody>
+        </Table>
+      )}
     </PanelCard>
   );
 }
