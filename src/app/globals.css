@@ -205,9 +205,17 @@
        state (z-index has no effect on position: static elements). */
     position: relative;
   }
+  /* Include the `:hover` combinations so the MenuButton's built-in
+     `hover:shadow-…` doesn't override the focus ring when the user
+     hovers the trigger while the menu is open. The calendar trigger
+     doesn't have this collision because its hover only changes the
+     background, not the shadow. */
   .consent-env-trigger:focus,
+  .consent-env-trigger:focus:hover,
   .consent-env-trigger:focus-visible,
-  .consent-env-trigger[aria-expanded="true"] {
+  .consent-env-trigger:focus-visible:hover,
+  .consent-env-trigger[aria-expanded="true"],
+  .consent-env-trigger[aria-expanded="true"]:hover {
     outline: none;
     box-shadow:
       0 0 0 1px var(--ds-gray-alpha-600),
