@@ -50,14 +50,17 @@ export default function ConsentEnvFilterMenu({
       <Menu position="bottom-start" width={200}>
         {/* min-width sized to fit the widest label ("All environments")
             so changing the selection doesn't shift the search input.
-            justify-content: flex-end keeps the label + chevron pinned
-            to the right edge of the trigger, so shorter labels open
-            empty space to their LEFT rather than appearing offset. */}
+            justify-content: space-between pins the label to the left
+            edge and the chevron to the right — standard select-trigger
+            pattern. focus + aria-expanded ring matches the date
+            picker's "open or focused" treatment (the DS Menu base
+            only fires the ring on keyboard focus). */}
         <MenuButton
           variant="secondary"
           size="default"
           chevron
-          style={{ minWidth: 200, justifyContent: "flex-end" }}
+          className="focus:ring-2 focus:ring-[var(--ds-focus-color)] focus:ring-offset-2 aria-expanded:ring-2 aria-expanded:ring-[var(--ds-focus-color)] aria-expanded:ring-offset-2"
+          style={{ minWidth: 200, justifyContent: "space-between" }}
         >
           {currentLabel}
         </MenuButton>
