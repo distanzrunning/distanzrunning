@@ -436,7 +436,7 @@ export async function ConsentDashboardContent({
             placeholder. The empty cell gives the trailing gap the
             same width as a tile (slot for a future 6th metric) and
             lets `divide-x` paint a divider after the last tile
-            without the old borderRight hack. minmax(200px, 1fr)
+            without the old borderRight hack. minmax(0, 1fr)
             keeps each column above 200px, flexing equally above
             that — overflowX:auto on the wrapper handles the
             narrow-viewport case. paddingBottom:6 on the wrapper
@@ -447,7 +447,7 @@ export async function ConsentDashboardContent({
           className="divide-x divide-[color:var(--ds-gray-400)]"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(6, minmax(200px, 1fr))",
+            gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
             borderBottom: "1px solid var(--ds-gray-400)",
             background: "var(--ds-background-200)",
           }}
@@ -597,7 +597,7 @@ export function ConsentDashboardSkeleton() {
           className="divide-x divide-[color:var(--ds-gray-400)]"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(6, minmax(200px, 1fr))",
+            gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
             borderBottom: "1px solid var(--ds-gray-400)",
             background: "var(--ds-background-200)",
           }}
