@@ -109,11 +109,43 @@ create table if not exists public.feedback_records (
   user_agent   text,
   ip_hash      text,
   country      text,
+  environment  text        not null check (environment in ('production', 'staging', 'development')),
   created_at   timestamptz not null default now()
 );
 
+-- Environment column migration (production / staging / development).
+-- Backfills existing rows as 'production' since the feedback API only
+-- deploys to live envs. Safe to re-run on existing deployments.
+alter table public.feedback_records add column if not exists environment text;
+update public.feedback_records set environment = 'production' where environment is null;
+alter table public.feedback_records alter column environment set not null;
+alter table public.feedback_records drop constraint if exists feedback_records_environment_check;
+alter table public.feedback_records add constraint feedback_records_environment_check
+  check (environment in ('production', 'staging', 'development'));
+
 create index if not exists feedback_records_created_at_idx
   on public.feedback_records (created_at desc);
+
+create index if not exists feedback_records_environment_idx
+  on public.feedback_records (environment);
+
+-- ----------------------------------------------------------------------------
+-- Retention: weekly delete of feedback_records older than 12 months.
+-- Mirrors consent retention — runs Sunday 03:00 UTC. pg_cron extension
+-- is already enabled by the consent retention migration.
+-- ----------------------------------------------------------------------------
+do $$
+begin
+  perform cron.unschedule('feedback-retention-12m');
+exception when others then null;
+end;
+$$;
+
+select cron.schedule(
+  'feedback-retention-12m',
+  '0 3 * * 0',
+  $$ delete from public.feedback_records where created_at < now() - interval '12 months' $$
+);
 
 alter table public.feedback_records enable row level security;
 revoke all on public.feedback_records from anon;
