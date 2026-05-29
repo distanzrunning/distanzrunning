@@ -39,6 +39,31 @@ create index if not exists consent_records_environment_created_at_idx
   on public.consent_records (environment, created_at desc);
 
 -- ----------------------------------------------------------------------------
+-- Deletion log: every admin-initiated delete on consent_records writes one
+-- row here. Lets future audits answer "who deleted anon_id X, when, and
+-- how many rows did that remove?" — invaluable if a deletion is ever
+-- disputed. deleted_by is nullable for now (single-admin auth doesn't
+-- identify individuals); populate once multi-user auth lands.
+-- ----------------------------------------------------------------------------
+create table if not exists public.consent_deletion_log (
+  id              bigint generated always as identity primary key,
+  anon_id         text        not null,
+  deleted_count   integer     not null check (deleted_count >= 0),
+  deleted_by      text,
+  reason          text,
+  deleted_at      timestamptz not null default now()
+);
+
+create index if not exists consent_deletion_log_deleted_at_idx
+  on public.consent_deletion_log (deleted_at desc);
+create index if not exists consent_deletion_log_anon_id_idx
+  on public.consent_deletion_log (anon_id);
+
+alter table public.consent_deletion_log enable row level security;
+revoke all on public.consent_deletion_log from anon;
+revoke all on public.consent_deletion_log from authenticated;
+
+-- ----------------------------------------------------------------------------
 -- Retention: weekly delete of consent_records older than 12 months.
 -- Lives in pg_cron (managed inside the DB, no app-layer involvement).
 -- Runs every Sunday at 03:00 UTC. Documented here for source-of-truth
