@@ -534,6 +534,7 @@ export function MenuButton({
     <button
       ref={triggerRef}
       type="button"
+      data-menu-trigger={variant}
       className={combinedClasses}
       onClick={() => setIsOpen(!isOpen)}
       aria-expanded={isOpen}

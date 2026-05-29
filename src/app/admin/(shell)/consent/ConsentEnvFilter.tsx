@@ -52,14 +52,13 @@ export default function ConsentEnvFilterMenu({
             so changing the selection doesn't shift the search input.
             justify-content: space-between pins the label to the left
             edge and the chevron to the right — standard select-trigger
-            pattern. consent-env-trigger class (in globals.css) gives
-            the two-layer focus ring on click + while the menu is
-            open, matching the Input and date-picker trigger. */}
+            pattern. The focus / open ring comes from MenuButton's
+            secondary variant automatically (see [data-menu-trigger=
+            "secondary"] in globals.css). */}
         <MenuButton
           variant="secondary"
           size="default"
           chevron
-          className="consent-env-trigger"
           style={{ minWidth: 200, justifyContent: "space-between" }}
         >
           {currentLabel}

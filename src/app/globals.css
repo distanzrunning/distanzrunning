@@ -1879,37 +1879,33 @@
 }
 
 @layer utilities {
-  /* Consent dashboard env-filter trigger — match the Input's
-     two-layer focus ring on click + while the menu is open.
-     Must live in @layer utilities (not components) so it takes
-     precedence over the MenuButton's Tailwind `hover:shadow-…`
-     utility on hover-while-open. Tailwind's aria-expanded:shadow-
-     [...] arbitrary-value classes don't reliably compile when the
-     value contains commas, so we scope this directly here. */
-  .consent-env-trigger {
+  /* MenuButton (variant="secondary") — two-layer focus ring on
+     click + while the menu is open, matching the Input and the
+     calendar trigger. Targets the data-menu-trigger attribute that
+     MenuButton renders, so any consumer using variant="secondary"
+     picks this up automatically with no per-page CSS.
+     `!important` needed: MenuButton's own `hover:shadow-…` and
+     `dark:hover:shadow-…` Tailwind utilities live in this same
+     layer at equal-or-higher specificity, and Tailwind's emit
+     order isn't deterministic relative to our rule. The Input
+     focus ring uses the same trick. */
+  [data-menu-trigger="secondary"] {
     /* position: relative so z-index applies in the focused/open
        state (z-index has no effect on position: static elements). */
     position: relative;
   }
-  .consent-env-trigger:focus,
-  .consent-env-trigger:focus:hover,
-  .consent-env-trigger:focus-visible,
-  .consent-env-trigger:focus-visible:hover,
-  .consent-env-trigger[aria-expanded="true"],
-  .consent-env-trigger[aria-expanded="true"]:hover {
+  [data-menu-trigger="secondary"]:focus,
+  [data-menu-trigger="secondary"]:focus:hover,
+  [data-menu-trigger="secondary"]:focus-visible,
+  [data-menu-trigger="secondary"]:focus-visible:hover,
+  [data-menu-trigger="secondary"][aria-expanded="true"],
+  [data-menu-trigger="secondary"][aria-expanded="true"]:hover {
     outline: none !important;
-    /* `!important` needed: MenuButton ships `hover:shadow-…` and
-       `dark:hover:shadow-…` utilities at equal-or-higher specificity,
-       and Tailwind's utility output ordering inside @layer utilities
-       isn't deterministic relative to our custom rule. The Input
-       focus ring uses the same trick (`!important` on its
-       focus-within shadow). */
     box-shadow:
       0 0 0 1px var(--ds-gray-alpha-600),
       0 0 0 4px var(--ds-focus-ring) !important;
     /* Lift the trigger above adjacent siblings so the 4px outer
-       ring isn't clipped by the date picker on its right (matches
-       the calendar trigger's behaviour). */
+       ring isn't clipped (matches the calendar trigger). */
     z-index: 2;
   }
 
