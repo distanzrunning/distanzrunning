@@ -38,6 +38,27 @@ create index if not exists consent_records_anon_id_idx
 create index if not exists consent_records_environment_created_at_idx
   on public.consent_records (environment, created_at desc);
 
+-- ----------------------------------------------------------------------------
+-- Retention: weekly delete of consent_records older than 12 months.
+-- Lives in pg_cron (managed inside the DB, no app-layer involvement).
+-- Runs every Sunday at 03:00 UTC. Documented here for source-of-truth
+-- visibility; idempotent if applied via Supabase SQL editor.
+-- ----------------------------------------------------------------------------
+create extension if not exists pg_cron with schema extensions;
+
+do $$
+begin
+  perform cron.unschedule('consent-retention-12m');
+exception when others then null;
+end;
+$$;
+
+select cron.schedule(
+  'consent-retention-12m',
+  '0 3 * * 0',
+  $$ delete from public.consent_records where created_at < now() - interval '12 months' $$
+);
+
 -- Lock down the table. Writes happen server-side via the service role key,
 -- which bypasses RLS. The anon key on the client has no access.
 alter table public.consent_records enable row level security;
