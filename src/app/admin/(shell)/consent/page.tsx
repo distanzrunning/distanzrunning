@@ -12,8 +12,9 @@ import {
   ConsentLookupContent,
   ConsentLookupSkeleton,
 } from "./ConsentLookup";
-import { getEarliestDecisionDate, type ConsentEnvFilter } from "./data";
-import { windowFromParams } from "./presets";
+import type { EnvFilter } from "@/components/admin/env";
+import { windowFromParams } from "@/components/admin/datePresets";
+import { getEarliestDecisionDate } from "./data";
 
 export const metadata = {
   title: "Consent — Stride Admin",
@@ -43,7 +44,7 @@ function resolveMetric(
   return filter ? "decisions" : "visitors";
 }
 
-function normaliseEnv(raw: string | undefined): ConsentEnvFilter {
+function normaliseEnv(raw: string | undefined): EnvFilter {
   if (raw === "production" || raw === "staging" || raw === "development") {
     return raw;
   }

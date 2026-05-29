@@ -1,33 +1,45 @@
 "use client";
 
 import { useTransition } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Check } from "lucide-react";
 
 import { Menu, MenuButton, MenuItem } from "@/components/ui/Menu";
 
-import type { ConsentEnvFilter } from "./data";
+import type { EnvFilter } from "./env";
 
-const OPTIONS: { value: ConsentEnvFilter; label: string }[] = [
+const OPTIONS: { value: EnvFilter; label: string }[] = [
   { value: "all", label: "All environments" },
   { value: "production", label: "Production" },
   { value: "staging", label: "Staging" },
   { value: "development", label: "Development" },
 ];
 
-export default function ConsentEnvFilterMenu({
+/**
+ * Admin environment filter — Production / Staging / Development /
+ * All. Sits to the left of the date picker on every dashboard
+ * that filters by deployment env. Reads + writes a single
+ * `?env=` URL search param ("all" is the default and stays off the
+ * URL for clean links). Switching env also drops `?filter=` since
+ * an env-specific filter usually doesn't carry over.
+ *
+ * Uses `usePathname()` so it works on any admin route — no
+ * hardcoded base path.
+ */
+export default function AdminEnvFilter({
   current,
 }: {
-  current: ConsentEnvFilter;
+  current: EnvFilter;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
   const currentLabel =
     OPTIONS.find((o) => o.value === current)?.label ?? "All environments";
 
-  const selectEnv = (value: ConsentEnvFilter) => {
+  const selectEnv = (value: EnvFilter) => {
     if (value === current) return;
     const next = new URLSearchParams(searchParams.toString());
     if (value === "all") {
@@ -41,7 +53,7 @@ export default function ConsentEnvFilterMenu({
     next.delete("filter");
     const qs = next.toString();
     startTransition(() => {
-      router.push(qs ? `/admin/consent?${qs}` : "/admin/consent");
+      router.push(qs ? `${pathname}?${qs}` : pathname);
     });
   };
 

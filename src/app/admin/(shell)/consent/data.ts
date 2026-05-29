@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache";
 
+import type { Environment, EnvFilter } from "@/components/admin/env";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 
 /** Tag used by every consent-data unstable_cache entry. The delete
@@ -9,10 +10,6 @@ export const CONSENT_CACHE_TAG = "consent_records";
 
 export type ConsentDecision = "accept_all" | "reject_all" | "custom";
 
-export type ConsentEnvironment = "production" | "staging" | "development";
-/** Dashboard filter value — concrete env name or "all" to skip filtering. */
-export type ConsentEnvFilter = ConsentEnvironment | "all";
-
 export interface ConsentRowRaw {
   id: number;
   anon_id: string;
@@ -21,7 +18,7 @@ export interface ConsentRowRaw {
   functional: boolean;
   decision: ConsentDecision;
   country: string | null;
-  environment: ConsentEnvironment;
+  environment: Environment;
   created_at: string;
 }
 
@@ -36,7 +33,7 @@ const FETCH_LIMIT = 10_000;
  *  Cache key segments include the env filter so each filter gets
  *  its own entry — "production" earliest can differ from "all". */
 const getEarliestDecisionDateIso = unstable_cache(
-  async (env: ConsentEnvFilter): Promise<string | null> => {
+  async (env: EnvFilter): Promise<string | null> => {
     const supabase = getSupabaseAdmin();
     let q = supabase
       .from("consent_records")
@@ -60,7 +57,7 @@ const getEarliestDecisionDateIso = unstable_cache(
  *  the first-ever record (per env), so the underlying cache TTL
  *  is 5 min. Defaults to "all" envs. */
 export async function getEarliestDecisionDate(
-  env: ConsentEnvFilter = "all",
+  env: EnvFilter = "all",
 ): Promise<Date | null> {
   const iso = await getEarliestDecisionDateIso(env);
   return iso ? new Date(iso) : null;
@@ -78,7 +75,7 @@ export const getConsentRowsInRange = unstable_cache(
   async (
     startIso: string,
     endIso: string,
-    env: ConsentEnvFilter,
+    env: EnvFilter,
   ): Promise<ConsentRowRaw[]> => {
     const supabase = getSupabaseAdmin();
     let q = supabase

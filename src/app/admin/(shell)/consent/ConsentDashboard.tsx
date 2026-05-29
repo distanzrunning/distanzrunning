@@ -1,5 +1,17 @@
 import { Inbox } from "lucide-react";
 
+import AdminTrendChart from "@/components/admin/AdminTrendChart";
+import {
+  addBusinessDays,
+  DEFAULT_PRESET,
+  formatBusinessDay,
+  isoOf,
+  matchPreset,
+  previousWindow,
+  windowDays,
+  type DateWindow,
+} from "@/components/admin/datePresets";
+import type { EnvFilter } from "@/components/admin/env";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { NumberTicker } from "@/components/ui/NumberTicker";
 import { PanelCard } from "@/components/ui/PanelCard";
@@ -13,28 +25,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
-import {
-  getConsentRowsInRange,
-  type ConsentEnvFilter,
-  type ConsentRowRaw,
-} from "./data";
-import ConsentTrendChart from "./ConsentTrendChart";
+import { getConsentRowsInRange, type ConsentRowRaw } from "./data";
 import RecentDecisionsTable from "./RecentDecisionsTable";
-import {
-  addBusinessDays,
-  DEFAULT_PRESET,
-  formatBusinessDay,
-  isoOf,
-  matchPreset,
-  previousWindow,
-  windowDays,
-  type DateWindow,
-} from "./presets";
 
 interface BuildHrefContext {
   tz: string;
   earliestDate: Date | null;
-  env: ConsentEnvFilter;
+  env: EnvFilter;
 }
 
 type Decision = "accept_all" | "reject_all" | "custom";
@@ -298,7 +295,7 @@ export async function ConsentDashboardContent({
   windowEnd: Date;
   tz: string;
   earliestDate: Date | null;
-  env: ConsentEnvFilter;
+  env: EnvFilter;
 }) {
   // No rows at all for the active env filter — short-circuit before
   // building windows / fetching anything else. Renders a hero in
@@ -306,7 +303,7 @@ export async function ConsentDashboardContent({
   // the filter row above stays mounted so the user can switch envs
   // (e.g. production empty → staging has data).
   if (!earliestDate) {
-    const envLabel: Record<ConsentEnvFilter, string> = {
+    const envLabel: Record<EnvFilter, string> = {
       all: "any environment",
       production: "production",
       staging: "staging",
@@ -546,7 +543,7 @@ export async function ConsentDashboardContent({
         </div>
         </div>
 
-        <ConsentTrendChart
+        <AdminTrendChart
           trend={trend}
           metricLabel={chartLabel}
           format={chartFormat}

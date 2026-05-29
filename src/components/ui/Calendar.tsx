@@ -790,7 +790,7 @@ export function Calendar({
 
   // Auto-derive `selectedPreset` from the current dateRange when it
   // matches one of the configured presets. Lets a controlled caller
-  // (e.g. ConsentDateRangePicker — value driven by URL params) get
+  // (e.g. AdminDateRangePicker — value driven by URL params) get
   // the preset highlighted in the dropdown without having to wire a
   // separate `selectedPreset` prop. Clears on a custom range.
   React.useEffect(() => {

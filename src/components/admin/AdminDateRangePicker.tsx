@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useTransition } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import {
   Calendar,
@@ -16,7 +16,7 @@ import {
   presetWindow,
   type PresetId,
   windowFromParams,
-} from "./presets";
+} from "./datePresets";
 
 const PRESETS: { label: string; id: PresetId }[] = [
   { label: "Last 7 days", id: "7d" },
@@ -27,17 +27,33 @@ const PRESETS: { label: string; id: PresetId }[] = [
   { label: "All time", id: "all" },
 ];
 
-export default function ConsentDateRangePicker({
+/**
+ * Vercel-style admin date range picker — 6 presets (Last 7d /
+ * 30d / 90d / This month / Last month / All time) plus a custom
+ * range mode via the Calendar.
+ *
+ * Reads + writes URL search params (`period` / `from` / `to`) so
+ * a refresh / share / back-button restores the same window.
+ * `usePathname()` means it works on any admin route — no
+ * hardcoded base path.
+ *
+ * `earliestDate` (optional) bounds the "All time" preset to the
+ * first real data point for that dataset, so the calendar grid
+ * doesn't suggest a 25-year empty span.
+ */
+export default function AdminDateRangePicker({
   tz,
   earliestDate,
 }: {
+  /** IANA timezone used for day-bucketing (e.g. "Europe/Brussels"). */
   tz: string;
   /** Used to bound the "All time" preset's visual range so the
    *  calendar grid + selected-preset detection agree with the
-   *  server-side narrowing in page.tsx. */
+   *  server-side narrowing in the page. */
   earliestDate: Date | null;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
@@ -104,7 +120,8 @@ export default function ConsentDateRangePicker({
       next.delete("period");
     }
     startTransition(() => {
-      router.push(`/admin/consent?${next.toString()}`);
+      const qs = next.toString();
+      router.push(qs ? `${pathname}?${qs}` : pathname);
     });
   };
 

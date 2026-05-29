@@ -1,4 +1,5 @@
-// Shared date-range presets + URL helpers for the consent dashboard.
+// Shared date-range presets + URL helpers for the admin dashboards
+// (consent, feedback, future).
 //
 // Stays framework-agnostic: pure date math + parsing. The picker
 // renders these as Calendar presets; the page reads URL params and
@@ -8,8 +9,8 @@
 // (loaded server-side from site_settings → getSiteSettings()). The
 // DB stores timestamps in UTC, but business reporting groups rows by
 // the local calendar day they fall on. Every helper that touches
-// "what day is this?" takes `tz` as a parameter so the consent
-// dashboard, picker, and chart all agree on a single tz per request.
+// "what day is this?" takes `tz` as a parameter so the dashboard,
+// picker, and chart all agree on a single tz per request.
 
 export interface DateWindow {
   /** Inclusive start. UTC instant at 00:00 (tz) on the start day. */
