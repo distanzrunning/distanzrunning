@@ -64,6 +64,52 @@ export async function getEarliestFeedbackDate(
   return iso ? new Date(iso) : null;
 }
 
+/** Lookup search: returns rows whose anon_id / email / feedback /
+ *  topic matches `q` (case-insensitive substring). Hard-capped to
+ *  100 rows so a wildcard-ish query can't blow the page render
+ *  budget. Cached per (q, env) for 30s.
+ *
+ *  Sanitises the percent-encoded commas/parentheses that PostgREST's
+ *  .or() filter uses as separators, so an admin search containing
+ *  these chars doesn't get split into multiple clauses. SQL injection
+ *  is not a concern (parameterised client) — this is purely about
+ *  the .or filter's grammar. */
+const LOOKUP_LIMIT = 100;
+const escapeOrValue = (raw: string): string =>
+  raw.replace(/[,()*]/g, " ").trim();
+
+export const lookupFeedback = unstable_cache(
+  async (q: string, env: EnvFilter): Promise<FeedbackRowRaw[]> => {
+    const term = escapeOrValue(q);
+    if (term.length === 0) return [];
+    const supabase = getSupabaseAdmin();
+    let query = supabase
+      .from("feedback_records")
+      .select(
+        "id, anon_id, emotion, feedback, topic, email, page_path, country, environment, created_at",
+      )
+      .or(
+        [
+          `anon_id.ilike.%${term}%`,
+          `email.ilike.%${term}%`,
+          `feedback.ilike.%${term}%`,
+          `topic.ilike.%${term}%`,
+        ].join(","),
+      )
+      .order("created_at", { ascending: false })
+      .limit(LOOKUP_LIMIT);
+    if (env !== "all") query = query.eq("environment", env);
+    const { data, error } = await query;
+    if (error) {
+      console.error("[feedback] lookup failed", error.message);
+      return [];
+    }
+    return (data ?? []) as FeedbackRowRaw[];
+  },
+  ["feedback-lookup"],
+  { revalidate: 30, tags: [FEEDBACK_CACHE_TAG] },
+);
+
 /** Fetch feedback rows within [startIso, endIso] inclusive, optionally
  *  narrowed to a single environment, ordered desc. Cached per
  *  (startIso, endIso, env) for 30s so clicking between tiles /
