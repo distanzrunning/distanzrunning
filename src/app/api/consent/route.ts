@@ -36,10 +36,29 @@ function isValidPayload(v: unknown): v is Payload {
   );
 }
 
+// IP salt is the entire defence against rainbow-tabling the audit
+// log — without it, every IP from a given environment produces a
+// stable salt-free SHA-256 hash that's recoverable in minutes.
+// Resolved at module load so the route crashes on cold start (in
+// deploy logs, can't be missed) rather than silently shipping
+// unsalted hashes if the env var is missing.
+const CONSENT_IP_SALT = (() => {
+  const raw = process.env.CONSENT_IP_SALT;
+  if (!raw || raw.length === 0) {
+    throw new Error(
+      "[consent] CONSENT_IP_SALT env var is missing or empty. " +
+        "This salt is required to deidentify IP hashes — refusing to " +
+        "ship unsalted hashes. Set it on the deployment.",
+    );
+  }
+  return raw;
+})();
+
 function hashIp(ip: string | null): string | null {
   if (!ip) return null;
-  const salt = process.env.CONSENT_IP_SALT ?? "";
-  return createHash("sha256").update(`${salt}:${ip}`).digest("hex");
+  return createHash("sha256")
+    .update(`${CONSENT_IP_SALT}:${ip}`)
+    .digest("hex");
 }
 
 // Vercel sets VERCEL_ENV to "production" | "preview" | "development".
