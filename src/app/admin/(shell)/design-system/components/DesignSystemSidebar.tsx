@@ -133,6 +133,15 @@ export const navigation: NavSection[] = [
     ],
   },
   {
+    id: "admin",
+    label: "Admin",
+    items: [
+      { id: "admin-date-range-picker", label: "Date Range Picker" },
+      { id: "admin-env-filter", label: "Env Filter" },
+      { id: "admin-trend-chart", label: "Trend Chart" },
+    ],
+  },
+  {
     id: "templates",
     label: "Templates",
     items: [
