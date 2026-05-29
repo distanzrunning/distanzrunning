@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Download, Search } from "lucide-react";
 
 import AdminDateRangePicker from "@/components/admin/AdminDateRangePicker";
 import AdminEnvFilter from "@/components/admin/AdminEnvFilter";
 import type { EnvFilter } from "@/components/admin/env";
+import { ButtonLink } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
 // One-row filter bar: free-text lookup on the left, env + date picker
@@ -28,7 +29,18 @@ export default function FeedbackFilterRow({
   initialQuery?: string;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [query, setQuery] = useState(initialQuery);
+
+  // CSV export href mirrors the current view — same searchParams the
+  // dashboard / lookup uses, so the export route can reproduce the
+  // exact row set. Read the live params (not the initial server-side
+  // ones) so the picker / env / filter changes take effect without a
+  // remount.
+  const exportQs = searchParams.toString();
+  const exportHref = exportQs
+    ? `/admin/feedback/export?${exportQs}`
+    : "/admin/feedback/export";
 
   return (
     <div
@@ -62,6 +74,18 @@ export default function FeedbackFilterRow({
       </div>
       <AdminEnvFilter current={env} />
       <AdminDateRangePicker tz={tz} earliestDate={earliestDate} />
+      <ButtonLink
+        href={exportHref}
+        variant="secondary"
+        size="medium"
+        prefixIcon={<Download />}
+        // `download` on the anchor hints the browser to save rather
+        // than navigate, even when the response's Content-Disposition
+        // would already do that.
+        download=""
+      >
+        Export
+      </ButtonLink>
     </div>
   );
 }
