@@ -1,6 +1,6 @@
 import { Inbox } from "lucide-react";
 
-import AdminTrendChart from "@/components/admin/AdminTrendChart";
+import TrendChart from "@/components/ui/TrendChart";
 import {
   addBusinessDays,
   DEFAULT_PRESET,
@@ -543,7 +543,7 @@ export async function ConsentDashboardContent({
         </div>
         </div>
 
-        <AdminTrendChart
+        <TrendChart
           trend={trend}
           metricLabel={chartLabel}
           format={chartFormat}

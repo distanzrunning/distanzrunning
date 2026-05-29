@@ -10,7 +10,7 @@ export default function TrendChartPage() {
     <ContentWithTOC
       tocTitle="On this page"
       pageTitle="Trend Chart"
-      pageSubtitle="Single-metric line chart for admin dashboards — counts or percentages, nice-integer Y ticks, calendar-anchored X ticks, dashed today segment, hover crosshair + days-ago pill."
+      pageSubtitle="Single-metric line chart — counts or percentages, nice-integer Y ticks, calendar-anchored X ticks, dashed today segment, hover crosshair + days-ago pill."
       mainSectionId="trend-chart"
     >
       <TrendChartComponent />

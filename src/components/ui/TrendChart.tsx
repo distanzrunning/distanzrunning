@@ -15,9 +15,9 @@ import {
   businessTodayKey,
   diffBusinessDays,
   msUntilNextBusinessDay,
-} from "./datePresets";
+} from "@/components/admin/datePresets";
 
-export interface AdminTrendPoint {
+export interface TrendPoint {
   /** Full tz day-key "YYYY-MM-DD" — kept whole (rather than sliced
    *  to MM-DD) so the tick formatter can build "May 19" and the
    *  active overlay can compute "N days ago" without re-parsing. */
@@ -25,8 +25,8 @@ export interface AdminTrendPoint {
   value: number | null;
 }
 
-interface AdminTrendChartProps {
-  trend: AdminTrendPoint[];
+interface TrendChartProps {
+  trend: TrendPoint[];
   metricLabel: string;
   format: "count" | "percent";
   /** IANA timezone — drives today-detection, tick-label formatting,
@@ -121,7 +121,7 @@ function pickTickCadence(lengthDays: number): (iso: string) => boolean {
 // (1, 2, 5, 10, 20, …) targeting ~5 ticks and let the tick count fall
 // out. A fixed tick-count algorithm inflates the upper bound on small
 // ranges (max=2 ends up 0,1,2,3,4).
-function niceIntegerTicks(points: AdminTrendPoint[]): number[] {
+function niceIntegerTicks(points: TrendPoint[]): number[] {
   const dataMax = points.reduce(
     (max, p) => (p.value != null && p.value > max ? p.value : max),
     0,
@@ -143,7 +143,7 @@ function niceIntegerTicks(points: AdminTrendPoint[]): number[] {
   return ticks;
 }
 
-export default function AdminTrendChart(props: AdminTrendChartProps) {
+export default function TrendChart(props: TrendChartProps) {
   return (
     // No outer padding — Vercel's chart panel runs SVG flush against
     // the tile-row's bottom border. Breathing room is provided by the
@@ -160,7 +160,7 @@ export default function AdminTrendChart(props: AdminTrendChartProps) {
   );
 }
 
-interface ChartInnerProps extends AdminTrendChartProps {
+interface ChartInnerProps extends TrendChartProps {
   width: number;
   height: number;
 }
@@ -244,7 +244,7 @@ function ChartInner({
     tooltipLeft,
     showTooltip,
     hideTooltip,
-  } = useTooltip<AdminTrendPoint>();
+  } = useTooltip<TrendPoint>();
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<SVGRectElement>) => {
@@ -329,7 +329,7 @@ function ChartInner({
             stroke="var(--ds-gray-400)"
             strokeWidth={1}
           />
-          <AreaClosed<AdminTrendPoint>
+          <AreaClosed<TrendPoint>
             data={trend}
             x={(d) => xScale(d.date) ?? 0}
             y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
@@ -342,7 +342,7 @@ function ChartInner({
             curve={curveLinear}
             defined={(d) => d.value != null}
           />
-          <LinePath<AdminTrendPoint>
+          <LinePath<TrendPoint>
             data={solidTrend}
             x={(d) => xScale(d.date) ?? 0}
             y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
@@ -352,7 +352,7 @@ function ChartInner({
             defined={(d) => d.value != null}
           />
           {dashedTrend.length === 2 && (
-            <LinePath<AdminTrendPoint>
+            <LinePath<TrendPoint>
               data={dashedTrend}
               x={(d) => xScale(d.date) ?? 0}
               y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}

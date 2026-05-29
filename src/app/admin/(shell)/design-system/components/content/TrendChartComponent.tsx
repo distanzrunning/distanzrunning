@@ -3,9 +3,9 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
-import AdminTrendChart, {
-  type AdminTrendPoint,
-} from "@/components/admin/AdminTrendChart";
+import TrendChart, {
+  type TrendPoint,
+} from "@/components/ui/TrendChart";
 import { businessTodayKey } from "@/components/admin/datePresets";
 import {
   useShikiHighlighter,
@@ -270,8 +270,8 @@ function dayKeyOffset(daysFromToday: number): string {
 /** Generate a `length`-day trend ending today, with values pulled from
  *  a deterministic sine + jitter so each demo render looks the same
  *  (no hydration flicker). */
-function buildCountTrend(length: number): AdminTrendPoint[] {
-  const out: AdminTrendPoint[] = [];
+function buildCountTrend(length: number): TrendPoint[] {
+  const out: TrendPoint[] = [];
   for (let i = length - 1; i >= 0; i--) {
     const date = dayKeyOffset(-i);
     // Deterministic pseudo-random: sin-based so the curve has shape.
@@ -283,8 +283,8 @@ function buildCountTrend(length: number): AdminTrendPoint[] {
   return out;
 }
 
-function buildPercentTrend(length: number): AdminTrendPoint[] {
-  const out: AdminTrendPoint[] = [];
+function buildPercentTrend(length: number): TrendPoint[] {
+  const out: TrendPoint[] = [];
   for (let i = length - 1; i >= 0; i--) {
     const date = dayKeyOffset(-i);
     const wave = Math.sin(i * 0.3) * 12 + Math.sin(i * 0.08) * 6;
@@ -294,8 +294,8 @@ function buildPercentTrend(length: number): AdminTrendPoint[] {
   return out;
 }
 
-function buildEmptyTrend(length: number): AdminTrendPoint[] {
-  const out: AdminTrendPoint[] = [];
+function buildEmptyTrend(length: number): TrendPoint[] {
+  const out: TrendPoint[] = [];
   for (let i = length - 1; i >= 0; i--) {
     out.push({ date: dayKeyOffset(-i), value: null });
   }
@@ -309,14 +309,14 @@ function buildEmptyTrend(length: number): AdminTrendPoint[] {
 function CountDemo() {
   const trend = useMemo(() => buildCountTrend(30), []);
   return (
-    <AdminTrendChart trend={trend} metricLabel="Decisions" format="count" tz={TZ} />
+    <TrendChart trend={trend} metricLabel="Decisions" format="count" tz={TZ} />
   );
 }
 
 function PercentDemo() {
   const trend = useMemo(() => buildPercentTrend(30), []);
   return (
-    <AdminTrendChart
+    <TrendChart
       trend={trend}
       metricLabel="Opt-in rate"
       format="percent"
@@ -328,7 +328,7 @@ function PercentDemo() {
 function EmptyDemo() {
   const trend = useMemo(() => buildEmptyTrend(14), []);
   return (
-    <AdminTrendChart
+    <TrendChart
       trend={trend}
       metricLabel="Opt-in rate"
       format="percent"
@@ -341,9 +341,9 @@ function EmptyDemo() {
 // Code strings
 // ============================================================================
 
-const countCode = `import AdminTrendChart, {
-  type AdminTrendPoint,
-} from '@/components/admin/AdminTrendChart';
+const countCode = `import TrendChart, {
+  type TrendPoint,
+} from '@/components/ui/TrendChart';
 import { getSiteSettings } from '@/lib/site-settings';
 import { buildTrend } from './data';
 import { windowFromParams } from '@/components/admin/datePresets';
@@ -355,14 +355,14 @@ export default async function Page({
 }) {
   const { timezone: tz } = await getSiteSettings();
   const window = windowFromParams(await searchParams, tz);
-  const trend: AdminTrendPoint[] = await buildTrend({
+  const trend: TrendPoint[] = await buildTrend({
     metric: 'decisions',
     tz,
     window,
   });
 
   return (
-    <AdminTrendChart
+    <TrendChart
       trend={trend}
       metricLabel="Decisions"
       format="count"
@@ -371,7 +371,7 @@ export default async function Page({
   );
 }`;
 
-const percentCode = `<AdminTrendChart
+const percentCode = `<TrendChart
   trend={trend}
   metricLabel="Opt-in rate"
   format="percent"
@@ -382,7 +382,7 @@ const emptyCode = `// Every bucket is null — the chart keeps its axes drawn an
 // overlays a centred "No data in this range" message instead of
 // swapping in a blank panel. Only happens in percent mode (count
 // mode backfills 0 for empty days).
-<AdminTrendChart
+<TrendChart
   trend={trend}
   metricLabel="Opt-in rate"
   format="percent"
@@ -471,10 +471,12 @@ export default function TrendChartComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             The single-metric trend slot under a stat-tile row on any
-            admin dashboard — consent, feedback, future analytics.
-            Pair with <ComponentRef name="Calendar" /> (in its
-            compact + preset-label mode) and <ComponentRef name="Menu" />{" "}
-            on the row above for the date / env filter pair.
+            dashboard — admin (consent, feedback) or public
+            (analytics, race trends). Pair with{" "}
+            <ComponentRef name="Calendar" /> (in its compact +
+            preset-label mode) and, on admin surfaces, a{" "}
+            <ComponentRef name="Menu" /> for the env filter on the
+            row above.
           </li>
           <li>
             Don&apos;t use for multi-series comparison (two opt-in
@@ -567,13 +569,15 @@ export default function TrendChartComponent() {
             <code className="inline-code">tz</code> should be the
             configured site timezone (<em>Europe/Brussels</em> by
             default, from <em>site_settings</em>). Hard-coding a tz
-            per consumer drifts when the admin changes it in settings.
+            per consumer drifts the moment it&apos;s changed in
+            settings.
           </li>
           <li>
             The empty-state copy currently reads{" "}
             <em>&quot;No decisions in this range&quot;</em> — TODO:
-            lift to a prop so the feedback dashboard can override to
-            <em> &quot;No feedback in this range&quot;</em>.
+            lift to a prop so non-consent consumers can override
+            (e.g. <em>&quot;No feedback in this range&quot;</em>,{" "}
+            <em>&quot;No races in this range&quot;</em>).
           </li>
         </ul>
 
