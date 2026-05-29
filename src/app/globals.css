@@ -200,32 +200,6 @@
      Tailwind's aria-expanded:shadow-[...] arbitrary-value classes
      don't reliably compile when the value contains commas, so we
      scope this directly here. */
-  .consent-env-trigger {
-    /* position: relative so z-index applies in the focused/open
-       state (z-index has no effect on position: static elements). */
-    position: relative;
-  }
-  /* Include the `:hover` combinations so the MenuButton's built-in
-     `hover:shadow-…` doesn't override the focus ring when the user
-     hovers the trigger while the menu is open. The calendar trigger
-     doesn't have this collision because its hover only changes the
-     background, not the shadow. */
-  .consent-env-trigger:focus,
-  .consent-env-trigger:focus:hover,
-  .consent-env-trigger:focus-visible,
-  .consent-env-trigger:focus-visible:hover,
-  .consent-env-trigger[aria-expanded="true"],
-  .consent-env-trigger[aria-expanded="true"]:hover {
-    outline: none;
-    box-shadow:
-      0 0 0 1px var(--ds-gray-alpha-600),
-      0 0 0 4px var(--ds-focus-ring);
-    /* Lift the trigger above adjacent siblings so the 4px outer
-       ring isn't clipped by the date picker on its right (matches
-       the calendar trigger's behaviour). */
-    z-index: 2;
-  }
-
   /* Input component styles */
   .ds-input-container {
     box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
@@ -1905,6 +1879,34 @@
 }
 
 @layer utilities {
+  /* Consent dashboard env-filter trigger — match the Input's
+     two-layer focus ring on click + while the menu is open.
+     Must live in @layer utilities (not components) so it takes
+     precedence over the MenuButton's Tailwind `hover:shadow-…`
+     utility on hover-while-open. Tailwind's aria-expanded:shadow-
+     [...] arbitrary-value classes don't reliably compile when the
+     value contains commas, so we scope this directly here. */
+  .consent-env-trigger {
+    /* position: relative so z-index applies in the focused/open
+       state (z-index has no effect on position: static elements). */
+    position: relative;
+  }
+  .consent-env-trigger:focus,
+  .consent-env-trigger:focus:hover,
+  .consent-env-trigger:focus-visible,
+  .consent-env-trigger:focus-visible:hover,
+  .consent-env-trigger[aria-expanded="true"],
+  .consent-env-trigger[aria-expanded="true"]:hover {
+    outline: none;
+    box-shadow:
+      0 0 0 1px var(--ds-gray-alpha-600),
+      0 0 0 4px var(--ds-focus-ring);
+    /* Lift the trigger above adjacent siblings so the 4px outer
+       ring isn't clipped by the date picker on its right (matches
+       the calendar trigger's behaviour). */
+    z-index: 2;
+  }
+
   /* macOS-style Window Shadows */
   .mac-window-shadow {
     box-shadow:
