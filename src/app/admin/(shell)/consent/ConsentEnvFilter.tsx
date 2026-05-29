@@ -47,7 +47,7 @@ export default function ConsentEnvFilterMenu({
 
   return (
     <div style={{ opacity: isPending ? 0.6 : 1, transition: "opacity 0.15s" }}>
-      <Menu position="bottom-start" width={200}>
+      <Menu position="bottom-start" width={200} sideOffset={12}>
         {/* min-width sized to fit the widest label ("All environments")
             so changing the selection doesn't shift the search input.
             justify-content: space-between pins the label to the left

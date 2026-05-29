@@ -54,9 +54,19 @@ interface MenuProps {
   children: ReactNode;
   position?: MenuPosition;
   width?: number;
+  /** Pixel gap between the trigger and the dropdown along the
+   *  primary axis. Defaults to 4 — matches the header menu and
+   *  existing DS-docs usage. Pass 12 to align with the calendar
+   *  preset dropdown gap (used by the consent env filter). */
+  sideOffset?: number;
 }
 
-export function Menu({ children, position = "bottom-start", width }: MenuProps) {
+export function Menu({
+  children,
+  position = "bottom-start",
+  width,
+  sideOffset = 4,
+}: MenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -165,6 +175,7 @@ export function Menu({ children, position = "bottom-start", width }: MenuProps) 
               dropdownRef={dropdownRef}
               position={position}
               menuWidth={width}
+              sideOffset={sideOffset}
             >
               {items}
             </MenuDropdown>,
@@ -184,12 +195,14 @@ function MenuDropdown({
   dropdownRef,
   position,
   menuWidth,
+  sideOffset,
   children,
 }: {
   containerRef: React.RefObject<HTMLDivElement>;
   dropdownRef: React.RefObject<HTMLDivElement>;
   position: MenuPosition;
   menuWidth?: number;
+  sideOffset: number;
   children: ReactNode;
 }) {
   const [coords, setCoords] = useState({ top: 0, left: 0 });
@@ -241,23 +254,23 @@ function MenuDropdown({
     let left = 0;
 
     if (resolved.startsWith("bottom")) {
-      top = rect.bottom + scrollY + 4;
+      top = rect.bottom + scrollY + sideOffset;
       left = resolved === "bottom-end" ? rect.right + scrollX : rect.left + scrollX;
     } else if (resolved.startsWith("top")) {
       // Anchored to the bottom of the menu — `bottom` is computed by
       // the consumer using viewport height + scroll.
-      top = rect.top + scrollY - 4;
+      top = rect.top + scrollY - sideOffset;
       left = resolved === "top-end" ? rect.right + scrollX : rect.left + scrollX;
     } else if (resolved.startsWith("left")) {
       left = rect.left + scrollX;
       top = resolved === "left-end" ? rect.bottom + scrollY : rect.top + scrollY;
     } else if (resolved.startsWith("right")) {
-      left = rect.right + scrollX + 4;
+      left = rect.right + scrollX + sideOffset;
       top = resolved === "right-end" ? rect.bottom + scrollY : rect.top + scrollY;
     }
 
     setCoords({ top, left });
-  }, [containerRef, position, menuWidth, children]);
+  }, [containerRef, position, menuWidth, children, sideOffset]);
 
   // Auto-focus the first non-disabled item when the dropdown mounts,
   // then handle Up/Down/Home/End at the container level. Roving

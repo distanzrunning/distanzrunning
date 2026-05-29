@@ -1897,10 +1897,16 @@
   .consent-env-trigger:focus-visible:hover,
   .consent-env-trigger[aria-expanded="true"],
   .consent-env-trigger[aria-expanded="true"]:hover {
-    outline: none;
+    outline: none !important;
+    /* `!important` needed: MenuButton ships `hover:shadow-…` and
+       `dark:hover:shadow-…` utilities at equal-or-higher specificity,
+       and Tailwind's utility output ordering inside @layer utilities
+       isn't deterministic relative to our custom rule. The Input
+       focus ring uses the same trick (`!important` on its
+       focus-within shadow). */
     box-shadow:
       0 0 0 1px var(--ds-gray-alpha-600),
-      0 0 0 4px var(--ds-focus-ring);
+      0 0 0 4px var(--ds-focus-ring) !important;
     /* Lift the trigger above adjacent siblings so the 4px outer
        ring isn't clipped by the date picker on its right (matches
        the calendar trigger's behaviour). */
