@@ -12,7 +12,13 @@ import {
   type DateWindow,
 } from "@/components/admin/datePresets";
 import type { EnvFilter } from "@/components/admin/env";
-import { EmptyState } from "@/components/ui/EmptyState";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateText,
+  EmptyStateTitle,
+} from "@/components/ui/EmptyState";
 import { NumberTicker } from "@/components/ui/NumberTicker";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -311,15 +317,15 @@ export async function ConsentDashboardContent({
     };
     return (
       <EmptyState live>
-        <EmptyState.Icon>
+        <EmptyStateIcon>
           <Inbox />
-        </EmptyState.Icon>
-        <EmptyState.Text>
-          <EmptyState.Title>No decisions yet</EmptyState.Title>
-          <EmptyState.Description>
+        </EmptyStateIcon>
+        <EmptyStateText>
+          <EmptyStateTitle>No decisions yet</EmptyStateTitle>
+          <EmptyStateDescription>
             {`No consent decisions recorded in ${envLabel[env]} yet. Decisions appear here when visitors interact with the consent banner on the public site.`}
-          </EmptyState.Description>
-        </EmptyState.Text>
+          </EmptyStateDescription>
+        </EmptyStateText>
       </EmptyState>
     );
   }

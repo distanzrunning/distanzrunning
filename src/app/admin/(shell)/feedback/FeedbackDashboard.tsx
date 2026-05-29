@@ -12,7 +12,13 @@ import {
 } from "@/components/admin/datePresets";
 import type { EnvFilter } from "@/components/admin/env";
 import { Badge, type BadgeVariant } from "@/components/ui/Badge";
-import { EmptyState } from "@/components/ui/EmptyState";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateText,
+  EmptyStateTitle,
+} from "@/components/ui/EmptyState";
 import { NumberTicker } from "@/components/ui/NumberTicker";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -422,15 +428,15 @@ export async function FeedbackDashboardContent({
     };
     return (
       <EmptyState live>
-        <EmptyState.Icon>
+        <EmptyStateIcon>
           <Inbox />
-        </EmptyState.Icon>
-        <EmptyState.Text>
-          <EmptyState.Title>No feedback yet</EmptyState.Title>
-          <EmptyState.Description>
+        </EmptyStateIcon>
+        <EmptyStateText>
+          <EmptyStateTitle>No feedback yet</EmptyStateTitle>
+          <EmptyStateDescription>
             {`No feedback recorded in ${envLabel[env]} yet. Submissions appear here when visitors send feedback through the public site.`}
-          </EmptyState.Description>
-        </EmptyState.Text>
+          </EmptyStateDescription>
+        </EmptyStateText>
       </EmptyState>
     );
   }

@@ -159,20 +159,28 @@ const EMPTY_STATE_CSS = `
 // ============================================================================
 // Compound Components
 // ============================================================================
+//
+// Each sub-component is ALSO a named export. The `EmptyState.X` static-
+// property attachments below are kept for client-component callers
+// (RecentDecisionsTable, DS docs), but server components MUST import
+// the named exports directly — static properties on a `"use client"`
+// export don't survive the RSC serialization boundary and resolve to
+// `undefined` at render time (React error #130). See
+// feedback_rsc_static_property_compound memory for the full incident.
 
-function EmptyStateIcon({ children }: EmptyStateIconProps) {
+export function EmptyStateIcon({ children }: EmptyStateIconProps) {
   return <div className="ds-empty-state-icon">{children}</div>;
 }
 
-function EmptyStateTitle({ children }: EmptyStateTitleProps) {
+export function EmptyStateTitle({ children }: EmptyStateTitleProps) {
   return <p className="ds-empty-state-title">{children}</p>;
 }
 
-function EmptyStateDescription({ children }: EmptyStateDescriptionProps) {
+export function EmptyStateDescription({ children }: EmptyStateDescriptionProps) {
   return <p className="ds-empty-state-description">{children}</p>;
 }
 
-function EmptyStateActions({ children }: EmptyStateActionsProps) {
+export function EmptyStateActions({ children }: EmptyStateActionsProps) {
   return <div className="ds-empty-state-actions">{children}</div>;
 }
 
@@ -196,7 +204,7 @@ export function EmptyState({ children, live = false }: EmptyStateProps) {
 }
 
 /** Wrapper for title + description to group them with tighter spacing */
-function EmptyStateText({ children }: { children: ReactNode }) {
+export function EmptyStateText({ children }: { children: ReactNode }) {
   return <div className="ds-empty-state-text">{children}</div>;
 }
 
