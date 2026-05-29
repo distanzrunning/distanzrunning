@@ -1,3 +1,6 @@
+import { Inbox } from "lucide-react";
+
+import { EmptyState } from "@/components/ui/EmptyState";
 import { NumberTicker } from "@/components/ui/NumberTicker";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -297,6 +300,33 @@ export async function ConsentDashboardContent({
   earliestDate: Date | null;
   env: ConsentEnvFilter;
 }) {
+  // No rows at all for the active env filter — short-circuit before
+  // building windows / fetching anything else. Renders a hero in
+  // place of the tile row, chart, category bars, and recent table;
+  // the filter row above stays mounted so the user can switch envs
+  // (e.g. production empty → staging has data).
+  if (!earliestDate) {
+    const envLabel: Record<ConsentEnvFilter, string> = {
+      all: "any environment",
+      production: "production",
+      staging: "staging",
+      development: "development",
+    };
+    return (
+      <EmptyState live>
+        <EmptyState.Icon>
+          <Inbox />
+        </EmptyState.Icon>
+        <EmptyState.Text>
+          <EmptyState.Title>No decisions yet</EmptyState.Title>
+          <EmptyState.Description>
+            {`No consent decisions recorded in ${envLabel[env]} yet. Decisions appear here when visitors interact with the consent banner on the public site.`}
+          </EmptyState.Description>
+        </EmptyState.Text>
+      </EmptyState>
+    );
+  }
+
   // The "All time" sentinel is already narrowed in page.tsx via
   // getEarliestDecisionDate, so windowStart here is always real-data
   // bound. No further preprocessing needed.
