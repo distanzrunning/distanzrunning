@@ -271,7 +271,7 @@ function CategoryBar({
           style={{
             width: `${ratio * 100}%`,
             height: "100%",
-            background: "var(--ds-blue-900)",
+            background: "var(--ds-blue-700)",
             transition: "width 300ms ease",
           }}
         />

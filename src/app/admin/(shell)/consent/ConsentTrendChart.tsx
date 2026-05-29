@@ -336,9 +336,9 @@ function ChartInner({
             yScale={yScale}
             // rgba(token-rgb, alpha) is the project's preferred shape
             // for theme-aware semi-transparent fills (per CLAUDE.md).
-            // --ds-blue-900-rgb flips with the .dark class so the
+            // --ds-blue-700-rgb flips with the .dark class so the
             // tint stays balanced against either background.
-            fill="rgba(var(--ds-blue-900-rgb), 0.10)"
+            fill="rgba(var(--ds-blue-700-rgb), 0.10)"
             curve={curveLinear}
             defined={(d) => d.value != null}
           />
@@ -346,7 +346,7 @@ function ChartInner({
             data={solidTrend}
             x={(d) => xScale(d.date) ?? 0}
             y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
-            stroke="var(--ds-blue-900)"
+            stroke="var(--ds-blue-700)"
             strokeWidth={2}
             curve={curveLinear}
             defined={(d) => d.value != null}
@@ -356,7 +356,7 @@ function ChartInner({
               data={dashedTrend}
               x={(d) => xScale(d.date) ?? 0}
               y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
-              stroke="var(--ds-blue-900)"
+              stroke="var(--ds-blue-700)"
               strokeWidth={2}
               strokeDasharray="4 8"
               strokeLinecap="round"
@@ -418,7 +418,7 @@ function ChartInner({
                   cx={activeX}
                   cy={activeY}
                   r={4}
-                  fill="var(--ds-blue-900)"
+                  fill="var(--ds-blue-700)"
                   opacity={0.4}
                 >
                   <animate
@@ -441,7 +441,7 @@ function ChartInner({
                 cx={activeX}
                 cy={activeY}
                 r={4}
-                fill="var(--ds-blue-900)"
+                fill="var(--ds-blue-700)"
               />
             </g>
           )}
@@ -540,7 +540,7 @@ function ChartInner({
                   width: 8,
                   height: 8,
                   borderRadius: 9999,
-                  background: "var(--ds-blue-900)",
+                  background: "var(--ds-blue-700)",
                 }}
               />
               <span style={{ fontWeight: 400 }}>{metricLabel}</span>
