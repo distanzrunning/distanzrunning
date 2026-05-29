@@ -277,6 +277,128 @@ function CategoryBar({
   );
 }
 
+// Per-emotion fill colour for the stacked page bar. Uses the 700
+// shade per the DS "primary" slot for each hue — same family as the
+// chart fill — and stays stable across light/dark via the token.
+const EMOTION_COLOUR: Record<Exclude<Emotion, null> | "unknown", string> = {
+  love: "var(--ds-green-700)",
+  okay: "var(--ds-blue-700)",
+  "not-great": "var(--ds-amber-700)",
+  hate: "var(--ds-red-700)",
+  unknown: "var(--ds-gray-500)",
+};
+
+interface PageGroup {
+  path: string;
+  total: number;
+  byEmotion: { emotion: Exclude<Emotion, null> | "unknown"; count: number }[];
+}
+
+function PagePathRow({
+  group,
+  windowTotal,
+  topTotal,
+}: {
+  group: PageGroup;
+  windowTotal: number;
+  topTotal: number;
+}) {
+  // Bar fills proportional to topTotal so the top page anchors at
+  // full width and the rest scale relative — visual hierarchy comes
+  // from the bar length, not just the count text.
+  const widthRatio = topTotal === 0 ? 0 : group.total / topTotal;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      <div
+        className="flex justify-between text-copy-13"
+        style={{ color: "var(--ds-gray-1000)", gap: 16 }}
+      >
+        <span
+          className="font-mono"
+          style={{
+            color: "var(--ds-gray-1000)",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            minWidth: 0,
+            flex: 1,
+          }}
+          title={group.path}
+        >
+          {group.path}
+        </span>
+        <span style={{ color: "var(--ds-gray-700)", flexShrink: 0 }}>
+          {group.total.toLocaleString()} ·{" "}
+          {fmtPct(pct(group.total, windowTotal))}
+        </span>
+      </div>
+      <div
+        style={{
+          height: 8,
+          borderRadius: 4,
+          background: "var(--ds-gray-200)",
+          overflow: "hidden",
+          width: `${widthRatio * 100}%`,
+          transition: "width 300ms ease",
+          display: "flex",
+        }}
+      >
+        {group.byEmotion.map(({ emotion, count }) => {
+          const segmentRatio = group.total === 0 ? 0 : count / group.total;
+          return (
+            <div
+              key={emotion}
+              style={{
+                width: `${segmentRatio * 100}%`,
+                height: "100%",
+                background: EMOTION_COLOUR[emotion],
+              }}
+              title={`${emotion}: ${count.toLocaleString()}`}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const TOP_PAGES_LIMIT = 10;
+
+/** Group the active-window rows by page_path and return the top N
+ *  by count, including a per-emotion breakdown for the stacked bar.
+ *  Null paths bucket as "(no path)" — feedback submitted without a
+ *  page reference, rare but worth surfacing. */
+function buildPageGroups(rows: FeedbackRowRaw[]): PageGroup[] {
+  const groups = new Map<
+    string,
+    { total: number; counts: Record<Exclude<Emotion, null> | "unknown", number> }
+  >();
+  for (const row of rows) {
+    const key = row.page_path ?? "(no path)";
+    const entry = groups.get(key) ?? {
+      total: 0,
+      counts: { love: 0, okay: 0, "not-great": 0, hate: 0, unknown: 0 },
+    };
+    entry.total += 1;
+    const e = row.emotion ?? "unknown";
+    entry.counts[e] += 1;
+    groups.set(key, entry);
+  }
+  const ordered: PageGroup[] = [...groups.entries()]
+    .map(([path, { total, counts }]) => ({
+      path,
+      total,
+      byEmotion: (
+        ["love", "okay", "not-great", "hate", "unknown"] as const
+      )
+        .map((emotion) => ({ emotion, count: counts[emotion] }))
+        .filter((s) => s.count > 0),
+    }))
+    .sort((a, b) => b.total - a.total)
+    .slice(0, TOP_PAGES_LIMIT);
+  return ordered;
+}
+
 function emotionBadge(
   e: Emotion | null,
 ): { label: string; variant: BadgeVariant } {
@@ -563,6 +685,13 @@ export async function FeedbackDashboardContent({
   // already window-scoped and (since the underlying query orders by
   // created_at desc) the slice picks the 20 most recent rows within
   // the active range.
+  // Page-path leaderboard mirrors the active window (but ignores the
+  // tile filter — the value is "which pages drive feedback overall",
+  // not "which pages drive love-it specifically"). Top 10 by count
+  // with a per-emotion stacked bar so the mix is visible inline.
+  const pageGroups = buildPageGroups(currentRows);
+  const topPageTotal = pageGroups[0]?.total ?? 0;
+
   const recent = (
     filter
       ? currentRows.filter((r) => rowMatchesFilter(r, filter))
@@ -713,6 +842,28 @@ export async function FeedbackDashboardContent({
           </div>
         </PanelCard>
       </div>
+
+      {/* Top pages by feedback — stacked horizontal bar per page
+          coloured by emotion. Empty when the window has zero rows
+          (the parent already short-circuits to EmptyState, so the
+          fallback render here is only for windows with rows but no
+          page_path on any of them — rare). */}
+      {pageGroups.length > 0 && (
+        <div style={{ marginBottom: 16 }}>
+          <PanelCard title="Top pages by feedback">
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {pageGroups.map((group) => (
+                <PagePathRow
+                  key={group.path}
+                  group={group}
+                  windowTotal={currentCount}
+                  topTotal={topPageTotal}
+                />
+              ))}
+            </div>
+          </PanelCard>
+        </div>
+      )}
 
       <RecentFeedbackTable
         rows={recent}
