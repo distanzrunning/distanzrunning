@@ -49,13 +49,15 @@ export default function ConsentEnvFilterMenu({
     <div style={{ opacity: isPending ? 0.6 : 1, transition: "opacity 0.15s" }}>
       <Menu position="bottom-start" width={200}>
         {/* min-width sized to fit the widest label ("All environments")
-            so changing the selection doesn't shift the search input
-            to its left. */}
+            so changing the selection doesn't shift the search input.
+            justify-content: flex-end keeps the label + chevron pinned
+            to the right edge of the trigger, so shorter labels open
+            empty space to their LEFT rather than appearing offset. */}
         <MenuButton
           variant="secondary"
           size="default"
           chevron
-          style={{ minWidth: 200 }}
+          style={{ minWidth: 200, justifyContent: "flex-end" }}
         >
           {currentLabel}
         </MenuButton>
