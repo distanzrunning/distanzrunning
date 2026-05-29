@@ -18,14 +18,40 @@ export async function deleteFeedbackRecord(formData: FormData) {
   }
 
   const supabase = getSupabaseAdmin();
-  const { error } = await supabase
+  // `.select("id, anon_id, emotion")` makes the delete RETURNING —
+  // captures the row's identifying fields at delete time so the
+  // audit row is self-contained even after the original is gone.
+  const { data: deleted, error } = await supabase
     .from("feedback_records")
     .delete()
-    .eq("id", id);
+    .eq("id", id)
+    .select("id, anon_id, emotion");
 
   if (error) {
     console.error("[feedback] delete failed", error);
     throw new Error(error.message);
+  }
+
+  // Audit the deletion. Best-effort write — if the log insert fails
+  // we still consider the user-facing delete successful, but log the
+  // discrepancy so it shows up in runtime logs for investigation.
+  const removed = deleted?.[0];
+  if (removed) {
+    const { error: logError } = await supabase
+      .from("feedback_deletion_log")
+      .insert({
+        feedback_id: removed.id,
+        anon_id: removed.anon_id,
+        emotion: removed.emotion,
+        // deleted_by stays null for now — single-admin auth doesn't
+        // identify individuals. Populate once multi-user auth lands.
+      });
+    if (logError) {
+      console.error(
+        "[feedback] deletion log insert failed (delete still applied)",
+        logError,
+      );
+    }
   }
 
   revalidateTag(FEEDBACK_CACHE_TAG);

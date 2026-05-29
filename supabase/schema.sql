@@ -151,6 +151,32 @@ alter table public.feedback_records enable row level security;
 revoke all on public.feedback_records from anon;
 revoke all on public.feedback_records from authenticated;
 
+-- ----------------------------------------------------------------------------
+-- Deletion log for feedback_records — mirrors consent_deletion_log.
+-- Captures feedback_id + anon_id + emotion at delete time so the audit
+-- row is self-contained even if the original is gone. deleted_by stays
+-- nullable for now (single-admin auth doesn't identify individuals);
+-- populate once multi-user auth lands.
+-- ----------------------------------------------------------------------------
+create table if not exists public.feedback_deletion_log (
+  id              bigint generated always as identity primary key,
+  feedback_id     bigint      not null,
+  anon_id         text,
+  emotion         text,
+  deleted_by      text,
+  reason          text,
+  deleted_at      timestamptz not null default now()
+);
+
+create index if not exists feedback_deletion_log_deleted_at_idx
+  on public.feedback_deletion_log (deleted_at desc);
+create index if not exists feedback_deletion_log_feedback_id_idx
+  on public.feedback_deletion_log (feedback_id);
+
+alter table public.feedback_deletion_log enable row level security;
+revoke all on public.feedback_deletion_log from anon;
+revoke all on public.feedback_deletion_log from authenticated;
+
 -- ============================================================================
 -- Site settings
 -- ============================================================================
