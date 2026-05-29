@@ -1,10 +1,53 @@
 "use client";
 
+import { useState } from "react";
+
 import { Section } from "../ContentWithTOC";
 import { CodePreview } from "../CodePreview";
 import { ComponentRef } from "../ComponentRef";
 import { StatTile } from "@/components/ui/StatTile";
 import { StatTileGroup } from "@/components/ui/StatTileGroup";
+
+type DemoMetric = "decisions" | "visitors";
+
+// Local stateful demo for the "As a tab row" example. The real
+// component uses Next's <Link> via `href` to drive navigation; here
+// we intercept the click with anchorProps.onClick + preventDefault
+// so the demo reads as a tab swap rather than a page jump.
+function TabRowDemo() {
+  const [metric, setMetric] = useState<DemoMetric>("decisions");
+  const selectMetric =
+    (next: DemoMetric) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      setMetric(next);
+    };
+  return (
+    <div
+      className="divide-x divide-[color:var(--ds-gray-400)]"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+        borderBottom: "1px solid var(--ds-gray-400)",
+        background: "var(--ds-background-200)",
+      }}
+    >
+      <StatTile
+        label="Decisions"
+        value="12,481"
+        href="#decisions"
+        active={metric === "decisions"}
+        anchorProps={{ onClick: selectMetric("decisions") }}
+      />
+      <StatTile
+        label="Unique visitors"
+        value="3,927"
+        href="#visitors"
+        active={metric === "visitors"}
+        anchorProps={{ onClick: selectMetric("visitors") }}
+      />
+    </div>
+  );
+}
 
 const basicCode = `import { StatTile } from "@/components/ui/StatTile";
 import { StatTileGroup } from "@/components/ui/StatTileGroup";
@@ -262,27 +305,7 @@ export default function StatTileComponent() {
           the surface below.
         </p>
         <CodePreview componentCode={tabRowCode}>
-          <div
-            className="divide-x divide-[color:var(--ds-gray-400)]"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              borderBottom: "1px solid var(--ds-gray-400)",
-              background: "var(--ds-background-200)",
-            }}
-          >
-            <StatTile
-              label="Decisions"
-              value="12,481"
-              href="#decisions"
-              active
-            />
-            <StatTile
-              label="Unique visitors"
-              value="3,927"
-              href="#visitors"
-            />
-          </div>
+          <TabRowDemo />
         </CodePreview>
       </Section>
 
