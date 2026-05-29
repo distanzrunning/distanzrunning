@@ -1,9 +1,12 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
-import AdminEnvFilter from "@/components/admin/AdminEnvFilter";
+import AdminTrendChart, {
+  type AdminTrendPoint,
+} from "@/components/admin/AdminTrendChart";
+import { businessTodayKey } from "@/components/admin/datePresets";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -242,22 +245,95 @@ function CodePreview({
 }
 
 // ============================================================================
+// Synthetic trend data
+// ============================================================================
+
+const TZ = "Europe/Brussels";
+
+/** Build a "YYYY-MM-DD" key for `daysFromToday` business days back
+ *  (or forward, if positive), interpreted in TZ. Mirrors what the
+ *  real datePresets helpers produce so the demos look indistinguishable
+ *  from a live dashboard. */
+function dayKeyOffset(daysFromToday: number): string {
+  const todayKey = businessTodayKey(TZ);
+  // Parse as a Date at noon UTC so we can step in days without DST
+  // wobble, then re-format.
+  const [y, m, d] = todayKey.split("-").map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  date.setUTCDate(date.getUTCDate() + daysFromToday);
+  const yy = date.getUTCFullYear();
+  const mm = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(date.getUTCDate()).padStart(2, "0");
+  return `${yy}-${mm}-${dd}`;
+}
+
+/** Generate a `length`-day trend ending today, with values pulled from
+ *  a deterministic sine + jitter so each demo render looks the same
+ *  (no hydration flicker). */
+function buildCountTrend(length: number): AdminTrendPoint[] {
+  const out: AdminTrendPoint[] = [];
+  for (let i = length - 1; i >= 0; i--) {
+    const date = dayKeyOffset(-i);
+    // Deterministic pseudo-random: sin-based so the curve has shape.
+    const wave = Math.sin(i * 0.4) * 30 + Math.sin(i * 0.13) * 18;
+    const jitter = Math.sin(i * 1.7) * 8;
+    const value = Math.max(0, Math.round(120 + wave + jitter));
+    out.push({ date, value });
+  }
+  return out;
+}
+
+function buildPercentTrend(length: number): AdminTrendPoint[] {
+  const out: AdminTrendPoint[] = [];
+  for (let i = length - 1; i >= 0; i--) {
+    const date = dayKeyOffset(-i);
+    const wave = Math.sin(i * 0.3) * 12 + Math.sin(i * 0.08) * 6;
+    const value = Math.max(0, Math.min(100, 68 + wave));
+    out.push({ date, value: Number(value.toFixed(1)) });
+  }
+  return out;
+}
+
+function buildEmptyTrend(length: number): AdminTrendPoint[] {
+  const out: AdminTrendPoint[] = [];
+  for (let i = length - 1; i >= 0; i--) {
+    out.push({ date: dayKeyOffset(-i), value: null });
+  }
+  return out;
+}
+
+// ============================================================================
 // Demos
 // ============================================================================
 
-function DefaultDemo() {
+function CountDemo() {
+  const trend = useMemo(() => buildCountTrend(30), []);
   return (
-    <div style={{ display: "flex", justifyContent: "flex-end" }}>
-      <AdminEnvFilter current="all" />
-    </div>
+    <AdminTrendChart trend={trend} metricLabel="Decisions" format="count" tz={TZ} />
   );
 }
 
-function SelectedDemo() {
+function PercentDemo() {
+  const trend = useMemo(() => buildPercentTrend(30), []);
   return (
-    <div style={{ display: "flex", justifyContent: "flex-end" }}>
-      <AdminEnvFilter current="production" />
-    </div>
+    <AdminTrendChart
+      trend={trend}
+      metricLabel="Opt-in rate"
+      format="percent"
+      tz={TZ}
+    />
+  );
+}
+
+function EmptyDemo() {
+  const trend = useMemo(() => buildEmptyTrend(14), []);
+  return (
+    <AdminTrendChart
+      trend={trend}
+      metricLabel="Opt-in rate"
+      format="percent"
+      tz={TZ}
+    />
   );
 }
 
@@ -265,31 +341,59 @@ function SelectedDemo() {
 // Code strings
 // ============================================================================
 
-const defaultCode = `import AdminEnvFilter from '@/components/admin/AdminEnvFilter';
-import type { EnvFilter } from '@/components/admin/env';
+const countCode = `import AdminTrendChart, {
+  type AdminTrendPoint,
+} from '@/components/admin/AdminTrendChart';
+import { getSiteSettings } from '@/lib/site-settings';
+import { buildTrend } from './data';
+import { windowFromParams } from '@/components/admin/datePresets';
 
-type Props = {
-  searchParams: Promise<{ env?: string }>;
-};
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string>>;
+}) {
+  const { timezone: tz } = await getSiteSettings();
+  const window = windowFromParams(await searchParams, tz);
+  const trend: AdminTrendPoint[] = await buildTrend({
+    metric: 'decisions',
+    tz,
+    window,
+  });
 
-export default async function Page({ searchParams }: Props) {
-  const { env } = await searchParams;
-  const current: EnvFilter =
-    env === 'production' || env === 'staging' || env === 'development'
-      ? env
-      : 'all';
-
-  return <AdminEnvFilter current={current} />;
+  return (
+    <AdminTrendChart
+      trend={trend}
+      metricLabel="Decisions"
+      format="count"
+      tz={tz}
+    />
+  );
 }`;
 
-const selectedCode = `// Render with a pre-selected environment when ?env=production is in the URL.
-<AdminEnvFilter current="production" />`;
+const percentCode = `<AdminTrendChart
+  trend={trend}
+  metricLabel="Opt-in rate"
+  format="percent"
+  tz={tz}
+/>`;
+
+const emptyCode = `// Every bucket is null — the chart keeps its axes drawn and
+// overlays a centred "No data in this range" message instead of
+// swapping in a blank panel. Only happens in percent mode (count
+// mode backfills 0 for empty days).
+<AdminTrendChart
+  trend={trend}
+  metricLabel="Opt-in rate"
+  format="percent"
+  tz={tz}
+/>`;
 
 // ============================================================================
 // Page
 // ============================================================================
 
-export default function AdminEnvFilterComponent() {
+export default function TrendChartComponent() {
   const [toast, setToast] = useState({ message: "", isVisible: false });
 
   const showToast = (message: string) => {
@@ -301,45 +405,54 @@ export default function AdminEnvFilterComponent() {
     <>
       <Toast message={toast.message} isVisible={toast.isVisible} />
 
-      {/* Default */}
+      {/* Count */}
       <Section>
-        <SectionHeader id="default" onCopyLink={showToast}>
-          Default
+        <SectionHeader id="count" onCopyLink={showToast}>
+          Count
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-4 xl:mb-6">
-          A secondary <ComponentRef name="Menu" /> trigger that lets
-          admins scope a dashboard to a single deployment env —{" "}
-          <em>Production</em>, <em>Staging</em>, <em>Development</em>{" "}
-          — or leave it on <em>All environments</em>. Writes its
-          selection to the URL via{" "}
-          <code className="inline-code">?env=</code> (omitted when{" "}
-          <em>All</em>).
+          The default mode. Plots a daily integer count with{" "}
+          <em>nice</em> Y-axis ticks (1 / 2 / 5 / 10 / 20 …), so the
+          axis sits flush with the data instead of inflating to fit a
+          fixed tick count. Today&apos;s in-progress bucket is the
+          dashed terminal segment; hover surfaces a value tooltip plus
+          a &quot;N days ago&quot; pill.
         </p>
-        <p className="text-copy-14 text-textSubtle mt-3 mb-4 xl:mb-6">
-          <em>
-            Note: selecting an option here updates this page&apos;s URL —
-            that&apos;s the filter&apos;s real behaviour, not a bug.
-          </em>
-        </p>
-        <CodePreview componentCode={defaultCode}>
-          <DefaultDemo />
+        <CodePreview componentCode={countCode}>
+          <CountDemo />
         </CodePreview>
       </Section>
 
-      {/* Pre-selected */}
+      {/* Percent */}
       <Section>
-        <SectionHeader id="pre-selected" onCopyLink={showToast}>
-          Pre-selected
+        <SectionHeader id="percent" onCopyLink={showToast}>
+          Percent
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-4 xl:mb-6">
-          Reading <code className="inline-code">?env=production</code>{" "}
-          from <code className="inline-code">searchParams</code> and
-          passing it down restores the picker to the same state on
-          refresh / share / back-button. The trigger label updates to
-          match.
+          Setting <code className="inline-code">format=&quot;percent&quot;</code>{" "}
+          locks the Y axis to <em>0 / 25 / 50 / 75 / 100%</em> and
+          drops the top headroom (no peaking past 100%). Use for rate
+          metrics — opt-in rate, completion rate, anything bounded.
         </p>
-        <CodePreview componentCode={selectedCode}>
-          <SelectedDemo />
+        <CodePreview componentCode={percentCode}>
+          <PercentDemo />
+        </CodePreview>
+      </Section>
+
+      {/* Empty */}
+      <Section>
+        <SectionHeader id="empty" onCopyLink={showToast}>
+          Empty
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-3 mb-4 xl:mb-6">
+          When every bucket is <code className="inline-code">null</code>{" "}
+          (no traffic in any day of the window), the chart keeps its
+          axes drawn for context and centres a fallback message inside
+          the plot area. Hover handlers go silent so the cursor
+          doesn&apos;t surface empty tooltips.
+        </p>
+        <CodePreview componentCode={emptyCode}>
+          <EmptyDemo />
         </CodePreview>
       </Section>
 
@@ -357,17 +470,18 @@ export default function AdminEnvFilterComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Any admin dashboard backed by a table with an{" "}
-            <code className="inline-code">environment</code> column
-            written at insert time (consent, feedback, future
-            analytics). Sits to the left of{" "}
-            <ComponentRef name="Admin Date Range Picker" /> on the
-            filter row.
+            The single-metric trend slot under a stat-tile row on any
+            admin dashboard — consent, feedback, future analytics.
+            Pair with <ComponentRef name="Calendar" /> (in its
+            compact + preset-label mode) and <ComponentRef name="Menu" />{" "}
+            on the row above for the date / env filter pair.
           </li>
           <li>
-            Don&apos;t expose to non-admins — env is an internal
-            distinction. Public-facing analytics should always be
-            production-only and not show this control.
+            Don&apos;t use for multi-series comparison (two opt-in
+            rates side by side, region splits, etc.) — that&apos;s a
+            different component. This chart deliberately keeps to one
+            line so the dashed-today and days-ago affordances stay
+            unambiguous.
           </li>
         </ul>
 
@@ -379,37 +493,58 @@ export default function AdminEnvFilterComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            URL-driven, no internal state. Read{" "}
-            <code className="inline-code">?env=</code> server-side and
-            pass <code className="inline-code">current</code> down — the
-            same pattern as{" "}
-            <ComponentRef name="Admin Date Range Picker" />.
+            <strong>Dashed terminal segment.</strong> When the last
+            data point&apos;s date matches{" "}
+            <code className="inline-code">businessTodayKey(tz)</code>,
+            the final two-point segment renders dashed — the bucket is
+            still filling, so the slope into it isn&apos;t final. A
+            historical custom range (last point ≠ today) stays fully
+            solid.
           </li>
           <li>
-            <em>All environments</em> is the default and stays off the
-            URL for clean shareable links. The other three values write{" "}
-            <code className="inline-code">?env=production</code>,{" "}
-            <code className="inline-code">?env=staging</code>, or{" "}
-            <code className="inline-code">?env=development</code>.
+            <strong>Live midnight rollover.</strong> A
+            one-shot timer fires at the next tz midnight (+1s buffer)
+            and re-reads{" "}
+            <code className="inline-code">businessTodayKey(tz)</code>,
+            so a long-open tab rolls over instead of sticking on
+            yesterday.
           </li>
           <li>
-            Switching env <strong>drops</strong> any active{" "}
-            <code className="inline-code">?filter=</code> — a filter
-            from a different env (e.g. an opt-out reason that only
-            exists in production data) is usually noise.
+            <strong>Hover crosshair + pill.</strong> Vertical line plus
+            a pulsing ring (only when the hovered point is today),
+            value tooltip flipping with{" "}
+            <code className="inline-code">TooltipWithBounds</code>, and
+            a floating &quot;N days ago&quot; pill on the same row as
+            the X-axis tick labels. The pill&apos;s background masks
+            the tick text underneath, so the date and the days-ago
+            string share one baseline without overlap.
           </li>
           <li>
-            Navigation goes through{" "}
-            <code className="inline-code">router.push()</code> inside{" "}
-            <code className="inline-code">startTransition</code>; the
-            trigger dims to 0.6 opacity during the re-fetch as a
-            lightweight loading affordance.
+            <strong>Calendar-anchored X ticks.</strong> Cadence widens
+            with the window length so the axis never holds more than
+            ~15 labels: every day (≤10 pts), every Monday (&lt;120
+            days), 1st of each month (&lt;730 days), then{" "}
+            <em>Jan 1 / Jul 1</em>. Ticks within 2 indices of either
+            edge are dropped so labels don&apos;t crowd the border.
           </li>
           <li>
-            The trigger width is pinned to{" "}
-            <code className="inline-code">200px</code> — wide enough
-            for the longest label (<em>All environments</em>) so the
-            row doesn&apos;t shift when the selection changes.
+            <strong>Y-axis sizing.</strong> Count mode picks a nice
+            integer step (1, 2, 5, 10, 20 …) targeting ~5 ticks; the
+            domain ends exactly at the top tick value, and visible
+            headroom comes from the SVG&apos;s top margin (24px) — not
+            from inflating the domain. Percent mode locks to{" "}
+            <em>0 / 25 / 50 / 75 / 100</em> and skips the headroom.
+          </li>
+          <li>
+            <strong>Theme-aware fill.</strong> The area fill uses{" "}
+            <code className="inline-code">
+              rgba(var(--ds-blue-700-rgb), 0.10)
+            </code>{" "}
+            — the RGB tuple flips with the{" "}
+            <code className="inline-code">.dark</code> class so the
+            tint stays balanced on either background, no{" "}
+            <code className="inline-code">dark:</code> override
+            needed.
           </li>
         </ul>
 
@@ -421,18 +556,24 @@ export default function AdminEnvFilterComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Labels are fixed — <em>All environments</em>,{" "}
-            <em>Production</em>, <em>Staging</em>,{" "}
-            <em>Development</em> — and consistent across every admin
-            dashboard so muscle memory transfers.
+            <code className="inline-code">metricLabel</code> shows up
+            in the tooltip and the SVG&apos;s{" "}
+            <code className="inline-code">aria-label</code>. Use the
+            same label the active stat tile carries (
+            <em>Decisions</em>, <em>Opt-in rate</em>, <em>Unique visitors</em>
+            ) so a tile-click → chart-swap reads consistently.
           </li>
           <li>
-            The concrete env values map from{" "}
-            <code className="inline-code">VERCEL_ENV</code> at insert
-            time (<em>production</em> → <em>production</em>,{" "}
-            <em>preview</em> → <em>staging</em>, else{" "}
-            <em>development</em>). Keep the dashboard filter labels in
-            lockstep with that mapping or rows will appear to be missing.
+            <code className="inline-code">tz</code> should be the
+            configured site timezone (<em>Europe/Brussels</em> by
+            default, from <em>site_settings</em>). Hard-coding a tz
+            per consumer drifts when the admin changes it in settings.
+          </li>
+          <li>
+            The empty-state copy currently reads{" "}
+            <em>&quot;No decisions in this range&quot;</em> — TODO:
+            lift to a prop so the feedback dashboard can override to
+            <em> &quot;No feedback in this range&quot;</em>.
           </li>
         </ul>
 
@@ -444,23 +585,22 @@ export default function AdminEnvFilterComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Inherits keyboard nav from <ComponentRef name="Menu" /> —
-            Enter/Space opens, arrow keys move between options,
-            Enter/Space selects, Escape closes.
+            The SVG carries <code className="inline-code">role=&quot;img&quot;</code>{" "}
+            and an <code className="inline-code">aria-label</code>{" "}
+            with the metric label and the visible date range — falls
+            back to a no-data variant when every bucket is null.
           </li>
           <li>
-            The selected option carries a <em>Check</em> suffix as a
-            non-colour affordance — screen readers announce it via the
-            icon&apos;s text equivalent and sighted users see it
-            without relying on the trigger label alone.
+            Color is decorative — the tooltip carries the metric label
+            and the date in text, and the dashed segment signals
+            in-progress without relying on colour. Don&apos;t expose
+            this chart as the sole conveyance of any datum.
           </li>
           <li>
-            The trigger shows a focus ring on click and while open —
-            matches <ComponentRef name="Admin Date Range Picker" /> and{" "}
-            <ComponentRef name="Input" /> for row-level consistency. The
-            ring uses the{" "}
-            <code className="inline-code">[data-menu-trigger=&quot;secondary&quot;]</code>{" "}
-            selector defined in <em>globals.css</em>.
+            Hover-only affordances (the crosshair / pill / value
+            tooltip) aren&apos;t keyboard-reachable today — a
+            keyboard-driven inspector is on the backlog and would
+            complement, not replace, the static SVG description.
           </li>
         </ul>
       </Section>

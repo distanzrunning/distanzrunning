@@ -107,6 +107,7 @@ export const navigation: NavSection[] = [
       { id: "tabs", label: "Tabs" },
       { id: "theme-switcher", label: "Theme Switcher" },
       { id: "tooltip", label: "Tooltip" },
+      { id: "trend-chart", label: "Trend Chart" },
     ],
   },
   {
@@ -130,15 +131,6 @@ export const navigation: NavSection[] = [
       { id: "site-header", label: "Site Header" },
       { id: "table", label: "Table" },
       { id: "toast", label: "Toast" },
-    ],
-  },
-  {
-    id: "admin",
-    label: "Admin",
-    items: [
-      { id: "admin-date-range-picker", label: "Date Range Picker" },
-      { id: "admin-env-filter", label: "Env Filter" },
-      { id: "admin-trend-chart", label: "Trend Chart" },
     ],
   },
   {
