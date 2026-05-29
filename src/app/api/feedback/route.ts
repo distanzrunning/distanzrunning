@@ -56,6 +56,19 @@ function hashIp(ip: string | null): string | null {
   return createHash("sha256").update(`${salt}:${ip}`).digest("hex");
 }
 
+// Vercel sets VERCEL_ENV to "production" | "preview" | "development".
+// Map preview → "staging" so the feedback dashboard's filter only has
+// to think in production / staging / development buckets (matches
+// /api/consent's resolveEnvironment + feedback_records check
+// constraint).
+type FeedbackEnv = "production" | "staging" | "development";
+function resolveEnvironment(): FeedbackEnv {
+  const vercelEnv = process.env.VERCEL_ENV;
+  if (vercelEnv === "production") return "production";
+  if (vercelEnv === "preview") return "staging";
+  return "development";
+}
+
 function clip(value: string | undefined, max: number): string | null {
   if (!value) return null;
   const trimmed = value.trim();
@@ -93,6 +106,7 @@ export async function POST(request: Request) {
       user_agent: userAgent,
       ip_hash: hashIp(ip),
       country,
+      environment: resolveEnvironment(),
     });
     if (error) {
       console.error("[feedback] insert failed", error);

@@ -1,9 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
+
+import { FEEDBACK_CACHE_TAG } from "./data";
 
 export async function deleteFeedbackRecord(formData: FormData) {
   if (!(await isAdminAuthenticated())) {
@@ -26,5 +28,6 @@ export async function deleteFeedbackRecord(formData: FormData) {
     throw new Error(error.message);
   }
 
+  revalidateTag(FEEDBACK_CACHE_TAG);
   revalidatePath("/admin/feedback");
 }
