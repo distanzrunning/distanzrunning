@@ -200,6 +200,11 @@
      Tailwind's aria-expanded:shadow-[...] arbitrary-value classes
      don't reliably compile when the value contains commas, so we
      scope this directly here. */
+  .consent-env-trigger {
+    /* position: relative so z-index applies in the focused/open
+       state (z-index has no effect on position: static elements). */
+    position: relative;
+  }
   .consent-env-trigger:focus,
   .consent-env-trigger:focus-visible,
   .consent-env-trigger[aria-expanded="true"] {
@@ -207,6 +212,10 @@
     box-shadow:
       0 0 0 1px var(--ds-gray-alpha-600),
       0 0 0 4px var(--ds-focus-ring);
+    /* Lift the trigger above adjacent siblings so the 4px outer
+       ring isn't clipped by the date picker on its right (matches
+       the calendar trigger's behaviour). */
+    z-index: 2;
   }
 
   /* Input component styles */
