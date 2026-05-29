@@ -195,6 +195,20 @@
     border: 1px solid var(--ds-gray-alpha-400);
   }
 
+  /* Consent dashboard env-filter trigger — match the Input's
+     two-layer focus ring on click + while the menu is open.
+     Tailwind's aria-expanded:shadow-[...] arbitrary-value classes
+     don't reliably compile when the value contains commas, so we
+     scope this directly here. */
+  .consent-env-trigger:focus,
+  .consent-env-trigger:focus-visible,
+  .consent-env-trigger[aria-expanded="true"] {
+    outline: none;
+    box-shadow:
+      0 0 0 1px var(--ds-gray-alpha-600),
+      0 0 0 4px var(--ds-focus-ring);
+  }
+
   /* Input component styles */
   .ds-input-container {
     box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
