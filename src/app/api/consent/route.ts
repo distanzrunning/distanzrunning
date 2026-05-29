@@ -73,6 +73,46 @@ function resolveEnvironment(): ConsentEnv {
   return "development";
 }
 
+// ---------- Rate limit ----------
+// Simple in-memory token bucket per IP. Per-instance state — each
+// warm Vercel function shares the map within its lifetime, cold
+// starts reset (~15 min idle). Sufficient defence against casual
+// bots / accidental loops; for distributed-bot resistance, swap to
+// Upstash Redis or Vercel KV behind the same checkRateLimit shape.
+
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 10;
+
+const rateLimitBuckets = new Map<
+  string,
+  { count: number; windowStart: number }
+>();
+
+function checkRateLimit(ip: string): { allowed: boolean; retryAfter: number } {
+  const now = Date.now();
+  const bucket = rateLimitBuckets.get(ip);
+  // Bucket expired (or never existed) — reset.
+  if (!bucket || now - bucket.windowStart >= RATE_LIMIT_WINDOW_MS) {
+    rateLimitBuckets.set(ip, { count: 1, windowStart: now });
+    // Lazy cleanup: prune any other expired buckets while we're here
+    // so the map doesn't grow without bound on a long-lived instance.
+    for (const [key, b] of rateLimitBuckets) {
+      if (now - b.windowStart >= RATE_LIMIT_WINDOW_MS) {
+        rateLimitBuckets.delete(key);
+      }
+    }
+    return { allowed: true, retryAfter: 0 };
+  }
+  if (bucket.count >= RATE_LIMIT_MAX) {
+    const retryAfter = Math.ceil(
+      (RATE_LIMIT_WINDOW_MS - (now - bucket.windowStart)) / 1000,
+    );
+    return { allowed: false, retryAfter };
+  }
+  bucket.count += 1;
+  return { allowed: true, retryAfter: 0 };
+}
+
 export async function POST(request: Request) {
   let body: unknown;
   try {
@@ -91,6 +131,22 @@ export async function POST(request: Request) {
     headers.get("x-real-ip");
   const userAgent = headers.get("user-agent")?.slice(0, 512) ?? null;
   const country = headers.get("x-vercel-ip-country") ?? null;
+
+  // Per-IP rate limit. If we can't identify the IP at all (no
+  // forwarded headers — local dev / unusual proxy), skip the check
+  // rather than locking everyone into a single shared bucket.
+  if (ip) {
+    const limit = checkRateLimit(ip);
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: "Too many requests" },
+        {
+          status: 429,
+          headers: { "Retry-After": String(limit.retryAfter) },
+        },
+      );
+    }
+  }
 
   try {
     const supabase = getSupabaseAdmin();
