@@ -1,4 +1,7 @@
+import { Download } from "lucide-react";
+
 import { Badge, type BadgeVariant } from "@/components/ui/Badge";
+import { ButtonLink } from "@/components/ui/Button";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { Skeleton } from "@/components/ui/Skeleton";
 import {
@@ -88,7 +91,17 @@ export async function ConsentLookupContent({ query }: { query: string }) {
               {rows.length} decision{rows.length === 1 ? "" : "s"} · latest{" "}
               {new Date(rows[0].created_at).toLocaleString()}
             </div>
-            <DeleteIdButton anonId={query} count={rows.length} />
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <ButtonLink
+                href={`/admin/consent/${encodeURIComponent(query)}/export`}
+                variant="secondary"
+                size="small"
+                prefixIcon={<Download />}
+              >
+                Download CSV
+              </ButtonLink>
+              <DeleteIdButton anonId={query} count={rows.length} />
+            </div>
           </div>
 
           <Table>
