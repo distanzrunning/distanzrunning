@@ -1,5 +1,6 @@
 import { Inbox } from "lucide-react";
 
+import { CountryCell } from "@/components/admin/CountryCell";
 import {
   addBusinessDays,
   DEFAULT_PRESET,
@@ -11,6 +12,7 @@ import {
   type DateWindow,
 } from "@/components/admin/datePresets";
 import type { EnvFilter } from "@/components/admin/env";
+import { WhenCell } from "@/components/admin/WhenCell";
 import { Badge, type BadgeVariant } from "@/components/ui/Badge";
 import {
   EmptyState,
@@ -294,10 +296,31 @@ function emotionBadge(
 function RecentFeedbackTable({
   rows,
   title,
+  hasFilter,
 }: {
   rows: FeedbackRowRaw[];
   title: string;
+  hasFilter: boolean;
 }) {
+  if (rows.length === 0) {
+    return (
+      <PanelCard title={title}>
+        <EmptyState live>
+          <EmptyStateIcon>
+            <Inbox />
+          </EmptyStateIcon>
+          <EmptyStateText>
+            <EmptyStateTitle>No feedback</EmptyStateTitle>
+            <EmptyStateDescription>
+              {hasFilter
+                ? "No feedback matches this filter in the active window. Try a wider date range or clear the tile filter."
+                : "No feedback in this window. Try a wider date range, or check back after visitors submit feedback."}
+            </EmptyStateDescription>
+          </EmptyStateText>
+        </EmptyState>
+      </PanelCard>
+    );
+  }
   return (
     <PanelCard title={title}>
       <Table>
@@ -314,20 +337,6 @@ function RecentFeedbackTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {rows.length === 0 && (
-            <TableRow>
-              <TableCell
-                colSpan={8}
-                style={{
-                  padding: 24,
-                  textAlign: "center",
-                  color: "var(--ds-gray-700)",
-                }}
-              >
-                No feedback in this range.
-              </TableCell>
-            </TableRow>
-          )}
           {rows.map((row) => {
             const b = emotionBadge(row.emotion);
             const snippet =
@@ -336,11 +345,8 @@ function RecentFeedbackTable({
                 : row.feedback;
             return (
               <TableRow key={row.id}>
-                <TableCell
-                  className="text-label-12"
-                  style={{ whiteSpace: "nowrap" }}
-                >
-                  {new Date(row.created_at).toLocaleString()}
+                <TableCell>
+                  <WhenCell iso={row.created_at} />
                 </TableCell>
                 <TableCell>
                   <Badge variant={b.variant} size="sm">
@@ -353,10 +359,12 @@ function RecentFeedbackTable({
                 >
                   {snippet}
                 </TableCell>
-                <TableCell className="text-label-12">
-                  {row.topic ?? "—"}
+                <TableCell>
+                  {row.topic ?? (
+                    <span style={{ color: "var(--ds-gray-700)" }}>—</span>
+                  )}
                 </TableCell>
-                <TableCell className="text-label-12">
+                <TableCell>
                   {row.email ? (
                     <a
                       href={`mailto:${row.email}`}
@@ -368,7 +376,7 @@ function RecentFeedbackTable({
                       {row.email}
                     </a>
                   ) : (
-                    "—"
+                    <span style={{ color: "var(--ds-gray-700)" }}>—</span>
                   )}
                 </TableCell>
                 <TableCell
@@ -381,10 +389,12 @@ function RecentFeedbackTable({
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {row.page_path ?? "—"}
+                  {row.page_path ?? (
+                    <span style={{ color: "var(--ds-gray-700)" }}>—</span>
+                  )}
                 </TableCell>
-                <TableCell className="text-label-12">
-                  {row.country ?? "—"}
+                <TableCell>
+                  <CountryCell iso={row.country} />
                 </TableCell>
                 <TableCell style={{ width: 48, textAlign: "right" }}>
                   <DeleteFeedbackButton id={row.id} snippet={snippet} />
@@ -695,7 +705,11 @@ export async function FeedbackDashboardContent({
         </PanelCard>
       </div>
 
-      <RecentFeedbackTable rows={recent} title={recentTitle} />
+      <RecentFeedbackTable
+        rows={recent}
+        title={recentTitle}
+        hasFilter={!!filter}
+      />
     </>
   );
 }

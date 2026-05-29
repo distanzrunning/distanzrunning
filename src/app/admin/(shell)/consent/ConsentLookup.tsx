@@ -13,8 +13,8 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
-import { CountryCell } from "./CountryCell";
-import { WhenCell } from "./WhenCell";
+import { CountryCell } from "@/components/admin/CountryCell";
+import { WhenCell } from "@/components/admin/WhenCell";
 import DeleteIdButton from "./DeleteIdButton";
 
 type Decision = "accept_all" | "reject_all" | "custom";

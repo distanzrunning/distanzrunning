@@ -23,8 +23,8 @@ import {
 } from "@/components/ui/Table";
 import { Tooltip } from "@/components/ui/Tooltip";
 
-import { CountryCell } from "./CountryCell";
-import { WhenCell } from "./WhenCell";
+import { CountryCell } from "@/components/admin/CountryCell";
+import { WhenCell } from "@/components/admin/WhenCell";
 import { useConsentFilter } from "./ConsentFilterShell";
 
 type Decision = "accept_all" | "reject_all" | "custom";
