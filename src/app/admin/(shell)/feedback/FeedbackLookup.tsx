@@ -22,6 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 
+import ContactedToggle from "./ContactedToggle";
 import DeleteFeedbackButton from "./DeleteFeedbackButton";
 import { lookupFeedback, type Emotion } from "./data";
 
@@ -83,6 +84,7 @@ export async function FeedbackLookupContent({
             <TableHead>Email</TableHead>
             <TableHead>Page</TableHead>
             <TableHead>Country</TableHead>
+            <TableHead style={{ width: 56 }}>Follow-up</TableHead>
             <TableHead style={{ width: 48 }} aria-label="Actions" />
           </TableRow>
         </TableHeader>
@@ -145,6 +147,13 @@ export async function FeedbackLookupContent({
                 </TableCell>
                 <TableCell>
                   <CountryCell iso={row.country} />
+                </TableCell>
+                <TableCell style={{ width: 56, textAlign: "center" }}>
+                  <ContactedToggle
+                    id={row.id}
+                    hasEmail={!!row.email}
+                    contactedAt={row.contacted_at}
+                  />
                 </TableCell>
                 <TableCell style={{ width: 48, textAlign: "right" }}>
                   <DeleteFeedbackButton id={row.id} snippet={snippet} />

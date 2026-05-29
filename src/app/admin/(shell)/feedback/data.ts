@@ -20,6 +20,10 @@ export interface FeedbackRowRaw {
   page_path: string | null;
   country: string | null;
   environment: Environment;
+  /** ISO timestamp when an admin marked this submission as
+   *  followed-up via the dashboard. Null = still awaiting follow-up
+   *  (or no email — see UI for the actionability check). */
+  contacted_at: string | null;
   created_at: string;
 }
 
@@ -86,7 +90,7 @@ export const lookupFeedback = unstable_cache(
     let query = supabase
       .from("feedback_records")
       .select(
-        "id, anon_id, emotion, feedback, topic, email, page_path, country, environment, created_at",
+        "id, anon_id, emotion, feedback, topic, email, page_path, country, environment, contacted_at, created_at",
       )
       .or(
         [
@@ -128,7 +132,7 @@ export const getFeedbackRowsInRange = unstable_cache(
     let q = supabase
       .from("feedback_records")
       .select(
-        "id, anon_id, emotion, feedback, topic, email, page_path, country, environment, created_at",
+        "id, anon_id, emotion, feedback, topic, email, page_path, country, environment, contacted_at, created_at",
       )
       .gte("created_at", startIso)
       .lte("created_at", endIso)

@@ -7,6 +7,47 @@ import { getSupabaseAdmin } from "@/lib/supabase/server";
 
 import { FEEDBACK_CACHE_TAG } from "./data";
 
+/** Toggle the contacted_at flag on a single feedback row. Reads the
+ *  current value first so the UI can call this idempotently without
+ *  branching on state — the action does the right thing either way. */
+export async function toggleFeedbackContacted(formData: FormData) {
+  if (!(await isAdminAuthenticated())) {
+    redirect("/admin/login");
+  }
+  const raw = String(formData.get("id") ?? "").trim();
+  const id = Number(raw);
+  if (!Number.isInteger(id) || id <= 0) {
+    throw new Error("Invalid feedback id");
+  }
+
+  const supabase = getSupabaseAdmin();
+  const { data: current, error: readError } = await supabase
+    .from("feedback_records")
+    .select("contacted_at")
+    .eq("id", id)
+    .maybeSingle();
+  if (readError) {
+    console.error("[feedback] contacted read failed", readError);
+    throw new Error(readError.message);
+  }
+  if (!current) {
+    throw new Error("Feedback row not found");
+  }
+
+  const next = current.contacted_at ? null : new Date().toISOString();
+  const { error: writeError } = await supabase
+    .from("feedback_records")
+    .update({ contacted_at: next })
+    .eq("id", id);
+  if (writeError) {
+    console.error("[feedback] contacted write failed", writeError);
+    throw new Error(writeError.message);
+  }
+
+  revalidateTag(FEEDBACK_CACHE_TAG);
+  revalidatePath("/admin/feedback");
+}
+
 export async function deleteFeedbackRecord(formData: FormData) {
   if (!(await isAdminAuthenticated())) {
     redirect("/admin/login");

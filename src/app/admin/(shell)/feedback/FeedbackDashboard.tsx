@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/Table";
 import TrendChart from "@/components/ui/TrendChart";
 
+import ContactedToggle from "./ContactedToggle";
 import DeleteFeedbackButton from "./DeleteFeedbackButton";
 import {
   getFeedbackRowsInRange,
@@ -333,6 +334,7 @@ function RecentFeedbackTable({
             <TableHead>Email</TableHead>
             <TableHead>Page</TableHead>
             <TableHead>Country</TableHead>
+            <TableHead style={{ width: 56 }}>Follow-up</TableHead>
             <TableHead style={{ width: 48 }} aria-label="Actions" />
           </TableRow>
         </TableHeader>
@@ -395,6 +397,13 @@ function RecentFeedbackTable({
                 </TableCell>
                 <TableCell>
                   <CountryCell iso={row.country} />
+                </TableCell>
+                <TableCell style={{ width: 56, textAlign: "center" }}>
+                  <ContactedToggle
+                    id={row.id}
+                    hasEmail={!!row.email}
+                    contactedAt={row.contacted_at}
+                  />
                 </TableCell>
                 <TableCell style={{ width: 48, textAlign: "right" }}>
                   <DeleteFeedbackButton id={row.id} snippet={snippet} />
@@ -804,12 +813,13 @@ export function FeedbackDashboardSkeleton() {
               <TableHead>Email</TableHead>
               <TableHead>Page</TableHead>
               <TableHead>Country</TableHead>
+              <TableHead style={{ width: 56 }}>Follow-up</TableHead>
               <TableHead style={{ width: 48 }} aria-label="Actions" />
             </TableRow>
           </TableHeader>
           <TableBody>
             {Array.from({ length: 10 }).map((_, i) => (
-              <TableRowSkeleton key={i} cols={8} />
+              <TableRowSkeleton key={i} cols={9} />
             ))}
           </TableBody>
         </Table>

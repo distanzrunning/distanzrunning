@@ -110,8 +110,16 @@ create table if not exists public.feedback_records (
   ip_hash      text,
   country      text,
   environment  text        not null check (environment in ('production', 'staging', 'development')),
+  contacted_at timestamptz,
   created_at   timestamptz not null default now()
 );
+
+-- contacted_at: when an admin marked this feedback as followed-up.
+-- Null = still awaiting follow-up (or no email — see the UI for the
+-- actionability check). Safe to re-run on existing deployments.
+alter table public.feedback_records add column if not exists contacted_at timestamptz;
+create index if not exists feedback_records_contacted_at_idx
+  on public.feedback_records (contacted_at);
 
 -- Environment column migration (production / staging / development).
 -- Backfills existing rows as 'production' since the feedback API only
