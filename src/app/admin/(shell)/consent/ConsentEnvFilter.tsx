@@ -52,14 +52,14 @@ export default function ConsentEnvFilterMenu({
             so changing the selection doesn't shift the search input.
             justify-content: space-between pins the label to the left
             edge and the chevron to the right — standard select-trigger
-            pattern. focus + aria-expanded ring matches the date
-            picker's "open or focused" treatment (the DS Menu base
-            only fires the ring on keyboard focus). */}
+            pattern. Focus / open use the two-layer box-shadow ring
+            (1px inner gray-alpha-600 + 4px outer ds-focus-ring) so it
+            matches the Input and the date-picker trigger on this row. */}
         <MenuButton
           variant="secondary"
           size="default"
           chevron
-          className="focus:ring-2 focus:ring-[var(--ds-focus-color)] focus:ring-offset-2 aria-expanded:ring-2 aria-expanded:ring-[var(--ds-focus-color)] aria-expanded:ring-offset-2"
+          className="focus:shadow-[0_0_0_1px_var(--ds-gray-alpha-600),0_0_0_4px_var(--ds-focus-ring)] aria-expanded:shadow-[0_0_0_1px_var(--ds-gray-alpha-600),0_0_0_4px_var(--ds-focus-ring)]"
           style={{ minWidth: 200, justifyContent: "space-between" }}
         >
           {currentLabel}
