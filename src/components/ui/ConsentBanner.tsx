@@ -431,7 +431,10 @@ function BottomBanner() {
         role="alertdialog"
         aria-labelledby="consent-banner-title"
         aria-modal="false"
-        className="fixed bottom-4 left-4 right-4 z-[10000] sm:right-auto sm:max-w-[400px]"
+        // Mobile: full-width bottom-aligned (left-4 + right-4).
+        // Desktop (sm+): pin to the bottom-right by releasing the
+        // left edge with sm:left-auto.
+        className="fixed bottom-4 left-4 right-4 z-[10000] sm:left-auto sm:max-w-[400px]"
         style={{
           animation:
             "distanz-consent-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both",
@@ -439,10 +442,13 @@ function BottomBanner() {
         }}
       >
         <div
+          // No explicit border — --ds-shadow-menu already opens with
+          // a 0 0 0 1px rgba(0,0,0,0.08) hairline ring, so an
+          // additional border layer would double-paint the outline
+          // (per the feedback-material-class-double-border lesson).
           className="flex flex-col gap-4 rounded-xl p-5"
           style={{
             background: "var(--ds-background-100)",
-            border: "1px solid var(--ds-gray-400)",
             boxShadow: "var(--ds-shadow-menu)",
           }}
         >
