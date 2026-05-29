@@ -87,6 +87,7 @@ export const navigation: NavSection[] = [
       { id: "empty-state", label: "Empty State" },
       { id: "entity", label: "Entity" },
       { id: "error", label: "Error" },
+      { id: "fieldset", label: "Fieldset" },
       { id: "grid", label: "Grid" },
       { id: "multi-select", label: "Multi Select" },
       { id: "note", label: "Note" },
