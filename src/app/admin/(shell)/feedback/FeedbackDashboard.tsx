@@ -43,7 +43,13 @@ import {
   type FeedbackRowRaw,
 } from "./data";
 
-type FeedbackFilter = "love" | "okay" | "not-great" | "hate" | "email";
+type FeedbackFilter =
+  | "love"
+  | "okay"
+  | "not-great"
+  | "hate"
+  | "email"
+  | "follow-up";
 type Metric = "feedback" | "submitters";
 
 const FILTER_LABEL: Record<FeedbackFilter, string> = {
@@ -52,6 +58,7 @@ const FILTER_LABEL: Record<FeedbackFilter, string> = {
   "not-great": "not-great",
   hate: "hate-it",
   email: "with-email",
+  "follow-up": "needs-follow-up",
 };
 
 const BASE_PATH = "/admin/feedback";
@@ -176,6 +183,7 @@ interface TrendPoint {
 
 function rowMatchesFilter(row: FeedbackRowRaw, filter: FeedbackFilter): boolean {
   if (filter === "email") return !!row.email;
+  if (filter === "follow-up") return !!row.email && !row.contacted_at;
   return row.emotion === filter;
 }
 
@@ -225,7 +233,10 @@ function buildTrend(
     }
   }
   return [...days.entries()].map(([date, { total, matched }]) => {
-    if (filter) {
+    // follow-up is a count metric, not a rate — "how many pending
+    // replies originated on this day" reads more usefully as a
+    // number than a percentage of that day's traffic.
+    if (filter && filter !== "follow-up") {
       return {
         date,
         value: total === 0 ? null : (matched / total) * 100,
@@ -631,6 +642,13 @@ export async function FeedbackDashboardContent({
   const currentNotGreat = matches(currentRows, "not-great");
   const currentHate = matches(currentRows, "hate");
   const currentEmail = matches(currentRows, "email");
+  // Snapshot count of rows that still need a reply — has email but
+  // contacted_at is null. Tile + chart use this same predicate so
+  // a row toggled "contacted" disappears from both. Historical chart
+  // days drift down as items get marked contacted, which is the
+  // intended "current state" semantics.
+  const currentFollowUp = matches(currentRows, "follow-up");
+  const previousFollowUp = matches(previousRows, "follow-up");
 
   const previousLove = matches(previousRows, "love");
   const previousHate = matches(previousRows, "hate");
@@ -671,6 +689,7 @@ export async function FeedbackDashboardContent({
     "not-great": "Not-great rate",
     hate: "Hate-it rate",
     email: "With-email rate",
+    "follow-up": "Pending follow-up",
   };
   const chartLabel =
     metric === "submitters"
@@ -678,8 +697,17 @@ export async function FeedbackDashboardContent({
       : filter
         ? filterChartLabel[filter]
         : "Feedback";
+  // Most filters render as percent (rate of <filter> per day). The
+  // follow-up filter is a count — daily number of currently-pending
+  // rows — so the chart format flips to count for that one.
   const chartFormat: "count" | "percent" =
-    metric === "submitters" ? "count" : filter ? "percent" : "count";
+    metric === "submitters"
+      ? "count"
+      : filter === "follow-up"
+        ? "count"
+        : filter
+          ? "percent"
+          : "count";
 
   // Recent table mirrors the active window + filter. currentRows is
   // already window-scoped and (since the underlying query orders by
@@ -798,10 +826,19 @@ export async function FeedbackDashboardContent({
                 active={metric === "feedback" && filter === "email"}
               />
             </div>
-            {/* Empty 6th cell — reserves the trailing gap as one
-                tile-width, gives divide-x a sibling to paint a
-                divider against, and slots a future tile in cleanly. */}
-            <div aria-hidden />
+            <div>
+              <StatTile
+                label="Needs follow-up"
+                value={<NumberTicker value={currentFollowUp} />}
+                change={changeFrom(
+                  currentFollowUp,
+                  previousFollowUp,
+                  previousLabel,
+                )}
+                href={tileHref("follow-up")}
+                active={metric === "feedback" && filter === "follow-up"}
+              />
+            </div>
           </div>
         </div>
 
@@ -936,7 +973,9 @@ export function FeedbackDashboardSkeleton() {
             <div>
               <StatTileSkeleton label="With email" />
             </div>
-            <div aria-hidden />
+            <div>
+              <StatTileSkeleton label="Needs follow-up" />
+            </div>
           </div>
         </div>
         <div style={{ height: 400, background: "var(--ds-background-100)" }} />

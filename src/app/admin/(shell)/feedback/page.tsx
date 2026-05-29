@@ -22,7 +22,13 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-type FeedbackFilter = "love" | "okay" | "not-great" | "hate" | "email";
+type FeedbackFilter =
+  | "love"
+  | "okay"
+  | "not-great"
+  | "hate"
+  | "email"
+  | "follow-up";
 type FeedbackMetric = "feedback" | "submitters";
 
 function normaliseFilter(raw: string | undefined): FeedbackFilter | null {
@@ -31,7 +37,8 @@ function normaliseFilter(raw: string | undefined): FeedbackFilter | null {
     raw === "okay" ||
     raw === "not-great" ||
     raw === "hate" ||
-    raw === "email"
+    raw === "email" ||
+    raw === "follow-up"
   ) {
     return raw;
   }
