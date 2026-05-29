@@ -65,7 +65,6 @@ import { buildSliderItem } from "./items/slider";
 import { buildSnippetItem } from "./items/snippet";
 import { buildSpinnerItem } from "./items/spinner";
 import { buildSplitButtonItem } from "./items/split-button";
-import { buildStatCardItem } from "./items/stat-card";
 import { buildStatTileItem } from "./items/stat-tile";
 import { buildStatTileGroupItem } from "./items/stat-tile-group";
 import { buildStatusDotItem } from "./items/status-dot";
@@ -151,7 +150,6 @@ const BUILDERS: Record<string, Builder> = {
   slider: buildSliderItem,
   snippet: buildSnippetItem,
   "split-button": buildSplitButtonItem,
-  "stat-card": buildStatCardItem,
   "stat-tile": buildStatTileItem,
   "stat-tile-group": buildStatTileGroupItem,
   tabs: buildTabsItem,

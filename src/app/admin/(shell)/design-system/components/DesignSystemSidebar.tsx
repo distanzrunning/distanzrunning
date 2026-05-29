@@ -103,7 +103,7 @@ export const navigation: NavSection[] = [
       { id: "slider", label: "Slider" },
       { id: "snippet", label: "Snippet" },
       { id: "split-button", label: "Split Button" },
-      { id: "stat-card", label: "Stat Card" },
+      { id: "stat-tile", label: "Stat Tile" },
       { id: "tabs", label: "Tabs" },
       { id: "theme-switcher", label: "Theme Switcher" },
       { id: "tooltip", label: "Tooltip" },

@@ -1,7 +1,8 @@
 import { Badge, type BadgeVariant } from "@/components/ui/Badge";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { StatCard } from "@/components/ui/StatCard";
+import { StatTile } from "@/components/ui/StatTile";
+import { StatTileGroup } from "@/components/ui/StatTileGroup";
 import {
   Table,
   TableBody,
@@ -51,12 +52,13 @@ function emotionBadge(
   }
 }
 
-const STAT_GRID = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-  gap: 16,
+const STAT_GROUP_WRAPPER = {
   marginBottom: 16,
-} as const;
+  // Mirrors the consent dashboard's tile-row scroll affordance —
+  // 6 tiles cramp on narrow widths, so let the row scroll
+  // horizontally below the desktop breakpoint.
+  overflowX: "auto" as const,
+};
 
 const block = { display: "block" } as const;
 
@@ -96,33 +98,35 @@ export async function FeedbackDashboardContent() {
 
   return (
     <>
-      <div style={STAT_GRID}>
-        <StatCard label="Total" value={total.toLocaleString()} />
-        <StatCard
-          label="Love it"
-          value={pct(love, rows.length)}
-          hint={`${love.toLocaleString()}`}
-        />
-        <StatCard
-          label="It's okay"
-          value={pct(okay, rows.length)}
-          hint={`${okay.toLocaleString()}`}
-        />
-        <StatCard
-          label="Not great"
-          value={pct(notGreat, rows.length)}
-          hint={`${notGreat.toLocaleString()}`}
-        />
-        <StatCard
-          label="Hate it"
-          value={pct(hate, rows.length)}
-          hint={`${hate.toLocaleString()}`}
-        />
-        <StatCard
-          label="With email"
-          value={pct(withEmail, rows.length)}
-          hint={`${withEmail.toLocaleString()} follow-ups`}
-        />
+      <div style={STAT_GROUP_WRAPPER}>
+        <StatTileGroup columns={6}>
+          <StatTile label="Total" value={total.toLocaleString()} />
+          <StatTile
+            label="Love it"
+            value={pct(love, rows.length)}
+            hint={`${love.toLocaleString()}`}
+          />
+          <StatTile
+            label="It's okay"
+            value={pct(okay, rows.length)}
+            hint={`${okay.toLocaleString()}`}
+          />
+          <StatTile
+            label="Not great"
+            value={pct(notGreat, rows.length)}
+            hint={`${notGreat.toLocaleString()}`}
+          />
+          <StatTile
+            label="Hate it"
+            value={pct(hate, rows.length)}
+            hint={`${hate.toLocaleString()}`}
+          />
+          <StatTile
+            label="With email"
+            value={pct(withEmail, rows.length)}
+            hint={`${withEmail.toLocaleString()} follow-ups`}
+          />
+        </StatTileGroup>
       </div>
 
       <PanelCard title="Recent feedback">
@@ -225,7 +229,7 @@ export async function FeedbackDashboardContent() {
   );
 }
 
-function StatCardSkeleton({
+function StatTileSkeleton({
   label,
   hint,
 }: {
@@ -233,7 +237,7 @@ function StatCardSkeleton({
   hint?: string;
 }) {
   return (
-    <StatCard
+    <StatTile
       label={label}
       value={<Skeleton width={100} height={32} style={block} />}
       hint={hint ? <Skeleton width={80} height={14} style={block} /> : undefined}
@@ -244,13 +248,15 @@ function StatCardSkeleton({
 export function FeedbackDashboardSkeleton() {
   return (
     <div aria-busy="true" aria-live="polite">
-      <div style={STAT_GRID}>
-        <StatCardSkeleton label="Total" />
-        <StatCardSkeleton label="Love it" hint="count" />
-        <StatCardSkeleton label="It's okay" hint="count" />
-        <StatCardSkeleton label="Not great" hint="count" />
-        <StatCardSkeleton label="Hate it" hint="count" />
-        <StatCardSkeleton label="With email" hint="follow-ups" />
+      <div style={STAT_GROUP_WRAPPER}>
+        <StatTileGroup columns={6}>
+          <StatTileSkeleton label="Total" />
+          <StatTileSkeleton label="Love it" hint="count" />
+          <StatTileSkeleton label="It's okay" hint="count" />
+          <StatTileSkeleton label="Not great" hint="count" />
+          <StatTileSkeleton label="Hate it" hint="count" />
+          <StatTileSkeleton label="With email" hint="follow-ups" />
+        </StatTileGroup>
       </div>
 
       <PanelCard title="Recent feedback">
