@@ -294,14 +294,10 @@ interface PageGroup {
   total: number;
 }
 
-// Top-pages row, modelled on Vercel Analytics' page-leaderboard
-// anatomy. Single flat gray bar behind the row scales proportionally
-// to the top page's count (so the leader anchors at full width and
-// the rest scale relative). Path sits on the left as a link to the
-// page in question (opens in a new tab on the current host so admins
-// can investigate the same env they're looking at); count pins to
-// the right. A copy chip appears on hover, semi-transparent
-// background masking the truncated path under it.
+// Top-pages row, matched to Vercel Analytics' leaderboard anatomy
+// (40px container, 32px inner bar, 6px radii, 0.4 bar opacity, hover-
+// revealed copy chip floating against the right edge with a near-
+// opaque background to mask the path text underneath).
 function PagePathRow({
   group,
   topTotal,
@@ -320,7 +316,7 @@ function PagePathRow({
         style={{
           position: "relative",
           height: 32,
-          borderRadius: 4,
+          borderRadius: 6,
           overflow: "hidden",
         }}
       >
@@ -330,9 +326,9 @@ function PagePathRow({
             position: "absolute",
             inset: 0,
             width: `${widthRatio * 100}%`,
-            borderRadius: 4,
+            borderRadius: 6,
             background: "var(--ds-gray-200)",
-            opacity: 0.6,
+            opacity: 0.4,
             transition: "width 300ms ease",
           }}
           aria-hidden
@@ -365,8 +361,9 @@ function PagePathRow({
                 href={group.path}
                 target="_blank"
                 rel="noopener"
-                className="text-copy-14"
                 style={{
+                  fontSize: 14,
+                  lineHeight: "32px",
                   color: "var(--ds-gray-1000)",
                   textDecoration: "none",
                   overflow: "hidden",
@@ -382,8 +379,9 @@ function PagePathRow({
               </a>
             ) : (
               <span
-                className="text-copy-14"
                 style={{
+                  fontSize: 14,
+                  lineHeight: "32px",
                   color: "var(--ds-gray-700)",
                   fontStyle: "italic",
                   overflow: "hidden",
@@ -398,39 +396,50 @@ function PagePathRow({
               </span>
             )}
             {/* Hover-revealed copy chip — only rendered when there's
-                a real path to copy. Semi-transparent bg masks the
-                path text underneath so the chip reads cleanly even
-                over long paths. */}
+                a real path to copy. Floats against the right edge with
+                a solid background-100 chip so it masks the truncated
+                path text underneath. */}
             {hasRealPath && (
               <div
                 className="opacity-0 group-hover/row:opacity-100"
                 style={{
                   position: "absolute",
-                  insetBlock: 0,
-                  right: 0,
+                  top: 4,
+                  bottom: 4,
+                  right: 4,
                   display: "flex",
                   alignItems: "center",
                   padding: "0 4px",
                   background: "var(--ds-background-100)",
-                  borderRadius: 4,
-                  transition: "opacity 0.12s ease",
+                  borderRadius: 6,
+                  transition: "opacity 0.15s ease",
                 }}
               >
                 <CopyPathButton value={group.path} />
               </div>
             )}
           </div>
-          <span
-            className="text-copy-14"
+          <div
             style={{
-              color: "var(--ds-gray-1000)",
-              fontWeight: 600,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              minWidth: 50,
               flexShrink: 0,
-              fontVariantNumeric: "tabular-nums",
             }}
           >
-            {group.total.toLocaleString()}
-          </span>
+            <span
+              style={{
+                fontSize: 14,
+                lineHeight: "20px",
+                fontWeight: 600,
+                color: "var(--ds-gray-1000)",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {group.total.toLocaleString()}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -925,42 +934,100 @@ export async function FeedbackDashboardContent({
         </PanelCard>
       </div>
 
-      {/* Top pages by feedback — Vercel-style leaderboard. Single
-          flat bar per row scaled to the top page, path on left as a
-          link (opens new tab same-host so admins can investigate the
-          env they're looking at), count pinned right. Hidden when
-          the window has rows but none carry a page_path. */}
+      {/* Top pages — modelled on Vercel Analytics' leaderboard panel.
+          Custom chrome (box-shadow + 6px radius, no border) instead
+          of PanelCard so the tab-style header sits on a bottom rule
+          flush with the panel edge. Tab strip on the left (single
+          "Pages" tab today, room for Routes/Hostnames later) +
+          right-aligned "FEEDBACK" column header. Hidden when the
+          window has rows but none carry a page_path. */}
       {pageGroups.length > 0 && (
-        <div style={{ marginBottom: 16 }}>
-          <PanelCard
-            title="Top pages by feedback"
-            action={
-              <span
-                className="text-label-12"
+        <div
+          style={{
+            marginBottom: 16,
+            background: "var(--ds-background-100)",
+            borderRadius: 6,
+            // Layered box-shadow: hairline ring + soft drop + secondary
+            // outer ring. Matches Vercel's leaderboard panel exactly
+            // and avoids the double-border problem flagged in the
+            // material-class memory.
+            boxShadow:
+              "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 8px -8px",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              padding: "4px 20px 0",
+              borderBottom: "1px solid var(--ds-gray-400)",
+            }}
+          >
+            {/* Tab strip — only "Pages" today, but rendered with the
+                Vercel tab anatomy (padding, bottom border on active,
+                -1px margin so the active rule sits on top of the
+                container's bottom rule). Drop-in slots when Routes /
+                Hostnames make sense later. */}
+            <div
+              role="tablist"
+              aria-label="Top pages tabs"
+              style={{
+                display: "flex",
+                alignItems: "baseline",
+                gap: 24,
+                marginRight: "auto",
+              }}
+            >
+              <button
+                type="button"
+                role="tab"
+                aria-selected="true"
                 style={{
-                  color: "var(--ds-gray-700)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.04em",
-                  fontWeight: 500,
+                  appearance: "none",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "default",
+                  padding: "14px 2px",
+                  fontSize: 14,
+                  fontWeight: 400,
+                  color: "var(--ds-gray-1000)",
+                  borderBottom: "2px solid var(--ds-gray-1000)",
+                  marginBottom: -1,
                 }}
               >
-                Feedback
-              </span>
-            }
-          >
-            {/* Negative inline margin pulls the rows' built-in
-                padding back so they align with the PanelCard header,
-                while still giving each row its own hover hit area. */}
-            <div style={{ marginInline: -12, marginBlock: -4 }}>
-              {pageGroups.map((group) => (
-                <PagePathRow
-                  key={group.path}
-                  group={group}
-                  topTotal={topPageTotal}
-                />
-              ))}
+                Pages
+              </button>
             </div>
-          </PanelCard>
+            {/* Right-aligned column header — matches Vercel's
+                "VISITORS" label. 12px / 500 / uppercase / 0.04em
+                tracking / gray-900. */}
+            <span
+              style={{
+                minWidth: 50,
+                textAlign: "right",
+                fontSize: 12,
+                lineHeight: "16px",
+                fontWeight: 500,
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+                color: "var(--ds-gray-900)",
+              }}
+            >
+              Feedback
+            </span>
+          </div>
+          <div
+            style={{ display: "flex", flexDirection: "column", margin: "8px 0" }}
+          >
+            {pageGroups.map((group) => (
+              <PagePathRow
+                key={group.path}
+                group={group}
+                topTotal={topPageTotal}
+              />
+            ))}
+          </div>
         </div>
       )}
 
