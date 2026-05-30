@@ -36,6 +36,7 @@ import {
 import TrendChart from "@/components/ui/TrendChart";
 
 import ContactedToggle from "./ContactedToggle";
+import CopyPathButton from "./CopyPathButton";
 import DeleteFeedbackButton from "./DeleteFeedbackButton";
 import {
   getFeedbackRowsInRange,
@@ -288,126 +289,170 @@ function CategoryBar({
   );
 }
 
-// Per-emotion fill colour for the stacked page bar. Uses the 700
-// shade per the DS "primary" slot for each hue — same family as the
-// chart fill — and stays stable across light/dark via the token.
-const EMOTION_COLOUR: Record<Exclude<Emotion, null> | "unknown", string> = {
-  love: "var(--ds-green-700)",
-  okay: "var(--ds-blue-700)",
-  "not-great": "var(--ds-amber-700)",
-  hate: "var(--ds-red-700)",
-  unknown: "var(--ds-gray-500)",
-};
-
 interface PageGroup {
   path: string;
   total: number;
-  byEmotion: { emotion: Exclude<Emotion, null> | "unknown"; count: number }[];
 }
 
+// Top-pages row, modelled on Vercel Analytics' page-leaderboard
+// anatomy. Single flat gray bar behind the row scales proportionally
+// to the top page's count (so the leader anchors at full width and
+// the rest scale relative). Path sits on the left as a link to the
+// page in question (opens in a new tab on the current host so admins
+// can investigate the same env they're looking at); count pins to
+// the right. A copy chip appears on hover, semi-transparent
+// background masking the truncated path under it.
 function PagePathRow({
   group,
-  windowTotal,
   topTotal,
 }: {
   group: PageGroup;
-  windowTotal: number;
   topTotal: number;
 }) {
-  // Bar fills proportional to topTotal so the top page anchors at
-  // full width and the rest scale relative — visual hierarchy comes
-  // from the bar length, not just the count text.
   const widthRatio = topTotal === 0 ? 0 : group.total / topTotal;
+  const hasRealPath = group.path !== NO_PATH;
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <div
-        className="flex justify-between text-copy-13"
-        style={{ color: "var(--ds-gray-1000)", gap: 16 }}
-      >
-        <span
-          className="font-mono"
-          style={{
-            color: "var(--ds-gray-1000)",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            minWidth: 0,
-            flex: 1,
-          }}
-          title={group.path}
-        >
-          {group.path}
-        </span>
-        <span style={{ color: "var(--ds-gray-700)", flexShrink: 0 }}>
-          {group.total.toLocaleString()} ·{" "}
-          {fmtPct(pct(group.total, windowTotal))}
-        </span>
-      </div>
+    <div
+      className="group/row"
+      style={{ position: "relative", width: "100%", padding: "4px 12px" }}
+    >
       <div
         style={{
-          height: 8,
+          position: "relative",
+          height: 32,
           borderRadius: 4,
-          background: "var(--ds-gray-200)",
           overflow: "hidden",
-          width: `${widthRatio * 100}%`,
-          transition: "width 300ms ease",
-          display: "flex",
         }}
       >
-        {group.byEmotion.map(({ emotion, count }) => {
-          const segmentRatio = group.total === 0 ? 0 : count / group.total;
-          return (
-            <div
-              key={emotion}
-              style={{
-                width: `${segmentRatio * 100}%`,
-                height: "100%",
-                background: EMOTION_COLOUR[emotion],
-              }}
-              title={`${emotion}: ${count.toLocaleString()}`}
-            />
-          );
-        })}
+        {/* Background bar — flat fill, proportional to top page. */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: `${widthRatio * 100}%`,
+            borderRadius: 4,
+            background: "var(--ds-gray-200)",
+            opacity: 0.6,
+            transition: "width 300ms ease",
+          }}
+          aria-hidden
+        />
+        {/* Content overlay. */}
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            height: "100%",
+            padding: "0 12px",
+            gap: 16,
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              overflow: "hidden",
+              flex: 1,
+              minWidth: 0,
+            }}
+          >
+            {hasRealPath ? (
+              <a
+                href={group.path}
+                target="_blank"
+                rel="noopener"
+                className="text-copy-14"
+                style={{
+                  color: "var(--ds-gray-1000)",
+                  textDecoration: "none",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  minWidth: 0,
+                  flex: 1,
+                  display: "block",
+                }}
+                title={group.path}
+              >
+                {group.path}
+              </a>
+            ) : (
+              <span
+                className="text-copy-14"
+                style={{
+                  color: "var(--ds-gray-700)",
+                  fontStyle: "italic",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  minWidth: 0,
+                  flex: 1,
+                }}
+                title="Feedback submitted without a page reference"
+              >
+                {group.path}
+              </span>
+            )}
+            {/* Hover-revealed copy chip — only rendered when there's
+                a real path to copy. Semi-transparent bg masks the
+                path text underneath so the chip reads cleanly even
+                over long paths. */}
+            {hasRealPath && (
+              <div
+                className="opacity-0 group-hover/row:opacity-100"
+                style={{
+                  position: "absolute",
+                  insetBlock: 0,
+                  right: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0 4px",
+                  background: "var(--ds-background-100)",
+                  borderRadius: 4,
+                  transition: "opacity 0.12s ease",
+                }}
+              >
+                <CopyPathButton value={group.path} />
+              </div>
+            )}
+          </div>
+          <span
+            className="text-copy-14"
+            style={{
+              color: "var(--ds-gray-1000)",
+              fontWeight: 600,
+              flexShrink: 0,
+              fontVariantNumeric: "tabular-nums",
+            }}
+          >
+            {group.total.toLocaleString()}
+          </span>
+        </div>
       </div>
     </div>
   );
 }
 
 const TOP_PAGES_LIMIT = 10;
+const NO_PATH = "(no path)";
 
 /** Group the active-window rows by page_path and return the top N
- *  by count, including a per-emotion breakdown for the stacked bar.
- *  Null paths bucket as "(no path)" — feedback submitted without a
- *  page reference, rare but worth surfacing. */
+ *  by count. Null paths bucket as "(no path)" — feedback submitted
+ *  without a page reference, rare but worth surfacing. */
 function buildPageGroups(rows: FeedbackRowRaw[]): PageGroup[] {
-  const groups = new Map<
-    string,
-    { total: number; counts: Record<Exclude<Emotion, null> | "unknown", number> }
-  >();
+  const groups = new Map<string, number>();
   for (const row of rows) {
-    const key = row.page_path ?? "(no path)";
-    const entry = groups.get(key) ?? {
-      total: 0,
-      counts: { love: 0, okay: 0, "not-great": 0, hate: 0, unknown: 0 },
-    };
-    entry.total += 1;
-    const e = row.emotion ?? "unknown";
-    entry.counts[e] += 1;
-    groups.set(key, entry);
+    const key = row.page_path ?? NO_PATH;
+    groups.set(key, (groups.get(key) ?? 0) + 1);
   }
-  const ordered: PageGroup[] = [...groups.entries()]
-    .map(([path, { total, counts }]) => ({
-      path,
-      total,
-      byEmotion: (
-        ["love", "okay", "not-great", "hate", "unknown"] as const
-      )
-        .map((emotion) => ({ emotion, count: counts[emotion] }))
-        .filter((s) => s.count > 0),
-    }))
+  return [...groups.entries()]
+    .map(([path, total]) => ({ path, total }))
     .sort((a, b) => b.total - a.total)
     .slice(0, TOP_PAGES_LIMIT);
-  return ordered;
 }
 
 function emotionBadge(
@@ -880,20 +925,37 @@ export async function FeedbackDashboardContent({
         </PanelCard>
       </div>
 
-      {/* Top pages by feedback — stacked horizontal bar per page
-          coloured by emotion. Empty when the window has zero rows
-          (the parent already short-circuits to EmptyState, so the
-          fallback render here is only for windows with rows but no
-          page_path on any of them — rare). */}
+      {/* Top pages by feedback — Vercel-style leaderboard. Single
+          flat bar per row scaled to the top page, path on left as a
+          link (opens new tab same-host so admins can investigate the
+          env they're looking at), count pinned right. Hidden when
+          the window has rows but none carry a page_path. */}
       {pageGroups.length > 0 && (
         <div style={{ marginBottom: 16 }}>
-          <PanelCard title="Top pages by feedback">
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <PanelCard
+            title="Top pages by feedback"
+            action={
+              <span
+                className="text-label-12"
+                style={{
+                  color: "var(--ds-gray-700)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.04em",
+                  fontWeight: 500,
+                }}
+              >
+                Feedback
+              </span>
+            }
+          >
+            {/* Negative inline margin pulls the rows' built-in
+                padding back so they align with the PanelCard header,
+                while still giving each row its own hover hit area. */}
+            <div style={{ marginInline: -12, marginBlock: -4 }}>
               {pageGroups.map((group) => (
                 <PagePathRow
                   key={group.path}
                   group={group}
-                  windowTotal={currentCount}
                   topTotal={topPageTotal}
                 />
               ))}
