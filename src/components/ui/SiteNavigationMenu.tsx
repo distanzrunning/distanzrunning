@@ -321,12 +321,13 @@ export interface SiteNavigationMenuProps {
 // in (the trigger row sits beside the wordmark; the Viewport mounts
 // absolutely below the pill).
 //
-// `delayDuration={120}` is Radix's open-intent debounce — far enough
-// down that a true hover (≈120 ms+ dwell) opens the panel but a
-// drive-by pointer doesn't. `skipDelayDuration={250}` is the grace
-// window for consecutive trigger hovers — once one section is open
-// and the user moves to the next within 250 ms, Radix swaps content
-// immediately (no second open-intent delay).
+// `delayDuration={0}` opens the panel the instant a trigger is
+// hovered — no hover-intent debounce. We tried 120 ms first; it
+// reads as lag for a primary nav that wants to feel snappy.
+// `skipDelayDuration={250}` is the grace window for consecutive
+// trigger hovers (irrelevant once delayDuration is 0, but kept for
+// the close→reopen edge case where the user briefly leaves and
+// returns).
 
 export function SiteNavigationMenuRoot({
   triggers,
@@ -338,7 +339,7 @@ export function SiteNavigationMenuRoot({
   return (
     <NavigationMenuPrimitive.Root
       aria-label="Primary"
-      delayDuration={120}
+      delayDuration={0}
       skipDelayDuration={250}
       className="contents"
     >
@@ -457,18 +458,13 @@ export function SiteNavigationMenuViewport() {
         "rounded-[8px] bg-[var(--ds-background-100)]",
         "shadow-[var(--ds-shadow-menu)]",
         "h-[var(--radix-navigation-menu-viewport-height)]",
-        // Smooth resize between sections of different heights.
-        // Without this the Viewport jumps from one section's height
-        // to the next and reads as a flicker rather than a content
-        // swap. The Content fade and the Viewport resize now share
-        // the same 200 ms easing so they animate in lockstep.
+        // Smooth resize between sections of different heights so a
+        // taller section doesn't pop. The Content swap is instant
+        // (zero animation on Content) but the chrome morphs.
         "transition-[height,width] duration-200 ease-out",
-        // Open/close animations are FADE ONLY — dropped zoom-in/out
-        // so an open→closed→open cycle (which can fire briefly when
-        // the cursor passes over a non-trigger gap) doesn't read as
-        // the whole panel jumping in and out. Just a soft fade.
-        "data-[state=open]:animate-in data-[state=open]:fade-in-0",
-        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
+        // NO open/close animations. The panel appears the instant
+        // a trigger is hovered and disappears the instant intent
+        // ends — anything else reads as lag for a primary nav.
       )}
     />
   );
