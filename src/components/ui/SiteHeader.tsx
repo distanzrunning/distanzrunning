@@ -109,11 +109,12 @@ export default function SiteHeader({
       <div className="pointer-events-none fixed inset-x-0 top-4 z-40 px-16">
         {/* The pill: max-width capped, centred, re-enables pointer
             events for its own surface. h-[72px] + p-4 + rounded-[8px]
-            matches the Frontify reference. Fill = page bg at 80%
-            opacity (rgba on bg-200-rgb, theme-flipping). On a plain
-            page section the pill is mathematically identical to the
-            page (same tone, blur of uniform = uniform) so it reads
-            as invisible at rest — exactly Frontify's behavior. The
+            matches the Frontify reference.
+
+            Rest fill = page bg at 80% opacity (rgba on bg-200-rgb,
+            theme-flipping). On a plain page section the pill is
+            mathematically identical to the page (same tone, blur of
+            uniform = uniform) so it reads as invisible at rest. The
             moment any non-uniform content (hero photo, dark section,
             cards) sits inside the blur(200px) kernel's reach, that
             content gets sampled and smeared across the entire pill
@@ -121,9 +122,18 @@ export default function SiteHeader({
             visibly distinct from the page. blur(200px) is huge on
             purpose: the radius exceeds the pill's own width, so the
             filter averages a viewport-wide neighbourhood per pixel,
-            which is what produces the propagation effect. */}
+            which produces the propagation effect.
+
+            Hover lift: when a descendant carrying [data-nav-trigger]
+            is hovered (nav links + Search), the pill flips to opaque
+            bg-100. Gives the navbar a clear "yes, this is a real
+            surface" affordance on plain page bg where the rest
+            state is invisible. Subscribe is excluded — it's a primary
+            CTA, not a nav trigger, so its filled-black hover should
+            not chameleon the surrounding pill. 260 ms ease-out keeps
+            the transition smooth enough to read as deliberate. */}
         <header
-          className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[rgba(var(--ds-background-200-rgb),0.8)] p-4 [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]"
+          className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[rgba(var(--ds-background-200-rgb),0.8)] p-4 transition-colors duration-[260ms] ease-out has-[[data-nav-trigger]:hover]:bg-[var(--ds-background-100)] [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]"
         >
           {/* Left group: wordmark + primary nav sitting beside it
               (Frontify pattern). Replaces the absolute-centred nav of
@@ -166,6 +176,7 @@ export default function SiteHeader({
                 aria-label="Open search"
                 title="Search (⌘K)"
                 onClick={openSearch}
+                data-nav-trigger
                 className="hover:!bg-[var(--ds-gray-200)]"
               >
                 <SearchIcon className="size-4" />

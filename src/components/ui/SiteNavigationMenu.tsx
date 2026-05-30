@@ -209,7 +209,12 @@ export default function SiteNavigationMenu() {
   return (
     <nav aria-label="Primary" className="flex items-center gap-1">
       {NAV_LINKS.map((link) => (
-        <Link key={link.href} href={link.href} className={NAV_LINK_CLASS}>
+        <Link
+          key={link.href}
+          href={link.href}
+          className={NAV_LINK_CLASS}
+          data-nav-trigger
+        >
           {link.label}
           <ChevronDown className={CHEVRON_CLASS} aria-hidden="true" />
         </Link>
