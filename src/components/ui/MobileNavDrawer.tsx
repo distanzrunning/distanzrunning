@@ -40,13 +40,14 @@ import {
   type CategoryItem,
   newsLinks,
   shoeLinks,
+  gearLinks,
   nutritionLinks,
   raceLinks,
   type FeaturedProduct,
   type FeaturedRace,
 } from "@/components/ui/SiteNavigationMenu";
 
-type SectionId = "news" | "shoes" | "nutrition" | "races";
+type SectionId = "news" | "shoes" | "gear" | "nutrition" | "races";
 
 interface SectionDef {
   id: SectionId;
@@ -61,6 +62,7 @@ interface MobileNavDrawerProps {
   onOpenChange: (open: boolean) => void;
   featuredNews: FeaturedProduct;
   featuredShoe: FeaturedProduct;
+  featuredGear: FeaturedProduct;
   featuredNutrition: FeaturedProduct;
   featuredRace: FeaturedRace;
   /**
@@ -130,6 +132,7 @@ export default function MobileNavDrawer({
   onOpenNewsletter,
   featuredNews,
   featuredShoe,
+  featuredGear,
   featuredNutrition,
   featuredRace,
 }: MobileNavDrawerProps) {
@@ -165,6 +168,15 @@ export default function MobileNavDrawer({
       featured: featuredShoe,
       featuredHref: featuredShoe
         ? `/shoes/${featuredShoe.slug.current}`
+        : undefined,
+    },
+    {
+      id: "gear",
+      label: "Gear",
+      items: gearLinks,
+      featured: featuredGear,
+      featuredHref: featuredGear
+        ? `/gear/${featuredGear.slug.current}`
         : undefined,
     },
     {

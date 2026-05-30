@@ -327,6 +327,7 @@ function HeaderInPagePreview() {
         <SiteHeader
           featuredNews={mockFeatured}
           featuredShoe={mockFeatured}
+          featuredGear={mockFeatured}
           featuredNutrition={mockFeatured}
           featuredRace={mockRace}
           newsletterSource="design-system"

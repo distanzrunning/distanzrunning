@@ -38,6 +38,7 @@ import { useSearch } from "@/contexts/SearchContext";
 export interface SiteHeaderProps {
   featuredNews: FeaturedProduct;
   featuredShoe: FeaturedProduct;
+  featuredGear: FeaturedProduct;
   featuredNutrition: FeaturedProduct;
   featuredRace: FeaturedRace;
   /**
@@ -50,6 +51,7 @@ export interface SiteHeaderProps {
 export default function SiteHeader({
   featuredNews,
   featuredShoe,
+  featuredGear,
   featuredNutrition,
   featuredRace,
   newsletterSource = "site_header",
@@ -113,8 +115,12 @@ export default function SiteHeader({
         <header
           className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[rgba(240,240,235,0.8)] p-4 [backdrop-filter:blur(20px)] [-webkit-backdrop-filter:blur(20px)]"
         >
-          {/* Left: wordmark */}
-          <div className="flex min-w-0 items-center">
+          {/* Left group: wordmark + primary nav sitting beside it
+              (Frontify pattern). Replaces the absolute-centred nav of
+              the prior version — left alignment puts visual weight
+              against the wordmark and gives the right cluster a clean
+              flush edge for its action chips. */}
+          <div className="flex min-w-0 items-center gap-4">
             <Link
               href="/"
               aria-label="Distanz Running — home"
@@ -126,21 +132,11 @@ export default function SiteHeader({
                   between near-black and near-white in dark mode. */}
               <Wordmark className="h-6 w-auto" />
             </Link>
-          </div>
-
-          {/* Centre: primary nav (desktop only). Absolutely positioned so
-              the row is geometrically centred on the pill, independent
-              of the wordmark + action-row widths. inset-0 (not just
-              inset-x-0) + items-center reliably centres the nav
-              vertically; without those the absolute wrapper inherits a
-              "static position" inside the flex container that browsers
-              resolve to the top edge, leaving the nav a few pixels
-              higher than the wordmark / right cluster. */}
-          <div className="pointer-events-none absolute inset-0 hidden items-center justify-center md:flex">
-            <div className="pointer-events-auto">
+            <div className="hidden md:block">
               <SiteNavigationMenu
                 featuredNews={featuredNews}
                 featuredShoe={featuredShoe}
+                featuredGear={featuredGear}
                 featuredNutrition={featuredNutrition}
                 featuredRace={featuredRace}
                 onValueChange={(v) => setNavMenuOpen(Boolean(v))}
@@ -153,13 +149,17 @@ export default function SiteHeader({
               same flex group so spacing inside the pill stays uniform
               across breakpoints. */}
           <div className="flex items-center gap-2">
-            {/* Desktop: search utility + newsletter primary CTA.
-                Theme switcher lives in the footer (set-once preference
+            {/* Desktop: search utility + Subscribe primary CTA. Sized
+                to medium (≈40 px) so both chips read at the same
+                visual weight as the nav triggers in the left group —
+                a tiny chip floating next to 40 px-tall nav items
+                makes the right cluster feel weightless. Theme
+                switcher lives in the footer (set-once preference
                 doesn't deserve top-of-page real estate). */}
             <div className="hidden items-center gap-2 md:flex">
               <IconButton
                 variant="tertiary"
-                size="small"
+                size="default"
                 aria-label="Open search"
                 title="Search (⌘K)"
                 onClick={openSearch}
@@ -167,13 +167,13 @@ export default function SiteHeader({
                 <SearchIcon className="size-4" />
               </IconButton>
               <Button
-                size="small"
+                size="medium"
                 onClick={() => openNewsletter(newsletterSource)}
                 onMouseEnter={preloadNewsletterHero}
                 onFocus={preloadNewsletterHero}
                 data-attr="newsletter-modal-open"
               >
-                Newsletter
+                Subscribe
               </Button>
             </div>
 
@@ -248,6 +248,7 @@ export default function SiteHeader({
         onOpenChange={setMobileOpen}
         featuredNews={featuredNews}
         featuredShoe={featuredShoe}
+        featuredGear={featuredGear}
         featuredNutrition={featuredNutrition}
         featuredRace={featuredRace}
         onOpenNewsletter={() =>

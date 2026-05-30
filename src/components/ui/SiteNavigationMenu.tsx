@@ -10,6 +10,9 @@ import {
   TbCalendar,
   TbCloud,
   TbStopwatch,
+  TbDeviceWatch,
+  TbHeadphones,
+  TbShirt,
   TbBatteryCharging,
   TbBottle,
   TbFlag,
@@ -51,6 +54,7 @@ export type FeaturedRace = {
 export interface SiteNavigationMenuProps {
   featuredNews: FeaturedProduct;
   featuredShoe: FeaturedProduct;
+  featuredGear: FeaturedProduct;
   featuredNutrition: FeaturedProduct;
   featuredRace: FeaturedRace;
   /**
@@ -124,6 +128,27 @@ export const shoeLinks: ReadonlyArray<CategoryItem> = [
     href: "/shoes/trail-shoes",
     description: "Off-road traction",
     Icon: TbMountain,
+  },
+];
+
+export const gearLinks: ReadonlyArray<CategoryItem> = [
+  {
+    label: "Watches",
+    href: "/gear/watches",
+    description: "Track every run",
+    Icon: TbDeviceWatch,
+  },
+  {
+    label: "Headphones",
+    href: "/gear/headphones",
+    description: "Music on the move",
+    Icon: TbHeadphones,
+  },
+  {
+    label: "Apparel",
+    href: "/gear/apparel",
+    description: "Kit for every season",
+    Icon: TbShirt,
   },
 ];
 
@@ -285,6 +310,7 @@ function FeaturedCard({
 export default function SiteNavigationMenu({
   featuredNews,
   featuredShoe,
+  featuredGear,
   featuredNutrition,
   featuredRace,
   onValueChange,
@@ -330,6 +356,27 @@ export default function SiteNavigationMenu({
                 )
               }
               items={shoeLinks}
+            />
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+
+        {/* Gear */}
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>Gear</NavigationMenuTrigger>
+          <NavigationMenuContent className="p-0">
+            <DropdownPanel
+              heading="Gear"
+              featured={
+                featuredGear && (
+                  <FeaturedCard
+                    href={`/gear/${featuredGear.slug.current}`}
+                    image={featuredGear.mainImage}
+                    label="Featured"
+                    title={featuredGear.title}
+                  />
+                )
+              }
+              items={gearLinks}
             />
           </NavigationMenuContent>
         </NavigationMenuItem>
