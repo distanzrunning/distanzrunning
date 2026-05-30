@@ -407,15 +407,13 @@ export function SiteNavigationMenuTriggers({
             // `measured` tall gets clipped. Putting the padding on
             // the measured element keeps both numbers in sync.
             //
-            // Animations: pure fade in/out, same 200 ms easing as
-            // the Viewport's height transition, so the resize and
-            // the cross-fade ride the same curve.
-            className={cn(
-              "absolute top-0 left-0 w-full p-4",
-              "data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in-0",
-              "data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out-0",
-              "duration-200",
-            )}
+            // Animations: NONE on the Content. Section switches snap
+            // instantly — no cross-fade overlap, no in-between
+            // mush. The Viewport's height/width transition still
+            // eases the panel resize, so the panel chrome morphs
+            // smoothly between sections while the inside content
+            // hard-swaps the moment Radix flips data-state.
+            className="absolute top-0 left-0 w-full p-4"
           >
             <MegaMenuPanel
               sectionKey={section.key}
