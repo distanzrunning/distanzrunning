@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import {
@@ -336,13 +337,48 @@ export function SiteNavigationMenuRoot({
   triggers: React.ReactNode;
   viewport: React.ReactNode;
 }) {
+  // Controlled value so we know when ANY section is open. Radix sets
+  // value to the active item's value (or auto-generated id) on open
+  // and back to "" on close. We pipe that into an overlay's opacity
+  // to dim/blur the page behind the open mega-menu.
+  const [value, setValue] = useState("");
+  const isOpen = value !== "";
+
   return (
     <NavigationMenuPrimitive.Root
       aria-label="Primary"
       delayDuration={0}
       skipDelayDuration={250}
       className="contents"
+      value={value}
+      onValueChange={setValue}
     >
+      {/* Full-viewport scrim rendered as the FIRST child of the Root
+          subtree so it stacks below the trigger pill and the Viewport
+          (same z-context via the fixed wrapper in SiteHeader; DOM
+          order decides who's on top). Always mounted — opacity is the
+          only thing that toggles, so we get a smooth fade in/out.
+
+          Visual: dark dim + soft blur in light mode (knocks the page
+          back so the menu feels foregrounded). Light wash in dark
+          mode (a black-on-black scrim would be invisible; flipping
+          to a light tint adds the same separation by lifting the
+          page instead of darkening it).
+
+          pointer-events-none keeps the page beneath interactive at
+          the cursor level — close is driven by hover-off (Radix
+          handles), not by capturing clicks on the scrim. */}
+      <div
+        aria-hidden
+        data-mega-menu-overlay
+        className={cn(
+          "pointer-events-none fixed inset-0",
+          "transition-opacity duration-200 ease-out",
+          "bg-[rgba(0,0,0,0.4)] backdrop-blur-sm",
+          "dark:bg-[rgba(255,255,255,0.08)]",
+          isOpen ? "opacity-100" : "opacity-0",
+        )}
+      />
       {triggers}
       {viewport}
     </NavigationMenuPrimitive.Root>
