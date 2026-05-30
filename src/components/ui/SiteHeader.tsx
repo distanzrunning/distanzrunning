@@ -147,32 +147,39 @@ export default function SiteHeader({
             // not chameleon the surrounding pill. 260 ms ease-out keeps
             // the transition smooth enough to read as deliberate.
             <header className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[rgba(var(--ds-background-200-rgb),0.8)] p-4 transition-colors duration-[260ms] ease-out has-[[data-nav-trigger]:hover]:bg-[var(--ds-background-100)] [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]">
-          {/* Left group: wordmark + primary nav sitting beside it
-              (Frontify pattern). Replaces the absolute-centred nav of
-              the prior version — left alignment puts visual weight
-              against the wordmark and gives the right cluster a clean
-              flush edge for its action chips. */}
-          <div className="flex min-w-0 items-center gap-4">
-            <Link
-              href="/"
-              aria-label="Distanz Running — home"
-              className="inline-flex h-10 items-center px-1 text-[color:var(--ds-gray-1000)]"
-            >
-              {/* Inline SVG via <Wordmark /> — single render, no network
-                  request, no light/dark download swap. Colour follows
-                  currentColor (text-gray-1000), which flips automatically
-                  between near-black and near-white in dark mode. */}
-              <Wordmark className="h-7 w-auto" />
-            </Link>
-            <div className="hidden md:block">
-              <SiteNavigationMenuTriggers
-                featuredNews={featuredNews}
-                featuredShoe={featuredShoe}
-                featuredGear={featuredGear}
-                featuredNutrition={featuredNutrition}
-                featuredRace={featuredRace}
-              />
-            </div>
+          {/* Left: wordmark only. The primary nav lives in its own
+              absolute-centred slot below so the three-zone layout
+              (brand / nav / actions) reads symmetrically — diverges
+              from Frontify's left-aligned trigger row in favour of
+              the more conventional centre nav that pairs cleanly
+              with our pill's geometric symmetry. */}
+          <Link
+            href="/"
+            aria-label="Distanz Running — home"
+            className="inline-flex h-10 items-center px-1 text-[color:var(--ds-gray-1000)]"
+          >
+            {/* Inline SVG via <Wordmark /> — single render, no network
+                request, no light/dark download swap. Colour follows
+                currentColor (text-gray-1000), which flips automatically
+                between near-black and near-white in dark mode. */}
+            <Wordmark className="h-7 w-auto" />
+          </Link>
+
+          {/* Centre: primary nav. Absolute-positioned + transform so
+              the trigger row is geometrically centred in the pill
+              regardless of how wide the wordmark or the action
+              cluster end up being. justify-between on the parent
+              still pushes wordmark and right cluster to the edges
+              (the absolute nav is out of flex flow). md:block hides
+              it on mobile — the hamburger handles small viewports. */}
+          <div className="absolute left-1/2 hidden -translate-x-1/2 md:block">
+            <SiteNavigationMenuTriggers
+              featuredNews={featuredNews}
+              featuredShoe={featuredShoe}
+              featuredGear={featuredGear}
+              featuredNutrition={featuredNutrition}
+              featuredRace={featuredRace}
+            />
           </div>
 
           {/* Right: action cluster. Desktop shows search + Newsletter;
