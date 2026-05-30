@@ -5,8 +5,8 @@
 // ============================================================================
 //
 // Full-height right-side drawer for mobile navigation (below md). Two
-// panes: a top-level list of section names (News / Shoes / Gear /
-// Nutrition / Races), and a section-detail view with sub-items + the
+// panes: a top-level list of section names (News / Shoes / Nutrition
+// / Races), and a section-detail view with sub-items + the
 // section's featured card. Tapping a section slides the inner pane
 // left to reveal the detail; the back button slides it back.
 //
@@ -40,14 +40,13 @@ import {
   type CategoryItem,
   newsLinks,
   shoeLinks,
-  gearLinks,
   nutritionLinks,
   raceLinks,
   type FeaturedProduct,
   type FeaturedRace,
 } from "@/components/ui/SiteNavigationMenu";
 
-type SectionId = "news" | "shoes" | "gear" | "nutrition" | "races";
+type SectionId = "news" | "shoes" | "nutrition" | "races";
 
 interface SectionDef {
   id: SectionId;
@@ -62,7 +61,6 @@ interface MobileNavDrawerProps {
   onOpenChange: (open: boolean) => void;
   featuredNews: FeaturedProduct;
   featuredShoe: FeaturedProduct;
-  featuredGear: FeaturedProduct;
   featuredNutrition: FeaturedProduct;
   featuredRace: FeaturedRace;
   /**
@@ -132,7 +130,6 @@ export default function MobileNavDrawer({
   onOpenNewsletter,
   featuredNews,
   featuredShoe,
-  featuredGear,
   featuredNutrition,
   featuredRace,
 }: MobileNavDrawerProps) {
@@ -168,15 +165,6 @@ export default function MobileNavDrawer({
       featured: featuredShoe,
       featuredHref: featuredShoe
         ? `/shoes/${featuredShoe.slug.current}`
-        : undefined,
-    },
-    {
-      id: "gear",
-      label: "Gear",
-      items: gearLinks,
-      featured: featuredGear,
-      featuredHref: featuredGear
-        ? `/gear/${featuredGear.slug.current}`
         : undefined,
     },
     {
@@ -259,8 +247,8 @@ export default function MobileNavDrawer({
           {/* a11y: required by Radix Dialog */}
           <Dialog.Title className="sr-only">Site navigation</Dialog.Title>
           <Dialog.Description className="sr-only">
-            Browse Distanz Running by section: News, Shoes, Gear,
-            Nutrition, and Races.
+            Browse Distanz Running by section: News, Shoes, Nutrition,
+            and Races.
           </Dialog.Description>
 
           {/* No internal drawer header — the sticky site header above

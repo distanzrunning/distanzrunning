@@ -426,6 +426,8 @@
        RADIUS - Border radius scale (matches Materials page)
        ───────────────────────────────────────────────────────────────────────── */
     --ds-radius-small: 6px; /* Buttons, inputs, tooltips, base surfaces */
+    /* Frontify-style navbar cards and floating-pill containers */
+    --ds-radius-medium: 8px;
     --ds-radius-large: 12px; /* Menus, modals, medium/large surfaces */
     --ds-radius-xlarge: 16px; /* Fullscreen overlays */
     --ds-radius-full: 9999px; /* Pills, circular elements */
@@ -916,6 +918,7 @@
        RADIUS - Border radius scale (same in dark mode)
        ───────────────────────────────────────────────────────────────────────── */
     --ds-radius-small: 6px;
+    --ds-radius-medium: 8px;
     --ds-radius-large: 12px;
     --ds-radius-xlarge: 16px;
     --ds-radius-full: 9999px;

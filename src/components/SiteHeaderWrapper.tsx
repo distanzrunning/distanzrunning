@@ -8,7 +8,6 @@
 import { sanityFetch } from "@/sanity/lib/live";
 import {
   featuredShoeProductQuery,
-  featuredGearProductQuery,
   featuredNutritionProductQuery,
 } from "@/sanity/queries/featuredProductQueries";
 import { featuredRaceQuery } from "@/sanity/queries/featuredRaceQuery";
@@ -23,13 +22,11 @@ export default async function SiteHeaderWrapper({
   const [
     featuredNews,
     featuredShoe,
-    featuredGear,
     featuredNutrition,
     featuredRace,
   ] = await Promise.all([
     sanityFetch({ query: featuredNewsQuery }),
     sanityFetch({ query: featuredShoeProductQuery }),
-    sanityFetch({ query: featuredGearProductQuery }),
     sanityFetch({ query: featuredNutritionProductQuery }),
     sanityFetch({ query: featuredRaceQuery }),
   ]);
@@ -38,7 +35,6 @@ export default async function SiteHeaderWrapper({
     <SiteHeader
       featuredNews={featuredNews.data}
       featuredShoe={featuredShoe.data}
-      featuredGear={featuredGear.data}
       featuredNutrition={featuredNutrition.data}
       featuredRace={featuredRace.data}
       newsletterSource={newsletterSource}
