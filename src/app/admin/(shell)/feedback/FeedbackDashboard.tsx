@@ -36,8 +36,8 @@ import {
 import TrendChart from "@/components/ui/TrendChart";
 
 import ContactedToggle from "./ContactedToggle";
-import CopyPathButton from "./CopyPathButton";
 import DeleteFeedbackButton from "./DeleteFeedbackButton";
+import LeaderboardPanel, { type LeaderRow } from "./LeaderboardPanel";
 import {
   getFeedbackRowsInRange,
   type Emotion,
@@ -294,160 +294,9 @@ interface PageGroup {
   total: number;
 }
 
-// Top-pages row, matched to Vercel Analytics' leaderboard anatomy
-// (40px container, 32px inner bar, 6px radii, 0.4 bar opacity, hover-
-// revealed copy chip floating against the right edge with a near-
-// opaque background to mask the path text underneath).
-function PagePathRow({
-  group,
-  topTotal,
-}: {
-  group: PageGroup;
-  topTotal: number;
-}) {
-  const widthRatio = topTotal === 0 ? 0 : group.total / topTotal;
-  const hasRealPath = group.path !== NO_PATH;
-  return (
-    <div
-      className="group/row"
-      style={{ position: "relative", width: "100%", padding: "4px 12px" }}
-    >
-      <div
-        style={{
-          position: "relative",
-          height: 32,
-          borderRadius: 6,
-          overflow: "hidden",
-        }}
-      >
-        {/* Background bar — flat fill, proportional to top page. */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: `${widthRatio * 100}%`,
-            borderRadius: 6,
-            background: "var(--ds-gray-200)",
-            opacity: 0.4,
-            transition: "width 300ms ease",
-          }}
-          aria-hidden
-        />
-        {/* Content overlay. */}
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            height: "100%",
-            padding: "0 12px",
-            gap: 16,
-          }}
-        >
-          <div
-            style={{
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              overflow: "hidden",
-              flex: 1,
-              minWidth: 0,
-            }}
-          >
-            {hasRealPath ? (
-              <a
-                href={group.path}
-                target="_blank"
-                rel="noopener"
-                style={{
-                  fontSize: 14,
-                  lineHeight: "32px",
-                  color: "var(--ds-gray-1000)",
-                  textDecoration: "none",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  minWidth: 0,
-                  flex: 1,
-                  display: "block",
-                }}
-                title={group.path}
-              >
-                {group.path}
-              </a>
-            ) : (
-              <span
-                style={{
-                  fontSize: 14,
-                  lineHeight: "32px",
-                  color: "var(--ds-gray-700)",
-                  fontStyle: "italic",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  minWidth: 0,
-                  flex: 1,
-                }}
-                title="Feedback submitted without a page reference"
-              >
-                {group.path}
-              </span>
-            )}
-            {/* Hover-revealed copy chip — only rendered when there's
-                a real path to copy. Floats against the right edge with
-                a solid background-100 chip so it masks the truncated
-                path text underneath. */}
-            {hasRealPath && (
-              <div
-                className="opacity-0 group-hover/row:opacity-100"
-                style={{
-                  position: "absolute",
-                  top: 4,
-                  bottom: 4,
-                  right: 4,
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "0 4px",
-                  background: "var(--ds-background-100)",
-                  borderRadius: 6,
-                  transition: "opacity 0.15s ease",
-                }}
-              >
-                <CopyPathButton value={group.path} />
-              </div>
-            )}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              minWidth: 50,
-              flexShrink: 0,
-            }}
-          >
-            <span
-              style={{
-                fontSize: 14,
-                lineHeight: "20px",
-                fontWeight: 600,
-                color: "var(--ds-gray-1000)",
-                fontVariantNumeric: "tabular-nums",
-              }}
-            >
-              {group.total.toLocaleString()}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 const TOP_PAGES_LIMIT = 10;
 const NO_PATH = "(no path)";
+const NO_TOPIC = "(no topic)";
 
 /** Group the active-window rows by page_path and return the top N
  *  by count. Null paths bucket as "(no path)" — feedback submitted
@@ -460,6 +309,27 @@ function buildPageGroups(rows: FeedbackRowRaw[]): PageGroup[] {
   }
   return [...groups.entries()]
     .map(([path, total]) => ({ path, total }))
+    .sort((a, b) => b.total - a.total)
+    .slice(0, TOP_PAGES_LIMIT);
+}
+
+interface TopicGroup {
+  label: string;
+  total: number;
+}
+
+/** Group by topic — same shape as buildPageGroups but no link
+ *  semantics (topics aren't URLs). Null topics bucket as
+ *  "(no topic)" so the absence of structured topic is visible
+ *  rather than silently dropped. */
+function buildTopicGroups(rows: FeedbackRowRaw[]): TopicGroup[] {
+  const groups = new Map<string, number>();
+  for (const row of rows) {
+    const key = row.topic?.trim() || NO_TOPIC;
+    groups.set(key, (groups.get(key) ?? 0) + 1);
+  }
+  return [...groups.entries()]
+    .map(([label, total]) => ({ label, total }))
     .sort((a, b) => b.total - a.total)
     .slice(0, TOP_PAGES_LIMIT);
 }
@@ -767,12 +637,27 @@ export async function FeedbackDashboardContent({
   // already window-scoped and (since the underlying query orders by
   // created_at desc) the slice picks the 20 most recent rows within
   // the active range.
-  // Page-path leaderboard mirrors the active window (but ignores the
-  // tile filter — the value is "which pages drive feedback overall",
-  // not "which pages drive love-it specifically"). Top 10 by count
-  // with a per-emotion stacked bar so the mix is visible inline.
+  // Leaderboard panel data. Two tabs: Pages (by page_path) and
+  // Topics (by topic). Both ignore the tile filter — the value of
+  // these breakdowns is "what dominates feedback overall", not "what
+  // dominates love-it feedback specifically". Top 10 each.
   const pageGroups = buildPageGroups(currentRows);
-  const topPageTotal = pageGroups[0]?.total ?? 0;
+  const topicGroups = buildTopicGroups(currentRows);
+  const pageRows: LeaderRow[] = pageGroups.map((g) => ({
+    key: g.path,
+    label: g.path,
+    total: g.total,
+    href: g.path === NO_PATH ? undefined : g.path,
+    copyValue: g.path === NO_PATH ? undefined : g.path,
+    italic: g.path === NO_PATH,
+  }));
+  const topicRows: LeaderRow[] = topicGroups.map((g) => ({
+    key: g.label,
+    label: g.label,
+    total: g.total,
+    copyValue: g.label === NO_TOPIC ? undefined : g.label,
+    italic: g.label === NO_TOPIC,
+  }));
 
   const recent = (
     filter
@@ -1014,92 +899,29 @@ export async function FeedbackDashboardContent({
           </div>
         </div>
 
-        {/* Top pages — same chrome as the Emotions panel above.
-            Hidden when the window has rows but none carry a
-            page_path. */}
-        {pageGroups.length > 0 && (
-        <div
-          style={{
-            background: "var(--ds-background-100)",
-            border: "1px solid var(--ds-gray-400)",
-            borderRadius: 6,
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              padding: "4px 20px 0",
-              borderBottom: "1px solid var(--ds-gray-400)",
-            }}
-          >
-            {/* Tab strip — only "Pages" today, but rendered with the
-                Vercel tab anatomy (padding, bottom border on active,
-                -1px margin so the active rule sits on top of the
-                container's bottom rule). Drop-in slots when Routes /
-                Hostnames make sense later. */}
-            <div
-              role="tablist"
-              aria-label="Top pages tabs"
-              style={{
-                display: "flex",
-                alignItems: "baseline",
-                gap: 24,
-                marginRight: "auto",
-              }}
-            >
-              <button
-                type="button"
-                role="tab"
-                aria-selected="true"
-                style={{
-                  appearance: "none",
-                  background: "transparent",
-                  border: "none",
-                  cursor: "default",
-                  padding: "14px 2px",
-                  fontSize: 14,
-                  fontWeight: 400,
-                  color: "var(--ds-gray-1000)",
-                  borderBottom: "2px solid var(--ds-gray-1000)",
-                  marginBottom: -1,
-                }}
-              >
-                Pages
-              </button>
-            </div>
-            {/* Right-aligned column header — matches Vercel's
-                "VISITORS" label. 12px / 500 / uppercase / 0.04em
-                tracking / gray-900. */}
-            <span
-              style={{
-                minWidth: 50,
-                textAlign: "right",
-                fontSize: 12,
-                lineHeight: "16px",
-                fontWeight: 500,
-                textTransform: "uppercase",
-                letterSpacing: "0.04em",
-                color: "var(--ds-gray-900)",
-              }}
-            >
-              Feedback
-            </span>
-          </div>
-          <div
-            style={{ display: "flex", flexDirection: "column", margin: "8px 0" }}
-          >
-            {pageGroups.map((group) => (
-              <PagePathRow
-                key={group.path}
-                group={group}
-                topTotal={topPageTotal}
-              />
-            ))}
-          </div>
-        </div>
-        )}
+        {/* Leaderboard panel — Pages + Topics tabs. Self-renders an
+            empty-state copy inside the active tab when its rows are
+            zero, so we don't conditionally hide the whole panel
+            (keeps the side-by-side grid layout stable). */}
+        <LeaderboardPanel
+          columnHeader="Feedback"
+          tabs={[
+            {
+              value: "pages",
+              title: "Pages",
+              rows: pageRows,
+              emptyMessage:
+                "No feedback rows in this window carry a page reference yet.",
+            },
+            {
+              value: "topics",
+              title: "Topics",
+              rows: topicRows,
+              emptyMessage:
+                "No feedback rows in this window carry a topic yet.",
+            },
+          ]}
+        />
       </div>
 
       <RecentFeedbackTable
