@@ -104,16 +104,13 @@ export default function SiteHeader({
       <div className="pointer-events-none fixed inset-x-0 top-4 z-40 px-16">
         {/* The pill: max-width capped, centred, re-enables pointer
             events for its own surface. h-[72px] + p-4 + rounded-[8px]
-            matches the Frontify reference; the surface is wired to
-            --ds-background-200 at rest and --ds-background-100 on
-            hover for a theme-aware chameleon (light: FAFAFA → white;
-            dark: the tokens flip so the pill still brightens into
-            the canvas). Heavy blur(200px) underneath keeps the
-            surface reading consistently regardless of the content
-            scrolling beneath it, and the 260 ms transition matches
-            Frontify's 0.26s ease. */}
+            matches the Frontify reference. Surface uses
+            --ds-background-100 so the pill elevates above the
+            bg-200 page canvas (same admin chrome pattern: panels on
+            bg-100, page on bg-200). Heavy blur(200px) underneath
+            softens whatever scrolls beneath it. */}
         <header
-          className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[var(--ds-background-200)] p-4 transition-colors duration-[260ms] ease-out hover:bg-[var(--ds-background-100)] [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]"
+          className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[var(--ds-background-100)] p-4 [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]"
         >
           {/* Left group: wordmark + primary nav sitting beside it
               (Frontify pattern). Replaces the absolute-centred nav of

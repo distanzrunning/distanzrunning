@@ -49,10 +49,11 @@ export default async function LayoutContent({
   }
 
   // Chrome background (the canvas around PageFrame):
-  //   light → bg-100 (#FFFFFF primary canvas)
-  //   dark  → bg-200 (#000000 primary canvas)
+  // Page canvas sits on bg-200 (recessed) in both modes — matches the
+  // admin shell pattern; elevated chrome (SiteHeader pill, future
+  // cards/panels) pops above it on bg-100.
   const chromeClass =
-    "flex min-h-screen flex-col bg-[var(--ds-background-100)] dark:bg-[var(--ds-background-200)]";
+    "flex min-h-screen flex-col bg-[var(--ds-background-200)]";
 
   // Homepage gets the SiteHeader (so we can iterate on the new
   // floating-pill chrome in context) but skips the PageFrame and the
