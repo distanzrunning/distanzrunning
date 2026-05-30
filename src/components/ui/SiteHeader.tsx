@@ -104,14 +104,16 @@ export default function SiteHeader({
       <div className="pointer-events-none fixed inset-x-0 top-4 z-40 px-16">
         {/* The pill: max-width capped, centred, re-enables pointer
             events for its own surface. h-[72px] + p-4 + rounded-[8px]
-            matches the Frontify reference. Surface matches the page
-            bg-200 so the pill blends tonally at rest — its presence
-            comes from the rounded geometry + heavy blur(200px), not a
-            colour contrast. Individual nav-link chips pop to bg-100
-            on hover (handled in SiteNavigationMenu by a parallel
-            agent) to provide the affordance. */}
+            matches the Frontify reference. At rest the pill sits on
+            bg-200 so it blends tonally with the page; on hover it
+            pops to bg-100 via a 260 ms ease-out transition — the
+            Frontify chameleon pattern. The :hover selector fires
+            whenever the cursor is anywhere inside the pill bounds
+            (over nav links, the Subscribe button, search, or empty
+            whitespace), so any descendant hover lifts the whole
+            surface as a single floating element. */}
         <header
-          className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[var(--ds-background-200)] p-4 [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]"
+          className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[var(--ds-background-200)] p-4 transition-colors duration-[260ms] ease-out hover:bg-[var(--ds-background-100)] [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]"
         >
           {/* Left group: wordmark + primary nav sitting beside it
               (Frontify pattern). Replaces the absolute-centred nav of
