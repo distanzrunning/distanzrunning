@@ -81,13 +81,17 @@ export default function MegaMenuPanel({
   return (
     <div
       // 3-col grid hardcoded to the Frontify spec: left 376, middle
-      // 752, right 376 with 32 px column gaps. Height fixed at 468 px
-      // so every section snaps to the same Viewport size — Radix sets
-      // --radix-navigation-menu-viewport-height from the active
-      // Content's measured height, so a uniform inner height keeps
-      // the Viewport chrome from jitter-resizing between sections.
+      // 752, right 376 with 32 px column gaps. Height is content-
+      // driven — Radix reads --radix-navigation-menu-viewport-height
+      // from the active Content's measured box, so a taller section
+      // (longer heading, more links) gets a taller panel without
+      // anything clipping against the Viewport's overflow-hidden.
+      // Grid's default align-items:stretch keeps all three columns
+      // the same height as the tallest within a given section, so the
+      // CTA's mt-auto and the left-column divider line still anchor
+      // to the bottom of the panel.
       className={cn(
-        "grid h-[468px] w-full grid-cols-[376px_752px_376px] gap-x-8",
+        "grid w-full grid-cols-[376px_752px_376px] gap-x-8",
         className,
       )}
       data-mega-menu-panel={sectionKey}
@@ -177,9 +181,10 @@ export default function MegaMenuPanel({
           </NavigationMenuPrimitive.Link>
         ) : (
           // Stable layout: when there's no featured item we still
-          // render a placeholder so the right column doesn't collapse
-          // and the Viewport height stays consistent across sections.
-          <div className="mt-3 flex flex-1 items-center justify-center rounded-[8px] border border-dashed border-[color:var(--ds-gray-300)] p-4 text-copy-14 text-[color:var(--ds-gray-900)]">
+          // render a placeholder at the same 4/3 aspect as the image
+          // slot so the right column keeps the same footprint and
+          // the panel doesn't shrink for unfeatured sections.
+          <div className="mt-3 flex aspect-[4/3] w-full items-center justify-center rounded-[8px] border border-dashed border-[color:var(--ds-gray-300)] p-4 text-copy-14 text-[color:var(--ds-gray-900)]">
             No featured item yet
           </div>
         )}
