@@ -267,17 +267,23 @@ export default function SiteHeader({
           viewport={
             // Viewport sits absolutely below the pill, centred to the
             // same 1600 px max-width so its left/right edges align
-            // with the pill's. top-[88px] = pill height (72) + the
-            // outer top-4 offset (16). pointer-events-auto on the
-            // inner wrapper re-enables interaction (the outer fixed
-            // wrapper sets pointer-events-none for the gutter).
+            // with the pill's. top-[72px] = pill height — the panel
+            // butts up flush against the pill bottom (no visible
+            // gap). Eliminates the dead-zone Radix-close bug where
+            // a cursor moving from trigger to panel would briefly
+            // leave both elements and fire the close timer. The
+            // pill and panel now share an edge; cursor traverses
+            // zero empty space between them.
             //
-            // mx-auto + max-w-[1600px] gives the panel the same
-            // horizontal extent as the pill. The Viewport itself
-            // measures the active Content and exposes its height as
+            // pointer-events-auto on the inner wrapper re-enables
+            // interaction (the outer fixed wrapper sets pointer-
+            // events-none for the gutter). mx-auto + max-w-[1600px]
+            // gives the panel the same horizontal extent as the
+            // pill. The Viewport itself measures the active Content
+            // and exposes its height as
             // --radix-navigation-menu-viewport-height — see
             // SiteNavigationMenuViewport for the chrome.
-            <div className="pointer-events-none absolute inset-x-0 top-[88px] z-40 px-16">
+            <div className="pointer-events-none absolute inset-x-0 top-[72px] z-40 px-16">
               <div className="pointer-events-auto mx-auto max-w-[1600px]">
                 <SiteNavigationMenuViewport />
               </div>
