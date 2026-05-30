@@ -925,9 +925,8 @@ export async function FeedbackDashboardContent({
         <div
           style={{
             background: "var(--ds-background-100)",
+            border: "1px solid var(--ds-gray-400)",
             borderRadius: 6,
-            boxShadow:
-              "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 8px -8px",
             overflow: "hidden",
           }}
         >
@@ -1022,9 +1021,8 @@ export async function FeedbackDashboardContent({
         <div
           style={{
             background: "var(--ds-background-100)",
+            border: "1px solid var(--ds-gray-400)",
             borderRadius: 6,
-            boxShadow:
-              "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 8px -8px",
             overflow: "hidden",
           }}
         >
@@ -1200,9 +1198,8 @@ export function FeedbackDashboardSkeleton() {
             key={i}
             style={{
               background: "var(--ds-background-100)",
+              border: "1px solid var(--ds-gray-400)",
               borderRadius: 6,
-              boxShadow:
-                "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 8px -8px",
               overflow: "hidden",
             }}
           >
