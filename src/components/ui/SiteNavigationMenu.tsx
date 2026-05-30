@@ -320,7 +320,9 @@ export default function SiteNavigationMenu({
       <NavigationMenuList>
         {/* News */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger>News</NavigationMenuTrigger>
+          <NavigationMenuTrigger className="h-9 rounded-full px-4 py-2 leading-[21px]">
+            News
+          </NavigationMenuTrigger>
           <NavigationMenuContent className="p-0">
             <DropdownPanel
               heading="News"
@@ -341,7 +343,9 @@ export default function SiteNavigationMenu({
 
         {/* Shoes */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Shoes</NavigationMenuTrigger>
+          <NavigationMenuTrigger className="h-9 rounded-full px-4 py-2 leading-[21px]">
+            Shoes
+          </NavigationMenuTrigger>
           <NavigationMenuContent className="p-0">
             <DropdownPanel
               heading="Shoes"
@@ -362,7 +366,9 @@ export default function SiteNavigationMenu({
 
         {/* Gear */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Gear</NavigationMenuTrigger>
+          <NavigationMenuTrigger className="h-9 rounded-full px-4 py-2 leading-[21px]">
+            Gear
+          </NavigationMenuTrigger>
           <NavigationMenuContent className="p-0">
             <DropdownPanel
               heading="Gear"
@@ -383,7 +389,9 @@ export default function SiteNavigationMenu({
 
         {/* Nutrition */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Nutrition</NavigationMenuTrigger>
+          <NavigationMenuTrigger className="h-9 rounded-full px-4 py-2 leading-[21px]">
+            Nutrition
+          </NavigationMenuTrigger>
           <NavigationMenuContent className="p-0">
             <DropdownPanel
               heading="Nutrition"
@@ -404,7 +412,9 @@ export default function SiteNavigationMenu({
 
         {/* Races */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Races</NavigationMenuTrigger>
+          <NavigationMenuTrigger className="h-9 rounded-full px-4 py-2 leading-[21px]">
+            Races
+          </NavigationMenuTrigger>
           <NavigationMenuContent className="p-0">
             <DropdownPanel
               heading="Races"

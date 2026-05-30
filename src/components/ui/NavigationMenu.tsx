@@ -109,8 +109,11 @@ function NavigationMenuTrigger({
       {...props}
     >
       {children}{" "}
+      {/* 16 px chevron (size-4) paired with a 6 px gap (ml-1.5) —
+          matches the Frontify trigger anatomy. Rotates 180° when the
+          trigger is open. */}
       <ChevronDownIcon
-        className="relative top-[1px] ml-1 size-3 transition duration-150 group-data-[state=open]:rotate-180"
+        className="relative top-[1px] ml-1.5 size-4 transition duration-150 group-data-[state=open]:rotate-180"
         aria-hidden="true"
       />
     </NavigationMenuPrimitive.Trigger>

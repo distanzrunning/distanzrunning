@@ -130,7 +130,7 @@ export default function SiteHeader({
                   request, no light/dark download swap. Colour follows
                   currentColor (text-gray-1000), which flips automatically
                   between near-black and near-white in dark mode. */}
-              <Wordmark className="h-6 w-auto" />
+              <Wordmark className="h-7 w-auto" />
             </Link>
             <div className="hidden md:block">
               <SiteNavigationMenu
