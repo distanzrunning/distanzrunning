@@ -118,7 +118,7 @@ export default function SiteHeader({
           — the Root contributes no DOM box of its own (className
           "contents" inside SiteNavigationMenuRoot), so the pill and
           Viewport flow as siblings inside this fixed wrapper. */}
-      <div className="pointer-events-none fixed inset-x-0 top-4 z-40 px-16">
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-40 px-16">
         <SiteNavigationMenuRoot
           triggers={
             // The pill: max-width capped, centred, re-enables pointer
@@ -265,23 +265,12 @@ export default function SiteHeader({
         </header>
           }
           viewport={
-            // Viewport sits absolutely below the pill, centred to the
-            // same 1600 px max-width so its left/right edges align
-            // with the pill's. top-[88px] = pill height (72) + the
-            // outer top-4 offset (16). pointer-events-auto on the
-            // inner wrapper re-enables interaction (the outer fixed
-            // wrapper sets pointer-events-none for the gutter).
-            //
-            // mx-auto + max-w-[1600px] gives the panel the same
-            // horizontal extent as the pill. The Viewport itself
-            // measures the active Content and exposes its height as
-            // --radix-navigation-menu-viewport-height — see
-            // SiteNavigationMenuViewport for the chrome.
-            <div className="pointer-events-none absolute inset-x-0 top-[88px] z-40 px-16">
-              <div className="pointer-events-auto mx-auto max-w-[1600px]">
-                <SiteNavigationMenuViewport />
-              </div>
-            </div>
+            // Viewport sits inside the bridge wrapper that
+            // SiteNavigationMenuRoot owns — the bridge handles width
+            // (mx-auto max-w-[1600px]), pointer-events, and the
+            // 16 px visual gap between pill and panel (mt-4). The
+            // Viewport itself just renders the panel chrome.
+            <SiteNavigationMenuViewport />
           }
         />
       </div>

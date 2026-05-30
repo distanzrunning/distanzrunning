@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import {
@@ -344,6 +344,21 @@ export function SiteNavigationMenuRoot({
   const [value, setValue] = useState("");
   const isOpen = value !== "";
 
+  // Hover-stable bridge: a transparent 1600 px-wide column spanning
+  // from the viewport top down to the bottom of the panel. Cursor
+  // anywhere in this column = "still in the menu" → no close. The
+  // bridge wraps the trigger row + panel so the two small dead zones
+  // (above the pill, between pill and panel) become part of the
+  // menu's hit area without changing the visual layout.
+  //
+  // Mechanism: cursorInBridgeRef tracks whether the cursor is inside
+  // the wrapper. Radix's onValueChange normally fires `""` when the
+  // cursor leaves a trigger — we intercept that and suppress while
+  // the cursor is still inside the bridge, deferring close to the
+  // bridge's own onPointerLeave. Escape closes through a separate
+  // keydown handler so keyboard dismissal still works.
+  const cursorInBridgeRef = useRef(false);
+
   return (
     <NavigationMenuPrimitive.Root
       aria-label="Primary"
@@ -351,7 +366,14 @@ export function SiteNavigationMenuRoot({
       skipDelayDuration={250}
       className="contents"
       value={value}
-      onValueChange={setValue}
+      onValueChange={(next) => {
+        // Honor open requests immediately (Radix opening a section).
+        // Suppress close requests while the cursor is in the bridge
+        // — the bridge's onPointerLeave is the sole close trigger.
+        if (next !== "" || !cursorInBridgeRef.current) {
+          setValue(next);
+        }
+      }}
     >
       {/* Full-viewport scrim rendered as the FIRST child of the Root
           subtree so it stacks below the trigger pill and the Viewport
@@ -368,8 +390,8 @@ export function SiteNavigationMenuRoot({
           for the fade-in and back to 0 on close.
 
           pointer-events-none keeps the page beneath interactive at
-          the cursor level — close is driven by hover-off (Radix
-          handles), not by capturing clicks on the scrim. */}
+          the cursor level — close is driven by the bridge's
+          pointerLeave below, not by capturing clicks on the scrim. */}
       <div
         aria-hidden
         data-mega-menu-overlay
@@ -383,8 +405,36 @@ export function SiteNavigationMenuRoot({
           "transition-opacity duration-200 ease-out",
         )}
       />
-      {triggers}
-      {viewport}
+      {/* Hover-stable bridge wrapper.
+          - pointer-events-auto: cursor doesn't fall through to the
+            page beneath, so onPointerEnter/Leave fire on this exact
+            element when the cursor crosses the 1600 px column edges.
+          - mx-auto max-w-[1600px]: matches pill + panel width.
+          - pt-4: bridges the 16 px above-pill gap (between viewport
+            top and the pill itself).
+          - The panel wrapper inside gets mt-4 to bridge the visible
+            16 px between pill and panel — both halves are inside the
+            wrapper, so the cursor never leaves the bridge while
+            traversing either gap. */}
+      <div
+        className="pointer-events-auto mx-auto max-w-[1600px] pt-4"
+        onPointerEnter={() => {
+          cursorInBridgeRef.current = true;
+        }}
+        onPointerLeave={() => {
+          cursorInBridgeRef.current = false;
+          setValue("");
+        }}
+        onKeyDown={(e) => {
+          // Escape still closes — our onValueChange suppression above
+          // would otherwise swallow Radix's Escape-driven close call
+          // because the cursor is presumably still inside the bridge.
+          if (e.key === "Escape") setValue("");
+        }}
+      >
+        {triggers}
+        <div className="mt-4">{viewport}</div>
+      </div>
     </NavigationMenuPrimitive.Root>
   );
 }
