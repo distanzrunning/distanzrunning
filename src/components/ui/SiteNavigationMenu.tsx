@@ -374,8 +374,8 @@ export function SiteNavigationMenuRoot({
         className={cn(
           "pointer-events-none fixed inset-0",
           "transition-opacity duration-200 ease-out",
-          "bg-[rgba(0,0,0,0.4)] backdrop-blur-sm",
-          "dark:bg-[rgba(255,255,255,0.08)]",
+          "bg-[rgba(0,0,0,0.35)] backdrop-blur-sm",
+          "dark:bg-[rgba(255,255,255,0.03)]",
           isOpen ? "opacity-100" : "opacity-0",
         )}
       />
