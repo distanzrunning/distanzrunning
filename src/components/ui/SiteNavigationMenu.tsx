@@ -191,14 +191,16 @@ const NAV_LINKS = [
 //   - 14 px / 500 / 21 lh
 //   - padding 8 px / 16 px (h-9 = 36 px total)
 //   - rounded-full so the hover bg reads as a true pill
-//   - hover/focus uses bg-[var(--ds-background-200)] — at the same
-//     moment the pill itself lifts to bg-100 (Frontify chameleon), so
-//     the hovered link cuts back to the recessed surface and reads as
-//     a dark-on-light chip.
+//   - hover/focus uses bg-[var(--ds-gray-200)] — a step deeper than
+//     bg-200 (FAFAFA) so the chip reads clearly against the elevated
+//     pill (bg-100, white) without going into "selected" territory.
+//     gray-200 is the Geist "component background" hue and flips
+//     correctly in dark mode (becomes a visible light overlay on the
+//     near-black pill).
 //   - `group` so the chevron after the label can react to the link's
 //     own hover/focus state
 const NAV_LINK_CLASS =
-  "group inline-flex h-9 items-center gap-1.5 rounded-full px-4 py-2 text-[14px] leading-[21px] font-medium text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[var(--ds-background-200)] focus-visible:bg-[var(--ds-background-200)] focus-visible:outline-none";
+  "group inline-flex h-9 items-center gap-1.5 rounded-full px-4 py-2 text-[14px] leading-[21px] font-medium text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[var(--ds-gray-200)] focus-visible:bg-[var(--ds-gray-200)] focus-visible:outline-none";
 
 // Chevron mirrors Frontify's: 16 px, sat next to the label with a 6 px
 // gap (the .gap-1.5 on the link covers that), rotates 180° on hover or
