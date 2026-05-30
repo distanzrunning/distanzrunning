@@ -103,8 +103,18 @@ export default async function FeedbackDashboardPage({
   );
 
   return (
-    <div style={{ padding: "32px 24px" }}>
-      <div style={{ maxWidth: 1248, margin: "0 auto" }}>
+    <div>
+      <div
+        style={{
+          maxWidth: 1248,
+          marginLeft: "auto",
+          marginRight: "auto",
+          paddingLeft: 24,
+          paddingRight: 24,
+          paddingTop: 32,
+          paddingBottom: 32,
+        }}
+      >
         {query && (
           <div style={{ marginBottom: 8 }}>
             <ButtonLink
