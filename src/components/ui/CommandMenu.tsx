@@ -128,6 +128,10 @@ const CMDK_CSS = `
     z-index: 100;
     background: var(--ds-overlay-backdrop-color);
     opacity: var(--ds-overlay-backdrop-opacity);
+    /* Match the Modal + Mega-menu scrim: dim/lift + 8px frost so
+       all three overlays read as the same product moment. */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     animation: ds-cmdk-fade-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
   }
 

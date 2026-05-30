@@ -468,9 +468,15 @@
       0px 8px 16px -4px rgba(0, 0, 0, 0.04),
       0px 24px 32px -8px rgba(0, 0, 0, 0.06);
 
-    /* Overlay / Backdrop */
-    --ds-overlay-backdrop-color: rgb(250, 250, 250);
-    --ds-overlay-backdrop-opacity: 0.8;
+    /* Overlay / Backdrop — shared scrim for Mega-menu, Modal, and
+       Search. Dim direction in light mode (darken the page so the
+       foreground reads as active); flips to a light lift in dark
+       mode (black-on-black would be invisible). Moderate opacity:
+       the previous near-page-colour-at-80% was modal-grade frost,
+       which was too heavy for hover-driven chrome. Always paired
+       with backdrop-filter:blur(8px) at the callsite. */
+    --ds-overlay-backdrop-color: rgb(0, 0, 0);
+    --ds-overlay-backdrop-opacity: 0.2;
 
     /* Modal backgrounds — panel is the body surface (bg-100, the
        brighter shade in light mode), sections (header / footer /
@@ -959,14 +965,14 @@
       0px 24px 32px -8px rgba(0, 0, 0, 0.3);
 
     /* Overlay / Backdrop — dark mode.
-       Light mode uses a near-white scrim; dark mode can't use
-       a black scrim (the page is already #000, so overlaying
-       black on black is invisible). Use a desaturated gray so
-       the page-beneath reads as muted but visibly different
-       from the elevated modal panel (#0A0A0A). Pairs with the
-       backdrop-filter: blur in Modal.tsx for clear separation. */
-    --ds-overlay-backdrop-color: rgb(40, 40, 40);
-    --ds-overlay-backdrop-opacity: 0.7;
+       Light mode dims with a dark wash; dark mode can't dim a
+       black page with black, so flip to a light wash that lifts
+       the page slightly. Opacity stays low — over near-black,
+       even a tiny white tint reads clearly when paired with the
+       8px blur. Same direction-flip lives in Tokens.md as a
+       house pattern. */
+    --ds-overlay-backdrop-color: rgb(255, 255, 255);
+    --ds-overlay-backdrop-opacity: 0.05;
 
     /* Modal backgrounds — same semantics as light mode (panel = the
        brighter body surface, sections = the softer tone). Because

@@ -359,11 +359,13 @@ export function SiteNavigationMenuRoot({
           order decides who's on top). Always mounted — opacity is the
           only thing that toggles, so we get a smooth fade in/out.
 
-          Visual: dark dim + soft blur in light mode (knocks the page
-          back so the menu feels foregrounded). Light wash in dark
-          mode (a black-on-black scrim would be invisible; flipping
-          to a light tint adds the same separation by lifting the
-          page instead of darkening it).
+          Reads from the shared --ds-overlay-backdrop-* tokens so
+          this scrim matches the Modal and CommandMenu/Search scrim
+          1:1. Dim direction (dark wash in light mode, light wash in
+          dark) at moderate opacity, paired with 8px backdrop blur.
+          Inline opacity: closed = 0, open = the scrim's token
+          opacity. transition-opacity then animates 0 → token-value
+          for the fade-in and back to 0 on close.
 
           pointer-events-none keeps the page beneath interactive at
           the cursor level — close is driven by hover-off (Radix
@@ -371,12 +373,14 @@ export function SiteNavigationMenuRoot({
       <div
         aria-hidden
         data-mega-menu-overlay
+        style={{
+          opacity: isOpen ? "var(--ds-overlay-backdrop-opacity)" : 0,
+        }}
         className={cn(
           "pointer-events-none fixed inset-0",
+          "bg-[var(--ds-overlay-backdrop-color)]",
+          "[backdrop-filter:blur(8px)] [-webkit-backdrop-filter:blur(8px)]",
           "transition-opacity duration-200 ease-out",
-          "bg-[rgba(0,0,0,0.35)] backdrop-blur-sm",
-          "dark:bg-[rgba(255,255,255,0.03)]",
-          isOpen ? "opacity-100" : "opacity-0",
         )}
       />
       {triggers}
