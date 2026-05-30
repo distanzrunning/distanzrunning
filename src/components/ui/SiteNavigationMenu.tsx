@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 import {
   TbRoad,
   TbArrowCapsule,
@@ -192,8 +193,16 @@ const NAV_LINKS = [
 //   - rounded-full so the hover bg reads as a true pill
 //   - hover/focus bg: #f0f0eb (warm off-white at full opacity — the
 //     parent pill's rgba(240,240,235,0.8) without the alpha)
+//   - `group` so the chevron after the label can react to the link's
+//     own hover/focus state
 const NAV_LINK_CLASS =
-  "inline-flex h-9 items-center rounded-full px-4 py-2 text-[14px] leading-[21px] font-medium text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[#f0f0eb] focus-visible:bg-[#f0f0eb] focus-visible:outline-none";
+  "group inline-flex h-9 items-center gap-1.5 rounded-full px-4 py-2 text-[14px] leading-[21px] font-medium text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[#f0f0eb] focus-visible:bg-[#f0f0eb] focus-visible:outline-none";
+
+// Chevron mirrors Frontify's: 16 px, sat next to the label with a 6 px
+// gap (the .gap-1.5 on the link covers that), rotates 180° on hover or
+// keyboard focus. Same 0.22s ease used in the Frontify reference.
+const CHEVRON_CLASS =
+  "size-4 transition-transform duration-[220ms] ease-out group-hover:rotate-180 group-focus-visible:rotate-180";
 
 export default function SiteNavigationMenu() {
   return (
@@ -201,6 +210,7 @@ export default function SiteNavigationMenu() {
       {NAV_LINKS.map((link) => (
         <Link key={link.href} href={link.href} className={NAV_LINK_CLASS}>
           {link.label}
+          <ChevronDown className={CHEVRON_CLASS} aria-hidden="true" />
         </Link>
       ))}
     </nav>
