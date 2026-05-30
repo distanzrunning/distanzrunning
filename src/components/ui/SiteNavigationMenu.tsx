@@ -386,12 +386,17 @@ export function SiteNavigationMenuTriggers({
             <ChevronDown className={CHEVRON_CLASS} aria-hidden="true" />
           </NavigationMenuPrimitive.Trigger>
           <NavigationMenuPrimitive.Content
-            // The panel cross-fades when Radix swaps content between
-            // sibling triggers. data-motion is set by Radix to
-            // from-end / from-start / to-end / to-start depending on
-            // which direction the user moved between triggers — we
-            // bind the same fade to every direction so section
-            // switches feel continuous instead of jumpy.
+            // absolute top-0 left-0 w-full: during a trigger switch
+            // Radix mounts both the outgoing and incoming Content at
+            // the same time so the cross-fade has two elements to
+            // animate against each other. Without absolute they sit
+            // in normal flow and stack vertically — you see both
+            // panels at once AND the Viewport tries to be tall
+            // enough for both, which reads as the panel jumping.
+            // With absolute they overlap in the same space, the
+            // cross-fade looks like one element morphing, and the
+            // Viewport's measured height only ever reflects the
+            // active section.
             //
             // p-4 lives HERE (not on the Viewport) because Radix
             // measures the Content's outer box to populate
@@ -401,12 +406,14 @@ export function SiteNavigationMenuTriggers({
             // eaten from each edge — and the Content that is
             // `measured` tall gets clipped. Putting the padding on
             // the measured element keeps both numbers in sync.
+            //
+            // Animations: pure fade in/out, same 200 ms easing as
+            // the Viewport's height transition, so the resize and
+            // the cross-fade ride the same curve.
             className={cn(
-              "p-4",
-              "data-[motion=from-end]:animate-in data-[motion=from-end]:fade-in-0",
-              "data-[motion=from-start]:animate-in data-[motion=from-start]:fade-in-0",
-              "data-[motion=to-end]:animate-out data-[motion=to-end]:fade-out-0",
-              "data-[motion=to-start]:animate-out data-[motion=to-start]:fade-out-0",
+              "absolute top-0 left-0 w-full p-4",
+              "data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in-0",
+              "data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out-0",
               "duration-200",
             )}
           >
