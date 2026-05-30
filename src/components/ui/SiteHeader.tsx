@@ -104,13 +104,14 @@ export default function SiteHeader({
       <div className="pointer-events-none fixed inset-x-0 top-4 z-40 px-16">
         {/* The pill: max-width capped, centred, re-enables pointer
             events for its own surface. h-[72px] + p-4 + rounded-[8px]
-            matches the Frontify reference. Surface uses
-            --ds-background-100 so the pill elevates above the
-            bg-200 page canvas (same admin chrome pattern: panels on
-            bg-100, page on bg-200). Heavy blur(200px) underneath
-            softens whatever scrolls beneath it. */}
+            matches the Frontify reference. Surface matches the page
+            bg-200 so the pill blends tonally at rest — its presence
+            comes from the rounded geometry + heavy blur(200px), not a
+            colour contrast. Individual nav-link chips pop to bg-100
+            on hover (handled in SiteNavigationMenu by a parallel
+            agent) to provide the affordance. */}
         <header
-          className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[var(--ds-background-100)] p-4 [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]"
+          className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[var(--ds-background-200)] p-4 [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]"
         >
           {/* Left group: wordmark + primary nav sitting beside it
               (Frontify pattern). Replaces the absolute-centred nav of
@@ -158,6 +159,8 @@ export default function SiteHeader({
               </IconButton>
               <Button
                 size="medium"
+                variant="secondary"
+                className="!bg-[var(--ds-background-200)] hover:!bg-[var(--ds-gray-100)]"
                 onClick={() => openNewsletter(newsletterSource)}
                 onMouseEnter={preloadNewsletterHero}
                 onFocus={preloadNewsletterHero}

@@ -191,13 +191,13 @@ const NAV_LINKS = [
 //   - 14 px / 500 / 21 lh
 //   - padding 8 px / 16 px (h-9 = 36 px total)
 //   - rounded-full so the hover bg reads as a true pill
-//   - hover/focus uses --ds-gray-alpha-200 (theme-aware translucent
-//     gray) so the link chip reads as a subtle wash on top of the
-//     pill's bg-100 surface — no warmth magic values, no rgba inlines.
+//   - hover/focus uses bg-[var(--ds-background-100)] so the link chip
+//     pops to the elevated primary surface against the pill's bg-200
+//     (the pill matches the page bg-200 at rest).
 //   - `group` so the chevron after the label can react to the link's
 //     own hover/focus state
 const NAV_LINK_CLASS =
-  "group inline-flex h-9 items-center gap-1.5 rounded-full px-4 py-2 text-[14px] leading-[21px] font-medium text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[var(--ds-gray-alpha-200)] focus-visible:bg-[var(--ds-gray-alpha-200)] focus-visible:outline-none";
+  "group inline-flex h-9 items-center gap-1.5 rounded-full px-4 py-2 text-[14px] leading-[21px] font-medium text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[var(--ds-background-100)] focus-visible:bg-[var(--ds-background-100)] focus-visible:outline-none";
 
 // Chevron mirrors Frontify's: 16 px, sat next to the label with a 6 px
 // gap (the .gap-1.5 on the link covers that), rotates 180° on hover or
