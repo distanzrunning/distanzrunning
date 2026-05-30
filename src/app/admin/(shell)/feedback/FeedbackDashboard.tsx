@@ -904,12 +904,91 @@ export async function FeedbackDashboardContent({
         />
       </div>
 
-      {/* Per-emotion breakdown mirrors the active window — bars tween
-          via CategoryBar's CSS width transition when the picker /
-          tile selection changes the window. */}
-      <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-emotion breakdown">
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {/* Per-emotion breakdown + Top pages share a row, each taking
+          half the width on desktop. Both panels wear the Vercel-style
+          leaderboard chrome (flat box-shadow + 6px radius + tab-style
+          header on a bottom rule) so they read as a visual pair. CSS
+          grid with auto-fit minmax stacks them on narrower viewports.
+          Heights are independent — top-aligned, no stretching. */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
+          gap: 16,
+          alignItems: "start",
+          marginBottom: 16,
+        }}
+      >
+        <div
+          style={{
+            background: "var(--ds-background-100)",
+            borderRadius: 6,
+            boxShadow:
+              "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 8px -8px",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              padding: "4px 20px 0",
+              borderBottom: "1px solid var(--ds-gray-400)",
+            }}
+          >
+            <div
+              role="tablist"
+              aria-label="Emotion breakdown tabs"
+              style={{
+                display: "flex",
+                alignItems: "baseline",
+                gap: 24,
+                marginRight: "auto",
+              }}
+            >
+              <button
+                type="button"
+                role="tab"
+                aria-selected="true"
+                style={{
+                  appearance: "none",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "default",
+                  padding: "14px 2px",
+                  fontSize: 14,
+                  fontWeight: 400,
+                  color: "var(--ds-gray-1000)",
+                  borderBottom: "2px solid var(--ds-gray-1000)",
+                  marginBottom: -1,
+                }}
+              >
+                Emotions
+              </button>
+            </div>
+            <span
+              style={{
+                minWidth: 50,
+                textAlign: "right",
+                fontSize: 12,
+                lineHeight: "16px",
+                fontWeight: 500,
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+                color: "var(--ds-gray-900)",
+              }}
+            >
+              Feedback
+            </span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 16,
+              padding: "16px 20px",
+            }}
+          >
             <CategoryBar
               label="Love it"
               count={currentLove}
@@ -931,26 +1010,16 @@ export async function FeedbackDashboardContent({
               total={currentCount}
             />
           </div>
-        </PanelCard>
-      </div>
+        </div>
 
-      {/* Top pages — modelled on Vercel Analytics' leaderboard panel.
-          Custom chrome (box-shadow + 6px radius, no border) instead
-          of PanelCard so the tab-style header sits on a bottom rule
-          flush with the panel edge. Tab strip on the left (single
-          "Pages" tab today, room for Routes/Hostnames later) +
-          right-aligned "FEEDBACK" column header. Hidden when the
-          window has rows but none carry a page_path. */}
-      {pageGroups.length > 0 && (
+        {/* Top pages — same chrome as the Emotions panel above.
+            Hidden when the window has rows but none carry a
+            page_path. */}
+        {pageGroups.length > 0 && (
         <div
           style={{
-            marginBottom: 16,
             background: "var(--ds-background-100)",
             borderRadius: 6,
-            // Layered box-shadow: hairline ring + soft drop + secondary
-            // outer ring. Matches Vercel's leaderboard panel exactly
-            // and avoids the double-border problem flagged in the
-            // material-class memory.
             boxShadow:
               "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 8px -8px",
             overflow: "hidden",
@@ -1029,7 +1098,8 @@ export async function FeedbackDashboardContent({
             ))}
           </div>
         </div>
-      )}
+        )}
+      </div>
 
       <RecentFeedbackTable
         rows={recent}
@@ -1110,15 +1180,51 @@ export function FeedbackDashboardSkeleton() {
         <div style={{ height: 400, background: "var(--ds-background-100)" }} />
       </div>
 
-      <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-emotion breakdown">
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <Skeleton width="100%" height={24} style={block} />
-            <Skeleton width="100%" height={24} style={block} />
-            <Skeleton width="100%" height={24} style={block} />
-            <Skeleton width="100%" height={24} style={block} />
+      {/* Per-emotion + Top pages share a row in the real dashboard;
+          mirror the same grid here so the skeleton previews the right
+          shape. Two flat panels with the leaderboard chrome, stacked
+          on narrow viewports via auto-fit minmax. */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
+          gap: 16,
+          alignItems: "start",
+          marginBottom: 16,
+        }}
+      >
+        {[0, 1].map((i) => (
+          <div
+            key={i}
+            style={{
+              background: "var(--ds-background-100)",
+              borderRadius: 6,
+              boxShadow:
+                "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 8px -8px",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                height: 49,
+                borderBottom: "1px solid var(--ds-gray-400)",
+              }}
+            />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 16,
+                padding: "16px 20px",
+              }}
+            >
+              <Skeleton width="100%" height={24} style={block} />
+              <Skeleton width="100%" height={24} style={block} />
+              <Skeleton width="100%" height={24} style={block} />
+              <Skeleton width="100%" height={24} style={block} />
+            </div>
           </div>
-        </PanelCard>
+        ))}
       </div>
 
       <PanelCard title="Recent feedback">
