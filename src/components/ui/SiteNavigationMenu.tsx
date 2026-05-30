@@ -174,10 +174,8 @@ export const raceLinks: ReadonlyArray<CategoryItem> = [
 //
 // Direct links to each section index — no mega-menu for now (the
 // editorial 3-column dropdown lands in a follow-up pass). Each link
-// renders as a Frontify-style pill: at rest it's plain text in the
-// pill's warm background; on hover/focus the chip pops to the same
-// warm tone at full opacity (#f0f0eb), matching the parent pill's
-// translucent bg pulled up to 100%.
+// renders as a Frontify-style pill chip: text-only at rest, with a
+// gray-200 chip surfacing on hover/focus.
 
 const NAV_LINKS = [
   { label: "News", href: "/articles" },
@@ -191,12 +189,11 @@ const NAV_LINKS = [
 //   - 14 px / 500 / 21 lh
 //   - padding 8 px / 16 px (h-9 = 36 px total)
 //   - rounded-full so the hover bg reads as a true pill
-//   - hover/focus uses bg-[var(--ds-gray-200)] — a step deeper than
-//     bg-200 (FAFAFA) so the chip reads clearly against the elevated
-//     pill (bg-100, white) without going into "selected" territory.
-//     gray-200 is the Geist "component background" hue and flips
-//     correctly in dark mode (becomes a visible light overlay on the
-//     near-black pill).
+//   - hover/focus uses bg-[var(--ds-gray-200)] — the Geist "component
+//     background" hue, a step deeper than the parent pill's
+//     translucent bg-200 fill so the chip pops without going into
+//     "selected" territory. Flips correctly in dark mode (becomes a
+//     visible light overlay on the near-black pill).
 //   - `group` so the chevron after the label can react to the link's
 //     own hover/focus state
 const NAV_LINK_CLASS =
@@ -212,12 +209,7 @@ export default function SiteNavigationMenu() {
   return (
     <nav aria-label="Primary" className="flex items-center gap-1">
       {NAV_LINKS.map((link) => (
-        <Link
-          key={link.href}
-          href={link.href}
-          className={NAV_LINK_CLASS}
-          data-nav-trigger
-        >
+        <Link key={link.href} href={link.href} className={NAV_LINK_CLASS}>
           {link.label}
           <ChevronDown className={CHEVRON_CLASS} aria-hidden="true" />
         </Link>
