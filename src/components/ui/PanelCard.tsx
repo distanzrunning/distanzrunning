@@ -24,12 +24,26 @@ export interface PanelCardProps {
   action?: ReactNode;
   /** Card body */
   children: ReactNode;
+  /** Border radius variant.
+   *  - `xl` (default, 12 px) — the standard admin panel.
+   *  - `md` (6 px) — tighter; use when pairing the card with the
+   *    Vercel-style leaderboard chrome elsewhere on the page so
+   *    the panel radii line up. */
+  radius?: "md" | "xl";
 }
 
-export function PanelCard({ title, action, children }: PanelCardProps) {
+export function PanelCard({
+  title,
+  action,
+  children,
+  radius = "xl",
+}: PanelCardProps) {
   const hasHeader = title != null || action != null;
+  const radiusClass = radius === "md" ? "rounded-md" : "rounded-xl";
   return (
-    <section className="flex flex-col gap-4 p-6 rounded-xl bg-[color:var(--ds-background-100)] border border-[color:var(--ds-gray-400)]">
+    <section
+      className={`flex flex-col gap-4 p-6 ${radiusClass} bg-[color:var(--ds-background-100)] border border-[color:var(--ds-gray-400)]`}
+    >
       {hasHeader && (
         <header className="flex justify-between items-center">
           {title != null ? (

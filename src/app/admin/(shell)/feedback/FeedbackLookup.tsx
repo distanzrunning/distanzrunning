@@ -54,7 +54,7 @@ export async function FeedbackLookupContent({
 
   if (rows.length === 0) {
     return (
-      <PanelCard title="Matching feedback">
+      <PanelCard title="Matching feedback" radius="md">
         <EmptyState live>
           <EmptyStateIcon>
             <Search />
@@ -73,6 +73,7 @@ export async function FeedbackLookupContent({
   return (
     <PanelCard
       title={`Matching feedback (${rows.length}${rows.length === 100 ? "+" : ""})`}
+      radius="md"
     >
       <Table>
         <TableHeader>
@@ -169,7 +170,7 @@ export async function FeedbackLookupContent({
 
 export function FeedbackLookupSkeleton({ query }: { query: string }) {
   return (
-    <PanelCard title={`Matching feedback for “${query}”`}>
+    <PanelCard title={`Matching feedback for “${query}”`} radius="md">
       <div style={{ padding: 24 }} aria-busy="true" aria-live="polite">
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {Array.from({ length: 5 }).map((_, i) => (

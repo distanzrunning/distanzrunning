@@ -492,7 +492,7 @@ function RecentFeedbackTable({
 }) {
   if (rows.length === 0) {
     return (
-      <PanelCard title={title}>
+      <PanelCard title={title} radius="md">
         <EmptyState live>
           <EmptyStateIcon>
             <Inbox />
@@ -510,7 +510,7 @@ function RecentFeedbackTable({
     );
   }
   return (
-    <PanelCard title={title}>
+    <PanelCard title={title} radius="md">
       <Table>
         <TableHeader>
           <TableRow>
@@ -915,7 +915,10 @@ export async function FeedbackDashboardContent({
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
           gap: 16,
-          alignItems: "start",
+          // align-items: stretch (default) so both panels match the
+          // tallest row — the Pages panel gets empty space below the
+          // last row when Emotions is taller, and vice versa. Looks
+          // tidier than the ragged-right top alignment.
           marginBottom: 16,
         }}
       >
@@ -1189,7 +1192,6 @@ export function FeedbackDashboardSkeleton() {
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
           gap: 16,
-          alignItems: "start",
           marginBottom: 16,
         }}
       >
@@ -1227,7 +1229,7 @@ export function FeedbackDashboardSkeleton() {
         ))}
       </div>
 
-      <PanelCard title="Recent feedback">
+      <PanelCard title="Recent feedback" radius="md">
         <Table>
           <TableHeader>
             <TableRow>
