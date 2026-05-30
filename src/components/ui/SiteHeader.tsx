@@ -10,7 +10,10 @@ import {
   NewsletterModal,
   preloadNewsletterHero,
 } from "@/components/ui/NewsletterModal";
-import SiteNavigationMenu, {
+import {
+  SiteNavigationMenuRoot,
+  SiteNavigationMenuTriggers,
+  SiteNavigationMenuViewport,
   type FeaturedProduct,
   type FeaturedRace,
 } from "@/components/ui/SiteNavigationMenu";
@@ -105,36 +108,45 @@ export default function SiteHeader({
       {/* Outer wrapper: fixed, full-bleed, with a 64 px gutter on each
           side (Frontify spec). pointer-events-none keeps the gutter
           transparent to clicks so page content beneath the floating
-          pill stays interactive in those margins. */}
+          pill stays interactive in those margins.
+
+          SiteNavigationMenuRoot wraps BOTH the trigger row (rendered
+          inside the pill, beside the wordmark) AND the mega-menu
+          Viewport (rendered as a sibling of the pill, absolutely
+          positioned below it). Both must live in the same
+          NavigationMenu.Root subtree so Radix can wire them together
+          — the Root contributes no DOM box of its own (className
+          "contents" inside SiteNavigationMenuRoot), so the pill and
+          Viewport flow as siblings inside this fixed wrapper. */}
       <div className="pointer-events-none fixed inset-x-0 top-4 z-40 px-16">
-        {/* The pill: max-width capped, centred, re-enables pointer
-            events for its own surface. h-[72px] + p-4 + rounded-[8px]
-            matches the Frontify reference.
-
-            Rest fill = page bg at 80% opacity (rgba on bg-200-rgb,
-            theme-flipping). On a plain page section the pill is
-            mathematically identical to the page (same tone, blur of
-            uniform = uniform) so it reads as invisible at rest. The
-            moment any non-uniform content (hero photo, dark section,
-            cards) sits inside the blur(200px) kernel's reach, that
-            content gets sampled and smeared across the entire pill
-            surface — the whole pill picks up a wash and becomes
-            visibly distinct from the page. blur(200px) is huge on
-            purpose: the radius exceeds the pill's own width, so the
-            filter averages a viewport-wide neighbourhood per pixel,
-            which produces the propagation effect.
-
-            Hover lift: when a descendant carrying [data-nav-trigger]
-            is hovered (nav links + Search), the pill flips to opaque
-            bg-100. Gives the navbar a clear "yes, this is a real
-            surface" affordance on plain page bg where the rest
-            state is invisible. Subscribe is excluded — it's a primary
-            CTA, not a nav trigger, so its filled-black hover should
-            not chameleon the surrounding pill. 260 ms ease-out keeps
-            the transition smooth enough to read as deliberate. */}
-        <header
-          className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[rgba(var(--ds-background-200-rgb),0.8)] p-4 transition-colors duration-[260ms] ease-out has-[[data-nav-trigger]:hover]:bg-[var(--ds-background-100)] [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]"
-        >
+        <SiteNavigationMenuRoot
+          triggers={
+            // The pill: max-width capped, centred, re-enables pointer
+            // events for its own surface. h-[72px] + p-4 + rounded-[8px]
+            // matches the Frontify reference.
+            //
+            // Rest fill = page bg at 80% opacity (rgba on bg-200-rgb,
+            // theme-flipping). On a plain page section the pill is
+            // mathematically identical to the page (same tone, blur of
+            // uniform = uniform) so it reads as invisible at rest. The
+            // moment any non-uniform content (hero photo, dark section,
+            // cards) sits inside the blur(200px) kernel's reach, that
+            // content gets sampled and smeared across the entire pill
+            // surface — the whole pill picks up a wash and becomes
+            // visibly distinct from the page. blur(200px) is huge on
+            // purpose: the radius exceeds the pill's own width, so the
+            // filter averages a viewport-wide neighbourhood per pixel,
+            // which produces the propagation effect.
+            //
+            // Hover lift: when a descendant carrying [data-nav-trigger]
+            // is hovered (nav links + Search), the pill flips to opaque
+            // bg-100. Gives the navbar a clear "yes, this is a real
+            // surface" affordance on plain page bg where the rest
+            // state is invisible. Subscribe is excluded — it's a primary
+            // CTA, not a nav trigger, so its filled-black hover should
+            // not chameleon the surrounding pill. 260 ms ease-out keeps
+            // the transition smooth enough to read as deliberate.
+            <header className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[rgba(var(--ds-background-200-rgb),0.8)] p-4 transition-colors duration-[260ms] ease-out has-[[data-nav-trigger]:hover]:bg-[var(--ds-background-100)] [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]">
           {/* Left group: wordmark + primary nav sitting beside it
               (Frontify pattern). Replaces the absolute-centred nav of
               the prior version — left alignment puts visual weight
@@ -153,7 +165,13 @@ export default function SiteHeader({
               <Wordmark className="h-7 w-auto" />
             </Link>
             <div className="hidden md:block">
-              <SiteNavigationMenu />
+              <SiteNavigationMenuTriggers
+                featuredNews={featuredNews}
+                featuredShoe={featuredShoe}
+                featuredGear={featuredGear}
+                featuredNutrition={featuredNutrition}
+                featuredRace={featuredRace}
+              />
             </div>
           </div>
 
@@ -238,6 +256,27 @@ export default function SiteHeader({
             </button>
           </div>
         </header>
+          }
+          viewport={
+            // Viewport sits absolutely below the pill, centred to the
+            // same 1600 px max-width so its left/right edges align
+            // with the pill's. top-[88px] = pill height (72) + the
+            // outer top-4 offset (16). pointer-events-auto on the
+            // inner wrapper re-enables interaction (the outer fixed
+            // wrapper sets pointer-events-none for the gutter).
+            //
+            // mx-auto + max-w-[1600px] gives the panel the same
+            // horizontal extent as the pill. The Viewport itself
+            // measures the active Content and exposes its height as
+            // --radix-navigation-menu-viewport-height — see
+            // SiteNavigationMenuViewport for the chrome.
+            <div className="pointer-events-none absolute inset-x-0 top-[88px] z-40 px-16">
+              <div className="pointer-events-auto mx-auto max-w-[1600px]">
+                <SiteNavigationMenuViewport />
+              </div>
+            </div>
+          }
+        />
       </div>
 
       <MobileNavDrawer
