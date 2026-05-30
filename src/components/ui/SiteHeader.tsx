@@ -107,13 +107,15 @@ export default function SiteHeader({
             matches the Frontify reference. At rest the pill sits on
             bg-200 so it blends tonally with the page; on hover it
             pops to bg-100 via a 260 ms ease-out transition — the
-            Frontify chameleon pattern. The :hover selector fires
-            whenever the cursor is anywhere inside the pill bounds
-            (over nav links, the Subscribe button, search, or empty
-            whitespace), so any descendant hover lifts the whole
-            surface as a single floating element. */}
+            Frontify chameleon pattern. Selective trigger: the pill
+            only lifts to bg-100 when a descendant carrying
+            [data-nav-trigger] is hovered (nav links + Search). The
+            Subscribe button is deliberately excluded — it's a primary
+            CTA, not a nav trigger, so cursoring onto its filled-black
+            chip should not chameleon the surrounding pill. Whitespace
+            inside the pill is inert by the same rule. */}
         <header
-          className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[var(--ds-background-200)] p-4 transition-colors duration-[260ms] ease-out hover:bg-[var(--ds-background-100)] [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]"
+          className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[var(--ds-background-200)] p-4 transition-colors duration-[260ms] ease-out has-[[data-nav-trigger]:hover]:bg-[var(--ds-background-100)] [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]"
         >
           {/* Left group: wordmark + primary nav sitting beside it
               (Frontify pattern). Replaces the absolute-centred nav of
@@ -156,13 +158,13 @@ export default function SiteHeader({
                 aria-label="Open search"
                 title="Search (⌘K)"
                 onClick={openSearch}
+                data-nav-trigger
+                className="hover:!bg-[var(--ds-gray-200)]"
               >
                 <SearchIcon className="size-4" />
               </IconButton>
               <Button
                 size="medium"
-                variant="secondary"
-                className="!bg-[var(--ds-background-200)] hover:!bg-[var(--ds-gray-100)]"
                 onClick={() => openNewsletter(newsletterSource)}
                 onMouseEnter={preloadNewsletterHero}
                 onFocus={preloadNewsletterHero}
