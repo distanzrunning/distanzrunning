@@ -392,7 +392,17 @@ export function SiteNavigationMenuTriggers({
             // which direction the user moved between triggers — we
             // bind the same fade to every direction so section
             // switches feel continuous instead of jumpy.
+            //
+            // p-4 lives HERE (not on the Viewport) because Radix
+            // measures the Content's outer box to populate
+            // --radix-navigation-menu-viewport-height. If the
+            // Viewport carries the padding, box-sizing:border-box
+            // makes the Viewport `height = measured` but with 16 px
+            // eaten from each edge — and the Content that is
+            // `measured` tall gets clipped. Putting the padding on
+            // the measured element keeps both numbers in sync.
             className={cn(
+              "p-4",
               "data-[motion=from-end]:animate-in data-[motion=from-end]:fade-in-0",
               "data-[motion=from-start]:animate-in data-[motion=from-start]:fade-in-0",
               "data-[motion=to-end]:animate-out data-[motion=to-end]:fade-out-0",
@@ -439,12 +449,21 @@ export function SiteNavigationMenuViewport() {
     <NavigationMenuPrimitive.Viewport
       className={cn(
         "relative w-full overflow-hidden",
-        "rounded-[8px] bg-[var(--ds-background-100)] p-4",
+        "rounded-[8px] bg-[var(--ds-background-100)]",
         "shadow-[var(--ds-shadow-menu)]",
         "h-[var(--radix-navigation-menu-viewport-height)]",
-        "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
-        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
-        "duration-200",
+        // Smooth resize between sections of different heights.
+        // Without this the Viewport jumps from one section's height
+        // to the next and reads as a flicker rather than a content
+        // swap. The Content fade and the Viewport resize now share
+        // the same 200 ms easing so they animate in lockstep.
+        "transition-[height,width] duration-200 ease-out",
+        // Open/close animations are FADE ONLY — dropped zoom-in/out
+        // so an open→closed→open cycle (which can fire briefly when
+        // the cursor passes over a non-trigger gap) doesn't read as
+        // the whole panel jumping in and out. Just a soft fade.
+        "data-[state=open]:animate-in data-[state=open]:fade-in-0",
+        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
       )}
     />
   );
