@@ -44,7 +44,7 @@ export default async function LayoutContent({
   // Hide footer on the calendar page (fullscreen app-like view)
   const isCalendarPage = pathname === "/races/calendar";
 
-  if (isPreviewMode || isLoginPage || isAdmin || isComingSoon || isHome) {
+  if (isPreviewMode || isLoginPage || isAdmin || isComingSoon) {
     return <main className="min-h-screen">{children}</main>;
   }
 
@@ -53,6 +53,19 @@ export default async function LayoutContent({
   //   dark  → bg-200 (#000000 primary canvas)
   const chromeClass =
     "flex min-h-screen flex-col bg-[var(--ds-background-100)] dark:bg-[var(--ds-background-200)]";
+
+  // Homepage gets the SiteHeader (so we can iterate on the new
+  // floating-pill chrome in context) but skips the PageFrame and the
+  // footer — a blank canvas under the navbar. Other public routes
+  // continue to get the full chrome (header + PageFrame + footer).
+  if (isHome) {
+    return (
+      <div className={chromeClass}>
+        {header}
+        <main className="flex flex-1 flex-col">{children}</main>
+      </div>
+    );
+  }
 
   return (
     <div className={chromeClass}>
