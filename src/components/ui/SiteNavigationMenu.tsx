@@ -415,9 +415,15 @@ export function SiteNavigationMenuRoot({
           - The panel wrapper inside gets mt-4 to bridge the visible
             16 px between pill and panel — both halves are inside the
             wrapper, so the cursor never leaves the bridge while
-            traversing either gap. */}
+            traversing either gap.
+          - `group` + `data-state={open|closed}` lets descendants
+            (the floating pill in SiteHeader) react to the menu's
+            open state via `group-data-[state=open]:…`. We use that
+            to keep the pill chameleon lit (bg-100) the entire time
+            the menu is open, not just while a trigger is hovered. */}
       <div
-        className="pointer-events-auto mx-auto max-w-[1600px] pt-4"
+        className="group pointer-events-auto mx-auto max-w-[1600px] pt-4"
+        data-state={isOpen ? "open" : "closed"}
         onPointerEnter={() => {
           cursorInBridgeRef.current = true;
         }}
