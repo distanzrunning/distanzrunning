@@ -133,7 +133,15 @@ export default function MegaMenuPanel({
         <p className="pl-2 text-heading-14 text-[color:var(--ds-gray-900)]">
           Categories
         </p>
-        <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2">
+        {/* grid-flow-col + grid-rows-4 fills column-by-column: the
+            first column packs up to 4 links before any spill into
+            column 2. Default row-major flow would interleave the
+            two columns (1,2,3,4,5 → col1 col2 col1 col2 col1), which
+            looks lopsided for sections like News with only 3 links.
+            Caps at 8 items per panel — beyond that, auto-flow would
+            create a 3rd column we haven't sized for. Largest section
+            today is shoes with 5 links, well under the cap. */}
+        <div className="mt-3 grid grid-cols-2 grid-rows-4 grid-flow-col gap-x-4 gap-y-2">
           {links.map((item) => (
             <NavigationMenuPrimitive.Link asChild key={item.href}>
               <Link
