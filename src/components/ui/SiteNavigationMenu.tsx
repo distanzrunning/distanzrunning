@@ -276,7 +276,11 @@ const SECTIONS: ReadonlyArray<SectionDef> = [
 //     the panel.
 
 const TRIGGER_CLASS = cn(
-  "group inline-flex h-9 items-center gap-1.5 rounded-full px-4 py-2",
+  // Named group `group/trigger` so the chevron can target THIS
+  // element's hover / focus / data-state without colliding with the
+  // outer `group/menu` on the bridge wrapper (which also carries
+  // data-state=open for the whole-menu open flag).
+  "group/trigger inline-flex h-9 items-center gap-1.5 rounded-full px-4 py-2",
   "text-[14px] leading-[21px] font-medium",
   "text-[color:var(--ds-gray-1000)]",
   "transition-colors",
@@ -286,12 +290,15 @@ const TRIGGER_CLASS = cn(
 );
 
 // Chevron — 16 px (size-4), rotates 180° on hover, focus, or open.
-// data-state lives on the Trigger (the group), so we read it via the
-// group's data attribute, not the chevron's own data-state.
+// All three selectors target the named /trigger group so the chevron
+// only reacts to ITS OWN trigger's state. Without the name, the bare
+// `group-*` selectors would also match the bridge wrapper (which is
+// `group/menu` + data-state=open while ANY section is open) — and
+// every chevron in the row would rotate at the same time.
 const CHEVRON_CLASS = cn(
   "size-4 transition-transform duration-[220ms] ease-out",
-  "group-hover:rotate-180 group-focus-visible:rotate-180",
-  "group-data-[state=open]:rotate-180",
+  "group-hover/trigger:rotate-180 group-focus-visible/trigger:rotate-180",
+  "group-data-[state=open]/trigger:rotate-180",
 );
 
 // ============================================================================
@@ -416,13 +423,16 @@ export function SiteNavigationMenuRoot({
             16 px between pill and panel — both halves are inside the
             wrapper, so the cursor never leaves the bridge while
             traversing either gap.
-          - `group` + `data-state={open|closed}` lets descendants
-            (the floating pill in SiteHeader) react to the menu's
-            open state via `group-data-[state=open]:…`. We use that
-            to keep the pill chameleon lit (bg-100) the entire time
-            the menu is open, not just while a trigger is hovered. */}
+          - `group/menu` + `data-state={open|closed}` lets the pill
+            in SiteHeader react to the menu's open state via
+            `group-data-[state=open]/menu:…` — keeps the pill
+            chameleon (bg-100) lit the entire time the menu is open,
+            not just while a trigger is hovered. NAMED group is
+            required: each Trigger is `group/trigger` for its own
+            chevron rotation, and unnamed `group-*` selectors match
+            ANY ancestor with `group`, which would conflate the two. */}
       <div
-        className="group pointer-events-auto mx-auto max-w-[1600px] pt-4"
+        className="group/menu pointer-events-auto mx-auto max-w-[1600px] pt-4"
         data-state={isOpen ? "open" : "closed"}
         onPointerEnter={() => {
           cursorInBridgeRef.current = true;
