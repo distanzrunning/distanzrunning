@@ -137,39 +137,54 @@
        ═══════════════════════════════════════════════════════════════════════ */
 
     /* ─────────────────────────────────────────────────────────────────────────
-       BACKGROUND SCALE - Canvas and surface colors (Geist)
-       ───────────────────────────────────────────────────────────────────────── */
-    --ds-background-100: hsl(0, 0%, 100%); /* #FFFFFF - Primary canvas */
-    --ds-background-200: hsl(0, 0%, 98%); /* #FAFAFA - Secondary surface */
+       BACKGROUND SCALE — Apple "base + elevated" framework
+       ─────────────────────────────────────────────────────────────────────────
+       background-200 = canvas (page floor — dimmer, recedes)
+       background-100 = elevated surface (cards/sheets — brighter, advances)
+       Visible Δ between them so cards lift off the canvas naturally
+       (was 2 L pts — invisible; now 5 L pts). */
+    --ds-background-100: hsl(0, 0%, 100%);  /* #FFFFFF - elevated card */
+    --ds-background-200: hsl(0, 0%, 96%);   /* #F5F5F5 - page canvas */
 
-    /* RGB fallbacks for Tailwind opacity support */
     --ds-background-100-rgb: 255, 255, 255;
-    --ds-background-200-rgb: 250, 250, 250;
+    --ds-background-200-rgb: 245, 245, 245;
 
     /* ─────────────────────────────────────────────────────────────────────────
-       GRAY SCALE - Pure neutral scale (100-1000) - Geist colors
-       ───────────────────────────────────────────────────────────────────────── */
-    --ds-gray-100: hsl(0, 0%, 95%); /* #F2F2F2 - Lightest */
-    --ds-gray-200: hsl(0, 0%, 92%); /* #EBEBEB - Light backgrounds */
-    --ds-gray-300: hsl(0, 0%, 90%); /* #E6E6E6 - Hover states */
-    --ds-gray-400: hsl(0, 0%, 92%); /* #EBEBEB - Subtle borders */
-    --ds-gray-500: hsl(0, 0%, 79%); /* #C9C9C9 - Default borders */
-    --ds-gray-600: hsl(0, 0%, 66%); /* #A8A8A8 - Prominent borders */
-    --ds-gray-700: hsl(0, 0%, 56%); /* #8F8F8F - High contrast bg */
-    --ds-gray-800: hsl(0, 0%, 49%); /* #7D7D7D - Solid fills */
-    --ds-gray-900: hsl(0, 0%, 40%); /* #666666 - Secondary text */
-    --ds-gray-1000: hsl(0, 0%, 9%); /* #171717 - Primary text */
+       GRAY SCALE — monotonic, role-aware (Geist + Material guidance)
+       ─────────────────────────────────────────────────────────────────────────
+         100 → subtle component bg            (Color 1)
+         200 → hover bg                       (Color 2)
+         300 → active bg                      (Color 3)
+         400 → DEFAULT BORDER (visibly distinct from 300) (Color 4)
+         500 → prominent border / hover border (Color 5)
+         600 → muted text / disabled          (Color 6)
+         700 → secondary text / sub-titles    (Color 7)
+         800 → solid neutral fills            (Color 8)
+         900 → body text                      (Color 9)
+         1000 → primary text / ink            (Color 10)
+       Previously: gray-200 and gray-400 were both #EBEBEB so borders
+       vanished on component bgs. Now monotonic with a real ~7-pt L
+       drop into gray-400 for visible borders. */
+    --ds-gray-100: hsl(0, 0%, 94%);   /* #F0F0F0 */
+    --ds-gray-200: hsl(0, 0%, 92%);   /* #EBEBEB */
+    --ds-gray-300: hsl(0, 0%, 87%);   /* #DEDEDE */
+    --ds-gray-400: hsl(0, 0%, 83%);   /* #D4D4D4 - DEFAULT BORDER */
+    --ds-gray-500: hsl(0, 0%, 70%);   /* #B3B3B3 */
+    --ds-gray-600: hsl(0, 0%, 60%);   /* #999999 */
+    --ds-gray-700: hsl(0, 0%, 56%);   /* #8F8F8F */
+    --ds-gray-800: hsl(0, 0%, 30%);   /* #4D4D4D */
+    --ds-gray-900: hsl(0, 0%, 20%);   /* #333333 */
+    --ds-gray-1000: hsl(0, 0%, 9%);   /* #171717 */
 
-    /* RGB fallbacks for Tailwind opacity support */
-    --ds-gray-100-rgb: 242, 242, 242;
+    --ds-gray-100-rgb: 240, 240, 240;
     --ds-gray-200-rgb: 235, 235, 235;
-    --ds-gray-300-rgb: 230, 230, 230;
-    --ds-gray-400-rgb: 235, 235, 235;
-    --ds-gray-500-rgb: 201, 201, 201;
-    --ds-gray-600-rgb: 168, 168, 168;
+    --ds-gray-300-rgb: 222, 222, 222;
+    --ds-gray-400-rgb: 212, 212, 212;
+    --ds-gray-500-rgb: 179, 179, 179;
+    --ds-gray-600-rgb: 153, 153, 153;
     --ds-gray-700-rgb: 143, 143, 143;
-    --ds-gray-800-rgb: 125, 125, 125;
-    --ds-gray-900-rgb: 102, 102, 102;
+    --ds-gray-800-rgb: 77, 77, 77;
+    --ds-gray-900-rgb: 51, 51, 51;
     --ds-gray-1000-rgb: 23, 23, 23;
 
     /* ─────────────────────────────────────────────────────────────────────────
@@ -657,32 +672,42 @@
        ───────────────────────────────────────────────────────────────────────── */
 
     /* Background Scale - Dark mode */
-    --ds-background-100: hsl(0, 0%, 4%); /* #0A0A0A - Elevated surface */
-    --ds-background-200: hsl(0, 0%, 0%); /* #000000 - Primary canvas (black) */
+    /* Dark backgrounds — Material recommended base (#121212) + elevation
+       overlay per Material spec. Drops pure black (#000) per Material/Apple/
+       NN-G guidance (eliminates depth perception, halation around text).
+         bg-200 = #121212 (base canvas — Material recommended dark surface)
+         bg-100 = #1F1F1F (~2dp elevated card, ~7% white overlay on base)
+       8-pt L lift between them vs the old 4-pt lift = visible elevation. */
+    --ds-background-100: hsl(0, 0%, 12%);  /* #1F1F1F - elevated card */
+    --ds-background-200: hsl(0, 0%, 7%);   /* #121212 - canvas (Material) */
+
+    --ds-background-100-rgb: 31, 31, 31;
+    --ds-background-200-rgb: 18, 18, 18;
+
+    /* Gray Scale — dark mode, monotonic, role-aware
+       Same role mapping as light mode:
+         100-300 → progressively-lifted bg tints (vs bg-100)
+         400 → DEFAULT BORDER (visibly distinct from 300)
+         500-700 → muted/secondary text
+         800-1000 → primary text (lightest = ink in dark) */
+    --ds-gray-100: hsl(0, 0%, 15%);   /* #262626 - subtle bg overlay */
+    --ds-gray-200: hsl(0, 0%, 18%);   /* #2E2E2E - hover bg */
+    --ds-gray-300: hsl(0, 0%, 22%);   /* #383838 - active bg */
+    --ds-gray-400: hsl(0, 0%, 27%);   /* #454545 - DEFAULT BORDER */
+    --ds-gray-500: hsl(0, 0%, 35%);   /* #595959 */
+    --ds-gray-600: hsl(0, 0%, 45%);   /* #737373 */
+    --ds-gray-700: hsl(0, 0%, 56%);   /* #8F8F8F */
+    --ds-gray-800: hsl(0, 0%, 70%);   /* #B3B3B3 */
+    --ds-gray-900: hsl(0, 0%, 83%);   /* #D4D4D4 */
+    --ds-gray-1000: hsl(0, 0%, 93%);  /* #EDEDED - ink in dark */
 
     /* RGB fallbacks */
-    --ds-background-100-rgb: 10, 10, 10;
-    --ds-background-200-rgb: 0, 0, 0;
-
-    /* Gray Scale - Dark mode (Geist exact values) */
-    --ds-gray-100: hsl(0, 0%, 10%); /* #1A1A1A */
-    --ds-gray-200: hsl(0, 0%, 12%); /* #1F1F1F */
-    --ds-gray-300: hsl(0, 0%, 16%); /* #292929 */
-    --ds-gray-400: hsl(0, 0%, 18%); /* #2E2E2E */
-    --ds-gray-500: hsl(0, 0%, 27%); /* #454545 */
-    --ds-gray-600: hsl(0, 0%, 53%); /* #878787 */
-    --ds-gray-700: hsl(0, 0%, 56%); /* #8F8F8F */
-    --ds-gray-800: hsl(0, 0%, 49%); /* #7D7D7D */
-    --ds-gray-900: hsl(0, 0%, 63%); /* #A1A1A1 */
-    --ds-gray-1000: hsl(0, 0%, 93%); /* #EDEDED */
-
-    /* RGB fallbacks */
-    --ds-gray-100-rgb: 26, 26, 26;
-    --ds-gray-200-rgb: 31, 31, 31;
-    --ds-gray-300-rgb: 41, 41, 41;
-    --ds-gray-400-rgb: 46, 46, 46;
-    --ds-gray-500-rgb: 69, 69, 69;
-    --ds-gray-600-rgb: 135, 135, 135;
+    --ds-gray-100-rgb: 38, 38, 38;
+    --ds-gray-200-rgb: 46, 46, 46;
+    --ds-gray-300-rgb: 56, 56, 56;
+    --ds-gray-400-rgb: 69, 69, 69;
+    --ds-gray-500-rgb: 89, 89, 89;
+    --ds-gray-600-rgb: 115, 115, 115;
     --ds-gray-700-rgb: 143, 143, 143;
     --ds-gray-800-rgb: 125, 125, 125;
     --ds-gray-900-rgb: 161, 161, 161;
