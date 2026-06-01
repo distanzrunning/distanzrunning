@@ -137,14 +137,15 @@
        ═══════════════════════════════════════════════════════════════════════ */
 
     /* ─────────────────────────────────────────────────────────────────────────
-       BACKGROUND SCALE — Apple "base + elevated" framework
+       BACKGROUND SCALE — Geist convention
        ─────────────────────────────────────────────────────────────────────────
-       background-200 = canvas (page floor — dimmer, recedes)
-       background-100 = elevated surface (cards/sheets — brighter, advances)
-       Visible Δ between them so cards lift off the canvas naturally
-       (was 2 L pts — invisible; now 5 L pts). */
-    --ds-background-100: hsl(0, 0%, 100%);  /* #FFFFFF - elevated card */
-    --ds-background-200: hsl(0, 0%, 96%);   /* #F5F5F5 - page canvas */
+       bg-100 = default canvas (the dominant surface, used most often)
+       bg-200 = secondary differentiation (used sparingly — sections,
+                callout backgrounds, where you want subtle contrast)
+       In dark mode bg-100 = Material's recommended #121212 base; bg-200
+       lifts via white overlay (~7% = #1F1F1F) for "subtle differentiation". */
+    --ds-background-100: hsl(0, 0%, 100%);  /* #FFFFFF - default canvas */
+    --ds-background-200: hsl(0, 0%, 96%);   /* #F5F5F5 - sparingly */
 
     --ds-background-100-rgb: 255, 255, 255;
     --ds-background-200-rgb: 245, 245, 245;
@@ -167,8 +168,8 @@
        drop into gray-400 for visible borders. */
     --ds-gray-100: hsl(0, 0%, 94%);   /* #F0F0F0 */
     --ds-gray-200: hsl(0, 0%, 92%);   /* #EBEBEB */
-    --ds-gray-300: hsl(0, 0%, 87%);   /* #DEDEDE */
-    --ds-gray-400: hsl(0, 0%, 83%);   /* #D4D4D4 - DEFAULT BORDER */
+    --ds-gray-300: hsl(0, 0%, 90%);   /* #E5E5E5 */
+    --ds-gray-400: hsl(0, 0%, 86%);   /* #DCDCDC - DEFAULT BORDER (subtler) */
     --ds-gray-500: hsl(0, 0%, 70%);   /* #B3B3B3 */
     --ds-gray-600: hsl(0, 0%, 60%);   /* #999999 */
     --ds-gray-700: hsl(0, 0%, 56%);   /* #8F8F8F */
@@ -178,8 +179,8 @@
 
     --ds-gray-100-rgb: 240, 240, 240;
     --ds-gray-200-rgb: 235, 235, 235;
-    --ds-gray-300-rgb: 222, 222, 222;
-    --ds-gray-400-rgb: 212, 212, 212;
+    --ds-gray-300-rgb: 229, 229, 229;
+    --ds-gray-400-rgb: 220, 220, 220;
     --ds-gray-500-rgb: 179, 179, 179;
     --ds-gray-600-rgb: 153, 153, 153;
     --ds-gray-700-rgb: 143, 143, 143;
@@ -672,17 +673,17 @@
        ───────────────────────────────────────────────────────────────────────── */
 
     /* Background Scale - Dark mode */
-    /* Dark backgrounds — Material recommended base (#121212) + elevation
-       overlay per Material spec. Drops pure black (#000) per Material/Apple/
-       NN-G guidance (eliminates depth perception, halation around text).
-         bg-200 = #121212 (base canvas — Material recommended dark surface)
-         bg-100 = #1F1F1F (~2dp elevated card, ~7% white overlay on base)
-       8-pt L lift between them vs the old 4-pt lift = visible elevation. */
-    --ds-background-100: hsl(0, 0%, 12%);  /* #1F1F1F - elevated card */
-    --ds-background-200: hsl(0, 0%, 7%);   /* #121212 - canvas (Material) */
+    /* Dark backgrounds — Geist convention preserved (bg-100 = default
+       canvas, bg-200 = secondary). Material's #121212 is the canonical
+       dark surface so bg-100 takes it. bg-200 lifts to #1F1F1F (~7%
+       white overlay per Material elevation spec) for "subtle
+       differentiation" sections. Drops pure black (#000) per
+       Material/Apple/NN-G guidance. */
+    --ds-background-100: hsl(0, 0%, 7%);    /* #121212 - default canvas */
+    --ds-background-200: hsl(0, 0%, 12%);   /* #1F1F1F - sparingly */
 
-    --ds-background-100-rgb: 31, 31, 31;
-    --ds-background-200-rgb: 18, 18, 18;
+    --ds-background-100-rgb: 18, 18, 18;
+    --ds-background-200-rgb: 31, 31, 31;
 
     /* Gray Scale — dark mode, monotonic, role-aware
        Same role mapping as light mode:
@@ -692,8 +693,8 @@
          800-1000 → primary text (lightest = ink in dark) */
     --ds-gray-100: hsl(0, 0%, 15%);   /* #262626 - subtle bg overlay */
     --ds-gray-200: hsl(0, 0%, 18%);   /* #2E2E2E - hover bg */
-    --ds-gray-300: hsl(0, 0%, 22%);   /* #383838 - active bg */
-    --ds-gray-400: hsl(0, 0%, 27%);   /* #454545 - DEFAULT BORDER */
+    --ds-gray-300: hsl(0, 0%, 20%);   /* #333333 - active bg */
+    --ds-gray-400: hsl(0, 0%, 24%);   /* #3D3D3D - DEFAULT BORDER (subtler) */
     --ds-gray-500: hsl(0, 0%, 35%);   /* #595959 */
     --ds-gray-600: hsl(0, 0%, 45%);   /* #737373 */
     --ds-gray-700: hsl(0, 0%, 56%);   /* #8F8F8F */
@@ -704,8 +705,8 @@
     /* RGB fallbacks */
     --ds-gray-100-rgb: 38, 38, 38;
     --ds-gray-200-rgb: 46, 46, 46;
-    --ds-gray-300-rgb: 56, 56, 56;
-    --ds-gray-400-rgb: 69, 69, 69;
+    --ds-gray-300-rgb: 51, 51, 51;
+    --ds-gray-400-rgb: 61, 61, 61;
     --ds-gray-500-rgb: 89, 89, 89;
     --ds-gray-600-rgb: 115, 115, 115;
     --ds-gray-700-rgb: 143, 143, 143;
