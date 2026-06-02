@@ -482,7 +482,7 @@ export async function ConsentDashboardContent({
             display: "grid",
             gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
             borderBottom: "1px solid var(--ds-gray-400)",
-            background: "rgb(var(--color-surface))",
+            background: "rgb(var(--color-canvas))",
           }}
         >
           <div>
@@ -632,7 +632,7 @@ export function ConsentDashboardSkeleton() {
             display: "grid",
             gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
             borderBottom: "1px solid var(--ds-gray-400)",
-            background: "rgb(var(--color-surface))",
+            background: "rgb(var(--color-canvas))",
           }}
         >
           <StatTileSkeleton label="Unique visitors" />
