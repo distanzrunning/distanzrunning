@@ -70,13 +70,25 @@ Token namespace: `--ds-{hue}-{shade}`.
 
 **Hues**: `gray`, `blue`, `red`, `amber`, `green`, `pink`, `purple`, `teal`. Shades 100–1000 (in steps of 100).
 
-**Backgrounds** (separate from the hue scale): `--ds-background-100` (primary canvas — `#FFFFFF` light) / `--ds-background-200` (secondary surface, used sparingly — `#F5F5F5` light). They flip in dark mode following Apple's **base / elevated** model: `bg-100` = `#121212` (Material base canvas), `bg-200` = `#1F1F1F` (the *elevated* surface, ~7% white lift). Floating surfaces (menus, popovers, raised controls) sit on the **elevated** surface so they read as advancing above the canvas — never darker than `bg-100`.
+**Backgrounds** (separate from the hue scale): `--ds-background-100` (primary canvas — `#FFFFFF` light) / `--ds-background-200` (secondary surface, used sparingly — `#F5F5F5` light). They flip in dark mode following Apple's **base / elevated** model: `bg-100` = `#121212` (Material base canvas), `bg-200` = `#1F1F1F` (the *elevated* surface, ~7% white lift).
+
+**Elevation ladder — use the semantic surface classes, don't hardcode `bg-[var(--ds-background-100)]`.** Depth is conveyed by an ascending tone ladder (brighter = higher, Apple base→elevated):
+
+| Tier | Class | Light | Dark | Use for |
+|---|---|---|---|---|
+| Base | `bg-canvas` | `#F5F5F5` | `#121212` | the page body / `PageFrame` — the darkest tone in dark |
+| Raised | `bg-surface` | `#FFFFFF` | `#262626` | cards, menus, popovers, drawers, panels — anything sitting *on* the page |
+| Section | `bg-[var(--ds-background-200)]` | `#F5F5F5` | `#1F1F1F` | softer sub-areas within a surface (modal footer, drawer footer) |
+
+A new card/menu/panel should be `bg-surface` (white in light, lifted in dark) — **not** `bg-[var(--ds-background-100)]`, which is the base canvas and makes the surface recede in dark. Floating elements add `material-menu`/`material-modal` shadow on top. (Light-mode depth also leans on these shadows + the hairline border.)
 
 **Alpha tokens**: `--ds-gray-alpha-{100..1000}` for translucent overlays.
 
 **RGB tuples** (for use inside `rgba()`): every token has a `-rgb` companion, e.g. `rgba(var(--ds-gray-1000-rgb), 0.04)`. The tuple flips with the theme automatically — preferred for theme-aware semi-transparent colors over a `dark:` override. **The `--ds-X` and `--ds-X-rgb` forms are consumed independently across the codebase, so they must always describe the same colour. If you edit one (e.g. bump a gray's HSL lightness), update its `-rgb` companion in the same pass — otherwise the token renders two different colours depending on which form a component used.**
 
 **Accessibility**: `textSubtle` (`gray-900`) is the readable secondary-text colour (≥12:1 light / ≥6:1 dark). `textSubtler` (`gray-700`) is the **muted** tone for de-emphasised micro-text (line numbers, captions, tiny labels) — AA-Large in light, full AA in dark; still reserve it for non-essential text, prefer `textSubtle` for content. `textDisabled` (`gray-500`) is for disabled states only. An **increased-contrast mode** (`@media (prefers-contrast: more)` in `distanz-tokens.css`) automatically pushes the muted text + border tokens toward ink for users with the OS "Increase Contrast" setting — don't hand-roll your own; rely on the semantic tokens and it applies for free.
+
+**Links**: inline text links use the `link` token (`text-link` / `--color-link` = `blue-700` light, `blue-900` dark — the accent blue). Always pair it with an **underline** (or other non-colour affordance) so links don't rely on colour alone (HIG) and stay legible on any surface. Don't invent a different link colour.
 
 **Geist semantic system** (from ColourPalettes.tsx — applies to the gray scale):
 

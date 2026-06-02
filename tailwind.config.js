@@ -166,6 +166,7 @@ module.exports = {
         textSubtler: "rgb(var(--color-textSubtler))",
         textInverted: "rgb(var(--color-textInverted))",
         textDisabled: "rgb(var(--color-textDisabled))",
+        link: "rgb(var(--color-link))",
 
         // Border colors
         borderDefault: "rgb(var(--color-borderDefault))",
@@ -332,6 +333,7 @@ module.exports = {
         textSubtler: "rgb(var(--color-textSubtler))",
         textInverted: "rgb(var(--color-textInverted))",
         textDisabled: "rgb(var(--color-textDisabled))",
+        link: "rgb(var(--color-link))",
       },
       borderColor: {
         // Semantic border colors (dynamic via CSS vars)

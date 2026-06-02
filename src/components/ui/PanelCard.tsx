@@ -42,7 +42,7 @@ export function PanelCard({
   const radiusClass = radius === "md" ? "rounded-md" : "rounded-xl";
   return (
     <section
-      className={`flex flex-col gap-4 p-6 ${radiusClass} bg-[color:var(--ds-background-100)] border border-[color:var(--ds-gray-400)]`}
+      className={`flex flex-col gap-4 p-6 ${radiusClass} bg-surface border border-[color:var(--ds-gray-400)]`}
     >
       {hasHeader && (
         <header className="flex justify-between items-center">

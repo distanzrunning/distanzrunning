@@ -426,7 +426,7 @@ function MenuDropdown({
               : isBottomEnd || isTopEnd
                 ? document.documentElement.clientWidth - coords.left
                 : undefined,
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-surface))",
           borderRadius: 12,
           boxShadow: "var(--ds-shadow-menu)",
           padding: 8,
@@ -515,7 +515,7 @@ export function MenuButton({
   const variantStyles =
     variant === "secondary"
       ? `
-        bg-[var(--ds-background-100)] text-[var(--ds-gray-1000)]
+        bg-surface text-[var(--ds-gray-1000)]
         shadow-[0_0_0_1px_var(--ds-gray-400)]
         hover:bg-[var(--ds-gray-100)] hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
         dark:hover:bg-[var(--ds-gray-200)] dark:hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]

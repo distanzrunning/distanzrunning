@@ -230,7 +230,7 @@ export function MultiSelect({
           focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
           rounded-[var(--ds-radius-small)]
           h-[var(--ds-button-height-medium)] px-[var(--ds-button-padding-medium)] text-button-14 gap-[var(--ds-button-gap-medium)]
-          bg-[var(--ds-background-100)] text-[var(--ds-gray-1000)]
+          bg-surface text-[var(--ds-gray-1000)]
           shadow-[0_0_0_1px_var(--ds-gray-400)]
           hover:bg-[var(--ds-gray-100)] hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
           dark:hover:bg-[var(--ds-gray-200)] dark:hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
@@ -348,7 +348,7 @@ function MultiSelectDropdown({
           position: "absolute",
           top: coords.top,
           left: coords.left,
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-surface))",
           borderRadius: 12,
           boxShadow: "var(--ds-shadow-menu)",
           padding: 8,
