@@ -77,9 +77,12 @@ Token namespace: `--ds-{hue}-{shade}`.
 | Role | Class | Light | Dark | Use for |
 |---|---|---|---|---|
 | **Canvas** (down) | `bg-canvas` | `#F5F5F5` | `#121212` | the page / `PageFrame`, **and** anything recessed *within* a surface: input/textarea/select fields, modal & drawer footers/sections |
-| **Surface** (up) | `bg-surface` | `#FFFFFF` | `#262626` | **everything raised**: cards, menus, popovers, dialogs, drawers, sheets, panels, toasts, badges, chips, filled/secondary buttons, checkbox/radio/switch boxes, the header pill |
+| **Surface** (up) | `bg-surface` | `#FFFFFF` | `#1F1F1F` | **everything raised**: cards, menus, popovers, dialogs, drawers, sheets, panels, toasts, badges, chips, filled/secondary buttons, checkbox/radio/switch boxes, the header pill |
+| **Interaction** (on a surface) | `--ds-gray-100/200/300` (`bg-[var(--ds-gray-100)]` …) | `#F0F0F0`+ | `#262626 / #2E2E2E / #333` | **hover / active / selected** states *on* a surface — one+ step above it so they read |
 
 **The rule:** *Is it the page, or a field you type/select into, or a footer/section inside a surface? → `bg-canvas`. Otherwise → `bg-surface`.* Floating things (menus/modals/popovers) additionally carry a `material-*` shadow — **extra depth comes from shadow, never from more tones.**
+
+**Surface ≠ its own states.** `surface` is deliberately **`bg-200` (`#1F1F1F`), not `gray-100`** — because `gray-100/200/300` are the **hover/active/selected** tones (Geist "component backgrounds"). If `surface` were `gray-100`, a hover or selected child *on* a surface would collapse into it (this was the ThemeSwitcher bug). **Segmented controls** follow one shared pattern: track/container = `bg-canvas` (recessed), selected segment = `bg-surface` (raised) + a hairline ring — see `ThemeSwitcher`/`Switch`.
 
 **Hard anti-pattern: never use `bg-[var(--ds-background-100)]` or `bg-[var(--ds-background-200)]` (or their inline/CSS forms) as a fill.** Those raw tokens only *feed* `canvas`/`surface` internally. Components always use `bg-canvas` / `bg-surface` — that's what guarantees conformity (no component "does its own thing"). Don't reach for `bg-white`/`bg-black`/`neutral-*` either. (The only legitimate non-token fills are deliberate translucent **glass** effects, e.g. `bg-white/15` + blur.)
 

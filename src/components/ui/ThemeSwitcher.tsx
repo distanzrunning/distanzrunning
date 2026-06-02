@@ -67,7 +67,7 @@ export function ThemeSwitcher({
         gap: 2,
         padding: containerPadding,
         borderRadius: containerRadius,
-        background: "var(--ds-gray-100)",
+        background: "rgb(var(--color-canvas))",
         border: "none",
         margin: 0,
         ...styleProp,

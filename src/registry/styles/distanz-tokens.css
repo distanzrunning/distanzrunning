@@ -1075,9 +1075,11 @@
 
     /* Background/Surface colors */
     /* Dark elevation ladder (Apple base→elevated; brighter = higher):
-       canvas #121212 (base) → surfaceSubtle/bg-200 #1F1F1F (section) →
-       surface #262626 (raised cards/menus) → surfaceSubtle/gray-200 overlay. */
-    --color-surface: var(--ds-gray-100-rgb); /* Raised surfaces — cards, menus, popovers (#262626) */
+       canvas #121212 (base/recessed) → surface #1F1F1F (raised cards/menus)
+       → gray-100 #262626 (hover/active/selected) → gray-200 #2E2E2E (above).
+       Keeping surface OFF the gray-100 hover tone is what lets hover and
+       nested/selected states read against the surface they sit on. */
+    --color-surface: var(--ds-background-200-rgb); /* Raised surfaces — cards, menus, popovers (#1F1F1F). Sits ONE step above canvas; gray-100/200/300 (#262626/#2E2E2E/#333) are the hover/active/selected steps ABOVE surface. */
     --color-surfaceSubtle: var(--ds-gray-200-rgb); /* Subtle elevation */
     --color-surfaceWarm: var(--ds-gray-200-rgb); /* Warm-tinted surface */
     --color-canvas: var(--ds-background-100-rgb); /* Page base — the DARKEST tone (#121212), so raised surfaces advance above it */
