@@ -1131,7 +1131,7 @@
      Opt-in via the OS setting (prefers-contrast: more). Remaps the muted
      text + border semantic tokens to higher-contrast scale steps so
      structure and de-emphasised text become clearly legible. The gray
-     -rgb tuples are theme-scoped, so referencing the same step yields the
+     -value triplets are theme-scoped, so referencing the same step yields the
      correct value in light and dark — one block covers both. No effect on
      the default experience. The legacy border aliases reference
      --color-borderDefault/Subtle, so they inherit these overrides at use-time.
