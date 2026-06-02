@@ -695,7 +695,7 @@
     --ds-gray-100: hsl(0, 0%, 19%);   /* #303030 - hover bg (one step above surface) */
     --ds-gray-200: hsl(0, 0%, 23%);   /* #3A3A3A - active bg */
     --ds-gray-300: hsl(0, 0%, 27%);   /* #444444 - active/selected bg */
-    --ds-gray-400: hsl(0, 0%, 29%);   /* #4A4A4A - DEFAULT BORDER (more visible) */
+    --ds-gray-400: hsl(0, 0%, 33%);   /* #545454 - DEFAULT BORDER (dark needs a stronger step than light to read equally — perceived contrast is compressed near black) */
     --ds-gray-500: hsl(0, 0%, 35%);   /* #595959 */
     --ds-gray-600: hsl(0, 0%, 45%);   /* #737373 */
     --ds-gray-700: hsl(0, 0%, 56%);   /* #8F8F8F */
@@ -707,7 +707,7 @@
     --ds-gray-100-rgb: 48, 48, 48;
     --ds-gray-200-rgb: 58, 58, 58;
     --ds-gray-300-rgb: 68, 68, 68;
-    --ds-gray-400-rgb: 74, 74, 74;
+    --ds-gray-400-rgb: 84, 84, 84;
     --ds-gray-500-rgb: 89, 89, 89;
     --ds-gray-600-rgb: 115, 115, 115;
     --ds-gray-700-rgb: 143, 143, 143;
