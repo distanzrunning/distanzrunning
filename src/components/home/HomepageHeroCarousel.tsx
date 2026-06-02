@@ -28,12 +28,12 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Button from "@/components/ui/Button";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/Carousel";
 
@@ -162,9 +162,9 @@ export default function HomepageHeroCarousel({
   return (
     <section
       aria-label="Featured stories"
-      className="group/carousel relative z-0 flex w-full justify-center px-4 py-12 md:py-24 lg:py-32"
+      className="group/carousel relative z-0 w-full px-4 py-12 md:py-24 lg:py-32"
     >
-      <div className="w-full max-w-[1400px]">
+      <div className="w-full">
         <Carousel
           opts={{ loop: true, align: "start" }}
           setApi={setApi}
@@ -183,7 +183,7 @@ export default function HomepageHeroCarousel({
                         lg:order-1 reverts to normal flow on desktop. */}
                     <div className="order-2 flex flex-col justify-center gap-4 lg:order-1 lg:col-span-1">
                       <h2
-                        className="text-balance font-headline font-semibold text-[color:var(--ds-gray-1000)]"
+                        className="text-balance font-serif font-semibold text-[color:var(--ds-gray-1000)]"
                         style={{
                           fontSize: "clamp(36px, 5.2vw, 64px)",
                           lineHeight: 1.05,
@@ -192,18 +192,18 @@ export default function HomepageHeroCarousel({
                       >
                         <Link
                           href={slide.href}
-                          className="outline-none transition-colors hover:text-[color:var(--ds-gray-900)] focus-visible:text-[color:var(--ds-gray-900)]"
+                          className="outline-none transition-colors hover:text-[color:var(--ds-gray-900)] focus-visible:text-[color:var(--ds-gray-900)] group-has-[[data-hero-cover]:hover]/slide:text-[color:var(--ds-gray-900)]"
                         >
                           {slide.title}
                         </Link>
                       </h2>
                       {slide.excerpt && (
-                        <p className="max-w-prose text-[18px] leading-[1.4] text-[color:var(--ds-gray-900)] md:text-[21px] md:leading-[1.4]">
+                        <p className="max-w-prose text-copy-18 font-medium leading-snug text-[color:var(--ds-gray-900)] md:text-copy-20 md:leading-snug">
                           {slide.excerpt}
                         </p>
                       )}
                       {(slide.kicker || dateLabel) && (
-                        <div className="mt-1 flex items-center gap-2 text-[13px] text-[color:var(--ds-gray-700)]">
+                        <div className="mt-1 flex items-center gap-2 text-copy-13 text-[color:var(--ds-gray-700)]">
                           {slide.kicker && slide.kickerHref ? (
                             <Link
                               href={slide.kickerHref}
@@ -239,6 +239,7 @@ export default function HomepageHeroCarousel({
                         respects the editor's hotspot if set. */}
                     <Link
                       href={slide.href}
+                      data-hero-cover
                       className="relative order-1 block overflow-hidden rounded-lg border border-[color:var(--ds-gray-400)] lg:order-2 lg:col-span-2"
                       style={{ background: "var(--ds-gray-200)" }}
                       aria-label={slide.title}
@@ -252,45 +253,57 @@ export default function HomepageHeroCarousel({
               );
             })}
           </CarouselContent>
-
-          {/* Prev / next chevrons fade in on section hover (desktop
-              affordance). Hidden on mobile / tablet — they sit at
-              -left-12 / -right-12 which puts them off-screen on
-              narrow viewports. Mobile users navigate via swipe
-              (Embla's built-in drag handler) and the dot
-              wayfinding strip below. */}
-          {slideCount > 1 && (
-            <>
-              <CarouselPrevious className="hidden opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100 focus-visible:opacity-100 lg:grid" />
-              <CarouselNext className="hidden opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100 focus-visible:opacity-100 lg:grid" />
-            </>
-          )}
         </Carousel>
 
-        {/* Subtle dots — wayfinding only. Active widens slightly to
-            mark position; inactive sit quietly at gray-400 so they
-            read as "more here" without dominating. */}
+        {/* Wayfinding row — Embla default controls pattern. Prev +
+            next buttons grouped on the bottom-left, dots on the
+            bottom-right. Active dot widens to mark position;
+            inactive dots sit quietly at gray-400 so they read as
+            "more here" without dominating. */}
         {slideCount > 1 && (
-          <div
-            role="tablist"
-            aria-label="Slide navigation"
-            className="mt-8 flex items-center justify-center gap-1.5 lg:mt-10"
-          >
-            {slides.map((s, i) => (
-              <button
-                key={s._id}
-                role="tab"
-                type="button"
-                aria-selected={i === active}
-                aria-label={`Slide ${i + 1}: ${s.title}`}
-                onClick={() => scrollTo(i)}
-                className={`h-[5px] rounded-full transition-all ${
-                  i === active
-                    ? "w-4 bg-[color:var(--ds-gray-1000)]"
-                    : "w-[5px] bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
-                }`}
-              />
-            ))}
+          <div className="mt-8 flex items-center justify-between gap-4 lg:mt-10 lg:px-14">
+            <div className="flex items-center gap-2">
+              <Button
+                size="small"
+                shape="square"
+                variant="secondary"
+                onClick={() => api?.scrollPrev()}
+                aria-label="Previous slide"
+              >
+                <ChevronLeft className="size-4" aria-hidden />
+              </Button>
+              <Button
+                size="small"
+                shape="square"
+                variant="secondary"
+                onClick={() => api?.scrollNext()}
+                aria-label="Next slide"
+              >
+                <ChevronRight className="size-4" aria-hidden />
+              </Button>
+            </div>
+
+            <div
+              role="tablist"
+              aria-label="Slide navigation"
+              className="flex items-center gap-1.5"
+            >
+              {slides.map((s, i) => (
+                <button
+                  key={s._id}
+                  role="tab"
+                  type="button"
+                  aria-selected={i === active}
+                  aria-label={`Slide ${i + 1}: ${s.title}`}
+                  onClick={() => scrollTo(i)}
+                  className={`h-[5px] rounded-full transition-all ${
+                    i === active
+                      ? "w-4 bg-[color:var(--ds-gray-1000)]"
+                      : "w-[5px] bg-[color:var(--ds-gray-400)] hover:bg-[color:var(--ds-gray-700)]"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>

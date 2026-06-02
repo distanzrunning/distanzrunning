@@ -39,8 +39,6 @@ function classifyRegion(country: string): Region {
 // until launch. Every request on these hosts gets rewritten to
 // /coming-soon, so any deep link still lands on the holding page
 // while keeping the URL the visitor typed in the address bar.
-// Remove this set (or wrap in an env flag) at launch to expose the
-// real site on the public domain.
 const HOLDING_PAGE_HOSTS = new Set([
   "distanzrunning.com",
   "www.distanzrunning.com",
@@ -48,7 +46,19 @@ const HOLDING_PAGE_HOSTS = new Set([
 
 const HOLDING_PAGE_PATH = "/coming-soon";
 
+// Launch switch. The public domain is held behind /coming-soon by
+// DEFAULT (pre-launch, fail-safe) — set SITE_LIVE=1 (or "true") in the
+// production environment to lift the gate and expose the real site.
+// A missing or mistyped flag keeps the site gated, so we can never go
+// public by accident; flipping it back re-gates instantly. Edge env
+// vars bind at deploy time, so a toggle takes effect on the next
+// (re)deploy — no code change or merge required.
+const SITE_IS_LIVE =
+  process.env.SITE_LIVE === "1" || process.env.SITE_LIVE === "true";
+
 function handleHoldingPage(request: NextRequest): NextResponse | null {
+  // Launched — no holding page on any host.
+  if (SITE_IS_LIVE) return null;
   const host = request.headers.get("host") ?? "";
   if (!HOLDING_PAGE_HOSTS.has(host)) return null;
 

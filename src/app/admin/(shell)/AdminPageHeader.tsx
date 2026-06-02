@@ -23,6 +23,7 @@ const ADMIN_FEEDBACK_TOPICS = [
   { label: "Overview", value: "Overview" },
   { label: "Consent", value: "Consent" },
   { label: "Feedback", value: "Feedback" },
+  { label: "Settings", value: "Settings" },
   { label: "Design System", value: "Design System" },
   { label: "Other", value: "Other" },
 ];
@@ -30,6 +31,7 @@ const ADMIN_FEEDBACK_TOPICS = [
 function defaultAdminTopic(pathname: string): string {
   if (pathname.startsWith("/admin/consent")) return "Consent";
   if (pathname.startsWith("/admin/feedback")) return "Feedback";
+  if (pathname.startsWith("/admin/settings")) return "Settings";
   if (pathname.startsWith("/admin/design-system")) return "Design System";
   if (pathname === "/admin" || pathname === "/admin/") return "Overview";
   return "Other";
@@ -73,6 +75,9 @@ function getTitleParts(pathname: string): TitleParts {
         page: item.label,
       };
     }
+  }
+  if (pathname === "/admin/settings" || pathname === "/admin/settings/") {
+    return { section: null, page: "Settings" };
   }
   if (
     pathname === "/admin/design-system" ||
@@ -135,8 +140,8 @@ export default function AdminPageHeader() {
         top: 0,
         zIndex: 30,
         height: HEADER_HEIGHT,
-        background: "var(--ds-background-200)",
-        borderBottom: "1px solid var(--ds-gray-400)",
+        background: "hsl(var(--color-canvas))",
+        borderBottom: "1px solid hsl(var(--color-borderDefault))",
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-end",
@@ -148,14 +153,8 @@ export default function AdminPageHeader() {
           <div className="hidden md:flex items-center gap-2 pr-2.5 min-w-0">
             <Link
               href={section.href}
-              className="no-underline truncate min-w-0 hover:underline"
-              style={{
-                fontSize: 14,
-                lineHeight: "20px",
-                letterSpacing: "-0.28px",
-                fontWeight: 500,
-                color: "var(--ds-gray-800)",
-              }}
+              className="no-underline truncate min-w-0 hover:underline text-button-14"
+              style={{ color: "var(--ds-gray-800)" }}
             >
               {section.label}
             </Link>
@@ -163,13 +162,8 @@ export default function AdminPageHeader() {
           </div>
         )}
         <span
-          className="flex items-center gap-0.5 truncate font-medium"
-          style={{
-            fontSize: 14,
-            lineHeight: "20px",
-            letterSpacing: "-0.28px",
-            color: "var(--ds-gray-1000)",
-          }}
+          className="flex items-center gap-0.5 truncate text-button-14"
+          style={{ color: "hsl(var(--color-textDefault))" }}
         >
           <span className="min-w-0 truncate">{page}</span>
         </span>
@@ -182,7 +176,7 @@ export default function AdminPageHeader() {
             style={{
               width: 32,
               height: 32,
-              color: "var(--ds-gray-900)",
+              color: "hsl(var(--color-textSubtle))",
             }}
           >
             <MoreHorizontal className="w-4 h-4" />
@@ -199,7 +193,7 @@ export default function AdminPageHeader() {
             borderRadius: 6,
           }}
         >
-          <span style={{ fontSize: 14, color: "var(--ds-gray-1000)" }}>
+          <span className="text-copy-14" style={{ color: "hsl(var(--color-textDefault))" }}>
             Theme
           </span>
           <ThemeSwitcher

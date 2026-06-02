@@ -159,7 +159,7 @@ export default function IconSystemShowcase() {
               </div>
               <div className="space-y-1">
                 <p className="font-medium text-sm">{size.name}</p>
-                <code className="text-xs text-textSubtler font-mono block">
+                <code className="inline-code">
                   {size.class}
                 </code>
                 <p className="text-xs text-textSubtle">{size.size}px</p>
@@ -172,31 +172,31 @@ export default function IconSystemShowcase() {
           <h4 className="font-medium mb-4 text-sm">Usage Examples</h4>
           <div className="space-y-3 text-sm text-textSubtle">
             <p>
-              <code className="font-mono text-neutral-700 dark:text-neutral-300">
+              <code className="inline-code">
                 w-4 h-4 (16px)
               </code>{" "}
               - Inline with small text, compact UI elements
             </p>
             <p>
-              <code className="font-mono text-neutral-700 dark:text-neutral-300">
+              <code className="inline-code">
                 w-5 h-5 (20px)
               </code>{" "}
               - Buttons, form inputs, navigation items
             </p>
             <p>
-              <code className="font-mono text-neutral-700 dark:text-neutral-300">
+              <code className="inline-code">
                 w-6 h-6 (24px)
               </code>{" "}
               - Default size for most icons, feature cards
             </p>
             <p>
-              <code className="font-mono text-neutral-700 dark:text-neutral-300">
+              <code className="inline-code">
                 w-8 h-8 (32px)
               </code>{" "}
               - Section headers, emphasized actions
             </p>
             <p>
-              <code className="font-mono text-neutral-700 dark:text-neutral-300">
+              <code className="inline-code">
                 w-10 h-10 (40px)
               </code>{" "}
               - Hero sections, empty states

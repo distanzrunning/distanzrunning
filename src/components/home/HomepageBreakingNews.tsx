@@ -71,7 +71,7 @@ export default function HomepageBreakingNews({
   const isScrollable = visible.length > 3;
 
   // Faint 60 px column grid via globals.css --newsprint-grid token
-  // (rgba on --ds-gray-1000-rgb at 2.5 %, theme-aware). Half-tile
+  // (rgba on --ds-gray-1000-value at 2.5 %, theme-aware). Half-tile
   // offset prevents the leftmost / topmost line from doubling the
   // panel border on the outer edges.
   const newsprintBg: React.CSSProperties = {
@@ -101,7 +101,7 @@ export default function HomepageBreakingNews({
               Latest news
             </h2>
 
-            <p className="text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">
+            <p className="text-copy-16 text-[color:var(--ds-gray-900)] md:text-copy-18">
               Stories moving the sport this week.
             </p>
           </div>

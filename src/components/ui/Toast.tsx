@@ -61,7 +61,7 @@ function notifyListeners() {
   listeners.forEach((fn) => fn([...globalToasts]));
 }
 
-function addToast(options: string | ToastOptions) {
+function addToast(options: string | ToastOptions): number {
   const opts: ToastOptions =
     typeof options === "string" ? { message: options } : options;
 
@@ -85,6 +85,8 @@ function addToast(options: string | ToastOptions) {
       removeToast(item.id);
     }, 5000);
   }
+
+  return item.id;
 }
 
 function removeToast(id: number) {
@@ -101,11 +103,21 @@ function removeToast(id: number) {
   }, 350);
 }
 
-
 function CloseIcon() {
   return (
-    <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
-      <path fillRule="evenodd" clipRule="evenodd" d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z" fill="currentColor" />
+    <svg
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z"
+        fill="currentColor"
+      />
     </svg>
   );
 }
@@ -117,7 +129,6 @@ function CloseIcon() {
 function ToastCard({
   item,
   index,
-  total,
   isHovered,
   stackOffset,
   frontHeight,
@@ -126,7 +137,6 @@ function ToastCard({
 }: {
   item: ToastItem;
   index: number;
-  total: number;
   isHovered: boolean;
   stackOffset: number;
   frontHeight: number;
@@ -151,7 +161,7 @@ function ToastCard({
       return () => cancelAnimationFrame(raf2);
     });
     return () => cancelAnimationFrame(raf1);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Geist approach: entry from below, visible = transform:none,
@@ -218,41 +228,52 @@ function ToastCard({
   }
 
   // Message opacity: non-front toasts hide message when not hovered
-  const messageOpacity = entered && !item.exiting && index > 0 && !isHovered ? 0 : 1;
+  const messageOpacity =
+    entered && !item.exiting && index > 0 && !isHovered ? 0 : 1;
 
   return (
     <div
       ref={cardRef}
       role="status"
       aria-atomic="true"
-      style={{
-        position: "absolute",
-        bottom: 0,
-        right: 0,
-        width: 420,
-        maxWidth: "min(420px, calc(100vw - 48px))",
-        backgroundColor:
-          item.variant === "success" ? "var(--ds-blue-700)"
-          : item.variant === "warning" ? "var(--ds-amber-800)"
-          : item.variant === "error" ? "var(--ds-red-800)"
-          : "var(--ds-background-100)",
-        boxShadow: item.variant === "default" ? "var(--ds-shadow-menu)" : "none",
-        borderRadius: 12,
-        padding: 16,
-        lineHeight: "20px",
-        color:
-          item.variant === "warning" ? "var(--ds-gray-1000)"
-          : item.variant !== "default" ? "#fff"
-          : "var(--ds-gray-1000)",
-        zIndex,
-        overflow: "hidden",
-        pointerEvents: item.exiting || index >= 3 ? "none" as const : "auto" as const,
-        // CSS custom properties for hover expansion
-        "--y": `${stackY}px`,
-        "--z": `${stackZ}px`,
-        "--max-height": `${measuredHeight}px`,
-        ...containerStyle,
-      } as React.CSSProperties}
+      data-exiting={item.exiting || undefined}
+      style={
+        {
+          position: "absolute",
+          bottom: 0,
+          right: 0,
+          width: 420,
+          maxWidth: "min(420px, calc(100vw - 48px))",
+          backgroundColor:
+            item.variant === "success"
+              ? "var(--ds-blue-700)"
+              : item.variant === "warning"
+                ? "var(--ds-amber-800)"
+                : item.variant === "error"
+                  ? "var(--ds-red-800)"
+                  : "hsl(var(--color-surface))",
+          boxShadow:
+            item.variant === "default" ? "var(--ds-shadow-menu)" : "none",
+          borderRadius: 12,
+          padding: 16,
+          lineHeight: "20px",
+          color:
+            item.variant === "warning"
+              ? "hsl(var(--color-textDefault))"
+              : item.variant !== "default"
+                ? "hsl(var(--color-textInverted))"
+                : "hsl(var(--color-textDefault))",
+          zIndex,
+          overflow: "hidden",
+          pointerEvents:
+            item.exiting || index >= 3 ? ("none" as const) : ("auto" as const),
+          // CSS custom properties for hover expansion
+          "--y": `${stackY}px`,
+          "--z": `${stackZ}px`,
+          "--max-height": `${measuredHeight}px`,
+          ...containerStyle,
+        } as React.CSSProperties
+      }
     >
       <div
         style={{
@@ -280,29 +301,70 @@ function ToastCard({
             transition: "opacity 0.4s ease",
           }}
         >
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+            }}
+          >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               {item.jsx ? (
-                <span style={{ display: "block", lineHeight: "20px" }}>{item.jsx}</span>
+                <span style={{ display: "block", lineHeight: "20px" }}>
+                  {item.jsx}
+                </span>
               ) : (
-                <span style={{ display: "block", fontWeight: item.description ? 500 : 400, lineHeight: "20px" }}>
+                <span
+                  style={{
+                    display: "block",
+                    fontWeight: item.description ? 500 : 400,
+                    lineHeight: "20px",
+                  }}
+                >
                   {item.message}
                 </span>
               )}
             </div>
             {item.description && (
-              <span style={{ color: "var(--ds-gray-900)", fontSize: 13, lineHeight: "18px" }}>
+              <span
+                style={{
+                  // Description color follows the variant's main
+                  // text color but slightly muted, so the
+                  // hierarchy reads (title bolder, description
+                  // softer) on every background:
+                  //   default  → gray-900   (paired w/ gray-1000 title)
+                  //   warning  → gray-900   (amber bg keeps dark text)
+                  //   success/error → rgba(white, .8)   (dark bg, white title)
+                  color:
+                    item.variant === "default" || item.variant === "warning"
+                      ? "hsl(var(--color-textSubtle))"
+                      : "rgba(255, 255, 255, 0.8)",
+                  fontSize: 13,
+                  lineHeight: "18px",
+                }}
+              >
                 {item.description}
               </span>
             )}
           </div>
 
           {!item.action && (index === 0 || isHovered) && (
-            <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "nowrap" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                flexWrap: "nowrap",
+              }}
+            >
               {item.undo && (
                 <button
                   type="button"
-                  onClick={() => { item.undo?.(); onDismiss(); }}
+                  onClick={() => {
+                    item.undo?.();
+                    onDismiss();
+                  }}
                   aria-label="Undo"
                   style={{
                     background: "none",
@@ -320,14 +382,28 @@ function ToastCard({
                     transition: "background 0.15s ease",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = item.variant === "default" ? "var(--ds-gray-100)" : "rgba(0,0,0,0.1)";
+                    e.currentTarget.style.backgroundColor =
+                      item.variant === "default"
+                        ? "var(--ds-gray-100)"
+                        : "rgba(0,0,0,0.1)";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = "transparent";
                   }}
                 >
-                  <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
-                    <path fillRule="evenodd" clipRule="evenodd" d="M13.5 8C13.5 4.96643 11.0257 2.5 7.96452 2.5C5.42843 2.5 3.29365 4.19393 2.63724 6.5H5.25H6V8H5.25H0.75C0.335787 8 0 7.66421 0 7.25V2.75V2H1.5V2.75V5.23347C2.57851 2.74164 5.06835 1 7.96452 1C11.8461 1 15 4.13001 15 8C15 11.87 11.8461 15 7.96452 15C5.62368 15 3.54872 13.8617 2.27046 12.1122L1.828 11.5066L3.03915 10.6217L3.48161 11.2273C4.48831 12.6051 6.12055 13.5 7.96452 13.5C11.0257 13.5 13.5 11.0336 13.5 8Z" fill="currentColor" />
+                  <svg
+                    height="16"
+                    strokeLinejoin="round"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    style={{ color: "currentcolor" }}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M13.5 8C13.5 4.96643 11.0257 2.5 7.96452 2.5C5.42843 2.5 3.29365 4.19393 2.63724 6.5H5.25H6V8H5.25H0.75C0.335787 8 0 7.66421 0 7.25V2.75V2H1.5V2.75V5.23347C2.57851 2.74164 5.06835 1 7.96452 1C11.8461 1 15 4.13001 15 8C15 11.87 11.8461 15 7.96452 15C5.62368 15 3.54872 13.8617 2.27046 12.1122L1.828 11.5066L3.03915 10.6217L3.48161 11.2273C4.48831 12.6051 6.12055 13.5 7.96452 13.5C11.0257 13.5 13.5 11.0336 13.5 8Z"
+                      fill="currentColor"
+                    />
                   </svg>
                 </button>
               )}
@@ -351,7 +427,10 @@ function ToastCard({
                   transition: "background 0.15s ease",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = item.variant === "default" ? "var(--ds-gray-100)" : "rgba(0,0,0,0.1)";
+                  e.currentTarget.style.backgroundColor =
+                    item.variant === "default"
+                      ? "var(--ds-gray-100)"
+                      : "rgba(0,0,0,0.1)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = "transparent";
@@ -387,7 +466,7 @@ function ToastCard({
                 border: "none",
                 borderRadius: 6,
                 background: "transparent",
-                color: "var(--ds-gray-1000)",
+                color: "hsl(var(--color-textDefault))",
                 fontSize: 14,
                 fontWeight: 500,
                 lineHeight: "20px",
@@ -406,7 +485,10 @@ function ToastCard({
             {item.action && (
               <button
                 type="button"
-                onClick={() => { item.action?.onClick(); onDismiss(); }}
+                onClick={() => {
+                  item.action?.onClick();
+                  onDismiss();
+                }}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -415,8 +497,8 @@ function ToastCard({
                   padding: "0 6px",
                   border: "none",
                   borderRadius: 6,
-                  background: "var(--ds-gray-1000)",
-                  color: "#fff",
+                  background: "hsl(var(--color-textDefault))",
+                  color: "hsl(var(--color-textInverted))",
                   fontSize: 14,
                   fontWeight: 500,
                   lineHeight: "20px",
@@ -451,25 +533,54 @@ export function ToastContainer() {
     };
   }, []);
 
+  // Drop heights for toasts that no longer exist so the dict doesn't
+  // grow unbounded across a long session.
+  useEffect(() => {
+    setHeights((prev) => {
+      const liveIds = new Set(toasts.map((t) => t.id));
+      const next: Record<number, number> = {};
+      for (const [idStr, h] of Object.entries(prev)) {
+        const id = Number(idStr);
+        if (liveIds.has(id)) next[id] = h;
+      }
+      return next;
+    });
+  }, [toasts]);
+
   const handleHeightMeasured = useCallback((id: number, height: number) => {
     setHeights((prev) => ({ ...prev, [id]: height }));
   }, []);
 
   if (!mounted || toasts.length === 0) return null;
 
-  const hasMultiple = toasts.filter((t) => !t.exiting).length > 1;
+  // Exiting toasts must not influence the stack layout — otherwise
+  // their slot stays reserved during the 350ms exit animation, the
+  // hover-state CSS forces them visible at a stale stack position,
+  // and you see phantom cards below the bottom toast.
+  const activeIndexById = new Map<number, number>();
+  let activeCount = 0;
+  for (const t of toasts) {
+    if (!t.exiting) {
+      activeIndexById.set(t.id, activeCount);
+      activeCount += 1;
+    }
+  }
+  const hasMultiple = activeCount > 1;
 
-  // Compute cumulative stack offsets based on actual heights
+  // Compute cumulative stack offsets based on active toasts only.
   const gap = 16;
-  const stackOffsets: number[] = [];
+  const activeStackOffsets: number[] = [];
   let cumulative = 0;
-  for (let i = 0; i < toasts.length; i++) {
-    stackOffsets.push(cumulative);
-    cumulative += (heights[toasts[i].id] || 63) + gap;
+  const activeToasts = toasts.filter((t) => !t.exiting);
+  for (let i = 0; i < activeToasts.length; i++) {
+    activeStackOffsets.push(cumulative);
+    cumulative += (heights[activeToasts[i].id] || 63) + gap;
   }
 
-  // Total height of all toasts expanded (for hover hit area)
+  // Total height of all active toasts expanded (for hover hit area)
   const totalExpandedHeight = cumulative - gap; // remove last gap
+
+  const frontHeight = heights[activeToasts[0]?.id] || 63;
 
   return createPortal(
     <div
@@ -480,26 +591,37 @@ export function ToastContainer() {
         right: 24,
         zIndex: 5000,
         width: 420,
-        height: isHovered ? totalExpandedHeight : (heights[toasts[0]?.id] || 63),
-        transition: "transform 0.4s ease, bottom 0.4s ease, height 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+        height: isHovered ? totalExpandedHeight : heights[toasts[0]?.id] || 63,
+        transition:
+          "transform 0.4s ease, bottom 0.4s ease, height 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
         pointerEvents: "auto",
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {toasts.map((item, index) => (
-        <ToastCard
-          key={item.id}
-          item={item}
-          index={index}
-          total={toasts.length}
-          isHovered={isHovered && hasMultiple}
-          stackOffset={stackOffsets[index]}
-          frontHeight={heights[toasts[0]?.id] || 63}
-          onDismiss={() => removeToast(item.id)}
-          onHeightMeasured={handleHeightMeasured}
-        />
-      ))}
+      {toasts.map((item) => {
+        // Exiting toasts keep their last-known visual position
+        // (whatever stack slot they were in) but contribute nothing
+        // to the live layout — see activeStackOffsets above.
+        const activeIndex = activeIndexById.get(item.id);
+        const isExiting = item.exiting === true;
+        const effectiveIndex = isExiting ? activeCount : (activeIndex ?? 0);
+        const stackOffset = isExiting
+          ? cumulative
+          : (activeStackOffsets[activeIndex ?? 0] ?? 0);
+        return (
+          <ToastCard
+            key={item.id}
+            item={item}
+            index={effectiveIndex}
+            isHovered={isHovered && hasMultiple}
+            stackOffset={stackOffset}
+            frontHeight={frontHeight}
+            onDismiss={() => removeToast(item.id)}
+            onHeightMeasured={handleHeightMeasured}
+          />
+        );
+      })}
     </div>,
     document.body,
   );
@@ -509,14 +631,18 @@ export function ToastContainer() {
 // Legacy Toast component (backwards-compatible wrapper)
 // ============================================================================
 
-export function Toast({
-  toast,
-  onDismiss,
-}: {
-  toast: { message: string; isVisible: boolean; isExiting?: boolean; variant?: string; [key: string]: unknown };
+export function Toast(_props: {
+  toast: {
+    message: string;
+    isVisible: boolean;
+    isExiting?: boolean;
+    variant?: string;
+    [key: string]: unknown;
+  };
   onDismiss: () => void;
 }) {
-  // This is a no-op — the ToastContainer handles rendering now
+  void _props;
+  // This is a no-op — the ToastContainer handles rendering now.
   return null;
 }
 
@@ -525,19 +651,33 @@ export function Toast({
 // ============================================================================
 
 export function useToast() {
-  const showToast = useCallback((options: string | ToastOptions) => {
-    addToast(options);
-  }, []);
+  // Returns the id of the new toast so callers can dismiss it
+  // programmatically later (e.g. swap a "preserved" loading toast
+  // for a result toast when an async action settles).
+  const showToast = useCallback(
+    (options: string | ToastOptions): number => addToast(options),
+    [],
+  );
 
-  const dismissToast = useCallback(() => {
-    // Dismiss the most recent toast
+  const dismissToast = useCallback((id?: number) => {
+    if (typeof id === "number") {
+      removeToast(id);
+      return;
+    }
+    // No id supplied — fall back to dismissing the most recent
+    // toast (preserves the original API).
     if (globalToasts.length > 0) {
       removeToast(globalToasts[0].id);
     }
   }, []);
 
   // Return a dummy toast object for backwards compatibility
-  const toast = { message: "", isVisible: false, isExiting: false, variant: "default" as const };
+  const toast = {
+    message: "",
+    isVisible: false,
+    isExiting: false,
+    variant: "default" as const,
+  };
 
   return { toast, showToast, dismissToast };
 }

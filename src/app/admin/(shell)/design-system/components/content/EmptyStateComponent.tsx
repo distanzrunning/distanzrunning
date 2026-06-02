@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown, FileText, ExternalLink } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -140,7 +141,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -231,8 +232,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -244,40 +245,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -779,21 +780,21 @@ export default function EmptyStateComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Component
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">EmptyState</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -869,6 +870,125 @@ export default function EmptyStateComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pick the variant by what the user needs: no-results for a
+            filtered list that returned zero rows, blank slate or
+            informational for a resource the user hasn&apos;t created,
+            cleared for completed work, permission for role or tier
+            denials, error for a failed load.
+          </li>
+          <li>
+            Render the permission and tier-denial variants full-page when
+            the user lands on a route they can&apos;t view. Use a{" "}
+            <ComponentRef name="Note" /> only when one tile inside an
+            otherwise-accessible page is gated.
+          </li>
+          <li>
+            Don&apos;t put critical persistent warnings here. Empty states
+            vanish when the list populates; persistent warnings belong in{" "}
+            <ComponentRef name="Note" /> or the page header.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The CTA must be a real <ComponentRef name="Button" /> or
+            link, not an <code className="inline-code">onClick</code> div,
+            so it joins the tab order and exposes a role.
+          </li>
+          <li>
+            Cap at one primary CTA, plus one secondary when the first
+            action could legitimately be one of two paths (
+            <code className="inline-code">Import Repository</code> and{" "}
+            <code className="inline-code">Deploy Template</code>). Three
+            CTAs is a smell.
+          </li>
+          <li>
+            After an async filter change, wrap the region in{" "}
+            <code className="inline-code">aria-live=&quot;polite&quot;</code>{" "}
+            so screen readers announce the new state.
+          </li>
+          <li>
+            Don&apos;t auto-launch a tour from the educational variant;
+            pair <code className="inline-code">Start Tour</code> with{" "}
+            <code className="inline-code">Skip</code>.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">&lt;EmptyState.Title&gt;</code>{" "}
+            is Title Case (
+            <code className="inline-code">No Logs Match Your Filter</code>
+            );{" "}
+            <code className="inline-code">
+              &lt;EmptyState.Description&gt;
+            </code>{" "}
+            is sentence case and adds new information instead of
+            restating the title.
+          </li>
+          <li>
+            Quote a single typed query verbatim with curly quotes:{" "}
+            <code className="inline-code">
+              No logs match &ldquo;{"${query}"}&rdquo;. Clear the filter
+              to see all logs.
+            </code>{" "}
+            For multi-facet filters use the plural template{" "}
+            <code className="inline-code">
+              No {"{Items}"} Match Your Filters
+            </code>{" "}
+            and suggest widening or clearing.
+          </li>
+          <li>
+            Onboarding bodies name the next action that creates the first
+            item:{" "}
+            <code className="inline-code">
+              Push to your Git repository to create your first one.
+            </code>{" "}
+            Tier-gated bodies follow{" "}
+            <code className="inline-code">
+              {"{Feature value}"} with the {"{Plan}"} plan.
+            </code>
+          </li>
+          <li>
+            Error variant pairs the body with a copyable request ID and a{" "}
+            <code className="inline-code">Try Again</code> button.
+          </li>
+          <li>
+            CTA labels are Title Case{" "}
+            <code className="inline-code">Verb + Noun</code>. Never{" "}
+            <code className="inline-code">Get Started</code>,{" "}
+            <code className="inline-code">Continue</code>, or{" "}
+            <code className="inline-code">OK</code>.
+          </li>
+        </ul>
       </Section>
     </>
   );

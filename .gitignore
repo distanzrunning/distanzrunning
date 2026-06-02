@@ -36,9 +36,13 @@ yarn-error.log*
 # local MCP server config (contains secrets)
 .mcp.json
 
+# Claude Code per-project local state (settings, scheduled task locks)
+.claude/
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+Screen Recording*.mov

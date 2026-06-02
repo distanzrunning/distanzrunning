@@ -3,13 +3,13 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { RelativeTimeCard } from "@/components/ui/RelativeTimeCard";
-import { Button } from "@/components/ui/Button";
 
 // ============================================================================
 // Toast Component
@@ -141,7 +141,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -232,8 +232,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -245,40 +245,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -311,14 +311,24 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // ============================================================================
 
 const defaultCode = `import { RelativeTimeCard } from '@/components/ui/RelativeTimeCard';
-import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
+  const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
   return (
-    <RelativeTimeCard date={new Date(Date.now() - 2 * 60 * 60 * 1000)}>
-      <Button>Hover Me</Button>
-    </RelativeTimeCard>
+    <p className="text-copy-14">
+      Last deploy <RelativeTimeCard date={twoHoursAgo} />
+    </p>
+  );
+}`;
+
+const customLabelCode = `import { RelativeTimeCard } from '@/components/ui/RelativeTimeCard';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
+  return (
+    <RelativeTimeCard date={twoHoursAgo}>Pending</RelativeTimeCard>
   );
 }`;
 
@@ -327,10 +337,18 @@ export function Component(): JSX.Element {
 // ============================================================================
 
 function DefaultDemo() {
+  const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
   return (
-    <RelativeTimeCard date={new Date(Date.now() - 2 * 60 * 60 * 1000)}>
-      <Button>Hover Me</Button>
-    </RelativeTimeCard>
+    <p className="text-copy-14">
+      Last deploy <RelativeTimeCard date={twoHoursAgo} />
+    </p>
+  );
+}
+
+function CustomLabelDemo() {
+  const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
+  return (
+    <RelativeTimeCard date={twoHoursAgo}>Pending</RelativeTimeCard>
   );
 }
 
@@ -347,11 +365,98 @@ export default function RelativeTimeCardComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
+        <p
+          className="mt-2 leading-6 xl:mt-4"
+          style={{ color: "hsl(var(--color-textSubtle))" }}
+        >
+          With no <code className="inline-code">children</code>, the
+          component renders its short formatter (
+          <code className="inline-code">2m ago</code>,{" "}
+          <code className="inline-code">Yesterday</code>,{" "}
+          <code className="inline-code">Mar 14</code>). Hover for the
+          absolute UTC + local card.
+        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <DefaultDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="custom-label" onCopyLink={showToast}>
+          Custom label
+        </SectionHeader>
+        <p
+          className="mt-2 leading-6 xl:mt-4"
+          style={{ color: "hsl(var(--color-textSubtle))" }}
+        >
+          Pass <code className="inline-code">children</code> only for
+          non-time labels the formatter can&apos;t describe (
+          <code className="inline-code">Pending</code>,{" "}
+          <code className="inline-code">Queued</code>).
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={customLabelCode}>
+            <CustomLabelDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use{" "}
+            <code className="inline-code">&lt;RelativeTimeCard /&gt;</code>{" "}
+            anywhere a recent timestamp appears in scannable surfaces:{" "}
+            <ComponentRef name="Table" /> cells,{" "}
+            <ComponentRef name="Entity" /> rows, deploy lists, activity
+            feeds. For a static date in body prose past 7 days, render{" "}
+            <code className="inline-code">Mar 14, 2026</code> directly.
+          </li>
+          <li>
+            Pass <code className="inline-code">date</code> as a{" "}
+            <code className="inline-code">Date</code> or Unix-ms number.
+            Don&apos;t pre-format the value, and don&apos;t replace{" "}
+            <code className="inline-code">children</code> with a
+            formatted string. The component&apos;s short formatter is
+            the canonical form (<code className="inline-code">2m</code>,{" "}
+            <code className="inline-code">5h</code>,{" "}
+            <code className="inline-code">Yesterday</code>).
+          </li>
+          <li>
+            Don&apos;t append <code className="inline-code">ago</code>{" "}
+            after the component. The formatter already produces{" "}
+            <code className="inline-code">2m ago</code> /{" "}
+            <code className="inline-code">5h ago</code>, so{" "}
+            <code className="inline-code">
+              &lt;RelativeTimeCard /&gt; ago
+            </code>{" "}
+            reads as <code className="inline-code">2m ago ago</code>.
+          </li>
+          <li>
+            Use <code className="inline-code">children</code> only for
+            non-time labels (
+            <code className="inline-code">Just now</code>,{" "}
+            <code className="inline-code">Pending</code>,{" "}
+            <code className="inline-code">Queued</code>) where the
+            formatter can&apos;t describe the state.
+          </li>
+          <li>
+            Pair with a leading label when the row is ambiguous on its
+            own:{" "}
+            <code className="inline-code">
+              Last deploy &lt;RelativeTimeCard date={"{ts}"} /&gt;
+            </code>
+            . The hover card already shows absolute UTC and local time,
+            so don&apos;t duplicate that copy elsewhere on the row.
+          </li>
+        </ul>
       </Section>
 
       <Toast

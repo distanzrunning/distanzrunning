@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -140,7 +141,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -231,8 +232,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -244,40 +245,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -314,7 +315,7 @@ const defaultCode = `import { Error } from '@/components/ui/Error';
 function DefaultExample() {
   return (
     <Error>
-      This email address is already in use.
+      Couldn&rsquo;t load race results. Try again.
     </Error>
   );
 }`;
@@ -323,8 +324,8 @@ const customLabelCode = `import { Error } from '@/components/ui/Error';
 
 function CustomLabelExample() {
   return (
-    <Error label="Email Error">
-      This email address is already in use.
+    <Error label="Strava Sync">
+      Failed to fetch activity. The athlete profile is private.
     </Error>
   );
 }`;
@@ -334,7 +335,7 @@ const noLabelCode = `import { Error } from '@/components/ui/Error';
 function NoLabelExample() {
   return (
     <Error>
-      This email address is already in use.
+      Couldn&rsquo;t reach the events API. Try again.
     </Error>
   );
 }`;
@@ -345,13 +346,13 @@ function SizesExample() {
   return (
     <div className="flex flex-col md:flex-row items-start gap-6">
       <Error size="small">
-        This email is in use.
+        Couldn&rsquo;t connect to Strava.
       </Error>
       <Error>
-        This email is in use.
+        Couldn&rsquo;t connect to Strava.
       </Error>
       <Error size="large">
-        This email is in use.
+        Couldn&rsquo;t connect to Strava.
       </Error>
     </div>
   );
@@ -363,7 +364,7 @@ import { Error } from '@/components/ui/Error';
 function WithLinkExample() {
   return (
     <Error>
-      The request failed.{' '}
+      Couldn&rsquo;t process your registration.{' '}
       <a
         href="/support"
         target="_blank"
@@ -385,15 +386,15 @@ function WithLinkExample() {
 function DefaultDemo() {
   return (
     <Error>
-      This email address is already in use.
+      Couldn&rsquo;t load race results. Try again.
     </Error>
   );
 }
 
 function CustomLabelDemo() {
   return (
-    <Error label="Email Error">
-      This email address is already in use.
+    <Error label="Strava Sync">
+      Failed to fetch activity. The athlete profile is private.
     </Error>
   );
 }
@@ -401,7 +402,7 @@ function CustomLabelDemo() {
 function NoLabelDemo() {
   return (
     <Error>
-      This email address is already in use.
+      Couldn&rsquo;t reach the events API. Try again.
     </Error>
   );
 }
@@ -410,13 +411,13 @@ function SizesDemo() {
   return (
     <div className="flex flex-col md:flex-row items-start gap-6">
       <Error size="small">
-        This email is in use.
+        Couldn&rsquo;t connect to Strava.
       </Error>
       <Error>
-        This email is in use.
+        Couldn&rsquo;t connect to Strava.
       </Error>
       <Error size="large">
-        This email is in use.
+        Couldn&rsquo;t connect to Strava.
       </Error>
     </div>
   );
@@ -445,7 +446,7 @@ function ExternalLinkIcon() {
 function WithLinkDemo() {
   return (
     <Error>
-      The request failed.{" "}
+      Couldn&rsquo;t process your registration.{" "}
       <a
         href="/support"
         target="_blank"
@@ -527,6 +528,144 @@ export default function ErrorComponent() {
         <CodePreview componentCode={withLinkCode}>
           <WithLinkDemo />
         </CodePreview>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use the Error component as a block surface when a section or
+            page-level resource failed to load: a panel, a dashboard
+            card, a route boundary.
+          </li>
+          <li>
+            Pick <ComponentRef name="Toast" /> for transient action
+            failures (
+            <code className="inline-code">
+              Couldn&apos;t save settings. Try again.
+            </code>
+            ) and the <code className="inline-code">error</code> prop on{" "}
+            <ComponentRef name="Input" /> for field-level validation.
+            Don&apos;t replace either with this block.
+          </li>
+          <li>
+            Always pair platform or system errors with a stable
+            identifier (request ID{" "}
+            <code className="inline-code">x-vercel-id</code>, deployment
+            ID <code className="inline-code">dpl_…</code>, run ID, trace
+            ID). Validation and permission denials are user-state, not
+            system, and don&apos;t need an ID.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The recovery action must do something concrete: a{" "}
+            <code className="inline-code">Try Again</code> button when
+            the operation is retry-safe, a named verb (
+            <code className="inline-code">Reconnect Strava</code>,{" "}
+            <code className="inline-code">Update Payment Method</code>)
+            when it isn&apos;t.
+          </li>
+          <li>
+            Don&apos;t auto-retry in the background; the user came to
+            this surface to decide.
+          </li>
+          <li>
+            For full-page route errors (
+            <code className="inline-code">error.tsx</code>), return focus
+            to the <code className="inline-code">Try Again</code> button
+            on appearance so a keyboard user can retry without hunting
+            for it.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            State what happened and what to do next, in that order. Cut
+            apologetic preambles (
+            <code className="inline-code">Unfortunately</code>,{" "}
+            <code className="inline-code">Oops</code>,{" "}
+            <code className="inline-code">We&apos;re sorry</code>).
+          </li>
+          <li>
+            Use <code className="inline-code">Couldn&apos;t</code> or{" "}
+            <code className="inline-code">Can&apos;t</code> for
+            user-state errors (
+            <code className="inline-code">
+              Couldn&apos;t verify your passkey. Try again.
+            </code>
+            ); use <code className="inline-code">Failed to</code> for
+            system or infra errors that mirror CLI output (
+            <code className="inline-code">
+              Build failed. Bundle exceeds 50 MB.
+            </code>
+            ). <code className="inline-code">Unable to</code> is banned.
+          </li>
+          <li>
+            Don&apos;t fall back to{" "}
+            <code className="inline-code">Something Went Wrong</code> as
+            a title; name the resource that failed (
+            <code className="inline-code">Couldn&apos;t Load Page</code>,{" "}
+            <code className="inline-code">
+              Couldn&apos;t Load Race
+            </code>
+            ).
+          </li>
+          <li>
+            Render the stable ID on a monospace sub-line under a
+            collapsed{" "}
+            <code className="inline-code">&lt;details&gt;</code> so
+            the user can copy-paste it into a support thread.
+          </li>
+          <li>
+            Never humor an error. Users hitting an error are frustrated;
+            insincere copy makes it worse.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            When the error appears asynchronously (after a failed fetch),
+            wrap the region in{" "}
+            <code className="inline-code">
+              aria-live=&quot;polite&quot;
+            </code>{" "}
+            so it&apos;s announced. Reserve{" "}
+            <code className="inline-code">
+              aria-live=&quot;assertive&quot;
+            </code>{" "}
+            for true blocking errors that interrupt input.
+          </li>
+        </ul>
       </Section>
 
       <Toast

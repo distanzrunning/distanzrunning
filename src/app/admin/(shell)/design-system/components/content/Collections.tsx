@@ -3,14 +3,14 @@ export default function Collections() {
     <div className="space-y-12">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">Colour</p>
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Colour</p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-4"
+          className="text-heading-40 font-serif mb-4"
           id="collections"
         >
           Collections
         </h1>
-        <p className="text-base text-textSubtle max-w-3xl">
+        <p className="text-copy-16 text-textSubtle max-w-3xl">
           Curated color combinations for specific content types and contexts.
           Collections ensure visual consistency across different sections of the
           site.
@@ -23,14 +23,14 @@ export default function Collections() {
       <section>
         <h2
           id="road"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Road
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mb-6 max-w-3xl">
           Professional road running content - races, training, and performance.
         </p>
 
@@ -84,14 +84,14 @@ export default function Collections() {
       <section>
         <h2
           id="track"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Track
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mb-6 max-w-3xl">
           Track and field content - sprint, middle distance, and technical
           training.
         </p>
@@ -146,14 +146,14 @@ export default function Collections() {
       <section>
         <h2
           id="trail"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Trail
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mb-6 max-w-3xl">
           Trail and ultrarunning content - adventure, exploration, and
           endurance.
         </p>
@@ -208,14 +208,14 @@ export default function Collections() {
       <section>
         <h2
           id="gear"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Gear
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mb-6 max-w-3xl">
           Equipment and gear reviews - shoes, watches, nutrition, and
           technology.
         </p>
@@ -270,14 +270,14 @@ export default function Collections() {
       <section>
         <h2
           id="nutrition"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Nutrition
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6 max-w-3xl">
+        <p className="text-copy-16 text-textSubtle mb-6 max-w-3xl">
           Nutrition and wellness content - fueling strategies, recovery, and
           health.
         </p>

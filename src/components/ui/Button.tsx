@@ -191,59 +191,46 @@ const getVariantClasses = (
   if (isDisabled) {
     switch (variant) {
       case "secondary":
-        return "bg-[var(--ds-background-200)] text-[var(--ds-gray-700)] shadow-[0_0_0_1px_var(--ds-gray-400)] cursor-not-allowed";
+        return "bg-surface text-textSubtler shadow-[0_0_0_1px_var(--ds-gray-400)] cursor-not-allowed";
       case "tertiary":
-        return "bg-transparent text-[var(--ds-gray-700)] cursor-not-allowed";
+        return "bg-transparent text-textSubtler cursor-not-allowed";
       default:
-        // Geist: background #f2f2f2 (gray-100), text #8f8f8f (gray-700)
-        return "bg-[var(--ds-gray-100)] text-[var(--ds-gray-700)] cursor-not-allowed";
+        return "bg-[var(--ds-gray-100)] text-textSubtler cursor-not-allowed";
     }
   }
 
   switch (variant) {
     case "default":
-      // Light mode: white overlay lightens dark button
-      // Dark mode: black overlay darkens light button
       return `
-        bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]
+        bg-[var(--ds-gray-1000)] text-textInverted
         hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),white_15%)]
         dark:hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),black_15%)]
       `;
     case "error":
-      // Light mode: darken on hover
-      // Dark mode: lighten to red-900 on hover
       return `
-        bg-[var(--ds-red-800)] text-white
+        bg-[var(--ds-red-800)] text-textInverted dark:text-[var(--ds-red-100)]
         hover:bg-[color-mix(in_srgb,var(--ds-red-800),black_15%)]
         dark:hover:bg-[var(--ds-red-900)]
       `;
     case "warning":
-      // Same color in light and dark modes
-      // Always darkens on hover (same hover in both modes)
-      // Warning uses dark text, not white
       return `
-        bg-[var(--ds-amber-800)] text-[var(--ds-gray-1000)]
+        bg-[var(--ds-amber-800)] text-[var(--ds-gray-1000)] dark:text-[var(--ds-amber-100)]
         hover:bg-[color-mix(in_srgb,var(--ds-amber-800),black_15%)]
       `;
     case "secondary":
-      // Secondary with shadow prop (rounded marketing style)
       if (shadow) {
         return `button-shadow-rounded`;
       }
-      // Light: white bg, gray border via box-shadow, darker bg on hover
-      // Dark: dark bg, subtle border via box-shadow, lighter bg on hover
       return `
-        bg-[var(--ds-background-100)] text-[var(--ds-gray-1000)]
+        bg-surface text-textDefault
         shadow-[0_0_0_1px_var(--ds-gray-400)]
         hover:bg-[var(--ds-gray-100)]
         dark:shadow-[0_0_0_1px_var(--ds-gray-400)]
         dark:hover:bg-[var(--ds-gray-200)]
       `;
     case "tertiary":
-      // Transparent bg, shows subtle overlay on hover
-      // Uses --ds-hover-overlay token (light: black 8%, dark: white 9%)
       return `
-        bg-transparent text-[var(--ds-gray-1000)]
+        bg-transparent text-textDefault
         hover:bg-[var(--ds-hover-overlay)]
       `;
     default:
@@ -299,17 +286,26 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       disabled = false,
       className = "",
       type = "button",
+      onClick,
       ...props
     },
     ref,
   ) => {
-    const isDisabled = disabled || loading;
+    // Two "disabled" axes:
+    //   - disabled prop → HTML disabled attribute. Removes the button
+    //     from the tab order and blocks pointer events at the browser
+    //     level. Use when the action is genuinely unavailable.
+    //   - loading prop → keeps the button focusable so the busy state
+    //     is announced when the user lands on it (per the Best
+    //     Practices section). We mark it aria-disabled + aria-busy
+    //     for assistive tech and guard onClick below.
+    const isVisuallyDisabled = disabled || loading;
 
     const baseClasses = `
       inline-flex items-center justify-center
       select-none
       transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
-      focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2
     `;
 
     const sizeClasses = getSizeClasses(size, shape);
@@ -335,13 +331,29 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const spinnerSize = size === "large" ? 24 : 16;
     const iconSize = getIconSize(size);
 
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (loading) {
+        event.preventDefault();
+        return;
+      }
+      onClick?.(event);
+    };
+
     return (
       <button
         ref={ref}
         type={type}
-        disabled={isDisabled}
+        disabled={disabled}
+        aria-busy={loading || undefined}
+        aria-disabled={loading || undefined}
+        onClick={handleClick}
         className={combinedClasses}
-        style={{ "--ds-icon-size": iconSize } as React.CSSProperties}
+        style={
+          {
+            "--ds-icon-size": iconSize,
+            ...(isVisuallyDisabled ? { cursor: "not-allowed" } : null),
+          } as React.CSSProperties
+        }
         {...props}
       >
         {loading && (
@@ -393,7 +405,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       inline-flex items-center justify-center
       select-none
       transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
-      focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2
       no-underline
     `;
 

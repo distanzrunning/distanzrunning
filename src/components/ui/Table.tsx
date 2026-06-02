@@ -39,7 +39,7 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
               "w-full caption-bottom",
               className,
             )}
-            style={{ color: "var(--ds-gray-900)", fontSize: 14, lineHeight: "20px" }}
+            style={{ color: "hsl(var(--color-textSubtle))", fontSize: 14, lineHeight: "20px" }}
             {...props}
           >
             {children}
@@ -78,26 +78,20 @@ const TableBody = forwardRef<
   const { striped, bordered, interactive } = useContext(TableContext);
 
   return (
-    <>
-      {/* Spacer row between header and body */}
-      <tbody aria-hidden="true">
-        <tr className="table-row h-3" />
-      </tbody>
-      <tbody
-        ref={ref}
-        className={cn(
-          "[&_td:first-child]:rounded-l [&_td:last-child]:rounded-r",
-          striped &&
-            "[&_tr:where(:nth-child(odd))]:bg-[var(--ds-background-200)]",
-          bordered && "[&_tr:not(:last-child)]:border-b",
-          interactive && "[&_tr:hover]:bg-[var(--ds-gray-100)]",
-          className,
-        )}
-        {...props}
-      >
-        {children}
-      </tbody>
-    </>
+    <tbody
+      ref={ref}
+      className={cn(
+        "[&_td:first-child]:rounded-l [&_td:last-child]:rounded-r",
+        striped &&
+          "[&_tr:where(:nth-child(odd))]:bg-surface",
+        bordered && "[&_tr:not(:last-child)]:border-b",
+        interactive && "[&_tr:hover]:bg-[var(--ds-gray-100)]",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </tbody>
   );
 });
 TableBody.displayName = "TableBody";
@@ -129,10 +123,10 @@ const TableHead = forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-10 px-2 text-left align-middle font-medium last:text-right border-[var(--ds-gray-400)]",
+      "h-10 px-2 text-left align-middle font-medium last:text-right border-borderDefault",
       className,
     )}
-    style={{ color: "var(--ds-gray-900)" }}
+    style={{ color: "hsl(var(--color-textSubtle))" }}
     {...props}
   />
 ));
@@ -170,8 +164,20 @@ const TableFooter = forwardRef<
 ));
 TableFooter.displayName = "TableFooter";
 
+// Compound aliases so callers can use `<Table.Body>` / `<Table.Head>`
+// notation that matches Geist's BP wording. Named exports remain for
+// existing consumers.
+const TableWithSubcomponents = Object.assign(Table, {
+  Header: TableHeader,
+  Body: TableBody,
+  Row: TableRow,
+  Head: TableHead,
+  Cell: TableCell,
+  Footer: TableFooter,
+});
+
 export {
-  Table,
+  TableWithSubcomponents as Table,
   TableHeader,
   TableBody,
   TableRow,

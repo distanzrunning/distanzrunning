@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -140,7 +141,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -231,8 +232,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -244,40 +245,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -403,7 +404,7 @@ function KeyboardNavDemo() {
         defaultSelected={["engineering"]}
         placeholder="Select teams..."
       />
-      <p className="text-copy-14" style={{ color: "var(--ds-gray-900)" }}>
+      <p className="text-copy-14" style={{ color: "hsl(var(--color-textSubtle))" }}>
         Try keyboard navigation: ↑ ↓ for rows, ← → for checkbox/button focus, Tab to cycle through all elements
       </p>
     </div>
@@ -489,7 +490,7 @@ export default function MultiSelectComponent() {
         </p>
         <ul
           className="text-copy-16 mb-6 space-y-2 pl-6"
-          style={{ lineHeight: 1.5, color: "var(--ds-gray-900)", listStyleType: "disc" }}
+          style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))", listStyleType: "disc" }}
         >
           <li>
             <strong className="text-textDefault">
@@ -528,7 +529,7 @@ export default function MultiSelectComponent() {
         </p>
         <ul
           className="text-copy-16 mb-6 space-y-2 pl-6"
-          style={{ lineHeight: 1.5, color: "var(--ds-gray-900)", listStyleType: "disc" }}
+          style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))", listStyleType: "disc" }}
         >
           <li>
             <strong className="text-textDefault">Up/Down arrows</strong>:
@@ -569,6 +570,107 @@ export default function MultiSelectComponent() {
             <ControlledStateDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pick{" "}
+            <code className="inline-code">&lt;MultiSelect&gt;</code>{" "}
+            when users pick more than one value from a known list
+            (regions, scopes, tags).
+          </li>
+          <li>
+            For a single value from a short list, use{" "}
+            <ComponentRef name="Select" />.
+          </li>
+          <li>
+            When typing to filter is more important than seeing every
+            option at once, use <ComponentRef name="Combobox" />.
+          </li>
+          <li>
+            Skip{" "}
+            <code className="inline-code">&lt;MultiSelect&gt;</code>{" "}
+            for boolean settings; <ComponentRef name="Toggle" />{" "}
+            handles those.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Show the selected count in the trigger (
+            <code className="inline-code">3 regions selected</code>);
+            show the single name when only one is picked.
+          </li>
+          <li>
+            Use controlled mode when state lives in the URL or syncs
+            to the server so the trigger label and stored value stay
+            in lockstep.
+          </li>
+          <li>
+            Keep checkbox focus and button focus distinct so Up/Down
+            navigates rows and Left/Right toggles between the row&apos;s
+            checkbox and action button.
+          </li>
+          <li>
+            For empty filters, render{" "}
+            <code className="inline-code">
+              No {"{items}"} match &ldquo;{"{query}"}&rdquo;
+            </code>{" "}
+            rather than{" "}
+            <code className="inline-code">No results</code>.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Each row checkbox needs an{" "}
+            <code className="inline-code">aria-label</code> that names
+            the item (
+            <code className="inline-code">Select us-east-1</code>); a
+            bare <code className="inline-code">Select</code> is
+            unanchored for screen readers.
+          </li>
+          <li>
+            The trigger button needs a stable accessible name even
+            when zero items are selected; don&apos;t rely on the
+            placeholder alone.
+          </li>
+          <li>
+            Trap focus inside the menu while it&apos;s open and
+            return focus to the trigger on close.
+          </li>
+          <li>
+            Announce bulk actions (
+            <code className="inline-code">Select All</code>,{" "}
+            <code className="inline-code">Select Only</code>) through
+            the visible button label so the action matches what the
+            screen reader speaks.
+          </li>
+        </ul>
       </Section>
 
       <Toast

@@ -1,6 +1,8 @@
 "use client";
 
-import {
+import React, {
+  createContext,
+  useContext,
   useEffect,
   useState,
   useRef,
@@ -14,6 +16,31 @@ const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 // ============================================================================
+// Context
+// ============================================================================
+
+interface ModalContextValue {
+  titleId: string;
+  /**
+   * True when the component is rendering inside a <Modal.Header>.
+   * Modal.Header uses `gap` to space its children, so Modal.Title's
+   * standalone bottom margin would collide with the gap; we suppress
+   * it here and let the Header own the spacing.
+   */
+  inHeader: boolean;
+}
+
+const ModalContext = createContext<ModalContextValue | null>(null);
+
+function useModalContext(componentName: string): ModalContextValue {
+  const ctx = useContext(ModalContext);
+  if (!ctx) {
+    throw new Error(`<${componentName}> must be used inside <Modal>`);
+  }
+  return ctx;
+}
+
+// ============================================================================
 // Types
 // ============================================================================
 
@@ -22,16 +49,8 @@ export interface ModalProps {
   open: boolean;
   /** Called when the modal should close */
   onClose: () => void;
-  /** Modal body content */
+  /** Modal contents — compose with Modal.Title / Modal.P / Modal.Header / Modal.Footer / Modal.Inset */
   children?: ReactNode;
-  /** Optional title shown in the modal header */
-  title?: string;
-  /** Optional subtitle shown below the title in the header */
-  subtitle?: string;
-  /** Optional footer rendered outside the scrollable body */
-  footer?: ReactNode;
-  /** Enable sticky header that stays visible when body scrolls */
-  stickyHeader?: boolean;
   /** Ref to an element that should receive focus when the modal opens */
   initialFocusRef?: RefObject<HTMLElement | null>;
   /** Max width of the modal panel (default 540px). */
@@ -45,8 +64,134 @@ const DURATION = 300; // ms
 const TIMING = "cubic-bezier(0.175, 0.885, 0.32, 1.1)";
 
 // ============================================================================
-// Modal
+// Subcomponents
 // ============================================================================
+
+function ModalTitle({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const { titleId } = useModalContext("Modal.Title");
+  return (
+    <h3
+      id={titleId}
+      className={className}
+      style={{
+        color: "var(--ds-gray-1000)",
+        fontSize: 24,
+        fontWeight: 600,
+        lineHeight: "32px",
+        letterSpacing: "-0.029375rem",
+        // Title sits flush against the next element so it groups
+        // tightly with a following Modal.P. The bottom rhythm to the
+        // body is owned by Modal.P (or Modal.Header's gap when
+        // wrapped).
+        margin: 0,
+      }}
+    >
+      {children}
+    </h3>
+  );
+}
+
+function ModalP({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const { inHeader } = useModalContext("Modal.P");
+  return (
+    <div
+      className={className}
+      style={{
+        color: "var(--ds-gray-1000)",
+        fontSize: 16,
+        lineHeight: "24px",
+        fontWeight: 400,
+        // Inside <Modal.Header>, the header's `gap` owns spacing.
+        // Standalone, the paragraph needs its own bottom rhythm so the
+        // body content below sits 24px clear.
+        margin: inHeader ? 0 : "0 0 24px",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/**
+ * Optional wrapper around Modal.Title + Modal.P that turns the header
+ * into a sticky band that stays visible while the body scrolls.
+ */
+function ModalHeader({
+  children,
+  sticky = false,
+  className,
+}: {
+  children: ReactNode;
+  sticky?: boolean;
+  className?: string;
+}) {
+  const parent = useModalContext("Modal.Header");
+  return (
+    <ModalContext.Provider value={{ ...parent, inHeader: true }}>
+      <header
+        className={className}
+        style={
+          sticky
+            ? {
+                position: "sticky",
+                top: 0,
+                zIndex: 10,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+                margin: "0 -24px 24px",
+                padding: "20px 24px",
+                background: "var(--ds-modal-section-bg)",
+                borderBottom: "1px solid var(--ds-gray-alpha-400)",
+              }
+            : {
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+                marginBottom: 24,
+                zIndex: 10,
+              }
+        }
+      >
+        {children}
+      </header>
+    </ModalContext.Provider>
+  );
+}
+
+function ModalFooter({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  // Marker only — Modal pulls this out of the scrollable body and
+  // renders it in the panel's footer slot.
+  return (
+    <div
+      className={className}
+      style={{
+        borderTop: "1px solid var(--ds-gray-alpha-400)",
+        background: "var(--ds-modal-section-bg)",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 function ModalInset({ children }: { children: ReactNode }) {
   return (
@@ -64,14 +209,14 @@ function ModalInset({ children }: { children: ReactNode }) {
   );
 }
 
+// ============================================================================
+// Modal
+// ============================================================================
+
 export function Modal({
   open,
   onClose,
   children,
-  title,
-  subtitle,
-  footer,
-  stickyHeader = false,
   initialFocusRef,
   maxWidth = 540,
   className = "",
@@ -85,7 +230,29 @@ export function Modal({
   const openerRef = useRef<HTMLElement | null>(null);
 
   const titleId = useId();
-  const subtitleId = useId();
+
+  // Split children: Modal.Footer renders outside the scrollable body,
+  // everything else stays inside. We also flag whether a sticky header
+  // is in play so the body can drop its top padding.
+  const { bodyChildren, footerChild, hasStickyHeader } = React.useMemo(() => {
+    let footer: ReactNode = null;
+    let stickyHeader = false;
+    const rest: ReactNode[] = [];
+    React.Children.forEach(children, (child) => {
+      if (React.isValidElement(child)) {
+        if (child.type === ModalFooter) {
+          footer = child;
+          return;
+        }
+        if (child.type === ModalHeader) {
+          const props = child.props as { sticky?: boolean };
+          if (props.sticky) stickyHeader = true;
+        }
+      }
+      rest.push(child);
+    });
+    return { bodyChildren: rest, footerChild: footer, hasStickyHeader: stickyHeader };
+  }, [children]);
 
   // Respect the user's OS-level "reduce motion" preference. When true we
   // drop the opacity/scale transitions (enter/exit are instantaneous).
@@ -121,20 +288,20 @@ export function Modal({
     };
   }, [open]);
 
-  // Body scroll lock (compensate for scrollbar width to prevent layout shift)
+  // Body scroll lock. We don't compensate for the freed
+  // scrollbar width because globals.css sets
+  // `scrollbar-gutter: stable` on <html>, which reserves the
+  // gutter unconditionally — there's nothing to compensate
+  // for, and adding padding-right here on top of that
+  // *causes* a layout shift (pushes content inward by the
+  // gutter width since clientWidth always reads as
+  // viewport-width − gutter).
   useEffect(() => {
     if (!mounted) return;
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
     const prevOverflow = document.body.style.overflow;
-    const prevPaddingRight = document.body.style.paddingRight;
     document.body.style.overflow = "hidden";
-    if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    }
     return () => {
       document.body.style.overflow = prevOverflow;
-      document.body.style.paddingRight = prevPaddingRight;
     };
   }, [mounted]);
 
@@ -212,8 +379,14 @@ export function Modal({
   if (!mounted || typeof document === "undefined") return null;
 
   return createPortal(
-    <>
-      {/* Backdrop */}
+    <ModalContext.Provider value={{ titleId, inHeader: false }}>
+      {/* Backdrop. backdrop-filter: blur frosts the page behind
+          the modal so even when the colour-contrast is subtle
+          (notably dark mode, where a pure-black scrim on a
+          pure-black page would be invisible), the modal still
+          reads as elevated over a visually different surface.
+          Tokens for colour + opacity are theme-aware
+          (var(--ds-overlay-backdrop-*)). */}
       <div
         style={{
           position: "fixed",
@@ -223,6 +396,8 @@ export function Modal({
           height: "100%",
           backgroundColor: "var(--ds-overlay-backdrop-color)",
           opacity: visible ? "var(--ds-overlay-backdrop-opacity)" : (0 as never),
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
           zIndex: 50,
           pointerEvents: visible ? "all" : "none",
           transition: `opacity ${effectiveDuration}ms ${TIMING}`,
@@ -252,8 +427,7 @@ export function Modal({
           ref={panelRef}
           role="dialog"
           aria-modal="true"
-          aria-labelledby={title ? titleId : undefined}
-          aria-describedby={subtitle ? subtitleId : undefined}
+          aria-labelledby={titleId}
           tabIndex={-1}
           className={`relative w-full mx-4 ${className}`}
           style={{
@@ -275,92 +449,28 @@ export function Modal({
           {/* Modal body */}
           <div
             style={{
-              padding: stickyHeader ? "0 24px 24px" : 24,
+              padding: hasStickyHeader ? "0 24px 24px" : 24,
               overflowX: "hidden",
               overflowY: "auto",
               position: "relative",
-              borderTopLeftRadius: stickyHeader ? 12 : undefined,
-              borderTopRightRadius: stickyHeader ? 12 : undefined,
+              borderTopLeftRadius: hasStickyHeader ? 12 : undefined,
+              borderTopRightRadius: hasStickyHeader ? 12 : undefined,
             }}
           >
-            {(title || subtitle) && (
-              <header
-                style={
-                  stickyHeader
-                    ? {
-                        position: "sticky",
-                        top: 0,
-                        zIndex: 10,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 10,
-                        margin: "0 -24px 24px",
-                        padding: "20px 24px",
-                        background: "var(--ds-modal-section-bg)",
-                        borderBottom: "1px solid var(--ds-gray-alpha-400)",
-                      }
-                    : {
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 12,
-                        marginBottom: 24,
-                        zIndex: 10,
-                      }
-                }
-              >
-                {title && (
-                  <h3
-                    id={titleId}
-                    style={{
-                      color: "var(--ds-gray-1000)",
-                      fontSize: stickyHeader ? 20 : 24,
-                      fontWeight: 600,
-                      lineHeight: stickyHeader ? "24px" : "32px",
-                      letterSpacing: stickyHeader
-                        ? "-0.47px"
-                        : "-0.029375rem",
-                      margin: 0,
-                    }}
-                  >
-                    {title}
-                  </h3>
-                )}
-                {subtitle && (
-                  <div
-                    id={subtitleId}
-                    style={{
-                      color: "var(--ds-gray-1000)",
-                      fontSize: 16,
-                      lineHeight: "24px",
-                      fontWeight: 400,
-                      margin: 0,
-                    }}
-                  >
-                    {subtitle}
-                  </div>
-                )}
-              </header>
-            )}
-
-            {children}
+            {bodyChildren}
           </div>
 
           {/* Footer (outside scrollable body) */}
-          {footer && (
-            <div
-              style={{
-                borderTop: "1px solid var(--ds-gray-alpha-400)",
-                background: "var(--ds-modal-section-bg)",
-              }}
-            >
-              {footer}
-            </div>
-          )}
+          {footerChild}
         </div>
       </div>
-    </>,
+    </ModalContext.Provider>,
     document.body,
   );
 }
 
+Modal.Title = ModalTitle;
+Modal.P = ModalP;
+Modal.Header = ModalHeader;
+Modal.Footer = ModalFooter;
 Modal.Inset = ModalInset;

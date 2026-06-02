@@ -33,14 +33,14 @@ export default function RadiusAndShadowsShowcase() {
           {radiusValues.map((radius) => (
             <div key={radius.name} className="text-center">
               <div
-                className={`w-full h-24 bg-electric-pink ${radius.class} mb-3 transition-transform hover:scale-105`}
+                className={`w-full h-24 bg-textDefault ${radius.class} mb-3 transition-transform hover:scale-105`}
               />
               <div className="space-y-1">
                 <p className="font-medium text-sm">{radius.name}</p>
                 <p className="text-xs text-textSubtle font-mono">
                   {radius.value}
                 </p>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   {radius.class}
                 </code>
               </div>
@@ -70,7 +70,7 @@ export default function RadiusAndShadowsShowcase() {
               </div>
               <div className="space-y-1">
                 <p className="font-medium text-sm">{shadow.name}</p>
-                <code className="text-xs text-textSubtler font-mono block">
+                <code className="inline-code">
                   {shadow.class}
                 </code>
                 <p className="text-xs text-textSubtle">{shadow.value}</p>

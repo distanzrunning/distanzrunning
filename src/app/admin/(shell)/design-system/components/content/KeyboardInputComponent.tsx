@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -140,7 +141,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -231,8 +232,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -244,40 +245,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -315,10 +316,10 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Kbd>\u2318</Kbd>
-      <Kbd>\u21E7</Kbd>
-      <Kbd>\u2325</Kbd>
-      <Kbd>\u2303</Kbd>
+      <Kbd meta />
+      <Kbd shift />
+      <Kbd alt />
+      <Kbd ctrl />
     </div>
   );
 }`;
@@ -328,7 +329,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Kbd keys={["\u2318", "\u21E7"]} />
+    <Kbd meta shift />
   );
 }`;
 
@@ -348,18 +349,16 @@ export function Component(): JSX.Element {
 function ModifiersDemo() {
   return (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Kbd>{"\u2318"}</Kbd>
-      <Kbd>{"\u21E7"}</Kbd>
-      <Kbd>{"\u2325"}</Kbd>
-      <Kbd>{"\u2303"}</Kbd>
+      <Kbd meta />
+      <Kbd shift />
+      <Kbd alt />
+      <Kbd ctrl />
     </div>
   );
 }
 
 function CombinationDemo() {
-  return (
-    <Kbd keys={["\u2318", "\u21E7"]} />
-  );
+  return <Kbd meta shift />;
 }
 
 function SmallDemo() {
@@ -408,6 +407,64 @@ export default function KeyboardInputComponent() {
             <SmallDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use{" "}
+            <code className="inline-code">&lt;Kbd&gt;</code> for
+            shortcut hints inside prose, menu items, and button
+            suffixes. In long-form docs that narrate a shortcut, write{" "}
+            <code className="inline-code">the ⌘ K shortcut</code>{" "}
+            directly so the page renders the same when copied to plain
+            text.
+          </li>
+          <li>
+            Pass modifiers via boolean props (
+            <code className="inline-code">meta</code>,{" "}
+            <code className="inline-code">shift</code>,{" "}
+            <code className="inline-code">alt</code>,{" "}
+            <code className="inline-code">ctrl</code>). The component
+            swaps <code className="inline-code">⌘</code> for{" "}
+            <code className="inline-code">Ctrl</code> on Windows and
+            Linux, so hard-coding{" "}
+            <code className="inline-code">&lt;Kbd&gt;Cmd+K&lt;/Kbd&gt;</code>{" "}
+            ships the wrong glyph to half your users.
+          </li>
+          <li>
+            <code className="inline-code">children</code> is one key,
+            digit, or named key (
+            <code className="inline-code">K</code>,{" "}
+            <code className="inline-code">7</code>,{" "}
+            <code className="inline-code">Enter</code>,{" "}
+            <code className="inline-code">Esc</code>). Don&apos;t
+            lowercase it, don&apos;t spell out modifiers inside, and
+            don&apos;t pack a sentence into the element.
+          </li>
+          <li>
+            Use{" "}
+            <code className="inline-code">size=&quot;small&quot;</code>{" "}
+            inside dense surfaces like menu rows,{" "}
+            <ComponentRef name="Command Menu" /> items, or table cells
+            where the default size crowds adjacent text.
+          </li>
+          <li>
+            Punctuation lives outside the element:{" "}
+            <code className="inline-code">
+              Press &lt;Kbd meta&gt;K&lt;/Kbd&gt; to open the command
+              menu.
+            </code>{" "}
+            Period, comma, and{" "}
+            <code className="inline-code">or</code> separators stay in
+            surrounding prose so screen readers don&apos;t announce
+            them as keys.
+          </li>
+        </ul>
       </Section>
 
       <Toast

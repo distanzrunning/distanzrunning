@@ -324,7 +324,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex-shrink-0">
                 <div className="flex items-center justify-between">
                   {/* Left: Title */}
-                  <h1 className="text-2xl font-semibold text-neutral-900 dark:text-white font-playfair">
+                  <h1 className="text-heading-24 font-serif text-neutral-900 dark:text-white">
                     Race Calendar
                   </h1>
 
@@ -610,7 +610,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         <style jsx global>{`
           /* Calendar container styling */
           .calendar-wrapper .fc {
-            font-family: var(--font-body), sans-serif;
+            font-family: var(--font-sans), sans-serif;
           }
 
           /* Hide default header */

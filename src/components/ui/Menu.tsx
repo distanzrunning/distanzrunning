@@ -22,7 +22,9 @@ type MenuPosition =
   | "right-start"
   | "right-end"
   | "bottom-start"
-  | "bottom-end";
+  | "bottom-end"
+  | "top-start"
+  | "top-end";
 
 interface MenuContextValue {
   isOpen: boolean;
@@ -32,6 +34,8 @@ interface MenuContextValue {
   itemCount: number;
   registerItem: () => number;
   menuWidth?: number;
+  /** Trigger button ref so focus can be restored on close. */
+  triggerRef: React.MutableRefObject<HTMLButtonElement | null>;
 }
 
 const MenuContext = createContext<MenuContextValue | null>(null);
@@ -50,14 +54,28 @@ interface MenuProps {
   children: ReactNode;
   position?: MenuPosition;
   width?: number;
+  /** Pixel gap between the trigger and the dropdown along the
+   *  primary axis. Defaults to 4 — matches the header menu and
+   *  existing DS-docs usage. Pass 12 to align with the calendar
+   *  preset dropdown gap (used by the consent env filter). */
+  sideOffset?: number;
 }
 
-export function Menu({ children, position = "bottom-start", width }: MenuProps) {
+export function Menu({
+  children,
+  position = "bottom-start",
+  width,
+  sideOffset = 4,
+}: MenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
   const itemCountRef = useRef(0);
+  // Track whether the menu was open in the previous render so we can
+  // restore focus to the trigger when it closes.
+  const wasOpenRef = useRef(false);
 
   // Reset item count on each render cycle
   itemCountRef.current = 0;
@@ -106,31 +124,25 @@ export function Menu({ children, position = "bottom-start", width }: MenuProps) 
     };
   }, [isOpen]);
 
-  // Reset active index when menu opens/closes
+  // Reset active index when menu opens/closes, and restore focus to
+  // the trigger when the menu transitions from open → closed so a
+  // keyboard user lands back where they came from.
   useEffect(() => {
     if (!isOpen) {
       setActiveIndex(-1);
+      if (wasOpenRef.current) {
+        // Wait for the dropdown unmount + portal cleanup before
+        // moving focus; rAF keeps the call in the same paint frame.
+        requestAnimationFrame(() => triggerRef.current?.focus());
+      }
     }
+    wasOpenRef.current = isOpen;
   }, [isOpen]);
 
-  const positionStyles: React.CSSProperties = (() => {
-    switch (position) {
-      case "bottom-start":
-        return { top: "100%", left: 0, marginTop: 4 };
-      case "bottom-end":
-        return { top: "100%", right: 0, marginTop: 4 };
-      case "left-start":
-        return { right: "100%", top: 0, marginRight: 4 };
-      case "left-end":
-        return { right: "100%", bottom: 0, marginRight: 4 };
-      case "right-start":
-        return { left: "100%", top: 0, marginLeft: 4 };
-      case "right-end":
-        return { left: "100%", bottom: 0, marginLeft: 4 };
-      default:
-        return { top: "100%", left: 0, marginTop: 4 };
-    }
-  })();
+  // Positioning is now resolved inside <MenuDropdown> (it can flip the
+  // requested side when the viewport would clip the menu). The
+  // dropdown is portaled, so no inline offset on the trigger
+  // container is needed here.
 
   // Separate children into MenuButton and menu content
   const childArray = React.Children.toArray(children);
@@ -151,18 +163,23 @@ export function Menu({ children, position = "bottom-start", width }: MenuProps) 
         itemCount: itemCountRef.current,
         registerItem,
         menuWidth: width,
+        triggerRef,
       }}
     >
-      <div ref={containerRef} style={{ position: "relative", display: "inline-block" }}>
+      <div
+        ref={containerRef}
+        style={{ position: "relative", display: "inline-block" }}
+      >
         {trigger}
-        {isOpen && typeof document !== "undefined" &&
+        {isOpen &&
+          typeof document !== "undefined" &&
           createPortal(
             <MenuDropdown
               containerRef={containerRef}
               dropdownRef={dropdownRef}
               position={position}
-              positionStyles={positionStyles}
               menuWidth={width}
+              sideOffset={sideOffset}
             >
               {items}
             </MenuDropdown>,
@@ -181,43 +198,224 @@ function MenuDropdown({
   containerRef,
   dropdownRef,
   position,
-  positionStyles,
   menuWidth,
+  sideOffset,
   children,
 }: {
-  containerRef: React.RefObject<HTMLDivElement | null>;
-  dropdownRef: React.RefObject<HTMLDivElement | null>;
+  containerRef: React.RefObject<HTMLDivElement>;
+  dropdownRef: React.RefObject<HTMLDivElement>;
   position: MenuPosition;
   menuWidth?: number;
-  positionStyles: React.CSSProperties;
+  sideOffset: number;
   children: ReactNode;
 }) {
   const [coords, setCoords] = useState({ top: 0, left: 0 });
+  // Resolved position after auto-flip — may differ from the prop
+  // when the requested side would overflow the viewport.
+  const [resolvedPosition, setResolvedPosition] = useState(position);
 
   useEffect(() => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const scrollY = window.scrollY;
     const scrollX = window.scrollX;
+    const viewportH = window.innerHeight;
+    const viewportW = window.innerWidth;
+    const widthPx = menuWidth || 200;
+    // Estimated dropdown height — refined on mount below if needed,
+    // but most menus are short so this works for the initial flip
+    // decision. Caller can pass a tighter width if it matters.
+    const estimatedH = Math.min(
+      8 + 40 * React.Children.count(children) + 8,
+      viewportH - 16,
+    );
+
+    // Auto-flip: if the requested side would clip, swap to its
+    // mirror. Vertical (bottom ↔ top) and horizontal (right ↔ left).
+    let resolved: MenuPosition = position;
+    if (position.startsWith("bottom")) {
+      const spaceBelow = viewportH - rect.bottom;
+      const spaceAbove = rect.top;
+      if (spaceBelow < estimatedH && spaceAbove > spaceBelow) {
+        resolved = (
+          position === "bottom-end" ? "top-end" : "top-start"
+        ) as MenuPosition;
+      }
+    } else if (position.startsWith("right")) {
+      const spaceRight = viewportW - rect.right;
+      const spaceLeft = rect.left;
+      if (spaceRight < widthPx && spaceLeft > spaceRight) {
+        resolved = (
+          position === "right-end" ? "left-end" : "left-start"
+        ) as MenuPosition;
+      }
+    } else if (position.startsWith("left")) {
+      const spaceLeft = rect.left;
+      const spaceRight = viewportW - rect.right;
+      if (spaceLeft < widthPx && spaceRight > spaceLeft) {
+        resolved = (
+          position === "left-end" ? "right-end" : "right-start"
+        ) as MenuPosition;
+      }
+    }
+    setResolvedPosition(resolved);
 
     let top = 0;
     let left = 0;
 
-    if (position.startsWith("bottom")) {
-      top = rect.bottom + scrollY + 4;
-      left = position === "bottom-end" ? rect.right + scrollX : rect.left + scrollX;
-    } else if (position.startsWith("left")) {
-      // For left positions, we store the right edge of viewport minus button's left edge
-      // This will be used as CSS `right` to position dropdown to the left of the button
+    if (resolved.startsWith("bottom")) {
+      top = rect.bottom + scrollY + sideOffset;
+      left =
+        resolved === "bottom-end" ? rect.right + scrollX : rect.left + scrollX;
+    } else if (resolved.startsWith("top")) {
+      // Anchored to the bottom of the menu — `bottom` is computed by
+      // the consumer using viewport height + scroll.
+      top = rect.top + scrollY - sideOffset;
+      left =
+        resolved === "top-end" ? rect.right + scrollX : rect.left + scrollX;
+    } else if (resolved.startsWith("left")) {
       left = rect.left + scrollX;
-      top = position === "left-end" ? rect.bottom + scrollY : rect.top + scrollY;
-    } else if (position.startsWith("right")) {
-      left = rect.right + scrollX + 4;
-      top = position === "right-end" ? rect.bottom + scrollY : rect.top + scrollY;
+      top =
+        resolved === "left-end" ? rect.bottom + scrollY : rect.top + scrollY;
+    } else if (resolved.startsWith("right")) {
+      left = rect.right + scrollX + sideOffset;
+      top =
+        resolved === "right-end" ? rect.bottom + scrollY : rect.top + scrollY;
     }
 
     setCoords({ top, left });
-  }, [containerRef, position]);
+  }, [containerRef, position, menuWidth, children, sideOffset]);
+
+  // Auto-focus the first non-disabled item when the dropdown mounts,
+  // then handle Up/Down/Home/End at the container level. Roving
+  // tabindex isn't needed — each item is tabindex=0 and we just call
+  // .focus() on the right one.
+  //
+  // `preventScroll` is essential on this first focus: at the moment
+  // it fires, the dropdown's coords useEffect has scheduled a setState
+  // but the new position hasn't been committed to the DOM, so the
+  // dropdown is still anchored at top:0, left:0. A plain .focus()
+  // would scroll the page to that origin (jumping the viewport to
+  // the top). Subsequent focus() calls from arrow keys happen after
+  // the menu is positioned and should keep their default scroll-into-
+  // view behaviour so long menus reveal the focused row.
+  // Typeahead state lives in refs so it persists across keystrokes
+  // without forcing re-renders.
+  const typeaheadBufferRef = useRef("");
+  const typeaheadTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const el = dropdownRef.current;
+    if (!el) return;
+    const items = Array.from(
+      el.querySelectorAll<HTMLElement>(
+        '[role="menuitem"]:not([aria-disabled="true"])',
+      ),
+    );
+    if (items.length === 0) return;
+    items[0].focus({ preventScroll: true });
+
+    function handleKey(e: KeyboardEvent) {
+      if (!el) return;
+      const items = Array.from(
+        el.querySelectorAll<HTMLElement>(
+          '[role="menuitem"]:not([aria-disabled="true"])',
+        ),
+      );
+      if (items.length === 0) return;
+      const currentIdx = items.findIndex(
+        (item) => item === document.activeElement,
+      );
+      switch (e.key) {
+        case "ArrowDown": {
+          e.preventDefault();
+          const next = currentIdx < 0 ? 0 : (currentIdx + 1) % items.length;
+          items[next].focus();
+          break;
+        }
+        case "ArrowUp": {
+          e.preventDefault();
+          const prev =
+            currentIdx < 0
+              ? items.length - 1
+              : (currentIdx - 1 + items.length) % items.length;
+          items[prev].focus();
+          break;
+        }
+        case "Home": {
+          e.preventDefault();
+          items[0].focus();
+          break;
+        }
+        case "End": {
+          e.preventDefault();
+          items[items.length - 1].focus();
+          break;
+        }
+        default: {
+          // Typeahead: printable single-character key, no modifiers,
+          // not Space (which activates the focused item).
+          if (
+            e.key.length !== 1 ||
+            e.key === " " ||
+            e.metaKey ||
+            e.ctrlKey ||
+            e.altKey
+          ) {
+            break;
+          }
+
+          // Append to the buffer and reset the idle timer (500ms is
+          // the standard WAI-ARIA typeahead window).
+          if (typeaheadTimerRef.current !== null) {
+            window.clearTimeout(typeaheadTimerRef.current);
+          }
+          typeaheadBufferRef.current += e.key.toLowerCase();
+          typeaheadTimerRef.current = window.setTimeout(() => {
+            typeaheadBufferRef.current = "";
+            typeaheadTimerRef.current = null;
+          }, 500);
+
+          // When the buffer is a single repeated character, cycle
+          // through items starting with that character. Otherwise match
+          // the full buffered prefix.
+          const buf = typeaheadBufferRef.current;
+          const isRepeatedChar =
+            buf.length > 1 && buf.split("").every((c) => c === buf[0]);
+          const needle = isRepeatedChar ? buf[0] : buf;
+
+          // Start the search at the next item so repeated presses cycle.
+          const startIdx = currentIdx >= 0 ? currentIdx + 1 : 0;
+          for (let i = 0; i < items.length; i++) {
+            const idx = (startIdx + i) % items.length;
+            const label = (items[idx].textContent || "").trim().toLowerCase();
+            if (label.startsWith(needle)) {
+              e.preventDefault();
+              items[idx].focus();
+              break;
+            }
+          }
+          break;
+        }
+      }
+    }
+    el.addEventListener("keydown", handleKey);
+    return () => {
+      el.removeEventListener("keydown", handleKey);
+      if (typeaheadTimerRef.current !== null) {
+        window.clearTimeout(typeaheadTimerRef.current);
+        typeaheadTimerRef.current = null;
+      }
+      typeaheadBufferRef.current = "";
+    };
+  }, [dropdownRef]);
+
+  // For top-anchored positions, we need `bottom` rather than `top`
+  // so the menu's bottom edge sits above the trigger.
+  const isTop = resolvedPosition.startsWith("top");
+  const isLeft = resolvedPosition.startsWith("left");
+  const isBottomEnd = resolvedPosition === "bottom-end";
+  const isTopEnd = resolvedPosition === "top-end";
 
   return (
     <>
@@ -226,14 +424,19 @@ function MenuDropdown({
         role="menu"
         style={{
           position: "absolute",
-          top: coords.top,
-          left: position.startsWith("left") || position === "bottom-end" ? undefined : coords.left,
-          right: position.startsWith("left")
+          top: isTop ? undefined : coords.top,
+          bottom: isTop
+            ? document.documentElement.clientHeight -
+              coords.top +
+              window.scrollY
+            : undefined,
+          left: isLeft || isBottomEnd || isTopEnd ? undefined : coords.left,
+          right: isLeft
             ? document.documentElement.clientWidth - coords.left + 4
-            : position === "bottom-end"
+            : isBottomEnd || isTopEnd
               ? document.documentElement.clientWidth - coords.left
               : undefined,
-          background: "var(--ds-background-100)",
+          background: "hsl(var(--color-surface))",
           borderRadius: 12,
           boxShadow: "var(--ds-shadow-menu)",
           padding: 8,
@@ -283,13 +486,14 @@ export function MenuButton({
   className = "",
   ...props
 }: MenuButtonProps) {
-  const { isOpen, setIsOpen } = useMenuContext();
+  const { isOpen, setIsOpen, triggerRef } = useMenuContext();
 
   if (unstyled) {
     return (
       <button
+        ref={triggerRef}
         type="button"
-        className={`inline-flex items-center justify-center cursor-pointer bg-transparent border-none p-0 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2 rounded-full ${className}`}
+        className={`inline-flex items-center justify-center cursor-pointer bg-transparent border-none p-0 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2 rounded-full ${className}`}
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-haspopup="menu"
@@ -303,7 +507,7 @@ export function MenuButton({
   const baseStyles = `
     inline-flex items-center justify-center select-none cursor-pointer border-none
     transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
-    focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
+    focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2
     rounded-[var(--ds-radius-small)]
   `;
 
@@ -321,24 +525,27 @@ export function MenuButton({
   const variantStyles =
     variant === "secondary"
       ? `
-        bg-[var(--ds-background-100)] text-[var(--ds-gray-1000)]
+        bg-surface text-textDefault
         shadow-[0_0_0_1px_var(--ds-gray-400)]
         hover:bg-[var(--ds-gray-100)] hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
         dark:hover:bg-[var(--ds-gray-200)] dark:hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
       `
       : `
-        bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]
+        bg-[var(--ds-gray-1000)] text-textInverted
         hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),white_15%)]
         dark:hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),black_15%)]
       `;
 
-  const combinedClasses = `${baseStyles} ${sizeStyles} ${variantStyles} ${className}`
-    .replace(/\s+/g, " ")
-    .trim();
+  const combinedClasses =
+    `${baseStyles} ${sizeStyles} ${variantStyles} ${className}`
+      .replace(/\s+/g, " ")
+      .trim();
 
   return (
     <button
+      ref={triggerRef}
       type="button"
+      data-menu-trigger={variant}
       className={combinedClasses}
       onClick={() => setIsOpen(!isOpen)}
       aria-expanded={isOpen}
@@ -455,7 +662,7 @@ export function MenuItem({
     height: 40,
     borderRadius: 6,
     fontSize: 14,
-    color: destructive ? "var(--ds-red-900)" : "var(--ds-gray-1000)",
+    color: destructive ? "var(--ds-red-900)" : "hsl(var(--color-textDefault))",
     cursor: isDisabled ? "default" : "pointer",
     opacity: isDisabled ? 0.5 : 1,
     background: "transparent",
@@ -483,7 +690,7 @@ export function MenuItem({
             display: "flex",
             alignItems: "center",
             flexShrink: 0,
-            color: "var(--ds-gray-900)",
+            color: "hsl(var(--color-textSubtle))",
           }}
         >
           {suffix}
@@ -492,8 +699,12 @@ export function MenuItem({
     </>
   );
 
-  const hoverBg = destructive ? "var(--ds-red-100)" : "var(--ds-gray-alpha-100)";
-  const activeBg = destructive ? "var(--ds-red-200)" : "var(--ds-gray-alpha-200)";
+  const hoverBg = destructive
+    ? "var(--ds-red-100)"
+    : "var(--ds-gray-alpha-100)";
+  const activeBg = destructive
+    ? "var(--ds-red-200)"
+    : "var(--ds-gray-alpha-200)";
 
   const hoverHandlers = isDisabled
     ? {}
@@ -563,5 +774,40 @@ export function MenuSeparator() {
         margin: "4px 0",
       }}
     />
+  );
+}
+
+// ============================================================================
+// MenuSection
+// ============================================================================
+
+interface MenuSectionProps {
+  /** Short Title Case header (1–2 words, e.g. "Workspace", "Recent Projects"). */
+  title: string;
+  children: ReactNode;
+}
+
+/**
+ * Group related items under a small-caps Title Case header. Use when
+ * a menu's item count starts to crowd past ~10 and items split into
+ * natural buckets ("Workspace" / "Account", etc.).
+ */
+export function MenuSection({ title, children }: MenuSectionProps) {
+  return (
+    <div role="group" aria-label={title}>
+      <div
+        style={{
+          padding: "8px 8px 4px",
+          fontSize: 11,
+          fontWeight: 600,
+          textTransform: "uppercase",
+          letterSpacing: "0.04em",
+          color: "var(--ds-gray-800)",
+        }}
+      >
+        {title}
+      </div>
+      {children}
+    </div>
   );
 }

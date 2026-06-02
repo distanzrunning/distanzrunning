@@ -1,0 +1,273 @@
+/* ===========================================================================
+   Distanz Running — typography utilities
+
+   Custom utility classes used by registry components for headings,
+   body copy, button labels, and metadata labels. Mirrors the
+   geistTypography plugin in tailwind.config.js — that plugin remains
+   the source of truth for the live site; this CSS file ships the same
+   utilities to anyone installing components via the registry.
+   ===========================================================================
+*/
+
+@layer utilities {
+  .text-heading-72 {
+    font-size: 72px;
+    line-height: 72px;
+    letter-spacing: -0.06em;
+    font-weight: 600;
+  }
+  .text-heading-72 strong {
+    font-weight: 400;
+  }
+  .text-heading-64 {
+    font-size: 64px;
+    line-height: 64px;
+    letter-spacing: -0.06em;
+    font-weight: 600;
+  }
+  .text-heading-64 strong {
+    font-weight: 400;
+  }
+  .text-heading-56 {
+    font-size: 56px;
+    line-height: 56px;
+    letter-spacing: -0.06em;
+    font-weight: 600;
+  }
+  .text-heading-56 strong {
+    font-weight: 400;
+  }
+  .text-heading-48 {
+    font-size: 48px;
+    line-height: 56px;
+    letter-spacing: -0.06em;
+    font-weight: 600;
+  }
+  .text-heading-48 strong {
+    font-weight: 400;
+  }
+  .text-heading-40 {
+    font-size: 40px;
+    line-height: 48px;
+    letter-spacing: -0.06em;
+    font-weight: 600;
+  }
+  .text-heading-40 strong {
+    font-weight: 400;
+  }
+  .text-heading-32 {
+    font-size: 32px;
+    line-height: 40px;
+    letter-spacing: -0.04em;
+    font-weight: 600;
+  }
+  .text-heading-32 strong {
+    font-weight: 400;
+  }
+  .text-heading-24 {
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -0.04em;
+    font-weight: 600;
+  }
+  .text-heading-24 strong {
+    font-weight: 400;
+  }
+  .text-heading-20 {
+    font-size: 20px;
+    line-height: 26px;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .text-heading-20 strong {
+    font-weight: 400;
+  }
+  .text-heading-18 {
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .text-heading-18 strong {
+    font-weight: 400;
+  }
+  .text-heading-16 {
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .text-heading-16 strong {
+    font-weight: 400;
+  }
+  .text-heading-14 {
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .text-button-16 {
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0;
+    font-weight: 500;
+  }
+  .text-button-14 {
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0;
+    font-weight: 500;
+  }
+  .text-button-12 {
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0;
+    font-weight: 500;
+  }
+  .text-label-20 {
+    font-size: 20px;
+    line-height: 32px;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .text-label-18 {
+    font-size: 18px;
+    line-height: 20px;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .text-label-16 {
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .text-label-16 strong {
+    font-weight: 500;
+  }
+  .text-label-14 {
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .text-label-14 strong {
+    font-weight: 500;
+  }
+  .text-label-14-mono {
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0;
+    font-weight: 400;
+    font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  }
+  .text-label-13 {
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+  }
+  .text-label-13 strong {
+    font-weight: 500;
+  }
+  .text-label-13-mono {
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: 0;
+    font-weight: 400;
+    font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  }
+  .text-label-12 {
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .text-label-12 strong {
+    font-weight: 500;
+  }
+  .text-label-12-mono {
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0;
+    font-weight: 400;
+    font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  }
+  .text-label-11 {
+    font-size: 11px;
+    line-height: 16px;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .text-copy-24 {
+    font-size: 24px;
+    line-height: 36px;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .text-copy-24 strong {
+    font-weight: 600;
+  }
+  .text-copy-20 {
+    font-size: 20px;
+    line-height: 36px;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .text-copy-20 strong {
+    font-weight: 600;
+  }
+  .text-copy-18 {
+    font-size: 18px;
+    line-height: 28px;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .text-copy-18 strong {
+    font-weight: 600;
+  }
+  .text-copy-16 {
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .text-copy-16 strong {
+    font-weight: 600;
+  }
+  .text-copy-14 {
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .text-copy-14 strong {
+    font-weight: 600;
+  }
+  .text-copy-13 {
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .text-copy-13-mono {
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: 0;
+    font-weight: 400;
+    font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  }
+  .text-footer-heading {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  .text-footer-link {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+}

@@ -81,7 +81,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -91,79 +91,67 @@ function SectionHeader({
   );
 }
 
-// Helper to convert hex to HSLA
-function hexToHsla(hex: string): string {
-  if (hex.startsWith("rgba")) {
-    return hex.replace("rgba", "HSLA").replace(/,([^,]*)$/, ",$1");
+// Normalise a resolved CSS color (from getComputedStyle) for display/copy.
+// Opaque rgb() → hex; translucent rgba() and any modern color function
+// (oklch(), color(srgb …)) pass through verbatim. Keeps the displayed
+// value honest to what the browser actually rendered.
+function formatColor(value: string): string {
+  const m = value.match(/^rgba?\(([^)]+)\)$/);
+  if (m) {
+    const parts = m[1].split(/[\s,/]+/).filter(Boolean).map(Number);
+    const [r, g, b, a] = parts;
+    if (a !== undefined && a < 1) return `rgba(${r}, ${g}, ${b}, ${a})`;
+    const hex = (n: number) => Math.round(n).toString(16).padStart(2, "0");
+    return `#${hex(r)}${hex(g)}${hex(b)}`.toUpperCase();
   }
-  hex = hex.replace("#", "");
-  const r = parseInt(hex.substring(0, 2), 16) / 255;
-  const g = parseInt(hex.substring(2, 4), 16) / 255;
-  const b = parseInt(hex.substring(4, 6), 16) / 255;
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  const l = (max + min) / 2;
-  let h = 0;
-  let s = 0;
-  if (max !== min) {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case r:
-        h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-        break;
-      case g:
-        h = ((b - r) / d + 2) / 6;
-        break;
-      case b:
-        h = ((r - g) / d + 4) / 6;
-        break;
-    }
-  }
-  return `HSLA(${Math.round(h * 360)},${Math.round(s * 100)}%,${Math.round(l * 100)}%,1)`;
+  return value;
 }
 
-// Color swatch with context menu (matches Geist)
+// Color swatch with context menu (matches Geist).
+// The swatch paints straight from the CSS variable, and its displayed /
+// copied value is read back from the rendered element via getComputedStyle —
+// so the page is always truthful to distanz-tokens.css and can never drift.
+// `themeKey` flips with light/dark so the resolved value re-reads on toggle.
 function ColorSwatch({
   cssVar,
-  value,
+  themeKey,
 }: {
-  step: number;
   cssVar: string;
-  value: string;
+  themeKey: boolean;
 }) {
   const { showToast } = useToast();
   const [showTick, setShowTick] = useState(false);
+  const [resolved, setResolved] = useState("");
+  const ref = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      setResolved(formatColor(getComputedStyle(ref.current).backgroundColor));
+    }
+  }, [cssVar, themeKey]);
+
+  const flash = useCallback(() => {
+    setShowTick(true);
+    setTimeout(() => setShowTick(false), 600);
+  }, []);
 
   const handleCopyToken = useCallback(() => {
-    const tokenValue = `var(${cssVar})`;
-    navigator.clipboard.writeText(tokenValue);
-    showToast(`Copied ${tokenValue}`);
-    setShowTick(true);
-    setTimeout(() => setShowTick(false), 600);
-  }, [cssVar, showToast]);
+    navigator.clipboard.writeText(`var(${cssVar})`);
+    showToast(`Copied var(${cssVar})`);
+    flash();
+  }, [cssVar, showToast, flash]);
 
-  const handleCopyHex = useCallback(() => {
-    navigator.clipboard.writeText(value);
-    showToast(`Copied ${value}`);
-    setShowTick(true);
-    setTimeout(() => setShowTick(false), 600);
-  }, [value, showToast]);
-
-  const handleCopyHsla = useCallback(() => {
-    const hsla = hexToHsla(value);
-    navigator.clipboard.writeText(hsla);
-    showToast(`Copied ${hsla}`);
-    setShowTick(true);
-    setTimeout(() => setShowTick(false), 600);
-  }, [value, showToast]);
-
-  const hslaValue = hexToHsla(value);
+  const handleCopyValue = useCallback(() => {
+    navigator.clipboard.writeText(resolved);
+    showToast(`Copied ${resolved}`);
+    flash();
+  }, [resolved, showToast, flash]);
 
   return (
     <ContextMenu.Root modal={false}>
       <ContextMenu.Trigger asChild>
         <button
+          ref={ref}
           className="relative w-full aspect-square md:h-10 md:aspect-auto rounded-sm cursor-copy shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
           style={{ backgroundColor: `var(${cssVar})` }}
           onClick={handleCopyToken}
@@ -185,24 +173,17 @@ function ColorSwatch({
         <ContextMenu.Content className="material-menu min-w-[240px] p-1.5 z-50">
           <ContextMenu.Item
             className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-[var(--ds-gray-100)] rounded-md cursor-pointer outline-none"
-            onSelect={handleCopyHex}
+            onSelect={handleCopyValue}
           >
-            Copy HEX
-            <span className="text-[13px] text-textSubtle">{value}</span>
-          </ContextMenu.Item>
-          <ContextMenu.Item
-            className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-[var(--ds-gray-100)] rounded-md cursor-pointer outline-none"
-            onSelect={handleCopyHsla}
-          >
-            Copy HSLA
-            <span className="text-[13px] text-textSubtle">{hslaValue}</span>
+            Copy value
+            <span className="text-copy-13 text-textSubtle">{resolved}</span>
           </ContextMenu.Item>
           <ContextMenu.Item
             className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-[var(--ds-gray-100)] rounded-md cursor-pointer outline-none"
             onSelect={handleCopyToken}
           >
             Copy token
-            <span className="flex items-center gap-1.5 text-[13px] text-textSubtle">
+            <span className="flex items-center gap-1.5 text-copy-13 text-textSubtle">
               Left click <MousePointer size={14} />
             </span>
           </ContextMenu.Item>
@@ -212,12 +193,16 @@ function ColorSwatch({
   );
 }
 
-// Color scale data
+// Color scale data.
+//
+// IMPORTANT: this carries NO colour values — only token names. Every swatch
+// resolves its colour at runtime from distanz-tokens.css (see ColorSwatch),
+// which is the single source of truth. Do not reintroduce hardcoded hex here;
+// it silently drifts the moment a token changes (which is exactly what
+// happened before this page was reworked).
 interface ColorStep {
   step: number;
   cssVar: string;
-  lightValue: string;
-  darkValue: string;
 }
 
 interface ColorScale {
@@ -226,627 +211,37 @@ interface ColorScale {
   steps: ColorStep[];
 }
 
-const backgroundScale: ColorScale = {
-  name: "Backgrounds",
-  id: "backgrounds",
-  steps: [
-    {
-      step: 100,
-      cssVar: "--ds-background-100",
-      lightValue: "#FFFFFF",
-      darkValue: "#0A0A0A",
-    },
-    {
-      step: 200,
-      cssVar: "--ds-background-200",
-      lightValue: "#FAFAFA",
-      darkValue: "#000000",
-    },
-  ],
-};
+const STEPS = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
-const grayScale: ColorScale = {
-  name: "Gray",
-  id: "gray",
-  steps: [
-    {
-      step: 100,
-      cssVar: "--ds-gray-100",
-      lightValue: "#F2F2F2",
-      darkValue: "#1A1A1A",
-    },
-    {
-      step: 200,
-      cssVar: "--ds-gray-200",
-      lightValue: "#EBEBEB",
-      darkValue: "#1F1F1F",
-    },
-    {
-      step: 300,
-      cssVar: "--ds-gray-300",
-      lightValue: "#E6E6E6",
-      darkValue: "#292929",
-    },
-    {
-      step: 400,
-      cssVar: "--ds-gray-400",
-      lightValue: "#EBEBEB",
-      darkValue: "#2E2E2E",
-    },
-    {
-      step: 500,
-      cssVar: "--ds-gray-500",
-      lightValue: "#C9C9C9",
-      darkValue: "#454545",
-    },
-    {
-      step: 600,
-      cssVar: "--ds-gray-600",
-      lightValue: "#A8A8A8",
-      darkValue: "#878787",
-    },
-    {
-      step: 700,
-      cssVar: "--ds-gray-700",
-      lightValue: "#8F8F8F",
-      darkValue: "#8F8F8F",
-    },
-    {
-      step: 800,
-      cssVar: "--ds-gray-800",
-      lightValue: "#7D7D7D",
-      darkValue: "#7D7D7D",
-    },
-    {
-      step: 900,
-      cssVar: "--ds-gray-900",
-      lightValue: "#666666",
-      darkValue: "#A1A1A1",
-    },
-    {
-      step: 1000,
-      cssVar: "--ds-gray-1000",
-      lightValue: "#171717",
-      darkValue: "#EDEDED",
-    },
-  ],
-};
+function makeScale(
+  name: string,
+  id: string,
+  prefix: string,
+  steps: number[] = STEPS,
+): ColorScale {
+  return {
+    name,
+    id,
+    steps: steps.map((step) => ({ step, cssVar: `${prefix}${step}` })),
+  };
+}
 
-const grayAlphaScale: ColorScale = {
-  name: "Gray alpha",
-  id: "gray-alpha",
-  steps: [
-    {
-      step: 100,
-      cssVar: "--ds-gray-alpha-100",
-      lightValue: "rgba(0,0,0,0.05)",
-      darkValue: "rgba(255,255,255,0.06)",
-    },
-    {
-      step: 200,
-      cssVar: "--ds-gray-alpha-200",
-      lightValue: "rgba(0,0,0,0.08)",
-      darkValue: "rgba(255,255,255,0.09)",
-    },
-    {
-      step: 300,
-      cssVar: "--ds-gray-alpha-300",
-      lightValue: "rgba(0,0,0,0.1)",
-      darkValue: "rgba(255,255,255,0.13)",
-    },
-    {
-      step: 400,
-      cssVar: "--ds-gray-alpha-400",
-      lightValue: "rgba(0,0,0,0.08)",
-      darkValue: "rgba(255,255,255,0.14)",
-    },
-    {
-      step: 500,
-      cssVar: "--ds-gray-alpha-500",
-      lightValue: "rgba(0,0,0,0.21)",
-      darkValue: "rgba(255,255,255,0.24)",
-    },
-    {
-      step: 600,
-      cssVar: "--ds-gray-alpha-600",
-      lightValue: "rgba(0,0,0,0.34)",
-      darkValue: "rgba(255,255,255,0.51)",
-    },
-    {
-      step: 700,
-      cssVar: "--ds-gray-alpha-700",
-      lightValue: "rgba(0,0,0,0.44)",
-      darkValue: "rgba(255,255,255,0.54)",
-    },
-    {
-      step: 800,
-      cssVar: "--ds-gray-alpha-800",
-      lightValue: "rgba(0,0,0,0.51)",
-      darkValue: "rgba(255,255,255,0.47)",
-    },
-    {
-      step: 900,
-      cssVar: "--ds-gray-alpha-900",
-      lightValue: "rgba(0,0,0,0.61)",
-      darkValue: "rgba(255,255,255,0.61)",
-    },
-    {
-      step: 1000,
-      cssVar: "--ds-gray-alpha-1000",
-      lightValue: "rgba(0,0,0,0.91)",
-      darkValue: "rgba(255,255,255,0.92)",
-    },
-  ],
-};
+const backgroundScale: ColorScale = makeScale(
+  "Backgrounds",
+  "backgrounds",
+  "--ds-background-",
+  [100, 200],
+);
 
-const blueScale: ColorScale = {
-  name: "Blue",
-  id: "blue",
-  steps: [
-    {
-      step: 100,
-      cssVar: "--ds-blue-100",
-      lightValue: "#EFF7FF",
-      darkValue: "#101C30",
-    },
-    {
-      step: 200,
-      cssVar: "--ds-blue-200",
-      lightValue: "#E8F4FF",
-      darkValue: "#11233D",
-    },
-    {
-      step: 300,
-      cssVar: "--ds-blue-300",
-      lightValue: "#DBEEFF",
-      darkValue: "#143052",
-    },
-    {
-      step: 400,
-      cssVar: "--ds-blue-400",
-      lightValue: "#C6E4FF",
-      darkValue: "#163961",
-    },
-    {
-      step: 500,
-      cssVar: "--ds-blue-500",
-      lightValue: "#99CCFF",
-      darkValue: "#194574",
-    },
-    {
-      step: 600,
-      cssVar: "--ds-blue-600",
-      lightValue: "#52A9FF",
-      darkValue: "#0099FF",
-    },
-    {
-      step: 700,
-      cssVar: "--ds-blue-700",
-      lightValue: "#0070F3",
-      darkValue: "#0070F3",
-    },
-    {
-      step: 800,
-      cssVar: "--ds-blue-800",
-      lightValue: "#0062D4",
-      darkValue: "#0062D4",
-    },
-    {
-      step: 900,
-      cssVar: "--ds-blue-900",
-      lightValue: "#006ADC",
-      darkValue: "#52A9FF",
-    },
-    {
-      step: 1000,
-      cssVar: "--ds-blue-1000",
-      lightValue: "#00244D",
-      darkValue: "#EBF8FF",
-    },
-  ],
-};
-
-const redScale: ColorScale = {
-  name: "Red",
-  id: "red",
-  steps: [
-    {
-      step: 100,
-      cssVar: "--ds-red-100",
-      lightValue: "#FFF0F0",
-      darkValue: "#2D1314",
-    },
-    {
-      step: 200,
-      cssVar: "--ds-red-200",
-      lightValue: "#FFE8E8",
-      darkValue: "#3C1618",
-    },
-    {
-      step: 300,
-      cssVar: "--ds-red-300",
-      lightValue: "#FFE0E0",
-      darkValue: "#541B1F",
-    },
-    {
-      step: 400,
-      cssVar: "--ds-red-400",
-      lightValue: "#FFD2D2",
-      darkValue: "#671E22",
-    },
-    {
-      step: 500,
-      cssVar: "--ds-red-500",
-      lightValue: "#FFAFAF",
-      darkValue: "#822025",
-    },
-    {
-      step: 600,
-      cssVar: "--ds-red-600",
-      lightValue: "#FF6C6C",
-      darkValue: "#E5484D",
-    },
-    {
-      step: 700,
-      cssVar: "--ds-red-700",
-      lightValue: "#EE0000",
-      darkValue: "#F2555A",
-    },
-    {
-      step: 800,
-      cssVar: "--ds-red-800",
-      lightValue: "#D50000",
-      darkValue: "#FF6369",
-    },
-    {
-      step: 900,
-      cssVar: "--ds-red-900",
-      lightValue: "#C50000",
-      darkValue: "#FF9592",
-    },
-    {
-      step: 1000,
-      cssVar: "--ds-red-1000",
-      lightValue: "#3C1414",
-      darkValue: "#FFD1D9",
-    },
-  ],
-};
-
-const amberScale: ColorScale = {
-  name: "Amber",
-  id: "amber",
-  steps: [
-    {
-      step: 100,
-      cssVar: "--ds-amber-100",
-      lightValue: "#FFF8E6",
-      darkValue: "#1F1300",
-    },
-    {
-      step: 200,
-      cssVar: "--ds-amber-200",
-      lightValue: "#FFF4D6",
-      darkValue: "#271700",
-    },
-    {
-      step: 300,
-      cssVar: "--ds-amber-300",
-      lightValue: "#FFEFC7",
-      darkValue: "#341C00",
-    },
-    {
-      step: 400,
-      cssVar: "--ds-amber-400",
-      lightValue: "#FFDC8C",
-      darkValue: "#3F2200",
-    },
-    {
-      step: 500,
-      cssVar: "--ds-amber-500",
-      lightValue: "#FFC850",
-      darkValue: "#4D2A00",
-    },
-    {
-      step: 600,
-      cssVar: "--ds-amber-600",
-      lightValue: "#FFA800",
-      darkValue: "#F5A623",
-    },
-    {
-      step: 700,
-      cssVar: "--ds-amber-700",
-      lightValue: "#F5A400",
-      darkValue: "#F5A623",
-    },
-    {
-      step: 800,
-      cssVar: "--ds-amber-800",
-      lightValue: "#E68C00",
-      darkValue: "#FFBA18",
-    },
-    {
-      step: 900,
-      cssVar: "--ds-amber-900",
-      lightValue: "#995200",
-      darkValue: "#FFD60A",
-    },
-    {
-      step: 1000,
-      cssVar: "--ds-amber-1000",
-      lightValue: "#472912",
-      darkValue: "#FFF1CF",
-    },
-  ],
-};
-
-const greenScale: ColorScale = {
-  name: "Green",
-  id: "green",
-  steps: [
-    {
-      step: 100,
-      cssVar: "--ds-green-100",
-      lightValue: "#ECFDF0",
-      darkValue: "#0D1912",
-    },
-    {
-      step: 200,
-      cssVar: "--ds-green-200",
-      lightValue: "#E4FBEB",
-      darkValue: "#0F2417",
-    },
-    {
-      step: 300,
-      cssVar: "--ds-green-300",
-      lightValue: "#D4F7DC",
-      darkValue: "#14351F",
-    },
-    {
-      step: 400,
-      cssVar: "--ds-green-400",
-      lightValue: "#BFF1CA",
-      darkValue: "#194427",
-    },
-    {
-      step: 500,
-      cssVar: "--ds-green-500",
-      lightValue: "#99E6AA",
-      darkValue: "#1F5530",
-    },
-    {
-      step: 600,
-      cssVar: "--ds-green-600",
-      lightValue: "#66D982",
-      darkValue: "#30A46C",
-    },
-    {
-      step: 700,
-      cssVar: "--ds-green-700",
-      lightValue: "#2FA34C",
-      darkValue: "#3CB179",
-    },
-    {
-      step: 800,
-      cssVar: "--ds-green-800",
-      lightValue: "#248B3D",
-      darkValue: "#4CC38A",
-    },
-    {
-      step: 900,
-      cssVar: "--ds-green-900",
-      lightValue: "#1A7832",
-      darkValue: "#7AE2A0",
-    },
-    {
-      step: 1000,
-      cssVar: "--ds-green-1000",
-      lightValue: "#0F371B",
-      darkValue: "#D1FADF",
-    },
-  ],
-};
-
-const tealScale: ColorScale = {
-  name: "Teal",
-  id: "teal",
-  steps: [
-    {
-      step: 100,
-      cssVar: "--ds-teal-100",
-      lightValue: "#EBFEFD",
-      darkValue: "#0D1918",
-    },
-    {
-      step: 200,
-      cssVar: "--ds-teal-200",
-      lightValue: "#E6FDFA",
-      darkValue: "#0F2321",
-    },
-    {
-      step: 300,
-      cssVar: "--ds-teal-300",
-      lightValue: "#D6F9F4",
-      darkValue: "#13322F",
-    },
-    {
-      step: 400,
-      cssVar: "--ds-teal-400",
-      lightValue: "#C3F4EC",
-      darkValue: "#17423E",
-    },
-    {
-      step: 500,
-      cssVar: "--ds-teal-500",
-      lightValue: "#99E8DA",
-      darkValue: "#1C544E",
-    },
-    {
-      step: 600,
-      cssVar: "--ds-teal-600",
-      lightValue: "#66D9C3",
-      darkValue: "#12A594",
-    },
-    {
-      step: 700,
-      cssVar: "--ds-teal-700",
-      lightValue: "#1AA390",
-      darkValue: "#0EB39E",
-    },
-    {
-      step: 800,
-      cssVar: "--ds-teal-800",
-      lightValue: "#118B7A",
-      darkValue: "#0FC9B0",
-    },
-    {
-      step: 900,
-      cssVar: "--ds-teal-900",
-      lightValue: "#0C786A",
-      darkValue: "#5EDDC8",
-    },
-    {
-      step: 1000,
-      cssVar: "--ds-teal-1000",
-      lightValue: "#123D35",
-      darkValue: "#C7FAF0",
-    },
-  ],
-};
-
-const purpleScale: ColorScale = {
-  name: "Purple",
-  id: "purple",
-  steps: [
-    {
-      step: 100,
-      cssVar: "--ds-purple-100",
-      lightValue: "#FAF0FF",
-      darkValue: "#1B1525",
-    },
-    {
-      step: 200,
-      cssVar: "--ds-purple-200",
-      lightValue: "#FAF0FF",
-      darkValue: "#221A2E",
-    },
-    {
-      step: 300,
-      cssVar: "--ds-purple-300",
-      lightValue: "#F2E6FD",
-      darkValue: "#31223F",
-    },
-    {
-      step: 400,
-      cssVar: "--ds-purple-400",
-      lightValue: "#E6D7FA",
-      darkValue: "#402952",
-    },
-    {
-      step: 500,
-      cssVar: "--ds-purple-500",
-      lightValue: "#C8AAF5",
-      darkValue: "#513368",
-    },
-    {
-      step: 600,
-      cssVar: "--ds-purple-600",
-      lightValue: "#A573EB",
-      darkValue: "#8E4EC6",
-    },
-    {
-      step: 700,
-      cssVar: "--ds-purple-700",
-      lightValue: "#7928CA",
-      darkValue: "#9D5BD2",
-    },
-    {
-      step: 800,
-      cssVar: "--ds-purple-800",
-      lightValue: "#641EAA",
-      darkValue: "#AB6BE5",
-    },
-    {
-      step: 900,
-      cssVar: "--ds-purple-900",
-      lightValue: "#5D1EA8",
-      darkValue: "#C996FF",
-    },
-    {
-      step: 1000,
-      cssVar: "--ds-purple-1000",
-      lightValue: "#280F48",
-      darkValue: "#F3E7FF",
-    },
-  ],
-};
-
-const pinkScale: ColorScale = {
-  name: "Pink",
-  id: "pink",
-  steps: [
-    {
-      step: 100,
-      cssVar: "--ds-pink-100",
-      lightValue: "#FFEDF5",
-      darkValue: "#1F1318",
-    },
-    {
-      step: 200,
-      cssVar: "--ds-pink-200",
-      lightValue: "#FFEDF3",
-      darkValue: "#2B1620",
-    },
-    {
-      step: 300,
-      cssVar: "--ds-pink-300",
-      lightValue: "#FDE1EC",
-      darkValue: "#3E1A2D",
-    },
-    {
-      step: 400,
-      cssVar: "--ds-pink-400",
-      lightValue: "#FAD7E6",
-      darkValue: "#501D39",
-    },
-    {
-      step: 500,
-      cssVar: "--ds-pink-500",
-      lightValue: "#F2B9D2",
-      darkValue: "#642248",
-    },
-    {
-      step: 600,
-      cssVar: "--ds-pink-600",
-      lightValue: "#EB82AF",
-      darkValue: "#D6409F",
-    },
-    {
-      step: 700,
-      cssVar: "--ds-pink-700",
-      lightValue: "#EB377D",
-      darkValue: "#E34BA9",
-    },
-    {
-      step: 800,
-      cssVar: "--ds-pink-800",
-      lightValue: "#DA2D73",
-      darkValue: "#F65CB6",
-    },
-    {
-      step: 900,
-      cssVar: "--ds-pink-900",
-      lightValue: "#B92D64",
-      darkValue: "#FF8AD8",
-    },
-    {
-      step: 1000,
-      cssVar: "--ds-pink-1000",
-      lightValue: "#3C1426",
-      darkValue: "#FFD6F0",
-    },
-  ],
-};
+const grayScale = makeScale("Gray", "gray", "--ds-gray-");
+const grayAlphaScale = makeScale("Gray alpha", "gray-alpha", "--ds-gray-alpha-");
+const blueScale = makeScale("Blue", "blue", "--ds-blue-");
+const redScale = makeScale("Red", "red", "--ds-red-");
+const amberScale = makeScale("Amber", "amber", "--ds-amber-");
+const greenScale = makeScale("Green", "green", "--ds-green-");
+const tealScale = makeScale("Teal", "teal", "--ds-teal-");
+const purpleScale = makeScale("Purple", "purple", "--ds-purple-");
+const pinkScale = makeScale("Pink", "pink", "--ds-pink-");
 
 const allScales: ColorScale[] = [
   backgroundScale,
@@ -876,7 +271,7 @@ function ColorScaleRow({
     <div className="flex flex-col items-start gap-2 md:flex-row md:items-center">
       <div className="w-[100px] flex-shrink-0">
         <p
-          className="text-[14px] leading-[20px] font-medium text-textDefault"
+          className="text-heading-14 text-textDefault"
           id={scale.name}
         >
           {scale.name}
@@ -885,11 +280,7 @@ function ColorScaleRow({
       <ul aria-describedby={scale.name} className="flex w-full gap-1 md:gap-2">
         {scale.steps.map((step) => (
           <li key={step.step} className="w-full max-w-[68px]">
-            <ColorSwatch
-              step={step.step}
-              cssVar={step.cssVar}
-              value={isDark ? step.darkValue : step.lightValue}
-            />
+            <ColorSwatch cssVar={step.cssVar} themeKey={isDark} />
           </li>
         ))}
         {Array.from({ length: emptySlots }).map((_, i) => (
@@ -907,7 +298,7 @@ function ScalesSection({ isDark }: { isDark: boolean }) {
   return (
     <Section>
       <SectionHeader id="scales">Scales</SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         There are 10 color scales in the system. Right click to copy raw values.
       </p>
       <div className="mt-10 space-y-6">
@@ -939,10 +330,10 @@ function ColorRowItem({
         className="h-4 w-4 rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
         style={{ background: `var(${cssVar})` }}
       />
-      <p className="text-[14px] leading-[20px] font-medium text-textDefault w-[120px]">
+      <p className="text-heading-14 text-textDefault w-[120px]">
         {label}
       </p>
-      <p className="text-[14px] leading-[20px] text-textSubtle">
+      <p className="text-label-14 text-textSubtle">
         {description}
       </p>
     </div>
@@ -954,7 +345,7 @@ function BackgroundsSection() {
   return (
     <Section>
       <SectionHeader id="backgrounds">Backgrounds</SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         There are two background colors for pages and UI components. In most
         instances, you should use Background 1—especially when color is being
         placed on top of the background. Background 2 should be used sparingly
@@ -976,15 +367,15 @@ function BackgroundsSection() {
       {/* Visual demo */}
       <div
         className="mt-10 flex h-[700px] w-full flex-col border border-borderNeutral md:h-[412px] md:flex-row"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         <div
           className="flex h-[50%] items-center justify-center border-r border-borderNeutral md:h-full md:w-[50%]"
-          style={{ background: "var(--ds-background-100)" }}
+          style={{ background: "hsl(var(--color-surface))" }}
         >
           <div
             className="relative flex h-[164px] w-[164px] items-center justify-center rounded-[12px] border border-borderNeutral"
-            style={{ background: "var(--ds-background-100)" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div
               className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-textSubtle font-mono"
@@ -1002,11 +393,11 @@ function BackgroundsSection() {
         </div>
         <div
           className="flex h-[50%] items-center justify-center border-t border-borderNeutral md:h-full md:w-[50%] md:border-t-0"
-          style={{ background: "var(--ds-background-200)" }}
+          style={{ background: "hsl(var(--color-canvas))" }}
         >
           <div
             className="relative flex h-[164px] w-[164px] items-center justify-center rounded-[12px] border border-borderNeutral"
-            style={{ background: "var(--ds-background-100)" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div
               className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-textSubtle font-mono"
@@ -1034,7 +425,7 @@ function ComponentBackgroundsSection() {
       <SectionHeader id="colors-1-3-component-backgrounds">
         Colors 1–3: Component Backgrounds
       </SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         These three colors are designed for UI component backgrounds.
       </p>
       <div className="my-5">
@@ -1055,7 +446,7 @@ function ComponentBackgroundsSection() {
           showBorder={false}
         />
       </div>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         If your UI component&apos;s default background is Background 1, you can
         use Color 1 as your hover background and Color 2 as your active
         background. On smaller UI elements like badges, you can use Color 2 or
@@ -1064,7 +455,7 @@ function ComponentBackgroundsSection() {
       {/* Visual demo */}
       <div
         className="mt-10 flex w-full flex-col border border-borderNeutral md:flex-row"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         <div className="border-borderNeutral p-2 md:p-12">
           <ul>
@@ -1131,7 +522,7 @@ function ComponentBackgroundsSection() {
             className="px-2 py-1 text-xs font-medium rounded capitalize"
             style={{
               background: "var(--ds-gray-200)",
-              color: "var(--ds-gray-900)",
+              color: "hsl(var(--color-textSubtle))",
             }}
           >
             Hobby
@@ -1165,7 +556,7 @@ function BordersSection() {
   return (
     <Section>
       <SectionHeader id="colors-4-6-borders">Colors 4-6: Borders</SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         These three colors are designed for UI component borders.
       </p>
       <div className="my-5">
@@ -1189,7 +580,7 @@ function BordersSection() {
       {/* Visual demo */}
       <div
         className="mt-10 flex h-[136px] w-full items-center justify-center border border-borderNeutral"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         <button
           className="inline-flex items-center justify-center font-sans font-medium text-sm transition-all duration-150 ease focus:outline-none active:scale-[0.98] active:duration-100"
@@ -1198,9 +589,9 @@ function BordersSection() {
             minWidth: "160px",
             padding: "0 12px",
             borderRadius: "6px",
-            background: "var(--ds-background-100)",
-            boxShadow: "0 0 0 1px var(--ds-gray-400)",
-            color: "var(--ds-gray-1000)",
+            background: "hsl(var(--color-surface))",
+            boxShadow: "0 0 0 1px hsl(var(--color-borderDefault))",
+            color: "hsl(var(--color-textDefault))",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "var(--ds-gray-alpha-200)";
@@ -1223,7 +614,7 @@ function HighContrastBackgroundsSection() {
       <SectionHeader id="colors-7-8-high-contrast-backgrounds">
         Colors 7-8: High Contrast Backgrounds
       </SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         These two colors are designed for high contrast UI component
         backgrounds.
       </p>
@@ -1243,7 +634,7 @@ function HighContrastBackgroundsSection() {
       {/* Visual demo */}
       <div
         className="mt-10 flex h-[260px] w-full flex-col items-center justify-center border border-borderNeutral md:h-[136px] md:flex-row"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         <div className="flex h-[65%] w-full items-center justify-center gap-5 border-borderNeutral md:h-full md:w-[50%] md:border-r">
           {/* Gauges */}
@@ -1359,7 +750,7 @@ function TextAndIconsSection() {
       <SectionHeader id="colors-9-10-text-and-icons">
         Colors 9-10: Text and Icons
       </SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4">
+      <p className="text-copy-16 text-textSubtle mt-4">
         These two colors are designed for accessible text and icons.
       </p>
       <div className="my-5">
@@ -1378,17 +769,17 @@ function TextAndIconsSection() {
       {/* Visual demo */}
       <div
         className="mt-10 flex h-[260px] w-full flex-col items-center justify-center border border-borderNeutral md:h-[198px] md:flex-row"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         <div className="flex h-[65%] w-[63%] items-center justify-center border-borderNeutral md:h-full md:w-[50%]">
           <div className="flex w-[316px] flex-col gap-1">
             <p
-              className="text-[16px] font-semibold"
-              style={{ color: "var(--ds-gray-1000)" }}
+              className="text-heading-16"
+              style={{ color: "hsl(var(--color-textDefault))" }}
             >
               The Frontend Cloud
             </p>
-            <p className="text-[14px]" style={{ color: "var(--ds-gray-900)" }}>
+            <p className="text-[14px]" style={{ color: "hsl(var(--color-textSubtle))" }}>
               Build, scale, and secure a faster, personalized web with Distanz.
             </p>
             <a

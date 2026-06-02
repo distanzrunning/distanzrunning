@@ -72,7 +72,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -185,7 +185,7 @@ function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
           {materials.map((material) => (
             <tr
               key={material.className}
-              className="transition-colors hover:bg-[var(--ds-gray-100)] cursor-copy border-b border-[var(--ds-gray-400)]"
+              className="transition-colors hover:bg-[var(--ds-gray-100)] cursor-copy border-b border-borderDefault"
               onClick={() => handleCopyClassName(material.className)}
               style={{ height: 120 }}
             >
@@ -194,7 +194,7 @@ function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
                   className={`${material.className} max-w-[240px] h-[100px]`}
                 />
               </td>
-              <td className="px-2 py-2.5 align-middle text-left font-mono text-[13px]">
+              <td className="px-2 py-2.5 align-middle text-left font-mono text-copy-13">
                 {material.className}
               </td>
               <td className="px-2 py-2.5 align-middle text-left text-textSubtle">
@@ -213,7 +213,7 @@ function SurfaceSection() {
   return (
     <Section>
       <SectionHeader id="surface">Surface</SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4 mb-6">
+      <p className="text-copy-16 text-textSubtle mt-4 mb-6">
         On the page.
       </p>
       <MaterialTable materials={surfaceMaterials} />
@@ -226,7 +226,7 @@ function FloatingSection() {
   return (
     <Section>
       <SectionHeader id="floating">Floating</SectionHeader>
-      <p className="text-[16px] leading-[1.5] text-textSubtle mt-4 mb-6">
+      <p className="text-copy-16 text-textSubtle mt-4 mb-6">
         Above the page.
       </p>
       <MaterialTable materials={floatingMaterials} />

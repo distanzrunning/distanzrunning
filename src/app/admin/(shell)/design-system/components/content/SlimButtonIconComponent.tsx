@@ -87,7 +87,7 @@ function VariantShowcase({
     <div className="mb-8">
       <h3
         id={id}
-        className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        className="text-heading-20 font-serif mb-3 scroll-mt-32"
       >
         {title}
       </h3>
@@ -97,7 +97,7 @@ function VariantShowcase({
         {/* Preview area - fixed background regardless of theme */}
         <div
           className={`flex-1 p-8 flex items-center justify-start min-h-[120px] ${
-            inverse ? "bg-asphalt-10" : "bg-white"
+            inverse ? "bg-gray-1000" : "bg-white"
           }`}
         >
           <IconButton
@@ -135,15 +135,15 @@ function VariantShowcase({
                   transition-all duration-150 ease-out cursor-pointer
                   ${
                     isDisabled
-                      ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
-                      : "bg-white dark:bg-asphalt-10 border-asphalt-40 dark:border-asphalt-60 hover:border-asphalt-50"
+                      ? "bg-gray-1000 dark:bg-gray-200 border-gray-1000 dark:border-gray-200"
+                      : "bg-white dark:bg-gray-1000 border-gray-800 dark:border-gray-600 hover:border-gray-700"
                   }
                   peer-focus:ring-1 peer-focus:ring-borderNeutral peer-focus:ring-offset-0
                 `}
               >
                 {isDisabled && (
                   <svg
-                    className="w-3 h-3 text-white dark:text-asphalt-10"
+                    className="w-3 h-3 text-white dark:text-gray-1000"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth={2}
@@ -186,16 +186,16 @@ export default function SlimButtonIconComponent() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">Buttons</p>
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Buttons</p>
         <h1
           id="slim-button-icon"
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
         >
           Slim button + icon
         </h1>
       </div>
 
-      <p className="text-base text-textSubtle max-w-3xl">
+      <p className="text-copy-16 text-textSubtle max-w-3xl">
         For actions where space is limited, or to resolve conflicting priorities
         between nearby buttons.
       </p>
@@ -206,7 +206,7 @@ export default function SlimButtonIconComponent() {
       <section>
         <h2
           id="variants"
-          className="sr-only font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="sr-only text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Variants
         </h2>
@@ -277,7 +277,7 @@ export default function SlimButtonIconComponent() {
       <section>
         <h2
           id="guidelines"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Guidelines
         </h2>
@@ -286,12 +286,12 @@ export default function SlimButtonIconComponent() {
 
         <h3
           id="guidelines-how-to-use"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           How to use
         </h3>
 
-        <div className="space-y-4 text-base text-textSubtle max-w-3xl">
+        <div className="space-y-4 text-copy-16 text-textSubtle max-w-3xl">
           <p>Do not use for principal actions.</p>
           <p>
             For secondary actions where space is limited, and for additional
@@ -306,7 +306,7 @@ export default function SlimButtonIconComponent() {
       <section>
         <h2
           id="props"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Props
         </h2>
@@ -317,13 +317,13 @@ export default function SlimButtonIconComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
               </tr>

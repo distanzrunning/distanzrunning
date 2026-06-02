@@ -50,10 +50,88 @@ function isValidPayload(v: unknown): v is Payload {
   return true;
 }
 
+// IP salt is the entire defence against rainbow-tabling the audit
+// log — without it, every IP from a given environment produces a
+// stable salt-free SHA-256 hash that's recoverable in minutes
+// against the 4B IPv4 space. Resolve at module load so the route
+// crashes on cold start (visible in deploy logs) rather than
+// silently shipping unsalted hashes.
+//
+// Falls back to CONSENT_IP_SALT for back-compat — both routes can
+// share one salt, and the prior empty-string fallback that silently
+// shipped unsalted hashes is removed. Same pattern as consent's
+// resolveSalt module-load throw.
+const FEEDBACK_IP_SALT = (() => {
+  const raw = process.env.FEEDBACK_IP_SALT ?? process.env.CONSENT_IP_SALT;
+  if (!raw || raw.length === 0) {
+    throw new Error(
+      "[feedback] FEEDBACK_IP_SALT (or CONSENT_IP_SALT as fallback) env " +
+        "var is missing or empty. This salt is required to deidentify IP " +
+        "hashes — refusing to ship unsalted hashes. Set it on the " +
+        "deployment.",
+    );
+  }
+  return raw;
+})();
+
 function hashIp(ip: string | null): string | null {
   if (!ip) return null;
-  const salt = process.env.FEEDBACK_IP_SALT ?? process.env.CONSENT_IP_SALT ?? "";
-  return createHash("sha256").update(`${salt}:${ip}`).digest("hex");
+  return createHash("sha256")
+    .update(`${FEEDBACK_IP_SALT}:${ip}`)
+    .digest("hex");
+}
+
+// ---------- Rate limit ----------
+// Simple in-memory token bucket per IP. Per-instance state — each
+// warm Vercel function shares the map within its lifetime, cold
+// starts reset (~15 min idle). Sufficient defence against casual
+// bots / accidental loops; swap to Upstash Redis or Vercel KV
+// behind the same checkRateLimit shape for distributed-bot
+// resistance. Mirrors /api/consent.
+
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 10;
+
+const rateLimitBuckets = new Map<
+  string,
+  { count: number; windowStart: number }
+>();
+
+function checkRateLimit(ip: string): { allowed: boolean; retryAfter: number } {
+  const now = Date.now();
+  const bucket = rateLimitBuckets.get(ip);
+  if (!bucket || now - bucket.windowStart >= RATE_LIMIT_WINDOW_MS) {
+    rateLimitBuckets.set(ip, { count: 1, windowStart: now });
+    // Lazy cleanup so the map doesn't grow without bound on a long-
+    // lived instance.
+    for (const [key, b] of rateLimitBuckets) {
+      if (now - b.windowStart >= RATE_LIMIT_WINDOW_MS) {
+        rateLimitBuckets.delete(key);
+      }
+    }
+    return { allowed: true, retryAfter: 0 };
+  }
+  if (bucket.count >= RATE_LIMIT_MAX) {
+    const retryAfter = Math.ceil(
+      (RATE_LIMIT_WINDOW_MS - (now - bucket.windowStart)) / 1000,
+    );
+    return { allowed: false, retryAfter };
+  }
+  bucket.count += 1;
+  return { allowed: true, retryAfter: 0 };
+}
+
+// Vercel sets VERCEL_ENV to "production" | "preview" | "development".
+// Map preview → "staging" so the feedback dashboard's filter only has
+// to think in production / staging / development buckets (matches
+// /api/consent's resolveEnvironment + feedback_records check
+// constraint).
+type FeedbackEnv = "production" | "staging" | "development";
+function resolveEnvironment(): FeedbackEnv {
+  const vercelEnv = process.env.VERCEL_ENV;
+  if (vercelEnv === "production") return "production";
+  if (vercelEnv === "preview") return "staging";
+  return "development";
 }
 
 function clip(value: string | undefined, max: number): string | null {
@@ -81,6 +159,22 @@ export async function POST(request: Request) {
   const userAgent = headers.get("user-agent")?.slice(0, 512) ?? null;
   const country = headers.get("x-vercel-ip-country") ?? null;
 
+  // Per-IP rate limit. If we can't identify the IP at all (no
+  // forwarded headers — local dev / unusual proxy), skip the check
+  // rather than locking everyone into a single shared bucket.
+  if (ip) {
+    const limit = checkRateLimit(ip);
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: "Too many requests" },
+        {
+          status: 429,
+          headers: { "Retry-After": String(limit.retryAfter) },
+        },
+      );
+    }
+  }
+
   try {
     const supabase = getSupabaseAdmin();
     const { error } = await supabase.from("feedback_records").insert({
@@ -93,6 +187,7 @@ export async function POST(request: Request) {
       user_agent: userAgent,
       ip_hash: hashIp(ip),
       country,
+      environment: resolveEnvironment(),
     });
     if (error) {
       console.error("[feedback] insert failed", error);

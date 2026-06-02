@@ -34,7 +34,7 @@ export default function DesignPatternsShowcase() {
             </p>
             <div className="bg-canvas border border-borderNeutral rounded-lg p-4">
               <div className="flex items-center justify-between">
-                <div className="font-bold text-electric-pink">LOGO</div>
+                <div className="font-bold text-textSubtle">LOGO</div>
                 <nav className="flex gap-6 text-sm">
                   <a
                     href="#"
@@ -80,7 +80,7 @@ export default function DesignPatternsShowcase() {
             <div className="bg-canvas border border-borderNeutral rounded-lg p-6">
               <div className="grid grid-cols-3 gap-6">
                 <div>
-                  <p className="font-medium text-xs mb-3 text-electric-pink uppercase tracking-wide">
+                  <p className="font-medium text-xs mb-3 text-textSubtle uppercase tracking-wide">
                     Category 1
                   </p>
                   <ul className="space-y-2 text-sm text-textSubtle">
@@ -90,7 +90,7 @@ export default function DesignPatternsShowcase() {
                   </ul>
                 </div>
                 <div>
-                  <p className="font-medium text-xs mb-3 text-electric-pink uppercase tracking-wide">
+                  <p className="font-medium text-xs mb-3 text-textSubtle uppercase tracking-wide">
                     Category 2
                   </p>
                   <ul className="space-y-2 text-sm text-textSubtle">
@@ -99,7 +99,7 @@ export default function DesignPatternsShowcase() {
                     <li>Item 3</li>
                   </ul>
                 </div>
-                <div className="bg-gradient-to-br from-electric-pink to-deep-purple rounded p-4 flex items-center justify-center">
+                <div className="bg-gradient-to-br from-blue-700 to-purple-800 rounded p-4 flex items-center justify-center">
                   <p className="text-white text-xs text-center">
                     Featured Content
                   </p>
@@ -167,9 +167,9 @@ export default function DesignPatternsShowcase() {
                   key={i}
                   className="bg-canvas rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow"
                 >
-                  <div className="w-full h-32 bg-gradient-to-br from-electric-pink via-pace-purple to-deep-purple" />
+                  <div className="w-full h-32 bg-gradient-to-br from-blue-700 via-purple-600 to-purple-800" />
                   <div className="p-4">
-                    <p className="text-xs uppercase tracking-wide text-electric-pink font-medium mb-1">
+                    <p className="text-xs uppercase tracking-wide text-textSubtle font-medium mb-1">
                       Category
                     </p>
                     <p className="font-bold text-sm mb-1">Article Title {i}</p>
@@ -195,7 +195,7 @@ export default function DesignPatternsShowcase() {
             <p className="text-sm text-textSubtle mb-4">
               Large featured content with image and CTA
             </p>
-            <div className="bg-gradient-to-br from-electric-pink to-deep-purple rounded-xl p-8 text-white">
+            <div className="bg-gradient-to-br from-blue-700 to-purple-800 rounded-xl p-8 text-white">
               <p className="text-xs uppercase tracking-wide mb-2 opacity-90">
                 Featured
               </p>
@@ -206,12 +206,12 @@ export default function DesignPatternsShowcase() {
                 Compelling description that hooks the reader and encourages them
                 to click through.
               </p>
-              <button className="px-6 py-3 bg-white text-electric-pink rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
+              <button className="px-6 py-3 bg-white text-textSubtle rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
                 Read More
               </button>
             </div>
             <pre className="mt-4 p-3 bg-canvas rounded text-xs overflow-x-auto">
-              <code>{`<section className="relative h-[500px] bg-gradient-to-br from-electric-pink to-deep-purple">
+              <code>{`<section className="relative h-[500px] bg-gradient-to-br from-blue-700 to-purple-800">
   <div className="absolute inset-0 flex items-center">
     <div className="max-w-2xl px-6">
       <h1 className="font-serif text-5xl">Title</h1>
@@ -338,12 +338,12 @@ export default function DesignPatternsShowcase() {
                 </div>
                 <p className="text-xs font-medium">Account</p>
               </div>
-              <div className="flex-1 h-1 bg-electric-pink mx-2" />
+              <div className="flex-1 h-1 bg-textDefault mx-2" />
               <div className="flex flex-col items-center">
                 <div className="w-10 h-10 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 flex items-center justify-center text-sm font-medium mb-2">
                   2
                 </div>
-                <p className="text-xs font-medium text-electric-pink">
+                <p className="text-xs font-medium text-textSubtle">
                   Profile
                 </p>
               </div>
@@ -415,7 +415,7 @@ export default function DesignPatternsShowcase() {
               </div>
               <div>
                 <p className="text-xs font-medium mb-2">Spinner</p>
-                <div className="w-8 h-8 border-4 border-surface-subtle border-t-electric-pink rounded-full animate-spin" />
+                <div className="w-8 h-8 border-4 border-surface-subtle border-t-textDefault rounded-full animate-spin" />
               </div>
             </div>
           </div>

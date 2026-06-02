@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -141,7 +142,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -232,8 +233,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -245,40 +246,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -358,6 +359,18 @@ export function Component(): JSX.Element {
   );
 }`;
 
+const placeholderCode = `import { Snippet } from '@/components/ui/Snippet';
+
+export function Component(): JSX.Element {
+  return (
+    <Snippet
+      text=""
+      placeholder="Run vercel link to fetch env vars"
+      width={300}
+    />
+  );
+}`;
+
 const controlledCopiedCode = `import { Snippet } from '@/components/ui/Snippet';
 
 export function Component(): JSX.Element {
@@ -418,6 +431,16 @@ function VariantsDemo() {
   );
 }
 
+function PlaceholderDemo() {
+  return (
+    <Snippet
+      text=""
+      placeholder="Run vercel link to fetch env vars"
+      width={300}
+    />
+  );
+}
+
 function ControlledCopiedDemo() {
   const [copied, setCopied] = useState(false);
 
@@ -429,8 +452,8 @@ function ControlledCopiedDemo() {
 
   const cardContent = (
     <div
-      className="font-mono text-[13px] w-96 whitespace-pre-line"
-      style={{ color: "var(--ds-gray-1000)" }}
+      className="font-mono text-copy-13 w-96 whitespace-pre-line"
+      style={{ color: "hsl(var(--color-textDefault))" }}
     >
       {`# About\nTemplate for a full-featured Next.js AI chatbot\n\n# Requirements\nThis template uses the Vercel AI Gateway to access multiple AI models through a unified interface. The default model is OpenAI GPT-4.1 Mini, with support for Anthropic, Google, and xAI models.`}
     </div>
@@ -536,6 +559,28 @@ export default function SnippetComponent() {
       </Section>
 
       <Section>
+        <SectionHeader id="placeholder" onCopyLink={showToast}>
+          Placeholder
+        </SectionHeader>
+        <p
+          className="mt-2 leading-6 xl:mt-4"
+          style={{ color: "hsl(var(--color-textSubtle))" }}
+        >
+          Pair{" "}
+          <code className="inline-code">placeholder</code> with{" "}
+          <code className="inline-code">text=&quot;&quot;</code> for
+          an empty state. The placeholder is informational only — the
+          copy button stays disabled and the clipboard receives
+          nothing.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={placeholderCode}>
+            <PlaceholderDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
         <SectionHeader id="controlled-copied-state" onCopyLink={showToast}>
           Controlled Copied State
         </SectionHeader>
@@ -547,6 +592,70 @@ export default function SnippetComponent() {
             <ControlledCopiedDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Snippet for a runnable shell command the user is meant
+            to copy. For inline tokens (env var names, paths) use{" "}
+            <code className="inline-code">InlineCode</code>, and for
+            multi-line source use <ComponentRef name="Code Block" />.
+          </li>
+          <li>
+            Pass the command as{" "}
+            <code className="inline-code">text</code>. Authors never
+            type a leading <code className="inline-code">$</code>; the
+            component renders the prompt, so{" "}
+            <code className="inline-code">
+              text=&quot;$ vercel deploy&quot;
+            </code>{" "}
+            displays as{" "}
+            <code className="inline-code">$ $ vercel deploy</code>.
+          </li>
+          <li>
+            Set <code className="inline-code">prompt={"{false}"}</code>{" "}
+            for non-shell content (URLs, JSON, output you want copied
+            verbatim) so the rendered string matches what gets copied.
+          </li>
+          <li>
+            Pair <code className="inline-code">placeholder</code> with{" "}
+            <code className="inline-code">text=&quot;&quot;</code> for
+            an empty state. Sentence case, no trailing period, no{" "}
+            <code className="inline-code">Please</code>:{" "}
+            <code className="inline-code">
+              Run vercel link to fetch env vars
+            </code>
+            . The placeholder is informational, not copied.
+          </li>
+          <li>
+            Use <code className="inline-code">copyText</code> only when{" "}
+            <code className="inline-code">text</code> contains rich
+            nodes (<code className="inline-code">&lt;span&gt;</code>{" "}
+            highlights, conditional fragments) and the clipboard
+            payload should be plain text. For a string{" "}
+            <code className="inline-code">text</code>,{" "}
+            <code className="inline-code">copyText</code> is redundant.
+          </li>
+          <li>
+            Keep one command per Snippet. Pass an array to{" "}
+            <code className="inline-code">text</code> for a short
+            multi-line block; for longer scripts, switch to{" "}
+            <ComponentRef name="Code Block" /> so users can read before
+            they copy.
+          </li>
+          <li>
+            Use <code className="inline-code">copied</code> plus an{" "}
+            <code className="inline-code">onCopy</code> callback when a
+            parent surface (a card, a tooltip) needs to show the same
+            checkmark feedback while copying different text.
+          </li>
+        </ul>
       </Section>
 
       <Toast

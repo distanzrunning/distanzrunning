@@ -12,7 +12,6 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { PortableText } from "@portabletext/react";
 import { urlFor } from "@/sanity/lib/image";
-import NewsletterSignup from "@/components/ui/NewsletterSignup";
 import SimilarArticles from "@/components/SimilarArticles";
 import TableOfContentsWidget from "@/components/TableOfContentsWidget";
 import { CustomTable } from "@/components/CustomTable";
@@ -71,7 +70,7 @@ export default function ArticlePostLayout({
   const portableTextComponents = {
     block: {
       normal: ({ children }: { children?: React.ReactNode }) => (
-        <p className="mb-6 font-sans text-[17px] font-normal leading-[25px] text-textDefault last:mb-0 md:text-[19px] md:leading-[28px]">
+        <p className="mb-6 font-sans text-copy-18 md:text-copy-20 text-textDefault last:mb-0">
           {children}
         </p>
       ),
@@ -81,7 +80,7 @@ export default function ArticlePostLayout({
         return (
           <h1
             id={id}
-            className="capsize mb-6 mt-12 font-sans text-3xl font-semibold leading-tight text-textDefault"
+            className="capsize mb-6 mt-12 font-sans text-heading-32 text-textDefault"
             style={{ scrollMarginTop: "100px" }}
           >
             {children}
@@ -100,7 +99,7 @@ export default function ArticlePostLayout({
               <div className="pt-6">
                 <h2
                   id={id}
-                  className="capsize font-sans text-3xl font-semibold leading-tight text-textDefault"
+                  className="capsize font-sans text-heading-32 text-textDefault"
                 >
                   {children}
                 </h2>
@@ -121,7 +120,7 @@ export default function ArticlePostLayout({
               <div className="relative mr-4">
                 <h3
                   id={id}
-                  className="capsize font-sans text-2xl font-semibold leading-tight text-textDefault"
+                  className="capsize font-sans text-heading-24 text-textDefault"
                 >
                   {children}
                 </h3>
@@ -131,7 +130,7 @@ export default function ArticlePostLayout({
         );
       },
       h4: ({ children }: { children?: React.ReactNode }) => (
-        <h4 className="capsize mb-3 mt-6 font-sans text-2xl font-semibold leading-tight text-textDefault">
+        <h4 className="capsize mb-3 mt-6 font-sans text-heading-24 text-textDefault">
           {children}
         </h4>
       ),
@@ -140,7 +139,7 @@ export default function ArticlePostLayout({
           className="my-8 flex flex-col gap-6 border border-borderNeutralSubtle pl-6"
           style={{ borderWidth: "0px 0px 0px 4px" }}
         >
-          <div className="font-sans text-[17px] font-normal italic leading-[25px] text-textDefault md:text-[19px] md:leading-[28px]">
+          <div className="font-sans text-copy-18 md:text-copy-20 italic text-textDefault">
             {children}
           </div>
         </div>
@@ -197,13 +196,13 @@ export default function ArticlePostLayout({
     listItem: {
       bullet: ({ children }: { children?: React.ReactNode }) => (
         <li className="fragment-li mb-6 last:mb-0">
-          <div className="font-sans text-[17px] font-normal leading-[25px] text-textDefault md:text-[19px] md:leading-[28px]">
+          <div className="font-sans text-copy-18 md:text-copy-20 text-textDefault">
             {children}
           </div>
         </li>
       ),
       number: ({ children }: { children?: React.ReactNode }) => (
-        <li className="fragment-li mb-8 pl-1 font-sans text-[17px] font-normal leading-[25px] text-textDefault md:text-[19px] md:leading-[28px]">
+        <li className="fragment-li mb-8 pl-1 font-sans text-copy-18 md:text-copy-20 text-textDefault">
           {children}
         </li>
       ),
@@ -235,12 +234,12 @@ export default function ArticlePostLayout({
           {(value.caption || value.credit) && (
             <div className="mt-3 space-y-1">
               {value.caption && (
-                <p className="text-left font-sans text-sm font-normal leading-snug text-textSubtle">
+                <p className="text-left font-sans text-copy-14 text-textSubtle">
                   {value.caption}
                 </p>
               )}
               {value.credit && (
-                <p className="text-left font-sans text-xs font-normal italic leading-snug text-textSubtler">
+                <p className="text-left font-sans text-copy-13 italic text-textSubtler">
                   {value.credit}
                 </p>
               )}
@@ -280,7 +279,7 @@ export default function ArticlePostLayout({
                   <>
                     <li className="break-words py-1">
                       <a href={`/articles/${post.category.slug.current}`}>
-                        <div className="capsize font-sans text-lg font-normal leading-snug text-textSubtle">
+                        <div className="capsize font-sans text-copy-18 text-textSubtle">
                           <span className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
                             {post.category.title}
                           </span>
@@ -309,7 +308,7 @@ export default function ArticlePostLayout({
                 )}
                 <li className="break-words overflow-hidden py-1">
                   <a href={`/articles/${post.slug.current}`}>
-                    <div className="capsize font-sans text-lg font-normal leading-snug text-textSubtle">
+                    <div className="capsize font-sans text-copy-18 text-textSubtle">
                       <span className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
                         {post.title}
                       </span>
@@ -322,17 +321,17 @@ export default function ArticlePostLayout({
 
           <div className="col-span-full lg:col-span-12 lg:col-start-4">
             <div className="flex flex-col gap-6 pb-9 md:gap-9">
-              <h1 className="font-playfair text-[35px] font-semibold leading-[40px] tracking-tight text-textDefault md:text-[56px] md:leading-[56px]">
+              <h1 className="text-heading-32 md:text-heading-56 font-serif text-textDefault">
                 {post.title}
               </h1>
               <div className="flex flex-col gap-2">
                 <div>
-                  <div className="capsize font-sans text-base font-normal leading-snug text-textSubtle">
+                  <div className="capsize font-sans text-copy-16 text-textSubtle">
                     {readTime} minutes reading time
                   </div>
                 </div>
                 <div>
-                  <div className="capsize font-sans text-base font-normal leading-snug text-textSubtle">
+                  <div className="capsize font-sans text-copy-16 text-textSubtle">
                     Published {publishedDate}
                   </div>
                 </div>
@@ -356,7 +355,7 @@ export default function ArticlePostLayout({
                     )}
                     <div className="flex flex-col gap-3">
                       <div className="flex justify-start gap-1">
-                        <div className="capsize font-sans text-lg font-normal leading-snug text-textSubtle">
+                        <div className="capsize font-sans text-copy-18 text-textSubtle">
                           <b>Author: </b>
                           <span style={{ textDecoration: "underline" }}>
                             {post.author.name}
@@ -377,7 +376,7 @@ export default function ArticlePostLayout({
                 components={{
                   block: {
                     normal: ({ children }) => (
-                      <p className="mb-4 font-sans text-[21px] font-medium leading-[24px] text-textSubtle last:mb-0 md:text-[22px] md:leading-[25px]">
+                      <p className="mb-4 font-sans text-copy-20 md:text-copy-24 font-medium text-textSubtle last:mb-0">
                         <span className="fragment-span preamble" data-v2="true">
                           {children}
                         </span>
@@ -386,7 +385,7 @@ export default function ArticlePostLayout({
                   },
                   marks: {
                     strong: ({ children }) => (
-                      <strong className="font-sans text-[21px] font-semibold leading-[24px] text-textSubtle md:text-[22px] md:leading-[25px]">
+                      <strong className="font-sans text-copy-20 md:text-copy-24 font-semibold text-textSubtle">
                         {children}
                       </strong>
                     ),
@@ -413,9 +412,6 @@ export default function ArticlePostLayout({
         maxArticles={4}
       />
 
-      <div className="pt-16">
-        <NewsletterSignup />
-      </div>
     </div>
   );
 }

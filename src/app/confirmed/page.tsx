@@ -52,19 +52,19 @@ function ConfirmedContent() {
             </Link>
           </div>
 
-          {/* Main Heading - Playfair font for elegant feel */}
+          {/* Main Heading */}
           {already ? (
-            <h1 className="font-playfair text-3xl md:text-4xl font-semibold text-textDefault transition-colors duration-300 mb-4">
+            <h1 className="text-heading-32 md:text-heading-40 font-serif text-textDefault transition-colors duration-300 mb-4">
               Already Confirmed!
             </h1>
           ) : (
-            <h1 className="font-playfair text-3xl md:text-4xl font-semibold text-textDefault transition-colors duration-300 mb-4">
+            <h1 className="text-heading-32 md:text-heading-40 font-serif text-textDefault transition-colors duration-300 mb-4">
               You're All Set!
             </h1>
           )}
 
           {/* Description */}
-          <div className="text-sm md:text-base text-textSubtle mb-6 transition-colors duration-300 leading-relaxed">
+          <div className="text-copy-14 md:text-copy-16 text-textSubtle mb-6 transition-colors duration-300">
             {already ? (
               <p>
                 You're already subscribed to our newsletter. Keep an eye on your

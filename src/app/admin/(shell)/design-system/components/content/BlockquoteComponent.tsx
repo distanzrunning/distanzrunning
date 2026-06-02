@@ -64,14 +64,14 @@ function VariantShowcase({ title, id, initialText }: VariantShowcaseProps) {
     <div className="mb-8">
       <h3
         id={id}
-        className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        className="text-heading-20 font-serif mb-3 scroll-mt-32"
       >
         {title}
       </h3>
 
       {/* Preview area */}
       <div className="rounded-t-lg border border-b-0 border-borderSubtle overflow-hidden">
-        <div className="p-8 bg-white dark:bg-asphalt-10">
+        <div className="p-8 bg-white dark:bg-gray-1000">
           <Blockquote>{text}</Blockquote>
         </div>
       </div>
@@ -100,16 +100,16 @@ export default function BlockquoteComponent() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">Content</p>
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Content</p>
         <h1
           id="blockquote"
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
         >
           Blockquote
         </h1>
       </div>
 
-      <p className="text-base text-textSubtle max-w-3xl">
+      <p className="text-copy-16 text-textSubtle max-w-3xl">
         For quoting a passage of text or speech from another source.
       </p>
 
@@ -119,7 +119,7 @@ export default function BlockquoteComponent() {
       <section>
         <h2
           id="variants"
-          className="sr-only font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="sr-only text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Variants
         </h2>
@@ -138,7 +138,7 @@ export default function BlockquoteComponent() {
       <section>
         <h2
           id="props"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Props
         </h2>
@@ -149,13 +149,13 @@ export default function BlockquoteComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
               </tr>
@@ -182,7 +182,7 @@ export default function BlockquoteComponent() {
       <section>
         <h2
           id="anatomy"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Anatomy
         </h2>
@@ -193,18 +193,18 @@ export default function BlockquoteComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Property
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Value
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Token
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Left border width</td>
                 <td className="py-3 px-4">4px</td>
@@ -256,7 +256,7 @@ export default function BlockquoteComponent() {
       <section>
         <h2
           id="colours"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Colour reference
         </h2>
@@ -267,22 +267,22 @@ export default function BlockquoteComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Element
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Light mode
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Dark mode
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Border</td>
-                <td className="py-3 px-4 font-mono">electric-pink</td>
-                <td className="py-3 px-4 font-mono">electric-pink</td>
+                <td className="py-3 px-4 font-mono">textDefault</td>
+                <td className="py-3 px-4 font-mono">textDefault</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Text</td>

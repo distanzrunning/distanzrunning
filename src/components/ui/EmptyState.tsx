@@ -8,6 +8,14 @@ import { type ReactNode } from "react";
 
 export interface EmptyStateProps {
   children: ReactNode;
+  /**
+   * When true, render the container as a polite live region so screen
+   * readers announce the empty state as it appears. Pass for
+   * async-filtered lists where the empty state can replace results
+   * after the user changes the filter; leave false for static "blank
+   * slate" / permission / onboarding states the user navigates to.
+   */
+  live?: boolean;
 }
 
 interface EmptyStateIconProps {
@@ -38,9 +46,9 @@ const EMPTY_STATE_CSS = `
     justify-content: center;
     gap: var(--ds-space-6x);
     padding: 48px 70px;
-    border: 1px solid var(--ds-gray-400);
+    border: 1px solid hsl(var(--color-borderDefault));
     border-radius: var(--ds-radius-small);
-    background-color: var(--ds-background-100);
+    background-color: hsl(var(--color-surface));
     text-align: center;
   }
 
@@ -53,8 +61,8 @@ const EMPTY_STATE_CSS = `
     padding: 14px;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 8px;
-    background-color: var(--ds-background-100);
-    color: var(--ds-gray-900);
+    background-color: hsl(var(--color-surface));
+    color: hsl(var(--color-textSubtle));
   }
 
   :is(.dark, [data-theme="dark"]) .ds-empty-state-icon {
@@ -78,7 +86,7 @@ const EMPTY_STATE_CSS = `
     font-weight: 500;
     line-height: 24px;
     letter-spacing: -0.32px;
-    color: var(--ds-gray-1000);
+    color: hsl(var(--color-textDefault));
     margin: 0;
     max-width: 340px;
     text-align: center;
@@ -88,7 +96,7 @@ const EMPTY_STATE_CSS = `
   .ds-empty-state-description {
     font-size: 14px;
     line-height: 20px;
-    color: var(--ds-gray-900);
+    color: hsl(var(--color-textSubtle));
     margin: 0;
     max-width: 340px;
     text-align: center;
@@ -113,9 +121,9 @@ const EMPTY_STATE_CSS = `
     line-height: 20px;
     border: none;
     border-radius: 6px;
-    background-color: var(--ds-background-100);
-    color: var(--ds-gray-1000);
-    box-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
+    background-color: hsl(var(--color-surface));
+    color: hsl(var(--color-textDefault));
+    box-shadow: hsl(var(--color-borderDefault)) 0px 0px 0px 1px;
     cursor: pointer;
     transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
   }
@@ -139,7 +147,7 @@ const EMPTY_STATE_CSS = `
   }
 
   .ds-empty-state-link:hover {
-    color: var(--ds-gray-1000);
+    color: hsl(var(--color-textDefault));
   }
 
   .ds-empty-state-link svg {
@@ -151,20 +159,28 @@ const EMPTY_STATE_CSS = `
 // ============================================================================
 // Compound Components
 // ============================================================================
+//
+// Each sub-component is ALSO a named export. The `EmptyState.X` static-
+// property attachments below are kept for client-component callers
+// (RecentDecisionsTable, DS docs), but server components MUST import
+// the named exports directly — static properties on a `"use client"`
+// export don't survive the RSC serialization boundary and resolve to
+// `undefined` at render time (React error #130). See
+// feedback_rsc_static_property_compound memory for the full incident.
 
-function EmptyStateIcon({ children }: EmptyStateIconProps) {
+export function EmptyStateIcon({ children }: EmptyStateIconProps) {
   return <div className="ds-empty-state-icon">{children}</div>;
 }
 
-function EmptyStateTitle({ children }: EmptyStateTitleProps) {
+export function EmptyStateTitle({ children }: EmptyStateTitleProps) {
   return <p className="ds-empty-state-title">{children}</p>;
 }
 
-function EmptyStateDescription({ children }: EmptyStateDescriptionProps) {
+export function EmptyStateDescription({ children }: EmptyStateDescriptionProps) {
   return <p className="ds-empty-state-description">{children}</p>;
 }
 
-function EmptyStateActions({ children }: EmptyStateActionsProps) {
+export function EmptyStateActions({ children }: EmptyStateActionsProps) {
   return <div className="ds-empty-state-actions">{children}</div>;
 }
 
@@ -172,12 +188,15 @@ function EmptyStateActions({ children }: EmptyStateActionsProps) {
 // EmptyState
 // ============================================================================
 
-export function EmptyState({ children }: EmptyStateProps) {
-  // Separate icon, text (title/description), and actions
+export function EmptyState({ children, live = false }: EmptyStateProps) {
   return (
     <>
       <style>{EMPTY_STATE_CSS}</style>
-      <div className="ds-empty-state">
+      <div
+        className="ds-empty-state"
+        role={live ? "status" : undefined}
+        aria-live={live ? "polite" : undefined}
+      >
         {children}
       </div>
     </>
@@ -185,7 +204,7 @@ export function EmptyState({ children }: EmptyStateProps) {
 }
 
 /** Wrapper for title + description to group them with tighter spacing */
-function EmptyStateText({ children }: { children: ReactNode }) {
+export function EmptyStateText({ children }: { children: ReactNode }) {
   return <div className="ds-empty-state-text">{children}</div>;
 }
 

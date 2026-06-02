@@ -53,6 +53,12 @@ export interface AvatarGroupProps {
   limit?: number;
   /** Size in pixels for all avatars (default: 32) */
   size?: number;
+  /**
+   * Accessible name for the group as a whole. Read once by screen
+   * readers; the individual avatars are hidden from the SR so the
+   * group doesn't announce N times. Defaults to "{N} avatars".
+   */
+  label?: string;
 }
 
 /** Props for AvatarBrand component */
@@ -139,9 +145,24 @@ export function Avatar({
   };
 
   const fontSize = Math.round(size * 0.4);
+  const initials = fallback ? getInitials(fallback) : "";
+
+  // Accessible name: image avatars use the <img alt>; initials avatars
+  // get an explicit aria-label so screen readers announce "Avatar with
+  // initials: XX" rather than reading the bare letterforms; placeholder
+  // shells fall back to the provided alt or a generic "Avatar".
+  const ariaLabel = !showFallback
+    ? undefined // alt on the <img> below carries the SR text
+    : placeholderIcon
+      ? alt || undefined
+      : fallback
+        ? `Avatar with initials: ${initials}`
+        : alt || "Avatar";
 
   return (
     <div
+      role="img"
+      aria-label={ariaLabel}
       className="relative inline-flex items-center justify-center rounded-full text-textSubtle overflow-hidden flex-shrink-0"
       style={{
         width: size,
@@ -158,17 +179,23 @@ export function Avatar({
         />
       ) : placeholderIcon ? (
         <span
+          aria-hidden="true"
           className="flex items-center justify-center text-textSubtle"
           style={{ width: size * 0.5, height: size * 0.5 }}
         >
           {placeholderIcon}
         </span>
       ) : fallback ? (
-        <span className="font-medium text-textSubtle" style={{ fontSize }}>
-          {getInitials(fallback)}
+        <span
+          aria-hidden="true"
+          className="font-medium text-textSubtle"
+          style={{ fontSize }}
+        >
+          {initials}
         </span>
       ) : (
         <User
+          aria-hidden="true"
           className="text-textSubtle"
           style={{ width: size * 0.5, height: size * 0.5 }}
         />
@@ -191,7 +218,12 @@ export function Avatar({
  *   size={32}
  * />
  */
-export function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
+export function AvatarGroup({
+  members,
+  limit,
+  size = 32,
+  label,
+}: AvatarGroupProps) {
   const visibleMembers = limit ? members.slice(0, limit) : members;
   const remainingCount = limit ? Math.max(0, members.length - limit) : 0;
 
@@ -201,18 +233,22 @@ export function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
   const fontSize = Math.round(innerSize * 0.35);
   const overlap = outerSize * 0.25;
 
+  const groupLabel =
+    label ?? `${members.length} avatar${members.length === 1 ? "" : "s"}`;
+
   return (
-    <div className="flex items-center">
+    <div role="img" aria-label={groupLabel} className="flex items-center">
       {visibleMembers.map((member, index) => (
         <div
           key={index}
+          aria-hidden="true"
           className="relative rounded-full"
           style={{
             marginLeft: index === 0 ? 0 : -overlap,
             width: outerSize,
             height: outerSize,
             padding: borderWidth,
-            backgroundColor: member.borderColor || "var(--ds-background-100)",
+            backgroundColor: member.borderColor || "hsl(var(--color-surface))",
           }}
         >
           <Avatar
@@ -227,13 +263,14 @@ export function AvatarGroup({ members, limit, size = 32 }: AvatarGroupProps) {
       ))}
       {remainingCount > 0 && (
         <div
+          aria-hidden="true"
           className="relative rounded-full"
           style={{
             marginLeft: -overlap,
             width: outerSize,
             height: outerSize,
             padding: borderWidth,
-            backgroundColor: "var(--ds-background-100)",
+            backgroundColor: "hsl(var(--color-surface))",
           }}
         >
           <div

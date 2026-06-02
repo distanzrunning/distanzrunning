@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -141,7 +142,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -232,8 +233,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -245,40 +246,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -332,7 +333,7 @@ export function Component(): JSX.Element {
   const [value, setValue] = useState(0);
 
   const getColor = (v: number) => {
-    if (v <= 25) return 'var(--ds-gray-1000)';
+    if (v <= 25) return 'hsl(var(--color-textDefault))';
     if (v <= 50) return 'var(--ds-amber-700)';
     if (v <= 75) return 'var(--ds-blue-700)';
     return 'var(--ds-green-700)';
@@ -373,7 +374,7 @@ export function Component(): JSX.Element {
       <Progress value={100} color="var(--ds-blue-700)" />
       <Progress value={10} color="var(--ds-red-700)" />
       <Progress value={40} color="var(--ds-amber-700)" />
-      <Progress value={70} color="var(--ds-gray-700)" />
+      <Progress value={70} color="hsl(var(--color-textSubtler))" />
     </div>
   );
 }`;
@@ -418,7 +419,7 @@ function DynamicColorsDemo() {
   const [value, setValue] = useState(0);
 
   const getColor = (v: number) => {
-    if (v <= 25) return "var(--ds-gray-1000)";
+    if (v <= 25) return "hsl(var(--color-textDefault))";
     if (v <= 50) return "var(--ds-amber-700)";
     if (v <= 75) return "var(--ds-blue-700)";
     return "var(--ds-green-700)";
@@ -456,7 +457,7 @@ function ThemedDemo() {
       <Progress value={100} color="var(--ds-blue-700)" />
       <Progress value={10} color="var(--ds-red-700)" />
       <Progress value={40} color="var(--ds-amber-700)" />
-      <Progress value={70} color="var(--ds-gray-700)" />
+      <Progress value={70} color="hsl(var(--color-textSubtler))" />
     </div>
   );
 }
@@ -533,6 +534,130 @@ export default function ProgressComponent() {
             <WithStopsDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Determinate work whose total is knowable, like file uploads,
+            multi-step setup, build steps, or batch deletions.
+          </li>
+          <li>
+            For short indeterminate waits (~1&ndash;3s), use{" "}
+            <ComponentRef name="Spinner" />; for inline copy like{" "}
+            <code className="inline-code">Saving</code>, use{" "}
+            <ComponentRef name="Loading Dots" />.
+          </li>
+          <li>
+            For usage against a quota or ratio, use{" "}
+            <ComponentRef name="Gauge" />; the circle reads as health,
+            the bar reads as progress.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use <code className="inline-code">max</code> for the real
+            ceiling (
+            <code className="inline-code">{"max={files.length}"}</code>),
+            not a hardcoded <code className="inline-code">100</code>. The
+            component computes the percentage from{" "}
+            <code className="inline-code">value / max</code>.
+          </li>
+          <li>
+            Threshold colors via{" "}
+            <code className="inline-code">dynamicColors</code> should
+            mirror the same breakpoints used elsewhere (warning at the
+            same threshold a quota note fires).
+          </li>
+          <li>
+            Use stops for genuine multi-stage work and label the stage
+            next to the bar (
+            <code className="inline-code">Step 2 of 4 · Building</code>
+            ); a stop with no label is decorative noise.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pair the bar with text naming the work and units:{" "}
+            <code className="inline-code">Uploading 12 of 30 files</code>
+            ,{" "}
+            <code className="inline-code">Building · 1.2 GB / 4 GB</code>
+            . The bar alone doesn&apos;t say what&apos;s progressing.
+          </li>
+          <li>
+            Don&apos;t append{" "}
+            <code className="inline-code">successfully</code> or{" "}
+            <code className="inline-code">complete</code> once the bar
+            fills; swap to a completion state (toast, success row,
+            redirect).
+          </li>
+          <li>
+            For long operations, name the work in the surrounding copy (
+            <code className="inline-code">Building deployment&hellip;</code>
+            ) instead of leaving a bare percentage.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The native{" "}
+            <code className="inline-code">&lt;progress&gt;</code> element
+            already exposes{" "}
+            <code className="inline-code">role=&quot;progressbar&quot;</code>{" "}
+            with <code className="inline-code">aria-valuemin</code>,{" "}
+            <code className="inline-code">aria-valuemax</code>, and{" "}
+            <code className="inline-code">aria-valuenow</code>. Pass an
+            accessible name via{" "}
+            <code className="inline-code">aria-label</code> on the
+            wrapper or a sibling{" "}
+            <code className="inline-code">&lt;label&gt;</code> tied with{" "}
+            <code className="inline-code">aria-labelledby</code>.
+          </li>
+          <li>
+            Throttle{" "}
+            <code className="inline-code">value</code> updates to roughly
+            once a second so screen readers don&apos;t announce every
+            increment of a fast upload.
+          </li>
+          <li>
+            Each stop accepts a{" "}
+            <code className="inline-code">label</code>; name them (
+            <code className="inline-code">Build complete</code>,{" "}
+            <code className="inline-code">Tests complete</code>) so the
+            bar is readable at a glance.
+          </li>
+        </ul>
       </Section>
 
       <Toast

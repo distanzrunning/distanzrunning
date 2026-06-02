@@ -151,7 +151,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -248,8 +248,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -261,18 +261,18 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+    <div className="border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
-      <div className="p-6" style={{ background: "var(--ds-background-100)" }}>
+      <div className="p-6" style={{ background: "hsl(var(--color-surface))" }}>
         {children}
       </div>
 
       {/* Accordion trigger */}
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
@@ -281,14 +281,14 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {/* Collapsible code section */}
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               {/* Floating copy button */}
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
@@ -296,7 +296,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 
               {/* Code content */}
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -358,6 +358,89 @@ export default function BrowserComponent() {
         <CodePreview componentCode={compositionCode}>
           <Browser url="distanzrunning.com" />
         </CodePreview>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Browser as marketing chrome around screenshots,
+            demos, and recordings shown on landing pages, docs, and
+            changelog posts.
+          </li>
+          <li>
+            Don&apos;t render real product UI inside a Browser
+            frame; the chrome implies a screenshot, not a live
+            surface.
+          </li>
+          <li>
+            Use{" "}
+            <code className="inline-code">&lt;BrowserHeader&gt;</code>{" "}
+            when the canned{" "}
+            <code className="inline-code">&lt;Browser&gt;</code>{" "}
+            shape doesn&apos;t fit the layout; don&apos;t fork the
+            chrome.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The chrome reads correctly on both light and dark
+            surfaces &mdash; background, border, and text colours
+            flip automatically with the page theme so the frame
+            doesn&apos;t fight the page.
+          </li>
+          <li>
+            For long URLs, pass a pre-shortened display value to{" "}
+            <code className="inline-code">url</code> so the host and
+            path tail both remain visible.
+          </li>
+          <li>
+            Lock the inner image aspect ratio so the chrome
+            doesn&apos;t reflow when an image is missing or slow to
+            load.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The browser chrome is decorative and carries{" "}
+            <code className="inline-code">aria-hidden=&quot;true&quot;</code>
+            ; meaning lives on the inner image or video.
+          </li>
+          <li>
+            Give the inner screenshot meaningful alt text describing
+            what the user is seeing, not{" "}
+            <code className="inline-code">browser screenshot</code>.
+          </li>
+          <li>
+            Don&apos;t add focusable dot controls or back/forward
+            buttons; the chrome is a frame, and unreachable controls
+            confuse keyboard users.
+          </li>
+        </ul>
       </Section>
     </>
   );

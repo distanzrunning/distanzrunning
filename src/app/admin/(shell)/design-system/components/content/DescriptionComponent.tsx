@@ -140,7 +140,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -231,8 +231,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -244,40 +244,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -379,21 +379,21 @@ export default function DescriptionComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">children</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -417,6 +417,54 @@ export default function DescriptionComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use <code className="inline-code">&lt;Description&gt;</code>{" "}
+            for definition-list metadata: a short Title Case key paired
+            with a single value (
+            <code className="inline-code">Last Deployed</code>,{" "}
+            <code className="inline-code">Region</code>,{" "}
+            <code className="inline-code">Plan</code>). For inline help
+            under a form field, use the input&apos;s helper-text slot
+            instead.
+          </li>
+          <li>
+            Description renders{" "}
+            <code className="inline-code">&lt;dl&gt;</code>/
+            <code className="inline-code">&lt;dt&gt;</code>/
+            <code className="inline-code">&lt;dd&gt;</code> so screen
+            readers announce each key/value pair as a definition.
+            Don&apos;t wrap the component in extra paragraphs that break
+            the list semantics.
+          </li>
+          <li>
+            Title slot is Title Case noun (
+            <code className="inline-code">Last Deployed</code>,{" "}
+            <code className="inline-code">Build Duration</code>); content
+            is sentence case unless the value is a literal identifier, ID,
+            or timestamp that should be preserved verbatim.
+          </li>
+          <li>
+            Pass <code className="inline-code">tooltip</code> only when
+            the title alone is ambiguous and a one-sentence definition
+            resolves it. The tooltip text is sentence case and ends with
+            a period.
+          </li>
+          <li>
+            Don&apos;t put interactive controls in the title slot.
+            Buttons, menus, and links belong in the content (
+            <code className="inline-code">&lt;dd&gt;</code>) or in the
+            parent layout, not the label (
+            <code className="inline-code">&lt;dt&gt;</code>).
+          </li>
+        </ul>
       </Section>
     </>
   );

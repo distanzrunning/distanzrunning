@@ -148,7 +148,7 @@ function FeedbackSuccess() {
         </div>
         <p
           style={{
-            color: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
             fontSize: 14,
             lineHeight: "20px",
             fontWeight: 600,
@@ -159,7 +159,7 @@ function FeedbackSuccess() {
         </p>
         <p
           style={{
-            color: "var(--ds-gray-700)",
+            color: "hsl(var(--color-textSubtler))",
             fontSize: 13,
             lineHeight: "18px",
             margin: 0,
@@ -182,8 +182,8 @@ const emailInputStyle: React.CSSProperties = {
   padding: "0 12px",
   fontSize: 14,
   lineHeight: "20px",
-  color: "var(--ds-gray-1000)",
-  background: "var(--ds-background-100)",
+  color: "hsl(var(--color-textDefault))",
+  background: "hsl(var(--color-canvas))",
   outline: "none",
   fontFamily: "inherit",
   boxSizing: "border-box",
@@ -264,7 +264,7 @@ function MarkdownIcon() {
       <path
         clipRule="evenodd"
         d="M19.5 1.25H2.5C1.80964 1.25 1.25 1.80964 1.25 2.5V11.5C1.25 12.1904 1.80964 12.75 2.5 12.75H19.5C20.1904 12.75 20.75 12.1904 20.75 11.5V2.5C20.75 1.80964 20.1904 1.25 19.5 1.25ZM2.5 0C1.11929 0 0 1.11929 0 2.5V11.5C0 12.8807 1.11929 14 2.5 14H19.5C20.8807 14 22 12.8807 22 11.5V2.5C22 1.11929 20.8807 0 19.5 0H2.5ZM3 3.5H4H4.25H4.6899L4.98715 3.82428L7 6.02011L9.01285 3.82428L9.3101 3.5H9.75H10H11V4.5V10.5H9V6.79807L7.73715 8.17572L7 8.97989L6.26285 8.17572L5 6.79807V10.5H3V4.5V3.5ZM15 7V3.5H17V7H19.5L17 9.5L16 10.5L15 9.5L12.5 7H15Z"
-        fill="var(--ds-gray-700)"
+        fill="hsl(var(--color-textSubtler))"
         fillRule="evenodd"
       />
     </svg>
@@ -397,6 +397,7 @@ export function FeedbackInline({
   const send = useCallback(
     async (emailValue: string) => {
       setIsSending(true);
+      const emotionAtSubmit = selectedEmotion;
       const trimmedEmail = emailValue.trim() || undefined;
       const payload: FeedbackPayload = {
         emotion: selectedEmotion as FeedbackEmotion,
@@ -415,7 +416,20 @@ export function FeedbackInline({
       setTimeout(() => {
         setIsSending(false);
         setSubmitted(true);
-        setTimeout(close, 2200);
+        setTimeout(() => {
+          close();
+          // Restore focus to the emoji the user picked so a keyboard
+          // user lands on a visible, focusable element instead of body.
+          // Wait past the close animation + state reset (~250 ms).
+          setTimeout(() => {
+            if (!emotionAtSubmit) return;
+            const btn =
+              wrapperRef.current?.querySelector<HTMLButtonElement>(
+                `button[data-emoji-id="${emotionAtSubmit}"]`,
+              );
+            btn?.focus();
+          }, 300);
+        }, 2200);
       }, 650);
     },
     [selectedEmotion, feedbackText, onSubmit, close],
@@ -494,7 +508,7 @@ export function FeedbackInline({
         <div className="feedback-inline-trigger">
           <p
             style={{
-              color: "var(--ds-gray-900)",
+              color: "hsl(var(--color-textSubtle))",
               fontSize: 14,
               lineHeight: "20px",
               fontWeight: 400,
@@ -510,6 +524,7 @@ export function FeedbackInline({
                 key={emoji.id}
                 type="button"
                 role="radio"
+                data-emoji-id={emoji.id}
                 className={`feedback-emoji${selectedEmotion === emoji.id ? " feedback-emoji--selected" : ""}`}
                 aria-checked={selectedEmotion === emoji.id}
                 aria-label={`Select ${emoji.label} emoji`}
@@ -568,7 +583,7 @@ export function FeedbackInline({
                   lineHeight: "16px",
                   color: emailError
                     ? "var(--ds-red-900)"
-                    : "var(--ds-gray-700)",
+                    : "hsl(var(--color-textSubtler))",
                 }}
               >
                 {emailError ||
@@ -582,8 +597,8 @@ export function FeedbackInline({
                 alignItems: "center",
                 justifyContent: "flex-end",
                 padding: 12,
-                background: "var(--ds-background-200)",
-                borderTop: "1px solid var(--ds-gray-200)",
+                background: "hsl(var(--color-canvas))",
+                borderTop: "1px solid hsl(var(--color-borderSubtle))",
               }}
             >
               <Button type="submit" size="small" loading={isSending}>
@@ -623,8 +638,8 @@ export function FeedbackInline({
                       padding: "10px 12px",
                       fontSize: 14,
                       lineHeight: "normal",
-                      color: "var(--ds-gray-1000)",
-                      background: "var(--ds-background-100)",
+                      color: "hsl(var(--color-textDefault))",
+                      background: "hsl(var(--color-canvas))",
                       resize: "none",
                       outline: "none",
                       fontFamily: "inherit",
@@ -644,7 +659,7 @@ export function FeedbackInline({
                   fontSize: 12,
                   lineHeight: "16px",
                   fontWeight: 400,
-                  color: "var(--ds-gray-900)",
+                  color: "hsl(var(--color-textSubtle))",
                 }}
               >
                 <MarkdownIcon />
@@ -658,8 +673,8 @@ export function FeedbackInline({
                 alignItems: "center",
                 justifyContent: "flex-end",
                 padding: 12,
-                background: "var(--ds-background-200)",
-                borderTop: "1px solid var(--ds-gray-200)",
+                background: "hsl(var(--color-canvas))",
+                borderTop: "1px solid hsl(var(--color-borderSubtle))",
               }}
             >
               <Button type="submit" size="small" loading={isSending}>
@@ -707,8 +722,8 @@ export function FeedbackInline({
           min-width: 274px;
           height: 48px;
           border-radius: 30px;
-          background: var(--ds-background-100);
-          border: 1px solid var(--ds-gray-200);
+          background: hsl(var(--color-surface));
+          border: 1px solid hsl(var(--color-borderSubtle));
           overflow: hidden;
           will-change: width, height, border-radius, box-shadow;
           transition:
@@ -719,7 +734,7 @@ export function FeedbackInline({
             box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         :is(.dark, [data-theme="dark"]) .feedback-inline-wrapper {
-          border-color: var(--ds-gray-400);
+          border-color: hsl(var(--color-borderDefault));
         }
         .feedback-inline-wrapper--expanded {
           width: 336px;
@@ -790,27 +805,27 @@ export function FeedbackInline({
           cursor: pointer;
           padding: 0;
           background: transparent;
-          color: var(--ds-gray-900);
+          color: hsl(var(--color-textSubtle));
           transition: background 0.2s ease, color 0.2s ease;
         }
         .feedback-inline-wrapper .feedback-emoji:disabled {
           cursor: default;
         }
         .feedback-inline-wrapper .feedback-emoji--selected {
-          background: var(--ds-pink-300);
-          color: var(--ds-pink-800);
+          background: var(--ds-blue-300);
+          color: var(--ds-blue-800);
         }
         @media (hover: hover) {
           .feedback-inline-wrapper .feedback-emoji:hover {
-            background: var(--ds-pink-300);
-            color: var(--ds-pink-800);
+            background: var(--ds-blue-300);
+            color: var(--ds-blue-800);
           }
         }
         .feedback-inline-wrapper .feedback-textarea-wrapper {
           display: flex;
           width: 100%;
           border-radius: 6px;
-          background: var(--ds-background-100);
+          background: hsl(var(--color-canvas));
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
           transition: box-shadow 0.15s ease;
         }
@@ -825,7 +840,7 @@ export function FeedbackInline({
             0 0 0 4px var(--ds-focus-ring);
         }
         .feedback-inline-wrapper .feedback-textarea-wrapper textarea::placeholder {
-          color: var(--ds-gray-700);
+          color: hsl(var(--color-textSubtler));
         }
       `}</style>
     </div>
@@ -985,6 +1000,12 @@ export function FeedbackWithSelect({
       setSubmitted(true);
       setTimeout(() => {
         closeSelf();
+        // In popover mode, restore focus to the trigger button. The
+        // centered (modal) mode is controlled by the caller, who is
+        // responsible for restoring focus when `onClose` fires.
+        if (!centered) {
+          requestAnimationFrame(() => triggerRef.current?.focus());
+        }
         // Reset transient state after the close animation.
         setTimeout(() => {
           setSubmitted(false);
@@ -1006,6 +1027,7 @@ export function FeedbackWithSelect({
       onSubmit,
       closeSelf,
       defaultTopic,
+      centered,
     ],
   );
 
@@ -1126,8 +1148,8 @@ export function FeedbackWithSelect({
               padding: "10px 12px",
               fontSize: 14,
               lineHeight: "normal",
-              color: "var(--ds-gray-1000)",
-              background: "var(--ds-background-100)",
+              color: "hsl(var(--color-textDefault))",
+              background: "hsl(var(--color-canvas))",
               resize: "none",
               outline: "none",
               fontFamily: "inherit",
@@ -1147,7 +1169,7 @@ export function FeedbackWithSelect({
           fontSize: 12,
           lineHeight: "16px",
           fontWeight: 400,
-          color: "var(--ds-gray-900)",
+          color: "hsl(var(--color-textSubtle))",
         }}
       >
         <MarkdownIcon />
@@ -1163,8 +1185,8 @@ export function FeedbackWithSelect({
         alignItems: "center",
         justifyContent: "space-between",
         padding: 12,
-        background: "var(--ds-background-200)",
-        borderTop: "1px solid var(--ds-gray-200)",
+        background: "hsl(var(--color-canvas))",
+        borderTop: "1px solid hsl(var(--color-borderSubtle))",
       }}
     >
       <span style={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -1227,7 +1249,7 @@ export function FeedbackWithSelect({
         style={{
           fontSize: 12,
           lineHeight: "16px",
-          color: emailError ? "var(--ds-red-900)" : "var(--ds-gray-700)",
+          color: emailError ? "var(--ds-red-900)" : "hsl(var(--color-textSubtler))",
         }}
       >
         {emailError || "Optional — we'll only use this to follow up."}
@@ -1242,8 +1264,8 @@ export function FeedbackWithSelect({
         alignItems: "center",
         justifyContent: "flex-end",
         padding: 12,
-        background: "var(--ds-background-200)",
-        borderTop: "1px solid var(--ds-gray-200)",
+        background: "hsl(var(--color-canvas))",
+        borderTop: "1px solid hsl(var(--color-borderSubtle))",
       }}
     >
       <Button type="submit" size="small" loading={sending}>
@@ -1284,7 +1306,7 @@ export function FeedbackWithSelect({
         ...panelPositionStyle,
         width: 340,
         borderRadius: 12,
-        background: "var(--ds-background-100)",
+        background: "hsl(var(--color-surface))",
         boxShadow:
           "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, var(--ds-gray-100) 0px 0px 0px 1px",
         overflow: "hidden",
@@ -1398,8 +1420,8 @@ function FeedbackWithSelectFormStyles() {
         padding: 0 36px 0 12px;
         font-size: 14px;
         line-height: 20px;
-        color: var(--ds-gray-1000);
-        background: var(--ds-background-100);
+        color: hsl(var(--color-textDefault));
+        background: hsl(var(--color-canvas));
         outline: none;
         font-family: inherit;
         box-sizing: border-box;
@@ -1409,10 +1431,10 @@ function FeedbackWithSelectFormStyles() {
       }
       .feedback-select:invalid,
       .feedback-select option[value=""][disabled] {
-        color: var(--ds-gray-700);
+        color: hsl(var(--color-textSubtler));
       }
       .feedback-select option {
-        color: var(--ds-gray-1000);
+        color: hsl(var(--color-textDefault));
       }
       .feedback-select-suffix {
         position: absolute;
@@ -1422,7 +1444,7 @@ function FeedbackWithSelectFormStyles() {
         pointer-events: none;
         display: flex;
         align-items: center;
-        color: var(--ds-gray-900);
+        color: hsl(var(--color-textSubtle));
       }
 
       /* Shared with the <Feedback /> popover. Defined here too so that
@@ -1444,7 +1466,7 @@ function FeedbackWithSelectFormStyles() {
       }
       .feedback-textarea-wrapper textarea::placeholder,
       .feedback-textarea-wrapper input::placeholder {
-        color: var(--ds-gray-700);
+        color: hsl(var(--color-textSubtler));
       }
       .feedback-emoji {
         display: flex;
@@ -1457,18 +1479,18 @@ function FeedbackWithSelectFormStyles() {
         cursor: pointer;
         padding: 0;
         background: transparent;
-        color: var(--ds-gray-900);
+        color: hsl(var(--color-textSubtle));
         flex-shrink: 0;
         transition: background 0.2s ease, border-color 0.2s ease;
       }
       .feedback-emoji--selected {
-        background: var(--ds-pink-300);
-        color: var(--ds-pink-800);
+        background: var(--ds-blue-300);
+        color: var(--ds-blue-800);
       }
       @media (hover: hover) {
         .feedback-emoji:hover {
-          background: var(--ds-pink-300);
-          color: var(--ds-pink-800);
+          background: var(--ds-blue-300);
+          color: var(--ds-blue-800);
         }
       }
       @keyframes feedbackFadeIn {
@@ -1533,6 +1555,9 @@ export function Feedback({
       setSubmitted(true);
       setTimeout(() => {
         setIsOpen(false);
+        // Restore focus to the trigger so a keyboard user lands back
+        // where they came from instead of having focus collapse to body.
+        requestAnimationFrame(() => triggerRef.current?.focus());
         // Reset after close animation
         setTimeout(() => {
           setSubmitted(false);
@@ -1648,7 +1673,7 @@ export function Feedback({
                 : {}),
               width: 340,
               borderRadius: 12,
-              background: "var(--ds-background-100)",
+              background: "hsl(var(--color-surface))",
               boxShadow:
                 "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, var(--ds-gray-100) 0px 0px 0px 1px",
               overflow: "hidden",
@@ -1698,7 +1723,7 @@ export function Feedback({
                     lineHeight: "16px",
                     color: emailError
                       ? "var(--ds-red-900)"
-                      : "var(--ds-gray-700)",
+                      : "hsl(var(--color-textSubtler))",
                   }}
                 >
                   {emailError ||
@@ -1712,8 +1737,8 @@ export function Feedback({
                   alignItems: "center",
                   justifyContent: "flex-end",
                   padding: 12,
-                  background: "var(--ds-background-200)",
-                  borderTop: "1px solid var(--ds-gray-200)",
+                  background: "hsl(var(--color-canvas))",
+                  borderTop: "1px solid hsl(var(--color-borderSubtle))",
                 }}
               >
                 <Button type="submit" size="small" loading={sending}>
@@ -1753,8 +1778,8 @@ export function Feedback({
                         padding: "10px 12px",
                         fontSize: 14,
                         lineHeight: "normal",
-                        color: "var(--ds-gray-1000)",
-                        background: "var(--ds-background-100)",
+                        color: "hsl(var(--color-textDefault))",
+                        background: "hsl(var(--color-canvas))",
                         resize: "none",
                         outline: "none",
                         fontFamily: "inherit",
@@ -1775,7 +1800,7 @@ export function Feedback({
                     fontSize: 12,
                     lineHeight: "16px",
                     fontWeight: 400,
-                    color: "var(--ds-gray-900)",
+                    color: "hsl(var(--color-textSubtle))",
                   }}
                 >
                   <MarkdownIcon />
@@ -1790,8 +1815,8 @@ export function Feedback({
                   alignItems: "center",
                   justifyContent: "space-between",
                   padding: 12,
-                  background: "var(--ds-background-200)",
-                  borderTop: "1px solid var(--ds-gray-200)",
+                  background: "hsl(var(--color-canvas))",
+                  borderTop: "1px solid hsl(var(--color-borderSubtle))",
                 }}
               >
                   {/* Emoji buttons */}
@@ -1849,7 +1874,7 @@ export function Feedback({
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
         }
         .feedback-textarea-wrapper textarea::placeholder {
-          color: var(--ds-gray-700);
+          color: hsl(var(--color-textSubtler));
         }
         .feedback-emoji {
           display: flex;
@@ -1862,17 +1887,17 @@ export function Feedback({
           cursor: pointer;
           padding: 0;
           background: transparent;
-          color: var(--ds-gray-900);
+          color: hsl(var(--color-textSubtle));
           transition: background 0.2s ease, border-color 0.2s ease;
         }
         .feedback-emoji--selected {
-          background: var(--ds-pink-300);
-          color: var(--ds-pink-800);
+          background: var(--ds-blue-300);
+          color: var(--ds-blue-800);
         }
         @media (hover: hover) {
           .feedback-emoji:hover {
-            background: var(--ds-pink-300);
-            color: var(--ds-pink-800);
+            background: var(--ds-blue-300);
+            color: var(--ds-blue-800);
           }
         }
         @keyframes feedbackFadeIn {

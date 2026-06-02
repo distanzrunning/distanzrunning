@@ -1,12 +1,16 @@
 // src/components/LayoutContent.tsx
 //
-// Server component. Reads the current pathname from the x-pathname
-// header (set in middleware.ts) and picks the right chrome before
-// the HTML ever leaves the server. Previously this was a client
-// component using `usePathname()`, which returns null during static
-// rendering — that caused the homepage to render with the legacy
-// navbar HTML and only swap to the SiteHeader after hydration
-// (visible as a brief flash on first load).
+// Server component. Reads the current pathname from the
+// x-pathname header (set in middleware.ts) and picks the right
+// chrome before the HTML ever leaves the server. Doing this on
+// the server (vs. a client component using `usePathname()`,
+// which returns null during static rendering) avoids a flash
+// between layouts on first paint.
+//
+// SiteHeader is now the only public chrome. Previously the app
+// also rendered a legacy NavbarAlt for routes that hadn't been
+// migrated to the new DS — that branch is gone, every public
+// page renders SiteHeader unconditionally.
 
 import { headers } from "next/headers";
 import { ReactNode } from "react";
@@ -14,15 +18,12 @@ import PageFrame from "./ui/PageFrame";
 
 interface LayoutContentProps {
   children: ReactNode;
-  navbar: ReactNode;
-  /** v0-style SiteHeader rendered on the homepage. Other pages still use the legacy `navbar` while the rest of the site is being rebuilt. */
   header: ReactNode;
   footer: ReactNode;
 }
 
 export default async function LayoutContent({
   children,
-  navbar,
   header,
   footer,
 }: LayoutContentProps) {
@@ -31,47 +32,45 @@ export default async function LayoutContent({
 
   const isPreviewMode = process.env.NEXT_PUBLIC_PREVIEW_MODE === "true";
 
-  // Hide navbar and footer on login page
+  // Suppress site chrome on routes that own their own layout:
+  //   /login         — staging gate
+  //   /admin/*       — admin SPA (dashboard + design system + studio)
+  //   /coming-soon   — pre-launch holding page on the production domain
   const isLoginPage = pathname === "/login";
-
-  // Admin (dashboard + design system + studio) is a standalone SPA — no site navbar or footer
   const isAdmin = pathname.startsWith("/admin");
-
-  // Pre-launch holding page rendered on the production domain — owns
-  // its own full-screen layout, so suppress site chrome.
   const isComingSoon = pathname === "/coming-soon";
-
-  // Hide footer on calendar page (fullscreen app-like view)
-  const isCalendarPage = pathname === "/races/calendar";
-
-  // Homepage uses the new SiteHeader chrome.
   const isHome = pathname === "/";
+
+  // Hide footer on the calendar page (fullscreen app-like view)
+  const isCalendarPage = pathname === "/races/calendar";
 
   if (isPreviewMode || isLoginPage || isAdmin || isComingSoon) {
     return <main className="min-h-screen">{children}</main>;
   }
 
-  // Chrome background (area outside the frame):
-  //   light → bg-100 (#FFFFFF primary canvas)
-  //   dark  → bg-200 (#000000 primary canvas)
+  // Chrome background (the canvas around PageFrame):
+  // Page canvas sits on bg-200 (recessed) in both modes — matches the
+  // admin shell pattern; elevated chrome (SiteHeader pill, future
+  // cards/panels) pops above it on bg-100.
   const chromeClass =
-    "flex min-h-screen flex-col bg-[var(--ds-background-100)] dark:bg-[var(--ds-background-200)]";
+    "flex min-h-screen flex-col bg-[var(--ds-background-200)]";
 
+  // Homepage gets the SiteHeader (so we can iterate on the new
+  // floating-pill chrome in context) but skips the PageFrame and the
+  // footer — a blank canvas under the navbar. Other public routes
+  // continue to get the full chrome (header + PageFrame + footer).
   if (isHome) {
     return (
       <div className={chromeClass}>
         {header}
-        <PageFrame as="main" className="flex flex-1 flex-col">
-          {children}
-        </PageFrame>
-        {footer}
+        <main className="flex flex-1 flex-col">{children}</main>
       </div>
     );
   }
 
   return (
     <div className={chromeClass}>
-      {navbar}
+      {header}
       <PageFrame as="main" className="flex flex-1 flex-col">
         {children}
       </PageFrame>

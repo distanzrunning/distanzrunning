@@ -54,7 +54,7 @@ export default function PageFrame({
 
   return (
     <Component
-      className={`relative bg-[var(--ds-background-200)] dark:bg-[var(--ds-background-100)] ${className}`.trim()}
+      className={`relative bg-canvas ${className}`.trim()}
       style={{
         margin: "0 8px 8px",
         border: "1px solid var(--ds-gray-400)",

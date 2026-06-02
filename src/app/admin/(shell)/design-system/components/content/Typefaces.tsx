@@ -3,11 +3,11 @@ export default function Typefaces() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Typography
         </p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
           id="typefaces"
         >
           Typefaces
@@ -20,7 +20,7 @@ export default function Typefaces() {
       <section>
         <h2
           id="eb-garamond"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           EB Garamond
         </h2>
@@ -30,11 +30,11 @@ export default function Typefaces() {
         {/* EB Garamond Regular */}
         <h3
           id="eb-garamond-regular"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           EB Garamond
         </h3>
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           Primarily for headlines, display text, and editorial emphasis. A
           revival of Claude Garamont&apos;s famous humanist typefaces from the
           mid-16th century, designed by Georg Duffner. Known for its elegance,
@@ -68,21 +68,21 @@ export default function Typefaces() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Font
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Weight
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Style
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Token
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm whitespace-nowrap">
+            <tbody className="text-copy-14 whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Regular</td>
                 <td className="py-3 px-4">400</td>
@@ -120,11 +120,11 @@ export default function Typefaces() {
         {/* Weight spectrum */}
         <h3
           id="eb-garamond-weights"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Weight spectrum
         </h3>
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           EB Garamond offers five weights from Regular to ExtraBold, with
           matching italics for each weight. Its elegant proportions make it
           ideal for headlines and display text.
@@ -168,11 +168,11 @@ export default function Typefaces() {
         {/* Italic specimen */}
         <h3
           id="eb-garamond-italic"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           EB Garamond Italic
         </h3>
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           The italic cuts are true italics based on the chancery style, not
           simply slanted romans. They bring an additional layer of elegance for
           emphasis and decorative typography.
@@ -200,7 +200,7 @@ export default function Typefaces() {
       <section>
         <h2
           id="inter"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Inter
         </h2>
@@ -210,11 +210,11 @@ export default function Typefaces() {
         {/* Inter */}
         <h3
           id="inter-regular"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Inter
         </h3>
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           Primary typeface for body text, UI elements, navigation, metadata, and
           captions. Designed by Rasmus Andersson specifically for computer
           screens, with a tall x-height for improved readability at small sizes.
@@ -258,21 +258,21 @@ export default function Typefaces() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Font
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Weight
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Style
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Token
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm whitespace-nowrap">
+            <tbody className="text-copy-14 whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Thin</td>
                 <td className="py-3 px-4">100</td>
@@ -330,11 +330,11 @@ export default function Typefaces() {
         {/* Weight spectrum */}
         <h3
           id="inter-weights"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Weight spectrum
         </h3>
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           Inter provides a complete weight spectrum from 100-900, enabling
           precise typographic control for any use case.
         </p>
@@ -403,14 +403,14 @@ export default function Typefaces() {
       <section>
         <h2
           id="font-roles"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Font roles
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Semantic font tokens map typefaces to their intended use, ensuring
           consistent application across the design system.
         </p>
@@ -419,21 +419,21 @@ export default function Typefaces() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Role
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Token
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Typeface
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Usage
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Display</td>
                 <td className="py-3 px-4 font-mono">--display-font</td>
@@ -487,7 +487,7 @@ export default function Typefaces() {
       <section>
         <h2
           id="reference"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Reference
         </h2>
@@ -498,18 +498,18 @@ export default function Typefaces() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   CSS Variable
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Value
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Tailwind
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm whitespace-nowrap">
+            <tbody className="text-copy-14 whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">--font-family-serif</td>
                 <td className="py-3 px-4 font-mono text-xs">

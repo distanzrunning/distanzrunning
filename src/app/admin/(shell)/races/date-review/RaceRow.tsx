@@ -1,0 +1,149 @@
+"use client";
+
+// src/app/admin/(shell)/races/date-review/RaceRow.tsx
+//
+// Wraps the per-race row rendering as a client component so it
+// can own the expander state. Returns a React fragment of either
+// just the main TableRow, or main + expander TableRow when
+// expanded — both inside the parent <TableBody>.
+//
+// The page (server component) just iterates races and emits
+// <RaceRow race={…} />; all interactive bits (Calendar, Approve,
+// Scan, expander chevron) live below this boundary.
+
+import { useState } from "react";
+import { format } from "date-fns";
+import { ChevronDown, ChevronRight, ExternalLink } from "lucide-react";
+
+import { Badge } from "@/components/ui/Badge";
+import { TableCell, TableRow } from "@/components/ui/Table";
+
+import RowActions, { type RowState } from "./RowActions";
+import ScanLogPanel from "./ScanLogPanel";
+
+export interface RaceRowData {
+  _id: string;
+  title: string;
+  eventDate: string;
+  officialWebsite?: string;
+  suggestedNextDate?: string;
+  suggestedNextDateScrapedAt?: string;
+  suggestedNextDateSourceQuote?: string;
+  suggestedNextDateStatus?: "pending" | "approved" | "rejected";
+  /** Set on every scan attempt — used as the "has log" gate for
+   *  the expander chevron. The actual log JSON is lazy-loaded
+   *  via getScanLog() when the editor opens the expander, so it
+   *  doesn't bloat the page query at scale. */
+  lastScanAt?: string;
+}
+
+const safeFormat = (iso: string | undefined, pattern: string): string => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? "—" : format(d, pattern);
+};
+
+interface RaceRowProps {
+  race: RaceRowData;
+  state: RowState;
+}
+
+export default function RaceRow({ race, state }: RaceRowProps) {
+  const [expanded, setExpanded] = useState(false);
+  // hasLog gates the chevron — the JSON itself is lazy-loaded
+  // by ScanLogPanel below. lastScanAt is set on every scan
+  // attempt so its presence is a reliable proxy for "log exists".
+  const hasLog = Boolean(race.lastScanAt);
+
+  return (
+    <>
+      <TableRow>
+        <TableCell className="max-w-[220px] text-copy-13 text-textDefault">
+          <div className="flex items-center gap-2">
+            {/* Chevron expander — disabled when there's no log
+                (race hasn't been scanned yet). The button takes
+                over the leading-icon slot and stays compact. */}
+            <button
+              type="button"
+              disabled={!hasLog}
+              onClick={() => setExpanded((v) => !v)}
+              aria-expanded={expanded}
+              aria-label={
+                hasLog
+                  ? expanded
+                    ? `Collapse scan log for ${race.title}`
+                    : `Expand scan log for ${race.title}`
+                  : "No scan log yet"
+              }
+              className="inline-flex size-5 shrink-0 items-center justify-center rounded text-textSubtler hover:bg-[color:var(--ds-gray-100)] hover:text-textDefault disabled:cursor-not-allowed disabled:text-textDisabled disabled:hover:bg-transparent"
+            >
+              {expanded ? (
+                <ChevronDown className="size-3.5" />
+              ) : (
+                <ChevronRight className="size-3.5" />
+              )}
+            </button>
+            <span>{race.title}</span>
+            {race.officialWebsite && (
+              <a
+                href={race.officialWebsite}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open ${race.title} official website`}
+                title="Open official website"
+                className="inline-flex text-textSubtler hover:text-textDefault"
+              >
+                <ExternalLink className="size-3.5" />
+              </a>
+            )}
+          </div>
+        </TableCell>
+        <TableCell className="whitespace-nowrap">
+          <div className="flex items-center gap-2">
+            <Badge variant="red-subtle" size="sm">
+              Past
+            </Badge>
+            <span className="text-label-12 text-textSubtle">
+              {safeFormat(race.eventDate, "d MMM yyyy")}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="max-w-[320px] text-copy-13 italic text-textSubtle">
+          {race.suggestedNextDateSourceQuote
+            ? `"${race.suggestedNextDateSourceQuote}"`
+            : "—"}
+        </TableCell>
+        <TableCell className="whitespace-nowrap text-label-12 text-textSubtler">
+          {safeFormat(
+            race.suggestedNextDateScrapedAt ?? race.lastScanAt,
+            "d MMM, HH:mm",
+          )}
+        </TableCell>
+        {/* RowActions renders TWO cells (Suggested + Action) as a
+            fragment, switched by row state. */}
+        <RowActions
+          id={race._id}
+          title={race.title}
+          state={state}
+          suggestedDate={race.suggestedNextDate}
+          previousEventDate={race.eventDate}
+        />
+      </TableRow>
+      {expanded && hasLog && (
+        <TableRow>
+          {/* Inline text-align: left overrides the DS Table's
+              last:text-right utility (which fires on every
+              last-child cell) so the panel content reads left
+              like the rest of the columns. */}
+          <TableCell
+            colSpan={6}
+            style={{ textAlign: "left" }}
+            className="bg-[color:var(--ds-background-200)] !px-0 !py-0"
+          >
+            <ScanLogPanel raceId={race._id} />
+          </TableCell>
+        </TableRow>
+      )}
+    </>
+  );
+}

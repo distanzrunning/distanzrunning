@@ -332,7 +332,7 @@ const iconRegistry = buildIconRegistry();
 
 // Library badge style
 const libraryBadgeStyle =
-  "bg-[var(--ds-gray-100)] text-[var(--ds-gray-700)]";
+  "bg-[var(--ds-gray-100)] text-textSubtler";
 
 const libraryLabels: Record<IconLibrary, string> = {
   lucide: "Lucide",
@@ -422,7 +422,7 @@ function IconCard({ icon }: { icon: IconDefinition }) {
               <IconComponent size={16} className="text-current" />
             )}
           </div>
-          <p className="text-[13px] text-textSubtle truncate flex-1 pt-4 max-w-full">
+          <p className="text-copy-13 text-textSubtle truncate flex-1 pt-4 max-w-full">
             {icon.displayName}
           </p>
         </div>
@@ -489,12 +489,12 @@ function SearchInput({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-11 pl-11 pr-4 text-sm rounded-md border border-borderNeutral outline-none placeholder:text-[var(--ds-gray-700)] hover:border-borderNeutralHover focus:border-borderNeutralHover focus:ring-2 focus:ring-borderNeutral transition-colors"
-        style={{ background: "var(--ds-background-100)" }}
+        className="w-full h-11 pl-11 pr-4 text-sm rounded-md border border-borderNeutral outline-none placeholder:text-textSubtler hover:border-borderNeutralHover focus:border-borderNeutralHover focus:ring-2 focus:ring-borderNeutral transition-colors"
+        style={{ background: "hsl(var(--color-surface))" }}
       />
       <label
         aria-hidden="true"
-        className="absolute left-4 pointer-events-none text-[var(--ds-gray-700)]"
+        className="absolute left-4 pointer-events-none text-textSubtler"
       >
         <Search size={16} />
       </label>
@@ -577,7 +577,7 @@ export default function Icons() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <Search size={48} className="text-[var(--ds-gray-500)] mb-4" />
+              <Search size={48} className="text-textDisabled mb-4" />
               <p className="text-textSubtle font-medium">No icons found</p>
               <p className="text-textSubtle text-sm mt-1">
                 Try a different search term
@@ -593,11 +593,11 @@ export default function Icons() {
         <Section>
           <h2
             id="usage"
-            className="text-[24px] leading-[1.2] font-semibold text-textDefault mb-4 scroll-mt-32"
+            className="text-heading-24 text-textDefault mb-4 scroll-mt-32"
           >
             Usage
           </h2>
-          <p className="text-[16px] leading-[1.5] text-textSubtle mb-6">
+          <p className="text-copy-16 text-textSubtle mb-6">
             We use multiple icon libraries to ensure comprehensive coverage. Our
             primary library is{" "}
             <a
@@ -649,7 +649,7 @@ export default function Icons() {
 
           {/* Installation */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Installation
             </h3>
             <CodeBlock language="bash" showLineNumbers={false}>
@@ -659,7 +659,7 @@ export default function Icons() {
 
           {/* Import - Lucide */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Import from Lucide (primary)
             </h3>
             <CodeBlock language="tsx" showLineNumbers={false}>
@@ -669,7 +669,7 @@ export default function Icons() {
 
           {/* Import - Tabler */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Import from Tabler
             </h3>
             <CodeBlock language="tsx" showLineNumbers={false}>
@@ -679,7 +679,7 @@ export default function Icons() {
 
           {/* Import - Material */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Import from Material Design
             </h3>
             <CodeBlock language="tsx" showLineNumbers={false}>
@@ -689,7 +689,7 @@ export default function Icons() {
 
           {/* Import - Simple Icons */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Import from Simple Icons (brand logos)
             </h3>
             <CodeBlock language="tsx" showLineNumbers={false}>
@@ -699,7 +699,7 @@ export default function Icons() {
 
           {/* Basic usage */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Basic usage
             </h3>
             <CodeBlock language="tsx" showLineNumbers={false}>
@@ -722,7 +722,7 @@ export default function Icons() {
 
           {/* Sizing */}
           <div className="mb-6">
-            <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+            <h3 className="text-heading-14 text-textDefault mb-2">
               Recommended sizes
             </h3>
             <div className="overflow-x-auto">
@@ -764,13 +764,13 @@ export default function Icons() {
         <Section>
           <h2
             id="resources"
-            className="text-[24px] leading-[1.2] font-semibold text-textDefault mb-4 scroll-mt-32"
+            className="text-heading-24 text-textDefault mb-4 scroll-mt-32"
           >
             Resources
           </h2>
           <div className="space-y-4">
             <div>
-              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+              <h3 className="text-heading-14 text-textDefault mb-2">
                 Lucide (Primary)
               </h3>
               <div className="space-y-1">
@@ -795,7 +795,7 @@ export default function Icons() {
               </div>
             </div>
             <div>
-              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+              <h3 className="text-heading-14 text-textDefault mb-2">
                 Tabler Icons
               </h3>
               <div className="space-y-1">
@@ -811,7 +811,7 @@ export default function Icons() {
               </div>
             </div>
             <div>
-              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+              <h3 className="text-heading-14 text-textDefault mb-2">
                 Material Design Icons
               </h3>
               <div className="space-y-1">
@@ -827,7 +827,7 @@ export default function Icons() {
               </div>
             </div>
             <div>
-              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+              <h3 className="text-heading-14 text-textDefault mb-2">
                 Simple Icons
               </h3>
               <div className="space-y-1">
@@ -843,7 +843,7 @@ export default function Icons() {
               </div>
             </div>
             <div>
-              <h3 className="text-[14px] leading-[20px] font-medium text-textDefault mb-2">
+              <h3 className="text-heading-14 text-textDefault mb-2">
                 React Icons
               </h3>
               <div className="space-y-1">

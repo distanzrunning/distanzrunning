@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -140,7 +141,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -231,8 +232,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -244,40 +245,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -450,7 +451,7 @@ function CenteredDemo() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="h-8 px-3 rounded-md border border-[var(--ds-gray-400)] bg-[var(--ds-background-100)] text-[14px] text-[var(--ds-gray-1000)] hover:bg-[var(--ds-gray-100)]"
+        className="h-8 px-3 rounded-md border border-borderDefault bg-[var(--ds-background-100)] text-[14px] text-textDefault hover:bg-[var(--ds-gray-100)]"
       >
         Open centered feedback
       </button>
@@ -594,6 +595,100 @@ export default function FeedbackComponent() {
         <CodePreview componentCode={withMetadataCode}>
           <WithMetadataDemo />
         </CodePreview>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Place Feedback at the end of a page, doc, or completed flow
+            where the user has formed an opinion. Don&apos;t front-load
+            it on a surface the user has only opened.
+          </li>
+          <li>
+            Use{" "}
+            <code className="inline-code">&lt;FeedbackWithSelect&gt;</code>{" "}
+            when feedback maps to actionable categories the team triages
+            (<code className="inline-code">Bug</code>,{" "}
+            <code className="inline-code">Pricing</code>,{" "}
+            <code className="inline-code">Documentation</code>); skip it
+            when the open textarea is enough.
+          </li>
+          <li>
+            Don&apos;t use Feedback as a substitute for a support form,
+            a bug report intake, or NPS sampling. Those have dedicated
+            surfaces.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Keep the panel collapsed until the user clicks the trigger;
+            auto-opening derails the work that prompted the feedback.
+          </li>
+          <li>
+            Pair the{" "}
+            <code className="inline-code">metadata</code> prop with
+            non-PII context (route, build ID, plan, viewport) so the
+            team can reproduce the report without a second round-trip.
+          </li>
+          <li>
+            Submit closes the panel and returns focus to the trigger.
+            Don&apos;t replace the panel with a generic acknowledgment
+            toast; the close itself is the acknowledgment.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">buttonLabel</code> is Title
+            Case and short. Default{" "}
+            <code className="inline-code">Feedback</code> is fine;
+            override only when scoping to a flow:{" "}
+            <code className="inline-code">Feedback on Imports</code>,{" "}
+            <code className="inline-code">Report a Bug</code>.
+            Don&apos;t end the label with{" "}
+            <code className="inline-code">?</code>.
+          </li>
+          <li>
+            <code className="inline-code">&lt;FeedbackInline&gt;</code>
+            &apos;s <code className="inline-code">label</code> overrides
+            the prompt header next to the emoji row in sentence case (
+            <code className="inline-code">
+              How did the import go?
+            </code>
+            ). Cut <code className="inline-code">please</code> and{" "}
+            <code className="inline-code">we&apos;re sorry</code>.
+          </li>
+          <li>
+            The textarea placeholder (
+            <code className="inline-code">Your feedback...</code>) is
+            fixed by the component; don&apos;t try to override it with
+            rich children.
+          </li>
+        </ul>
       </Section>
 
       <Toast

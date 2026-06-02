@@ -11,6 +11,14 @@ interface SheetProps {
   children: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  /**
+   * Render the blocking overlay scrim and trap focus inside the sheet.
+   * Defaults to `true` — matches Geist's live Sheet behavior (overlay
+   * always shown, outside-click dismisses). Flip to `false` only when
+   * the underlying page must stay fully interactive while the sheet is
+   * open.
+   */
+  modal?: boolean;
 }
 
 interface SheetTriggerProps {
@@ -57,23 +65,75 @@ function ensureKeyframes() {
   style.textContent = `
     @keyframes sheet-overlay-in {
       from { opacity: 0; }
-      to { opacity: 1; }
+      to { opacity: var(--ds-overlay-backdrop-opacity); }
+    }
+    @keyframes sheet-overlay-out {
+      from { opacity: var(--ds-overlay-backdrop-opacity); }
+      to { opacity: 0; }
     }
     @keyframes sheet-slide-in-right {
       from { transform: translateX(1.25rem); opacity: 0; }
       to { transform: translateX(0); opacity: 1; }
     }
+    @keyframes sheet-slide-out-right {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(1.25rem); opacity: 0; }
+    }
     @keyframes sheet-slide-in-left {
       from { transform: translateX(-1.25rem); opacity: 0; }
       to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes sheet-slide-out-left {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(-1.25rem); opacity: 0; }
     }
     @keyframes sheet-slide-in-top {
       from { transform: translateY(-1.25rem); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
+    @keyframes sheet-slide-out-top {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(-1.25rem); opacity: 0; }
+    }
     @keyframes sheet-slide-in-bottom {
       from { transform: translateY(1.25rem); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes sheet-slide-out-bottom {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(1.25rem); opacity: 0; }
+    }
+
+    .ds-sheet-overlay[data-state="open"] {
+      animation: sheet-overlay-in 200ms ease-out;
+    }
+    .ds-sheet-overlay[data-state="closed"] {
+      animation: sheet-overlay-out 150ms ease-in;
+    }
+
+    .ds-sheet-content[data-state="open"][data-side="right"] {
+      animation: sheet-slide-in-right 200ms ease-out;
+    }
+    .ds-sheet-content[data-state="closed"][data-side="right"] {
+      animation: sheet-slide-out-right 150ms ease-in;
+    }
+    .ds-sheet-content[data-state="open"][data-side="left"] {
+      animation: sheet-slide-in-left 200ms ease-out;
+    }
+    .ds-sheet-content[data-state="closed"][data-side="left"] {
+      animation: sheet-slide-out-left 150ms ease-in;
+    }
+    .ds-sheet-content[data-state="open"][data-side="top"] {
+      animation: sheet-slide-in-top 200ms ease-out;
+    }
+    .ds-sheet-content[data-state="closed"][data-side="top"] {
+      animation: sheet-slide-out-top 150ms ease-in;
+    }
+    .ds-sheet-content[data-state="open"][data-side="bottom"] {
+      animation: sheet-slide-in-bottom 200ms ease-out;
+    }
+    .ds-sheet-content[data-state="closed"][data-side="bottom"] {
+      animation: sheet-slide-out-bottom 150ms ease-in;
     }
   `;
   document.head.appendChild(style);
@@ -84,30 +144,10 @@ function ensureKeyframes() {
 // ============================================================================
 
 const sidePositionStyles: Record<string, React.CSSProperties> = {
-  right: {
-    top: 0,
-    right: 0,
-    bottom: 0,
-    animation: "sheet-slide-in-right 200ms ease-in-out",
-  },
-  left: {
-    top: 0,
-    left: 0,
-    bottom: 0,
-    animation: "sheet-slide-in-left 200ms ease-in-out",
-  },
-  top: {
-    top: 0,
-    left: 0,
-    right: 0,
-    animation: "sheet-slide-in-top 200ms ease-in-out",
-  },
-  bottom: {
-    bottom: 0,
-    left: 0,
-    right: 0,
-    animation: "sheet-slide-in-bottom 200ms ease-in-out",
-  },
+  right: { top: 0, right: 0, bottom: 0 },
+  left: { top: 0, left: 0, bottom: 0 },
+  top: { top: 0, left: 0, right: 0 },
+  bottom: { bottom: 0, left: 0, right: 0 },
 };
 
 const sideClassNames: Record<string, string> = {
@@ -128,13 +168,13 @@ const defaultSizes: Record<string, string> = {
 // Components
 // ============================================================================
 
-function SheetRoot({ children, open, onOpenChange }: SheetProps) {
+function SheetRoot({ children, open, onOpenChange, modal = true }: SheetProps) {
   useEffect(() => {
     ensureKeyframes();
   }, []);
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+    <Dialog.Root open={open} onOpenChange={onOpenChange} modal={modal}>
       {children}
     </Dialog.Root>
   );
@@ -159,25 +199,29 @@ function SheetContent({
   return (
     <Dialog.Portal>
       <Dialog.Overlay
+        className="ds-sheet-overlay"
         style={{
           position: "fixed",
           inset: 0,
           zIndex: 99,
-          backgroundColor: "rgba(250, 250, 250, 0.5)",
-          animation: "sheet-overlay-in 200ms ease-out",
+          backgroundColor: "var(--ds-overlay-backdrop-color)",
+          opacity: "var(--ds-overlay-backdrop-opacity)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
         }}
       />
       <Dialog.Content
-        className={className || sideClassNames[side]}
+        data-side={side}
+        className={`ds-sheet-content ${className || sideClassNames[side]}`}
         style={{
           position: "fixed",
           zIndex: 100,
           display: "flex",
           flexDirection: "column",
           gap: 16,
-          background: "var(--ds-background-100)",
+          background: "hsl(var(--color-surface))",
           boxShadow:
-            "rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px 0px, rgba(0,0,0,0.04) 0px 8px 16px -4px, var(--ds-background-200) 0px 0px 0px 1px",
+            "var(--ds-shadow-modal), hsl(var(--color-canvas)) 0px 0px 0px 1px",
           outline: "none",
           transition:
             "color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter",
@@ -195,9 +239,7 @@ function SheetContent({
 
 function SheetHeader({ children }: SheetHeaderProps) {
   return (
-    <div className="flex flex-col sm:text-left p-6 text-left">
-      {children}
-    </div>
+    <div className="flex flex-col sm:text-left p-6 text-left">{children}</div>
   );
 }
 
@@ -208,7 +250,7 @@ function SheetTitle({ children }: SheetTitleProps) {
       style={{
         fontSize: 18,
         lineHeight: "28px",
-        color: "var(--ds-gray-1000)",
+        color: "hsl(var(--color-textDefault))",
       }}
     >
       {children}
@@ -222,7 +264,7 @@ function SheetDescription({ children }: SheetDescriptionProps) {
       style={{
         fontSize: 14,
         lineHeight: "20px",
-        color: "var(--ds-gray-700)",
+        color: "hsl(var(--color-textSubtler))",
       }}
     >
       {children}
@@ -237,7 +279,7 @@ function SheetBody({ children }: { children: React.ReactNode }) {
       style={{
         fontSize: 14,
         lineHeight: "20px",
-        color: "var(--ds-gray-1000)",
+        color: "hsl(var(--color-textDefault))",
       }}
     >
       {children}

@@ -11,7 +11,7 @@ export default function CloseComponent() {
     <article className="space-y-10">
       {/* Header */}
       <header>
-        <h1 className="font-display text-3xl md:text-4xl font-medium text-textDefault mb-4">
+        <h1 className="font-serif text-3xl md:text-4xl font-medium text-textDefault mb-4">
           Close
         </h1>
         <p className="text-lg text-textSubtle max-w-2xl">
@@ -22,13 +22,13 @@ export default function CloseComponent() {
 
       {/* Interactive Preview */}
       <section>
-        <h2 className="font-display text-xl font-medium text-textDefault mb-4">
+        <h2 className="font-serif text-xl font-medium text-textDefault mb-4">
           Preview
         </h2>
 
         {/* Disabled Toggle */}
         <div className="mb-4">
-          <label className="inline-flex items-center gap-2 text-sm text-textSubtle cursor-pointer">
+          <label className="inline-flex items-center gap-2 text-copy-14 text-textSubtle cursor-pointer">
             <input
               type="checkbox"
               checked={isDisabled}
@@ -43,7 +43,7 @@ export default function CloseComponent() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Default variant */}
           <div className="border border-borderNeutral rounded-lg p-8 flex flex-col items-center gap-4 bg-white">
-            <span className="text-sm text-textSubtle font-medium">Default</span>
+            <span className="text-copy-14 text-textSubtle font-medium">Default</span>
             <IconButton
               aria-label="Close"
               variant="primary"
@@ -55,8 +55,8 @@ export default function CloseComponent() {
           </div>
 
           {/* Inverse variant */}
-          <div className="border border-borderNeutral rounded-lg p-8 flex flex-col items-center gap-4 bg-asphalt-10">
-            <span className="text-sm text-asphalt-70 font-medium">Inverse</span>
+          <div className="border border-borderNeutral rounded-lg p-8 flex flex-col items-center gap-4 bg-gray-1000">
+            <span className="text-sm text-gray-600 font-medium">Inverse</span>
             <IconButton
               aria-label="Close"
               variant="primary"
@@ -72,10 +72,10 @@ export default function CloseComponent() {
 
       {/* Usage */}
       <section>
-        <h2 className="font-display text-xl font-medium text-textDefault mb-4">
+        <h2 className="font-serif text-xl font-medium text-textDefault mb-4">
           Usage
         </h2>
-        <div className="bg-asphalt-95 dark:bg-asphalt-10 rounded-lg overflow-hidden">
+        <div className="bg-gray-200 dark:bg-gray-1000 rounded-lg overflow-hidden">
           <pre className="p-4 text-sm overflow-x-auto">
             <code className="text-textDefault">{`import { X } from "lucide-react";
 import IconButton from "@/components/ui/IconButton";
@@ -100,7 +100,7 @@ import IconButton from "@/components/ui/IconButton";
 
       {/* Props */}
       <section>
-        <h2 className="font-display text-xl font-medium text-textDefault mb-4">
+        <h2 className="font-serif text-xl font-medium text-textDefault mb-4">
           Props
         </h2>
         <div className="overflow-x-auto">
@@ -115,37 +115,37 @@ import IconButton from "@/components/ui/IconButton";
             </thead>
             <tbody className="text-textSubtle">
               <tr className="border-b border-borderNeutral/50">
-                <td className="py-3 pr-4 font-mono text-xs text-electric-pink">aria-label</td>
+                <td className="py-3 pr-4 font-mono text-xs text-textSubtle">aria-label</td>
                 <td className="py-3 pr-4 font-mono text-xs">string</td>
                 <td className="py-3 pr-4 font-mono text-xs">—</td>
                 <td className="py-3">Required. Accessible label (e.g., "Close", "Close dialog")</td>
               </tr>
               <tr className="border-b border-borderNeutral/50">
-                <td className="py-3 pr-4 font-mono text-xs text-electric-pink">inverse</td>
+                <td className="py-3 pr-4 font-mono text-xs text-textSubtle">inverse</td>
                 <td className="py-3 pr-4 font-mono text-xs">boolean</td>
                 <td className="py-3 pr-4 font-mono text-xs">false</td>
                 <td className="py-3">Use inverse colors for dark backgrounds</td>
               </tr>
               <tr className="border-b border-borderNeutral/50">
-                <td className="py-3 pr-4 font-mono text-xs text-electric-pink">disabled</td>
+                <td className="py-3 pr-4 font-mono text-xs text-textSubtle">disabled</td>
                 <td className="py-3 pr-4 font-mono text-xs">boolean</td>
                 <td className="py-3 pr-4 font-mono text-xs">false</td>
                 <td className="py-3">Disable the button</td>
               </tr>
               <tr className="border-b border-borderNeutral/50">
-                <td className="py-3 pr-4 font-mono text-xs text-electric-pink">size</td>
+                <td className="py-3 pr-4 font-mono text-xs text-textSubtle">size</td>
                 <td className="py-3 pr-4 font-mono text-xs">"default" | "small"</td>
                 <td className="py-3 pr-4 font-mono text-xs">"default"</td>
                 <td className="py-3">Button size (40px or 32px)</td>
               </tr>
               <tr className="border-b border-borderNeutral/50">
-                <td className="py-3 pr-4 font-mono text-xs text-electric-pink">onClick</td>
+                <td className="py-3 pr-4 font-mono text-xs text-textSubtle">onClick</td>
                 <td className="py-3 pr-4 font-mono text-xs">() =&gt; void</td>
                 <td className="py-3 pr-4 font-mono text-xs">—</td>
                 <td className="py-3">Click handler for close action</td>
               </tr>
               <tr className="border-b border-borderNeutral/50">
-                <td className="py-3 pr-4 font-mono text-xs text-electric-pink">className</td>
+                <td className="py-3 pr-4 font-mono text-xs text-textSubtle">className</td>
                 <td className="py-3 pr-4 font-mono text-xs">string</td>
                 <td className="py-3 pr-4 font-mono text-xs">""</td>
                 <td className="py-3">Additional CSS classes</td>
@@ -157,14 +157,14 @@ import IconButton from "@/components/ui/IconButton";
 
       {/* Guidelines */}
       <section>
-        <h2 className="font-display text-xl font-medium text-textDefault mb-4">
+        <h2 className="font-serif text-xl font-medium text-textDefault mb-4">
           Guidelines
         </h2>
         <div className="space-y-4 text-textSubtle">
           <div>
             <h3 className="font-medium text-textDefault mb-2">Accessibility</h3>
             <ul className="list-disc list-inside space-y-1">
-              <li>Always provide a descriptive <code className="text-xs bg-asphalt-95 dark:bg-asphalt-20 px-1 py-0.5 rounded">aria-label</code> (e.g., "Close dialog", "Close menu")</li>
+              <li>Always provide a descriptive <code className="inline-code">aria-label</code> (e.g., "Close dialog", "Close menu")</li>
               <li>The close button should be focusable and activated with Enter or Space</li>
               <li>Consider trapping focus within the modal and returning focus on close</li>
             </ul>
@@ -189,7 +189,7 @@ import IconButton from "@/components/ui/IconButton";
 
       {/* Examples */}
       <section>
-        <h2 className="font-display text-xl font-medium text-textDefault mb-4">
+        <h2 className="font-serif text-xl font-medium text-textDefault mb-4">
           Common Patterns
         </h2>
 
@@ -203,7 +203,7 @@ import IconButton from "@/components/ui/IconButton";
                 <X className="w-5 h-5" />
               </IconButton>
             </div>
-            <div className="bg-asphalt-98 p-4 text-sm text-textSubtle">
+            <div className="bg-gray-100 p-4 text-copy-14 text-textSubtle">
               Modal content goes here...
             </div>
           </div>
@@ -213,11 +213,11 @@ import IconButton from "@/components/ui/IconButton";
         <div className="space-y-4 mt-8">
           <h3 className="font-medium text-textDefault">Fullscreen Overlay</h3>
           <div className="border border-borderNeutral rounded-lg overflow-hidden">
-            <div className="bg-asphalt-10 p-4 flex items-start justify-end min-h-[120px] relative">
+            <div className="bg-gray-1000 p-4 flex items-start justify-end min-h-[120px] relative">
               <IconButton aria-label="Close overlay" inverse ignoreDarkMode>
                 <X className="w-5 h-5" />
               </IconButton>
-              <span className="absolute inset-0 flex items-center justify-center text-asphalt-70 text-sm">
+              <span className="absolute inset-0 flex items-center justify-center text-gray-600 text-sm">
                 Fullscreen content
               </span>
             </div>

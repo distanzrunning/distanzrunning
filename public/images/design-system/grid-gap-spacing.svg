@@ -26,6 +26,6 @@
   <text x="376" y="158" fill="#0A1757" font-family="system-ui, sans-serif" font-size="10" font-weight="500">16px</text>
 
   <!-- Third element (Button) -->
-  <rect x="40" y="162" width="120" height="32" rx="4" fill="#E43C81"/>
+  <rect x="40" y="162" width="120" height="32" rx="4" fill="#0070F3"/>
   <text x="100" y="183" text-anchor="middle" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Submit</text>
 </svg>

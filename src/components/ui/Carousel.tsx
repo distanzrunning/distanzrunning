@@ -200,7 +200,7 @@ function CarouselPrevious({
       data-slot="carousel-previous"
       aria-label="Previous slide"
       className={cn(
-        "absolute z-[2] grid size-10 place-items-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] disabled:pointer-events-none disabled:opacity-50 dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)]",
+        "absolute z-[2] grid size-10 place-items-center rounded-full border border-borderDefault bg-surface text-textDefault transition-colors hover:bg-[var(--ds-gray-100)] disabled:pointer-events-none disabled:opacity-50 dark:hover:bg-[var(--ds-gray-100)]",
         orientation === "horizontal"
           ? "top-1/2 -left-12 -translate-y-1/2"
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
@@ -228,7 +228,7 @@ function CarouselNext({
       data-slot="carousel-next"
       aria-label="Next slide"
       className={cn(
-        "absolute z-[2] grid size-10 place-items-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] disabled:pointer-events-none disabled:opacity-50 dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)]",
+        "absolute z-[2] grid size-10 place-items-center rounded-full border border-borderDefault bg-surface text-textDefault transition-colors hover:bg-[var(--ds-gray-100)] disabled:pointer-events-none disabled:opacity-50 dark:hover:bg-[var(--ds-gray-100)]",
         orientation === "horizontal"
           ? "top-1/2 -right-12 -translate-y-1/2"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",

@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -141,7 +142,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -232,8 +233,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -245,40 +246,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -354,6 +355,131 @@ export function DefaultExample() {
 // Demo Components
 // ============================================================================
 
+const pagesCode = `import { useState } from 'react';
+import { CommandMenu } from '@/components/ui/CommandMenu';
+import { Button } from '@/components/ui/Button';
+
+function Example() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
+      <CommandMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        placeholder="Type a command or search..."
+      >
+        {/* Root page */}
+        <CommandMenu.Group heading="Actions">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Deploy Project
+          </CommandMenu.Item>
+          {/* This item drills into a sub-page instead of acting */}
+          <CommandMenu.Item subPage="projects">
+            View Projects…
+          </CommandMenu.Item>
+          <CommandMenu.Item subPage="settings">
+            Open Settings…
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+
+        {/* Sub-pages — only the matching one renders when active. */}
+        <CommandMenu.Page
+          id="projects"
+          label="Projects"
+          placeholder="Search projects..."
+        >
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Apollo Mission Control
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Berlin Marathon Hub
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Race Database Backend
+          </CommandMenu.Item>
+        </CommandMenu.Page>
+
+        <CommandMenu.Page
+          id="settings"
+          label="Settings"
+          placeholder="Search settings..."
+        >
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Toggle Dark Mode
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Manage Team Members
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Rotate API Key
+          </CommandMenu.Item>
+        </CommandMenu.Page>
+      </CommandMenu>
+    </>
+  );
+}`;
+
+function PagesDemo() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
+      <CommandMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        placeholder="Type a command or search..."
+      >
+        <CommandMenu.Group heading="Actions">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Deploy Project
+          </CommandMenu.Item>
+          <CommandMenu.Item subPage="projects">
+            View Projects…
+          </CommandMenu.Item>
+          <CommandMenu.Item subPage="settings">
+            Open Settings…
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+
+        <CommandMenu.Page
+          id="projects"
+          label="Projects"
+          placeholder="Search projects..."
+        >
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Apollo Mission Control
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Berlin Marathon Hub
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Race Database Backend
+          </CommandMenu.Item>
+        </CommandMenu.Page>
+
+        <CommandMenu.Page
+          id="settings"
+          label="Settings"
+          placeholder="Search settings..."
+        >
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Toggle Dark Mode
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Manage Team Members
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Rotate API Key
+          </CommandMenu.Item>
+        </CommandMenu.Page>
+      </CommandMenu>
+    </>
+  );
+}
+
 function DefaultDemo() {
   const [open, setOpen] = useState(false);
 
@@ -415,6 +541,28 @@ export default function CommandMenuComponent() {
         </div>
       </Section>
 
+      {/* Pages */}
+      <Section>
+        <SectionHeader id="pages" onCopyLink={showToast}>
+          Pages
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          For deep palettes, drill into a sub-page by pairing an item
+          with{" "}
+          <code className="inline-code">subPage=&quot;…&quot;</code> and
+          declaring a matching{" "}
+          <code className="inline-code">&lt;CommandMenu.Page id=&quot;…&quot;&gt;</code>{" "}
+          with its own label and placeholder. A breadcrumb chip appears
+          next to the input; Backspace at an empty input pops back to the
+          previous page, and clicking the chip jumps back to the root.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={pagesCode}>
+            <PagesDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* Props */}
       <Section>
         <SectionHeader id="props" onCopyLink={showToast}>
@@ -428,21 +576,21 @@ export default function CommandMenuComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">open</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -506,21 +654,21 @@ export default function CommandMenuComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">heading</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -552,21 +700,21 @@ export default function CommandMenuComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">children</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -620,6 +768,174 @@ export default function CommandMenuComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use CommandMenu for a global, keyboard-first command palette
+            that finds resources and runs actions across the app.
+          </li>
+          <li>
+            For a menu opened from a visible trigger on a single resource,
+            use <ComponentRef name="Menu" />; for right-click on a row, use{" "}
+            <ComponentRef name="Context Menu" slug="context-menu" />.
+          </li>
+          <li>
+            Split actions into{" "}
+            <code className="inline-code">&lt;CommandMenu.Group heading=&quot;…&quot;&gt;</code>{" "}
+            sections (
+            <code className="inline-code">Actions</code>,{" "}
+            <code className="inline-code">Recent</code>,{" "}
+            <code className="inline-code">Settings</code>) when items
+            cluster naturally but still belong on one screen.
+          </li>
+          <li>
+            Drill into a{" "}
+            <code className="inline-code">&lt;CommandMenu.Page&gt;</code>{" "}
+            when a single flat list would exceed roughly 30 items or span
+            multiple resource types — pair an item with{" "}
+            <code className="inline-code">subPage=&quot;…&quot;</code> and
+            give the page its own label + placeholder.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Bind <code className="inline-code">⌘K</code> on macOS and{" "}
+            <code className="inline-code">Ctrl+K</code> elsewhere
+            from outside the component and feed the result into{" "}
+            <code className="inline-code">open</code> /{" "}
+            <code className="inline-code">onClose</code>. Don&apos;t
+            reuse the binding for in-page filter inputs; it&apos;s a
+            global shortcut.
+          </li>
+          <li>
+            Focus is trapped inside the overlay while open and
+            returned to the previously active element on close.
+          </li>
+          <li>
+            Pre-populate <code className="inline-code">children</code> with
+            recent or default items so the menu is useful before the user
+            types. Drive the input from external state with{" "}
+            <code className="inline-code">value</code> /{" "}
+            <code className="inline-code">onValueChange</code> if you want
+            to preserve the query across opens.
+          </li>
+          <li>
+            On a sub-page, Backspace at an empty input pops back to the
+            previous page; clicking the page breadcrumb chip next to the
+            input does the same. Closing the dialog resets the page stack
+            so the next open lands on the root.
+          </li>
+          <li>
+            For search-as-you-type with an external data source (Algolia,
+            an API), pass{" "}
+            <code className="inline-code">filter={"{() => 1}"}</code> so
+            cmdk doesn&apos;t double-filter on top of the relevance ranking
+            you already produced.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">&lt;CommandMenu.Item&gt;</code>{" "}
+            children are Title Case verb phrases (
+            <code className="inline-code">Deploy Project</code>,{" "}
+            <code className="inline-code">Invite Team Member</code>).
+            Avoid navigation phrasing like{" "}
+            <code className="inline-code">Go to project page</code>;
+            CommandMenu commands act, not browse.
+          </li>
+          <li>
+            <code className="inline-code">placeholder</code> is sentence
+            case, action-oriented, and ends with{" "}
+            <code className="inline-code">…</code> (
+            <code className="inline-code">Type a command or search…</code>,{" "}
+            <code className="inline-code">Search articles…</code>). Bare{" "}
+            <code className="inline-code">Search…</code> doesn&apos;t name
+            the scope.
+          </li>
+          <li>
+            <code className="inline-code">&lt;CommandMenu.Group heading&gt;</code>{" "}
+            is Title Case, 1–2 words (
+            <code className="inline-code">Actions</code>,{" "}
+            <code className="inline-code">Recent</code>).
+          </li>
+          <li>
+            <code className="inline-code">&lt;CommandMenu.Page&gt;</code>{" "}
+            takes a Title Case{" "}
+            <code className="inline-code">label</code> that names the
+            scope (
+            <code className="inline-code">Projects</code>,{" "}
+            <code className="inline-code">Settings</code>) and a sentence-
+            case <code className="inline-code">placeholder</code> ending
+            in <code className="inline-code">…</code> — same content rules
+            as the root placeholder, narrowed to the page (
+            <code className="inline-code">Search projects…</code>).
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Result count is announced via an{" "}
+            <code className="inline-code">aria-live=&quot;polite&quot;</code>{" "}
+            region; screen readers hear{" "}
+            <code className="inline-code">
+              3 results for &quot;X&quot;
+            </code>{" "}
+            (or{" "}
+            <code className="inline-code">
+              No results for &quot;X&quot;
+            </code>
+            ) as the list narrows.
+          </li>
+            <li>
+              Up / Down arrows move the highlight, Enter activates,
+              Escape closes the overlay, Backspace at an empty input
+              pops the page stack. A visible{" "}
+              <code className="inline-code">Esc</code> button sits next
+              to the input for mouse / touch users, alongside the page
+              breadcrumb chip when a sub-page is active.
+            </li>
+          <li>
+            Pass <code className="inline-code">shortcut</code> on{" "}
+            <code className="inline-code">&lt;CommandMenu.Item&gt;</code>{" "}
+            so each item&apos;s keybind renders as a{" "}
+            <code className="inline-code">&lt;kbd&gt;</code> on the right
+            — discoverable to sighted users and announced as a label to
+            screen readers.
+          </li>
+        </ul>
       </Section>
     </>
   );

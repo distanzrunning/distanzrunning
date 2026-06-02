@@ -3,6 +3,8 @@
 import { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
+import { Pagination } from "@/components/ui/Pagination";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -138,7 +140,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -229,8 +231,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -242,34 +244,34 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
-      <div className="p-6" style={{ background: "var(--ds-background-100)" }}>
+    <div className="border border-borderDefault rounded-lg overflow-hidden">
+      <div className="p-6" style={{ background: "hsl(var(--color-surface))" }}>
         {children}
       </div>
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -298,60 +300,18 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 }
 
 // ============================================================================
-// Pagination Icons
-// ============================================================================
-
-function ChevronLeftIcon() {
-  return (
-    <svg
-      height="20"
-      width="20"
-      strokeLinejoin="round"
-      viewBox="0 0 16 16"
-      style={{ color: "currentcolor" }}
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M10.5 14.0607L9.96966 13.5303L5.14644 8.7071C4.75592 8.31658 4.75592 7.68341 5.14644 7.29289L9.96966 2.46966L10.5 1.93933L11.5607 2.99999L11.0303 3.53032L6.56065 7.99999L11.0303 12.4697L11.5607 13L10.5 14.0607Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-function ChevronRightIcon() {
-  return (
-    <svg
-      height="20"
-      width="20"
-      strokeLinejoin="round"
-      viewBox="0 0 16 16"
-      style={{ color: "currentcolor" }}
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M5.50001 1.93933L6.03034 2.46966L10.8536 7.29288C11.2441 7.68341 11.2441 8.31657 10.8536 8.7071L6.03034 13.5303L5.50001 14.0607L4.43935 13L4.96968 12.4697L9.43935 7.99999L4.96968 3.53032L4.43935 2.99999L5.50001 1.93933Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-// ============================================================================
 // Code Example
 // ============================================================================
 
 const defaultCode = `import { Pagination } from '@/components/ui/Pagination';
 
 const previous = {
-  label: 'Button',
+  title: 'Button',
   href: '#',
 };
 
 const next = {
-  label: 'Code Block',
+  title: 'Code Block',
   href: '#',
 };
 
@@ -379,55 +339,66 @@ export default function PaginationComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           The pagination component displays previous and next navigation links
           at the bottom of content pages.
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
-            <nav aria-label="pagination">
-              <div className="flex justify-between items-start">
-                {/* Previous page */}
-                <button
-                  onClick={() => {}}
-                  aria-label="Go to previous page: Button"
-                  className="block py-1 pl-7 pr-2 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
-                >
-                  <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
-                    Previous
-                  </span>
-                  <div className="relative flex items-center">
-                    <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
-                      Button
-                    </span>
-                    <span className="absolute left-[-26px] mt-0.5">
-                      <ChevronLeftIcon />
-                    </span>
-                  </div>
-                </button>
-
-                {/* Next page */}
-                <button
-                  onClick={() => {}}
-                  aria-label="Go to next page: Code Block"
-                  className="block py-1 pl-2 pr-7 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
-                >
-                  <span className="block text-[0.8125rem] leading-[1.125rem] font-normal mb-0.5">
-                    Next
-                  </span>
-                  <div className="relative flex items-center">
-                    <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
-                      Code Block
-                    </span>
-                    <span className="absolute right-[-26px] mt-0.5">
-                      <ChevronRightIcon />
-                    </span>
-                  </div>
-                </button>
-              </div>
-            </nav>
+            <Pagination
+              previous={{ title: "Button", href: "#" }}
+              next={{ title: "Code Block", href: "#" }}
+            />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Pagination for sequential navigation between sibling
+            pages (docs articles, blog posts, onboarding steps). For
+            revealing more rows of the same data set, use{" "}
+            <ComponentRef name="Show More" /> or a numbered pager.
+          </li>
+          <li>
+            <code className="inline-code">previous.title</code> and{" "}
+            <code className="inline-code">next.title</code> are the
+            destination page names (
+            <code className="inline-code">Deploy Hooks</code>,{" "}
+            <code className="inline-code">Environment Variables</code>).
+            The component already renders the{" "}
+            <code className="inline-code">Previous</code> /{" "}
+            <code className="inline-code">Next</code> label, the chevron,
+            and the{" "}
+            <code className="inline-code">
+              Go to {"{direction}"} page: {"{title}"}
+            </code>{" "}
+            aria-label; don&apos;t prepend arrows or{" "}
+            <code className="inline-code">Go to</code>.
+          </li>
+          <li>
+            Hide the slot at the start or end of a sequence instead of
+            disabling it; an empty rail reads cleaner than a dimmed link
+            with nowhere to go.
+          </li>
+          <li>
+            Keep titles Title Case and short enough to fit the rail
+            without wrapping; long destination names truncate, so put
+            the distinctive word first.
+          </li>
+          <li>
+            Don&apos;t restate ordinal positions like{" "}
+            <code className="inline-code">Page 3 of 10</code> inside{" "}
+            <code className="inline-code">previous.title</code> or{" "}
+            <code className="inline-code">next.title</code>. Pagination
+            is sibling-link, not a numbered pager.
+          </li>
+        </ul>
       </Section>
     </>
   );

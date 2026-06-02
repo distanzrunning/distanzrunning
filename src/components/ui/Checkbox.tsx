@@ -65,18 +65,18 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 
     const getBoxClasses = () => {
       if (disabled && checked) {
-        return "bg-[var(--ds-gray-600)] border-[var(--ds-gray-600)]";
+        return "bg-textDisabled border-textDisabled";
       }
       if (disabled) {
-        return "bg-[var(--ds-gray-100)] border-[var(--ds-gray-500)]";
+        return "bg-[var(--ds-gray-100)] border-textDisabled";
       }
       if (isActive && !color) {
-        return "bg-[var(--ds-gray-1000)] border-[var(--ds-gray-1000)]";
+        return "bg-textDefault border-textDefault";
       }
       if (isActive && color) {
         return "";
       }
-      return "bg-[var(--ds-background-100)] border-[var(--ds-gray-700)]";
+      return "bg-surface border-textSubtler";
     };
 
     return (
@@ -108,10 +108,11 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               w-4 h-4 rounded-[4px] border border-solid
               ${getBoxClasses()}
               ${!disabled && !isActive ? "group-hover/checkbox:bg-[var(--ds-gray-200)]" : ""}
-              ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]"}
+              ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-ring)]"}
             `}
             style={{
-              transition: "border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
+              transition:
+                "border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
               ...getBoxStyles(),
             }}
           >
@@ -137,7 +138,11 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
                   x2="12"
                   y1="8"
                   y2="8"
-                  stroke={isDisabledIndeterminate ? "var(--ds-gray-500)" : "var(--ds-gray-700)"}
+                  stroke={
+                    isDisabledIndeterminate
+                      ? "hsl(var(--color-textDisabled))"
+                      : "hsl(var(--color-textSubtler))"
+                  }
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
@@ -147,7 +152,9 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           </span>
         </span>
         {label && (
-          <span className={`text-sm select-none ${disabled ? "text-[var(--ds-gray-500)]" : "text-[var(--ds-gray-1000)]"}`}>
+          <span
+            className={`text-copy-14 select-none ${disabled ? "text-textDisabled" : "text-textDefault"}`}
+          >
             {label}
           </span>
         )}

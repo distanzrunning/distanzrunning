@@ -11,7 +11,6 @@ import Image from "next/image";
 import { format } from "date-fns";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { urlFor } from "@/sanity/lib/image";
-import NewsletterSignup from "@/components/ui/NewsletterSignup";
 
 type Author = {
   name: string;
@@ -89,7 +88,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                       <a
                         href={`${sectionPath}/${post.productCategory.slug.current}`}
                       >
-                        <div className="font-sans text-textSubtle font-normal text-lg capsize leading-snug">
+                        <div className="font-sans text-textSubtle text-copy-18 capsize">
                           <span className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
                             {post.productCategory.title}
                           </span>
@@ -118,7 +117,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                 )}
                 <li className="break-words py-1 overflow-hidden">
                   <a href={`${sectionPath}/${post.slug.current}`}>
-                    <div className="font-sans text-textSubtle font-normal text-lg capsize leading-snug">
+                    <div className="font-sans text-textSubtle text-copy-18 capsize">
                       <span className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
                         {post.title}
                       </span>
@@ -131,19 +130,19 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
 
           <div className="col-span-full lg:col-span-12 lg:col-start-4 lg:justify-self-center">
             <div className="flex flex-col gap-6 pb-9 md:gap-9">
-              <h1 className="font-playfair font-semibold tracking-tight text-[35px] leading-[40px] md:text-[56px] md:leading-[56px] text-textDefault">
+              <h1 className="text-heading-32 md:text-heading-56 font-serif text-textDefault">
                 {post.title}
               </h1>
 
               <div className="flex flex-col gap-2">
                 <div>
-                  <div className="font-sans text-textSubtle font-normal text-base capsize leading-snug">
+                  <div className="font-sans text-textSubtle text-copy-16 capsize">
                     {readTime} minutes reading time
                   </div>
                 </div>
 
                 <div>
-                  <div className="font-sans text-textSubtle font-normal text-base capsize leading-snug">
+                  <div className="font-sans text-textSubtle text-copy-16 capsize">
                     Published {publishedDate}
                   </div>
                 </div>
@@ -165,7 +164,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                     )}
                     <div className="flex flex-col gap-3">
                       <div className="flex justify-start gap-1">
-                        <div className="font-sans text-textSubtle font-normal text-lg capsize leading-snug">
+                        <div className="font-sans text-textSubtle text-copy-18 capsize">
                           <b>Author: </b>
                           <span style={{ textDecoration: "underline" }}>
                             {post.author.name}
@@ -186,7 +185,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                 components={{
                   block: {
                     normal: ({ children }) => (
-                      <p className="font-sans text-textSubtle font-medium text-[21px] leading-[24px] md:text-[22px] md:leading-[25px] mb-4 last:mb-0">
+                      <p className="font-sans text-textSubtle text-copy-20 md:text-copy-24 font-medium mb-4 last:mb-0">
                         <span className="fragment-span preamble" data-v2="true">
                           {children}
                         </span>
@@ -195,7 +194,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                   },
                   marks: {
                     strong: ({ children }) => (
-                      <strong className="font-sans text-textSubtle font-semibold text-[21px] leading-[24px] md:text-[22px] md:leading-[25px]">
+                      <strong className="font-sans text-textSubtle text-copy-20 md:text-copy-24 font-semibold">
                         {children}
                       </strong>
                     ),
@@ -212,12 +211,12 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                 components={{
                   block: {
                     normal: ({ children }) => (
-                      <p className="font-sans font-normal text-[17px] leading-[25px] md:text-[19px] md:leading-[28px] text-textDefault mb-6 last:mb-0">
+                      <p className="font-sans text-copy-18 md:text-copy-20 text-textDefault mb-6 last:mb-0">
                         {children}
                       </p>
                     ),
                     h1: ({ children }) => (
-                      <h1 className="font-sans font-semibold text-3xl capsize leading-tight text-textDefault mt-12 mb-6">
+                      <h1 className="font-sans text-heading-32 capsize text-textDefault mt-12 mb-6">
                         {children}
                       </h1>
                     ),
@@ -228,7 +227,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                       >
                         <div className="relative mr-4">
                           <div className="pt-6">
-                            <h2 className="font-sans font-semibold text-3xl capsize leading-tight text-textDefault">
+                            <h2 className="font-sans text-heading-32 capsize text-textDefault">
                               {children}
                             </h2>
                           </div>
@@ -242,7 +241,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                           style={{ scrollMarginTop: "100px" }}
                         >
                           <div className="relative mr-4">
-                            <h3 className="font-sans font-semibold text-2xl capsize leading-tight text-textDefault">
+                            <h3 className="font-sans text-heading-24 capsize text-textDefault">
                               {children}
                             </h3>
                           </div>
@@ -250,7 +249,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                       </div>
                     ),
                     h4: ({ children }) => (
-                      <h4 className="font-sans font-semibold text-2xl capsize leading-tight text-textDefault mt-6 mb-3">
+                      <h4 className="font-sans text-heading-24 capsize text-textDefault mt-6 mb-3">
                         {children}
                       </h4>
                     ),
@@ -275,7 +274,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                         className="flex flex-col gap-6 border border-borderNeutralSubtle pl-6 my-8"
                         style={{ borderWidth: "0px 0px 0px 4px" }}
                       >
-                        <div className="font-sans font-normal text-[17px] leading-[25px] md:text-[19px] md:leading-[28px] text-textDefault italic">
+                        <div className="font-sans text-copy-18 md:text-copy-20 text-textDefault italic">
                           {children}
                         </div>
                       </div>
@@ -319,13 +318,13 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                   listItem: {
                     bullet: ({ children }) => (
                       <li className="fragment-li mb-6 last:mb-0">
-                        <div className="font-sans font-normal text-[17px] leading-[25px] md:text-[19px] md:leading-[28px] text-textDefault">
+                        <div className="font-sans text-copy-18 md:text-copy-20 text-textDefault">
                           {children}
                         </div>
                       </li>
                     ),
                     number: ({ children }) => (
-                      <li className="fragment-li font-sans font-normal text-[17px] leading-[25px] md:text-[19px] md:leading-[28px] text-textDefault mb-8 pl-1">
+                      <li className="fragment-li font-sans text-copy-18 md:text-copy-20 text-textDefault mb-8 pl-1">
                         {children}
                       </li>
                     ),
@@ -341,7 +340,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                           className="rounded-lg w-full h-auto"
                         />
                         {value?.caption && (
-                          <p className="font-sans text-textSubtle font-normal text-base capsize leading-snug text-center mt-2">
+                          <p className="font-sans text-textSubtle text-copy-16 capsize text-center mt-2">
                             {value.caption}
                           </p>
                         )}
@@ -355,9 +354,6 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
         </div>
       </div>
 
-      <div className="pt-16">
-        <NewsletterSignup />
-      </div>
     </div>
   );
 }

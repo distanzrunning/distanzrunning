@@ -59,7 +59,7 @@ function IconShowcase({ icon: Icon, name, usage }: IconShowcaseProps) {
       </div>
       <div className="flex-1 min-w-0">
         <p className="font-mono text-sm font-medium text-textDefault">{name}</p>
-        {usage && <p className="text-sm text-textSubtle mt-0.5">{usage}</p>}
+        {usage && <p className="text-copy-14 text-textSubtle mt-0.5">{usage}</p>}
       </div>
     </div>
   );
@@ -165,11 +165,11 @@ export default function Iconography() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Foundations
         </p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
           id="iconography"
         >
           Iconography
@@ -178,7 +178,7 @@ export default function Iconography() {
 
       <hr className="border-t-4 border-textDefault" />
 
-      <p className="text-base text-textSubtle">
+      <p className="text-copy-16 text-textSubtle">
         We use Lucide React for our icon library. Lucide provides a
         comprehensive set of open-source icons that are consistent,
         customisable, and optimised for web use. All icons are SVG-based and
@@ -189,14 +189,14 @@ export default function Iconography() {
       <section>
         <h2
           id="sizing"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Sizing
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Icons should be sized consistently based on their context. We use
           three primary sizes throughout the interface.
         </p>
@@ -205,24 +205,24 @@ export default function Iconography() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Size
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Pixels
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Tailwind
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Usage
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Example
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Small</td>
                 <td className="py-3 px-4 font-mono">16px</td>
@@ -265,14 +265,14 @@ export default function Iconography() {
       <section>
         <h2
           id="stroke-weight"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Stroke weight
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Lucide icons support variable stroke width. We use two weights to
           indicate state.
         </p>
@@ -285,7 +285,7 @@ export default function Iconography() {
                 <p className="font-mono text-sm text-textDefault">
                   strokeWidth={"{1.5}"}
                 </p>
-                <p className="text-sm text-textSubtle">
+                <p className="text-copy-14 text-textSubtle">
                   Default / inactive state
                 </p>
               </div>
@@ -298,7 +298,7 @@ export default function Iconography() {
                 <p className="font-mono text-sm text-textDefault">
                   strokeWidth={"{2.5}"}
                 </p>
-                <p className="text-sm text-textSubtle">
+                <p className="text-copy-14 text-textSubtle">
                   Active / selected state
                 </p>
               </div>
@@ -306,7 +306,7 @@ export default function Iconography() {
           </div>
         </div>
 
-        <p className="text-sm text-textSubtle">
+        <p className="text-copy-14 text-textSubtle">
           This pattern is used in the design system sidebar to indicate the
           currently active section.
         </p>
@@ -318,16 +318,16 @@ export default function Iconography() {
       <section>
         <h2
           id="colour"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Colour
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Icons inherit their colour from the parent text colour using{" "}
-          <code className="font-mono text-sm bg-surfaceSubtle px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             currentColor
           </code>
           . Apply colour using Tailwind text utilities.
@@ -345,14 +345,14 @@ export default function Iconography() {
             <p className="font-mono text-xs text-textSubtle">text-textSubtle</p>
           </div>
           <div className="bg-surfaceSubtle p-4 text-center">
-            <Search className="w-6 h-6 mx-auto mb-2 text-electric-pink" />
+            <Search className="w-6 h-6 mx-auto mb-2 text-textSubtle" />
             <p className="font-mono text-xs text-textSubtle">
-              text-electric-pink
+              text-textSubtle
             </p>
           </div>
           <div className="bg-surfaceSubtle p-4 text-center">
-            <Search className="w-6 h-6 mx-auto mb-2 text-volt-green" />
-            <p className="font-mono text-xs text-textSubtle">text-volt-green</p>
+            <Search className="w-6 h-6 mx-auto mb-2 text-green-600" />
+            <p className="font-mono text-xs text-textSubtle">text-green-600</p>
           </div>
         </div>
       </section>
@@ -363,7 +363,7 @@ export default function Iconography() {
       <section>
         <h2
           id="navigation"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Navigation
         </h2>
@@ -379,7 +379,7 @@ export default function Iconography() {
       <section>
         <h2
           id="theme"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Theme
         </h2>
@@ -395,14 +395,14 @@ export default function Iconography() {
       <section>
         <h2
           id="categories"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Categories
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           These icons represent different content categories and navigation
           sections throughout the site.
         </p>
@@ -416,14 +416,14 @@ export default function Iconography() {
       <section>
         <h2
           id="data"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Data &amp; metrics
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Icons used to represent race data, statistics, and metrics in the race
           calendar and event popups.
         </p>
@@ -437,14 +437,14 @@ export default function Iconography() {
       <section>
         <h2
           id="design-system"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Design system
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Icons used in the design system sidebar navigation to represent
           different foundation sections.
         </p>
@@ -458,7 +458,7 @@ export default function Iconography() {
       <section>
         <h2
           id="usage"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Usage guidelines
         </h2>
@@ -467,7 +467,7 @@ export default function Iconography() {
 
         <div className="space-y-4">
           <div>
-            <h3 className="font-serif text-[22px] leading-[1.3] font-medium mb-2">
+            <h3 className="text-heading-20 font-serif mb-2">
               Import
             </h3>
             <div className="bg-surfaceSubtle p-4 font-mono text-sm">
@@ -480,7 +480,7 @@ export default function Iconography() {
           <hr className="border-t border-borderSubtle" />
 
           <div>
-            <h3 className="font-serif text-[22px] leading-[1.3] font-medium mb-2">
+            <h3 className="text-heading-20 font-serif mb-2">
               Basic usage
             </h3>
             <div className="bg-surfaceSubtle p-4 font-mono text-sm">
@@ -493,7 +493,7 @@ export default function Iconography() {
           <hr className="border-t border-borderSubtle" />
 
           <div>
-            <h3 className="font-serif text-[22px] leading-[1.3] font-medium mb-2">
+            <h3 className="text-heading-20 font-serif mb-2">
               With custom stroke
             </h3>
             <div className="bg-surfaceSubtle p-4 font-mono text-sm">
@@ -506,10 +506,10 @@ export default function Iconography() {
           <hr className="border-t border-borderSubtle" />
 
           <div>
-            <h3 className="font-serif text-[22px] leading-[1.3] font-medium mb-2">
+            <h3 className="text-heading-20 font-serif mb-2">
               Accessibility
             </h3>
-            <p className="text-base text-textSubtle mb-4">
+            <p className="text-copy-16 text-textSubtle mb-4">
               Icons used as buttons should include an accessible label:
             </p>
             <div className="bg-surfaceSubtle p-4 font-mono text-sm overflow-x-auto">
@@ -529,7 +529,7 @@ export default function Iconography() {
       <section>
         <h2
           id="reference"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Reference
         </h2>
@@ -540,15 +540,15 @@ export default function Iconography() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Property
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Value
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Library</td>
                 <td className="py-3 px-4 font-mono">lucide-react</td>
@@ -580,7 +580,7 @@ export default function Iconography() {
                     href="https://lucide.dev/icons/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-electric-pink hover:underline"
+                    className="text-textSubtle hover:underline"
                   >
                     lucide.dev/icons
                   </a>

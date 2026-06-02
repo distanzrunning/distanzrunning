@@ -140,7 +140,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -231,8 +231,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -244,40 +244,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+    <div className="border border-borderDefault rounded-lg overflow-hidden">
       <div
         className="p-6 rounded-t-lg overflow-hidden"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -314,13 +314,13 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Scroller height="220px" overflow="y" width="100%">
+    <Scroller height="220px" direction="vertical" width="100%">
       <div
         className="flex flex-col items-stretch justify-start gap-4 flex-initial"
         style={{ width: 400 }}
       >
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64" />
+        <div className="bg-textDefault h-64 w-64" />
+        <div className="bg-textDefault h-64 w-64" />
       </div>
     </Scroller>
   );
@@ -331,14 +331,14 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Scroller height="256px" overflow="x" width="100%">
+    <Scroller height="256px" direction="horizontal" width="100%">
       <div
         className="flex flex-row items-stretch justify-start gap-4 flex-initial"
       >
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
+        <div className="bg-textDefault h-64 w-64 flex-shrink-0" />
+        <div className="bg-textDefault h-64 w-64 flex-shrink-0" />
+        <div className="bg-textDefault h-64 w-64 flex-shrink-0" />
+        <div className="bg-textDefault h-64 w-64 flex-shrink-0" />
       </div>
     </Scroller>
   );
@@ -349,10 +349,10 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Scroller height="220px" overflow="both" width="100%">
+    <Scroller height="220px" direction="free" width="100%">
       <div className="grid grid-flow-col grid-rows-2 gap-4">
         {Array.from({ length: 6 }, (_, i) => (
-          <div className="bg-[var(--ds-gray-1000)] h-96 w-96" key={i} />
+          <div className="bg-textDefault h-96 w-96" key={i} />
         ))}
       </div>
     </Scroller>
@@ -387,12 +387,12 @@ export function Component(): JSX.Element {
         onScrollPrev={scrollPrev}
         onScrollNext={scrollNext}
       />
-      <Scroller ref={scrollerRef} overflow="y" height="220px" width="384px">
+      <Scroller ref={scrollerRef} direction="vertical" height="220px" width="384px">
         <div className="flex flex-col gap-4">
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
+          <div className="bg-textDefault h-60 w-96" />
+          <div className="bg-textDefault h-60 w-96" />
+          <div className="bg-textDefault h-60 w-96" />
+          <div className="bg-textDefault h-60 w-96" />
         </div>
       </Scroller>
     </div>
@@ -422,12 +422,12 @@ export function Component(): JSX.Element {
 
   return (
     <div className="flex flex-col gap-4">
-      <Scroller ref={scrollerRef} overflow="x" width="100%" height="256px">
+      <Scroller ref={scrollerRef} direction="horizontal" width="100%" height="256px">
         <div className="flex flex-row gap-4">
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
+          <div className="bg-textDefault h-64 w-96 flex-shrink-0" />
+          <div className="bg-textDefault h-64 w-96 flex-shrink-0" />
+          <div className="bg-textDefault h-64 w-96 flex-shrink-0" />
+          <div className="bg-textDefault h-64 w-96 flex-shrink-0" />
         </div>
       </Scroller>
       <ScrollerButtons
@@ -445,13 +445,13 @@ export function Component(): JSX.Element {
 
 function VerticalDemo() {
   return (
-    <Scroller height="220px" overflow="y" width="100%">
+    <Scroller height="220px" direction="vertical" width="100%">
       <div
         className="flex flex-col items-stretch justify-start gap-4 flex-initial"
         style={{ width: 400 }}
       >
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64" />
+        <div className="bg-textDefault h-64 w-64" />
+        <div className="bg-textDefault h-64 w-64" />
       </div>
     </Scroller>
   );
@@ -459,12 +459,12 @@ function VerticalDemo() {
 
 function HorizontalDemo() {
   return (
-    <Scroller height="256px" overflow="x" width="100%">
+    <Scroller height="256px" direction="horizontal" width="100%">
       <div className="flex flex-row items-stretch justify-start gap-4 flex-initial">
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
-        <div className="bg-[var(--ds-gray-1000)] h-64 w-64 flex-shrink-0" />
+        <div className="bg-textDefault h-64 w-64 flex-shrink-0" />
+        <div className="bg-textDefault h-64 w-64 flex-shrink-0" />
+        <div className="bg-textDefault h-64 w-64 flex-shrink-0" />
+        <div className="bg-textDefault h-64 w-64 flex-shrink-0" />
       </div>
     </Scroller>
   );
@@ -472,14 +472,14 @@ function HorizontalDemo() {
 
 function FreeDemo() {
   return (
-    <Scroller overflow="both" height="220px" width="100%">
+    <Scroller direction="free" height="220px" width="100%">
       <div className="grid grid-flow-col grid-rows-2 gap-4">
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
-        <div className="bg-[var(--ds-gray-1000)] h-96 w-96" />
+        <div className="bg-textDefault h-96 w-96" />
+        <div className="bg-textDefault h-96 w-96" />
+        <div className="bg-textDefault h-96 w-96" />
+        <div className="bg-textDefault h-96 w-96" />
+        <div className="bg-textDefault h-96 w-96" />
+        <div className="bg-textDefault h-96 w-96" />
       </div>
     </Scroller>
   );
@@ -509,12 +509,12 @@ function VerticalWithButtonsDemo() {
         onScrollPrev={scrollPrev}
         onScrollNext={scrollNext}
       />
-      <Scroller ref={scrollerRef} overflow="y" height="220px" width="384px">
+      <Scroller ref={scrollerRef} direction="vertical" height="220px" width="384px">
         <div className="flex flex-col gap-4">
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
-          <div className="bg-[var(--ds-gray-1000)] h-60 w-96" />
+          <div className="bg-textDefault h-60 w-96" />
+          <div className="bg-textDefault h-60 w-96" />
+          <div className="bg-textDefault h-60 w-96" />
+          <div className="bg-textDefault h-60 w-96" />
         </div>
       </Scroller>
     </div>
@@ -540,12 +540,12 @@ function HorizontalWithButtonsDemo() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Scroller ref={scrollerRef} overflow="x" width="100%" height="256px">
+      <Scroller ref={scrollerRef} direction="horizontal" width="100%" height="256px">
         <div className="flex flex-row gap-4">
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
-          <div className="bg-[var(--ds-gray-1000)] h-64 w-96 flex-shrink-0" />
+          <div className="bg-textDefault h-64 w-96 flex-shrink-0" />
+          <div className="bg-textDefault h-64 w-96 flex-shrink-0" />
+          <div className="bg-textDefault h-64 w-96 flex-shrink-0" />
+          <div className="bg-textDefault h-64 w-96 flex-shrink-0" />
         </div>
       </Scroller>
       <ScrollerButtons
@@ -605,12 +605,12 @@ export default function ScrollerComponent() {
         </SectionHeader>
         <p
           className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "var(--ds-gray-900)" }}
+          style={{ color: "hsl(var(--color-textSubtle))" }}
         >
           Buttons will automatically scroll to a given{" "}
           <strong
             className="!font-semibold"
-            style={{ color: "var(--ds-gray-1000)" }}
+            style={{ color: "hsl(var(--color-textDefault))" }}
           >
             direct
           </strong>{" "}
@@ -629,12 +629,12 @@ export default function ScrollerComponent() {
         </SectionHeader>
         <p
           className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "var(--ds-gray-900)" }}
+          style={{ color: "hsl(var(--color-textSubtle))" }}
         >
           Buttons will automatically scroll to a given{" "}
           <strong
             className="!font-semibold"
-            style={{ color: "var(--ds-gray-1000)" }}
+            style={{ color: "hsl(var(--color-textDefault))" }}
           >
             direct
           </strong>{" "}
@@ -645,6 +645,90 @@ export default function ScrollerComponent() {
             <HorizontalWithButtonsDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Scroller for an overflowing list of peer items along a
+            single axis: chip rows, log streams, code snippets, command
+            palettes.
+          </li>
+          <li>
+            Pick <code className="inline-code">vertical</code> for
+            stacked feeds, <code className="inline-code">horizontal</code>{" "}
+            for chip and tile rails,{" "}
+            <code className="inline-code">free</code> only when content
+            genuinely scrolls in both directions (logs with very long
+            lines).
+          </li>
+          <li>
+            For paginated or virtualized data sets larger than a few
+            hundred items, render with a virtualization library inside
+            the Scroller rather than dumping every node into the DOM.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Auto-scroll buttons target direct children only. If items
+            are wrapped in extra layout nodes the buttons won&apos;t
+            find their target.
+          </li>
+          <li>
+            Show edge fade or shadow affordances on the clipped axis so
+            users see there&apos;s more content past the viewport.
+          </li>
+          <li>
+            Keep item widths and gaps consistent in horizontal
+            scrollers; ragged edges break the snap rhythm and make the
+            rail feel broken.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Tab order follows DOM order, so place items in reading order
+            regardless of visual scroll direction.
+          </li>
+          <li>
+            Scroller buttons need <code className="inline-code">aria-label</code>s
+            that name the direction and content (
+            <code className="inline-code">
+              Scroll customer logos left
+            </code>
+            ), not bare <code className="inline-code">Previous</code>/
+            <code className="inline-code">Next</code>.
+          </li>
+          <li>
+            Make sure focusing an off-screen item scrolls it into view;
+            the default browser behavior covers this, but custom focus
+            traps can break it.
+          </li>
+        </ul>
       </Section>
 
       <Toast

@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useId, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useId,
+  useState,
+  type ReactNode,
+} from "react";
 import Checkbox from "./Checkbox";
 
 // ============================================================================
@@ -37,14 +43,14 @@ function RadioIndicator({
   disabled: boolean;
 }) {
   const borderColor = disabled
-    ? "var(--ds-gray-500)"
+    ? "hsl(var(--color-textDisabled))"
     : checked
-      ? "var(--ds-pink-900)"
+      ? "var(--ds-blue-900)"
       : "var(--ds-gray-600)";
 
   const dotColor = disabled
-    ? "var(--ds-gray-500)"
-    : "var(--ds-pink-900)";
+    ? "hsl(var(--color-textDisabled))"
+    : "var(--ds-blue-900)";
 
   return (
     <span
@@ -54,7 +60,7 @@ function RadioIndicator({
         height: 16,
         borderRadius: "50%",
         border: `1px solid ${borderColor}`,
-        background: "var(--ds-background-100)",
+        background: "hsl(var(--color-surface))",
         transition: "border-color 0.2s ease, background 0.2s ease",
         position: "relative",
       }}
@@ -126,10 +132,21 @@ export function ChoiceboxGroup({
 export interface ChoiceboxProps {
   /** The value this option represents */
   value: string;
-  /** Bold title text */
-  title: string;
-  /** Secondary description text */
-  description: string;
+  /** Bold title text. Optional when `icon` + `aria-label` carry the label. */
+  title?: string;
+  /** Secondary description text. Optional. */
+  description?: string;
+  /**
+   * Decorative icon shown on the left of the title block. Decorative
+   * when paired with a title; if the icon is the only label, pair it
+   * with `aria-label` so screen readers announce the choice.
+   */
+  icon?: ReactNode;
+  /**
+   * Accessible label for the tile — applied as `aria-label` on the
+   * underlying input. Required when there's no visible `title`.
+   */
+  "aria-label"?: string;
   /** Disable this specific item */
   disabled?: boolean;
   /** Custom content shown when selected */
@@ -141,6 +158,8 @@ export function Choicebox({
   value,
   title,
   description,
+  icon,
+  "aria-label": ariaLabel,
   disabled = false,
   children,
   className = "",
@@ -180,20 +199,23 @@ export function Choicebox({
         flex flex-1 flex-col
         rounded-md border border-solid
         ${isDisabled ? "cursor-not-allowed" : "cursor-pointer"}
+        ${!isDisabled ? "focus-within:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-ring)]" : ""}
         ${className}
       `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        borderColor: isSelected && !isDisabled
-          ? "var(--ds-pink-700)"
-          : showHover
-            ? "var(--ds-gray-500)"
-            : "var(--ds-gray-400)",
+        borderColor:
+          isSelected && !isDisabled
+            ? "var(--ds-blue-700)"
+            : showHover
+              ? "hsl(var(--color-borderDefaultHover))"
+              : "hsl(var(--color-borderDefault))",
         background: showHover
           ? "var(--ds-gray-100)"
-          : "var(--ds-background-100)",
-        transition: "background 0.15s ease, border 0.15s ease",
+          : "hsl(var(--color-surface))",
+        transition:
+          "background 0.15s ease, border 0.15s ease, box-shadow 0.15s ease",
       }}
     >
       <input
@@ -204,47 +226,74 @@ export function Choicebox({
         checked={isSelected}
         disabled={isDisabled}
         onChange={handleChange}
+        aria-label={ariaLabel}
         className="sr-only peer"
       />
 
       {/* Option row */}
       <div
-        className="flex items-center justify-between gap-6 rounded-md p-3"
+        className={`flex items-center justify-between gap-6 p-3 ${
+          isSelected && children ? "rounded-t-md" : "rounded-md"
+        }`}
         style={{
-          background: isSelected && !isDisabled
-            ? isHovered
-              ? "var(--ds-pink-200)"
-              : "color-mix(in oklch, var(--ds-pink-100) 40%, var(--ds-background-100))"
-            : "transparent",
+          background:
+            isSelected && !isDisabled
+              ? isHovered
+                ? "var(--ds-blue-200)"
+                : "color-mix(in oklch, var(--ds-blue-100) 40%, var(--ds-background-100))"
+              : "transparent",
           transition: "background 0.15s ease, border 0.15s ease",
         }}
       >
-        {/* Text content */}
-        <div className="flex flex-col gap-1">
-          <span
-            className="text-sm font-medium leading-5"
-            style={{
-              color: isDisabled
-                ? "var(--ds-gray-500)"
-                : isSelected
-                  ? "var(--ds-pink-700)"
-                  : "var(--ds-gray-1000)",
-            }}
-          >
-            {title}
-          </span>
-          <span
-            className="text-sm leading-5"
-            style={{
-              color: isDisabled
-                ? "var(--ds-gray-500)"
-                : isSelected
-                  ? "var(--ds-pink-700)"
-                  : "var(--ds-gray-900)",
-            }}
-          >
-            {description}
-          </span>
+        {/* Icon + text content */}
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          {icon && (
+            <span
+              aria-hidden="true"
+              className="flex items-center justify-center flex-shrink-0"
+              style={{
+                color: isDisabled
+                  ? "hsl(var(--color-textDisabled))"
+                  : isSelected
+                    ? "var(--ds-blue-700)"
+                    : "hsl(var(--color-textDefault))",
+              }}
+            >
+              {icon}
+            </span>
+          )}
+          {(title || description) && (
+            <div className="flex flex-col gap-1 min-w-0">
+              {title && (
+                <span
+                  className="text-copy-14 font-medium"
+                  style={{
+                    color: isDisabled
+                      ? "hsl(var(--color-textDisabled))"
+                      : isSelected
+                        ? "var(--ds-blue-700)"
+                        : "hsl(var(--color-textDefault))",
+                  }}
+                >
+                  {title}
+                </span>
+              )}
+              {description && (
+                <span
+                  className="text-copy-14"
+                  style={{
+                    color: isDisabled
+                      ? "hsl(var(--color-textDisabled))"
+                      : isSelected
+                        ? "var(--ds-blue-700)"
+                        : "hsl(var(--color-textSubtle))",
+                  }}
+                >
+                  {description}
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Indicator */}
@@ -255,7 +304,9 @@ export function Choicebox({
             <Checkbox
               checked={isSelected}
               disabled={isDisabled}
-              color={isSelected && !isDisabled ? "var(--ds-pink-700)" : undefined}
+              color={
+                isSelected && !isDisabled ? "var(--ds-blue-700)" : undefined
+              }
             />
           </span>
         )}
@@ -266,7 +317,7 @@ export function Choicebox({
         <div
           className="flex items-center justify-center px-3 pb-3 pt-3 rounded-b-md overflow-hidden transition-colors hover:bg-[var(--ds-gray-100)]"
           style={{
-            borderTop: `1px solid ${!isDisabled ? "var(--ds-pink-700)" : "var(--ds-gray-400)"}`,
+            borderTop: `1px solid ${!isDisabled ? "var(--ds-blue-700)" : "hsl(var(--color-borderDefault))"}`,
           }}
         >
           {children}

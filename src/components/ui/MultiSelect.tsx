@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  type ReactNode,
-} from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 
 // ============================================================================
@@ -85,10 +79,10 @@ export function MultiSelect({
       const allSelected = items.every((item) => selected.includes(item.value));
 
       if (allSelected || !isSelected) {
-        // Only: select just this item
+        // Select Only: select just this item
         updateSelected([value]);
       } else {
-        // Check All: select all items
+        // Select All: select all items
         updateSelected(items.map((item) => item.value));
       }
     },
@@ -101,9 +95,9 @@ export function MultiSelect({
       const isSelected = selected.includes(value);
       const allSelected = items.every((item) => selected.includes(item.value));
 
-      if (allSelected) return "Only";
-      if (!isSelected) return "Only";
-      return "Check All";
+      if (allSelected) return "Select Only";
+      if (!isSelected) return "Select Only";
+      return "Select All";
     },
     [selected, items],
   );
@@ -112,7 +106,7 @@ export function MultiSelect({
   const getCheckboxActionLabel = useCallback(
     (value: string): string => {
       const isSelected = selected.includes(value);
-      return isSelected ? "Uncheck" : "Check";
+      return isSelected ? "Deselect" : "Select";
     },
     [selected],
   );
@@ -160,11 +154,15 @@ export function MultiSelect({
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
-          setActiveRow((prev) => prev === -1 ? 0 : Math.min(prev + 1, items.length - 1));
+          setActiveRow((prev) =>
+            prev === -1 ? 0 : Math.min(prev + 1, items.length - 1),
+          );
           break;
         case "ArrowUp":
           e.preventDefault();
-          setActiveRow((prev) => prev === -1 ? items.length - 1 : Math.max(prev - 1, 0));
+          setActiveRow((prev) =>
+            prev === -1 ? items.length - 1 : Math.max(prev - 1, 0),
+          );
           break;
         case "ArrowRight":
           e.preventDefault();
@@ -191,7 +189,11 @@ export function MultiSelect({
           triggerRef.current?.focus();
           break;
         case "Tab":
+          // Tab exits the dropdown. Return focus to the trigger so a
+          // keyboard user lands back at the call site instead of
+          // having focus collapse to body.
           setIsOpen(false);
+          triggerRef.current?.focus();
           break;
       }
     },
@@ -223,10 +225,10 @@ export function MultiSelect({
         className={`
           inline-flex items-center justify-center select-none cursor-pointer border-none
           transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
-          focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2
           rounded-[var(--ds-radius-small)]
           h-[var(--ds-button-height-medium)] px-[var(--ds-button-padding-medium)] text-button-14 gap-[var(--ds-button-gap-medium)]
-          bg-[var(--ds-background-100)] text-[var(--ds-gray-1000)]
+          bg-surface text-textDefault
           shadow-[0_0_0_1px_var(--ds-gray-400)]
           hover:bg-[var(--ds-gray-100)] hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
           dark:hover:bg-[var(--ds-gray-200)] dark:hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
@@ -299,8 +301,8 @@ function MultiSelectDropdown({
   onKeyDown,
   setActiveRow,
 }: {
-  containerRef: React.RefObject<HTMLDivElement | null>;
-  dropdownRef: React.RefObject<HTMLDivElement | null>;
+  containerRef: React.RefObject<HTMLDivElement>;
+  dropdownRef: React.RefObject<HTMLDivElement>;
   items: MultiSelectItem[];
   selected: string[];
   activeRow: number;
@@ -344,7 +346,7 @@ function MultiSelectDropdown({
           position: "absolute",
           top: coords.top,
           left: coords.left,
-          background: "var(--ds-background-100)",
+          background: "hsl(var(--color-surface))",
           borderRadius: 12,
           boxShadow: "var(--ds-shadow-menu)",
           padding: 8,
@@ -408,10 +410,13 @@ function MultiSelectRow({
   onAction: () => void;
   onMouseEnter: () => void;
 }) {
-  const [hoverArea, setHoverArea] = useState<"checkbox" | "button" | null>(null);
+  const [hoverArea, setHoverArea] = useState<"checkbox" | "button" | null>(
+    null,
+  );
   // Mouse hover takes priority, then keyboard focus
   const activeArea = hoverArea ?? (isActive ? activeFocus : null);
-  const displayLabel = activeArea === "checkbox" ? checkboxActionLabel : buttonActionLabel;
+  const displayLabel =
+    activeArea === "checkbox" ? checkboxActionLabel : buttonActionLabel;
 
   return (
     <div
@@ -439,6 +444,9 @@ function MultiSelectRow({
         }}
       >
         <label
+          role="checkbox"
+          aria-checked={isSelected}
+          aria-label={`Select ${item.label}`}
           onClick={(e) => {
             e.preventDefault();
             onToggle();
@@ -452,7 +460,11 @@ function MultiSelectRow({
             borderRadius: 6,
             cursor: "pointer",
             fontSize: 13,
-            background: isActive && activeFocus === "checkbox" ? "var(--ds-gray-100)" : "transparent",
+            background:
+              hoverArea === "checkbox" ||
+              (hoverArea === null && isActive && activeFocus === "checkbox")
+                ? "var(--ds-gray-100)"
+                : "transparent",
             transition: "background 150ms ease",
           }}
         >
@@ -477,14 +489,23 @@ function MultiSelectRow({
                 height: 16,
                 borderRadius: 4,
                 position: "relative",
-                background: isSelected ? "var(--ds-gray-1000)" : "transparent",
+                background: isSelected
+                  ? "hsl(var(--color-textDefault))"
+                  : "transparent",
                 border: isSelected
-                  ? "1px solid var(--ds-gray-1000)"
+                  ? "1px solid hsl(var(--color-textDefault))"
                   : "1px solid var(--ds-gray-alpha-400)",
-                transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
+                transition:
+                  "border-color 0.2s, background 0.2s, box-shadow 0.2s",
               }}
             >
-              <svg fill="none" height="16" viewBox="0 0 20 20" width="16" style={{ display: "block", flexShrink: 0 }}>
+              <svg
+                fill="none"
+                height="16"
+                viewBox="0 0 20 20"
+                width="16"
+                style={{ display: "block", flexShrink: 0 }}
+              >
                 <path
                   d="M14 7L8.5 12.5L6 10"
                   stroke="var(--ds-background-100)"
@@ -517,7 +538,11 @@ function MultiSelectRow({
           width: "100%",
           padding: 6,
           borderRadius: 6,
-          background: isActive && activeFocus === "button" ? "var(--ds-gray-alpha-100)" : "transparent",
+          background:
+            hoverArea === "button" ||
+            (hoverArea === null && isActive && activeFocus === "button")
+              ? "var(--ds-gray-alpha-100)"
+              : "transparent",
           border: "none",
           cursor: "pointer",
           outline: "none",
@@ -528,7 +553,14 @@ function MultiSelectRow({
         className="multiselect-row-button"
       >
         <div style={{ display: "flex", alignItems: "center" }}>
-          <span style={{ fontSize: 14, lineHeight: "20px", color: "var(--ds-gray-1000)", whiteSpace: "nowrap" }}>
+          <span
+            style={{
+              fontSize: 14,
+              lineHeight: "20px",
+              color: "hsl(var(--color-textDefault))",
+              whiteSpace: "nowrap",
+            }}
+          >
             {item.label}
           </span>
         </div>
@@ -541,7 +573,7 @@ function MultiSelectRow({
               opacity: isActive ? 1 : 0,
               minWidth: 64,
               textAlign: "right",
-              color: "var(--ds-gray-900)",
+              color: "hsl(var(--color-textSubtle))",
               marginLeft: "auto",
               padding: "2px 4px",
               borderRadius: 2,

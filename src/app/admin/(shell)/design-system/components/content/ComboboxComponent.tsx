@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -143,7 +144,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -234,8 +235,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -247,40 +248,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -490,7 +491,7 @@ export function ModalExample() {
             placeholder="Search..."
           />
           <p className="text-copy-13"
-            style={{ color: "var(--ds-gray-900)", marginTop: 10, marginBottom: 0 }}>
+            style={{ color: "hsl(var(--color-textSubtle))", marginTop: 10, marginBottom: 0 }}>
             This is the region where your database reads and writes will take place.
           </p>
         </Modal.Inset>
@@ -524,29 +525,12 @@ function ModalDemo() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Create Token"
-        subtitle="Enter a unique name for your token to differentiate it from other tokens and then select the scope."
-        footer={
-          <footer
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              position: "sticky",
-              bottom: 0,
-              flexShrink: 0,
-              padding: 16,
-            }}
-          >
-            <Button variant="secondary" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={() => setOpen(false)}>Submit</Button>
-          </footer>
-        }
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Create Token</Modal.Title>
+        <Modal.P>
+          Enter a unique name for your token to differentiate it from other
+          tokens and then select the scope.
+        </Modal.P>
         <Modal.Inset>
           <Combobox
             label="Region"
@@ -556,12 +540,26 @@ function ModalDemo() {
           />
           <p
             className="text-copy-13"
-            style={{ color: "var(--ds-gray-900)", marginTop: 10, marginBottom: 0 }}
+            style={{ color: "hsl(var(--color-textSubtle))", marginTop: 10, marginBottom: 0 }}
           >
             This is the region where your database reads and writes will take
             place.
           </p>
         </Modal.Inset>
+        <Modal.Footer>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 16,
+            }}
+          >
+            <Button variant="secondary" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setOpen(false)}>Submit</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -772,21 +770,21 @@ export default function ComboboxComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">options</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -946,6 +944,124 @@ export default function ComboboxComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pick <code className="inline-code">&lt;Combobox&gt;</code> when
+            users type to filter a known list of values (regions,
+            frameworks, env-var names).
+          </li>
+          <li>
+            For short, fixed lists where typing adds nothing, switch to{" "}
+            <ComponentRef name="Select" />.
+          </li>
+          <li>
+            When more than one value can be chosen at once, use{" "}
+            <ComponentRef name="Multi Select" slug="multi-select" />.
+          </li>
+          <li>
+            For free-form filter strings that don&apos;t resolve to a single
+            option, drop in <ComponentRef name="Input" />.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Show a loading state for async results; don&apos;t collapse the
+            list while the request is in flight.
+          </li>
+          <li>
+            Render a custom empty state of the form{" "}
+            <code className="inline-code">
+              {'No {items} match "{query}"'}
+            </code>{" "}
+            rather than a bare{" "}
+            <code className="inline-code">No results</code>.
+          </li>
+          <li>
+            Inside a <ComponentRef name="Modal" />, the popover layers
+            correctly; don&apos;t layer a second portal or focus trap.
+          </li>
+          <li>
+            Keep arrow-key navigation through options; don&apos;t hijack
+            Enter to submit the surrounding form while the list is open.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Visible label is a short Title Case noun (
+            <code className="inline-code">Region</code>,{" "}
+            <code className="inline-code">Environment Variable Name</code>).
+          </li>
+          <li>
+            Placeholder is the inline hint:{" "}
+            <code className="inline-code">Search regions</code>,{" "}
+            <code className="inline-code">DATABASE_URL</code>. Never bare{" "}
+            <code className="inline-code">Search…</code> and never the
+            label restated.
+          </li>
+          <li>
+            Option text is Title Case for short values and matches
+            canonical branding (
+            <code className="inline-code">Next.js</code>, not{" "}
+            <code className="inline-code">NextJS</code>); same register
+            across the list.
+          </li>
+          <li>
+            Validation names the field and constraint, sentence case with
+            a period (
+            <code className="inline-code">Select a region.</code>).
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use the built-in{" "}
+            <code className="inline-code">label</code> prop, which
+            renders a real{" "}
+            <code className="inline-code">&lt;label&gt;</code>{" "}
+            associated to the input. For icon-only triggers, set{" "}
+            <code className="inline-code">aria-label</code> on the root
+            instead.
+          </li>
+          <li>
+            Trap focus inside the popover when nested in a{" "}
+            <ComponentRef name="Modal" /> so Tab cycles options instead
+            of the page behind it.
+          </li>
+        </ul>
       </Section>
     </>
   );

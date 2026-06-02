@@ -476,7 +476,7 @@ export const RaceMapComponent: React.FC<RaceMapComponentProps> = ({
           const bottomY = chart.scales.y.bottom
 
           ctx.save()
-          ctx.strokeStyle = '#e43c81'
+          ctx.strokeStyle = '#0070F3'
           ctx.lineWidth = 1.5
           ctx.setLineDash([4, 4])
           ctx.globalAlpha = 0.8
@@ -814,7 +814,7 @@ export const RaceMapComponent: React.FC<RaceMapComponentProps> = ({
           datasets: [{
             label: `Elevation (${unitElevation})`,
             data: elevationData,
-            borderColor: '#e43c81',
+            borderColor: '#0070F3',
             backgroundColor: 'rgba(228, 60, 129, 0.08)',
             fill: true,
             tension: 0.3,
@@ -823,7 +823,7 @@ export const RaceMapComponent: React.FC<RaceMapComponentProps> = ({
             pointHoverRadius: 5,
             pointHoverBorderWidth: 2,
             pointHoverBorderColor: '#ffffff',
-            pointHoverBackgroundColor: '#e43c81',
+            pointHoverBackgroundColor: '#0070F3',
           }]
         },
         plugins: [verticalLinePlugin.current],
@@ -1121,7 +1121,7 @@ export const RaceMapComponent: React.FC<RaceMapComponentProps> = ({
     const markerElement = document.createElement('div')
     markerElement.style.cssText = `
       background: white;
-      border: 2px solid #e43c81;
+      border: 2px solid #0070F3;
       border-radius: 50%;
       width: 24px;
       height: 24px;
@@ -1132,7 +1132,7 @@ export const RaceMapComponent: React.FC<RaceMapComponentProps> = ({
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       font-weight: 600;
       font-size: 11px;
-      color: #e43c81;
+      color: #0070F3;
       cursor: pointer;
       z-index: 10;
     `
@@ -1144,7 +1144,7 @@ export const RaceMapComponent: React.FC<RaceMapComponentProps> = ({
     const markerElement = document.createElement('div')
     markerElement.style.cssText = `
       background: white;
-      border: 2px solid #e43c81;
+      border: 2px solid #0070F3;
       border-radius: 50%;
       width: 16px;
       height: 16px;
@@ -1164,7 +1164,7 @@ export const RaceMapComponent: React.FC<RaceMapComponentProps> = ({
     
     const flagPath = document.createElementNS("http://www.w3.org/2000/svg", "path")
     flagPath.setAttribute("d", "M3 3.5a.5.5 0 011 0V5h8V3.5a.5.5 0 011 0V13h-1V9H4v4H3V5.667v-.019z")
-    flagPath.setAttribute("fill", "#e43c81")
+    flagPath.setAttribute("fill", "#0070F3")
     
     flagSvg.appendChild(flagPath)
     markerElement.appendChild(flagSvg)
@@ -1665,7 +1665,7 @@ export const RaceMapComponent: React.FC<RaceMapComponentProps> = ({
         'line-join': 'round'
       },
       paint: {
-        'line-color': '#e43c81',
+        'line-color': '#0070F3',
         'line-width': 5
       }
     })
@@ -1755,7 +1755,7 @@ export const RaceMapComponent: React.FC<RaceMapComponentProps> = ({
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
           <path fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" 
                 d="M6 6 L13 10 L6 14" />
-          <path fill="none" stroke="#e43c81" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" 
+          <path fill="none" stroke="#0070F3" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" 
                 d="M6 6 L13 10 L6 14" />
         </svg>
       `
@@ -2272,7 +2272,7 @@ export const RaceMapComponent: React.FC<RaceMapComponentProps> = ({
 // Export individual race map components
 export const TokyoMarathonRaceMap: React.FC = () => {
   return <RaceMapComponent 
-    token="pk.eyJ1IjoiZGlzdGFuenJ1bm5pbmciLCJhIjoiY21ia2Y4YjB0MDVyczJqcGduaXoxeW12dSJ9.tCFipup9j7bs_60hpBLqsg" 
+    token={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ""} 
     gpxUrl="https://raw.githubusercontent.com/distanzrunning/gpx/refs/heads/main/tokyo_marathon_geo.json"
     center={[139.6917, 35.6895]}
     city="Tokyo"
@@ -2281,7 +2281,7 @@ export const TokyoMarathonRaceMap: React.FC = () => {
 
 export const BerlinMarathonRaceMap: React.FC = () => {
   return <RaceMapComponent 
-    token="pk.eyJ1IjoiZGlzdGFuenJ1bm5pbmciLCJhIjoiY21ia2Y4YjB0MDVyczJqcGduaXoxeW12dSJ9.tCFipup9j7bs_60hpBLqsg" 
+    token={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ""} 
     gpxUrl="https://raw.githubusercontent.com/distanzrunning/gpx/refs/heads/main/berlin_marathon.json"
     center={[13.4050, 52.5200]}
     city="Berlin"
@@ -2290,7 +2290,7 @@ export const BerlinMarathonRaceMap: React.FC = () => {
 
 export const BostonMarathonRaceMap: React.FC = () => {
   return <RaceMapComponent 
-    token="pk.eyJ1IjoiZGlzdGFuenJ1bm5pbmciLCJhIjoiY21ia2Y4YjB0MDVyczJqcGduaXoxeW12dSJ9.tCFipup9j7bs_60hpBLqsg" 
+    token={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ""} 
     gpxUrl="https://raw.githubusercontent.com/distanzrunning/gpx/refs/heads/main/boston_marathon.json"
     center={[-71.0589, 42.3601]}
     city="Boston"
@@ -2299,7 +2299,7 @@ export const BostonMarathonRaceMap: React.FC = () => {
 
 export const LondonMarathonRaceMap: React.FC = () => {
   return <RaceMapComponent 
-    token="pk.eyJ1IjoiZGlzdGFuenJ1bm5pbmciLCJhIjoiY21ia2Y4YjB0MDVyczJqcGduaXoxeW12dSJ9.tCFipup9j7bs_60hpBLqsg" 
+    token={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ""} 
     gpxUrl="https://raw.githubusercontent.com/distanzrunning/gpx/refs/heads/main/london_marathon_1.json"
     center={[0.0022, 51.4769]}
     city="London"
@@ -2308,7 +2308,7 @@ export const LondonMarathonRaceMap: React.FC = () => {
 
 export const ChicagoMarathonRaceMap: React.FC = () => {
   return <RaceMapComponent 
-    token="pk.eyJ1IjoiZGlzdGFuenJ1bm5pbmciLCJhIjoiY21ia2Y4YjB0MDVyczJqcGduaXoxeW12dSJ9.tCFipup9j7bs_60hpBLqsg" 
+    token={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ""} 
     gpxUrl="https://raw.githubusercontent.com/distanzrunning/gpx/refs/heads/main/chicargo_marathon.json"
     center={[-87.6298, 41.8781]}
     city="Chicago"
@@ -2317,7 +2317,7 @@ export const ChicagoMarathonRaceMap: React.FC = () => {
 
 export const NewYorkCityMarathonRaceMap: React.FC = () => {
   return <RaceMapComponent 
-    token="pk.eyJ1IjoiZGlzdGFuenJ1bm5pbmciLCJhIjoiY21ia2Y4YjB0MDVyczJqcGduaXoxeW12dSJ9.tCFipup9j7bs_60hpBLqsg" 
+    token={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ""} 
     gpxUrl="https://raw.githubusercontent.com/distanzrunning/gpx/refs/heads/main/new_york_city_marathon.json"
     center={[-74.0060, 40.7128]}
     city="New York City"

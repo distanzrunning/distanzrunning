@@ -19,9 +19,12 @@ import { urlFor } from "@/sanity/lib/image";
 // column scrolls past — a "spotlight" pattern that lets a hero
 // review hold the visitor's attention while related items pass by.
 //
-// Sits directly on the PageFrame surface (no inner panel) so it
-// reads as a quieter editorial break between News and Races. Both
-// of those sections wear bordered panels; this one is a raw row.
+// Sits inside a contrast-toned panel (bg-gray-100, rounded-xl,
+// no border) at the same max-w-[1400px] / p-6 md:p-10 lg:p-12
+// rhythm as Breaking News and Races above and below. Surface
+// tone differs by design — gray-100 sits one notch off the
+// canvas in both themes so the row reads as its own editorial
+// moment without leaving the shared section geometry.
 //
 // Items come from the homepage query as the latest 4 productPost
 // records (any section) — first is the featured slot, next three
@@ -122,7 +125,7 @@ function FeaturedArticle({ item }: { item: HomepageGearItem }) {
         </h3>
 
         {item.excerpt && (
-          <p className="max-w-3xl text-balance text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">
+          <p className="max-w-3xl text-balance text-copy-16 text-[color:var(--ds-gray-900)] md:text-copy-18">
             {item.excerpt}
           </p>
         )}
@@ -143,25 +146,24 @@ export default function HomepageGear({ items }: HomepageGearProps) {
 
   return (
     <section className="flex w-full justify-center px-4 py-12 md:py-16 lg:py-20">
-      <div className="flex w-full max-w-[1400px] flex-col gap-8 md:gap-11">
+      <div className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl bg-[color:var(--ds-gray-100)] p-6 md:gap-11 md:p-10 lg:p-12">
         <header className="flex flex-col-reverse items-start justify-end gap-2 md:flex-row md:items-end md:justify-between md:gap-8">
           <div className="flex flex-col gap-2">
-            {/* text-heading-40 (Geist, 40 / 48 / -0.02em / 600) —
-                one DS step above the heading-32 used by News and
-                Races so the Quartr-style spotlight row feels
+            {/* text-heading-40 — one DS step above the heading-32
+                used by News and Races so the spotlight row feels
                 weightier than the regular content rows. */}
             <h2 className="m-0 text-heading-40 text-balance text-[color:var(--ds-gray-1000)]">
-              Latest Reviews
+              Editor&apos;s picks in shoes &amp; gear
             </h2>
-            <p className="text-balance text-[16px] leading-[1.5] text-[color:var(--ds-gray-900)] md:text-[18px]">
-              Explore the reviews, best of, and explainers on latest
-              running shoes and gear.
+            <p className="text-balance text-copy-16 text-[color:var(--ds-gray-900)] md:text-copy-18">
+              Hand-picked reviews, best-of round-ups, and explainers
+              on the latest running shoes and gear.
             </p>
           </div>
 
           <ButtonLink
             href={SEE_ALL_HREF}
-            variant="tertiary"
+            variant="secondary"
             size="small"
             suffixIcon={<ChevronRight />}
             className="hidden md:inline-flex"
@@ -200,7 +202,7 @@ export default function HomepageGear({ items }: HomepageGearProps) {
         <div className="md:hidden">
           <ButtonLink
             href={SEE_ALL_HREF}
-            variant="tertiary"
+            variant="secondary"
             size="small"
             suffixIcon={<ChevronRight />}
             className="w-full"

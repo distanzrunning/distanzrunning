@@ -60,9 +60,9 @@ function SectionCard({
       href={href}
       className="group flex flex-col gap-4 rounded-xl p-6 transition-colors no-underline"
       style={{
-        border: "1px solid var(--ds-gray-400)",
-        background: "var(--ds-background-100)",
-        color: "var(--ds-gray-1000)",
+        border: "1px solid hsl(var(--color-borderDefault))",
+        background: "hsl(var(--color-surface))",
+        color: "hsl(var(--color-textDefault))",
         minHeight: 180,
       }}
     >
@@ -73,7 +73,7 @@ function SectionCard({
             width: 40,
             height: 40,
             background: "var(--ds-gray-100)",
-            color: "var(--ds-gray-900)",
+            color: "hsl(var(--color-textSubtle))",
           }}
         >
           {icon}
@@ -83,7 +83,7 @@ function SectionCard({
           style={{
             width: 28,
             height: 28,
-            color: "var(--ds-gray-900)",
+            color: "hsl(var(--color-textSubtle))",
             background: "var(--ds-gray-100)",
           }}
           aria-hidden="true"
@@ -93,23 +93,14 @@ function SectionCard({
       </div>
       <div className="flex flex-col gap-2">
         <h2
-          style={{
-            margin: 0,
-            fontSize: 16,
-            fontWeight: 600,
-            color: "var(--ds-gray-1000)",
-            letterSpacing: "-0.32px",
-          }}
+          className="text-heading-16"
+          style={{ margin: 0, color: "hsl(var(--color-textDefault))" }}
         >
           {label}
         </h2>
         <p
-          style={{
-            margin: 0,
-            fontSize: 13,
-            lineHeight: 1.55,
-            color: "var(--ds-gray-700)",
-          }}
+          className="text-copy-14"
+          style={{ margin: 0, color: "hsl(var(--color-textSubtler))" }}
         >
           {description}
         </p>
@@ -124,23 +115,14 @@ export default function AdminOverviewPage() {
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <header style={{ marginBottom: 24 }}>
           <h1
-            style={{
-              fontSize: 24,
-              fontWeight: 600,
-              lineHeight: "32px",
-              margin: 0,
-              color: "var(--ds-gray-1000)",
-            }}
+            className="text-heading-32"
+            style={{ margin: 0, color: "hsl(var(--color-textDefault))" }}
           >
             Overview
           </h1>
           <p
-            style={{
-              marginTop: 6,
-              marginBottom: 0,
-              fontSize: 13,
-              color: "var(--ds-gray-700)",
-            }}
+            className="text-copy-16"
+            style={{ marginTop: 6, marginBottom: 0, color: "hsl(var(--color-textSubtler))" }}
           >
             Jump into any area of Stride Admin.
           </p>

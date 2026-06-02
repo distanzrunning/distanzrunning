@@ -26,13 +26,14 @@ import {
   Code2,
   Settings,
 } from "lucide-react";
+import Link from "next/link";
+import Wordmark from "@/components/ui/Wordmark";
 
 interface OverviewCardProps {
   href: string;
   title: string;
   description: string;
   children: React.ReactNode;
-  onNavigate: (slug: string) => void;
   /** Position in the grid: even index = left column, odd = right column */
   index: number;
   /** Total number of cards */
@@ -44,22 +45,17 @@ function OverviewCard({
   title,
   description,
   children,
-  onNavigate,
   index,
   total,
 }: OverviewCardProps) {
-  const slug = href.replace("/admin/design-system/", "");
   const isLeftColumn = index % 2 === 0;
   const isLastCard = index === total - 1;
   const isSecondLastCard = index === total - 2;
 
   return (
-    <a
+    <Link
+      href={href}
       className={`group relative flex h-full flex-col gap-6 p-8 no-underline cursor-pointer hover:bg-[var(--ds-background-100)] ${isLeftColumn ? "md:border-r" : ""} ${isLastCard ? "border-b-0" : "border-b"} ${isSecondLastCard ? "md:border-b-0" : ""}`}
-      onClick={(e) => {
-        e.preventDefault();
-        onNavigate(slug);
-      }}
       style={{
         backgroundClip: "padding-box",
         borderColor: "var(--ds-gray-alpha-400)",
@@ -67,10 +63,10 @@ function OverviewCard({
     >
       <div className="flex-1">{children}</div>
       <div className="mt-auto">
-        <p className="text-heading-16 font-semibold" style={{ color: "var(--ds-gray-1000)" }}>
+        <p className="text-heading-16 font-semibold" style={{ color: "hsl(var(--color-textDefault))" }}>
           {title}
         </p>
-        <p className="text-copy-16" style={{ color: "var(--ds-gray-900)" }}>
+        <p className="text-copy-16" style={{ color: "hsl(var(--color-textSubtle))" }}>
           {description}
         </p>
       </div>
@@ -78,7 +74,7 @@ function OverviewCard({
         className="pointer-events-none absolute inset-0 opacity-0 group-focus-visible:opacity-100"
         style={{ border: "2px solid var(--ds-blue-700)" }}
       />
-    </a>
+    </Link>
   );
 }
 
@@ -92,13 +88,15 @@ function BrandPreview() {
 
   return (
     <div className="relative mx-auto w-full" style={{ height: 96 }}>
-      {/* Logo */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/brand/wordmark-gray.svg"
-        alt="Distanz Running"
-        className="relative z-10"
-        style={{ height: 96, width: "auto", objectFit: "contain", margin: "0 auto", display: "block" }}
+      {/* Logo — inline SVG (Wordmark uses fill="currentColor")
+          so there's no network round-trip on first paint and
+          the brand preview renders the moment React mounts.
+          The gray-700 text colour matches the previous
+          wordmark-gray.svg tint. */}
+      <Wordmark
+        aria-label="Distanz Running"
+        className="relative z-10 mx-auto block text-textSubtler"
+        style={{ height: 96, width: "auto" }}
       />
       {/* Horizontal guide lines */}
       <div style={{ ...guideStyle, top: 0, left: 0, right: 0, borderTopWidth: 1 }} />
@@ -163,12 +161,12 @@ function ComponentsPreview() {
         className="-mt-px w-[214px] md:w-[246px]"
         style={{
           height: 42,
-          background: "var(--ds-background-100)",
+          background: "hsl(var(--color-surface))",
           boxShadow: boxBorder,
           borderRadius: 6,
           padding: "10px 48px 10px 12px",
           position: "relative",
-          color: "var(--ds-gray-700)",
+          color: "hsl(var(--color-textSubtler))",
         }}
       >
         <pre
@@ -195,7 +193,7 @@ function ComponentsPreview() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "var(--ds-gray-700)",
+            color: "hsl(var(--color-textSubtler))",
           }}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -208,7 +206,7 @@ function ComponentsPreview() {
       <div
         style={{
           height: 40,
-          background: "var(--ds-background-100)",
+          background: "hsl(var(--color-surface))",
           boxShadow: boxBorder,
           borderRadius: 6,
           padding: "0 10px",
@@ -218,7 +216,7 @@ function ComponentsPreview() {
           fontSize: 14,
           fontWeight: 500,
           lineHeight: "20px",
-          color: "var(--ds-gray-700)",
+          color: "hsl(var(--color-textSubtler))",
         }}
       >
         {/* User plus icon */}
@@ -235,13 +233,13 @@ function ComponentsPreview() {
         style={{
           width: 40,
           height: 40,
-          background: "var(--ds-background-100)",
+          background: "hsl(var(--color-surface))",
           boxShadow: boxBorder,
           borderRadius: 6,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: "var(--ds-gray-700)",
+          color: "hsl(var(--color-textSubtler))",
         }}
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor">
@@ -257,7 +255,7 @@ function ComponentsPreview() {
       <div
         style={{
           height: 40,
-          background: "var(--ds-background-100)",
+          background: "hsl(var(--color-surface))",
           boxShadow: boxBorder,
           borderRadius: 6,
           display: "inline-flex",
@@ -275,7 +273,7 @@ function ComponentsPreview() {
             padding: "8px 12px",
             borderRadius: 2,
             background: "var(--ds-gray-100)",
-            color: "var(--ds-gray-700)",
+            color: "hsl(var(--color-textSubtler))",
           }}
         >
           <LayoutGrid size={16} />
@@ -288,7 +286,7 @@ function ComponentsPreview() {
             justifyContent: "center",
             padding: "8px 12px",
             borderRadius: 2,
-            color: "var(--ds-gray-700)",
+            color: "hsl(var(--color-textSubtler))",
           }}
         >
           <BarChart3 size={16} />
@@ -317,8 +315,8 @@ function ComponentsPreview() {
               padding: "0 12px",
               height: 40,
               flexShrink: 0,
-              background: "var(--ds-background-100)",
-              color: "var(--ds-gray-700)",
+              background: "hsl(var(--color-surface))",
+              color: "hsl(var(--color-textSubtler))",
               borderRight: "1px solid var(--ds-gray-alpha-400)",
             }}
           >
@@ -333,7 +331,7 @@ function ComponentsPreview() {
               height: 40,
               flex: 1,
               minWidth: 0,
-              background: "var(--ds-background-100)",
+              background: "hsl(var(--color-surface))",
               color: "var(--ds-gray-600)",
             }}
           >
@@ -367,7 +365,7 @@ function ColoursPreview() {
             height: 96,
             width: 32,
             border: "1px solid var(--ds-gray-alpha-400)",
-            background: "var(--ds-background-200)",
+            background: "hsl(var(--color-canvas))",
           }}
         >
           <div
@@ -387,7 +385,7 @@ function ColoursPreview() {
 function GridCross({ style }: { style: React.CSSProperties }) {
   const crossSize = 21;
   const halfSize = 11;
-  const guideColor = "var(--ds-gray-700)";
+  const guideColor = "hsl(var(--color-textSubtler))";
 
   return (
     <div
@@ -429,7 +427,7 @@ function GridCross({ style }: { style: React.CSSProperties }) {
 function GridPreview() {
   const cols = 9;
   const rows = 2;
-  const guideColor = "var(--ds-gray-400)";
+  const guideColor = "hsl(var(--color-borderDefault))";
 
   return (
     <div className="w-full" style={{ position: "relative" }}>
@@ -483,13 +481,13 @@ function TypefacePreview() {
           borderRight: "1px dashed var(--ds-gray-alpha-400)",
         }}
       >
-        <p className="text-heading-24 text-center" style={{ fontFamily: "var(--font-family-sans)", color: "var(--ds-gray-700)" }}>
+        <p className="text-heading-24 text-center" style={{ fontFamily: "var(--font-family-sans)", color: "hsl(var(--color-textSubtler))" }}>
           Geist
         </p>
       </div>
       <p
         className="text-heading-24 text-center"
-        style={{ fontFamily: "var(--font-family-serif)", color: "var(--ds-gray-700)" }}
+        style={{ fontFamily: "var(--font-family-serif)", color: "hsl(var(--color-textSubtler))" }}
       >
         EB Garamond
       </p>
@@ -498,24 +496,20 @@ function TypefacePreview() {
 }
 
 interface FoundationsOverviewProps {
-  onNavigate?: (slug: string) => void;
 }
 
-export default function FoundationsOverview({ onNavigate }: FoundationsOverviewProps) {
-  const handleNavigate = onNavigate || (() => {});
-
+export default function FoundationsOverview({}: FoundationsOverviewProps) {
   return (
     <div>
       {/* Cards Grid */}
       <div
         className="grid grid-cols-1 md:grid-cols-2"
-        style={{ borderBottom: "1px solid var(--ds-gray-400)" }}
+        style={{ borderBottom: "1px solid hsl(var(--color-borderDefault))" }}
       >
         <OverviewCard
           href="/admin/design-system/distanz-running"
           title="Brand Assets"
           description="Learn how to work with our brand assets."
-          onNavigate={handleNavigate}
           index={0}
           total={6}
         >
@@ -526,7 +520,6 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           href="/admin/design-system/icons"
           title="Icons"
           description="Icon set tailored for running products."
-          onNavigate={handleNavigate}
           index={1}
           total={6}
         >
@@ -537,7 +530,6 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           href="/admin/design-system/avatar"
           title="Components"
           description="Building blocks for React applications."
-          onNavigate={handleNavigate}
           index={2}
           total={6}
         >
@@ -548,7 +540,6 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           href="/admin/design-system/colours"
           title="Colours"
           description="A high contrast, accessible color system."
-          onNavigate={handleNavigate}
           index={3}
           total={6}
         >
@@ -559,7 +550,6 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           href="/admin/design-system/grid"
           title="Grid"
           description="A huge part of the new Distanz aesthetic."
-          onNavigate={handleNavigate}
           index={4}
           total={6}
         >
@@ -570,7 +560,6 @@ export default function FoundationsOverview({ onNavigate }: FoundationsOverviewP
           href="/admin/design-system/typography"
           title="Typeface"
           description="Specifically designed for developers and designers."
-          onNavigate={handleNavigate}
           index={5}
           total={6}
         >

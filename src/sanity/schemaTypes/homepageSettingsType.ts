@@ -47,6 +47,20 @@ export const homepageSettingsType = defineType({
       ],
       validation: (Rule) => Rule.unique().max(6),
     }),
+    defineField({
+      name: 'featuredGearItems',
+      title: "Editor's picks — Shoes & Gear",
+      type: 'array',
+      description:
+        "Articles shown in the homepage Editor's picks row. The first item is the spotlight (large featured slot); the next three appear in the right-hand column. Drag to reorder. If left empty, the row auto-populates with the four most recent product posts.",
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'productPost' }],
+        },
+      ],
+      validation: (Rule) => Rule.unique().max(4),
+    }),
   ],
   preview: {
     prepare() {

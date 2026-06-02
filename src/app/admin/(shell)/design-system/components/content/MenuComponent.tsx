@@ -4,6 +4,7 @@ import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -13,6 +14,7 @@ import {
   Menu,
   MenuButton,
   MenuItem,
+  MenuSection,
   MenuSeparator,
 } from "@/components/ui/Menu";
 
@@ -146,7 +148,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -237,8 +239,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -250,40 +252,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -322,11 +324,11 @@ export function Component(): JSX.Element {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log('edit')}>Edit</MenuItem>
-      <MenuItem onClick={() => console.log('duplicate')}>Duplicate</MenuItem>
+      <MenuItem onClick={() => console.log('edit')}>Edit Race</MenuItem>
+      <MenuItem onClick={() => console.log('duplicate')}>Duplicate Race</MenuItem>
+      <MenuItem onClick={() => console.log('archive')}>Archive Race</MenuItem>
       <MenuSeparator />
-      <MenuItem onClick={() => console.log('archive')}>Archive</MenuItem>
-      <MenuItem onClick={() => console.log('delete')}>Delete</MenuItem>
+      <MenuItem destructive onClick={() => console.log('delete')}>Delete Race</MenuItem>
     </Menu>
   );
 }`;
@@ -338,26 +340,27 @@ export function Component(): JSX.Element {
   return (
     <Menu>
       <MenuButton variant="secondary" chevron>Actions</MenuButton>
-      <MenuItem onClick={() => console.log('edit')}>Edit</MenuItem>
-      <MenuItem onClick={() => console.log('duplicate')}>Duplicate</MenuItem>
+      <MenuItem onClick={() => console.log('edit')}>Edit Race</MenuItem>
+      <MenuItem onClick={() => console.log('duplicate')}>Duplicate Race</MenuItem>
+      <MenuItem onClick={() => console.log('archive')}>Archive Race</MenuItem>
       <MenuSeparator />
-      <MenuItem onClick={() => console.log('archive')}>Archive</MenuItem>
-      <MenuItem onClick={() => console.log('delete')}>Delete</MenuItem>
+      <MenuItem destructive onClick={() => console.log('delete')}>Delete Race</MenuItem>
     </Menu>
   );
 }`;
 
-const disabledItemsCode = `import { Menu, MenuButton, MenuItem } from '@/components/ui/Menu';
+const disabledItemsCode = `import { Menu, MenuButton, MenuItem, MenuSeparator } from '@/components/ui/Menu';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log('edit')}>Edit</MenuItem>
-      <MenuItem disabled>Duplicate</MenuItem>
-      <MenuItem disabled>Archive</MenuItem>
-      <MenuItem onClick={() => console.log('delete')}>Delete</MenuItem>
+      <MenuItem onClick={() => console.log('edit')}>Edit Race</MenuItem>
+      <MenuItem disabled>Duplicate Race</MenuItem>
+      <MenuItem disabled>Archive Race</MenuItem>
+      <MenuSeparator />
+      <MenuItem destructive onClick={() => console.log('delete')}>Delete Race</MenuItem>
     </Menu>
   );
 }`;
@@ -369,9 +372,9 @@ export function Component(): JSX.Element {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log('view')}>View Details</MenuItem>
-      <MenuItem onClick={() => console.log('edit')}>Edit</MenuItem>
-      <MenuItem locked>Delete</MenuItem>
+      <MenuItem onClick={() => console.log('view')}>View Race Details</MenuItem>
+      <MenuItem onClick={() => console.log('edit')}>Edit Race</MenuItem>
+      <MenuItem locked>Delete Race</MenuItem>
     </Menu>
   );
 }`;
@@ -383,9 +386,9 @@ export function Component(): JSX.Element {
   return (
     <Menu>
       <MenuButton>Links</MenuButton>
-      <MenuItem href="/admin/design-system/menu#custom-trigger">One</MenuItem>
-      <MenuItem href="#">Two</MenuItem>
-      <MenuItem href="#">Three</MenuItem>
+      <MenuItem href="/admin/design-system/menu#custom-trigger">View Documentation</MenuItem>
+      <MenuItem href="#">Open GitHub Repo</MenuItem>
+      <MenuItem href="#">Contact Support</MenuItem>
     </Menu>
   );
 }`;
@@ -408,9 +411,9 @@ export function Component(): JSX.Element {
           height={32}
         />
       </MenuButton>
-      <MenuItem onClick={() => console.log('profile')}>Profile</MenuItem>
-      <MenuItem onClick={() => console.log('settings')}>Settings</MenuItem>
-      <MenuItem onClick={() => console.log('logout')}>Log Out</MenuItem>
+      <MenuItem onClick={() => console.log('profile')}>View Profile</MenuItem>
+      <MenuItem onClick={() => console.log('settings')}>Account Settings</MenuItem>
+      <MenuItem onClick={() => console.log('logout')}>Sign Out</MenuItem>
     </Menu>
   );
 }`;
@@ -431,9 +434,9 @@ export function Component(): JSX.Element {
         >
           <MoreHorizontal size={16} />
         </MenuButton>
-        <MenuItem prefix={<Accessibility size={16} />}>Left</MenuItem>
-        <MenuItem prefix={<Accessibility size={16} />}>Center</MenuItem>
-        <MenuItem prefix={<Accessibility size={16} />}>Right</MenuItem>
+        <MenuItem prefix={<Accessibility size={16} />}>Align Left</MenuItem>
+        <MenuItem prefix={<Accessibility size={16} />}>Align Center</MenuItem>
+        <MenuItem prefix={<Accessibility size={16} />}>Align Right</MenuItem>
       </Menu>
       <Menu width={150}>
         <MenuButton
@@ -444,9 +447,9 @@ export function Component(): JSX.Element {
         >
           <MoreHorizontal size={16} />
         </MenuButton>
-        <MenuItem suffix={<Accessibility size={16} />}>Left</MenuItem>
-        <MenuItem suffix={<Accessibility size={16} />}>Center</MenuItem>
-        <MenuItem suffix={<Accessibility size={16} />}>Right</MenuItem>
+        <MenuItem suffix={<Accessibility size={16} />}>Align Left</MenuItem>
+        <MenuItem suffix={<Accessibility size={16} />}>Align Center</MenuItem>
+        <MenuItem suffix={<Accessibility size={16} />}>Align Right</MenuItem>
       </Menu>
     </div>
   );
@@ -459,8 +462,28 @@ export function Component(): JSX.Element {
   return (
     <Menu position="left-start">
       <MenuButton>Left Start</MenuButton>
-      <MenuItem>One</MenuItem>
-      <MenuItem>Two</MenuItem>
+      <MenuItem>Edit Race</MenuItem>
+      <MenuItem>Duplicate Race</MenuItem>
+    </Menu>
+  );
+}`;
+
+const menuSectionCode = `import { Menu, MenuButton, MenuItem, MenuSection, MenuSeparator } from '@/components/ui/Menu';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <Menu>
+      <MenuButton variant="secondary" chevron>Account</MenuButton>
+      <MenuSection title="Workspace">
+        <MenuItem>Switch Workspace</MenuItem>
+        <MenuItem>Invite Members</MenuItem>
+      </MenuSection>
+      <MenuSeparator />
+      <MenuSection title="Account">
+        <MenuItem>Account Settings</MenuItem>
+        <MenuItem>Sign Out</MenuItem>
+      </MenuSection>
     </Menu>
   );
 }`;
@@ -506,11 +529,11 @@ function DefaultDemo() {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
-      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
-      <MenuItem onClick={() => console.log("three")}>Three</MenuItem>
-      <MenuItem href="https://distanzrunning.com">Test for Link</MenuItem>
-      <MenuItem destructive onClick={() => console.log("delete")}>Delete</MenuItem>
+      <MenuItem onClick={() => console.log("edit")}>Edit Race</MenuItem>
+      <MenuItem onClick={() => console.log("duplicate")}>Duplicate Race</MenuItem>
+      <MenuItem onClick={() => console.log("archive")}>Archive Race</MenuItem>
+      <MenuSeparator />
+      <MenuItem destructive onClick={() => console.log("delete")}>Delete Race</MenuItem>
     </Menu>
   );
 }
@@ -521,11 +544,11 @@ function WithChevronDemo() {
       <MenuButton variant="secondary" chevron>
         Actions
       </MenuButton>
-      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
-      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
-      <MenuItem onClick={() => console.log("three")}>Three</MenuItem>
-      <MenuItem href="https://distanzrunning.com">Test for Link</MenuItem>
-      <MenuItem destructive onClick={() => console.log("delete")}>Delete</MenuItem>
+      <MenuItem onClick={() => console.log("edit")}>Edit Race</MenuItem>
+      <MenuItem onClick={() => console.log("duplicate")}>Duplicate Race</MenuItem>
+      <MenuItem onClick={() => console.log("archive")}>Archive Race</MenuItem>
+      <MenuSeparator />
+      <MenuItem destructive onClick={() => console.log("delete")}>Delete Race</MenuItem>
     </Menu>
   );
 }
@@ -534,10 +557,11 @@ function DisabledItemsDemo() {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
-      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
-      <MenuItem disabled>Three</MenuItem>
-      <MenuItem destructive onClick={() => console.log("delete")}>Delete</MenuItem>
+      <MenuItem onClick={() => console.log("edit")}>Edit Race</MenuItem>
+      <MenuItem disabled>Duplicate Race</MenuItem>
+      <MenuItem disabled>Archive Race</MenuItem>
+      <MenuSeparator />
+      <MenuItem destructive onClick={() => console.log("delete")}>Delete Race</MenuItem>
     </Menu>
   );
 }
@@ -546,9 +570,9 @@ function LockedItemsDemo() {
   return (
     <Menu>
       <MenuButton>Actions</MenuButton>
-      <MenuItem onClick={() => console.log("view")}>View Details</MenuItem>
-      <MenuItem onClick={() => console.log("edit")}>Edit</MenuItem>
-      <MenuItem locked>Delete</MenuItem>
+      <MenuItem onClick={() => console.log("view")}>View Race Details</MenuItem>
+      <MenuItem onClick={() => console.log("edit")}>Edit Race</MenuItem>
+      <MenuItem locked>Delete Race</MenuItem>
     </Menu>
   );
 }
@@ -557,9 +581,9 @@ function LinkItemsDemo() {
   return (
     <Menu>
       <MenuButton>Links</MenuButton>
-      <MenuItem href="/admin/design-system/menu#custom-trigger">One</MenuItem>
-      <MenuItem href="#">Two</MenuItem>
-      <MenuItem href="#">Three</MenuItem>
+      <MenuItem href="/admin/design-system/menu#custom-trigger">View Documentation</MenuItem>
+      <MenuItem href="#">Open GitHub Repo</MenuItem>
+      <MenuItem href="#">Contact Support</MenuItem>
     </Menu>
   );
 }
@@ -574,9 +598,9 @@ function CustomTriggerDemo() {
           size={30}
         />
       </MenuButton>
-      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
-      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
-      <MenuItem onClick={() => console.log("three")}>Three</MenuItem>
+      <MenuItem onClick={() => console.log("profile")}>View Profile</MenuItem>
+      <MenuItem onClick={() => console.log("settings")}>Account Settings</MenuItem>
+      <MenuItem onClick={() => console.log("logout")}>Sign Out</MenuItem>
     </Menu>
   );
 }
@@ -597,17 +621,17 @@ function PrefixSuffixDemo() {
         <MenuButton variant="secondary" size="small" shape="square">
           <ThreeDotsIcon />
         </MenuButton>
-        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("left")}>Left</MenuItem>
-        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("center")}>Center</MenuItem>
-        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("right")}>Right</MenuItem>
+        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("left")}>Align Left</MenuItem>
+        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("center")}>Align Center</MenuItem>
+        <MenuItem prefix={<PersonIcon />} onClick={() => console.log("right")}>Align Right</MenuItem>
       </Menu>
       <Menu width={150}>
         <MenuButton variant="secondary" size="small" shape="square">
           <ThreeDotsIcon />
         </MenuButton>
-        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("left")}>Left</MenuItem>
-        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("center")}>Center</MenuItem>
-        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("right")}>Right</MenuItem>
+        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("left")}>Align Left</MenuItem>
+        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("center")}>Align Center</MenuItem>
+        <MenuItem suffix={<PersonIcon />} onClick={() => console.log("right")}>Align Right</MenuItem>
       </Menu>
     </div>
   );
@@ -617,8 +641,35 @@ function MenuPositionDemo() {
   return (
     <Menu position="left-start">
       <MenuButton>Left Start</MenuButton>
-      <MenuItem onClick={() => console.log("one")}>One</MenuItem>
-      <MenuItem onClick={() => console.log("two")}>Two</MenuItem>
+      <MenuItem onClick={() => console.log("edit")}>Edit Race</MenuItem>
+      <MenuItem onClick={() => console.log("duplicate")}>Duplicate Race</MenuItem>
+    </Menu>
+  );
+}
+
+function MenuSectionDemo() {
+  return (
+    <Menu>
+      <MenuButton variant="secondary" chevron>
+        Account
+      </MenuButton>
+      <MenuSection title="Workspace">
+        <MenuItem onClick={() => console.log("switch")}>
+          Switch Workspace
+        </MenuItem>
+        <MenuItem onClick={() => console.log("invite")}>
+          Invite Members
+        </MenuItem>
+      </MenuSection>
+      <MenuSeparator />
+      <MenuSection title="Account">
+        <MenuItem onClick={() => console.log("settings")}>
+          Account Settings
+        </MenuItem>
+        <MenuItem onClick={() => console.log("signout")}>
+          Sign Out
+        </MenuItem>
+      </MenuSection>
     </Menu>
   );
 }
@@ -679,7 +730,7 @@ export default function MenuComponent() {
         <SectionHeader id="locked-items" onCopyLink={showToast}>
           Locked items
         </SectionHeader>
-        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "var(--ds-gray-900)" }}>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
           Use <code>MenuItemLocked</code> to indicate an action that requires additional permissions. The item is rendered as disabled with a lock icon suffix.
         </p>
         <div className="mt-6">
@@ -704,7 +755,7 @@ export default function MenuComponent() {
         <SectionHeader id="custom-trigger" onCopyLink={showToast}>
           Custom trigger
         </SectionHeader>
-        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "var(--ds-gray-900)" }}>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
           The trigger is still wrapped by an unstyled button.
         </p>
         <div className="mt-6">
@@ -718,7 +769,7 @@ export default function MenuComponent() {
         <SectionHeader id="prefix-and-suffix" onCopyLink={showToast}>
           Prefix and suffix
         </SectionHeader>
-        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "var(--ds-gray-900)" }}>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
           The trigger is still wrapped by an unstyled button.
         </p>
         <div className="mt-6">
@@ -732,7 +783,7 @@ export default function MenuComponent() {
         <SectionHeader id="menu-position" onCopyLink={showToast}>
           Menu position
         </SectionHeader>
-        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "var(--ds-gray-900)" }}>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
           The position will automatically adapt based on the window bounds.
         </p>
         <div className="mt-6">
@@ -740,6 +791,151 @@ export default function MenuComponent() {
             <MenuPositionDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="menu-section" onCopyLink={showToast}>
+          Menu sections
+        </SectionHeader>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
+          Group related items under a Title Case header with{" "}
+          <code className="inline-code">&lt;MenuSection title=&quot;&hellip;&quot;&gt;</code>{" "}
+          when the menu starts to crowd past ~10 items.
+        </p>
+        <div className="mt-6">
+          <CodePreview componentCode={menuSectionCode}>
+            <MenuSectionDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Menu for a discoverable trigger that opens a list of
+            actions on a single resource (a dots menu on a row, a
+            dropdown on a primary entity).
+          </li>
+          <li>
+            For right-click or long-press on a row, use{" "}
+            <ComponentRef name="Context Menu" />. For global commands
+            behind <code className="inline-code">⌘K</code>, use{" "}
+            <ComponentRef name="Command Menu" />. For two related
+            primary actions, use{" "}
+            <ComponentRef name="Split Button" /> rather than burying
+            the secondary action.
+          </li>
+          <li>
+            Cap a Menu around 10 items. Past that, group with{" "}
+            <code className="inline-code">MenuSection</code> or move
+            secondary actions to a settings page.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Open on click, not hover; hover-open menus collide with
+            screen readers and trackpad scrolls.
+          </li>
+          <li>
+            Position auto-flips based on window bounds; don&apos;t
+            hardcode a side that clips on narrow viewports.
+          </li>
+          <li>
+            Close on item activation, Escape, and outside-click.
+            Don&apos;t auto-close on a hover-out.
+          </li>
+          <li>
+            Use{" "}
+            <code className="inline-code">&lt;MenuItem locked&gt;</code>{" "}
+            for permission-gated actions so the lock icon and
+            disabled state explain why the row is inert.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Item children are Title Case{" "}
+            <code className="inline-code">Verb + Noun</code> (
+            <code className="inline-code">Rename Project</code>,{" "}
+            <code className="inline-code">Duplicate Deployment</code>).
+            Bare verbs like{" "}
+            <code className="inline-code">Rename</code> or{" "}
+            <code className="inline-code">Edit</code> are wrong outside
+            obvious single-object context.
+          </li>
+          <li>
+            End an item with{" "}
+            <code className="inline-code">&hellip;</code> only when
+            activating it opens a follow-up dialog (
+            <code className="inline-code">Rename&hellip;</code>,{" "}
+            <code className="inline-code">
+              Transfer to Team&hellip;
+            </code>
+            ).
+          </li>
+          <li>
+            Group destructive items at the bottom, separated by a
+            divider, and keep the destructive copy as{" "}
+            <code className="inline-code">Verb + Noun</code> (
+            <code className="inline-code">Delete Project</code>, never
+            bare <code className="inline-code">Delete</code>).
+          </li>
+          <li>
+            Section headers (
+            <code className="inline-code">
+              MenuSection title
+            </code>
+            ) are Title Case, 1&ndash;2 words (
+            <code className="inline-code">Workspace</code>,{" "}
+            <code className="inline-code">Recent Projects</code>).
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Up/Down arrows move focus through items, Home/End jump to
+            first/last, Enter or Space activates.
+          </li>
+          <li>
+            Typeahead jumps to the next item whose label starts with the
+            typed character; keep the visible label first so typeahead
+            matches what the user sees.
+          </li>
+          <li>
+            Return focus to the trigger on close so keyboard users keep
+            their place in the row.
+          </li>
+        </ul>
       </Section>
 
       <Toast

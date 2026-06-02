@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -140,7 +141,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -231,8 +232,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -244,40 +245,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -434,21 +435,21 @@ export default function ContextCardComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">children</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -456,7 +457,7 @@ export default function ContextCardComponent() {
                 </td>
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Wrap trigger elements to share a tooltip provider
+                  Wrap trigger elements to share delay defaults
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -466,7 +467,17 @@ export default function ContextCardComponent() {
                 </td>
                 <td className="py-3 px-4 text-textSubtle">200</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Delay in ms before the tooltip appears
+                  Delay in ms before the card opens on hover
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">closeDelay</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  number
+                </td>
+                <td className="py-3 px-4 text-textSubtle">150</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Delay in ms before the card closes on cursor exit
                 </td>
               </tr>
             </tbody>
@@ -480,21 +491,21 @@ export default function ContextCardComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">children</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -502,7 +513,7 @@ export default function ContextCardComponent() {
                 </td>
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  The element that triggers the tooltip on hover
+                  The element that triggers the card on hover or focus
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -512,7 +523,7 @@ export default function ContextCardComponent() {
                 </td>
                 <td className="py-3 px-4 text-textSubtle">-</td>
                 <td className="py-3 px-4 text-textSubtle">
-                  Content shown inside the tooltip
+                  Content shown inside the card
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -538,6 +549,112 @@ export default function ContextCardComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Context Card to reveal entity metadata on hover or focus:
+            a user, a deployment, a project, an API key. The trigger is
+            usually a name link or avatar in dense data.
+          </li>
+          <li>
+            For a one-line &quot;why&quot; without metadata rows, use{" "}
+            <ComponentRef name="Tooltip" />. For long-form content, edit
+            forms, or persistent navigation, route to a{" "}
+            <ComponentRef name="Drawer" /> or a detail page.
+          </li>
+          <li>
+            Don&apos;t use Context Card to surface destructive actions; the
+            panel can dismiss on cursor exit before the user commits.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Context Card opens on hover and keyboard focus and closes on
+            cursor exit or blur. Preserve the default entry delay so it
+            doesn&apos;t flash on a fast mouse sweep.
+          </li>
+          <li>
+            Cap interactive content at one primary action (
+            <code className="inline-code">View Project</code>,{" "}
+            <code className="inline-code">Open Settings</code>). More than
+            one CTA reads as a menu and belongs in{" "}
+            <ComponentRef name="Menu" />.
+          </li>
+          <li>
+            Don&apos;t nest a Context Card inside a{" "}
+            <ComponentRef name="Tooltip" /> or another Context Card; the
+            second layer steals focus and traps keyboard users.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Lead with the entity name as a Title Case heading and one
+            identifying line in sentence case underneath (team slug, owner,
+            deployment URL).
+          </li>
+          <li>
+            Follow with 2–4 metadata rows of{" "}
+            <code className="inline-code">Label: value</code>. Keys are
+            Title Case noun phrases (
+            <code className="inline-code">Last Active</code>,{" "}
+            <code className="inline-code">Created</code>,{" "}
+            <code className="inline-code">Plan</code>); values follow the
+            same formatting rules as table cells. Use the em-dash character{" "}
+            <code className="inline-code">—</code> for unknown values,
+            never <code className="inline-code">N/A</code> or{" "}
+            <code className="inline-code">null</code>.
+          </li>
+          <li>
+            Don&apos;t restate what the trigger already showed. If the row
+            already renders the deployment URL, don&apos;t repeat it as
+            the first card line.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The trigger keeps its own accessible name; the card is
+            supplementary and shouldn&apos;t replace it.
+          </li>
+          <li>
+            Card content is reachable by keyboard once the trigger has
+            focus; Escape closes the card and returns focus to the
+            trigger.
+          </li>
+        </ul>
       </Section>
     </>
   );

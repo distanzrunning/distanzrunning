@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -141,7 +142,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -232,8 +233,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -245,40 +246,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -322,28 +323,24 @@ export function DefaultExample() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Create Token"
-        subtitle="Enter a unique name for your token to differentiate it from other tokens and then select the scope."
-        footer={
-          <footer style={{
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Create Token</Modal.Title>
+        <Modal.P>
+          Enter a unique name for your token to differentiate it from other tokens and then select the scope.
+        </Modal.P>
+        <p className="text-copy-14">
+          The token will be shown once after creation. Store it somewhere safe.
+        </p>
+        <Modal.Footer>
+          <div style={{
             display: "flex",
             justifyContent: "space-between",
-            flexShrink: 0,
             padding: 16,
-            position: "sticky",
-            bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => setOpen(false)}>Submit</Button>
-          </footer>
-        }
-      >
-        <p className="text-copy-14">
-          Some content contained within the modal.
-        </p>
+            <Button onClick={() => setOpen(false)}>Create Token</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -361,31 +358,26 @@ export function StickyExample() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Terms of Service"
-        stickyHeader
-        footer={
-          <footer style={{
-            display: "flex",
-            justifyContent: "space-between",
-            flexShrink: 0,
-            padding: 16,
-            position: "sticky",
-            bottom: 0,
-          }}>
-            <Button variant="secondary" onClick={() => setOpen(false)}>Decline</Button>
-            <Button onClick={() => setOpen(false)}>Accept</Button>
-          </footer>
-        }
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Header sticky>
+          <Modal.Title>Terms of Service</Modal.Title>
+        </Modal.Header>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* Long content that causes scrolling */}
-          <p className="text-copy-14" style={{ color: "var(--ds-gray-900)", margin: 0 }}>
+          <p className="text-copy-14" style={{ color: "hsl(var(--color-textSubtle))", margin: 0 }}>
             Lorem ipsum dolor sit amet...
           </p>
         </div>
+        <Modal.Footer>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: 16,
+          }}>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpen(false)}>Accept Terms</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -403,26 +395,18 @@ export function SingleButtonExample() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Create Token"
-        stickyHeader
-        footer={
-          <footer style={{
-            display: "flex",
-            flexShrink: 0,
-            padding: 16,
-            position: "sticky",
-            bottom: 0,
-          }}>
-            <Button variant="secondary" style={{ width: "100%" }} onClick={() => setOpen(false)}>Cancel</Button>
-          </footer>
-        }
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Header sticky>
+          <Modal.Title>Token Created</Modal.Title>
+        </Modal.Header>
         <p className="text-copy-14">
-          Some content contained within the modal.
+          Copy your token now. You won&apos;t be able to see it again after this dialog closes.
         </p>
+        <Modal.Footer>
+          <div style={{ display: "flex", padding: 16 }}>
+            <Button variant="secondary" style={{ width: "100%" }} onClick={() => setOpen(false)}>Done</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -440,28 +424,24 @@ export function DisabledActionsExample() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Modal"
-        subtitle="This is a modal."
-        footer={
-          <footer style={{
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Create Token</Modal.Title>
+        <Modal.P>
+          Enter a unique name for your token. The primary button stays disabled until the form passes validation.
+        </Modal.P>
+        <p className="text-copy-14">
+          The token will be shown once after creation. Store it somewhere safe.
+        </p>
+        <Modal.Footer>
+          <div style={{
             display: "flex",
             justifyContent: "space-between",
-            flexShrink: 0,
             padding: 16,
-            position: "sticky",
-            bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button disabled>Submit</Button>
-          </footer>
-        }
-      >
-        <p className="text-copy-14">
-          Some content contained within the modal.
-        </p>
+            <Button disabled>Create Token</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -479,31 +459,31 @@ export function InsetExample() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Modal"
-        subtitle="This is a modal."
-        footer={
-          <footer style={{
-            display: "flex",
-            justifyContent: "space-between",
-            flexShrink: 0,
-            padding: 16,
-            position: "sticky",
-            bottom: 0,
-          }}>
-            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => setOpen(false)}>Submit</Button>
-          </footer>
-        }
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Transfer Race</Modal.Title>
+        <Modal.P>
+          Ownership transfers immediately. Some effects cannot be undone.
+        </Modal.P>
         <Modal.Inset>
-          <p className="text-copy-14">Content within the inset.</p>
+          <p className="text-copy-14">
+            The new owner gains admin access and can edit, archive, or delete this race.
+          </p>
         </Modal.Inset>
         <div className="pt-6">
-          <p className="text-copy-14">Content outside the inset.</p>
+          <p className="text-copy-14">
+            Type the race name to confirm: <code className="inline-code">berlin-marathon</code>
+          </p>
         </div>
+        <Modal.Footer>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: 16,
+          }}>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpen(false)}>Transfer Race</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -525,23 +505,23 @@ export function InitialFocusExample() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Initial Focus"
-        subtitle="This Modal is set up to programmatically move the focus onto the Submit button, making it possible to promptly continue with the Enter key."
         initialFocusRef={initialFocusRef}
-        footer={
-          <footer style={{
+      >
+        <Modal.Title>Save Changes</Modal.Title>
+        <Modal.P>
+          Your edits will be applied to the live race page. Focus is moved to the primary button so you can press Enter to confirm.
+        </Modal.P>
+        <Modal.Footer>
+          <div style={{
             display: "flex",
             justifyContent: "space-between",
-            flexShrink: 0,
             padding: 16,
-            position: "sticky",
-            bottom: 0,
           }}>
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button ref={initialFocusRef} onClick={() => setOpen(false)}>Submit</Button>
-          </footer>
-        }
-      />
+            <Button ref={initialFocusRef} onClick={() => setOpen(false)}>Save Changes</Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }`;
@@ -558,32 +538,29 @@ function DefaultDemo() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Create Token"
-        subtitle="Enter a unique name for your token to differentiate it from other tokens and then select the scope."
-        footer={
-          <footer
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Create Token</Modal.Title>
+        <Modal.P>
+          Enter a unique name for your token to differentiate it from other
+          tokens and then select the scope.
+        </Modal.P>
+        <p className="text-copy-14">
+          The token will be shown once after creation. Store it somewhere safe.
+        </p>
+        <Modal.Footer>
+          <div
             style={{
               display: "flex",
               justifyContent: "space-between",
-              flexShrink: 0,
               padding: 16,
-              position: "sticky",
-              bottom: 0,
             }}
           >
             <Button variant="secondary" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={() => setOpen(false)}>Submit</Button>
-          </footer>
-        }
-      >
-        <p className="text-copy-14">
-          Some content contained within the modal.
-        </p>
+            <Button onClick={() => setOpen(false)}>Create Token</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -608,40 +585,35 @@ function StickyDemo() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Terms of Service"
-        stickyHeader
-        footer={
-          <footer
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              flexShrink: 0,
-              padding: 16,
-              position: "sticky",
-              bottom: 0,
-            }}
-          >
-            <Button variant="secondary" onClick={() => setOpen(false)}>
-              Decline
-            </Button>
-            <Button onClick={() => setOpen(false)}>Accept</Button>
-          </footer>
-        }
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Header sticky>
+          <Modal.Title>Terms of Service</Modal.Title>
+        </Modal.Header>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {paragraphs.map((text, i) => (
             <p
               key={i}
               className="text-copy-14"
-              style={{ color: "var(--ds-gray-900)", margin: 0 }}
+              style={{ color: "hsl(var(--color-textSubtle))", margin: 0 }}
             >
               {text}
             </p>
           ))}
         </div>
+        <Modal.Footer>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 16,
+            }}
+          >
+            <Button variant="secondary" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setOpen(false)}>Accept Terms</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -655,34 +627,24 @@ function SingleButtonDemo() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Create Token"
-        stickyHeader
-        footer={
-          <footer
-            style={{
-              display: "flex",
-              flexShrink: 0,
-              padding: 16,
-              position: "sticky",
-              bottom: 0,
-            }}
-          >
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Header sticky>
+          <Modal.Title>Token Created</Modal.Title>
+        </Modal.Header>
+        <p className="text-copy-14">
+          Copy your token now. You won&apos;t be able to see it again after this dialog closes.
+        </p>
+        <Modal.Footer>
+          <div style={{ display: "flex", padding: 16 }}>
             <Button
               variant="secondary"
               style={{ width: "100%" }}
               onClick={() => setOpen(false)}
             >
-              Cancel
+              Done
             </Button>
-          </footer>
-        }
-      >
-        <p className="text-copy-14">
-          Some content contained within the modal.
-        </p>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -696,32 +658,29 @@ function DisabledActionsDemo() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Modal"
-        subtitle="This is a modal."
-        footer={
-          <footer
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Create Token</Modal.Title>
+        <Modal.P>
+          Enter a unique name for your token. The primary button stays disabled
+          until the form passes validation.
+        </Modal.P>
+        <p className="text-copy-14">
+          The token will be shown once after creation. Store it somewhere safe.
+        </p>
+        <Modal.Footer>
+          <div
             style={{
               display: "flex",
               justifyContent: "space-between",
-              flexShrink: 0,
               padding: 16,
-              position: "sticky",
-              bottom: 0,
             }}
           >
             <Button variant="secondary" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button disabled>Submit</Button>
-          </footer>
-        }
-      >
-        <p className="text-copy-14">
-          Some content contained within the modal.
-        </p>
+            <Button disabled>Create Token</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -735,35 +694,36 @@ function InsetDemo() {
       <Button size="small" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Modal"
-        subtitle="This is a modal."
-        footer={
-          <footer
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Transfer Race</Modal.Title>
+        <Modal.P>
+          Ownership transfers immediately. Some effects cannot be undone.
+        </Modal.P>
+        <Modal.Inset>
+          <p className="text-copy-14">
+            The new owner gains admin access and can edit, archive, or delete this race.
+          </p>
+        </Modal.Inset>
+        <div className="pt-6">
+          <p className="text-copy-14">
+            Type the race name to confirm:{" "}
+            <code className="inline-code">berlin-marathon</code>
+          </p>
+        </div>
+        <Modal.Footer>
+          <div
             style={{
               display: "flex",
               justifyContent: "space-between",
-              flexShrink: 0,
               padding: 16,
-              position: "sticky",
-              bottom: 0,
             }}
           >
             <Button variant="secondary" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={() => setOpen(false)}>Submit</Button>
-          </footer>
-        }
-      >
-        <Modal.Inset>
-          <p className="text-copy-14">Content within the inset.</p>
-        </Modal.Inset>
-        <div className="pt-6">
-          <p className="text-copy-14">Content outside the inset.</p>
-        </div>
+            <Button onClick={() => setOpen(false)}>Transfer Race</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -781,29 +741,30 @@ function InitialFocusDemo() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Initial Focus"
-        subtitle="This Modal is set up to programmatically move the focus onto the Submit button, making it possible to promptly continue with the Enter key."
         initialFocusRef={initialFocusRef}
-        footer={
-          <footer
+      >
+        <Modal.Title>Save Changes</Modal.Title>
+        <Modal.P>
+          Your edits will be applied to the live race page. Focus is moved to
+          the primary button so you can press Enter to confirm.
+        </Modal.P>
+        <Modal.Footer>
+          <div
             style={{
               display: "flex",
               justifyContent: "space-between",
-              flexShrink: 0,
               padding: 16,
-              position: "sticky",
-              bottom: 0,
             }}
           >
             <Button variant="secondary" onClick={() => setOpen(false)}>
               Cancel
             </Button>
             <Button ref={initialFocusRef} onClick={() => setOpen(false)}>
-              Submit
+              Save Changes
             </Button>
-          </footer>
-        }
-      />
+          </div>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
@@ -922,13 +883,13 @@ export default function ModalComponent() {
           <li>
             <a
               href="/admin/design-system/newsletter-modal"
-              className="block rounded-lg border border-[var(--ds-gray-400)] p-4 hover:bg-[var(--ds-background-200)] transition-colors no-underline"
+              className="block rounded-lg border border-borderDefault p-4 hover:bg-canvas transition-colors no-underline"
             >
               <div
                 style={{
                   fontSize: 14,
                   fontWeight: 600,
-                  color: "var(--ds-gray-1000)",
+                  color: "hsl(var(--color-textDefault))",
                 }}
               >
                 Newsletter Modal →
@@ -937,7 +898,7 @@ export default function ModalComponent() {
                 style={{
                   marginTop: 4,
                   fontSize: 13,
-                  color: "var(--ds-gray-700)",
+                  color: "hsl(var(--color-textSubtler))",
                 }}
               >
                 Email sign-up dialog with a branded hero. Wired to Mailgun
@@ -963,21 +924,21 @@ export default function ModalComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">open</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -1010,46 +971,6 @@ export default function ModalComponent() {
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">title</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Title displayed in the modal header
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">subtitle</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Subtitle displayed below the title in the header
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">footer</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Footer content rendered outside the scrollable body area
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">stickyHeader</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Enable sticky header that stays visible when body scrolls
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">initialFocusRef</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
                   {"RefObject<HTMLElement>"}
@@ -1060,6 +981,16 @@ export default function ModalComponent() {
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">maxWidth</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  number | string
+                </td>
+                <td className="py-3 px-4 text-textSubtle">540</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Max width of the modal panel
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">className</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
                   string
@@ -1067,6 +998,51 @@ export default function ModalComponent() {
                 <td className="py-3 px-4 text-textSubtle">{`""`}</td>
                 <td className="py-3 px-4 text-textSubtle">
                   Additional CSS classes for the modal dialog element
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">Modal.Title</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  Component
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Modal title; wires the dialog&apos;s aria-labelledby for screen
+                  readers
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">Modal.P</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  Component
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Body paragraph in the modal header; accepts JSX so you can mix
+                  links, bold spans, or multiple paragraphs
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">Modal.Header</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  Component
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Optional wrapper around Modal.Title + Modal.P; pass{" "}
+                  <code className="inline-code">sticky</code> to keep the header
+                  visible while the body scrolls
+                </td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-3 pr-4 font-mono">Modal.Footer</td>
+                <td className="py-3 px-4 font-mono text-textSubtle">
+                  Component
+                </td>
+                <td className="py-3 px-4 text-textSubtle">-</td>
+                <td className="py-3 px-4 text-textSubtle">
+                  Footer slot pulled out of the scrollable body and rendered
+                  pinned to the panel bottom
                 </td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -1083,6 +1059,155 @@ export default function ModalComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Modal when a decision must block the rest of the
+            page. For persistent associated context where the
+            underlying page stays readable, use{" "}
+            <ComponentRef name="Sheet" /> on desktop or{" "}
+            <ComponentRef name="Drawer" /> on mobile.
+          </li>
+          <li>
+            Confirm destructive actions in a Modal.{" "}
+            <ComponentRef name="Drawer" /> and{" "}
+            <ComponentRef name="Sheet" /> don&apos;t fully dim the
+            page, so they read as too soft for a delete or revoke.
+          </li>
+          <li>
+            Skip Modal for routine create flows that have a
+            dedicated page; route to the page instead.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Default focus to{" "}
+            <code className="inline-code">Cancel</code> on any
+            destructive Modal. Enter must never trigger the destructive
+            action without a typed confirmation.
+          </li>
+          <li>
+            Allow Escape and outside-click to dismiss
+            non-destructive Modals; gate dismissal on destructive
+            ones with unsaved input.
+          </li>
+          <li>
+            Trap focus inside the Modal while it&apos;s open and
+            return focus to the trigger after close. Restore body
+            scroll on the same tick the Modal unmounts.
+          </li>
+          <li>
+            For high-stakes destructive actions (delete production
+            resource, rotate signing key, downgrade plan), gate the
+            primary button on a typed match of the resource name.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">Modal.Title</code> is a Title
+            Case statement, never a question.{" "}
+            <code className="inline-code">Transfer Project</code> is
+            correct;{" "}
+            <code className="inline-code">Transfer Project?</code> is
+            wrong.
+          </li>
+          <li>
+            <code className="inline-code">Modal.P</code> body is sentence
+            case, 1&ndash;3 sentences. State the consequence first, then
+            any cascade.
+          </li>
+          <li>
+            Primary button is{" "}
+            <code className="inline-code">Verb + Noun</code> and
+            matches the title verb (
+            <code className="inline-code">Transfer Project</code>{" "}
+            title pairs with{" "}
+            <code className="inline-code">Transfer Project</code>{" "}
+            button). Never{" "}
+            <code className="inline-code">Confirm</code>,{" "}
+            <code className="inline-code">OK</code>, or a bare verb
+            on a destructive primary.
+          </li>
+          <li>
+            Cancel literal stays{" "}
+            <code className="inline-code">Cancel</code>.
+            Acknowledgment-only Modals (after a key reveal, after a
+            one-time-show) use{" "}
+            <code className="inline-code">Done</code>, never{" "}
+            <code className="inline-code">OK</code> or{" "}
+            <code className="inline-code">Close</code>.
+          </li>
+          <li>
+            Close irreversible bodies with{" "}
+            <code className="inline-code">
+              This cannot be undone.
+            </code>
+            ; close cascade-only bodies with{" "}
+            <code className="inline-code">
+              Some effects cannot be undone.
+            </code>
+            . Don&apos;t claim full irreversibility for a partial
+            cascade.
+          </li>
+          <li>
+            Pair the success toast verb 1:1 with the primary button:{" "}
+            <code className="inline-code">Delete Project</code> button,{" "}
+            <code className="inline-code">Project deleted</code> toast.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Set{" "}
+            <code className="inline-code">aria-labelledby</code> to the{" "}
+            <code className="inline-code">Modal.Title</code> id so screen
+            readers announce the title on open.
+          </li>
+          <li>
+            Keep the Cancel button literally{" "}
+            <code className="inline-code">Cancel</code> so
+            screen-reader users hear a stable dismissal label
+            across destructive flows.
+          </li>
+          <li>
+            After an error inside the Modal, keep focus inside so
+            the user can retry; after success, return focus to the
+            trigger.
+          </li>
+        </ul>
       </Section>
     </>
   );

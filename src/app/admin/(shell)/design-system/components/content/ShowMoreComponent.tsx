@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -140,7 +141,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -231,8 +232,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -244,40 +245,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -312,17 +313,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 const defaultCode = `import { ShowMore } from '@/components/ui/ShowMore';
 
 export function Component(): JSX.Element {
-  return (
-    <ShowMore>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur.
-      </p>
-    </ShowMore>
-  );
+  return <ShowMore />;
 }`;
 
 // ============================================================================
@@ -330,17 +321,7 @@ export function Component(): JSX.Element {
 // ============================================================================
 
 function DefaultDemo() {
-  return (
-    <ShowMore>
-      <p className="text-copy-16 text-textDefault" style={{ lineHeight: 1.5 }}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur.
-      </p>
-    </ShowMore>
-  );
+  return <ShowMore />;
 }
 
 // ============================================================================
@@ -361,6 +342,54 @@ export default function ShowMoreComponent() {
             <DefaultDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use ShowMore for progressive disclosure of a single long
+            list or block (recent activity, repo branches, attached
+            resources). For sibling pages of the same data set, use{" "}
+            <ComponentRef name="Pagination" />; for optional sections,
+            use <ComponentRef name="Collapse" />.
+          </li>
+          <li>
+            Show enough rows to convey the shape of the list before
+            truncating (5–10 typical). Truncating at 2 makes the
+            affordance feel performative.
+          </li>
+          <li>
+            Pair the trigger with the count of hidden items so the user
+            knows the cost of expanding (
+            <code className="inline-code">Show 12 More</code>, then{" "}
+            <code className="inline-code">Show Less</code> after
+            expand). Title Case both labels.
+          </li>
+          <li>
+            Don&apos;t cycle Show More then Show Less mid-flow on the
+            same data set; collapsing rows after the user expanded them
+            scrolls them away from where they were reading.
+          </li>
+          <li>
+            Render hidden rows in the DOM when the count is small so
+            find-in-page works; lazy-load only when the dataset is
+            large enough to hurt initial render.
+          </li>
+          <li>
+            The trigger is a{" "}
+            <code className="inline-code">&lt;button&gt;</code> with{" "}
+            <code className="inline-code">aria-expanded</code> and{" "}
+            <code className="inline-code">aria-controls</code> pointing
+            at the list. After expansion, move focus to the first newly
+            revealed row so screen readers and keyboard users land in
+            the new content.
+          </li>
+        </ul>
       </Section>
 
       <Toast

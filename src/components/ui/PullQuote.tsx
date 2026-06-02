@@ -23,7 +23,7 @@ export default function PullQuote({ children, className = "" }: PullQuoteProps) 
     <figure
       className={`
         my-10 py-6
-        border-t-4 border-b-4 border-electric-pink
+        border-t-4 border-b-4 border-textDefault
         text-center
         ${className}
       `.replace(/\s+/g, " ").trim()}

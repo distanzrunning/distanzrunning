@@ -19,11 +19,11 @@ export default function ComponentShowcase() {
           {/* Primary Button */}
           <div>
             <p className="text-sm font-medium mb-3">Primary Button</p>
-            <button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
+            <button className="px-6 py-3 bg-textDefault text-textInverted rounded-md font-medium hover:bg-[var(--ds-gray-900)] transition-colors">
               Primary Action
             </button>
             <pre className="mt-3 p-3 bg-canvas rounded text-xs overflow-x-auto">
-              <code>{`<button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
+              <code>{`<button className="px-6 py-3 bg-textDefault text-textInverted rounded-md font-medium hover:bg-[var(--ds-gray-900)] transition-colors">
   Primary Action
 </button>`}</code>
             </pre>
@@ -32,11 +32,11 @@ export default function ComponentShowcase() {
           {/* Secondary Button */}
           <div>
             <p className="text-sm font-medium mb-3">Secondary Button</p>
-            <button className="px-6 py-3 border-2 border-neutral-400 dark:border-neutral-500 text-neutral-900 dark:text-white rounded-md font-medium hover:bg-neutral-900 dark:hover:bg-white hover:text-white dark:hover:text-neutral-900 transition-colors">
+            <button className="px-6 py-3 border-2 border-borderDefault text-textDefault rounded-md font-medium hover:bg-[var(--ds-gray-100)] hover:text-textDefault transition-colors">
               Secondary Action
             </button>
             <pre className="mt-3 p-3 bg-canvas rounded text-xs overflow-x-auto">
-              <code>{`<button className="px-6 py-3 border-2 border-neutral-400 dark:border-neutral-500 text-neutral-900 dark:text-white rounded-md font-medium hover:bg-neutral-900 dark:hover:bg-white hover:text-white dark:hover:text-neutral-900 transition-colors">
+              <code>{`<button className="px-6 py-3 border-2 border-borderDefault text-textDefault rounded-md font-medium hover:bg-[var(--ds-gray-100)] hover:text-textDefault transition-colors">
   Secondary Action
 </button>`}</code>
             </pre>
@@ -45,11 +45,11 @@ export default function ComponentShowcase() {
           {/* Ghost Button */}
           <div>
             <p className="text-sm font-medium mb-3">Ghost Button</p>
-            <button className="px-6 py-3 text-neutral-700 dark:text-neutral-300 font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors">
+            <button className="px-6 py-3 text-textSubtle font-medium hover:bg-[var(--ds-gray-100)] rounded-md transition-colors">
               Tertiary Action
             </button>
             <pre className="mt-3 p-3 bg-canvas rounded text-xs overflow-x-auto">
-              <code>{`<button className="px-6 py-3 text-neutral-700 dark:text-neutral-300 font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors">
+              <code>{`<button className="px-6 py-3 text-textSubtle font-medium hover:bg-[var(--ds-gray-100)] rounded-md transition-colors">
   Tertiary Action
 </button>`}</code>
             </pre>
@@ -59,13 +59,13 @@ export default function ComponentShowcase() {
           <div>
             <p className="text-sm font-medium mb-3">Button Sizes</p>
             <div className="flex items-center gap-4 flex-wrap">
-              <button className="px-4 py-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
+              <button className="px-4 py-2 bg-textDefault text-textInverted rounded-md text-sm font-medium hover:bg-[var(--ds-gray-900)] transition-colors">
                 Small
               </button>
-              <button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
+              <button className="px-6 py-3 bg-textDefault text-textInverted rounded-md font-medium hover:bg-[var(--ds-gray-900)] transition-colors">
                 Medium
               </button>
-              <button className="px-8 py-4 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md text-lg font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors">
+              <button className="px-8 py-4 bg-textDefault text-textInverted rounded-md text-lg font-medium hover:bg-[var(--ds-gray-900)] transition-colors">
                 Large
               </button>
             </div>
@@ -86,7 +86,7 @@ export default function ComponentShowcase() {
             <label className="block text-sm font-medium mb-2">Text Input</label>
             <input
               type="text"
-              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors bg-surface"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-borderDefaultHover focus:ring-1 focus:ring-[var(--ds-focus-ring)] outline-none transition-colors bg-surface"
               placeholder="Enter text..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
@@ -94,7 +94,7 @@ export default function ComponentShowcase() {
             <pre className="mt-3 p-3 bg-canvas rounded text-xs overflow-x-auto">
               <code>{`<input
   type="text"
-  className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors"
+  className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-borderDefaultHover focus:ring-1 focus:ring-[var(--ds-focus-ring)] outline-none transition-colors"
   placeholder="Enter text..."
 />`}</code>
             </pre>
@@ -104,7 +104,7 @@ export default function ComponentShowcase() {
           <div>
             <label className="block text-sm font-medium mb-2">Textarea</label>
             <textarea
-              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors resize-y bg-surface"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-borderDefaultHover focus:ring-1 focus:ring-[var(--ds-focus-ring)] outline-none transition-colors resize-y bg-surface"
               placeholder="Enter longer text..."
               rows={4}
             />
@@ -114,7 +114,7 @@ export default function ComponentShowcase() {
           <div>
             <label className="block text-sm font-medium mb-2">Select</label>
             <select
-              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-neutral-400 dark:border-neutral-500 focus:ring-1 focus:ring-neutral-400 dark:ring-neutral-500 outline-none transition-colors bg-surface"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-borderDefaultHover focus:ring-1 focus:ring-[var(--ds-focus-ring)] outline-none transition-colors bg-surface"
               value={selectedOption}
               onChange={(e) => setSelectedOption(e.target.value)}
             >
@@ -129,7 +129,7 @@ export default function ComponentShowcase() {
             <input
               type="checkbox"
               id="checkbox-example"
-              className="w-5 h-5 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
+              className="w-5 h-5 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)] focus:ring-2"
             />
             <label
               htmlFor="checkbox-example"
@@ -147,7 +147,7 @@ export default function ComponentShowcase() {
                 type="radio"
                 id="radio1"
                 name="radio-group"
-                className="w-5 h-5 text-electric-pink border-borderNeutral focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
+                className="w-5 h-5 text-textSubtle border-borderNeutral focus:ring-[var(--ds-focus-ring)] focus:ring-2"
               />
               <label htmlFor="radio1" className="text-sm cursor-pointer">
                 Option 1
@@ -158,7 +158,7 @@ export default function ComponentShowcase() {
                 type="radio"
                 id="radio2"
                 name="radio-group"
-                className="w-5 h-5 text-electric-pink border-borderNeutral focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
+                className="w-5 h-5 text-textSubtle border-borderNeutral focus:ring-[var(--ds-focus-ring)] focus:ring-2"
               />
               <label htmlFor="radio2" className="text-sm cursor-pointer">
                 Option 2
@@ -178,9 +178,9 @@ export default function ComponentShowcase() {
         <div className="grid md:grid-cols-2 gap-6">
           {/* Basic Card */}
           <div className="bg-canvas rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
-            <div className="w-full h-48 bg-gradient-to-br from-electric-pink to-pace-purple" />
+            <div className="w-full h-48 bg-gradient-to-br from-blue-700 to-purple-600" />
             <div className="p-6">
-              <p className="text-xs uppercase tracking-wide text-electric-pink font-medium mb-2">
+              <p className="text-xs uppercase tracking-wide text-textSubtle font-medium mb-2">
                 CATEGORY
               </p>
               <h4 className="font-bold text-xl mb-2">Article Title</h4>
@@ -197,9 +197,9 @@ export default function ComponentShowcase() {
 
           {/* Card with Image */}
           <div className="bg-canvas rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
-            <div className="w-full h-48 bg-gradient-to-br from-volt-green to-signal-orange" />
+            <div className="w-full h-48 bg-gradient-to-br from-green-600 to-amber-600" />
             <div className="p-6">
-              <p className="text-xs uppercase tracking-wide text-volt-green font-medium mb-2">
+              <p className="text-xs uppercase tracking-wide text-green-600 font-medium mb-2">
                 FEATURED
               </p>
               <h4 className="font-bold text-xl mb-2">Featured Article</h4>
@@ -217,9 +217,9 @@ export default function ComponentShowcase() {
 
         <pre className="mt-6 p-3 bg-canvas rounded text-xs overflow-x-auto">
           <code>{`<div className="bg-surface rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
-  <div className="w-full h-48 bg-gradient-to-br from-electric-pink to-pace-purple" />
+  <div className="w-full h-48 bg-gradient-to-br from-blue-700 to-purple-600" />
   <div className="p-6">
-    <p className="text-xs uppercase tracking-wide text-electric-pink font-medium mb-2">
+    <p className="text-xs uppercase tracking-wide text-textSubtle font-medium mb-2">
       CATEGORY
     </p>
     <h4 className="font-bold text-xl mb-2">Article Title</h4>
@@ -240,16 +240,16 @@ export default function ComponentShowcase() {
           <div>
             <p className="text-sm font-medium mb-3">Category Tags</p>
             <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-textDefault text-textInverted text-xs font-medium rounded-full">
                 Running
               </span>
-              <span className="px-3 py-1 bg-volt-green text-white text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-[var(--ds-green-800)] text-[var(--ds-background-100)] text-xs font-medium rounded-full">
                 Training
               </span>
-              <span className="px-3 py-1 bg-pace-purple text-white text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-[var(--ds-purple-800)] text-[var(--ds-background-100)] text-xs font-medium rounded-full">
                 Nutrition
               </span>
-              <span className="px-3 py-1 bg-signal-orange text-white text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-[var(--ds-amber-800)] text-[var(--ds-gray-1000)] text-xs font-medium rounded-full">
                 Racing
               </span>
             </div>
@@ -258,13 +258,13 @@ export default function ComponentShowcase() {
           <div>
             <p className="text-sm font-medium mb-3">Outlined Tags</p>
             <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 border-2 border-neutral-400 dark:border-neutral-500 text-electric-pink text-xs font-medium rounded-full">
+              <span className="px-3 py-1 border-2 border-borderDefault text-textSubtle text-xs font-medium rounded-full">
                 Marathon
               </span>
-              <span className="px-3 py-1 border-2 border-volt-green text-volt-green text-xs font-medium rounded-full">
+              <span className="px-3 py-1 border-2 border-success-border text-success-text-subtle text-xs font-medium rounded-full">
                 Trail
               </span>
-              <span className="px-3 py-1 border-2 border-pace-purple text-pace-purple text-xs font-medium rounded-full">
+              <span className="px-3 py-1 border-2 border-info-border text-info-text-subtle text-xs font-medium rounded-full">
                 Ultra
               </span>
             </div>

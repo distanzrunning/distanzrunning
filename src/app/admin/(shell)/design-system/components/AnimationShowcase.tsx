@@ -64,11 +64,11 @@ export default function AnimationShowcase() {
           {transitions.map((transition) => (
             <div key={transition.name} className="text-center">
               <div
-                className={`w-full h-24 bg-electric-pink rounded-lg mb-3 transition-transform hover:scale-110 ${transition.class}`}
+                className={`w-full h-24 bg-textDefault rounded-lg mb-3 transition-transform hover:scale-110 ${transition.class}`}
               />
               <div className="space-y-1">
                 <p className="font-medium text-xs">{transition.name}</p>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   {transition.value}
                 </code>
               </div>
@@ -90,17 +90,17 @@ export default function AnimationShowcase() {
           {easings.map((easing) => (
             <div
               key={easing.name}
-              className="bg-surface rounded-lg p-4 border border-borderNeutral group hover:border-neutral-400 dark:border-neutral-500"
+              className="bg-surface rounded-lg p-4 border border-borderNeutral group hover:border-borderDefaultHover"
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium text-sm">{easing.name}</span>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   {easing.value}
                 </code>
               </div>
               <div className="bg-canvas rounded h-2 overflow-hidden">
                 <div
-                  className={`h-full bg-electric-pink transition-all duration-1000 ${easing.class} group-hover:w-full w-0`}
+                  className={`h-full bg-textDefault transition-all duration-1000 ${easing.class} group-hover:w-full w-0`}
                 />
               </div>
             </div>
@@ -121,7 +121,7 @@ export default function AnimationShowcase() {
           {/* Button Hover */}
           <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
             <h4 className="font-medium mb-4">Button Hover (opacity)</h4>
-            <button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors duration-200">
+            <button className="px-6 py-3 bg-textDefault text-textInverted rounded-md font-medium hover:bg-[var(--ds-gray-900)] transition-colors duration-200">
               Hover Me
             </button>
             <pre className="mt-4 p-3 bg-canvas rounded text-xs overflow-x-auto">

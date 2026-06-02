@@ -61,11 +61,12 @@ const DESCRIPTION_CSS = `
   }
 
   .ds-description-tooltip {
+    z-index: 1000000;
     max-width: 250px;
     padding: var(--ds-space-2x) var(--ds-space-3x);
     border-radius: var(--ds-radius-small);
-    background: var(--ds-gray-1000);
-    color: var(--ds-background-100);
+    background: hsl(var(--color-textDefault));
+    color: hsl(var(--color-textInverted));
     font-size: 12px;
     line-height: 16px;
     text-align: center;

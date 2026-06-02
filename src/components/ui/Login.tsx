@@ -16,16 +16,20 @@ export interface LoginField {
   id: string;
   /** HTML input type */
   type?: LoginFieldType;
-  /** Accessible label (rendered sr-only when not provided as visible label) */
+  /** Accessible label (rendered sr-only by default; set visibleLabel to show it above the input) */
   label?: string;
   /** Placeholder text */
-  placeholder: string;
+  placeholder?: string;
   /** autoComplete hint */
   autoComplete?: string;
   /** Whether the field is required */
   required?: boolean;
   /** Initial value */
   defaultValue?: string;
+  /** Render the label visibly above the input instead of sr-only (default: false) */
+  visibleLabel?: boolean;
+  /** Autofocus on mount */
+  autoFocus?: boolean;
 }
 
 export interface LoginProvider {
@@ -64,8 +68,14 @@ export interface LoginProps {
   isLoading?: boolean;
   /** Error message rendered above the submit button */
   error?: string;
-  /** Called with { [fieldId]: value } when the form is submitted */
+  /** Called with { [fieldId]: value } when the form is submitted (client mode) */
   onSubmit?: (values: Record<string, string>) => void | Promise<void>;
+  /**
+   * Server Action / form action — when passed, the form posts directly
+   * via React's <form action> instead of calling onSubmit. Use with
+   * useActionState for progressive-enhancement auth flows.
+   */
+  action?: (formData: FormData) => void | Promise<void>;
   /** Small legal / privacy text rendered under the submit button */
   disclaimer?: React.ReactNode;
   /** Footer slot — e.g. "Forgot password?" or sign-up link */
@@ -137,10 +147,11 @@ export function Login({
   divider,
   fields,
   submitLabel = "Sign in",
-  loadingLabel = "Authenticating...",
+  loadingLabel = "Authenticating…",
   isLoading = false,
   error,
   onSubmit,
+  action,
   disclaimer,
   footer,
   className,
@@ -178,8 +189,7 @@ export function Login({
 
   return (
     <div
-      className={`w-full max-w-sm bg-surface rounded-xl p-8 border border-borderSubtle ${className ?? ""}`.trim()}
-      style={{ boxShadow: "0 1px 2px rgba(0, 0, 0, 0.04)" }}
+      className={`w-full max-w-sm bg-surface material-medium p-8 ${className ?? ""}`.trim()}
     >
       <div className="space-y-6">
         {header && <div className="flex justify-center">{header}</div>}
@@ -187,14 +197,10 @@ export function Login({
         {(title || subtitle) && (
           <div className="space-y-2 text-center">
             {title && (
-              <h2 className="text-xl font-semibold text-textDefault leading-tight">
-                {title}
-              </h2>
+              <h2 className="text-heading-20 text-textDefault">{title}</h2>
             )}
             {subtitle && (
-              <p className="text-sm text-textSubtle leading-normal">
-                {subtitle}
-              </p>
+              <p className="text-copy-14 text-textSubtle">{subtitle}</p>
             )}
           </div>
         )}
@@ -209,7 +215,7 @@ export function Login({
                 size="large"
                 className="w-full"
                 onClick={p.onClick}
-                disabled={isLoading}
+                disabled={isLoading || !p.onClick}
                 prefixIcon={p.icon}
               >
                 {p.label}
@@ -228,7 +234,7 @@ export function Login({
               style={{ background: "var(--ds-gray-400)" }}
             />
             <span
-              className="text-xs uppercase tracking-wide"
+              className="text-copy-13 uppercase"
               style={{ color: "var(--ds-gray-700)", letterSpacing: "0.04em" }}
             >
               {dividerLabel}
@@ -241,7 +247,11 @@ export function Login({
         )}
 
         {hasFields && (
-          <form className="space-y-4" onSubmit={handleSubmit} noValidate>
+          <form
+            className="space-y-4"
+            {...(action ? { action } : { onSubmit: handleSubmit })}
+            noValidate
+          >
             {effectiveFields.map((field) => {
               const type = field.type ?? "text";
               const isPassword = type === "password";
@@ -249,7 +259,7 @@ export function Login({
 
               return (
                 <div key={field.id}>
-                  {field.label && (
+                  {field.label && !field.visibleLabel && (
                     <label htmlFor={field.id} className="sr-only">
                       {field.label}
                     </label>
@@ -258,9 +268,11 @@ export function Login({
                     id={field.id}
                     name={field.id}
                     type={isPassword && visible ? "text" : type}
+                    label={field.visibleLabel ? field.label : undefined}
                     placeholder={field.placeholder}
                     autoComplete={field.autoComplete}
                     required={field.required}
+                    autoFocus={field.autoFocus}
                     value={values[field.id]}
                     onChange={handleChange(field.id)}
                     disabled={isLoading}
@@ -282,7 +294,7 @@ export function Login({
 
             {error && (
               <div
-                className="text-sm"
+                className="text-copy-14"
                 style={{ color: "var(--ds-red-900)" }}
                 role="alert"
               >
@@ -290,13 +302,19 @@ export function Login({
               </div>
             )}
 
-            <Button type="submit" className="w-full" size="large" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="w-full"
+              size="large"
+              loading={isLoading}
+              disabled={isLoading}
+            >
               {isLoading ? loadingLabel : submitLabel}
             </Button>
 
             {disclaimer && (
               <p
-                className="text-xs leading-normal text-center"
+                className="text-copy-13 text-center"
                 style={{ color: "var(--ds-gray-700)" }}
               >
                 {disclaimer}
@@ -307,14 +325,14 @@ export function Login({
 
         {!hasFields && disclaimer && (
           <p
-            className="text-xs leading-normal text-center"
+            className="text-copy-13 text-center"
             style={{ color: "var(--ds-gray-700)" }}
           >
             {disclaimer}
           </p>
         )}
 
-        {footer && <div className="text-center text-sm">{footer}</div>}
+        {footer && <div className="text-copy-14 text-center">{footer}</div>}
       </div>
     </div>
   );

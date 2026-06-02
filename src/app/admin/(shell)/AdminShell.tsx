@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
+import { ToastContainer } from "@/components/ui/Toast";
 import {
   CommandMenuDialog,
   CommandMenuTrigger,
@@ -41,8 +42,8 @@ export default function AdminShell({ children }: { children: ReactNode }) {
     <div
       style={{
         minHeight: "100vh",
-        background: "var(--ds-background-200)",
-        color: "var(--ds-gray-1000)",
+        background: "hsl(var(--color-canvas))",
+        color: "hsl(var(--color-textDefault))",
       }}
     >
       <aside
@@ -53,8 +54,8 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           width: SIDEBAR_WIDTH,
           height: "100vh",
           zIndex: 40,
-          borderRight: "1px solid var(--ds-gray-400)",
-          background: "var(--ds-background-200)",
+          borderRight: "1px solid hsl(var(--color-borderDefault))",
+          background: "hsl(var(--color-canvas))",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
@@ -80,6 +81,10 @@ export default function AdminShell({ children }: { children: ReactNode }) {
         open={cmdOpen}
         onClose={() => setCmdOpen(false)}
       />
+
+      {/* Global toast surface for any admin page — race-date-review
+          uses it to surface scan progress + result. */}
+      <ToastContainer />
     </div>
   );
 }

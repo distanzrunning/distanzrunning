@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -141,7 +142,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -232,8 +233,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -245,40 +246,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -358,11 +359,11 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <RadioGroup name="headless" defaultValue="one">
-      <label style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <label className="text-copy-16" style={{ display: 'flex', justifyContent: 'space-between' }}>
         <span>Option 1</span>
         <Radio name="headless" value="one" defaultChecked />
       </label>
-      <label style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <label className="text-copy-16" style={{ display: 'flex', justifyContent: 'space-between' }}>
         <span>Option 2</span>
         <Radio name="headless" value="two" />
       </label>
@@ -375,7 +376,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <li className="flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
+    <li className="text-copy-16 flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
       <span>Option 1</span>
       <Radio defaultChecked value="one" />
     </li>
@@ -426,7 +427,10 @@ function HeadlessDemo() {
   return (
     <div role="radiogroup">
       <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
-        <label style={{ display: "flex", justifyContent: "space-between" }}>
+        <label
+          className="text-copy-16"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
           <span>Option 1</span>
           <Radio
             name="headless-demo"
@@ -435,7 +439,10 @@ function HeadlessDemo() {
             onChange={() => setSelected("one")}
           />
         </label>
-        <label style={{ display: "flex", justifyContent: "space-between" }}>
+        <label
+          className="text-copy-16"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
           <span>Option 2</span>
           <Radio
             name="headless-demo"
@@ -451,7 +458,7 @@ function HeadlessDemo() {
 
 function StandaloneDemo() {
   return (
-    <li className="flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
+    <li className="text-copy-16 flex flex-row items-stretch justify-start gap-2 flex-initial list-none">
       <span>Option 1</span>
       <Radio defaultChecked value="one" />
     </li>
@@ -506,14 +513,14 @@ export default function RadioComponent() {
         </SectionHeader>
         <p
           className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "var(--ds-gray-900)" }}
+          style={{ color: "hsl(var(--color-textSubtle))" }}
         >
           Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             RadioGroup
           </code>{" "}
           component without{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             RadioGroup.Item
           </code>
           .
@@ -531,7 +538,7 @@ export default function RadioComponent() {
         </SectionHeader>
         <p
           className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "var(--ds-gray-900)" }}
+          style={{ color: "hsl(var(--color-textSubtle))" }}
         >
           Standalone unlabelled radio input for use in custom UI.
         </p>
@@ -540,6 +547,127 @@ export default function RadioComponent() {
             <StandaloneDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            A single choice from 2–6 mutually exclusive options where
+            seeing every option matters (deploy regions, plan tiers,
+            billing cycle).
+          </li>
+          <li>
+            Past 6 options, switch to <ComponentRef name="Select" /> or{" "}
+            <ComponentRef name="Combobox" /> so the list doesn&apos;t
+            dominate the form.
+          </li>
+          <li>
+            For binary on/off, use <ComponentRef name="Toggle" />. For
+            richer per-option content (icon, description, badge), use{" "}
+            <ComponentRef name="Choicebox" />.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pre-select the safest default so the field reads as
+            configured, never as required-but-empty. Skip the default
+            only when the choice has real consequences and you want a
+            deliberate pick.
+          </li>
+          <li>
+            Required state goes on the{" "}
+            <code className="inline-code">RadioGroup</code>, not on
+            individual options. Required-against-a-single-radio is
+            meaningless.
+          </li>
+          <li>
+            Arrow keys move selection within the group and skip disabled
+            options. Tab moves to the next field, not the next radio.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Group label is a Title Case noun like{" "}
+            <code className="inline-code">Deployment Region</code> or{" "}
+            <code className="inline-code">Billing Cycle</code>. Tie it
+            to the <code className="inline-code">RadioGroup</code> via{" "}
+            <code className="inline-code">aria-labelledby</code>, or
+            wrap the group in{" "}
+            <code className="inline-code">&lt;fieldset&gt;</code> +{" "}
+            <code className="inline-code">&lt;legend&gt;</code>.
+          </li>
+          <li>
+            Option labels are parallel: same part of speech, same length
+            range, same register.{" "}
+            <code className="inline-code">Monthly</code> /{" "}
+            <code className="inline-code">Yearly</code>, not{" "}
+            <code className="inline-code">Monthly</code> /{" "}
+            <code className="inline-code">Pay yearly</code>.
+          </li>
+          <li>
+            Disabled options need a <ComponentRef name="Tooltip" />{" "}
+            naming why (
+            <code className="inline-code">
+              Available on Pro and Enterprise
+            </code>
+            ). A greyed-out radio with no reason reads as broken.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Wrap related radios in{" "}
+            <code className="inline-code">&lt;fieldset&gt;</code> +{" "}
+            <code className="inline-code">&lt;legend&gt;</code>, or
+            point{" "}
+            <code className="inline-code">RadioGroup</code>&apos;s{" "}
+            <code className="inline-code">aria-labelledby</code> at a
+            sibling heading, so screen readers announce the group name
+            before each option.
+          </li>
+          <li>
+            The standalone <code className="inline-code">Radio</code>{" "}
+            (custom UI) needs an{" "}
+            <code className="inline-code">aria-label</code> describing
+            the choice. Never ship a radio with no accessible name.
+          </li>
+          <li>
+            Don&apos;t replace the native focus ring with a CSS hack
+            that drops <code className="inline-code">outline-offset</code>;
+            keyboard users lose track of which option is focused.
+          </li>
+        </ul>
       </Section>
 
       <Toast

@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -139,7 +140,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -230,8 +231,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -243,40 +244,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+    <div className="border border-borderDefault rounded-lg overflow-hidden">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -439,21 +440,21 @@ export default function CheckboxComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">checked</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -513,6 +514,116 @@ export default function CheckboxComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Multi-select inside a list, like table-row pickers, multi-pick
+            filters, and opt-in preference groups.
+          </li>
+          <li>
+            Acknowledgments where the user must affirm a specific statement
+            (terms of service, irreversible export).
+          </li>
+          <li>
+            For a single boolean setting like dark mode or password
+            protection, use <ComponentRef name="Toggle" />. The on/off
+            mechanic is clearer there than a lone checkbox.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Indeterminate is a visual state, not a third value. Drive it
+            from a parent that knows partial selection, and clear it as
+            soon as every child is fully checked or unchecked.
+          </li>
+          <li>
+            Validation on a required acknowledgment fires on submit, not on
+            blur, so checking and unchecking shouldn&apos;t flash an error.
+          </li>
+          <li>
+            Disabled checkboxes still need a{" "}
+            <ComponentRef name="Tooltip" /> naming the reason; a greyed box
+            with no explanation reads as a bug.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Group label above a{" "}
+            <code className="inline-code">&lt;fieldset&gt;</code> is a Title
+            Case noun like{" "}
+            <code className="inline-code">Notifications</code> or{" "}
+            <code className="inline-code">Required Permissions</code>. No
+            trailing colon.
+          </li>
+          <li>
+            Acknowledgment label is a full sentence ending in a period:{" "}
+            <code className="inline-code">
+              I agree to the Terms of Service.
+            </code>
+          </li>
+          <li>
+            Indeterminate copy names the partial count next to the group
+            label (<code className="inline-code">3 of 5 selected</code>).
+            Never leave the dash state unlabeled.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Wrap related checkboxes in{" "}
+            <code className="inline-code">&lt;fieldset&gt;</code> with a{" "}
+            <code className="inline-code">&lt;legend&gt;</code> so screen
+            readers announce the group name before each option.
+          </li>
+          <li>
+            Row-select checkbox in a table has no visible label. Set{" "}
+            <code className="inline-code">
+              aria-label=&quot;Select {"{row name}"}&quot;
+            </code>{" "}
+            so the row stays identifiable out of context.
+          </li>
+          <li>
+            The click target already extends to the label.
+            Don&apos;t override the{" "}
+            <code className="inline-code">&lt;label&gt;</code> /{" "}
+            <code className="inline-code">htmlFor</code>{" "}
+            association with a custom wrapper that breaks the click
+            region.
+          </li>
+        </ul>
       </Section>
     </>
   );

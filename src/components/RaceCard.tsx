@@ -1,34 +1,46 @@
+"use client";
+
 import Link from "next/link";
 import { format } from "date-fns";
 
 import { Badge } from "@/components/ui/Badge";
 import CardImage from "@/components/ui/CardImage";
+import {
+  convertCurrencySync,
+  formatElevation,
+  formatPrice,
+} from "@/lib/raceUtils";
+import { useUnits } from "@/contexts/UnitsContext";
 
 // ============================================================================
 // RaceCard
 // ============================================================================
 //
-// Race-guide card used on the homepage Races row and section
-// landings. Anatomy is lifted from the original homepage draft and
-// rebuilt against the DS tokens:
-//   - Cinematic 16/8.75 image with a settle-zoom on hover
-//   - Floating category pill (top-right of the image)
-//   - Inset content panel below the image: title, location, square
-//     month/day date block aligned to the right
+// Cinematic 16/8.75 image with the category Badge in the top-right
+// corner (inverted variant for contrast against any photo). Body
+// stacks the title + location on the left with a date pill (full
+// date, e.g. "11 Apr, 2027") vertically centered against that
+// stack on the right. Two visual variants:
+//   - "default" — homepage row. No hover affordances beyond the
+//     image settle-zoom.
+//   - "index"   — /races index page. Adds a glassy hover overlay
+//     over the image with three stat columns (Surface / Elevation
+//     / Price) that fades in on group hover.
 //
 // Markup uses the "card-with-overlay-link" pattern so the whole
 // card stays clickable while the title's anchor carries an
-// after:absolute overlay that spans the full <article>. No nested
-// links inside the card today.
+// after:absolute overlay that spans the full <article>.
 
 export interface RaceCardProps {
   href: string;
   title: string;
-  /** ISO date — formatted into the square month/day block. */
+  /** ISO date — formatted into the body's date pill ("11 Apr, 2027"). */
   eventDate?: string;
   /** Pre-formatted location string, e.g. "Tokyo, Japan". */
   location?: string;
-  /** Distance / category label rendered as a floating pill on the image. */
+  /** Race category (Marathon / Half Marathon / 10K / etc.) —
+   *  rendered as the inverted Badge in the image's top-right
+   *  corner. */
   category?: string;
   /** Pre-resolved image URL. */
   imageUrl?: string;
@@ -37,6 +49,16 @@ export interface RaceCardProps {
   /** Mark above-the-fold cards as priority — disables lazy load. */
   priority?: boolean;
   className?: string;
+  /** Visual variant. "default" matches the homepage Races row;
+   *  "index" is the /races index page treatment. */
+  variant?: "default" | "index";
+  /** Index-variant only — populates the glassy hover stat columns. */
+  surface?: string;
+  surfaceBreakdown?: string;
+  profile?: string;
+  elevationGain?: number;
+  price?: number;
+  currency?: string;
 }
 
 const safeFormat = (iso: string | undefined, pattern: string): string => {
@@ -44,6 +66,39 @@ const safeFormat = (iso: string | undefined, pattern: string): string => {
   const d = new Date(iso);
   return Number.isNaN(d.getTime()) ? "" : format(d, pattern);
 };
+
+function StatColumn({
+  label,
+  value,
+  detail,
+}: {
+  label: string;
+  value: string;
+  detail?: string;
+}) {
+  return (
+    <div className="flex w-20 flex-col items-center gap-4 text-center">
+      <div className="flex h-6 w-full items-center justify-center rounded-full bg-white/30 backdrop-blur-md">
+        <span className="text-label-12 font-medium leading-none text-white">
+          {label}
+        </span>
+      </div>
+      {/* value + detail share a tighter inner stack so the detail
+          sits visually anchored to its value rather than floating
+          equidistant between value and the label pill above. */}
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-heading-20 tracking-[0.17px] text-white">
+          {value}
+        </span>
+        {detail && (
+          <span className="text-label-12 font-bold tracking-[0.11px] text-white/40">
+            {detail}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function RaceCard({
   href,
@@ -55,15 +110,56 @@ export default function RaceCard({
   imageAlt,
   priority = false,
   className = "",
+  variant = "default",
+  surface,
+  surfaceBreakdown,
+  profile,
+  elevationGain,
+  price,
+  currency,
 }: RaceCardProps) {
-  const month = safeFormat(eventDate, "MMM");
-  const day = safeFormat(eventDate, "dd");
+  const isIndex = variant === "index";
+  const { units, currency: displayCurrency } = useUnits();
+
+  // Date pill — abbreviated month, full year always shown.
+  const fullDate = safeFormat(eventDate, "d MMM, yyyy");
+
+  // Format profile as title-case ("rolling" → "Rolling").
+  const profileLabel = profile
+    ? profile.charAt(0).toUpperCase() + profile.slice(1)
+    : undefined;
+  const elevationGainLabel =
+    elevationGain != null ? formatElevation(elevationGain, units) : undefined;
+  const isLocalCurrency = displayCurrency === "local";
+  const targetCurrency = isLocalCurrency ? currency ?? "USD" : displayCurrency;
+  const priceLabel =
+    price != null && currency
+      ? formatPrice(
+          isLocalCurrency
+            ? price
+            : convertCurrencySync(price, currency, displayCurrency),
+          targetCurrency,
+        )
+      : undefined;
+  const hasAnyHoverContent = Boolean(
+    surface || profileLabel || elevationGainLabel || priceLabel,
+  );
+
+  // Outer rounding — index variant uses overflow-hidden +
+  // rounded-md so the single radius matches the homepage cards'
+  // 6 px corners (where the image + body each carry rounded-t-md
+  // / rounded-b-md separately for the same visual result).
+  const articleRadius = isIndex ? "overflow-hidden rounded-md" : "";
 
   return (
     <article
-      className={`group relative flex w-full flex-col ${className}`.trim()}
+      className={`group relative flex w-full flex-col ${articleRadius} ${className}`.trim()}
     >
-      <div className="relative aspect-[16/8.75] w-full overflow-hidden rounded-t-md bg-[color:var(--ds-gray-100)]">
+      <div
+        className={`relative aspect-[16/8.75] w-full overflow-hidden bg-[color:var(--ds-gray-100)] ${
+          isIndex ? "" : "rounded-t-md"
+        }`}
+      >
         {imageUrl && (
           <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100">
             <CardImage
@@ -75,15 +171,60 @@ export default function RaceCard({
           </div>
         )}
 
+        {/* Top-right pill — category Badge (inverted variant
+            so the dark bg + white text reads against any photo).
+            Date pill sits inline with the title in the body. */}
         {category && (
-          <div className="absolute right-3 top-3 z-10">
+          <div className="absolute right-3 top-3 z-20">
             <Badge variant="inverted" size="md">
               {category}
             </Badge>
           </div>
         )}
+
+        {/* Hover overlay (index variant only). Single absolutely-
+            positioned layer that darkens the image via
+            backdrop-filter brightness/contrast (no blur — keeps
+            the photography readable underneath) and renders the
+            three stat columns on top. Fades in on group hover. */}
+        {isIndex && hasAnyHoverContent && (
+          <div
+            className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-6 px-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            style={{
+              backdropFilter: "blur(12px) brightness(0.8) contrast(1.1)",
+              WebkitBackdropFilter:
+                "blur(12px) brightness(0.8) contrast(1.1)",
+            }}
+          >
+            {surface && (
+              <StatColumn
+                label="Surface"
+                value={surface}
+                detail={surfaceBreakdown}
+              />
+            )}
+            {(profileLabel || elevationGainLabel) && (
+              <StatColumn
+                label="Elevation"
+                value={profileLabel ?? elevationGainLabel ?? ""}
+                detail={profileLabel ? elevationGainLabel : undefined}
+              />
+            )}
+            {priceLabel && (
+              <StatColumn
+                label="Price"
+                value={priceLabel}
+                detail={targetCurrency}
+              />
+            )}
+          </div>
+        )}
       </div>
 
+      {/* Body — title + location stacked left, date pill on
+          the right vertically centered against the whole stack
+          (so it sits midway between title and location rather
+          than top-aligned with the title's first line). */}
       <div className="flex items-center justify-between gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
         <div className="flex min-w-0 flex-1 flex-col gap-1">
           <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
@@ -95,26 +236,27 @@ export default function RaceCard({
             </Link>
           </h3>
           {location && (
-            <p className="truncate text-sm font-normal text-[color:var(--ds-gray-900)]">
+            <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
               {location}
             </p>
           )}
         </div>
-
-        {(month || day) && (
-          <div
-            className="flex size-16 shrink-0 flex-col items-center justify-center rounded-md bg-[color:var(--ds-gray-200)]"
-            aria-hidden={false}
-          >
-            <span className="text-[11px] font-medium uppercase tracking-[0.04em] text-[color:var(--ds-gray-1000)]">
-              {month}
-            </span>
-            <span className="text-heading-24 text-[color:var(--ds-gray-1000)]">
-              {day}
-            </span>
-          </div>
-        )}
+        {fullDate && <MetaPill>{fullDate}</MetaPill>}
       </div>
     </article>
+  );
+}
+
+// Subtle gray pill — uses --ds-gray-300 for visible contrast
+// against the body's --ds-gray-100 surface in BOTH light and
+// dark modes. (gray-200 was too close to the body bg in dark
+// mode and rendered nearly invisible.) Sized one step up
+// (h-7 + text-copy-13) so the date string is comfortably
+// readable rather than label-tiny.
+function MetaPill({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex h-7 items-center rounded-full bg-[color:var(--ds-gray-300)] px-3 text-copy-13 font-medium text-[color:var(--ds-gray-1000)]">
+      {children}
+    </span>
   );
 }

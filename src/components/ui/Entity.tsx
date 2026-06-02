@@ -57,14 +57,14 @@ function EntityContent({ title, subtitle, thumbnail }: EntityContentProps) {
       <div className="flex flex-1 flex-col min-w-0">
         <p
           className="truncate m-0 text-[14px] leading-[20px] font-semibold"
-          style={{ color: "var(--ds-gray-1000)" }}
+          style={{ color: "hsl(var(--color-textDefault))" }}
         >
           {title}
         </p>
         {subtitle && (
           <p
             className="truncate m-0 text-[14px] leading-[20px]"
-            style={{ color: "var(--ds-gray-900)" }}
+            style={{ color: "hsl(var(--color-textSubtle))" }}
           >
             {subtitle}
           </p>
@@ -84,17 +84,27 @@ function EntityField({ children }: EntityFieldProps) {
 }
 
 /** A list container that renders Entity items with optional dividers */
-function EntityList({ children, dividers = true, bordered = false, className = "", style, ...rest }: EntityListProps) {
-  const borderedStyles: React.CSSProperties | undefined = bordered ? {
-    borderRadius: 6,
-    backgroundColor: "var(--ds-background-100)",
-    boxShadow: "var(--ds-gray-alpha-400) 0px 0px 0px 1px, var(--ds-background-100) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 6px 0px",
-    overflow: "hidden",
-  } : undefined;
+function EntityList({
+  children,
+  dividers = true,
+  bordered = false,
+  className = "",
+  style,
+  ...rest
+}: EntityListProps) {
+  const borderedStyles: React.CSSProperties | undefined = bordered
+    ? {
+        borderRadius: 6,
+        backgroundColor: "hsl(var(--color-surface))",
+        boxShadow:
+          "var(--ds-gray-alpha-400) 0px 0px 0px 1px, hsl(var(--color-canvas)) 0px 0px 0px 1px, hsla(var(--ds-gray-1000-value), 0.04) 0px 4px 6px 0px",
+        overflow: "hidden",
+      }
+    : undefined;
 
   return (
     <ul
-      className={`list-none m-0 p-0 ${dividers ? "divide-y divide-[var(--ds-gray-400)]" : ""} ${className}`}
+      className={`list-none m-0 p-0 ${dividers ? "divide-y divide-borderDefault" : ""} ${className}`}
       style={{ ...borderedStyles, ...style }}
       {...rest}
     >
@@ -111,7 +121,7 @@ function EntitySkeleton({ width = "100%", height = 20 }: SkeletonProps) {
       style={{
         width: typeof width === "number" ? `${width}px` : width,
         minHeight: `${height}px`,
-        backgroundColor: "var(--ds-gray-300)",
+        backgroundColor: "hsl(var(--color-borderSubtle))",
       }}
     />
   );
@@ -122,7 +132,17 @@ function EntitySkeleton({ width = "100%", height = 20 }: SkeletonProps) {
 // ============================================================================
 
 const Entity = forwardRef<HTMLElement, EntityProps>(
-  ({ children, padding = 16, hoverable = false, className = "", style, ...rest }, ref) => {
+  (
+    {
+      children,
+      padding = 16,
+      hoverable = false,
+      className = "",
+      style,
+      ...rest
+    },
+    ref,
+  ) => {
     if (hoverable) {
       return (
         <button

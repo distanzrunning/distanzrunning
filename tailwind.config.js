@@ -28,6 +28,10 @@ module.exports = {
         // ─────────────────────────────────────────────────────────────────
         // GRAY SCALE - Geist pure neutral (100-1000)
         // ─────────────────────────────────────────────────────────────────
+        // Static mirror of the --ds-gray-* LIGHT-mode values (the token flips
+        // for theme; this static scale is for fixed, non-flipping contexts).
+        // Canonical source: the --ds-*-value triplets in distanz-tokens.css
+        // (:root/.light). Keep these hex values in sync with those triplets.
         gray: {
           100: "#F2F2F2",
           200: "#EBEBEB",
@@ -37,7 +41,7 @@ module.exports = {
           600: "#A8A8A8",
           700: "#8F8F8F",
           800: "#7D7D7D",
-          900: "#666666",
+          900: "#4D4D4D",
           1000: "#171717",
         },
 
@@ -154,154 +158,78 @@ module.exports = {
         },
 
         // ═══════════════════════════════════════════════════════════════════
-        // LEGACY ALIASES - Backward compatibility
-        // These map old color names to new 100-1000 scale
-        // ═══════════════════════════════════════════════════════════════════
-
-        // Electric Pink aliases
-        "electric-pink": "#D11B5C",
-        "electric-pink-20": "#450820", // → pink-1000
-        "electric-pink-30": "#6A0D30", // → pink-900
-        "electric-pink-45": "#B8164F", // → pink-700
-        "electric-pink-55": "#D11B5C", // → pink-600
-        "electric-pink-90": "#F5D2E1", // → pink-300
-        "electric-pink-95": "#FAE9F0", // → pink-200
-
-        // Pace Purple aliases
-        "pace-purple": "#5E3FD1",
-        "pace-purple-45": "#452BB8", // → purple-700
-        "pace-purple-55": "#5E3FD1", // → purple-600
-        "pace-purple-90": "#DBD6F5", // → purple-300
-        "pace-purple-95": "#EDEBFA", // → purple-200
-
-        // Volt Green aliases
-        "volt-green": "#008C47",
-        "volt-green-45": "#00733A", // → green-700
-        "volt-green-55": "#008C47", // → green-600
-        "volt-green-90": "#CCF5E0", // → green-300
-        "volt-green-95": "#E6FAEF", // → green-200
-
-        // Tech Cyan aliases
-        "tech-cyan": "#008CB8",
-        "tech-cyan-45": "#007399", // → blue-700
-        "tech-cyan-55": "#008CB8", // → blue-600
-        "tech-cyan-90": "#CCF0F5", // → blue-300
-        "tech-cyan-95": "#E6F7FA", // → blue-200
-
-        // Track Red aliases
-        "track-red": "#D11B1B",
-        "track-red-45": "#B81616", // → red-700
-        "track-red-55": "#D11B1B", // → red-600
-        "track-red-90": "#F5D2D2", // → red-300
-        "track-red-95": "#FAE9E9", // → red-200
-
-        // Trail Brown (kept as-is, not part of new system)
-        "trail-brown": "#8C4623",
-        "trail-brown-45": "#73391D",
-        "trail-brown-55": "#8C4623",
-        "trail-brown-90": "#F5E6D9",
-        "trail-brown-95": "#FAF2EC",
-
-        // Signal Orange aliases → Amber
-        "signal-orange-45": "#B38208", // → amber-700
-        "signal-orange-55": "#D69E0A", // → amber-600
-        "signal-orange-90": "#FBEBC4", // → amber-300
-        "signal-orange-95": "#FDF5E0", // → amber-200
-
-        // Asphalt aliases → Gray (backward compatibility)
-        "asphalt-5": "#141413", // Darker than gray-1000
-        "asphalt-10": "#1F1E1C", // → gray-1000
-        "asphalt-15": "#2A2926", // Between gray-900 and gray-1000
-        "asphalt-20": "#363530", // → gray-900
-        "asphalt-25": "#42403A", // Between gray-800 and gray-900
-        "asphalt-30": "#4E4C45", // Between gray-800 and gray-900
-        "asphalt-35": "#5A574F", // → gray-800
-        "asphalt-40": "#666359", // Between gray-700 and gray-800
-        "asphalt-45": "#726F64", // Between gray-700 and gray-800
-        "asphalt-50": "#7E7B6F", // → gray-700
-        "asphalt-55": "#8B887C", // Between gray-600 and gray-700
-        "asphalt-60": "#989588", // Between gray-600 and gray-700
-        "asphalt-65": "#A5A295", // → gray-600
-        "asphalt-70": "#B3B0A3", // Between gray-500 and gray-600
-        "asphalt-75": "#C1BEAF", // → gray-500
-        "asphalt-80": "#CFCCBE", // Between gray-400 and gray-500
-        "asphalt-85": "#DDDACB", // → gray-400
-        "asphalt-90": "#EBE9DC", // → gray-300
-        "asphalt-95": "#F5F4ED", // → gray-200
-        "asphalt-98": "#FAF9F5", // → gray-100
-
-        // ═══════════════════════════════════════════════════════════════════
         // SEMANTIC TOKENS (Dynamic - swap between light/dark mode via CSS vars)
         // ═══════════════════════════════════════════════════════════════════
 
         // Text colors
-        textDefault: "rgb(var(--color-textDefault))",
-        textSubtle: "rgb(var(--color-textSubtle))",
-        textSubtler: "rgb(var(--color-textSubtler))",
-        textInverted: "rgb(var(--color-textInverted))",
-        textDisabled: "rgb(var(--color-textDisabled))",
+        textDefault: "hsl(var(--color-textDefault))",
+        textSubtle: "hsl(var(--color-textSubtle))",
+        textSubtler: "hsl(var(--color-textSubtler))",
+        textInverted: "hsl(var(--color-textInverted))",
+        textDisabled: "hsl(var(--color-textDisabled))",
+        link: "hsl(var(--color-link))",
 
         // Border colors
-        borderDefault: "rgb(var(--color-borderDefault))",
-        borderDefaultHover: "rgb(var(--color-borderDefaultHover))",
-        borderSubtle: "rgb(var(--color-borderSubtle))",
-        borderSubtleHover: "rgb(var(--color-borderSubtleHover))",
-        borderExtraSubtle: "rgb(var(--color-borderExtraSubtle))",
-        borderNeutral: "rgb(var(--color-borderNeutral))",
-        borderNeutralHover: "rgb(var(--color-borderNeutralHover))",
-        borderNeutralSubtle: "rgb(var(--color-borderNeutralSubtle))",
+        borderDefault: "hsl(var(--color-borderDefault))",
+        borderDefaultHover: "hsl(var(--color-borderDefaultHover))",
+        borderSubtle: "hsl(var(--color-borderSubtle))",
+        borderSubtleHover: "hsl(var(--color-borderSubtleHover))",
+        borderExtraSubtle: "hsl(var(--color-borderExtraSubtle))",
+        borderNeutral: "hsl(var(--color-borderNeutral))",
+        borderNeutralHover: "hsl(var(--color-borderNeutralHover))",
+        borderNeutralSubtle: "hsl(var(--color-borderNeutralSubtle))",
 
         // Surface colors
-        surface: "rgb(var(--color-surface))",
-        surfaceSubtle: "rgb(var(--color-surfaceSubtle))",
-        surfaceWarm: "rgb(var(--color-surfaceWarm))",
-        canvas: "rgb(var(--color-canvas))",
-        neutralBgSubtle: "rgb(var(--color-neutralBgSubtle))",
+        surface: "hsl(var(--color-surface))",
+        surfaceSubtle: "hsl(var(--color-surfaceSubtle))",
+        surfaceWarm: "hsl(var(--color-surfaceWarm))",
+        canvas: "hsl(var(--color-canvas))",
+        neutralBgSubtle: "hsl(var(--color-neutralBgSubtle))",
 
         // Elevated surfaces - layered depth hierarchy
-        "surface-elevated-1": "rgb(var(--color-surfaceElevated1))",
-        "surface-elevated-2": "rgb(var(--color-surfaceElevated2))",
-        "surface-elevated-3": "rgb(var(--color-surfaceElevated3))",
+        "surface-elevated-1": "hsl(var(--color-surfaceElevated1))",
+        "surface-elevated-2": "hsl(var(--color-surfaceElevated2))",
+        "surface-elevated-3": "hsl(var(--color-surfaceElevated3))",
 
         // Status colors - Success
-        "success-text": "rgb(var(--color-success-text))",
-        "success-text-subtle": "rgb(var(--color-success-text-subtle))",
-        "success-bg": "rgb(var(--color-success-bg))",
-        "success-bg-subtle": "rgb(var(--color-success-bg-subtle))",
-        "success-border": "rgb(var(--color-success-border))",
+        "success-text": "hsl(var(--color-success-text))",
+        "success-text-subtle": "hsl(var(--color-success-text-subtle))",
+        "success-bg": "hsl(var(--color-success-bg))",
+        "success-bg-subtle": "hsl(var(--color-success-bg-subtle))",
+        "success-border": "hsl(var(--color-success-border))",
 
         // Status colors - Warning
-        "warning-text": "rgb(var(--color-warning-text))",
-        "warning-text-subtle": "rgb(var(--color-warning-text-subtle))",
-        "warning-bg": "rgb(var(--color-warning-bg))",
-        "warning-bg-subtle": "rgb(var(--color-warning-bg-subtle))",
-        "warning-border": "rgb(var(--color-warning-border))",
+        "warning-text": "hsl(var(--color-warning-text))",
+        "warning-text-subtle": "hsl(var(--color-warning-text-subtle))",
+        "warning-bg": "hsl(var(--color-warning-bg))",
+        "warning-bg-subtle": "hsl(var(--color-warning-bg-subtle))",
+        "warning-border": "hsl(var(--color-warning-border))",
 
         // Status colors - Error
-        "error-text": "rgb(var(--color-error-text))",
-        "error-text-subtle": "rgb(var(--color-error-text-subtle))",
-        "error-bg": "rgb(var(--color-error-bg))",
-        "error-bg-subtle": "rgb(var(--color-error-bg-subtle))",
-        "error-border": "rgb(var(--color-error-border))",
+        "error-text": "hsl(var(--color-error-text))",
+        "error-text-subtle": "hsl(var(--color-error-text-subtle))",
+        "error-bg": "hsl(var(--color-error-bg))",
+        "error-bg-subtle": "hsl(var(--color-error-bg-subtle))",
+        "error-border": "hsl(var(--color-error-border))",
 
         // Status colors - Info
-        "info-text": "rgb(var(--color-info-text))",
-        "info-text-subtle": "rgb(var(--color-info-text-subtle))",
-        "info-bg": "rgb(var(--color-info-bg))",
-        "info-bg-subtle": "rgb(var(--color-info-bg-subtle))",
-        "info-border": "rgb(var(--color-info-border))",
+        "info-text": "hsl(var(--color-info-text))",
+        "info-text-subtle": "hsl(var(--color-info-text-subtle))",
+        "info-bg": "hsl(var(--color-info-bg))",
+        "info-bg-subtle": "hsl(var(--color-info-bg-subtle))",
+        "info-border": "hsl(var(--color-info-border))",
       },
       backgroundColor: {
         // Surface tokens (semantic)
-        surface: "rgb(var(--color-surface))",
-        surfaceSubtle: "rgb(var(--color-surfaceSubtle))",
-        surfaceWarm: "rgb(var(--color-surfaceWarm))",
-        canvas: "rgb(var(--color-canvas))",
-        neutralBgSubtle: "rgb(var(--color-neutralBgSubtle))",
+        surface: "hsl(var(--color-surface))",
+        surfaceSubtle: "hsl(var(--color-surfaceSubtle))",
+        surfaceWarm: "hsl(var(--color-surfaceWarm))",
+        canvas: "hsl(var(--color-canvas))",
+        neutralBgSubtle: "hsl(var(--color-neutralBgSubtle))",
         // Elevated surfaces
-        "surface-elevated-1": "rgb(var(--color-surfaceElevated1))",
-        "surface-elevated-2": "rgb(var(--color-surfaceElevated2))",
-        "surface-elevated-3": "rgb(var(--color-surfaceElevated3))",
+        "surface-elevated-1": "hsl(var(--color-surfaceElevated1))",
+        "surface-elevated-2": "hsl(var(--color-surfaceElevated2))",
+        "surface-elevated-3": "hsl(var(--color-surfaceElevated3))",
       },
       keyframes: {
         navContentIn: {
@@ -401,18 +329,19 @@ module.exports = {
       },
       textColor: {
         // Semantic text colors (dynamic via CSS vars)
-        textDefault: "rgb(var(--color-textDefault))",
-        textSubtle: "rgb(var(--color-textSubtle))",
-        textSubtler: "rgb(var(--color-textSubtler))",
-        textInverted: "rgb(var(--color-textInverted))",
-        textDisabled: "rgb(var(--color-textDisabled))",
+        textDefault: "hsl(var(--color-textDefault))",
+        textSubtle: "hsl(var(--color-textSubtle))",
+        textSubtler: "hsl(var(--color-textSubtler))",
+        textInverted: "hsl(var(--color-textInverted))",
+        textDisabled: "hsl(var(--color-textDisabled))",
+        link: "hsl(var(--color-link))",
       },
       borderColor: {
         // Semantic border colors (dynamic via CSS vars)
-        borderDefault: "rgb(var(--color-borderDefault))",
-        borderNeutral: "rgb(var(--color-borderNeutral))",
-        borderNeutralHover: "rgb(var(--color-borderNeutralHover))",
-        borderNeutralSubtle: "rgb(var(--color-borderNeutralSubtle))",
+        borderDefault: "hsl(var(--color-borderDefault))",
+        borderNeutral: "hsl(var(--color-borderNeutral))",
+        borderNeutralHover: "hsl(var(--color-borderNeutralHover))",
+        borderNeutralSubtle: "hsl(var(--color-borderNeutralSubtle))",
       },
       fontFamily: {
         // Distanz Typography System
@@ -431,25 +360,8 @@ module.exports = {
         ],
         geist: ["var(--font-geist-sans)", "sans-serif"],
 
-        // Serif (EB Garamond) - Headings, display
+        // Serif (EB Garamond) — editorial headings, article titles, pull quotes
         serif: ["var(--font-eb-garamond)", "Georgia", "serif"],
-        garamond: ["var(--font-eb-garamond)", "Georgia", "serif"],
-
-        // Legacy aliases for backwards compatibility
-        display: ["var(--font-eb-garamond)", "serif"],
-        headline: ["var(--font-eb-garamond)", "serif"],
-        body: ["var(--font-geist-sans)", "sans-serif"],
-        ui: ["var(--font-geist-sans)", "sans-serif"],
-        // Old font aliases (kept so existing class names don't break)
-        inter: ["var(--font-geist-sans)", "sans-serif"],
-        eczar: ["var(--font-eb-garamond)", "Georgia", "serif"],
-        franklin: ["var(--font-geist-sans)", "sans-serif"],
-        playfair: ["var(--font-eb-garamond)", "serif"],
-        manrope: ["var(--font-geist-sans)", "sans-serif"],
-        archivo: ["var(--font-geist-sans)", "sans-serif"],
-        bricolage: ["var(--font-geist-sans)", "sans-serif"],
-        garvis: ["var(--font-geist-sans)", "sans-serif"],
-        quasimoda: ["var(--font-geist-sans)", "sans-serif"],
         mono: [
           "var(--font-geist-mono)",
           "ui-monospace",
@@ -878,73 +790,84 @@ module.exports = {
         // ─────────────────────────────────────────────────────────────────
         // HEADINGS - Used to introduce pages or sections
         // ─────────────────────────────────────────────────────────────────
+        // Aligned with Vercel's Geist typography (vercel.com/geist/typography).
+        // letter-spacing scales: ≥40 px → -0.06em, 24–32 px → -0.04em,
+        // ≤20 px → -0.02em. Top sizes carry no extra leading
+        // (line-height = font-size).
         ".text-heading-72": {
           fontSize: "72px",
-          lineHeight: "80px",
-          letterSpacing: "-0.04em",
-          fontWeight: "700",
+          lineHeight: "72px",
+          letterSpacing: "-0.06em",
+          fontWeight: "600",
           "& strong": { fontWeight: "400" },
         },
         ".text-heading-64": {
           fontSize: "64px",
-          lineHeight: "72px",
-          letterSpacing: "-0.04em",
-          fontWeight: "700",
+          lineHeight: "64px",
+          letterSpacing: "-0.06em",
+          fontWeight: "600",
           "& strong": { fontWeight: "400" },
         },
         ".text-heading-56": {
           fontSize: "56px",
-          lineHeight: "64px",
-          letterSpacing: "-0.04em",
-          fontWeight: "700",
+          lineHeight: "56px",
+          letterSpacing: "-0.06em",
+          fontWeight: "600",
           "& strong": { fontWeight: "400" },
         },
         ".text-heading-48": {
           fontSize: "48px",
           lineHeight: "56px",
-          letterSpacing: "-0.03em",
-          fontWeight: "700",
+          letterSpacing: "-0.06em",
+          fontWeight: "600",
           "& strong": { fontWeight: "400" },
         },
         ".text-heading-40": {
           fontSize: "40px",
           lineHeight: "48px",
-          letterSpacing: "-0.02em",
+          letterSpacing: "-0.06em",
           fontWeight: "600",
           "& strong": { fontWeight: "400" },
         },
         ".text-heading-32": {
           fontSize: "32px",
           lineHeight: "40px",
-          letterSpacing: "-0.02em",
+          letterSpacing: "-0.04em",
           fontWeight: "600",
           "& strong": { fontWeight: "400" },
         },
         ".text-heading-24": {
           fontSize: "24px",
           lineHeight: "32px",
-          letterSpacing: "-0.015em",
+          letterSpacing: "-0.04em",
           fontWeight: "600",
           "& strong": { fontWeight: "400" },
         },
         ".text-heading-20": {
           fontSize: "20px",
-          lineHeight: "28px",
-          letterSpacing: "-0.01em",
+          lineHeight: "26px",
+          letterSpacing: "-0.02em",
+          fontWeight: "600",
+          "& strong": { fontWeight: "400" },
+        },
+        ".text-heading-18": {
+          fontSize: "18px",
+          lineHeight: "24px",
+          letterSpacing: "-0.02em",
           fontWeight: "600",
           "& strong": { fontWeight: "400" },
         },
         ".text-heading-16": {
           fontSize: "16px",
           lineHeight: "24px",
-          letterSpacing: "-0.01em",
+          letterSpacing: "-0.02em",
           fontWeight: "600",
           "& strong": { fontWeight: "400" },
         },
         ".text-heading-14": {
           fontSize: "14px",
           lineHeight: "20px",
-          letterSpacing: "-0.006em",
+          letterSpacing: "-0.02em",
           fontWeight: "600",
         },
 
@@ -976,18 +899,18 @@ module.exports = {
         ".text-label-20": {
           fontSize: "20px",
           lineHeight: "32px",
-          letterSpacing: "-0.01em",
-          fontWeight: "500",
+          letterSpacing: "0",
+          fontWeight: "400",
         },
         ".text-label-18": {
           fontSize: "18px",
-          lineHeight: "28px",
-          letterSpacing: "-0.01em",
-          fontWeight: "500",
+          lineHeight: "20px",
+          letterSpacing: "0",
+          fontWeight: "400",
         },
         ".text-label-16": {
           fontSize: "16px",
-          lineHeight: "24px",
+          lineHeight: "20px",
           letterSpacing: "0",
           fontWeight: "400",
           "& strong": { fontWeight: "500" },
@@ -1009,7 +932,7 @@ module.exports = {
         },
         ".text-label-13": {
           fontSize: "13px",
-          lineHeight: "20px",
+          lineHeight: "16px",
           letterSpacing: "0",
           fontWeight: "400",
           fontVariantNumeric: "tabular-nums",
@@ -1038,6 +961,12 @@ module.exports = {
           fontFamily:
             'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
         },
+        ".text-label-11": {
+          fontSize: "11px",
+          lineHeight: "16px",
+          letterSpacing: "0",
+          fontWeight: "400",
+        },
 
         // ─────────────────────────────────────────────────────────────────
         // COPY - Multi-line text with higher line height than Label
@@ -1051,7 +980,7 @@ module.exports = {
         },
         ".text-copy-20": {
           fontSize: "20px",
-          lineHeight: "32px",
+          lineHeight: "36px",
           letterSpacing: "0",
           fontWeight: "400",
           "& strong": { fontWeight: "600" },
@@ -1072,14 +1001,14 @@ module.exports = {
         },
         ".text-copy-14": {
           fontSize: "14px",
-          lineHeight: "22px",
+          lineHeight: "20px",
           letterSpacing: "0",
           fontWeight: "400",
           "& strong": { fontWeight: "600" },
         },
         ".text-copy-13": {
           fontSize: "13px",
-          lineHeight: "20px",
+          lineHeight: "18px",
           letterSpacing: "0",
           fontWeight: "400",
         },
@@ -1213,15 +1142,15 @@ module.exports = {
         },
         "@media (min-width: 768px)": {
           ".main-bordered": {
-            borderLeft: "1px solid rgb(var(--color-borderNeutral))",
-            borderRight: "1px solid rgb(var(--color-borderNeutral))",
+            borderLeft: "1px solid hsl(var(--color-borderNeutral))",
+            borderRight: "1px solid hsl(var(--color-borderNeutral))",
           },
         },
 
         // Vertical separator utility (borders only)
         ".v-sep": {
-          borderLeft: "1px solid rgb(var(--color-borderNeutral))",
-          borderRight: "1px solid rgb(var(--color-borderNeutral))",
+          borderLeft: "1px solid hsl(var(--color-borderNeutral))",
+          borderRight: "1px solid hsl(var(--color-borderNeutral))",
         },
         "@media (max-width: 767px)": {
           ".v-sep": {

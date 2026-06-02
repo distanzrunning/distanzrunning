@@ -23,8 +23,11 @@ interface SkeletonProps {
 
 const shapeRadiusMap: Record<NonNullable<SkeletonProps["shape"]>, string> = {
   default: "4px",
+  // Capsule for rectangles, circle for squares — use for avatars.
   pill: "9999px",
-  rounded: "50%",
+  // Soft corners — use for buttons and chips.
+  rounded: "6px",
+  // No rounding — use for image tiles.
   squared: "0px",
 };
 
@@ -99,6 +102,11 @@ export function Skeleton({
           .skeleton-pulse {
             animation: skeletonPulse 1.5s ease-in-out infinite;
           }
+          @media (prefers-reduced-motion: reduce) {
+            .skeleton-pulse {
+              animation: none;
+            }
+          }
         `}</style>
       </span>
     );
@@ -131,6 +139,11 @@ export function Skeleton({
         }
         .skeleton-pulse {
           animation: skeletonPulse 1.5s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .skeleton-pulse {
+            animation: none;
+          }
         }
       `}</style>
     </span>

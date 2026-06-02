@@ -33,9 +33,9 @@ export default function GridSpacing() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">Grid</p>
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Grid</p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
           id="grid-spacing"
         >
           Grid spacing
@@ -48,24 +48,24 @@ export default function GridSpacing() {
       <section>
         <h2
           id="spacing-scale"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Spacing scale
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           A systematic spacing scale based on an 8px grid. The base unit is 8px
           (spacing-2), with 4px increments available for fine-tuning and 2px for
           micro adjustments.
         </p>
 
-        <div className="bg-surfaceWarm border-l-4 border-electric-pink p-6 mb-8">
-          <h3 className="font-sans font-semibold text-sm uppercase tracking-wide text-textDefault mb-2">
+        <div className="bg-surfaceWarm border-l-4 border-textDefault p-6 mb-8">
+          <h3 className="font-sans text-heading-14 uppercase tracking-wide text-textDefault mb-2">
             Grid System
           </h3>
-          <ul className="text-sm text-textSubtle leading-relaxed space-y-1">
+          <ul className="text-copy-14 text-textSubtle leading-relaxed space-y-1">
             <li>
               <strong>Primary grid:</strong> 8px increments (spacing-2, 4, 6,
               8...)
@@ -83,14 +83,14 @@ export default function GridSpacing() {
         <div className="bg-surfaceSubtle p-6 mb-8 space-y-3">
           {spacingScale.slice(1, 9).map((item) => (
             <div key={item.token} className="flex items-center gap-4">
-              <span className="font-mono text-sm text-textSubtle w-8">
+              <span className="font-mono text-copy-14 text-textSubtle w-8">
                 {item.token}
               </span>
               <div
-                className="bg-electric-pink h-4"
+                className="bg-textDefault h-4"
                 style={{ width: `${item.px}px` }}
               />
-              <span className="text-sm text-textSubtle">{item.px}px</span>
+              <span className="text-copy-14 text-textSubtle">{item.px}px</span>
             </div>
           ))}
         </div>
@@ -100,24 +100,24 @@ export default function GridSpacing() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Token
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   px
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   rem
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Tailwind
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Usage
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm whitespace-nowrap">
+            <tbody className="text-copy-14 whitespace-nowrap">
               {spacingScale.map((item) => (
                 <tr key={item.token} className="border-b border-borderSubtle">
                   <td className="py-3 pr-4 font-mono">spacing-{item.token}</td>
@@ -140,7 +140,7 @@ export default function GridSpacing() {
       <section>
         <h2
           id="gap-and-gutter"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Gap and gutter
         </h2>
@@ -150,11 +150,11 @@ export default function GridSpacing() {
         {/* Grid Gap Subsection */}
         <h3
           id="gap-and-gutter-grid-gap"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Grid gap
         </h3>
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Grid gap is the standard spacing between elements.
         </p>
 
@@ -185,16 +185,16 @@ export default function GridSpacing() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Grid gap
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   px
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   rem
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Token
                 </th>
               </tr>
@@ -224,11 +224,11 @@ export default function GridSpacing() {
         {/* Grid Gutter Subsection */}
         <h3
           id="gap-and-gutter-grid-gutter"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Grid gutter
         </h3>
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Grid gutter is the space between grid columns, 2x the value of the
           gap.
         </p>
@@ -238,16 +238,16 @@ export default function GridSpacing() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Grid gutter
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   px
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   rem
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Token
                 </th>
               </tr>
@@ -275,7 +275,7 @@ export default function GridSpacing() {
         <hr className="border-t border-borderDefault mb-8" />
 
         {/* Grid gutter (medium screen, 6 columns) */}
-        <p className="text-base font-semibold mb-4">
+        <p className="text-copy-16 font-semibold mb-4">
           Grid gutter (medium screen, ≥600px) — 6 columns, 24px gutter
         </p>
         <figure className="mb-8">
@@ -291,7 +291,7 @@ export default function GridSpacing() {
         <hr className="border-t border-borderDefault mb-8" />
 
         {/* Grid gutter (large screen, 12 columns) */}
-        <p className="text-base font-semibold mb-4">
+        <p className="text-copy-16 font-semibold mb-4">
           Grid gutter (large screen, ≥960px) — 12 columns, 32px gutter
         </p>
         <figure className="mb-8">
@@ -307,7 +307,7 @@ export default function GridSpacing() {
         <hr className="border-t border-borderDefault mb-8" />
 
         {/* Component gutters */}
-        <p className="text-base font-semibold mb-4">Component gutters</p>
+        <p className="text-copy-16 font-semibold mb-4">Component gutters</p>
         <figure className="mb-8">
           <Image
             src="/images/design-system/grid-component-gutter.svg"
@@ -321,8 +321,8 @@ export default function GridSpacing() {
         <hr className="border-t border-borderDefault mb-8" />
 
         {/* Outside gutter */}
-        <p className="text-base font-semibold mb-4">Outside gutter</p>
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 font-semibold mb-4">Outside gutter</p>
+        <p className="text-copy-16 text-textSubtle mb-6">
           Outside gutters provide padding between the grid and the viewport
           edge. They use the same values as the column gutter.
         </p>
@@ -331,16 +331,16 @@ export default function GridSpacing() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Outside gutter
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   px
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   rem
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Token
                 </th>
               </tr>

@@ -9,6 +9,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 
 // Toast notification for copy confirmation
 function Toast({
@@ -193,8 +194,8 @@ function CodeBlock({
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -215,21 +216,21 @@ function CodeBlock({
 
   return (
     <div
-      className="relative border border-[var(--ds-gray-400)] rounded overflow-hidden"
+      className="relative border border-borderDefault rounded overflow-hidden"
       data-code-block
     >
       {/* Header with filename */}
       {filename && (
         <div
-          className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-[var(--ds-gray-400)]"
+          className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-borderDefault"
           style={{
-            background: "var(--ds-background-200)",
+            background: "hsl(var(--color-canvas))",
             borderRadius: "4px 4px 0 0",
           }}
         >
           <div className="flex items-center gap-2">
             <SiReact size={16} className="text-textSubtle" />
-            <span className="text-[13px] text-textSubtle">{filename}</span>
+            <span className="text-copy-13 text-textSubtle">{filename}</span>
           </div>
           <button
             onClick={handleCopy}
@@ -245,7 +246,7 @@ function CodeBlock({
       {!filename && (
         <button
           onClick={handleCopy}
-          className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+          className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
           aria-label="Copy code"
         >
           <CopyIconButton copied={copied} />
@@ -255,9 +256,9 @@ function CodeBlock({
       {/* Code content */}
       <pre
         className="overflow-x-auto py-4"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
-        <code className="block text-[13px] leading-[20px] font-mono">
+        <code className="block text-copy-13 leading-[20px] font-mono">
           {lines.map((lineTokens, index) => {
             const lineNumber = index + 1;
             const isHighlighted = highlightLines.includes(lineNumber);
@@ -380,8 +381,8 @@ function CodePreview({
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -393,11 +394,11 @@ function CodePreview({
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+    <div className="border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
       <div
         className="p-6 group"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         <CodeBlock
           code={previewCode}
@@ -412,11 +413,11 @@ function CodePreview({
       </div>
 
       {/* Accordion trigger */}
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
@@ -425,14 +426,14 @@ function CodePreview({
         {/* Collapsible code section */}
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               {/* Floating copy button */}
               <button
                 onClick={handleCopyComponentCode}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
@@ -440,7 +441,7 @@ function CodePreview({
 
               {/* Component code */}
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {componentCodeLines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -534,7 +535,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -880,8 +881,8 @@ function LanguageSwitcherCodePreview() {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -893,21 +894,21 @@ function LanguageSwitcherCodePreview() {
   }, []);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+    <div className="border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
       <div
         className="p-6 group"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         <LanguageSwitcherPreview />
       </div>
 
       {/* Accordion trigger */}
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
@@ -916,14 +917,14 @@ function LanguageSwitcherCodePreview() {
         {/* Collapsible code section */}
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               {/* Floating copy button */}
               <button
                 onClick={handleCopyComponentCode}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
@@ -931,7 +932,7 @@ function LanguageSwitcherCodePreview() {
 
               {/* Component code */}
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {componentCodeLines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -996,8 +997,8 @@ function LanguageSwitcherPreview() {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -1010,20 +1011,20 @@ function LanguageSwitcherPreview() {
 
   return (
     <div
-      className="relative border border-[var(--ds-gray-400)] rounded overflow-hidden"
+      className="relative border border-borderDefault rounded overflow-hidden"
       data-code-block
     >
       {/* Header with filename and switcher */}
       <div
-        className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-[var(--ds-gray-400)]"
+        className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-borderDefault"
         style={{
-          background: "var(--ds-background-200)",
+          background: "hsl(var(--color-canvas))",
           borderRadius: "4px 4px 0 0",
         }}
       >
         <div className="flex items-center gap-2">
           {getLanguageIcon(language)}
-          <span className="text-[13px] text-textSubtle">{getFilename()}</span>
+          <span className="text-copy-13 text-textSubtle">{getFilename()}</span>
         </div>
         <div className="flex items-center gap-1">
           {/* Language Switcher - Geist style with visible label overlay */}
@@ -1076,9 +1077,9 @@ function LanguageSwitcherPreview() {
       {/* Code content */}
       <pre
         className="overflow-x-auto py-4"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
-        <code className="block text-[13px] leading-[20px] font-mono">
+        <code className="block text-copy-13 leading-[20px] font-mono">
           {lines.map((lineTokens, index) => (
             <div
               key={index}
@@ -1152,7 +1153,7 @@ export default function CodeBlockComponent() {
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Specific lines can be highlighted to draw attention to important code.
           Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             highlightLines
           </code>{" "}
           prop with an array of line numbers.
@@ -1172,11 +1173,11 @@ export default function CodeBlockComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Show diff-style additions and removals using the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             addedLines
           </code>{" "}
           and{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             removedLines
           </code>{" "}
           props.
@@ -1197,7 +1198,7 @@ export default function CodeBlockComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Line numbers can be made clickable using the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             referencedLines
           </code>{" "}
           prop. Click a line number to highlight it with an amber left border.
@@ -1231,7 +1232,7 @@ export default function CodeBlockComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Line numbers can be hidden by setting{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             showLineNumbers={"{false}"}
           </code>
           .
@@ -1256,21 +1257,21 @@ export default function CodeBlockComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">code</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">string</td>
@@ -1360,7 +1361,7 @@ export default function CodeBlockComponent() {
           languages.
         </p>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           Theme
         </h3>
         <p className="text-copy-14 text-textSubtle mb-4">
@@ -1372,16 +1373,16 @@ export default function CodeBlockComponent() {
           Atom&apos;s classic editor theme.
         </p>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           Diff highlighting
         </h3>
         <p className="text-copy-14 text-textSubtle mb-4">
           When using{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             addedLines
           </code>{" "}
           or{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             removedLines
           </code>
           , syntax highlighting changes to emphasise what is being modified.
@@ -1390,21 +1391,21 @@ export default function CodeBlockComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Token type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Color
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Token
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Examples
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Identifiers & property names</td>
                 <td className="py-3 px-4">
@@ -1439,20 +1440,114 @@ export default function CodeBlockComponent() {
                 <td className="py-3 pr-4">Everything else</td>
                 <td className="py-3 px-4">
                   <span className="inline-flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[var(--ds-gray-1000)]"></span>
+                    <span className="w-3 h-3 rounded-full bg-textDefault"></span>
                     <span className="text-textSubtle">Gray</span>
                   </span>
                 </td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
                   --ds-gray-1000
                 </td>
-                <td className="py-3 px-4 font-mono text-[var(--ds-gray-1000)]">
+                <td className="py-3 px-4 font-mono text-textDefault">
                   {"{ } : , ="}
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use <code className="inline-code">&lt;CodeBlock&gt;</code> for
+            multi-line, syntax-highlighted source the reader will scan or
+            paste.
+          </li>
+          <li>
+            For a single inline token (env var, function name, file path),
+            use the{" "}
+            <code className="inline-code">
+              &lt;code className=&quot;inline-code&quot;&gt;
+            </code>{" "}
+            chip.
+          </li>
+          <li>
+            Pick <ComponentRef name="Snippet" /> for a copy-to-clipboard
+            shell command or one-line key reveal; it ships with the prompt
+            glyph and copy affordance built in.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Always pass a <code className="inline-code">language</code> (
+            <code className="inline-code">tsx</code>,{" "}
+            <code className="inline-code">bash</code>,{" "}
+            <code className="inline-code">json</code>,{" "}
+            <code className="inline-code">diff</code>). Highlighting is the
+            primary reason to choose{" "}
+            <code className="inline-code">&lt;CodeBlock&gt;</code> over a
+            plain <code className="inline-code">&lt;pre&gt;</code>.
+          </li>
+          <li>
+            Highlight only the lines under discussion. A block where every
+            line is highlighted reads the same as no highlight at all.
+          </li>
+          <li>
+            Mark added or removed lines with{" "}
+            <code className="inline-code">language=&quot;diff&quot;</code>{" "}
+            or the dedicated added/removed props. Faking them with{" "}
+            <code className="inline-code">// added</code> comments breaks
+            copy-paste.
+          </li>
+          <li>
+            Show the filename header when the snippet has a paste
+            destination (
+            <code className="inline-code">app/page.tsx</code>,{" "}
+            <code className="inline-code">vercel.json</code>). Omit it for
+            ephemeral examples.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Snippets stay runnable. Don&apos;t paraphrase real code into
+            pseudo-syntax, and don&apos;t prepend{" "}
+            <code className="inline-code">$</code> to shell commands.{" "}
+            <ComponentRef name="Snippet" /> already renders the prompt, so{" "}
+            <code className="inline-code">text=&quot;$ vercel deploy&quot;</code>{" "}
+            doubles to{" "}
+            <code className="inline-code">$ $ vercel deploy</code>.
+          </li>
+          <li>
+            Keep prose around the block in sentence case and wrap CLI
+            flags inline in the inline-code chip (
+            <code className="inline-code">--prebuilt</code>).
+          </li>
+        </ul>
       </Section>
     </>
   );

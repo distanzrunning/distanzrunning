@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import posthog from "posthog-js";
-import * as Dialog from "@radix-ui/react-dialog";
 import { Search as SearchIcon } from "lucide-react";
 import Button from "@/components/ui/Button";
 import IconButton from "@/components/ui/IconButton";
@@ -11,34 +10,38 @@ import {
   NewsletterModal,
   preloadNewsletterHero,
 } from "@/components/ui/NewsletterModal";
-import SiteNavigationMenu, {
+import {
+  SiteNavigationMenuRoot,
+  SiteNavigationMenuTriggers,
+  SiteNavigationMenuViewport,
   type FeaturedProduct,
   type FeaturedRace,
 } from "@/components/ui/SiteNavigationMenu";
 import MobileNavDrawer from "@/components/ui/MobileNavDrawer";
 import Wordmark from "@/components/ui/Wordmark";
-import Search from "@/components/Search";
+import { useSearch } from "@/contexts/SearchContext";
 
 // ============================================================================
 // SiteHeader
 // ============================================================================
 //
-// Public-site header that sits above the PageFrame. Anatomy modelled on
-// v0.app's chat-header: 50 px tall, wordmark left, nav centre, action
-// row right.
+// Public-site header rendered as a Frontify-style floating pill: a
+// fixed 72 px-tall capsule that floats above the page with a 64 px
+// outer gutter, a translucent bg-200 fill, and an oversize backdrop
+// blur (200 px). No bottom rule — separation from page content comes
+// from the floating geometry and translucent surface, never a
+// hairline. Over a plain page section the pill resolves to the page
+// tone and reads as invisible at rest; over any non-uniform content
+// (hero photos, dark sections, cards) the blur kernel smears that
+// content across the entire pill, giving it a wash that distinguishes
+// it from the page automatically.
 //
-// Sticky to the viewport top with z-40 so page content scrolls under
-// it. A 1 px bottom border baselines as transparent and fades to
-// --ds-gray-400 on scroll (matching v0's pattern) — gives a clear
-// affordance that the header is fixed and separates it from the
-// content scrolling below without painting a hairline at rest.
-//
-// Responsive split at the md breakpoint (768 px):
-//   below md → wordmark + hamburger; tap hamburger to open the
-//              MobileNavDrawer (full-screen panel that slides from the
-//              right with two-pane section navigation)
-//   md+      → wordmark + centred SiteNavigationMenu + Newsletter +
-//              ThemeSwitcher actions
+// Wordmark sits left, primary nav is absolutely centred in the pill so
+// it stays geometrically centred regardless of the action cluster's
+// width, and the right group hosts the search IconButton + Newsletter
+// CTA on desktop alongside the mobile hamburger (md:hidden) — both live
+// inside the pill so the chrome reads as a single floating element on
+// every breakpoint.
 
 export interface SiteHeaderProps {
   featuredNews: FeaturedProduct;
@@ -63,7 +66,7 @@ export default function SiteHeader({
 }: SiteHeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const { openSearch } = useSearch();
   // Newsletter modal state lives at the header level so the modal
   // can outlive both the desktop trigger and the mobile drawer —
   // the drawer can close itself before the modal appears, so the
@@ -86,9 +89,10 @@ export default function SiteHeader({
     [],
   );
 
-  // Track scroll position so the sticky header's bottom border can
-  // fade in once content has been scrolled under it. Threshold of 0
-  // matches v0 — the border appears as soon as you start scrolling.
+  // Scroll-position state retained for future use (e.g. animating the
+  // pill's elevation or opacity once content scrolls under it). It no
+  // longer drives className — the floating pill has no rest/scrolled
+  // border state to toggle.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 0);
     onScroll();
@@ -96,49 +100,80 @@ export default function SiteHeader({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // ⌘K / Ctrl+K opens the search modal — matches the DS Search page
-  // and the rest of the editorial web (Vercel, Linear, GitHub).
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        setSearchOpen((open) => !open);
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  // ⌘K / Ctrl+K shortcut + Dialog are owned by SearchProvider —
+  // see src/contexts/SearchContext.tsx.
 
   return (
     <>
-      <header
-        className={`sticky top-0 z-40 flex h-[50px] w-full shrink-0 items-center justify-between border-b bg-[color:var(--ds-background-100)] px-3 transition-colors duration-150 sm:px-2 dark:bg-[color:var(--ds-background-200)] ${
-          scrolled
-            ? "border-[color:var(--ds-gray-400)]"
-            : "border-transparent"
-        }`}
-      >
-        {/* Left: wordmark */}
-        <div className="flex min-w-0 items-center">
+      {/* Outer wrapper: fixed, full-bleed, with a 64 px gutter on each
+          side (Frontify spec). pointer-events-none keeps the gutter
+          transparent to clicks so page content beneath the floating
+          pill stays interactive in those margins.
+
+          SiteNavigationMenuRoot wraps BOTH the trigger row (rendered
+          inside the pill, beside the wordmark) AND the mega-menu
+          Viewport (rendered as a sibling of the pill, absolutely
+          positioned below it). Both must live in the same
+          NavigationMenu.Root subtree so Radix can wire them together
+          — the Root contributes no DOM box of its own (className
+          "contents" inside SiteNavigationMenuRoot), so the pill and
+          Viewport flow as siblings inside this fixed wrapper. */}
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-40 px-16">
+        <SiteNavigationMenuRoot
+          triggers={
+            // The pill: max-width capped, centred, re-enables pointer
+            // events for its own surface. h-[72px] + p-4 + rounded-[8px]
+            // matches the Frontify reference.
+            //
+            // Rest fill = page bg at 80% opacity (rgba on bg-200-rgb,
+            // theme-flipping). On a plain page section the pill is
+            // mathematically identical to the page (same tone, blur of
+            // uniform = uniform) so it reads as invisible at rest. The
+            // moment any non-uniform content (hero photo, dark section,
+            // cards) sits inside the blur(200px) kernel's reach, that
+            // content gets sampled and smeared across the entire pill
+            // surface — the whole pill picks up a wash and becomes
+            // visibly distinct from the page. blur(200px) is huge on
+            // purpose: the radius exceeds the pill's own width, so the
+            // filter averages a viewport-wide neighbourhood per pixel,
+            // which produces the propagation effect.
+            //
+            // Hover lift: when a descendant carrying [data-nav-trigger]
+            // is hovered (nav links + Search), the pill flips to opaque
+            // bg-100. Gives the navbar a clear "yes, this is a real
+            // surface" affordance on plain page bg where the rest
+            // state is invisible. Subscribe is excluded — it's a primary
+            // CTA, not a nav trigger, so its filled-black hover should
+            // not chameleon the surrounding pill. 260 ms ease-out keeps
+            // the transition smooth enough to read as deliberate.
+            <header className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[hsla(var(--ds-background-200-value),0.8)] p-4 transition-colors duration-[260ms] ease-out has-[[data-nav-trigger]:hover]:bg-surface group-data-[state=open]/menu:bg-surface [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]">
+          {/* Left: wordmark only. The primary nav lives in its own
+              absolute-centred slot below so the three-zone layout
+              (brand / nav / actions) reads symmetrically — diverges
+              from Frontify's left-aligned trigger row in favour of
+              the more conventional centre nav that pairs cleanly
+              with our pill's geometric symmetry. */}
           <Link
             href="/"
             aria-label="Distanz Running — home"
-            className="inline-flex h-10 items-center px-1 text-[color:var(--ds-gray-1000)]"
+            className="inline-flex h-10 items-center px-1 text-textDefault"
           >
             {/* Inline SVG via <Wordmark /> — single render, no network
                 request, no light/dark download swap. Colour follows
                 currentColor (text-gray-1000), which flips automatically
                 between near-black and near-white in dark mode. */}
-            <Wordmark className="h-6 w-auto" />
+            <Wordmark className="h-7 w-auto" />
           </Link>
-        </div>
 
-        {/* Centre: primary nav (desktop only). Absolutely positioned so
-            the row is geometrically centred on the page, independent
-            of the wordmark + action-row widths. */}
-        <div className="pointer-events-none absolute inset-x-0 hidden justify-center md:flex">
-          <div className="pointer-events-auto">
-            <SiteNavigationMenu
+          {/* Centre: primary nav. Absolute-positioned + transform so
+              the trigger row is geometrically centred in the pill
+              regardless of how wide the wordmark or the action
+              cluster end up being. justify-between on the parent
+              still pushes wordmark and right cluster to the edges
+              (the absolute nav is out of flex flow). md:block hides
+              it on mobile — the hamburger handles small viewports. */}
+          <div className="absolute left-1/2 hidden -translate-x-1/2 md:block">
+            <SiteNavigationMenuTriggers
               featuredNews={featuredNews}
               featuredShoe={featuredShoe}
               featuredGear={featuredGear}
@@ -146,77 +181,99 @@ export default function SiteHeader({
               featuredRace={featuredRace}
             />
           </div>
-        </div>
 
-        {/* Right (desktop only): search utility + newsletter primary
-            CTA. Theme switcher lives in the footer (set-once
-            preference doesn't deserve top-of-page real estate). */}
-        <div className="hidden items-center gap-2 md:flex">
-          <IconButton
-            variant="tertiary"
-            size="small"
-            aria-label="Open search"
-            title="Search (⌘K)"
-            onClick={() => setSearchOpen(true)}
-          >
-            <SearchIcon className="size-4" />
-          </IconButton>
-          <Button
-            size="small"
-            onClick={() => openNewsletter(newsletterSource)}
-            onMouseEnter={preloadNewsletterHero}
-            onFocus={preloadNewsletterHero}
-            data-attr="newsletter-modal-open"
-          >
-            Newsletter
-          </Button>
-        </div>
+          {/* Right: action cluster. Desktop shows search + Newsletter;
+              mobile shows the hamburger ↔ X toggle. Both live in the
+              same flex group so spacing inside the pill stays uniform
+              across breakpoints. */}
+          <div className="flex items-center gap-2">
+            {/* Desktop: search utility + Subscribe primary CTA. Sized
+                to medium (≈40 px) so both chips read at the same
+                visual weight as the nav triggers in the left group —
+                a tiny chip floating next to 40 px-tall nav items
+                makes the right cluster feel weightless. Theme
+                switcher lives in the footer (set-once preference
+                doesn't deserve top-of-page real estate). */}
+            <div className="hidden items-center gap-2 md:flex">
+              <IconButton
+                variant="tertiary"
+                size="default"
+                aria-label="Open search"
+                title="Search (⌘K)"
+                onClick={openSearch}
+                data-nav-trigger
+                className="hover:!bg-[var(--ds-gray-200)]"
+              >
+                <SearchIcon className="size-4" />
+              </IconButton>
+              <Button
+                size="medium"
+                onClick={() => openNewsletter(newsletterSource)}
+                onMouseEnter={preloadNewsletterHero}
+                onFocus={preloadNewsletterHero}
+                data-attr="newsletter-modal-open"
+              >
+                Subscribe
+              </Button>
+            </div>
 
-        {/* Right (mobile only): hamburger ↔ close toggle. 28 px
-            square with rounded-md + hairline border. Interior is
-            the alternate of the header surface (bg-200 light, bg-100
-            dark) so the chip reads against either chrome. The icon
-            swaps to an X glyph while the drawer is open so the
-            close affordance is obvious. */}
-        <button
-          type="button"
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileOpen}
-          data-mobile-nav-toggle
-          onClick={() => setMobileOpen((prev) => !prev)}
-          className="pointer-events-auto relative z-[101] grid size-7 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] md:hidden dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)]"
-        >
-          {mobileOpen ? (
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              aria-hidden="true"
-              fill="currentColor"
+            {/* Mobile: hamburger ↔ close toggle. 28 px square with
+                rounded-md + hairline border. Interior is the alternate
+                of the header surface (bg-200 light, bg-100 dark) so the
+                chip reads against either chrome. The icon swaps to an X
+                glyph while the drawer is open so the close affordance
+                is obvious. */}
+            <button
+              type="button"
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+              data-mobile-nav-toggle
+              onClick={() => setMobileOpen((prev) => !prev)}
+              className="pointer-events-auto relative z-[101] grid size-7 place-items-center rounded-md border border-borderDefault bg-canvas text-textDefault transition-colors hover:bg-[var(--ds-gray-100)] md:hidden dark:bg-canvas dark:hover:bg-[var(--ds-gray-100)]"
             >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z"
-              />
-            </svg>
-          ) : (
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              aria-hidden="true"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M1.75 4H1V5.5H1.75H14.25H15V4H14.25H1.75ZM1.75 10.5H1V12H1.75H14.25H15V10.5H14.25H1.75Z"
-              />
-            </svg>
-          )}
-        </button>
-      </header>
+              {mobileOpen ? (
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M1.75 4H1V5.5H1.75H14.25H15V4H14.25H1.75ZM1.75 10.5H1V12H1.75H14.25H15V10.5H14.25H1.75Z"
+                  />
+                </svg>
+              )}
+            </button>
+          </div>
+        </header>
+          }
+          viewport={
+            // Viewport sits inside the bridge wrapper that
+            // SiteNavigationMenuRoot owns — the bridge handles width
+            // (mx-auto max-w-[1600px]), pointer-events, and the
+            // 16 px visual gap between pill and panel (mt-4). The
+            // Viewport itself just renders the panel chrome.
+            <SiteNavigationMenuViewport />
+          }
+        />
+      </div>
 
       <MobileNavDrawer
         open={mobileOpen}
@@ -232,19 +289,6 @@ export default function SiteHeader({
           })
         }
       />
-
-      <Dialog.Root open={searchOpen} onOpenChange={setSearchOpen}>
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" />
-          <Dialog.Content className="fixed left-1/2 top-24 z-[70] w-[calc(100%-1rem)] -translate-x-1/2 p-0 focus:outline-none md:w-full md:max-w-xl">
-            <Dialog.Title className="sr-only">Search</Dialog.Title>
-            <Dialog.Description className="sr-only">
-              Search articles, gear and races
-            </Dialog.Description>
-            <Search isExpanded={searchOpen} onExpandChange={setSearchOpen} />
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
 
       <NewsletterModal
         isOpen={newsletterOpen}

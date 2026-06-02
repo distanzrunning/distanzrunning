@@ -18,7 +18,7 @@ function TypeSpec({
   letterSpacing,
 }: TypeSpecProps) {
   return (
-    <div className="flex items-baseline gap-4 text-xs text-textSubtler font-mono border-t border-borderNeutralSubtle pt-2 mt-2">
+    <div className="flex items-baseline gap-4 inline-code border-t border-borderNeutralSubtle pt-2 mt-2">
       <span className="w-20">{size}</span>
       <span className="w-20">{weight}</span>
       <span className="w-20">{lineHeight}</span>
@@ -39,7 +39,7 @@ export default function TypographyShowcase() {
             <p className="text-2xl font-sans">
               The quick brown fox jumps over the lazy dog
             </p>
-            <code className="text-xs text-textSubtler font-mono">
+            <code className="inline-code">
               {fonts.sans}
             </code>
           </div>
@@ -48,7 +48,7 @@ export default function TypographyShowcase() {
             <p className="text-2xl font-serif">
               The quick brown fox jumps over the lazy dog
             </p>
-            <code className="text-xs text-textSubtler font-mono">
+            <code className="inline-code">
               {fonts.serif}
             </code>
           </div>

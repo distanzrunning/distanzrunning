@@ -40,6 +40,8 @@ export interface RadioGroupProps {
   disabled?: boolean;
   required?: boolean;
   className?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
 }
 
 function RadioGroupRoot({
@@ -51,6 +53,8 @@ function RadioGroupRoot({
   disabled = false,
   required = false,
   className = "",
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
 }: RadioGroupProps) {
   const [uncontrolledValue, setUncontrolledValue] = useState<string | undefined>(
     defaultValue
@@ -79,7 +83,12 @@ function RadioGroupRoot({
         required,
       }}
     >
-      <div role="radiogroup" className={`flex flex-col gap-3 ${className}`}>
+      <div
+        role="radiogroup"
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
+        className={`flex flex-col gap-3 ${className}`}
+      >
         {children}
       </div>
     </RadioGroupContext.Provider>
@@ -140,10 +149,10 @@ function RadioGroupItem({ value, children, disabled: itemDisabled }: RadioGroupI
                   ? "border-[var(--ds-gray-600)] bg-[var(--ds-gray-100)]"
                   : "border-[var(--ds-gray-400)] bg-[var(--ds-gray-100)]"
                 : isChecked
-                  ? "border-[var(--ds-gray-1000)] bg-[var(--ds-background-100)]"
-                  : "border-[var(--ds-gray-alpha-400)] bg-[var(--ds-background-100)] group-hover/radio:bg-[var(--ds-gray-200)]"
+                  ? "border-[var(--ds-gray-1000)] bg-surface"
+                  : "border-borderSubtle bg-surface group-hover/radio:bg-[var(--ds-gray-200)]"
             }
-            ${!isDisabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
+            ${!isDisabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-ring)]" : ""}
           `}
           style={{
             transition:
@@ -163,8 +172,8 @@ function RadioGroupItem({ value, children, disabled: itemDisabled }: RadioGroupI
         </span>
       </span>
       <span
-        className={`text-sm select-none ${
-          isDisabled ? "text-[var(--ds-gray-500)]" : "text-[var(--ds-gray-1000)]"
+        className={`text-copy-13 select-none ${
+          isDisabled ? "text-textDisabled" : "text-textDefault"
         }`}
       >
         {children}
@@ -185,6 +194,8 @@ export interface RadioProps {
   value?: string;
   name?: string;
   className?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
 }
 
 export const Radio = forwardRef<HTMLInputElement, RadioProps>(
@@ -197,6 +208,8 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
       value,
       name,
       className = "",
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledBy,
     },
     ref
   ) => {
@@ -229,6 +242,8 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
           checked={isChecked}
           onChange={handleChange}
           disabled={disabled}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy}
           className="sr-only peer"
         />
         <span
@@ -242,10 +257,10 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
                   ? "border-[var(--ds-gray-600)] bg-[var(--ds-gray-100)] cursor-not-allowed"
                   : "border-[var(--ds-gray-400)] bg-[var(--ds-gray-100)] cursor-not-allowed"
                 : isChecked
-                  ? "border-[var(--ds-gray-1000)] bg-[var(--ds-background-100)]"
-                  : "border-[var(--ds-gray-alpha-400)] bg-[var(--ds-background-100)] hover:bg-[var(--ds-gray-200)]"
+                  ? "border-[var(--ds-gray-1000)] bg-surface"
+                  : "border-borderSubtle bg-surface hover:bg-[var(--ds-gray-200)]"
             }
-            ${!disabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
+            ${!disabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-ring)]" : ""}
           `}
           style={{
             transition:

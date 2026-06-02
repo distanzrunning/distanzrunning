@@ -140,7 +140,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -231,8 +231,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -244,40 +244,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -350,23 +350,7 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const responsiveGridCode = `import { Grid, GridCell } from '@/components/ui/Grid';
-import type { JSX } from 'react';
-
-export function Component(): JSX.Element {
-  return (
-    <Grid columns={3} rows={2}>
-      <GridCell>1</GridCell>
-      <GridCell>2</GridCell>
-      <GridCell>3</GridCell>
-      <GridCell>4</GridCell>
-      <GridCell>5</GridCell>
-      <GridCell>6</GridCell>
-    </Grid>
-  );
-}`;
-
-const responsiveClippingCode = `import { Grid, GridCell } from '@/components/ui/Grid';
+const spanningCellsCode = `import { Grid, GridCell } from '@/components/ui/Grid';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
@@ -478,20 +462,7 @@ function SolidCellsDemo() {
   );
 }
 
-function ResponsiveGridDemo() {
-  return (
-    <Grid rows={2} columns={3}>
-      <GridCell>1</GridCell>
-      <GridCell>2</GridCell>
-      <GridCell>3</GridCell>
-      <GridCell>4</GridCell>
-      <GridCell>5</GridCell>
-      <GridCell>6</GridCell>
-    </Grid>
-  );
-}
-
-function ResponsiveClippingDemo() {
+function SpanningCellsDemo() {
   return (
     <Grid rows={2} columns={3}>
       <GridCell row="1" column="1 / 3" solid>1 + 2</GridCell>
@@ -574,7 +545,7 @@ export default function GridComponent() {
           Solid cells
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Using the <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">solid</code> prop on cells will occlude the guides that the cell overlaps.
+          Using the <code className="inline-code">solid</code> prop on cells will occlude the guides that the cell overlaps.
         </p>
         <CodePreview componentCode={solidCellsCode}>
           <SolidCellsDemo />
@@ -582,26 +553,19 @@ export default function GridComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="responsive-grid" onCopyLink={showToast}>
-          Responsive grid
+        <SectionHeader id="spanning-cells" onCopyLink={showToast}>
+          Spanning cells
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Grid component with responsive <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">rows</code> and <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">columns</code> props at all 3 breakpoints.
+          Cells can span multiple columns or rows with the{" "}
+          <code className="inline-code">column</code> /{" "}
+          <code className="inline-code">row</code> props (e.g.{" "}
+          <code className="inline-code">column=&quot;1 / 3&quot;</code>).
+          Pair with <code className="inline-code">solid</code> so the
+          cell content occludes the guides underneath.
         </p>
-        <CodePreview componentCode={responsiveGridCode}>
-          <ResponsiveGridDemo />
-        </CodePreview>
-      </Section>
-
-      <Section>
-        <SectionHeader id="responsive-grid-with-responsive-guide-clipping-cells" onCopyLink={showToast}>
-          Responsive Grid with responsive guide clipping cells
-        </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Grid component with responsive <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">rows</code> and <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">columns</code> props at all 3 breakpoints as well as guide clipping on specific cells.
-        </p>
-        <CodePreview componentCode={responsiveClippingCode}>
-          <ResponsiveClippingDemo />
+        <CodePreview componentCode={spanningCellsCode}>
+          <SpanningCellsDemo />
         </CodePreview>
       </Section>
 
@@ -645,6 +609,89 @@ export default function GridComponent() {
         <CodePreview componentCode={specificClippingCode}>
           <SpecificClippingDemo />
         </CodePreview>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Grid for two-dimensional cell-and-guide layouts in
+            marketing pages, docs landing pages, and feature breakdowns
+            where the rule lines and cell borders are part of the
+            design.
+          </li>
+          <li>
+            For plain n-column responsive content (cards, lists), use
+            Tailwind{" "}
+            <code className="inline-code">grid grid-cols-*</code>{" "}
+            utilities directly; Grid is overkill when guides
+            aren&apos;t visible.
+          </li>
+          <li>
+            Don&apos;t nest Grids more than one level; the guide
+            overlap reads as visual noise and breaks the cell math.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Set <code className="inline-code">columns</code> and{" "}
+            <code className="inline-code">rows</code> per breakpoint
+            (swap Grid variants at the caller) so cells reflow
+            predictably between mobile, tablet, and desktop.
+          </li>
+          <li>
+            Use <code className="inline-code">solid</code> cells to
+            occlude guides behind a tile when content needs an opaque
+            background; without it, guides render through the cell.
+          </li>
+          <li>
+            Hide row or column guides only when their absence improves
+            clarity (single-axis layouts, hero rows). Hiding both usually
+            means a plain Tailwind grid is the right tool.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Guides are decorative; mark them{" "}
+            <code className="inline-code">
+              aria-hidden=&quot;true&quot;
+            </code>{" "}
+            and let semantics live on cell content.
+          </li>
+          <li>
+            When cells become tappable, give each its own focus ring
+            and keep tab order matching reading order.
+          </li>
+          <li>
+            Confirm guide contrast on both themes; the default tokens
+            are tuned, but custom borders can drop below the 3:1
+            minimum.
+          </li>
+        </ul>
       </Section>
 
       <Toast

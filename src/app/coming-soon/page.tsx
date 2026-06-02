@@ -18,7 +18,7 @@ export default function ComingSoonPage() {
     <div className="flex min-h-screen w-full flex-col items-center justify-center gap-10 bg-[var(--ds-background-100)] px-6 py-16 text-[color:var(--ds-gray-1000)] dark:bg-[var(--ds-background-200)]">
       <Logo className="h-16 w-auto sm:h-20" />
       <div className="flex max-w-2xl flex-col items-center gap-4 text-center">
-        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-electric-pink">
+        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-textSubtle">
           Coming soon
         </span>
         <h1 className="text-balance font-serif text-heading-32 md:text-heading-40 lg:text-heading-48">

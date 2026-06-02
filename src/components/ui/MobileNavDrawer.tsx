@@ -5,8 +5,8 @@
 // ============================================================================
 //
 // Full-height right-side drawer for mobile navigation (below md). Two
-// panes: a top-level list of section names (News / Shoes / Gear /
-// Nutrition / Races), and a section-detail view with sub-items + the
+// panes: a top-level list of section names (News / Shoes / Nutrition
+// / Races), and a section-detail view with sub-items + the
 // section's featured card. Tapping a section slides the inner pane
 // left to reveal the detail; the back button slides it back.
 //
@@ -22,11 +22,17 @@ import {
 } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  ChevronRight,
+  ArrowLeft,
+  ArrowRight,
+  Search as SearchIcon,
+} from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import { useSearch } from "@/contexts/SearchContext";
 import Button from "@/components/ui/Button";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { preloadNewsletterHero } from "@/components/ui/NewsletterModal";
@@ -131,10 +137,19 @@ export default function MobileNavDrawer({
   featuredRace,
 }: MobileNavDrawerProps) {
   const { theme, setTheme } = useContext(DarkModeContext);
+  const { openSearch } = useSearch();
 
   useEffect(() => {
     ensureKeyframes();
   }, []);
+
+  // Close the drawer before opening the search sheet so the
+  // two modals never stack — the search dialog should take
+  // over the viewport cleanly.
+  const handleOpenSearch = () => {
+    onOpenChange(false);
+    openSearch();
+  };
 
   const sections: ReadonlyArray<SectionDef> = [
     {
@@ -239,13 +254,13 @@ export default function MobileNavDrawer({
           // caps at 384 px (max-w-sm) so on bigger phones / small
           // tablets it reads as a side panel sliding in from the
           // right rather than the whole screen swapping out.
-          className="fixed bottom-0 right-0 top-[50px] z-[100] flex w-full flex-col bg-[color:var(--ds-background-100)] shadow-[var(--ds-shadow-modal)] outline-none sm:max-w-sm"
+          className="fixed bottom-0 right-0 top-[50px] z-[100] flex w-full flex-col bg-surface shadow-[var(--ds-shadow-modal)] outline-none sm:max-w-sm"
         >
           {/* a11y: required by Radix Dialog */}
           <Dialog.Title className="sr-only">Site navigation</Dialog.Title>
           <Dialog.Description className="sr-only">
-            Browse Distanz Running by section: News, Shoes, Gear,
-            Nutrition, and Races.
+            Browse Distanz Running by section: News, Shoes, Nutrition,
+            and Races.
           </Dialog.Description>
 
           {/* No internal drawer header — the sticky site header above
@@ -296,11 +311,11 @@ export default function MobileNavDrawer({
                       key={s.id}
                       type="button"
                       onClick={() => setActiveSection(s.id)}
-                      className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-base text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
+                      className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-base text-textSubtle transition-colors hover:bg-[var(--ds-gray-100)] hover:text-textDefault"
                     >
                       <span>{s.label}</span>
                       <ChevronRight
-                        className="size-4 text-[color:var(--ds-gray-700)]"
+                        className="size-4 text-textSubtler"
                         aria-hidden
                       />
                     </button>
@@ -321,12 +336,21 @@ export default function MobileNavDrawer({
             </div>
           </div>
 
-          {/* Footer — just the theme switcher row now that the
-              newsletter CTA has moved up to the top pane. */}
-          <div className="flex items-center justify-end gap-2 border-t border-[color:var(--ds-gray-400)] px-5 py-4">
-            <span className="text-[13px] leading-5 text-[color:var(--ds-gray-700)]">
-              Theme
-            </span>
+          {/* Footer — Search trigger on the left + theme switcher
+              on the right. Search opens the global full-viewport
+              SearchProvider dialog; we close the drawer first so
+              the two never stack. */}
+          <div className="flex items-center justify-between gap-2 border-t border-borderDefault px-5 py-4">
+            <Button
+              variant="secondary"
+              shape="rounded"
+              size="small"
+              onClick={handleOpenSearch}
+              aria-label="Open search"
+              prefixIcon={<SearchIcon className="size-4" aria-hidden />}
+            >
+              Search
+            </Button>
             <ThemeSwitcher
               showSystem={false}
               value={theme === "system" ? "light" : theme}
@@ -365,11 +389,11 @@ function SectionDetail({
             type="button"
             onClick={onBack}
             aria-label="Back to all sections"
-            className="grid size-7 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)]"
+            className="grid size-7 place-items-center rounded-md border border-borderDefault bg-surface text-textDefault transition-colors hover:bg-[var(--ds-gray-100)] dark:bg-surface dark:hover:bg-[var(--ds-gray-100)]"
           >
             <ArrowLeft className="size-4" aria-hidden />
           </button>
-          <h2 className="text-[18px] leading-6 font-medium text-[color:var(--ds-gray-1000)]">
+          <h2 className="text-[18px] leading-6 font-medium text-textDefault">
             {section.label}
           </h2>
         </div>
@@ -384,7 +408,7 @@ function SectionDetail({
 
       {/* Featured card — pinned to the bottom of the pane */}
       {section.featured && section.featuredHref && (
-        <div className="mt-auto border-t border-[color:var(--ds-gray-400)] p-4">
+        <div className="mt-auto border-t border-borderDefault p-4">
           <div className="mx-auto w-full max-w-md">
             <MobileFeaturedCard
               href={section.featuredHref}
@@ -413,7 +437,7 @@ function MobileSubItem({
     <Link
       href={item.href}
       onClick={onClick}
-      className="flex items-center rounded-lg px-3 py-2 text-base text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
+      className="flex items-center rounded-lg px-3 py-2 text-base text-textSubtle transition-colors hover:bg-[var(--ds-gray-100)] hover:text-textDefault"
     >
       <span>{item.label}</span>
     </Link>
@@ -471,10 +495,7 @@ function MobileFeaturedCard({
           <span className="text-[12px] leading-4 font-medium text-white/90">
             Featured
           </span>
-          <h3
-            className="mt-1 text-[18px] leading-[22px] font-[550] text-white"
-            style={{ letterSpacing: "-0.005em" }}
-          >
+          <h3 className="mt-1 text-heading-18 text-white">
             <span className="line-clamp-2">{title}</span>
           </h3>
         </div>

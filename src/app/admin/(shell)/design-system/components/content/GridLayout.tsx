@@ -5,9 +5,9 @@ export default function GridLayout() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">Grid</p>
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Grid</p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
           id="grid-layout"
         >
           Grid layout
@@ -20,19 +20,19 @@ export default function GridLayout() {
       <section>
         <h2
           id="column-grid"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Column grid
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           Across screen sizes, grid spacing and grid gutters remain fixed to the
           defined values. The number of columns is changeable, and column widths
           are fluid.
         </p>
-        <p className="text-base text-textSubtle mb-8">
+        <p className="text-copy-16 text-textSubtle mb-8">
           The recommended max-width of the grid for the web is 1585px.
         </p>
 
@@ -41,13 +41,13 @@ export default function GridLayout() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Columns
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Breakpoints
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Within media query
                 </th>
               </tr>
@@ -81,10 +81,10 @@ export default function GridLayout() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   CSS
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
@@ -113,7 +113,7 @@ export default function GridLayout() {
         <hr className="border-t border-borderDefault mb-8" />
 
         {/* 4 columns with outside gutters (small screen) */}
-        <p className="text-base font-semibold mb-4">
+        <p className="text-copy-16 font-semibold mb-4">
           4 columns with outside gutters (small screen, &lt;600px)
         </p>
         <figure className="mb-8">
@@ -129,7 +129,7 @@ export default function GridLayout() {
         <hr className="border-t border-borderDefault mb-8" />
 
         {/* 6 columns with outside gutters (medium screen) */}
-        <p className="text-base font-semibold mb-4">
+        <p className="text-copy-16 font-semibold mb-4">
           6 columns with outside gutters (medium screen)
         </p>
         <figure className="mb-8">
@@ -145,7 +145,7 @@ export default function GridLayout() {
         <hr className="border-t border-borderDefault mb-8" />
 
         {/* 12 columns with outside gutters (large screen) */}
-        <p className="text-base font-semibold mb-4">
+        <p className="text-copy-16 font-semibold mb-4">
           12 columns with outside gutters (large screen, ≥960px)
         </p>
         <figure className="mb-8">
@@ -165,19 +165,19 @@ export default function GridLayout() {
       <section>
         <h2
           id="main-wrapper"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Main wrapper
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-4">
+        <p className="text-copy-16 text-textSubtle mb-4">
           The main wrapper is the outermost layout container that frames all
           page content. It creates a centered, max-width container with vertical
           borders on larger screens, inspired by editorial layouts.
         </p>
-        <p className="text-base text-textSubtle mb-8">
+        <p className="text-copy-16 text-textSubtle mb-8">
           On mobile, the wrapper spans full width with no borders. On screens
           768px and above, it gains left and right borders and centers within
           the viewport up to a max-width of 1585px.
@@ -199,7 +199,7 @@ export default function GridLayout() {
         {/* CSS Classes Table */}
         <h3
           id="main-wrapper-classes"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           CSS classes
         </h3>
@@ -208,10 +208,10 @@ export default function GridLayout() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   CSS
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
@@ -246,7 +246,7 @@ export default function GridLayout() {
         {/* Responsive Behavior Table */}
         <h3
           id="main-wrapper-responsive"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Responsive behavior
         </h3>
@@ -255,13 +255,13 @@ export default function GridLayout() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Screen size
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Width
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Borders
                 </th>
               </tr>
@@ -291,7 +291,7 @@ export default function GridLayout() {
         {/* Usage Example */}
         <h3
           id="main-wrapper-usage"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Usage
         </h3>
@@ -315,7 +315,7 @@ export default function GridLayout() {
       <section>
         <h2
           id="resources"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Resources
         </h2>
@@ -324,7 +324,7 @@ export default function GridLayout() {
 
         <h3
           id="resources-figma-files"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Figma artboards
         </h3>
@@ -334,19 +334,19 @@ export default function GridLayout() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Artboard
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Grid/artboard
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Columns
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Gap/gutter
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Within media query
                 </th>
               </tr>

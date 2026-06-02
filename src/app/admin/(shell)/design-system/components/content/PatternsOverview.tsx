@@ -3,18 +3,18 @@ export default function PatternsOverview() {
     <article className="space-y-4">
       {/* Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Patterns
         </p>
         <h1
           id="overview"
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
         >
           Overview
         </h1>
       </div>
 
-      <p className="text-base text-textSubtle max-w-3xl">
+      <p className="text-copy-16 text-textSubtle max-w-3xl">
         Patterns are the ways in which components are grouped together and
         organised in order to serve a particular purpose.
       </p>

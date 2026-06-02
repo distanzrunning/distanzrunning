@@ -44,7 +44,7 @@ function TypographyRow({
       onContextMenu={handleContextMenu}
     >
       <td className="py-4 pr-4 align-middle">{example}</td>
-      <td className="py-4 px-4 font-mono text-xs align-middle">{className}</td>
+      <td className="py-4 px-4 text-label-12-mono align-middle">{className}</td>
       <td className="py-4 px-4 text-textSubtle align-middle">{usage}</td>
     </tr>
   );
@@ -156,7 +156,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -184,34 +184,34 @@ export default function Typography() {
           Usage
         </SectionHeader>
 
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-4">
           Our typography styles can be consumed as{" "}
           <span className="inline-flex items-center gap-1.5 align-bottom">
             <SiTailwindcss size={14} className="text-[#38bdf8]" />
             Tailwind
           </span>{" "}
           classes. The classes below pre-set a combination of{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             font-size
           </code>
           ,{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             line-height
           </code>
           ,{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             letter-spacing
           </code>
           , and{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             font-weight
           </code>{" "}
           for you based on the Geist design system.
         </p>
 
-        <p className="text-copy-14 text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           The{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             strong
           </code>{" "}
           element can be used as a modifier to change the font weight. For
@@ -232,23 +232,23 @@ export default function Typography() {
           Headings
         </SectionHeader>
 
-        <p className="text-base text-textSubtle mt-4 mb-4">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-4">
           Headings are used to introduce pages or sections. Use{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             font-serif
           </code>{" "}
           (EB Garamond) for editorial contexts like featured article headlines,
           article page titles, and pull quotes. Use{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             font-sans
           </code>{" "}
           (Geist Sans) for UI contexts like section titles, card headings, and
           navigation.
         </p>
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           The{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             strong
           </code>{" "}
           element reduces the weight for creating subtle variants.
@@ -258,16 +258,16 @@ export default function Typography() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm w-1/2">
+                <th className="text-left py-3 pr-4 text-heading-14 w-1/2">
                   Example
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-1.5">
                     <SiTailwindcss size={14} className="text-[#06B6D4]" />
                     Class name
                   </span>
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-2">
                     <CircleHelp size={14} className="text-textSubtler" />
                     Usage
@@ -275,7 +275,7 @@ export default function Typography() {
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               {/* Editorial headings - EB Garamond */}
               <TypographyRow
                 example={<p className="text-heading-48 font-serif">Heading</p>}
@@ -359,7 +359,7 @@ export default function Typography() {
           Buttons
         </SectionHeader>
 
-        <p className="text-base text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Button text styles should only be used for button components.
         </p>
 
@@ -367,16 +367,16 @@ export default function Typography() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm w-1/2">
+                <th className="text-left py-3 pr-4 text-heading-14 w-1/2">
                   Example
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-1.5">
                     <SiTailwindcss size={14} className="text-[#06B6D4]" />
                     Class name
                   </span>
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-2">
                     <CircleHelp size={14} className="text-textSubtler" />
                     Usage
@@ -384,7 +384,7 @@ export default function Typography() {
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <TypographyRow
                 example={<p className="text-button-16">Button Text</p>}
                 className="text-button-16"
@@ -414,10 +414,10 @@ export default function Typography() {
           Labels
         </SectionHeader>
 
-        <p className="text-base text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Labels are single-line text with ample line-height to align with
           icons. Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             strong
           </code>{" "}
           element to increase weight. Mono variants use monospace font.
@@ -427,16 +427,16 @@ export default function Typography() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm w-1/2">
+                <th className="text-left py-3 pr-4 text-heading-14 w-1/2">
                   Example
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-1.5">
                     <SiTailwindcss size={14} className="text-[#06B6D4]" />
                     Class name
                   </span>
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-2">
                     <CircleHelp size={14} className="text-textSubtler" />
                     Usage
@@ -444,7 +444,7 @@ export default function Typography() {
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <TypographyRow
                 example={<p className="text-label-20">Label Text</p>}
                 className="text-label-20"
@@ -530,10 +530,10 @@ export default function Typography() {
           Copy
         </SectionHeader>
 
-        <p className="text-base text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Copy styles are for multi-line text with higher line height than
           Labels. Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             strong
           </code>{" "}
           element to increase weight for emphasis.
@@ -543,16 +543,16 @@ export default function Typography() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm w-1/2">
+                <th className="text-left py-3 pr-4 text-heading-14 w-1/2">
                   Example
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-1.5">
                     <SiTailwindcss size={14} className="text-[#06B6D4]" />
                     Class name
                   </span>
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   <span className="inline-flex items-center gap-2">
                     <CircleHelp size={14} className="text-textSubtler" />
                     Usage
@@ -560,7 +560,7 @@ export default function Typography() {
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <TypographyRow
                 example={
                   <p className="text-copy-24">
@@ -634,7 +634,7 @@ export default function Typography() {
           Quick reference
         </SectionHeader>
 
-        <p className="text-base text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Complete specifications for all typography utility classes.
         </p>
 
@@ -642,32 +642,32 @@ export default function Typography() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   <span className="inline-flex items-center gap-1.5">
                     <SiTailwindcss size={14} className="text-[#06B6D4]" />
                     Class
                   </span>
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Font Size
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Line Height
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Letter Spacing
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Font Weight
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm font-mono whitespace-nowrap">
+            <tbody className="text-label-14-mono whitespace-nowrap">
               {/* Headings */}
               <tr className="border-b border-borderSubtle bg-surfaceSubtle">
                 <td
                   colSpan={5}
-                  className="py-2 px-4 font-sans font-semibold text-textSubtle"
+                  className="py-2 px-4 font-sans text-heading-14 text-textSubtle"
                 >
                   Headings
                 </td>
@@ -675,71 +675,71 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-72</td>
                 <td className="py-2 px-4">72px</td>
-                <td className="py-2 px-4">80px</td>
-                <td className="py-2 px-4">-0.04em</td>
-                <td className="py-2 px-4">700</td>
+                <td className="py-2 px-4">72px</td>
+                <td className="py-2 px-4">-0.06em</td>
+                <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-64</td>
                 <td className="py-2 px-4">64px</td>
-                <td className="py-2 px-4">72px</td>
-                <td className="py-2 px-4">-0.04em</td>
-                <td className="py-2 px-4">700</td>
+                <td className="py-2 px-4">64px</td>
+                <td className="py-2 px-4">-0.06em</td>
+                <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-56</td>
                 <td className="py-2 px-4">56px</td>
-                <td className="py-2 px-4">64px</td>
-                <td className="py-2 px-4">-0.04em</td>
-                <td className="py-2 px-4">700</td>
+                <td className="py-2 px-4">56px</td>
+                <td className="py-2 px-4">-0.06em</td>
+                <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-48</td>
                 <td className="py-2 px-4">48px</td>
                 <td className="py-2 px-4">56px</td>
-                <td className="py-2 px-4">-0.03em</td>
-                <td className="py-2 px-4">700</td>
+                <td className="py-2 px-4">-0.06em</td>
+                <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-40</td>
                 <td className="py-2 px-4">40px</td>
                 <td className="py-2 px-4">48px</td>
-                <td className="py-2 px-4">-0.02em</td>
+                <td className="py-2 px-4">-0.06em</td>
                 <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-32</td>
                 <td className="py-2 px-4">32px</td>
                 <td className="py-2 px-4">40px</td>
-                <td className="py-2 px-4">-0.02em</td>
+                <td className="py-2 px-4">-0.04em</td>
                 <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-24</td>
                 <td className="py-2 px-4">24px</td>
                 <td className="py-2 px-4">32px</td>
-                <td className="py-2 px-4">-0.015em</td>
+                <td className="py-2 px-4">-0.04em</td>
                 <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-20</td>
                 <td className="py-2 px-4">20px</td>
-                <td className="py-2 px-4">28px</td>
-                <td className="py-2 px-4">-0.01em</td>
+                <td className="py-2 px-4">26px</td>
+                <td className="py-2 px-4">-0.02em</td>
                 <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-16</td>
                 <td className="py-2 px-4">16px</td>
                 <td className="py-2 px-4">24px</td>
-                <td className="py-2 px-4">-0.01em</td>
+                <td className="py-2 px-4">-0.02em</td>
                 <td className="py-2 px-4">600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-14</td>
                 <td className="py-2 px-4">14px</td>
                 <td className="py-2 px-4">20px</td>
-                <td className="py-2 px-4">-0.006em</td>
+                <td className="py-2 px-4">-0.02em</td>
                 <td className="py-2 px-4">600</td>
               </tr>
 
@@ -747,7 +747,7 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle bg-surfaceSubtle">
                 <td
                   colSpan={5}
-                  className="py-2 px-4 font-sans font-semibold text-textSubtle"
+                  className="py-2 px-4 font-sans text-heading-14 text-textSubtle"
                 >
                   Buttons
                 </td>
@@ -778,7 +778,7 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle bg-surfaceSubtle">
                 <td
                   colSpan={5}
-                  className="py-2 px-4 font-sans font-semibold text-textSubtle"
+                  className="py-2 px-4 font-sans text-heading-14 text-textSubtle"
                 >
                   Labels
                 </td>
@@ -787,20 +787,20 @@ export default function Typography() {
                 <td className="py-2 pr-4">text-label-20</td>
                 <td className="py-2 px-4">20px</td>
                 <td className="py-2 px-4">32px</td>
-                <td className="py-2 px-4">-0.01em</td>
-                <td className="py-2 px-4">500</td>
+                <td className="py-2 px-4">0</td>
+                <td className="py-2 px-4">400</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-label-18</td>
                 <td className="py-2 px-4">18px</td>
-                <td className="py-2 px-4">28px</td>
-                <td className="py-2 px-4">-0.01em</td>
-                <td className="py-2 px-4">500</td>
+                <td className="py-2 px-4">20px</td>
+                <td className="py-2 px-4">0</td>
+                <td className="py-2 px-4">400</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-label-16</td>
                 <td className="py-2 px-4">16px</td>
-                <td className="py-2 px-4">24px</td>
+                <td className="py-2 px-4">20px</td>
                 <td className="py-2 px-4">0</td>
                 <td className="py-2 px-4">400</td>
               </tr>
@@ -821,7 +821,7 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-label-13</td>
                 <td className="py-2 px-4">13px</td>
-                <td className="py-2 px-4">20px</td>
+                <td className="py-2 px-4">16px</td>
                 <td className="py-2 px-4">0</td>
                 <td className="py-2 px-4">400</td>
               </tr>
@@ -846,12 +846,19 @@ export default function Typography() {
                 <td className="py-2 px-4">0</td>
                 <td className="py-2 px-4">400</td>
               </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-2 pr-4">text-label-11</td>
+                <td className="py-2 px-4">11px</td>
+                <td className="py-2 px-4">16px</td>
+                <td className="py-2 px-4">0</td>
+                <td className="py-2 px-4">400</td>
+              </tr>
 
               {/* Copy */}
               <tr className="border-b border-borderSubtle bg-surfaceSubtle">
                 <td
                   colSpan={5}
-                  className="py-2 px-4 font-sans font-semibold text-textSubtle"
+                  className="py-2 px-4 font-sans text-heading-14 text-textSubtle"
                 >
                   Copy
                 </td>
@@ -866,7 +873,7 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-copy-20</td>
                 <td className="py-2 px-4">20px</td>
-                <td className="py-2 px-4">32px</td>
+                <td className="py-2 px-4">36px</td>
                 <td className="py-2 px-4">0</td>
                 <td className="py-2 px-4">400</td>
               </tr>
@@ -887,14 +894,14 @@ export default function Typography() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-copy-14</td>
                 <td className="py-2 px-4">14px</td>
-                <td className="py-2 px-4">22px</td>
+                <td className="py-2 px-4">20px</td>
                 <td className="py-2 px-4">0</td>
                 <td className="py-2 px-4">400</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-copy-13</td>
                 <td className="py-2 px-4">13px</td>
-                <td className="py-2 px-4">20px</td>
+                <td className="py-2 px-4">18px</td>
                 <td className="py-2 px-4">0</td>
                 <td className="py-2 px-4">400</td>
               </tr>

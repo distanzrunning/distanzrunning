@@ -120,26 +120,26 @@ export default function NewsletterSignup({
   const cardBackground =
     theme === "grey"
       ? "var(--ds-gray-200)"
-      : "var(--ds-background-100)";
+      : "hsl(var(--color-surface))";
 
   return (
     <div className={themeClass}>
       <div
-        className="mx-auto w-full max-w-7xl overflow-hidden rounded-xl border border-borderSubtle"
+        className="mx-auto w-full max-w-[1400px] overflow-hidden rounded-xl border border-borderSubtle"
         style={{ background: cardBackground }}
       >
         <div className="flex flex-col justify-between gap-8 p-6 sm:p-12 md:flex-row md:items-center md:gap-20 md:p-16">
           {/* Left: heading + description */}
           <div className="flex max-w-md flex-col gap-2">
             <h2
-              className="font-headline text-balance"
+              className="font-serif text-balance"
               style={{
                 margin: 0,
                 fontSize: 38,
                 lineHeight: 1.1,
                 fontWeight: 400,
                 letterSpacing: "-0.04em",
-                color: "var(--ds-gray-1000)",
+                color: "hsl(var(--color-textDefault))",
               }}
             >
               Subscribe to the{" "}
@@ -152,7 +152,7 @@ export default function NewsletterSignup({
                 fontSize: 15,
                 lineHeight: 1.4,
                 fontWeight: 500,
-                color: "var(--ds-gray-1000)",
+                color: "hsl(var(--color-textDefault))",
                 maxWidth: 448,
               }}
             >
@@ -234,7 +234,7 @@ export default function NewsletterSignup({
                   style={{
                     margin: 0,
                     lineHeight: 1.5,
-                    color: "var(--ds-gray-700)",
+                    color: "hsl(var(--color-textSubtler))",
                   }}
                 >
                   This site is protected by reCAPTCHA and the Google{" "}
@@ -243,7 +243,7 @@ export default function NewsletterSignup({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline"
-                    style={{ color: "var(--ds-gray-900)" }}
+                    style={{ color: "hsl(var(--color-textSubtle))" }}
                   >
                     Privacy Policy
                   </a>{" "}
@@ -253,7 +253,7 @@ export default function NewsletterSignup({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline"
-                    style={{ color: "var(--ds-gray-900)" }}
+                    style={{ color: "hsl(var(--color-textSubtle))" }}
                   >
                     Terms of Service
                   </a>{" "}

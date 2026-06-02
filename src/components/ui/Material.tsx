@@ -30,7 +30,7 @@ export interface MaterialProps {
 }
 
 // ============================================================================
-// Shadow Map
+// Shadow + Radius maps (per the foundations page)
 // ============================================================================
 
 const shadowMap: Record<MaterialType, string> = {
@@ -42,6 +42,20 @@ const shadowMap: Record<MaterialType, string> = {
   menu: "var(--ds-shadow-menu)",
   modal: "var(--ds-shadow-modal)",
   fullscreen: "var(--ds-shadow-fullscreen)",
+};
+
+// Radii follow the Materials foundations table — see CLAUDE.md.
+// 6px for everyday surfaces and tooltips, 12px for raised surfaces,
+// menus and modals, 16px for fullscreen overlays.
+const radiusMap: Record<MaterialType, number> = {
+  base: 6,
+  small: 6,
+  medium: 12,
+  large: 12,
+  tooltip: 6,
+  menu: 12,
+  modal: 12,
+  fullscreen: 16,
 };
 
 // ============================================================================
@@ -62,8 +76,8 @@ export const Material = forwardRef<HTMLDivElement, MaterialProps>(
       display: "flex",
       flexDirection: "column",
       alignItems: "stretch",
-      background: "var(--ds-background-100)",
-      borderRadius: 8,
+      background: "hsl(var(--color-surface))",
+      borderRadius: radiusMap[type],
       overflow: "hidden",
       boxShadow: shadowMap[type],
       ...style,

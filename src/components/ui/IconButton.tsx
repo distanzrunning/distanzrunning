@@ -67,77 +67,60 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       ${sizeClasses[size]}
       rounded-md
       transition-colors
-      focus:outline-none focus:ring-2 focus:ring-borderNeutral
+      focus:outline-none focus:ring-2 focus:ring-[var(--ds-focus-ring)]
       active:scale-[0.98] active:duration-100
     `;
 
-    // Variant + inverse color combinations
-    // When ignoreDarkMode is true, no dark: modifiers are used (for design system docs)
-    // When ignoreDarkMode is false, dark: modifiers enable automatic theme switching
     const getVariantClasses = () => {
       if (disabled) {
-        // Disabled state: subtle, recessive styling for premium feel
-        // Inverse disabled should match the opposite theme's primary disabled
         if (variant === "primary") {
           if (inverse) {
-            // Inverse disabled: dark grey for dark backgrounds (no dark mode switch)
-            return "bg-asphalt-20 text-asphalt-50 cursor-not-allowed";
+            return "bg-[var(--ds-gray-600)] text-[var(--ds-gray-300)] cursor-not-allowed";
           }
-          // Primary disabled: light grey in light mode, dark grey in dark mode
-          return "bg-asphalt-90 dark:bg-asphalt-20 text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
+          return "bg-[var(--ds-gray-300)] text-textDisabled cursor-not-allowed";
         }
         if (variant === "secondary") {
           if (inverse) {
-            // Inverse secondary disabled: for dark backgrounds (no dark mode switch)
-            return "bg-transparent border border-asphalt-30 text-asphalt-50 cursor-not-allowed";
+            return "bg-transparent border border-[var(--ds-gray-600)] text-[var(--ds-gray-500)] cursor-not-allowed";
           }
-          // Secondary disabled
-          return "bg-transparent border border-asphalt-80 dark:border-asphalt-30 text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
+          return "bg-transparent border border-borderSubtle text-textDisabled cursor-not-allowed";
         }
         if (variant === "tertiary") {
           if (inverse) {
-            // Inverse tertiary disabled: for dark backgrounds
-            return "bg-transparent text-asphalt-50 cursor-not-allowed";
+            return "bg-transparent text-[var(--ds-gray-500)] cursor-not-allowed";
           }
-          // Tertiary disabled
-          return "bg-transparent text-asphalt-70 dark:text-asphalt-50 cursor-not-allowed";
+          return "bg-transparent text-textDisabled cursor-not-allowed";
         }
       }
 
       if (variant === "primary") {
         if (inverse) {
-          // Inverse primary: for dark backgrounds - contrasts (light button on dark bg)
-          return "bg-asphalt-95 text-asphalt-10 hover:bg-asphalt-90";
+          return "bg-surface text-textDefault hover:bg-[var(--ds-gray-100)]";
         }
-        // Primary: blends with theme (light in light mode, dark in dark mode)
         if (ignoreDarkMode) {
-          return "bg-asphalt-95 text-asphalt-10 hover:bg-asphalt-90";
+          return "bg-[var(--ds-gray-200)] text-textDefault hover:bg-[var(--ds-gray-300)]";
         }
-        return "bg-asphalt-95 dark:bg-asphalt-10 text-asphalt-10 dark:text-white hover:bg-asphalt-90 dark:hover:bg-asphalt-20";
+        return "bg-[var(--ds-gray-200)] dark:bg-[var(--ds-gray-1000)] text-textDefault dark:text-textInverted hover:bg-[var(--ds-gray-300)] dark:hover:bg-[var(--ds-gray-900)]";
       }
 
       if (variant === "secondary") {
         if (inverse) {
-          // Inverse secondary: for dark backgrounds
-          return "bg-transparent border border-white text-white hover:bg-white/10";
+          return "bg-transparent border border-[hsl(var(--color-textInverted))] text-textInverted hover:bg-[var(--ds-gray-alpha-100)]";
         }
-        // Secondary: blends with theme
         if (ignoreDarkMode) {
-          return "bg-transparent border border-asphalt-70 text-asphalt-10 hover:border-asphalt-40 hover:bg-asphalt-95/50";
+          return "bg-transparent border border-borderDefaultHover text-textDefault hover:border-[var(--ds-gray-1000)] hover:bg-[var(--ds-gray-100)]";
         }
-        return "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-10 dark:text-asphalt-95 hover:border-asphalt-40 dark:hover:border-asphalt-60 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
+        return "bg-transparent border border-borderDefaultHover dark:border-[var(--ds-gray-600)] text-textDefault dark:text-[var(--ds-gray-200)] hover:border-[var(--ds-gray-1000)] dark:hover:border-[var(--ds-gray-400)] hover:bg-[var(--ds-gray-100)] dark:hover:bg-[var(--ds-gray-900)]/30";
       }
 
       if (variant === "tertiary") {
         if (inverse) {
-          // Inverse tertiary: muted icon for dark backgrounds, intensifies on hover
-          return "bg-transparent text-asphalt-80 hover:text-asphalt-95 hover:bg-asphalt-20/30";
+          return "bg-transparent text-textInverted hover:bg-[var(--ds-gray-alpha-100)]";
         }
-        // Tertiary: muted icon that intensifies on hover
         if (ignoreDarkMode) {
-          return "bg-transparent text-asphalt-40 hover:text-asphalt-10 hover:bg-asphalt-95/50";
+          return "bg-transparent text-textSubtler hover:text-textDefault hover:bg-[var(--ds-gray-100)]";
         }
-        return "bg-transparent text-asphalt-40 dark:text-asphalt-60 hover:text-asphalt-10 dark:hover:text-asphalt-95 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
+        return "bg-transparent text-textSubtler dark:text-[var(--ds-gray-600)] hover:text-textDefault dark:hover:text-[var(--ds-gray-200)] hover:bg-[var(--ds-gray-100)] dark:hover:bg-[var(--ds-gray-900)]/30";
       }
 
       return "";

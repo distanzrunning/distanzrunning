@@ -47,6 +47,8 @@ export const LoadingDots = forwardRef<HTMLSpanElement, LoadingDotsProps>(
           ...style,
         }}
         data-geist-loading-dots=""
+        role="status"
+        aria-live="polite"
       >
         {hasText && (
           <div style={{ marginRight: 12 }}>
@@ -62,9 +64,9 @@ export const LoadingDots = forwardRef<HTMLSpanElement, LoadingDotsProps>(
             </p>
           </div>
         )}
-        <span style={{ ...dotStyle, animationDelay: "0s" }} />
-        <span style={{ ...dotStyle, animationDelay: "0.2s" }} />
-        <span style={{ ...dotStyle, animationDelay: "0.4s" }} />
+        <span aria-hidden="true" style={{ ...dotStyle, animationDelay: "0s" }} />
+        <span aria-hidden="true" style={{ ...dotStyle, animationDelay: "0.2s" }} />
+        <span aria-hidden="true" style={{ ...dotStyle, animationDelay: "0.4s" }} />
       </span>
     );
   },

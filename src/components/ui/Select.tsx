@@ -149,7 +149,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <div
             className="text-[13px] capitalize mb-2 max-w-full"
-            style={{ color: "var(--ds-gray-700)" }}
+            style={{ color: "hsl(var(--color-textSubtler))" }}
           >
             {label}
           </div>
@@ -167,7 +167,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               className="absolute left-0 flex items-center justify-center pointer-events-none z-10"
               style={{
                 left: size === "xsmall" ? "8px" : size === "small" ? "10px" : size === "large" ? "14px" : "12px",
-                color: "var(--ds-gray-900)",
+                color: "hsl(var(--color-textSubtle))",
               }}
             >
               {prefix}
@@ -191,8 +191,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               .filter(Boolean)
               .join(" ")}
             style={{
-              color: disabled ? "var(--ds-gray-600)" : "var(--ds-gray-1000)",
-              background: disabled ? "var(--ds-gray-200)" : "var(--ds-background-100)",
+              color: disabled ? "var(--ds-gray-600)" : "hsl(var(--color-textDefault))",
+              background: disabled ? "var(--ds-gray-200)" : "hsl(var(--color-surface))",
             }}
             {...props}
           >
@@ -204,7 +204,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             className="absolute right-0 flex items-center justify-center pointer-events-none"
             style={{
               right: size === "xsmall" ? "8px" : size === "small" ? "10px" : size === "large" ? "14px" : "12px",
-              color: disabled ? "var(--ds-gray-600)" : "var(--ds-gray-900)",
+              color: disabled ? "var(--ds-gray-600)" : "hsl(var(--color-textSubtle))",
             }}
           >
             {suffix || <ChevronDownIcon />}
@@ -224,14 +224,14 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
         <style>{`
           .ds-select {
-            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 0 0 1px hsla(var(--ds-gray-1000-value), 0.1);
             transition: box-shadow 0.2s ease, color 0.2s ease;
           }
           .ds-select:hover:not(:disabled) {
             box-shadow: 0 0 0 1px var(--ds-gray-alpha-600);
           }
           .ds-select:focus-visible:not(:disabled) {
-            box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0 0 0 4px rgba(0, 0, 0, 0.16);
+            box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0 0 0 4px hsla(var(--ds-gray-1000-value), 0.16);
           }
           .ds-select-error {
             box-shadow: 0 0 0 1px var(--ds-red-700) !important;

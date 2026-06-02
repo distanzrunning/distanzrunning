@@ -93,7 +93,7 @@ function VariantShowcase({
     <div className="mb-8">
       <h3
         id={id}
-        className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+        className="text-heading-20 font-serif mb-3 scroll-mt-32"
       >
         {title}
       </h3>
@@ -103,7 +103,7 @@ function VariantShowcase({
         {/* Preview area - fixed background regardless of theme */}
         <div
           className={`flex-1 p-8 flex items-center justify-start min-h-[120px] ${
-            inverse ? "bg-asphalt-10" : "bg-white"
+            inverse ? "bg-gray-1000" : "bg-white"
           }`}
         >
           <IconButton
@@ -141,15 +141,15 @@ function VariantShowcase({
                   transition-all duration-150 ease-out cursor-pointer
                   ${
                     isDisabled
-                      ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
-                      : "bg-white dark:bg-asphalt-10 border-asphalt-40 dark:border-asphalt-60 hover:border-asphalt-50"
+                      ? "bg-gray-1000 dark:bg-gray-200 border-gray-1000 dark:border-gray-200"
+                      : "bg-white dark:bg-gray-1000 border-gray-800 dark:border-gray-600 hover:border-gray-700"
                   }
                   peer-focus:ring-1 peer-focus:ring-borderNeutral peer-focus:ring-offset-0
                 `}
               >
                 {isDisabled && (
                   <svg
-                    className="w-3 h-3 text-white dark:text-asphalt-10"
+                    className="w-3 h-3 text-white dark:text-gray-1000"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth={2}
@@ -195,16 +195,16 @@ export default function ButtonIconComponent() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">Buttons</p>
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Buttons</p>
         <h1
           id="button-icon"
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
         >
           Button + icon
         </h1>
       </div>
 
-      <p className="text-base text-textSubtle max-w-3xl">
+      <p className="text-copy-16 text-textSubtle max-w-3xl">
         For the primary action.
       </p>
 
@@ -214,7 +214,7 @@ export default function ButtonIconComponent() {
       <section>
         <h2
           id="variants"
-          className="sr-only font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="sr-only text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Variants
         </h2>
@@ -289,7 +289,7 @@ export default function ButtonIconComponent() {
       <section>
         <h2
           id="guidelines"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Guidelines
         </h2>
@@ -298,12 +298,12 @@ export default function ButtonIconComponent() {
 
         <h3
           id="guidelines-how-to-use"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           How to use
         </h3>
 
-        <div className="space-y-4 text-base text-textSubtle max-w-3xl">
+        <div className="space-y-4 text-copy-16 text-textSubtle max-w-3xl">
           <p>
             Use <strong>icon buttons</strong> for common actions where the icon
             meaning is universally understood (search, close, menu, settings).
@@ -322,12 +322,12 @@ export default function ButtonIconComponent() {
 
         <h3
           id="guidelines-best-practices"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Best practices
         </h3>
 
-        <ul className="space-y-3 text-base text-textSubtle max-w-3xl list-disc pl-5">
+        <ul className="space-y-3 text-copy-16 text-textSubtle max-w-3xl list-disc pl-5">
           <li>
             Use icons that are universally recognizable (magnifying glass for
             search, X for close, hamburger for menu)
@@ -351,7 +351,7 @@ export default function ButtonIconComponent() {
       <section>
         <h2
           id="anatomy"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Anatomy
         </h2>
@@ -362,18 +362,18 @@ export default function ButtonIconComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Property
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Value
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Token
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Size (default)</td>
                 <td className="py-3 px-4">40px x 40px</td>
@@ -410,7 +410,7 @@ export default function ButtonIconComponent() {
       <section>
         <h2
           id="props"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Props
         </h2>
@@ -421,13 +421,13 @@ export default function ButtonIconComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
               </tr>
@@ -496,7 +496,7 @@ export default function ButtonIconComponent() {
       <section>
         <h2
           id="colours"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Colour reference
         </h2>
@@ -505,7 +505,7 @@ export default function ButtonIconComponent() {
 
         <h3
           id="colours-primary"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Primary icon button
         </h3>
@@ -514,37 +514,37 @@ export default function ButtonIconComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   State
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Background
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Icon
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">gray-1000</td>
                 <td className="py-3 px-4 font-mono">white</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (light)</td>
-                <td className="py-3 px-4 font-mono">asphalt-20</td>
+                <td className="py-3 px-4 font-mono">gray-900</td>
                 <td className="py-3 px-4 font-mono">white</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (dark)</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">gray-200</td>
+                <td className="py-3 px-4 font-mono">gray-1000</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (dark)</td>
-                <td className="py-3 px-4 font-mono">asphalt-90</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">gray-300</td>
+                <td className="py-3 px-4 font-mono">gray-1000</td>
               </tr>
             </tbody>
           </table>
@@ -552,7 +552,7 @@ export default function ButtonIconComponent() {
 
         <h3
           id="colours-secondary"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Secondary icon button
         </h3>
@@ -561,44 +561,44 @@ export default function ButtonIconComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   State
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Background
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Border
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Icon
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
-                <td className="py-3 px-4 font-mono">asphalt-70</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">gray-600</td>
+                <td className="py-3 px-4 font-mono">gray-1000</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (light)</td>
-                <td className="py-3 px-4 font-mono">asphalt-95/50</td>
-                <td className="py-3 px-4 font-mono">asphalt-40</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">gray-200/50</td>
+                <td className="py-3 px-4 font-mono">gray-800</td>
+                <td className="py-3 px-4 font-mono">gray-1000</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (dark)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
-                <td className="py-3 px-4 font-mono">asphalt-40</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
+                <td className="py-3 px-4 font-mono">gray-800</td>
+                <td className="py-3 px-4 font-mono">gray-200</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (dark)</td>
-                <td className="py-3 px-4 font-mono">asphalt-20/30</td>
-                <td className="py-3 px-4 font-mono">asphalt-60</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
+                <td className="py-3 px-4 font-mono">gray-900/30</td>
+                <td className="py-3 px-4 font-mono">gray-600</td>
+                <td className="py-3 px-4 font-mono">gray-200</td>
               </tr>
             </tbody>
           </table>
@@ -606,7 +606,7 @@ export default function ButtonIconComponent() {
 
         <h3
           id="colours-tertiary"
-          className="font-serif text-[22px] leading-[1.3] font-medium mb-3 scroll-mt-32"
+          className="text-heading-20 font-serif mb-3 scroll-mt-32"
         >
           Tertiary icon button
         </h3>
@@ -615,37 +615,37 @@ export default function ButtonIconComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   State
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Background
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Icon
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
-                <td className="py-3 px-4 font-mono">asphalt-40</td>
+                <td className="py-3 px-4 font-mono">gray-800</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (light)</td>
-                <td className="py-3 px-4 font-mono">asphalt-95/50</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">gray-200/50</td>
+                <td className="py-3 px-4 font-mono">gray-1000</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (dark)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
-                <td className="py-3 px-4 font-mono">asphalt-60</td>
+                <td className="py-3 px-4 font-mono">gray-600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (dark)</td>
-                <td className="py-3 px-4 font-mono">asphalt-20/30</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
+                <td className="py-3 px-4 font-mono">gray-900/30</td>
+                <td className="py-3 px-4 font-mono">gray-200</td>
               </tr>
             </tbody>
           </table>

@@ -79,7 +79,7 @@ function SectionHeader({
       id={id}
       style={{ scrollMarginTop: 32 }}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -133,7 +133,7 @@ function CodePreview({ children, componentCode, minHeight = 220 }: { children: R
   const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
   const lines: DualThemeToken[][] =
     tokenizedLines ||
-    componentCode.split("\n").map((line) => [{ content: line, color: "var(--ds-gray-1000)", darkColor: "var(--ds-gray-1000)" }] as DualThemeToken[]);
+    componentCode.split("\n").map((line) => [{ content: line, color: "hsl(var(--color-textDefault))", darkColor: "hsl(var(--color-textDefault))" }] as DualThemeToken[]);
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(componentCode);
@@ -142,23 +142,23 @@ function CodePreview({ children, componentCode, minHeight = 220 }: { children: R
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg w-full min-w-0 overflow-hidden">
-      <div className="p-6 flex items-center justify-center" style={{ background: "var(--ds-background-100)", minHeight }}>
+    <div className="border border-borderDefault rounded-lg w-full min-w-0 overflow-hidden">
+      <div className="p-6 flex items-center justify-center" style={{ background: "hsl(var(--color-surface))", minHeight }}>
         {children}
       </div>
-      <div style={{ background: "var(--ds-background-200)" }}>
-        <button type="button" onClick={() => setIsOpen(!isOpen)} className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]">
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
+        <button type="button" onClick={() => setIsOpen(!isOpen)} className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault">
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
-          <div className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]" style={{ background: "var(--ds-background-100)" }}>
+          <div className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13" style={{ background: "hsl(var(--color-surface))" }}>
             <div className="relative group">
-              <button onClick={handleCopy} className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]" aria-label="Copy code">
+              <button onClick={handleCopy} className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]" aria-label="Copy code">
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div key={index} className="flex px-4" style={{ fontFeatureSettings: '"liga" off' }}>
                       <span className="select-none w-[32px] min-w-[32px] text-right pr-4 text-textSubtler">{index + 1}</span>
@@ -229,19 +229,19 @@ function DemoFloatingBanner({
         <div
           className="flex flex-col gap-4 rounded-xl p-5"
           style={{
-            background: "var(--ds-background-100)",
-            border: "1px solid var(--ds-gray-400)",
+            background: "hsl(var(--color-surface))",
+            border: "1px solid hsl(var(--color-borderDefault))",
             boxShadow: "var(--ds-shadow-menu)",
           }}
         >
           <div>
             <h2
               id="consent-demo-title"
-              className="text-[16px] font-semibold text-textDefault leading-tight"
+              className="text-heading-16 text-textDefault leading-tight"
             >
               {CONSENT_COPY.bannerTitle}
             </h2>
-            <p className="mt-2 text-[13px] leading-[1.55] text-textSubtle">
+            <p className="mt-2 text-copy-13 leading-[1.55] text-textSubtle">
               {CONSENT_COPY.bannerDescription}{" "}
               <a
                 href={CONSENT_COPY.cookiePolicyHref}
@@ -309,12 +309,33 @@ function DemoSettingsModal({
   });
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      title={CONSENT_COPY.modalTitle}
-      subtitle={CONSENT_COPY.modalDescription}
-      footer={
+    <Modal open={open} onClose={onClose}>
+      <Modal.Title>{CONSENT_COPY.modalTitle}</Modal.Title>
+      <Modal.P>{CONSENT_COPY.modalDescription}</Modal.P>
+      <div
+        className="overflow-hidden"
+        style={{
+          border: "1px solid hsl(var(--color-borderDefault))",
+          borderRadius: 6,
+          background: "hsl(var(--color-surface))",
+          marginTop: 24,
+        }}
+      >
+        {CONSENT_CATEGORIES.map((cat, i) => (
+          <ConsentCategoryRow
+            key={cat.key}
+            category={cat}
+            value={draft[cat.key]}
+            onChange={(next) => {
+              if (cat.required) return;
+              setDraft((d) => ({ ...d, [cat.key]: next }));
+            }}
+            isLast={i === CONSENT_CATEGORIES.length - 1}
+          />
+        ))}
+      </div>
+      <ConsentAnonIdSection anonId="demo-0000-0000-0000-000000000000" />
+      <Modal.Footer>
         <div
           style={{
             padding: 24,
@@ -336,7 +357,7 @@ function DemoSettingsModal({
           </div>
           <p
             className="text-[12px] leading-[1.6]"
-            style={{ color: "var(--ds-gray-700)", margin: 0 }}
+            style={{ color: "hsl(var(--color-textSubtler))", margin: 0 }}
           >
             For more information, see our{" "}
             <a
@@ -357,30 +378,7 @@ function DemoSettingsModal({
             .
           </p>
         </div>
-      }
-    >
-      <div
-        className="overflow-hidden"
-        style={{
-          border: "1px solid var(--ds-gray-400)",
-          borderRadius: 6,
-          background: "var(--ds-background-100)",
-        }}
-      >
-        {CONSENT_CATEGORIES.map((cat, i) => (
-          <ConsentCategoryRow
-            key={cat.key}
-            category={cat}
-            value={draft[cat.key]}
-            onChange={(next) => {
-              if (cat.required) return;
-              setDraft((d) => ({ ...d, [cat.key]: next }));
-            }}
-            isLast={i === CONSENT_CATEGORIES.length - 1}
-          />
-        ))}
-      </div>
-      <ConsentAnonIdSection anonId="demo-0000-0000-0000-000000000000" />
+      </Modal.Footer>
     </Modal>
   );
 }
@@ -470,12 +468,12 @@ export default function ConsentBannerComponent() {
         <SectionHeader id="intro" onCopyLink={showToast}>
           Intro
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 xl:mt-7 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 xl:mt-7 mb-6">
           The consent banner asks visitors for permission before loading
           tracking, advertising, and other third-party tech. It captures four
           categories (Essential, Marketing, Analytics, Functional) and exposes
           the state via the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             useConsent()
           </code>{" "}
           hook so any component can gate itself on the user&apos;s preferences.
@@ -498,7 +496,7 @@ export default function ConsentBannerComponent() {
         <SectionHeader id="preview" onCopyLink={showToast}>
           Preview
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Click <strong>Show banner</strong> to pop the real floating banner
           at its fixed bottom-left position. Deny and Accept dismiss it;
           Customise opens the settings modal. The demo runs on local state —
@@ -516,18 +514,18 @@ export default function ConsentBannerComponent() {
         <SectionHeader id="setup" onCopyLink={showToast}>
           Setup
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Wrap the app in{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             ConsentProvider
           </code>{" "}
           and render{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             ConsentBanner
           </code>{" "}
           once at the root. The banner self-hides once a decision has been
           made and re-opens when{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             reset()
           </code>{" "}
           is called.
@@ -546,19 +544,19 @@ export default function ConsentBannerComponent() {
         <SectionHeader id="consuming" onCopyLink={showToast}>
           Consuming consent
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Use{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             useConsent()
           </code>{" "}
           to read the full preferences object or trigger the settings modal,
           and{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             useConsentCategory(name)
           </code>{" "}
           when you just need a boolean for a single category. Before the
           user decides, every optional category defaults to{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             false
           </code>{" "}
           — the strict default expected by GDPR.

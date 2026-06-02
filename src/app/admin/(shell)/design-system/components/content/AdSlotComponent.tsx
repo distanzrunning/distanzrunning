@@ -71,7 +71,7 @@ function SectionHeader({
       id={id}
       style={{ scrollMarginTop: 32 }}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -163,8 +163,8 @@ function CodePreview({ children, componentCode, minHeight = 200 }: CodePreviewPr
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -176,37 +176,37 @@ function CodePreview({ children, componentCode, minHeight = 200 }: CodePreviewPr
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg w-full min-w-0 overflow-hidden">
+    <div className="border border-borderDefault rounded-lg w-full min-w-0 overflow-hidden">
       <div
         className="p-6 flex items-center justify-center"
-        style={{ background: "var(--ds-background-100)", minHeight }}
+        style={{ background: "hsl(var(--color-surface))", minHeight }}
       >
         {children}
       </div>
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -281,13 +281,13 @@ export default function AdSlotComponent() {
         <SectionHeader id="intro" onCopyLink={showToast}>
           Intro
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 xl:mt-7 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 xl:mt-7 mb-6">
           The ad slot is how Distanz Running embeds advertising into the
           product without breaking the layout or the design language. It
           renders a Google AdSense unit at a standard IAB size, reserves the
           exact pixel space before any network call, lazy-loads the ad only
           when the slot enters the viewport, labels the space as{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             Advertisement
           </code>{" "}
           per IAB guidelines, and falls back to a Distanz-branded card if
@@ -302,15 +302,15 @@ export default function AdSlotComponent() {
             />
             <span>
               Distanz Running is set up under AdSense publisher{" "}
-              <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              <code className="inline-code">
                 ca-pub-8457173435004026
               </code>
               . The AdSense script is injected once in{" "}
-              <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              <code className="inline-code">
                 layout.tsx
               </code>
               ; every{" "}
-              <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+              <code className="inline-code">
                 AdSlot
               </code>{" "}
               just passes the ad-unit slot ID it received from the AdSense
@@ -325,7 +325,7 @@ export default function AdSlotComponent() {
         <SectionHeader id="mpu" onCopyLink={showToast}>
           MPU &mdash; 300&times;250
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           The default in-article and sidebar unit. Fits beside editorial
           copy, inside race guides, and at the end of gear reviews.
         </p>
@@ -341,7 +341,7 @@ export default function AdSlotComponent() {
         <SectionHeader id="leaderboard" onCopyLink={showToast}>
           Leaderboard &mdash; 728&times;90
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Horizontal top-of-page unit for desktop. Paired below the nav or
           between content sections.
         </p>
@@ -357,7 +357,7 @@ export default function AdSlotComponent() {
         <SectionHeader id="billboard" onCopyLink={showToast}>
           Billboard &mdash; 970&times;250
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Premium above-the-fold unit on wide desktop layouts. Reserve for
           homepage and landing pages.
         </p>
@@ -373,7 +373,7 @@ export default function AdSlotComponent() {
         <SectionHeader id="skyscraper" onCopyLink={showToast}>
           Skyscraper &mdash; 160&times;600
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Vertical sidebar unit. Good for long-form article pages with a
           sticky rail.
         </p>
@@ -389,7 +389,7 @@ export default function AdSlotComponent() {
         <SectionHeader id="mobile-banner" onCopyLink={showToast}>
           Mobile banner &mdash; 320&times;50
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Compact bottom-of-screen unit for mobile. Sits above the nav bar
           or at the end of a mobile feed.
         </p>
@@ -405,12 +405,12 @@ export default function AdSlotComponent() {
         <SectionHeader id="custom-fallback" onCopyLink={showToast}>
           Custom fallback
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           When no ad fills, the slot defaults to a Distanz &ldquo;advertise
           with us&rdquo; card. To show something else instead &mdash; a
           newsletter CTA, a related race, an affiliate product &mdash; pass
           any React node to{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             fallback
           </code>
           . The dimensions stay fixed so the layout never shifts whether an
@@ -426,21 +426,21 @@ export default function AdSlotComponent() {
                 <div
                   className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border p-6 text-center"
                   style={{
-                    borderColor: "var(--ds-gray-400)",
-                    background: "var(--ds-background-200)",
+                    borderColor: "hsl(var(--color-borderDefault))",
+                    background: "hsl(var(--color-canvas))",
                   }}
                 >
-                  <h4 className="text-[16px] font-semibold leading-tight text-textDefault">
+                  <h4 className="text-heading-16 text-textDefault">
                     Get the Shakeout
                   </h4>
-                  <p className="text-[13px] leading-snug text-textSubtle">
+                  <p className="text-copy-13 leading-snug text-textSubtle">
                     Weekly running stories, gear, and race news.
                   </p>
                   <a
                     href="/newsletter"
-                    className="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-md font-sans text-[13px] font-semibold no-underline"
+                    className="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-md font-sans text-copy-13 font-semibold no-underline"
                     style={{
-                      background: "var(--ds-gray-1000)",
+                      background: "hsl(var(--color-textDefault))",
                       color: "var(--ds-background-100)",
                     }}
                   >

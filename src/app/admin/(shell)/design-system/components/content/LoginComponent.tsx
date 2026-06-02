@@ -70,7 +70,7 @@ function SectionHeader({
       id={id}
       style={{ scrollMarginTop: 32 }}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -161,8 +161,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -174,37 +174,37 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg w-full min-w-0 overflow-hidden">
+    <div className="border border-borderDefault rounded-lg w-full min-w-0 overflow-hidden">
       <div
         className="p-6 flex items-center justify-center min-h-[320px]"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -237,6 +237,11 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // ============================================================================
 
 function WordmarkLogo() {
+  // Intrinsic SVG viewBox is 1579.12 × 484.75 (aspect ratio ~3.26:1).
+  // At height 40, width is ~130 — set both explicitly so the browser
+  // reserves the layout slot before the SVG loads (prevents the
+  // logo-pop on first paint).
+  const dims = { width: 130, height: 40 };
   return (
     <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -244,14 +249,21 @@ function WordmarkLogo() {
         src="/brand/wordmark-black.svg"
         alt="Distanz Running"
         className="block dark:hidden"
-        style={{ height: 40, width: "auto" }}
+        width={dims.width}
+        height={dims.height}
+        loading="eager"
+        decoding="async"
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/brand/wordmark-white.svg"
-        alt="Distanz Running"
+        alt=""
+        aria-hidden="true"
         className="hidden dark:block"
-        style={{ height: 40, width: "auto" }}
+        width={dims.width}
+        height={dims.height}
+        loading="eager"
+        decoding="async"
       />
     </>
   );
@@ -685,13 +697,13 @@ export default function LoginComponent() {
         <SectionHeader id="intro" onCopyLink={showToast}>
           Intro
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 xl:mt-7 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 xl:mt-7 mb-6">
           The Login component is a composable card for authentication flows.
           It provides a logo slot, title and subtitle, configurable fields,
           a built-in password show/hide toggle, error state, and a footer
           slot for links such as "Forgot password?". The same component
           powers the staging gate at{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             /login
           </code>{" "}
           and is suitable for any sign-in surface across the product.
@@ -703,7 +715,7 @@ export default function LoginComponent() {
         <SectionHeader id="password-only" onCopyLink={showToast}>
           Password only
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           The minimal variant — a single password field with a logo header
           and title. This is the pattern used by the Distanz Running staging
           gate.
@@ -720,7 +732,7 @@ export default function LoginComponent() {
         <SectionHeader id="email-password" onCopyLink={showToast}>
           Email + password
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           A standard sign-in form with an email and password field, a
           subtitle for welcome copy, and no logo — useful when the logo is
           rendered by a surrounding layout.
@@ -737,10 +749,10 @@ export default function LoginComponent() {
         <SectionHeader id="continue-with-google" onCopyLink={showToast}>
           Continue with Google
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           A social-only variant — no email form, just one or more OAuth
           providers. Pass each provider through the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             providers
           </code>{" "}
           prop with a label, icon, and click handler.
@@ -757,13 +769,13 @@ export default function LoginComponent() {
         <SectionHeader id="google-and-email" onCopyLink={showToast}>
           Google and email
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           When both a provider and email form are present, pass{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             divider
           </code>{" "}
           to render a separator between them. Use{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             true
           </code>{" "}
           for the default "Or continue with email" label or pass a custom
@@ -781,10 +793,10 @@ export default function LoginComponent() {
         <SectionHeader id="sign-up" onCopyLink={showToast}>
           Sign up
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           A sign-up flow combines a Google provider, a name + email form,
           and a legal disclaimer. The{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             disclaimer
           </code>{" "}
           slot renders small, centered text under the submit button — use
@@ -802,9 +814,9 @@ export default function LoginComponent() {
         <SectionHeader id="forgot-password" onCopyLink={showToast}>
           With forgot password
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Pass any React node to{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             footer
           </code>{" "}
           to render helper links — a forgot-password link, a sign-up link,
@@ -822,9 +834,9 @@ export default function LoginComponent() {
         <SectionHeader id="error-state" onCopyLink={showToast}>
           Error state
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Pass an{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             error
           </code>{" "}
           string to render an inline error above the submit button. Fields
@@ -835,6 +847,157 @@ export default function LoginComponent() {
             <ErrorStateDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pick <code className="inline-code">&lt;Login&gt;</code> for any
+            sign-in or sign-up surface that combines a brand logo, one or
+            more credential fields, and optional OAuth providers — keeps
+            spacing, button sizing, and password-toggle behaviour
+            consistent across every auth screen.
+          </li>
+          <li>
+            For short single-credential gates (a staging password prompt,
+            a maintenance unlock), inline a{" "}
+            <code className="inline-code">&lt;form&gt;</code> with{" "}
+            <code className="inline-code">&lt;Input&gt;</code> +{" "}
+            <code className="inline-code">&lt;Button&gt;</code> instead;{" "}
+            <code className="inline-code">&lt;Login&gt;</code> is overkill
+            when there&apos;s no title, no providers, and no disclaimer.
+          </li>
+          <li>
+            For passwordless or magic-link flows where the next step is{" "}
+            <code className="inline-code">Check your email</code>, render
+            the post-submit confirmation outside the component; don&apos;t
+            try to swap{" "}
+            <code className="inline-code">&lt;Login&gt;</code>&apos;s
+            internals into a success state.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pass <code className="inline-code">isLoading</code> while the
+            request is in flight; the component swaps the submit label to{" "}
+            <code className="inline-code">loadingLabel</code> and disables
+            every input and provider button so users can&apos;t
+            double-submit.
+          </li>
+          <li>
+            Password fields ship with a built-in show/hide toggle (eye
+            icon in the suffix). Don&apos;t add a second toggle outside
+            the field.
+          </li>
+          <li>
+            Surface server-side errors via the{" "}
+            <code className="inline-code">error</code> string; it renders
+            above the submit button with{" "}
+            <code className="inline-code">role=&quot;alert&quot;</code>{" "}
+            and tints every field red. Don&apos;t render extra error UI
+            elsewhere in the form.
+          </li>
+          <li>
+            OAuth providers render in the order passed. Put the
+            most-likely path first.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">title</code> is a short Title
+            Case noun phrase that names the action (
+            <code className="inline-code">Sign In</code>,{" "}
+            <code className="inline-code">Create Account</code>).{" "}
+            <code className="inline-code">subtitle</code> is sentence case,
+            one sentence with a trailing period.
+          </li>
+          <li>
+            Provider button labels follow the pattern{" "}
+            <code className="inline-code">Continue with [Provider]</code>{" "}
+            (<code className="inline-code">Continue with Google</code>,{" "}
+            <code className="inline-code">Continue with GitHub</code>).
+            Match canonical brand casing.
+          </li>
+          <li>
+            <code className="inline-code">submitLabel</code> is a Title
+            Case verb phrase (
+            <code className="inline-code">Sign In</code>,{" "}
+            <code className="inline-code">Reset Password</code>).{" "}
+            <code className="inline-code">loadingLabel</code> is
+            present-progressive (
+            <code className="inline-code">Signing in&hellip;</code>,{" "}
+            <code className="inline-code">Authenticating&hellip;</code>).
+          </li>
+          <li>
+            Field placeholders show an example value (
+            <code className="inline-code">you@example.com</code>), not
+            instructions like{" "}
+            <code className="inline-code">Enter your email</code>.
+          </li>
+          <li>
+            <code className="inline-code">disclaimer</code> is small print
+            for legal or privacy copy; keep it under two sentences and
+            link the policy by name.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The password show/hide toggle carries an{" "}
+            <code className="inline-code">aria-label</code> that flips
+            between{" "}
+            <code className="inline-code">Show password</code> and{" "}
+            <code className="inline-code">Hide password</code> so screen
+            readers announce the state change.
+          </li>
+          <li>
+            The provider/email divider is{" "}
+            <code className="inline-code">aria-hidden=&quot;true&quot;</code>
+            ; it&apos;s decorative, and the providers and fields carry
+            their own semantics.
+          </li>
+          <li>
+            When a field doesn&apos;t render a visible{" "}
+            <code className="inline-code">label</code>, the component
+            wires the{" "}
+            <code className="inline-code">label</code> prop as an{" "}
+            <code className="inline-code">sr-only</code>{" "}
+            <code className="inline-code">&lt;label htmlFor&gt;</code>.
+            Pass <code className="inline-code">label</code> even when the
+            placeholder feels self-evident.
+          </li>
+        </ul>
       </Section>
     </div>
   );

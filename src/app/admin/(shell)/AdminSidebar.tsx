@@ -1,14 +1,18 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
   Database,
+  Home,
+  Map,
   MessageSquare,
   PanelsTopLeft,
+  Settings,
   SquareCheckBig,
 } from "lucide-react";
 import { navigation as dsNavigation } from "./design-system/components/DesignSystemSidebar";
@@ -31,9 +35,38 @@ export function isFeedbackRoute(pathname: string): boolean {
   );
 }
 
+export function isRacesRoute(pathname: string): boolean {
+  return pathname === "/admin/races" || pathname.startsWith("/admin/races/");
+}
+
 function dsSlugFrom(pathname: string): string | null {
   const match = pathname.match(/^\/admin\/design-system\/([^/?#]+)/);
   return match ? match[1] : null;
+}
+
+// ============================================================================
+// Sidebar view state — decoupled from the URL.
+//
+// The sidebar can show one of five "levels" (admin top-level, or a
+// specific section's submenu). The level is derived from the URL on
+// mount and on URL changes, but the user can also navigate the sidebar
+// up/down without changing the URL — e.g. clicking the back button
+// shows the admin top-level nav while the page content stays put.
+// ============================================================================
+
+type SidebarLevel =
+  | "admin"
+  | "design-system"
+  | "consent"
+  | "feedback"
+  | "races";
+
+function levelFromPathname(pathname: string): SidebarLevel {
+  if (isDesignSystemRoute(pathname)) return "design-system";
+  if (isConsentRoute(pathname)) return "consent";
+  if (isFeedbackRoute(pathname)) return "feedback";
+  if (isRacesRoute(pathname)) return "races";
+  return "admin";
 }
 
 export const CONSENT_NAV: { id: string; label: string; href: string }[] = [
@@ -52,6 +85,10 @@ export const FEEDBACK_NAV: { id: string; label: string; href: string }[] = [
     label: "How it works",
     href: "/admin/feedback/how-it-works",
   },
+];
+
+export const RACES_NAV: { id: string; label: string; href: string }[] = [
+  { id: "date-review", label: "Date review", href: "/admin/races/date-review" },
 ];
 
 // ============================================================================
@@ -85,7 +122,7 @@ function BrandHeader() {
       <Link
         href="/admin"
         aria-label="Stride Admin"
-        className="flex items-center justify-center w-full h-9 gap-2 outline-none no-underline text-[var(--ds-gray-1000)]"
+        className="flex items-center justify-center w-full h-9 gap-2 outline-none no-underline text-textDefault"
       >
         <StrideIcon />
         <span
@@ -106,20 +143,21 @@ function BrandHeader() {
 function BackHeader({
   leftSlot,
   label,
-  href,
+  onClick,
   ariaLabel,
 }: {
   leftSlot: ReactNode;
   label: string;
-  href: string;
+  onClick: () => void;
   ariaLabel?: string;
 }) {
   return (
-    <div style={{ padding: "12px 8px 4px" }}>
-      <Link
-        href={href}
+    <div style={{ padding: "16px 8px 4px" }}>
+      <button
+        type="button"
+        onClick={onClick}
         aria-label={ariaLabel ?? label}
-        className="flex items-center justify-between w-full h-9 rounded-md outline-none transition-colors gap-1 text-[var(--ds-gray-900)] hover:text-[var(--ds-gray-1000)] hover:bg-[var(--ds-gray-100)] active:bg-[var(--ds-gray-200)] focus-visible:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)]"
+        className="flex items-center justify-between w-full h-9 rounded-md outline-none transition-colors gap-1 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)] active:bg-[var(--ds-gray-200)] focus-visible:text-textDefault focus-visible:bg-[var(--ds-gray-100)] bg-transparent border-0 cursor-pointer"
       >
         <span
           className="grid place-content-center"
@@ -134,7 +172,7 @@ function BackHeader({
           {label}
         </span>
         <span style={{ width: 36, height: 36, flexShrink: 0 }} />
-      </Link>
+      </button>
     </div>
   );
 }
@@ -149,7 +187,17 @@ const ADMIN_NAV: {
   href: string;
   icon: ReactNode;
   hasSubmenu?: boolean;
+  /** Match the route exactly — used by Overview so it doesn't stay
+      active on every nested admin page. */
+  exact?: boolean;
 }[] = [
+  {
+    id: "overview",
+    label: "Overview",
+    href: "/admin",
+    icon: <Home className="w-4 h-4" />,
+    exact: true,
+  },
   {
     id: "consent",
     label: "Consent",
@@ -165,6 +213,13 @@ const ADMIN_NAV: {
     hasSubmenu: true,
   },
   {
+    id: "races",
+    label: "Races",
+    href: "/admin/races",
+    icon: <Map className="w-4 h-4" />,
+    hasSubmenu: true,
+  },
+  {
     id: "design-system",
     label: "Design System",
     href: "/admin/design-system",
@@ -177,11 +232,17 @@ const ADMIN_NAV: {
     href: "/admin/studio",
     icon: <Database className="w-4 h-4" />,
   },
+  {
+    id: "settings",
+    label: "Settings",
+    href: "/admin/settings",
+    icon: <Settings className="w-4 h-4" />,
+  },
 ];
 
 function AdminNav({ pathname }: { pathname: string }) {
   return (
-    <nav style={{ padding: 16, paddingTop: 8 }}>
+    <nav style={{ padding: 16, paddingTop: 16 }}>
       <ul
         style={{
           listStyle: "none",
@@ -193,13 +254,14 @@ function AdminNav({ pathname }: { pathname: string }) {
         }}
       >
         {ADMIN_NAV.map((item) => {
-          const active =
-            pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const active = item.exact
+            ? pathname === item.href
+            : pathname === item.href || pathname.startsWith(`${item.href}/`);
           const baseClasses =
             "group flex items-center rounded-md outline-none transition-colors";
           const stateClasses = active
-            ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
-            : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+            ? "bg-[var(--ds-gray-200)] text-textDefault font-medium hover:bg-[var(--ds-gray-200)]"
+            : "text-textSubtle hover:bg-[var(--ds-gray-100)] hover:text-textDefault focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-textDefault";
           return (
             <li key={item.id}>
               <Link
@@ -272,7 +334,7 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
   const activeSlug = dsSlugFrom(pathname);
 
   return (
-    <nav style={{ padding: 16, paddingTop: 8 }}>
+    <nav style={{ padding: 16, paddingTop: 16 }}>
       <ul
         style={{
           listStyle: "none",
@@ -286,7 +348,7 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
         {dsNavigation.map((section) => (
           <li key={section.id}>
             <p
-              className="flex items-center font-medium text-[var(--ds-gray-1000)]"
+              className="flex items-center font-medium text-textDefault"
               style={{
                 margin: 0,
                 height: 36,
@@ -313,8 +375,8 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
                 const baseClasses =
                   "group flex items-center rounded-md outline-none transition-colors";
                 const stateClasses = isActive
-                  ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
-                  : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+                  ? "bg-[var(--ds-gray-200)] text-textDefault font-medium hover:bg-[var(--ds-gray-200)]"
+                  : "text-textSubtle hover:bg-[var(--ds-gray-100)] hover:text-textDefault focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-textDefault";
                 const rowStyle = {
                   height: 36,
                   paddingLeft: 12,
@@ -333,7 +395,7 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
                       <button
                         type="button"
                         disabled
-                        className={`${baseClasses} w-full text-[var(--ds-gray-700)] cursor-not-allowed`}
+                        className={`${baseClasses} w-full text-textSubtler cursor-not-allowed`}
                         style={rowStyle}
                       >
                         {labelContent}
@@ -365,7 +427,7 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
 
 function ConsentNav({ pathname }: { pathname: string }) {
   return (
-    <nav style={{ padding: 16, paddingTop: 8 }}>
+    <nav style={{ padding: 16, paddingTop: 16 }}>
       <ul
         style={{
           listStyle: "none",
@@ -384,8 +446,8 @@ function ConsentNav({ pathname }: { pathname: string }) {
           const baseClasses =
             "group flex items-center rounded-md outline-none transition-colors";
           const stateClasses = active
-            ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
-            : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+            ? "bg-[var(--ds-gray-200)] text-textDefault font-medium hover:bg-[var(--ds-gray-200)]"
+            : "text-textSubtle hover:bg-[var(--ds-gray-100)] hover:text-textDefault focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-textDefault";
           return (
             <li key={item.id}>
               <Link
@@ -417,7 +479,7 @@ function ConsentNav({ pathname }: { pathname: string }) {
 
 function FeedbackNav({ pathname }: { pathname: string }) {
   return (
-    <nav style={{ padding: 16, paddingTop: 8 }}>
+    <nav style={{ padding: 16, paddingTop: 16 }}>
       <ul
         style={{
           listStyle: "none",
@@ -436,8 +498,60 @@ function FeedbackNav({ pathname }: { pathname: string }) {
           const baseClasses =
             "group flex items-center rounded-md outline-none transition-colors";
           const stateClasses = active
-            ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
-            : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+            ? "bg-[var(--ds-gray-200)] text-textDefault font-medium hover:bg-[var(--ds-gray-200)]"
+            : "text-textSubtle hover:bg-[var(--ds-gray-100)] hover:text-textDefault focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-textDefault";
+          return (
+            <li key={item.id}>
+              <Link
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`${baseClasses} ${stateClasses}`}
+                style={{
+                  height: 36,
+                  paddingLeft: 12,
+                  paddingRight: 12,
+                  fontSize: 14,
+                }}
+              >
+                <span className="flex-1 flex items-center min-w-0">
+                  <span className="truncate">{item.label}</span>
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
+
+// ============================================================================
+// Races nav (replaces admin nav while inside /admin/races)
+// ============================================================================
+
+function RacesNav({ pathname }: { pathname: string }) {
+  return (
+    <nav style={{ padding: 16, paddingTop: 16 }}>
+      <ul
+        style={{
+          listStyle: "none",
+          margin: 0,
+          padding: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+        }}
+      >
+        {RACES_NAV.map((item) => {
+          const active =
+            pathname === item.href ||
+            (item.href !== "/admin/races" &&
+              pathname.startsWith(`${item.href}/`));
+          const baseClasses =
+            "group flex items-center rounded-md outline-none transition-colors";
+          const stateClasses = active
+            ? "bg-[var(--ds-gray-200)] text-textDefault font-medium hover:bg-[var(--ds-gray-200)]"
+            : "text-textSubtle hover:bg-[var(--ds-gray-100)] hover:text-textDefault focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-textDefault";
           return (
             <li key={item.id}>
               <Link
@@ -473,50 +587,89 @@ export default function AdminSidebar({
   searchTrigger?: ReactNode;
 }) {
   const pathname = usePathname() ?? "";
-  const inDs = isDesignSystemRoute(pathname);
-  const inConsent = isConsentRoute(pathname);
-  const inFeedback = isFeedbackRoute(pathname);
+  const [level, setLevel] = useState<SidebarLevel>(() =>
+    levelFromPathname(pathname),
+  );
+
+  // Re-sync sidebar level when the URL changes externally (leaf-click
+  // navigation, browser back/forward, address-bar edit). The setter
+  // remains free to override this for back-button / submenu-expand
+  // interactions that intentionally leave the URL alone.
+  useEffect(() => {
+    setLevel(levelFromPathname(pathname));
+  }, [pathname]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <BrandHeader />
       {searchTrigger && (
-        <div style={{ padding: "0 16px 8px" }}>{searchTrigger}</div>
+        <div style={{ position: "relative", padding: "0 16px" }}>
+          {searchTrigger}
+          {/* Soft fade anchored directly to the search button's
+              bottom edge so the boundary between search and nav
+              blurs out instead of showing a hard line. */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              top: "100%",
+              left: 0,
+              right: 0,
+              height: 16,
+              background:
+                "linear-gradient(to bottom, hsl(var(--color-canvas)), transparent)",
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          />
+        </div>
       )}
-      {inDs && (
-        <BackHeader
-          leftSlot={<ChevronLeft className="w-4 h-4" />}
-          label="Design System"
-          href="/admin"
-          ariaLabel="Back to admin"
-        />
-      )}
-      {inConsent && (
-        <BackHeader
-          leftSlot={<ChevronLeft className="w-4 h-4" />}
-          label="Consent"
-          href="/admin"
-          ariaLabel="Back to admin"
-        />
-      )}
-      {inFeedback && (
-        <BackHeader
-          leftSlot={<ChevronLeft className="w-4 h-4" />}
-          label="Feedback"
-          href="/admin"
-          ariaLabel="Back to admin"
-        />
-      )}
-      <div style={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
-        {inDs ? (
-          <DesignSystemNav pathname={pathname} />
-        ) : inConsent ? (
-          <ConsentNav pathname={pathname} />
-        ) : inFeedback ? (
-          <FeedbackNav pathname={pathname} />
-        ) : (
-          <AdminNav pathname={pathname} />
-        )}
+      <div style={{ flex: 1, minHeight: 0 }}>
+        <div style={{ height: "100%", overflowY: "auto" }}>
+          {level === "design-system" && (
+            <BackHeader
+              leftSlot={<ChevronLeft className="w-4 h-4" />}
+              label="Design System"
+              onClick={() => setLevel("admin")}
+              ariaLabel="Back to admin"
+            />
+          )}
+          {level === "consent" && (
+            <BackHeader
+              leftSlot={<ChevronLeft className="w-4 h-4" />}
+              label="Consent"
+              onClick={() => setLevel("admin")}
+              ariaLabel="Back to admin"
+            />
+          )}
+          {level === "feedback" && (
+            <BackHeader
+              leftSlot={<ChevronLeft className="w-4 h-4" />}
+              label="Feedback"
+              onClick={() => setLevel("admin")}
+              ariaLabel="Back to admin"
+            />
+          )}
+          {level === "races" && (
+            <BackHeader
+              leftSlot={<ChevronLeft className="w-4 h-4" />}
+              label="Races"
+              onClick={() => setLevel("admin")}
+              ariaLabel="Back to admin"
+            />
+          )}
+          {level === "design-system" ? (
+            <DesignSystemNav pathname={pathname} />
+          ) : level === "consent" ? (
+            <ConsentNav pathname={pathname} />
+          ) : level === "feedback" ? (
+            <FeedbackNav pathname={pathname} />
+          ) : level === "races" ? (
+            <RacesNav pathname={pathname} />
+          ) : (
+            <AdminNav pathname={pathname} />
+          )}
+        </div>
       </div>
     </div>
   );

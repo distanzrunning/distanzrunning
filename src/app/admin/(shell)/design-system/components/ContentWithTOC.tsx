@@ -25,7 +25,7 @@ export function Section({ children }: { children: React.ReactNode }) {
         columns={1}
         rows={1}
         showGuides={false}
-        style={{ border: "none", borderBottom: "1px solid var(--ds-gray-400)" }}
+        style={{ border: "none", borderBottom: "1px solid hsl(var(--color-borderDefault))" }}
       >
         <GridCell style={{ margin: 0, overflow: "visible" }}>
           {children}
@@ -51,8 +51,9 @@ interface ContentWithTOCProps {
   mainSectionId?: string; // Optional h2 id
   pageTitle?: string;
   pageSubtitle?: string;
-  activeSlug?: string;
-  onNavigate?: (slug: string) => void;
+  /** Right-aligned slot in the page header — used for install /
+      "Open in v0" buttons on components published to the registry. */
+  headerRight?: React.ReactNode;
 }
 
 // Helper to scan headings from a container
@@ -205,8 +206,7 @@ export default function ContentWithTOC({
   mainSectionId,
   pageTitle,
   pageSubtitle,
-  activeSlug,
-  onNavigate,
+  headerRight,
 }: ContentWithTOCProps) {
   const [activeId, setActiveId] = useState<string>("");
   const isClickScrolling = useRef(false);
@@ -425,8 +425,8 @@ export default function ContentWithTOC({
           flex border-l-2 border-solid py-1.5 pr-4 no-underline transition-all duration-150 ease-out
           ${
             isActive
-              ? "border-asphalt-10 dark:border-asphalt-95 text-textDefault font-medium"
-              : "border-borderSubtle text-textSubtle hover:text-textDefault hover:border-asphalt-40 dark:hover:border-asphalt-60"
+              ? "border-gray-1000 dark:border-gray-200 text-textDefault font-medium"
+              : "border-borderSubtle text-textSubtle hover:text-textDefault hover:border-gray-800 dark:hover:border-gray-600"
           }
           ${isChild ? "text-xs pl-7" : "text-sm pl-4"}
         `}
@@ -446,23 +446,30 @@ export default function ContentWithTOC({
             columns={1}
             rows={1}
             showGuides={false}
-            style={{ border: "none", borderBottom: "1px solid var(--ds-gray-400)" }}
+            style={{ border: "none", borderBottom: "1px solid hsl(var(--color-borderDefault))" }}
           >
             <GridCell style={{ margin: 0, overflow: "visible" }}>
-              <h1
-                id={mainSectionId}
-                className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3"
-              >
-                {pageTitle}
-              </h1>
-              {pageSubtitle && (
-                <p
-                  className="text-[16px] md:text-[20px] text-textSubtle"
-                  style={{ lineHeight: 1.5 }}
-                >
-                  {pageSubtitle}
-                </p>
-              )}
+              <div className="flex items-end justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                  <h1
+                    id={mainSectionId}
+                    className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3"
+                  >
+                    {pageTitle}
+                  </h1>
+                  {pageSubtitle && (
+                    <p
+                      className="text-[16px] md:text-[20px] text-textSubtle"
+                      style={{ lineHeight: 1.5 }}
+                    >
+                      {pageSubtitle}
+                    </p>
+                  )}
+                </div>
+                {headerRight && (
+                  <div className="flex-shrink-0">{headerRight}</div>
+                )}
+              </div>
             </GridCell>
           </Grid>
         )}
@@ -474,19 +481,18 @@ export default function ContentWithTOC({
           </SectionContext.Provider>
         </article>
 
-        {/* Page Pagination - flex-1 to fill remaining space, mt-auto pushes to bottom */}
-        {activeSlug && onNavigate && (
-          <div className="flex-1 flex flex-col justify-end px-12 pb-8">
-            <PagePagination activeSlug={activeSlug} onNavigate={onNavigate} />
-          </div>
-        )}
+        {/* Page Pagination - flex-1 to fill remaining space, mt-auto pushes to bottom.
+            Derives prev/next from usePathname() — no props needed. */}
+        <div className="flex-1 flex flex-col justify-end px-12 pb-8">
+          <PagePagination />
+        </div>
       </div>
 
       {/* Table of Contents - Right Sidebar (≥1280px) */}
       <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle">
         {(tocItems.length > 0 || mainSectionId) && (
           <div className="sticky top-[65px] max-h-[calc(100vh-65px)] overflow-y-auto px-6 py-6">
-            <h4 className="text-[14px] leading-[20px] font-medium text-textDefault mb-3">
+            <h4 className="text-heading-14 text-textDefault mb-3">
               {tocTitle}
             </h4>
             <div className="flex flex-col">

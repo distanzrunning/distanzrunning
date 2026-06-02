@@ -10,6 +10,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { CommandMenu } from "@/components/ui/CommandMenu";
+import { Kbd } from "@/components/ui/Kbd";
 import { Note } from "@/components/ui/Note";
 import { useToast } from "@/components/ui/Toast";
 import IconButton from "@/components/ui/IconButton";
@@ -72,7 +73,7 @@ function SectionHeader({
       id={id}
       style={{ scrollMarginTop: 32 }}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -163,8 +164,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -176,40 +177,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg w-full min-w-0 overflow-hidden">
+    <div className="border border-borderDefault rounded-lg w-full min-w-0 overflow-hidden">
       <div
         className="p-6 flex items-center justify-center min-h-[200px]"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -252,12 +253,35 @@ const SAMPLE_GROUPS: { heading: string; items: string[] }[] = [
   },
 ];
 
+// Flat list used by the "Search as you type" example below.
+// Picked to overlap with the SAMPLE_GROUPS items so a typed
+// query produces a believable filtered set without any async
+// data fetch.
+const TYPE_AHEAD_ITEMS: ReadonlyArray<string> = [
+  "Avatar",
+  "Badge",
+  "Button",
+  "Calendar",
+  "Checkbox",
+  "Combobox",
+  "Drawer",
+  "Empty State",
+  "Input",
+  "Modal",
+  "Pagination",
+  "Popover",
+  "Select",
+  "Tabs",
+  "Tooltip",
+];
+
 // ============================================================================
 // Code strings
 // ============================================================================
 
 const triggerCode = `import { useState } from 'react';
 import { CommandMenu } from '@/components/ui/CommandMenu';
+import { Kbd } from '@/components/ui/Kbd';
 
 export function SearchTrigger() {
   const [open, setOpen] = useState(false);
@@ -267,16 +291,10 @@ export function SearchTrigger() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex h-8 w-[220px] items-center justify-between rounded border border-[var(--ds-gray-400)] bg-transparent pl-2 pr-1.5 text-sm text-[var(--ds-gray-700)] hover:bg-[var(--ds-background-200)]"
+        className="flex h-8 w-[220px] items-center justify-between rounded border border-borderDefault bg-transparent pl-2 pr-1.5 text-sm text-textSubtler hover:bg-canvas"
       >
         Search Stride
-        <kbd
-          className="ml-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded bg-[var(--ds-background-100)] px-1 text-[12px] text-[var(--ds-gray-900)]"
-          style={{ boxShadow: '0 0 0 1px var(--ds-gray-alpha-400)' }}
-        >
-          <span>⌘</span>
-          <span>K</span>
-        </kbd>
+        <Kbd size="small" meta>K</Kbd>
       </button>
 
       <CommandMenu open={open} onClose={() => setOpen(false)} placeholder="Search...">
@@ -327,6 +345,82 @@ export function SearchIconTrigger() {
   );
 }`;
 
+const typeAheadCode = `import { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
+import { CommandMenu } from '@/components/ui/CommandMenu';
+
+const ITEMS = [
+  'Avatar', 'Badge', 'Button', 'Calendar', 'Checkbox',
+  'Combobox', 'Drawer', 'Empty State', 'Input', 'Modal',
+  'Pagination', 'Popover', 'Select', 'Tabs', 'Tooltip',
+];
+
+export function SearchAsYouType() {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+
+  // Idle (no query) → empty array so no items render.
+  // Typing → filter against the dataset (could just as easily
+  // be an async Algolia / network call — the component doesn't
+  // care, it just renders what you hand it).
+  const matches = query.length > 0
+    ? ITEMS.filter((item) =>
+        item.toLowerCase().includes(query.toLowerCase()),
+      )
+    : [];
+
+  return (
+    <CommandMenu
+      open={open}
+      onClose={() => {
+        setQuery('');
+        setOpen(false);
+      }}
+      placeholder="Search"
+
+      // Controlled input — drive the query from external state
+      // so you can wire it to whatever data source you like.
+      value={query}
+      onValueChange={setQuery}
+
+      // Already filtered upstream — tell cmdk to render every
+      // item we give it instead of running its own fuzzy filter
+      // on top.
+      filter={() => 1}
+
+      // Three-state empty content:
+      //   - null     → suppress Command.Empty entirely
+      //   - ReactNode → custom message (e.g. "No matches for X")
+      //   - omitted  → default "No results found."
+      emptyState={
+        query.length === 0
+          ? null
+          : matches.length === 0
+            ? <NoMatches query={query} />
+            : null
+      }
+
+      // Drops the input-row divider + list padding when there's
+      // nothing below. The modal collapses to just the input.
+      resultsHidden={query.length === 0}
+    >
+      {matches.map((item) => (
+        <CommandMenu.Item
+          key={item}
+          icon={<ArrowRight className="w-4 h-4" />}
+          onSelect={() => {
+            setQuery('');
+            setOpen(false);
+            // navigate or do work...
+          }}
+        >
+          {item}
+        </CommandMenu.Item>
+      ))}
+    </CommandMenu>
+  );
+}`;
+
 // ============================================================================
 // Main component
 // ============================================================================
@@ -334,6 +428,18 @@ export function SearchIconTrigger() {
 export default function SearchComponent() {
   const [open, setOpen] = useState(false);
   const { showToast } = useToast();
+
+  // Independent state for the "Search as you type" demo —
+  // separate from the static-groups example above so the two
+  // can be exercised without stepping on each other.
+  const [typeAheadOpen, setTypeAheadOpen] = useState(false);
+  const [typeAheadValue, setTypeAheadValue] = useState("");
+  const typeAheadMatches =
+    typeAheadValue.length > 0
+      ? TYPE_AHEAD_ITEMS.filter((item) =>
+          item.toLowerCase().includes(typeAheadValue.toLowerCase()),
+        )
+      : [];
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -353,15 +459,15 @@ export default function SearchComponent() {
         <SectionHeader id="intro" onCopyLink={showToast}>
           Intro
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 xl:mt-7 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 xl:mt-7 mb-6">
           Search is a header-level trigger paired with a modal that lets
           users jump between pages. The trigger can be a compact
           input-styled button showing the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             ⌘K
           </code>{" "}
           shortcut, or a square icon button. The modal is built on{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             CommandMenu
           </code>{" "}
           and lists navigable destinations grouped by section.
@@ -397,9 +503,9 @@ export default function SearchComponent() {
         <SectionHeader id="trigger" onCopyLink={showToast}>
           Trigger with shortcut
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           The primary placement in a page header. Click or press{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             ⌘K
           </code>{" "}
           to open the modal.
@@ -409,18 +515,10 @@ export default function SearchComponent() {
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-[var(--ds-gray-400)] bg-transparent pl-2 pr-1.5 font-sans text-sm text-[var(--ds-gray-700)] outline-none transition-colors hover:bg-[var(--ds-background-200)]"
+              className="flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-borderDefault bg-transparent pl-2 pr-1.5 font-sans text-sm text-textSubtler outline-none transition-colors hover:bg-canvas"
             >
               Search Stride
-              <kbd
-                className="ml-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded bg-[var(--ds-background-100)] px-1 font-sans text-[12px] leading-5 text-[var(--ds-gray-900)]"
-                style={{ boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)" }}
-              >
-                <span style={{ minWidth: "1em", display: "inline-block" }}>
-                  ⌘
-                </span>
-                <span>K</span>
-              </kbd>
+              <Kbd size="small" meta>K</Kbd>
             </button>
           </CodePreview>
         </div>
@@ -431,7 +529,7 @@ export default function SearchComponent() {
         <SectionHeader id="icon-triggers" onCopyLink={showToast}>
           Icon triggers
         </SectionHeader>
-        <p className="text-[16px] leading-[1.6] text-textSubtle mt-4 mb-6">
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           When space is tight — or the shortcut would be out of place — use
           an icon button. Available in the three standard variants.
         </p>
@@ -464,6 +562,76 @@ export default function SearchComponent() {
         </div>
       </Section>
 
+      {/* Search-as-you-type */}
+      <Section>
+        <SectionHeader id="search-as-you-type" onCopyLink={showToast}>
+          Search as you type
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          When the static-group navigator isn&rsquo;t the right fit —
+          e.g. a live search over an external dataset (Algolia, an
+          internal API, …) — drive the input externally and render
+          items as they come back. The modal idles as a single{" "}
+          <code className="inline-code">
+            Search
+          </code>{" "}
+          field with no result area, then reveals previews as the user
+          types. Three new props on{" "}
+          <code className="inline-code">
+            CommandMenu
+          </code>{" "}
+          do the work:
+        </p>
+        <ul className="m-0 list-disc space-y-2 pl-6 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">
+              value
+            </code>{" "}
+            +{" "}
+            <code className="inline-code">
+              onValueChange
+            </code>{" "}
+            — controlled input. Pipe it to your data source.
+          </li>
+          <li>
+            <code className="inline-code">
+              emptyState
+            </code>{" "}
+            — ReactNode for a custom empty message, or{" "}
+            <code className="inline-code">
+              null
+            </code>{" "}
+            to suppress Command.Empty entirely.
+          </li>
+          <li>
+            <code className="inline-code">
+              resultsHidden
+            </code>{" "}
+            — drops the input-row divider and zeros the list padding
+            so the modal collapses to a flush input-only surface.
+          </li>
+        </ul>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          Pair with{" "}
+          <code className="inline-code">
+            filter={"{() => 1}"}
+          </code>{" "}
+          to disable cmdk&rsquo;s fuzzy filter — your data source has
+          already done the ranking, so each item should render as-is.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={typeAheadCode}>
+            <button
+              type="button"
+              onClick={() => setTypeAheadOpen(true)}
+              className="flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-borderDefault bg-transparent pl-2 pr-1.5 font-sans text-sm text-textSubtler outline-none transition-colors hover:bg-canvas"
+            >
+              Search
+            </button>
+          </CodePreview>
+        </div>
+      </Section>
+
       <CommandMenu
         open={open}
         onClose={() => setOpen(false)}
@@ -484,6 +652,44 @@ export default function SearchComponent() {
               </CommandMenu.Item>
             ))}
           </CommandMenu.Group>
+        ))}
+      </CommandMenu>
+
+      {/* Live "Search as you type" demo. Independent state from
+          the static-groups CommandMenu above so the two can be
+          exercised side by side. */}
+      <CommandMenu
+        open={typeAheadOpen}
+        onClose={() => {
+          setTypeAheadValue("");
+          setTypeAheadOpen(false);
+        }}
+        placeholder="Search"
+        value={typeAheadValue}
+        onValueChange={setTypeAheadValue}
+        filter={() => 1}
+        emptyState={
+          typeAheadValue.length === 0 ? null : typeAheadMatches.length ===
+            0 ? (
+            <div className="px-6 py-12 text-center text-copy-14 text-textSubtle">
+              No matches for &ldquo;{typeAheadValue}&rdquo;.
+            </div>
+          ) : null
+        }
+        resultsHidden={typeAheadValue.length === 0}
+      >
+        {typeAheadMatches.map((item) => (
+          <CommandMenu.Item
+            key={item}
+            icon={<ArrowRight className="w-4 h-4" />}
+            onSelect={() => {
+              showToast(`Selected "${item}"`);
+              setTypeAheadValue("");
+              setTypeAheadOpen(false);
+            }}
+          >
+            {item}
+          </CommandMenu.Item>
         ))}
       </CommandMenu>
     </div>

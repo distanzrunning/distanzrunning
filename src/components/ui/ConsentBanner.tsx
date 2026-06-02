@@ -58,8 +58,8 @@ export const CONSENT_COPY = {
   modalTitle: "Privacy Settings",
   modalDescription:
     "We use cookies to personalise content and ads, to provide essential features and to analyse our traffic. You may opt in or opt out of the use of these technologies.",
-  cookiePolicyHref: "/legal/cookie-policy",
-  privacyHref: "/legal/privacy-policy",
+  cookiePolicyHref: "/privacy#cookies",
+  privacyHref: "/privacy",
   dataRequestEmail: "info@distanzrunning.com",
 } as const;
 
@@ -98,7 +98,7 @@ export function ConsentCategoryRow({
           // follows it — either the next row's title, or this row's own
           // description when it's open.
           borderBottom:
-            !isLast || open ? "1px solid var(--ds-gray-400)" : "none",
+            !isLast || open ? "1px solid hsl(var(--color-borderDefault))" : "none",
         }}
       >
         <button
@@ -130,9 +130,10 @@ export function ConsentCategoryRow({
             checked={value}
             disabled={category.required}
             onChange={onChange}
-            label={value ? "On" : "Off"}
             labelPosition="left"
-          />
+          >
+            {value ? "On" : "Off"}
+          </Toggle>
         </div>
       </div>
       <div
@@ -141,7 +142,7 @@ export function ConsentCategoryRow({
         className="text-[13px] leading-[1.55] text-textSubtle"
         style={{
           padding: "12px 16px 16px",
-          borderBottom: isLast ? "none" : "1px solid var(--ds-gray-400)",
+          borderBottom: isLast ? "none" : "1px solid hsl(var(--color-borderDefault))",
         }}
       >
         {category.description}
@@ -182,9 +183,9 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
       className="overflow-hidden"
       style={{
         marginTop: 16,
-        border: "1px solid var(--ds-gray-400)",
+        border: "1px solid hsl(var(--color-borderDefault))",
         borderRadius: 6,
-        background: "var(--ds-background-100)",
+        background: "hsl(var(--color-surface))",
       }}
     >
       <button
@@ -213,7 +214,7 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
         hidden={!open}
         style={{
           padding: "0 16px 16px",
-          borderTop: "1px solid var(--ds-gray-400)",
+          borderTop: "1px solid hsl(var(--color-borderDefault))",
           display: "flex",
           flexDirection: "column",
           gap: 12,
@@ -227,8 +228,8 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
             gap: 8,
             padding: "10px 12px",
             borderRadius: 6,
-            background: "var(--ds-background-200)",
-            border: "1px solid var(--ds-gray-400)",
+            background: "hsl(var(--color-canvas))",
+            border: "1px solid hsl(var(--color-borderDefault))",
           }}
         >
           <span
@@ -254,9 +255,9 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
               width: 28,
               height: 28,
               borderRadius: 6,
-              border: "1px solid var(--ds-gray-400)",
-              background: "var(--ds-background-100)",
-              color: "var(--ds-gray-900)",
+              border: "1px solid hsl(var(--color-borderDefault))",
+              background: "hsl(var(--color-surface))",
+              color: "hsl(var(--color-textSubtle))",
               cursor: anonId ? "pointer" : "not-allowed",
               opacity: anonId ? 1 : 0.5,
               flexShrink: 0,
@@ -271,7 +272,7 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
         </div>
         <p
           className="text-[12px] leading-[1.55]"
-          style={{ color: "var(--ds-gray-700)", margin: 0 }}
+          style={{ color: "hsl(var(--color-textSubtler))", margin: 0 }}
         >
           Email{" "}
           <a
@@ -332,12 +333,33 @@ function ConsentSettingsModal() {
   };
 
   return (
-    <Modal
-      open={settingsOpen}
-      onClose={closeSettings}
-      title={MODAL_TITLE}
-      subtitle={MODAL_DESCRIPTION}
-      footer={
+    <Modal open={settingsOpen} onClose={closeSettings}>
+      <Modal.Title>{MODAL_TITLE}</Modal.Title>
+      <Modal.P>{MODAL_DESCRIPTION}</Modal.P>
+      <div
+        className="overflow-hidden"
+        style={{
+          border: "1px solid hsl(var(--color-borderDefault))",
+          borderRadius: 6,
+          background: "hsl(var(--color-surface))",
+          marginTop: 24,
+        }}
+      >
+        {CONSENT_CATEGORIES.map((cat, i) => (
+          <ConsentCategoryRow
+            key={cat.key}
+            category={cat}
+            value={draft[cat.key]}
+            onChange={(next) => {
+              if (cat.required) return;
+              setDraft((d) => ({ ...d, [cat.key]: next }));
+            }}
+            isLast={i === CONSENT_CATEGORIES.length - 1}
+          />
+        ))}
+      </div>
+      <ConsentAnonIdSection anonId={anonId} />
+      <Modal.Footer>
         <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="secondary" onClick={rejectAll}>
@@ -352,7 +374,7 @@ function ConsentSettingsModal() {
           </div>
           <p
             className="text-[12px] leading-[1.6]"
-            style={{ color: "var(--ds-gray-700)", margin: 0 }}
+          style={{ color: "hsl(var(--color-textSubtler))", margin: 0 }}
           >
             For more information, see our{" "}
             <a
@@ -371,30 +393,7 @@ function ConsentSettingsModal() {
             .
           </p>
         </div>
-      }
-    >
-      <div
-        className="overflow-hidden"
-        style={{
-          border: "1px solid var(--ds-gray-400)",
-          borderRadius: 6,
-          background: "var(--ds-background-100)",
-        }}
-      >
-        {CONSENT_CATEGORIES.map((cat, i) => (
-          <ConsentCategoryRow
-            key={cat.key}
-            category={cat}
-            value={draft[cat.key]}
-            onChange={(next) => {
-              if (cat.required) return;
-              setDraft((d) => ({ ...d, [cat.key]: next }));
-            }}
-            isLast={i === CONSENT_CATEGORIES.length - 1}
-          />
-        ))}
-      </div>
-      <ConsentAnonIdSection anonId={anonId} />
+      </Modal.Footer>
     </Modal>
   );
 }
@@ -432,7 +431,10 @@ function BottomBanner() {
         role="alertdialog"
         aria-labelledby="consent-banner-title"
         aria-modal="false"
-        className="fixed bottom-4 left-4 right-4 z-[10000] sm:right-auto sm:max-w-[400px]"
+        // Mobile: full-width bottom-aligned (left-4 + right-4).
+        // Desktop (sm+): pin to the bottom-right by releasing the
+        // left edge with sm:left-auto.
+        className="fixed bottom-4 left-4 right-4 z-[10000] sm:left-auto sm:max-w-[400px]"
         style={{
           animation:
             "distanz-consent-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both",
@@ -440,17 +442,20 @@ function BottomBanner() {
         }}
       >
         <div
+          // No explicit border — --ds-shadow-menu already opens with
+          // a 0 0 0 1px rgba(0,0,0,0.08) hairline ring, so an
+          // additional border layer would double-paint the outline
+          // (per the feedback-material-class-double-border lesson).
           className="flex flex-col gap-4 rounded-xl p-5"
           style={{
-            background: "var(--ds-background-100)",
-            border: "1px solid var(--ds-gray-400)",
+            background: "hsl(var(--color-surface))",
             boxShadow: "var(--ds-shadow-menu)",
           }}
         >
           <div>
             <h2
               id="consent-banner-title"
-              className="text-[16px] font-semibold text-textDefault leading-tight"
+              className="text-heading-16 text-textDefault leading-tight"
             >
               {BANNER_TITLE}
             </h2>

@@ -18,16 +18,28 @@ interface SplitButtonProps {
   children: React.ReactNode;
   /** Primary button click handler */
   onClick?: () => void;
-  /** Button variant */
+  /**
+   * Primary button variant. Restricted to non-destructive variants
+   * on purpose — hiding a delete inside a dropdown is a sharp edge.
+   */
   variant?: "default" | "secondary";
   /** Button size */
   size?: "small" | "medium" | "large";
   /** Dropdown menu items */
   menuItems: SplitButtonMenuItem[];
-  /** Menu alignment */
-  menuAlign?: "start" | "end";
-  /** Dropdown trigger aria-label */
-  menuLabel?: string;
+  /**
+   * Menu alignment relative to the trigger. Default `bottom-start`
+   * places the menu under the primary button. Switch to `bottom-end`
+   * only when the button sits flush with the right edge of its
+   * container.
+   */
+  menuAlignment?: "bottom-start" | "bottom-end";
+  /**
+   * Accessible name for the dropdown trigger, e.g.
+   * `More deploy options`. Becomes the `aria-label` on the chevron
+   * button — the only label a screen reader hears for it.
+   */
+  menuButtonLabel?: string;
   /** Additional CSS classes */
   className?: string;
 }
@@ -38,11 +50,35 @@ interface SplitButtonProps {
 
 const sizeStyles: Record<
   "small" | "medium" | "large",
-  { height: number; fontSize: number; lineHeight: string; padding: number; radius: number }
+  {
+    height: number;
+    fontSize: number;
+    lineHeight: string;
+    padding: number;
+    radius: number;
+  }
 > = {
-  small: { height: 32, fontSize: 14, lineHeight: "20px", padding: 6, radius: 6 },
-  medium: { height: 40, fontSize: 14, lineHeight: "20px", padding: 10, radius: 6 },
-  large: { height: 48, fontSize: 16, lineHeight: "24px", padding: 14, radius: 8 },
+  small: {
+    height: 32,
+    fontSize: 14,
+    lineHeight: "20px",
+    padding: 6,
+    radius: 6,
+  },
+  medium: {
+    height: 40,
+    fontSize: 14,
+    lineHeight: "20px",
+    padding: 10,
+    radius: 6,
+  },
+  large: {
+    height: 48,
+    fontSize: 16,
+    lineHeight: "24px",
+    padding: 14,
+    radius: 8,
+  },
 };
 
 // ============================================================================
@@ -78,8 +114,8 @@ export function SplitButton({
   variant = "default",
   size = "medium",
   menuItems,
-  menuAlign = "end",
-  menuLabel = "Toggle menu",
+  menuAlignment = "bottom-start",
+  menuButtonLabel = "Toggle menu",
   className = "",
 }: SplitButtonProps) {
   const [open, setOpen] = useState(false);
@@ -112,7 +148,8 @@ export function SplitButton({
     fontSize: s.fontSize,
     fontWeight: 500,
     cursor: "pointer",
-    transition: "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
+    transition:
+      "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
     outline: "none",
     lineHeight: s.lineHeight,
     userSelect: "none",
@@ -122,12 +159,12 @@ export function SplitButton({
 
   // Variant-specific colors
   const bgColor = isDefault
-    ? "var(--ds-gray-1000)"
-    : "var(--ds-background-100)";
+    ? "hsl(var(--color-textDefault))"
+    : "hsl(var(--color-surface))";
   const textColor = isDefault
-    ? "var(--ds-background-100)"
-    : "var(--ds-gray-1000)";
-  const borderOuterColor = "var(--ds-gray-400)";
+    ? "hsl(var(--color-textInverted))"
+    : "hsl(var(--color-textDefault))";
+  const borderOuterColor = "hsl(var(--color-borderDefault))";
 
   // Primary button styles
   const primaryStyle: React.CSSProperties = {
@@ -163,7 +200,7 @@ export function SplitButton({
 
   const dividerColor = isDefault
     ? "var(--ds-gray-alpha-900)"
-    : "var(--ds-gray-300)";
+    : "hsl(var(--color-borderSubtle))";
 
   // Divider styles
   const dividerStyle: React.CSSProperties = {
@@ -176,12 +213,12 @@ export function SplitButton({
   const menuStyle: React.CSSProperties = {
     position: "absolute",
     top: "calc(100% + 4px)",
-    ...(menuAlign === "end" ? { right: 0 } : { left: 0 }),
+    ...(menuAlignment === "bottom-end" ? { right: 0 } : { left: 0 }),
     width: 264,
-    background: "var(--ds-background-100)",
+    background: "hsl(var(--color-surface))",
     borderRadius: 12,
     boxShadow:
-      "rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.02) 0px 1px 1px 0px, rgba(0,0,0,0.04) 0px 4px 8px -4px, rgba(0,0,0,0.06) 0px 16px 24px -8px, var(--ds-background-200) 0px 0px 0px 1px",
+      "var(--ds-shadow-menu), hsl(var(--color-canvas)) 0px 0px 0px 1px",
     padding: 8,
     zIndex: 2001,
     listStyle: "none",
@@ -210,7 +247,15 @@ export function SplitButton({
           e.currentTarget.style.backgroundColor = bgColor;
         }}
       >
-        <span style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", padding: "0 6px" }}>
+        <span
+          style={{
+            display: "block",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            padding: "0 6px",
+          }}
+        >
           {children}
         </span>
       </button>
@@ -223,7 +268,7 @@ export function SplitButton({
         type="button"
         style={triggerStyle}
         onClick={() => setOpen((prev) => !prev)}
-        aria-label={menuLabel}
+        aria-label={menuButtonLabel}
         aria-expanded={open}
         onMouseEnter={(e) => {
           e.currentTarget.style.backgroundColor = isDefault
@@ -234,7 +279,15 @@ export function SplitButton({
           e.currentTarget.style.backgroundColor = bgColor;
         }}
       >
-        <span style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 16, padding: "0 6px" }}>
+        <span
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: 16,
+            padding: "0 6px",
+          }}
+        >
           <ChevronDownIcon />
         </span>
       </button>
@@ -277,7 +330,7 @@ export function SplitButton({
                       fontSize: 14,
                       lineHeight: "20px",
                       fontWeight: 500,
-                      color: "var(--ds-gray-1000)",
+                      color: "hsl(var(--color-textDefault))",
                     }}
                   >
                     {item.label}
@@ -289,7 +342,7 @@ export function SplitButton({
                       fontSize: 14,
                       lineHeight: "20px",
                       fontWeight: 400,
-                      color: "var(--ds-gray-900)",
+                      color: "hsl(var(--color-textSubtle))",
                     }}
                   >
                     {item.description}

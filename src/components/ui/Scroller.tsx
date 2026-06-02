@@ -15,13 +15,16 @@ import { Button } from "@/components/ui/Button";
 
 interface ScrollerProps {
   children: React.ReactNode;
-  /** Scroll direction */
-  overflow?: "y" | "x" | "both";
+  /**
+   * Scroll direction. `vertical` clips horizontally, `horizontal` clips
+   * vertically, `free` allows scrolling on both axes.
+   */
+  direction?: "vertical" | "horizontal" | "free";
   /** Container width */
   width?: string;
   /** Container height */
   height?: string;
-  /** Fade overlay color — defaults to var(--ds-background-100) */
+  /** Fade overlay color — defaults to the semantic canvas. */
   fadeColor?: string;
   /** Fade overlay size in px — defaults to 40 */
   fadeSize?: number;
@@ -129,9 +132,7 @@ export function ScrollerButtons({
   const isVertical = direction === "vertical";
 
   return (
-    <div
-      className="flex flex-row gap-2 justify-center"
-    >
+    <div className="flex flex-row gap-2 justify-center">
       <Button
         variant="secondary"
         shape="circle"
@@ -162,10 +163,10 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
   (
     {
       children,
-      overflow = "y",
+      direction = "vertical",
       width,
       height,
-      fadeColor = "var(--ds-background-100)",
+      fadeColor = "hsl(var(--color-canvas))",
       fadeSize = 40,
       hideFade = false,
       className = "",
@@ -183,7 +184,8 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
     // Merge forwarded ref with internal ref
     const setRefs = useCallback(
       (node: HTMLDivElement | null) => {
-        (innerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        (innerRef as React.MutableRefObject<HTMLDivElement | null>).current =
+          node;
         if (typeof ref === "function") {
           ref(node);
         } else if (ref) {
@@ -197,20 +199,18 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
       const el = innerRef.current;
       if (!el) return;
 
-      const hasVertical = overflow === "y" || overflow === "both";
-      const hasHorizontal = overflow === "x" || overflow === "both";
+      const hasVertical = direction === "vertical" || direction === "free";
+      const hasHorizontal = direction === "horizontal" || direction === "free";
 
       setEdges({
         top: hasVertical && el.scrollTop > 1,
         bottom:
-          hasVertical &&
-          el.scrollTop < el.scrollHeight - el.clientHeight - 1,
+          hasVertical && el.scrollTop < el.scrollHeight - el.clientHeight - 1,
         left: hasHorizontal && el.scrollLeft > 1,
         right:
-          hasHorizontal &&
-          el.scrollLeft < el.scrollWidth - el.clientWidth - 1,
+          hasHorizontal && el.scrollLeft < el.scrollWidth - el.clientWidth - 1,
       });
-    }, [overflow]);
+    }, [direction]);
 
     useEffect(() => {
       const el = innerRef.current;
@@ -232,10 +232,10 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
     }, [updateEdges]);
 
     const overflowStyle: React.CSSProperties = {};
-    if (overflow === "y") {
+    if (direction === "vertical") {
       overflowStyle.overflowY = "auto";
       overflowStyle.overflowX = "hidden";
-    } else if (overflow === "x") {
+    } else if (direction === "horizontal") {
       overflowStyle.overflowX = "auto";
       overflowStyle.overflowY = "hidden";
     } else {

@@ -2,9 +2,8 @@
 //
 // Server component that fetches the three section featured items
 // (shoes / gear / nutrition) + featured race from Sanity and forwards
-// them to SiteHeader (client). Mirrors the pattern used by
-// NavbarAltWrapper so layout.tsx can drop the server boundary in as a
-// prop without client-side data fetching.
+// them to SiteHeader (client). Server boundary so layout.tsx can drop
+// it in as a prop without exposing client-side data fetching.
 
 import { sanityFetch } from "@/sanity/lib/live";
 import {

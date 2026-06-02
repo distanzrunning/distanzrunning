@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -140,7 +141,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -231,8 +232,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -244,40 +245,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -400,11 +401,23 @@ const indeterminateCode = `import { Gauge } from '@/components/ui/Gauge';
 
 function IndeterminateExample() {
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Gauge value={25} size={20} indeterminate />
-      <Gauge value={25} size={32} indeterminate />
-      <Gauge value={25} size={64} indeterminate />
-      <Gauge value={25} size={128} indeterminate />
+    <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+      <Gauge
+        value={0}
+        size={32}
+        indeterminate
+        aria-labelledby="quota-label"
+      />
+      <span
+        id="quota-label"
+        style={{
+          fontSize: 14,
+          lineHeight: "20px",
+          color: "hsl(var(--color-textSubtle))",
+        }}
+      >
+        Calculating usage...
+      </span>
     </div>
   );
 }`;
@@ -505,11 +518,23 @@ function ArcPriorityDemo() {
 
 function IndeterminateDemo() {
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Gauge value={25} size={20} indeterminate />
-      <Gauge value={25} size={32} indeterminate />
-      <Gauge value={25} size={64} indeterminate />
-      <Gauge value={25} size={128} indeterminate />
+    <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+      <Gauge
+        value={0}
+        size={32}
+        indeterminate
+        aria-labelledby="quota-label-demo"
+      />
+      <span
+        id="quota-label-demo"
+        style={{
+          fontSize: 14,
+          lineHeight: "20px",
+          color: "hsl(var(--color-textSubtle))",
+        }}
+      >
+        Calculating usage&hellip;
+      </span>
     </div>
   );
 }
@@ -601,10 +626,141 @@ export default function GaugeComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
           An animated indeterminate state for when the value is unknown.
+          Pair with explanatory copy and tie the label via{" "}
+          <code className="inline-code">aria-labelledby</code> so the
+          gauge isn&apos;t read as &ldquo;0%&rdquo;.
         </p>
         <CodePreview componentCode={indeterminateCode}>
           <IndeterminateDemo />
         </CodePreview>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            A 0&ndash;100 ratio against a fixed maximum where the
+            comparison is the point, like quota usage, build cache hit
+            rate, uptime, or billing-period consumption.
+          </li>
+          <li>
+            For determinate task progress with a known total (uploads,
+            multi-step setup), use{" "}
+            <ComponentRef name="Progress" />.
+          </li>
+          <li>
+            For binary or enumerated state, use{" "}
+            <ComponentRef name="Status Dot" /> for deployments or{" "}
+            <ComponentRef name="Badge" /> for everything else.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use{" "}
+            <code className="inline-code">
+              arcPriority=&quot;equal&quot;
+            </code>{" "}
+            for true ratios so 50% reads as exactly half. Use the
+            default{" "}
+            <code className="inline-code">primary</code> arc for
+            single-percentage usage where the filled portion is the
+            story.
+          </li>
+          <li>
+            Threshold colors should match the same numeric breakpoints
+            used elsewhere in the product (
+            <code className="inline-code">&gt;=80%</code> warning,{" "}
+            <code className="inline-code">&gt;=95%</code> error).
+            Don&apos;t invent gauge-only thresholds.
+          </li>
+          <li>
+            Pair{" "}
+            <code className="inline-code">indeterminate</code> with
+            explanatory copy nearby (
+            <code className="inline-code">
+              Calculating usage&hellip;
+            </code>
+            ) so the user knows the value is loading, not zero.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Always pair the gauge with an adjacent label or{" "}
+            <ComponentRef name="Tooltip" /> naming what the number
+            represents (
+            <code className="inline-code">Build Cache Hit Rate</code>).
+            The gauge alone is not self-describing.
+          </li>
+          <li>
+            Don&apos;t put units inside{" "}
+            <code className="inline-code">children</code>; the label
+            carries the unit (
+            <code className="inline-code">Uptime &middot; 99.97%</code>).{" "}
+            <code className="inline-code">children</code> is reserved
+            for an icon overlay.
+          </li>
+          <li>
+            When{" "}
+            <code className="inline-code">showLabel</code> is on, the
+            rendered number is the value only. Never inject a{" "}
+            <code className="inline-code">%</code> or unit string into
+            the prop.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The component sets{" "}
+            <code className="inline-code">role=&quot;progressbar&quot;</code>{" "}
+            with{" "}
+            <code className="inline-code">aria-valuemin</code>,{" "}
+            <code className="inline-code">aria-valuemax</code>, and{" "}
+            <code className="inline-code">aria-valuenow</code>.
+            Don&apos;t override those.
+          </li>
+          <li>
+            The adjacent label is the gauge&apos;s accessible name. Tie
+            it with{" "}
+            <code className="inline-code">aria-labelledby</code> on the
+            gauge wrapper so screen readers read &ldquo;Uptime, 99
+            percent.&rdquo;
+          </li>
+          <li>
+            Don&apos;t use color to encode the threshold without
+            redundant text; pair the warning tint with copy below or in
+            the <ComponentRef name="Tooltip" />.
+          </li>
+        </ul>
       </Section>
 
       <Toast

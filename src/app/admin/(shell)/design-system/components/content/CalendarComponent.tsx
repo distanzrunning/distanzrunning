@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -139,7 +140,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -230,8 +231,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -243,40 +244,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+    <div className="border border-borderDefault rounded-lg overflow-hidden">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -469,6 +470,58 @@ export function CompactDateRangePicker() {
       futurePresets={futurePresets}
       value={dateRange}
       onChange={setDateRange}
+    />
+  );
+}`;
+
+const compactPresetLabelCode = `import { Calendar, DateRange, CalendarPreset } from '@/components/ui/Calendar';
+import { useState } from 'react';
+import { startOfDay, endOfDay, subDays } from 'date-fns';
+
+const presets: CalendarPreset[] = [
+  { label: 'Last 7 days',  value: 'last-7d',  getRange: () => ({ start: startOfDay(subDays(new Date(), 7)),  end: endOfDay(new Date()) }) },
+  { label: 'Last 30 days', value: 'last-30d', getRange: () => ({ start: startOfDay(subDays(new Date(), 30)), end: endOfDay(new Date()) }) },
+  { label: 'Last 90 days', value: 'last-90d', getRange: () => ({ start: startOfDay(subDays(new Date(), 90)), end: endOfDay(new Date()) }) },
+];
+
+export function CompactPresetLabelPicker() {
+  const [dateRange, setDateRange] = useState<DateRange>({ start: null, end: null });
+
+  // compactPresetLabel collapses the date trigger to an icon-only
+  // button — the preset combobox alongside carries the active label
+  // ("Last 7 days" rather than an explicit date span). Popover
+  // expands right-to-left so it stays anchored to its container's
+  // trailing edge. Used on /admin/consent.
+  return (
+    <Calendar
+      compact
+      compactPresetLabel
+      popoverAlignment="end"
+      presets={presets}
+      defaultPreset="last-7d"
+      value={dateRange}
+      onChange={setDateRange}
+    />
+  );
+}`;
+
+const backdropCode = `import { Calendar, DateRange } from '@/components/ui/Calendar';
+import { useState } from 'react';
+
+export function OverlayDateRangePicker() {
+  const [dateRange, setDateRange] = useState<DateRange>({ start: null, end: null });
+
+  // \`backdrop\` opts the picker into a page-dim overlay + document
+  // scroll-lock while open. Off by default so most dashboards don't
+  // lock scroll on every open; on for focal contexts like the /races
+  // search filter row where the picker reads as the primary action.
+  return (
+    <Calendar
+      placeholder="Select Date Range"
+      value={dateRange}
+      onChange={setDateRange}
+      backdrop
+      width={250}
     />
   );
 }`;
@@ -712,9 +765,9 @@ export default function CalendarComponent() {
         <SectionHeader id="horizontal-layout" onCopyLink={showToast}>
           Horizontal Layout
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Use{" "}
-          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             horizontalLayout
           </code>{" "}
           to align content horizontally within the calendar popover.
@@ -738,13 +791,13 @@ export default function CalendarComponent() {
         <SectionHeader id="sizes" onCopyLink={showToast}>
           Sizes
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Choose between{" "}
-          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             large
           </code>{" "}
           (default) and{" "}
-          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             small
           </code>{" "}
           for size.
@@ -753,7 +806,7 @@ export default function CalendarComponent() {
           <CodePreview componentCode={sizesCode}>
             <div className="py-12 space-y-12">
               <div>
-                <p className="text-sm text-[var(--ds-gray-900)] mb-4 font-mono">
+                <p className="text-sm text-textSubtle mb-4 font-mono">
                   small
                 </p>
                 <div className="flex flex-wrap items-start gap-x-4 gap-y-8">
@@ -784,7 +837,7 @@ export default function CalendarComponent() {
                 </div>
               </div>
               <div>
-                <p className="text-sm text-[var(--ds-gray-900)] mb-4 font-mono">
+                <p className="text-sm text-textSubtle mb-4 font-mono">
                   default / large
                 </p>
                 <div className="flex flex-wrap items-start gap-x-4 gap-y-8">
@@ -817,7 +870,7 @@ export default function CalendarComponent() {
         <SectionHeader id="presets" onCopyLink={showToast}>
           Presets
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Provide common date ranges.
         </p>
         <div className="mt-4 xl:mt-7">
@@ -839,9 +892,9 @@ export default function CalendarComponent() {
         <SectionHeader id="compact" onCopyLink={showToast}>
           Compact
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Use{" "}
-          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             compact
           </code>{" "}
           for a smaller calendar trigger.
@@ -861,14 +914,43 @@ export default function CalendarComponent() {
         </div>
       </Section>
 
+      {/* Compact with preset label */}
+      <Section>
+        <SectionHeader id="compact-preset-label" onCopyLink={showToast}>
+          Compact with preset label
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
+          Pair <code className="inline-code">compact</code> with{" "}
+          <code className="inline-code">compactPresetLabel</code> to collapse
+          the date trigger to an icon-only button and let the preset
+          combobox carry the active label. Useful when the resting state
+          should read <em>&ldquo;Last 7 days&rdquo;</em> rather than a date
+          span. Used on{" "}
+          <code className="inline-code">/admin/consent</code>.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={compactPresetLabelCode}>
+            <div className="flex justify-center py-12">
+              <Calendar
+                compact
+                compactPresetLabel
+                popoverAlignment="end"
+                presets={defaultPresets}
+                defaultPreset="last-7-days"
+              />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* Stacked Section */}
       <Section>
         <SectionHeader id="stacked" onCopyLink={showToast}>
           Stacked
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Use{" "}
-          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             stacked
           </code>{" "}
           to display the preset dropdown above the calendar trigger button.
@@ -893,7 +975,7 @@ export default function CalendarComponent() {
         <SectionHeader id="presets-with-default-value" onCopyLink={showToast}>
           Presets with default value
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Provide common date ranges with an additional default value.
         </p>
         <div className="mt-4 xl:mt-7">
@@ -915,7 +997,7 @@ export default function CalendarComponent() {
         <SectionHeader id="min-and-max-dates" onCopyLink={showToast}>
           Min and max dates
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Constrain the selectable date range with minimum and maximum dates.
         </p>
         <div className="mt-4 xl:mt-7">
@@ -937,9 +1019,9 @@ export default function CalendarComponent() {
         <SectionHeader id="month-tab" onCopyLink={showToast}>
           Month tab
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Use{" "}
-          <code className="text-sm bg-[var(--ds-gray-200)] px-1.5 py-0.5 rounded">
+          <code className="inline-code">
             showMonthTab
           </code>{" "}
           to add a Dates/Months tab switcher within the calendar popover,
@@ -951,6 +1033,32 @@ export default function CalendarComponent() {
               <Calendar
                 placeholder="Select Date Range"
                 showMonthTab
+                width={250}
+              />
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Backdrop / overlay variant */}
+      <Section>
+        <SectionHeader id="backdrop" onCopyLink={showToast}>
+          With overlay
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
+          Pass <code className="inline-code">backdrop</code> to render a
+          page-dim overlay behind the open popover and lock document
+          scroll while it&rsquo;s open. Off by default so most dashboards
+          don&rsquo;t lock scroll on every open; on for focal contexts
+          where the picker reads as the primary action. Used on{" "}
+          <code className="inline-code">/races</code> in the filter row.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={backdropCode}>
+            <div className="flex justify-center py-12">
+              <Calendar
+                placeholder="Select Date Range"
+                backdrop
                 width={250}
               />
             </div>
@@ -971,21 +1079,21 @@ export default function CalendarComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">placeholder</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">string</td>
@@ -1147,25 +1255,25 @@ export default function CalendarComponent() {
           </table>
         </div>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           CalendarPreset
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Property
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">label</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">string</td>
@@ -1193,25 +1301,25 @@ export default function CalendarComponent() {
           </table>
         </div>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           DateRange
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Property
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">start</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -1233,6 +1341,113 @@ export default function CalendarComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pick <code className="inline-code">&lt;Calendar&gt;</code>{" "}
+            for analytics ranges and any picker where day-of-week
+            and month context matter.
+          </li>
+          <li>
+            For ISO dates pasted whole or relative shorthand like{" "}
+            <code className="inline-code">7d</code>, use a
+            free-form <ComponentRef name="Input" />.
+          </li>
+          <li>
+            Provide <code className="inline-code">presets</code> for
+            the common ranges (
+            <code className="inline-code">Last 7 Days</code>,{" "}
+            <code className="inline-code">Month to Date</code>) so
+            users land on the right window in one click.
+          </li>
+          <li>
+            Pair a horizontal layout with live results next to the
+            calendar; in narrow surfaces like a sidebar, fall back
+            to the stacked layout.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Set <code className="inline-code">minDate</code> and{" "}
+            <code className="inline-code">maxDate</code> to the data
+            window so users can&apos;t pick outside the retention
+            range.
+          </li>
+          <li>
+            Default to the user&apos;s locale and timezone; never
+            silently render UTC for a US-Pacific viewer.
+          </li>
+          <li>
+            Keep the trigger label as the chosen range (
+            <code className="inline-code">Apr 1 – Apr 28, 2026</code>
+            ); don&apos;t fall back to{" "}
+            <code className="inline-code">Pick a date</code> once a
+            value is committed.
+          </li>
+          <li>
+            Persist the selected range when the popover closes and
+            re-opens so users can tweak the end date without
+            re-picking the start.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Trap focus inside the popover so Tab cycles day cells
+            and presets instead of the page behind it.
+          </li>
+          <li>
+            Support arrow-key day navigation,{" "}
+            <code className="inline-code">Shift</code> + arrow for
+            week jumps, and{" "}
+            <code className="inline-code">Page Up</code> /{" "}
+            <code className="inline-code">Page Down</code> for
+            month jumps.
+          </li>
+          <li>
+            Announce range changes through{" "}
+            <code className="inline-code">
+              aria-live=&quot;polite&quot;
+            </code>{" "}
+            so a screen reader hears{" "}
+            <code className="inline-code">
+              From Apr 1 to Apr 28
+            </code>{" "}
+            after the second click.
+          </li>
+          <li>
+            Each preset is a real button with a Title Case label (
+            <code className="inline-code">Last 30 Days</code>);
+            don&apos;t mark presets as menu items without keyboard
+            handling.
+          </li>
+        </ul>
       </Section>
     </>
   );

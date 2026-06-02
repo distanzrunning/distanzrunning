@@ -156,7 +156,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -253,8 +253,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -266,18 +266,18 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+    <div className="border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
-      <div className="p-6" style={{ background: "var(--ds-background-100)" }}>
+      <div className="p-6" style={{ background: "hsl(var(--color-surface))" }}>
         {children}
       </div>
 
       {/* Accordion trigger */}
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
@@ -286,14 +286,14 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {/* Collapsible code section - no internal rounded corners */}
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               {/* Floating copy button */}
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
@@ -301,7 +301,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 
               {/* Code content */}
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -391,7 +391,7 @@ export function Component() {
       <AvatarWithIcon
         gradient={{ colors: ['#ff6b6b', '#feca57', '#48dbfb'], angle: 135 }}
         icon={<Check size={14} />}
-        iconBgColor="var(--ds-gray-900)"
+        iconBgColor="hsl(var(--color-textSubtle))"
         size={64}
         badgeSize={26}
       />
@@ -399,7 +399,7 @@ export function Component() {
         gradient={{ colors: ['#a29bfe', '#74b9ff', '#81ecec'], angle: 45 }}
         icon={<Medal size={14} />}
         iconBgColor="var(--ds-gray-200)"
-        iconColor="var(--ds-gray-900)"
+        iconColor="hsl(var(--color-textSubtle))"
         size={64}
         badgeSize={26}
       />
@@ -454,7 +454,7 @@ export default function AvatarComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Multiple avatars can be stacked together in a group. Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             limit
           </code>{" "}
           prop to limit the number of visible avatars and show a count for the
@@ -477,7 +477,7 @@ export default function AvatarComponent() {
                     />
                   ),
                   bgColor: "#000",
-                  borderColor: "var(--ds-gray-400)",
+                  borderColor: "hsl(var(--color-borderDefault))",
                 },
                 { src: avatarImages[0], alt: "User 1" },
                 { src: avatarImages[1], alt: "User 2" },
@@ -546,7 +546,7 @@ export default function AvatarComponent() {
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Add a custom icon badge to indicate status, role, or any other
           attribute. Customize the background colour using the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             iconBgColor
           </code>{" "}
           prop. The avatar can also use a gradient background instead of an
@@ -562,7 +562,7 @@ export default function AvatarComponent() {
               size={64}
               badgeSize={26}
               icon={<Check size={14} />}
-              iconBgColor="var(--ds-gray-900)"
+              iconBgColor="hsl(var(--color-textSubtle))"
             />
             <AvatarWithIcon
               gradient={{
@@ -573,7 +573,7 @@ export default function AvatarComponent() {
               badgeSize={26}
               icon={<Medal size={14} />}
               iconBgColor="var(--ds-gray-200)"
-              iconColor="var(--ds-gray-900)"
+              iconColor="hsl(var(--color-textSubtle))"
             />
             <AvatarWithIcon
               gradient={{
@@ -597,7 +597,7 @@ export default function AvatarComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           When no image is provided, use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             placeholder
           </code>{" "}
           prop to display a subtle shimmer animation.
@@ -614,7 +614,7 @@ export default function AvatarComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Avatars can be rendered at any size using the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             size
           </code>{" "}
           prop. Common sizes are 24, 32, 40, 48, and 64 pixels.
@@ -639,28 +639,28 @@ export default function AvatarComponent() {
           Available props for the Avatar components.
         </p>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           Avatar
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">src</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">string</td>
@@ -713,28 +713,28 @@ export default function AvatarComponent() {
           </table>
         </div>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           AvatarGroup
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">members</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -765,28 +765,28 @@ export default function AvatarComponent() {
           </table>
         </div>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           AvatarBrand
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">brand</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -817,28 +817,28 @@ export default function AvatarComponent() {
           </table>
         </div>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           AvatarWithIcon
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">icon</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -894,6 +894,58 @@ export default function AvatarComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use a single{" "}
+            <code className="inline-code">&lt;Avatar&gt;</code> for
+            one person, team, or organization. For two or more
+            stacked avatars, use{" "}
+            <code className="inline-code">&lt;AvatarGroup&gt;</code>{" "}
+            so the cluster gets correct overlap, sizing, and a
+            single accessible label.
+          </li>
+          <li>
+            Pass <code className="inline-code">src</code> first and
+            fall back to{" "}
+            <code className="inline-code">fallback</code> (the
+            entity&apos;s name; the component derives 1&ndash;2
+            uppercase initials) when the image is missing. Reserve{" "}
+            <code className="inline-code">placeholder</code> for the
+            loading shell, never as a permanent fallback.
+          </li>
+          <li>
+            <code className="inline-code">fallback</code> is the
+            literal entity name (
+            <code className="inline-code">Acme Inc.</code>,{" "}
+            <code className="inline-code">Jane Doe</code>). Initials
+            avatars are announced as{" "}
+            <code className="inline-code">
+              Avatar with initials:
+            </code>{" "}
+            for screen readers, so don&apos;t hand-write{" "}
+            <code className="inline-code">Avatar of …</code>.
+          </li>
+          <li>
+            Keep <code className="inline-code">fallback</code>{" "}
+            derived from the entity name. No emoji, no punctuation,
+            no <code className="inline-code">?</code>.
+          </li>
+          <li>
+            Pick a size that matches adjacent type: 20&ndash;24px
+            next to{" "}
+            <code className="inline-code">text-label-14</code>, 32px
+            next to{" "}
+            <code className="inline-code">text-label-16</code>,
+            48&ndash;64px in headers and onboarding states.
+          </li>
+        </ul>
       </Section>
     </>
   );

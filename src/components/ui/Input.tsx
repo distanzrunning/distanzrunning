@@ -87,6 +87,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     disabled,
     className,
     id: idProp,
+    "aria-describedby": ariaDescribedByProp,
     ...props
   },
   ref,
@@ -96,6 +97,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const config = sizeConfigs[size];
   const hasPrefix = prefix !== undefined;
   const hasSuffix = suffix !== undefined;
+  const errorMessageId =
+    error && errorMessage ? `${inputId}-error` : undefined;
+  const ariaDescribedBy =
+    [ariaDescribedByProp, errorMessageId].filter(Boolean).join(" ") ||
+    undefined;
 
   return (
     <div className="ds-input-wrapper">
@@ -124,7 +130,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           height: config.height,
           maxWidth: "100%",
           borderRadius: config.borderRadius,
-          background: "var(--ds-background-100)",
+          background: "hsl(var(--color-surface))",
           transition: "box-shadow 0.15s ease",
           overflow: "hidden",
           fontSize: config.fontSize,
@@ -150,9 +156,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               cursor: "default",
               transition: "color 0.15s ease",
               ...(prefixStyling
-                ? { background: "var(--ds-background-200)" }
+                ? { background: "hsl(var(--color-surface))" }
                 : { marginRight: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
-              ...(disabled ? { cursor: "not-allowed", color: "var(--ds-gray-700)" } : {}),
+              ...(disabled ? { cursor: "not-allowed", color: "hsl(var(--color-textSubtler))" } : {}),
             }}
           >
             {prefix}
@@ -164,6 +170,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           ref={ref}
           id={inputId}
           disabled={disabled}
+          aria-invalid={error || undefined}
+          aria-describedby={ariaDescribedBy}
           className="ds-input-field"
           style={{
             flex: 1,
@@ -171,10 +179,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             height: "100%",
             border: "none",
             outline: "none",
-            background: disabled ? "var(--ds-gray-100)" : "var(--ds-background-100)",
+            background: disabled ? "var(--ds-gray-100)" : "hsl(var(--color-surface))",
             fontSize: config.fontSize,
             lineHeight: "20px",
-            color: disabled ? "var(--ds-gray-700)" : "var(--ds-gray-1000)",
+            color: disabled ? "hsl(var(--color-textSubtler))" : "hsl(var(--color-textDefault))",
             fontFamily: "inherit",
             paddingLeft: config.paddingX,
             paddingRight: config.paddingX,
@@ -210,9 +218,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               cursor: "default",
               transition: "color 0.15s ease",
               ...(suffixStyling
-                ? { background: "var(--ds-background-200)" }
+                ? { background: "hsl(var(--color-surface))" }
                 : { marginLeft: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
-              ...(disabled ? { cursor: "not-allowed", color: "var(--ds-gray-700)" } : {}),
+              ...(disabled ? { cursor: "not-allowed", color: "hsl(var(--color-textSubtler))" } : {}),
             }}
           >
             {suffix}
@@ -223,6 +231,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       {/* Error message */}
       {error && errorMessage && (
         <div
+          id={errorMessageId}
           className="ds-input-error"
           style={{
             display: "flex",

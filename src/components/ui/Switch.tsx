@@ -9,8 +9,20 @@ import { Tooltip } from "./Tooltip";
 
 interface SwitchOption {
   value: string;
+  /**
+   * Visible label. Required for non-icon options. For icon-only
+   * options, either `label` or `ariaLabel` must be set so screen
+   * readers can announce the option — when both `icon` and `label`
+   * are present the label renders visibly; when only `icon` is set
+   * we render `ariaLabel` (or `label`) as an SR-only span.
+   */
   label?: string;
   icon?: React.ReactNode;
+  /**
+   * Explicit accessible name for icon-only options. Falls back to
+   * `label`, then `value`.
+   */
+  ariaLabel?: string;
   disabled?: boolean;
   tooltip?: string;
 }
@@ -132,8 +144,8 @@ export function Switch({
     alignItems: "stretch",
     padding: config.containerPadding,
     borderRadius: config.borderRadius,
-    backgroundColor: "var(--ds-background-100)",
-    boxShadow: "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px",
+    backgroundColor: "hsl(var(--color-canvas))",
+    boxShadow: "hsla(var(--ds-gray-1000-value), 0.1) 0px 0px 0px 1px",
     position: "relative",
     width: fullWidth ? "100%" : undefined,
     gap: 0,
@@ -205,7 +217,7 @@ export function Switch({
                 userSelect: "none",
                 transition: "color 0.15s ease",
                 backgroundColor: isSelected
-                  ? "var(--ds-gray-100)"
+                  ? "hsl(var(--color-surface))"
                   : "transparent",
                 color: isDisabled
                   ? "var(--ds-gray-600)"
@@ -226,11 +238,31 @@ export function Switch({
                     height: config.iconSize,
                     flexShrink: 0,
                   }}
+                  aria-hidden="true"
                 >
                   {option.icon}
                 </span>
               )}
               {hasLabel && <span>{option.label}</span>}
+              {isIconOnly && (
+                <span
+                  // Visually hidden text so screen readers announce
+                  // the option name even when only the icon is shown.
+                  style={{
+                    position: "absolute",
+                    width: 1,
+                    height: 1,
+                    padding: 0,
+                    margin: -1,
+                    overflow: "hidden",
+                    clip: "rect(0, 0, 0, 0)",
+                    whiteSpace: "nowrap",
+                    borderWidth: 0,
+                  }}
+                >
+                  {option.ariaLabel || option.label || option.value}
+                </span>
+              )}
             </div>
           </label>
         );

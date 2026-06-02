@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -148,7 +149,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -239,8 +240,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -252,40 +253,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -812,6 +813,110 @@ export default function TableComponent() {
             <FullFeaturedDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use{" "}
+            <code className="inline-code">&lt;Table&gt;</code> for
+            tabular data where rows share the same shape and at least
+            one column is sortable or comparable across rows.
+          </li>
+          <li>
+            For a row of descriptive content paired with a single
+            action (membership row, integration row), use{" "}
+            <ComponentRef name="Entity" /> instead.
+          </li>
+          <li>
+            For a key/value metadata block on a detail page, use{" "}
+            <ComponentRef name="Description" />, not a two-column
+            table.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            When the underlying list is empty (filter cleared, never
+            created), render <ComponentRef name="Empty State" />{" "}
+            outside the table rather than an empty{" "}
+            <code className="inline-code">
+              &lt;Table.Body&gt;
+            </code>
+            .
+          </li>
+          <li>
+            Render <code className="inline-code">—</code> in cells
+            where a value is unknown or not applicable. Don&apos;t
+            substitute <code className="inline-code">N/A</code>,{" "}
+            <code className="inline-code">null</code>, or an empty
+            string.
+          </li>
+          <li>
+            Sortable column headers are buttons. The visible label
+            stays Title Case; the sort-direction arrow is decorative
+            and the button announces the next sort state to assistive
+            tech.
+          </li>
+          <li>
+            Apply <code className="inline-code">tabular-nums</code>{" "}
+            (or Geist Mono) to numeric columns so digits align across
+            rows for comparison.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Column headers (
+            <code className="inline-code">
+              &lt;Table.Head&gt;
+            </code>
+            ) are Title Case nouns or noun phrases:{" "}
+            <code className="inline-code">Last Used</code>,{" "}
+            <code className="inline-code">Requests (7d)</code>,{" "}
+            <code className="inline-code">Created</code>,{" "}
+            <code className="inline-code">Status</code>. Never
+            sentences.
+          </li>
+          <li>
+            Use the canonical short relative-time form in cells (
+            <code className="inline-code">2m ago</code>,{" "}
+            <code className="inline-code">5h ago</code>); switch to{" "}
+            <code className="inline-code">Mar 14, 2026</code> past 7
+            days. See <ComponentRef name="Relative Time Card" />.
+          </li>
+          <li>
+            Pagination labels are{" "}
+            <code className="inline-code">Previous</code> and{" "}
+            <code className="inline-code">Next</code>. Page-count copy
+            reads <code className="inline-code">Page 2 of 7</code> or{" "}
+            <code className="inline-code">21–40 of 142</code> with an
+            en-dash inside the range.
+          </li>
+        </ul>
       </Section>
 
       <Toast

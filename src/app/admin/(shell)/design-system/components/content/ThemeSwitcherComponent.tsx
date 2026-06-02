@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef, useContext } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -141,7 +142,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -232,8 +233,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -245,40 +246,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -354,6 +355,21 @@ export function Component(): JSX.Element {
   );
 }`;
 
+const sizesCode = `import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher';
+import { useContext, type JSX } from 'react';
+import { DarkModeContext } from '@/components/DarkModeProvider';
+
+export function Component(): JSX.Element {
+  const { theme, setTheme } = useContext(DarkModeContext);
+
+  return (
+    <div className="flex flex-row items-center gap-6">
+      <ThemeSwitcher size="small" value={theme} onChange={setTheme} />
+      <ThemeSwitcher size="default" value={theme} onChange={setTheme} />
+    </div>
+  );
+}`;
+
 // ============================================================================
 // Demo Components
 // ============================================================================
@@ -371,6 +387,16 @@ function LightDarkDemo() {
 function DisabledDemo() {
   const { theme } = useContext(DarkModeContext);
   return <ThemeSwitcher disabled value={theme} />;
+}
+
+function SizesDemo() {
+  const { theme, setTheme } = useContext(DarkModeContext);
+  return (
+    <div className="flex flex-row items-center gap-6">
+      <ThemeSwitcher size="small" value={theme} onChange={setTheme} />
+      <ThemeSwitcher size="default" value={theme} onChange={setTheme} />
+    </div>
+  );
 }
 
 // ============================================================================
@@ -413,6 +439,79 @@ export default function ThemeSwitcherComponent() {
             <DisabledDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="sizes" onCopyLink={showToast}>
+          Sizes
+        </SectionHeader>
+        <p
+          className="mt-2 leading-6 xl:mt-4"
+          style={{ color: "hsl(var(--color-textSubtle))" }}
+        >
+          Pass <code className="inline-code">size=&quot;small&quot;</code>{" "}
+          for dense chrome (footers, dropdowns); the default size
+          works for settings pages.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={sizesCode}>
+            <SizesDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Theme Switcher for the canonical Light / System / Dark
+            control. Place it once per app, in the footer or settings,
+            not duplicated across pages.
+          </li>
+          <li>
+            Pass <code className="inline-code">size=&quot;small&quot;</code>{" "}
+            for dense chrome (footers, dropdowns); use the default
+            size on a settings page where there&apos;s room for the
+            labels to breathe.
+          </li>
+          <li>
+            Theme Switcher is a controlled component — wire{" "}
+            <code className="inline-code">value</code> and{" "}
+            <code className="inline-code">onChange</code> to our{" "}
+            <code className="inline-code">DarkModeProvider</code>{" "}
+            context (
+            <code className="inline-code">theme</code>,{" "}
+            <code className="inline-code">setTheme</code>) at the
+            root. Don&apos;t mirror its state into local React state.
+          </li>
+          <li>
+            Use <code className="inline-code">disabled</code> for
+            read-only previews of the control itself (e.g.
+            documentation surfaces). For runtime theme locking, gate
+            the wiring at the provider level.
+          </li>
+          <li>
+            Don&apos;t rebuild a theme picker with{" "}
+            <ComponentRef name="Switch" /> or three icon buttons.
+            Theme Switcher already handles the icons, the{" "}
+            <code className="inline-code">aria-label</code> per
+            option, and System detection through{" "}
+            <code className="inline-code">DarkModeProvider</code>.
+          </li>
+          <li>
+            The component renders sun / monitor / moon icons and
+            descriptive{" "}
+            <code className="inline-code">aria-label</code>s (
+            <code className="inline-code">Light theme</code>,{" "}
+            <code className="inline-code">System theme</code>,{" "}
+            <code className="inline-code">Dark theme</code>); leave
+            them alone so they stay consistent across surfaces.
+          </li>
+        </ul>
       </Section>
 
       <Toast

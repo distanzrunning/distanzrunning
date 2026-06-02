@@ -40,6 +40,25 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
 
+  // The /r/* registry routes read component source from the repo at
+  // request time. Vercel's deployment tracing won't include those
+  // .tsx files by default because they're not statically imported,
+  // so name them explicitly here.
+  outputFileTracingIncludes: {
+    "/r": [
+      "./src/components/ui/*.tsx",
+      "./src/components/*.tsx",
+      "./src/contexts/*.tsx",
+      "./src/registry/styles/*.css",
+    ],
+    "/r/*": [
+      "./src/components/ui/*.tsx",
+      "./src/components/*.tsx",
+      "./src/contexts/*.tsx",
+      "./src/registry/styles/*.css",
+    ],
+  },
+
   // Permanent redirects for the URL flattening — old paths
   // (/articles/category/X, /articles/post/X, /shoes/category/X,
   // /gear/category/X, /nutrition/category/X) now resolve at the
@@ -70,6 +89,49 @@ const nextConfig: NextConfig = {
       {
         source: "/nutrition/category/:slug",
         destination: "/nutrition/:slug",
+        permanent: true,
+      },
+      // Runner's Guide articles merged into their raceGuide
+      // counterparts (May 2026). Old article URLs stay
+      // permanent-redirected to the race detail page so existing
+      // links and search-engine indexing keep working.
+      {
+        source: "/articles/tokyo-marathon-runners-guide",
+        destination: "/races/tokyo-marathon",
+        permanent: true,
+      },
+      {
+        source: "/articles/boston-marathon-runners-guide",
+        destination: "/races/boston-marathon",
+        permanent: true,
+      },
+      {
+        source: "/articles/chicago-marathon-runners-guide",
+        destination: "/races/chicago-marathon",
+        permanent: true,
+      },
+      {
+        source: "/articles/berlin-marathon-runners-guide",
+        destination: "/races/berlin-marathon",
+        permanent: true,
+      },
+      {
+        source: "/articles/new-york-city-marathon-runners-guide",
+        destination: "/races/new-york-city-marathon",
+        permanent: true,
+      },
+      {
+        source: "/articles/london-marathon-runners-guide",
+        destination: "/races/london-marathon",
+        permanent: true,
+      },
+      // London raceGuide originally shipped with a typo'd slug
+      // ("london-matathon"). Slug corrected to "london-marathon"
+      // — this redirect catches any inbound links / cached
+      // search results still pointing at the old URL.
+      {
+        source: "/races/london-matathon",
+        destination: "/races/london-marathon",
         permanent: true,
       },
     ];

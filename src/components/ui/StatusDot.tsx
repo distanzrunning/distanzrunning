@@ -1,41 +1,130 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+
+// ============================================================================
+// Types
+// ============================================================================
+
+type State =
+  | "QUEUED"
+  | "BUILDING"
+  | "READY"
+  | "ERROR"
+  | "CANCELED"
+  | "DELETED";
 
 interface StatusDotProps {
-  status: "queued" | "building" | "error" | "ready" | "canceled";
-  label?: string;
+  /** Deployment lifecycle state */
+  state: State;
+  /**
+   * Noun phrase prefixed to the state message in the auto-composed
+   * aria-label. Defaults to `"This deployment"`; pass the entity in
+   * lists (`"vercel-site production"`).
+   */
+  titlePrefix?: string;
+  /**
+   * Show a sentence-cased state next to the dot (Building, Ready,
+   * Error…). Use only when the dot stands alone without surrounding
+   * text.
+   */
+  label?: boolean;
+  /**
+   * Mark the dot decorative when it sits inline with text that
+   * already names the state — screen readers won't announce it twice.
+   */
+  "aria-hidden"?: boolean;
   className?: string;
 }
 
-const statusColors: Record<StatusDotProps["status"], string> = {
-  queued: "#eaeaea",
-  building: "#f5a623",
-  error: "#ee0000",
-  ready: "#50e3c2",
-  canceled: "#eaeaea",
+// ============================================================================
+// State → color / message tables
+// ============================================================================
+
+const stateColors: Record<State, string> = {
+  QUEUED: "var(--ds-gray-500)",
+  BUILDING: "var(--ds-amber-700)",
+  READY: "var(--ds-teal-700)",
+  ERROR: "var(--ds-red-700)",
+  CANCELED: "var(--ds-gray-500)",
+  DELETED: "var(--ds-gray-500)",
 };
 
-const statusDescriptions: Record<StatusDotProps["status"], string> = {
-  queued: "This deployment is queued.",
-  building: "This deployment is building.",
-  error: "This deployment had an error.",
-  ready: "This deployment is ready.",
-  canceled: "This deployment was canceled.",
+const stateMessages: Record<State, string> = {
+  QUEUED: "is queued",
+  BUILDING: "is building",
+  READY: "is ready",
+  ERROR: "had an error",
+  CANCELED: "was canceled",
+  DELETED: "was deleted",
 };
 
-export function StatusDot({ status, label, className }: StatusDotProps) {
-  const color = statusColors[status];
-  const description = statusDescriptions[status];
+const inFlightStates: Set<State> = new Set(["QUEUED", "BUILDING"]);
+
+function sentenceCaseState(state: State): string {
+  return state[0] + state.slice(1).toLowerCase();
+}
+
+// ============================================================================
+// Pulse keyframes (injected once)
+// ============================================================================
+
+const PULSE_STYLE_ID = "ds-status-dot-style";
+
+function ensurePulseStyles() {
+  if (typeof document === "undefined") return;
+  if (document.getElementById(PULSE_STYLE_ID)) return;
+  const style = document.createElement("style");
+  style.id = PULSE_STYLE_ID;
+  style.textContent = `
+    @keyframes ds-status-dot-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+    .ds-status-dot--pulse {
+      animation: ds-status-dot-pulse 1.4s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ds-status-dot--pulse {
+        animation: none;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// ============================================================================
+// Component
+// ============================================================================
+
+export function StatusDot({
+  state,
+  titlePrefix = "This deployment",
+  label = false,
+  "aria-hidden": ariaHidden,
+  className,
+}: StatusDotProps) {
+  useEffect(() => {
+    ensurePulseStyles();
+  }, []);
+
+  const color = stateColors[state];
+  const message = stateMessages[state];
+  const ariaLabel = ariaHidden ? undefined : `${titlePrefix} ${message}.`;
+  const title = `${titlePrefix} ${message}.`;
+  const sentenceCased = sentenceCaseState(state);
+  const shouldPulse = inFlightStates.has(state);
 
   return (
     <span
-      style={{ display: "flex", alignItems: "center" }}
+      style={{ display: "inline-flex", alignItems: "center" }}
       className={className}
-      aria-label={description}
-      title={description}
+      aria-label={ariaLabel}
+      aria-hidden={ariaHidden}
+      title={title}
     >
       <span
+        className={shouldPulse ? "ds-status-dot--pulse" : undefined}
         style={{
           display: "block",
           width: 10,
@@ -54,9 +143,11 @@ export function StatusDot({ status, label, className }: StatusDotProps) {
             marginLeft: 8,
           }}
         >
-          {label}
+          {sentenceCased}
         </span>
       )}
     </span>
   );
 }
+
+export default StatusDot;

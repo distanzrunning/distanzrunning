@@ -12,6 +12,11 @@ interface ThemeSwitcherProps {
   disabled?: boolean;
   /** Hide the system option, show only light/dark */
   showSystem?: boolean;
+  /**
+   * Size variant. `small` is for dense chrome (footers, dropdowns);
+   * `default` gives the labels room to breathe (settings pages).
+   */
+  size?: "small" | "default";
   className?: string;
   style?: React.CSSProperties;
 }
@@ -28,12 +33,19 @@ export function ThemeSwitcher({
   onChange,
   disabled = false,
   showSystem = true,
+  size = "default",
   className,
   style: styleProp,
 }: ThemeSwitcherProps) {
   const instanceId = useId();
   const [internalValue, setInternalValue] = useState<ThemeValue>(defaultValue);
   const selected = value !== undefined ? value : internalValue;
+
+  const buttonSize = size === "small" ? 24 : 32;
+  const iconSize = size === "small" ? 14 : 16;
+  const containerPadding = size === "small" ? 1 : 2;
+  const containerRadius = size === "small" ? 6 : 8;
+  const optionRadius = size === "small" ? 4 : 6;
 
   const handleChange = useCallback(
     (newValue: ThemeValue) => {
@@ -53,9 +65,9 @@ export function ThemeSwitcher({
         display: "inline-flex",
         flexDirection: "row",
         gap: 2,
-        padding: 2,
-        borderRadius: 8,
-        background: "var(--ds-gray-100)",
+        padding: containerPadding,
+        borderRadius: containerRadius,
+        background: "hsl(var(--color-canvas))",
         border: "none",
         margin: 0,
         ...styleProp,
@@ -98,28 +110,28 @@ export function ThemeSwitcher({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: 32,
-              height: 32,
+              width: buttonSize,
+              height: buttonSize,
               padding: 0,
               border: "none",
-              borderRadius: 6,
+              borderRadius: optionRadius,
               cursor: disabled ? "not-allowed" : "pointer",
               background: isSelected
-                ? "var(--ds-background-100)"
+                ? "hsl(var(--color-surface))"
                 : "transparent",
               boxShadow: isSelected
-                ? "rgba(0,0,0,0.06) 0px 2px 4px, rgba(0,0,0,0.04) 0px 0px 0px 1px"
+                ? "rgba(0,0,0,0.06) 0px 2px 4px, hsla(var(--ds-gray-1000-value), 0.14) 0px 0px 0px 1px"
                 : "none",
               color: disabled
                 ? "var(--ds-gray-600)"
                 : isSelected
-                  ? "var(--ds-gray-1000)"
+                  ? "hsl(var(--color-textDefault))"
                   : "var(--ds-gray-800)",
               transition:
                 "background 0.15s ease, box-shadow 0.15s ease, color 0.15s ease",
             }}
           >
-            <Icon size={16} />
+            <Icon size={iconSize} />
           </button>
         );
       })}

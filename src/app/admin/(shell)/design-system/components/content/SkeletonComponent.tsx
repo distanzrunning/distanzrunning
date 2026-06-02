@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -141,7 +142,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -232,8 +233,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -245,40 +246,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -369,7 +370,7 @@ const roundedCode = `import { Skeleton } from '@/components/ui/Skeleton';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  return <Skeleton width={48} height={48} shape="rounded" />;
+  return <Skeleton width={100} height={32} shape="rounded" />;
 }`;
 
 const squaredCode = `import { Skeleton } from '@/components/ui/Skeleton';
@@ -427,7 +428,7 @@ function PillDemo() {
 }
 
 function RoundedDemo() {
-  return <Skeleton width={48} height={48} shape="rounded" />;
+  return <Skeleton width={100} height={32} shape="rounded" />;
 }
 
 function SquaredDemo() {
@@ -475,7 +476,7 @@ export default function SkeletonComponent() {
         </SectionHeader>
         <p
           className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "var(--ds-gray-900)" }}
+          style={{ color: "hsl(var(--color-textSubtle))" }}
         >
           If you do not pass a fixed size, it will be calculated automatically.
         </p>
@@ -495,7 +496,7 @@ export default function SkeletonComponent() {
         </SectionHeader>
         <p
           className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "var(--ds-gray-900)" }}
+          style={{ color: "hsl(var(--color-textSubtle))" }}
         >
           The skeleton will hide when children are not null, but the size is
           retained.
@@ -549,6 +550,97 @@ export default function SkeletonComponent() {
             <NoAnimationDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Show a Skeleton when async data fills a known layout: table
+            rows, card grids, profile blocks, sidebars.
+          </li>
+          <li>
+            For a single in-flight action, use{" "}
+            <ComponentRef name="Spinner" />; for an indeterminate
+            inline wait, use <ComponentRef name="Loading Dots" />; for
+            known progress, use <ComponentRef name="Progress" />.
+          </li>
+          <li>
+            Don&apos;t use Skeleton as permanent decoration or as a
+            placeholder for empty states. When there&apos;s no data to
+            load, render an <ComponentRef name="Empty State" />.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Set <code className="inline-code">width</code> and{" "}
+            <code className="inline-code">height</code> to match the
+            final content so the layout doesn&apos;t shift when data
+            resolves. A 200×20 block becoming an 80×16 string reads as
+            a glitch.
+          </li>
+          <li>
+            Pick <code className="inline-code">pill</code>,{" "}
+            <code className="inline-code">rounded</code>, or{" "}
+            <code className="inline-code">squared</code> to mirror the
+            eventual element&apos;s shape (avatars{" "}
+            <code className="inline-code">pill</code>, buttons and
+            chips <code className="inline-code">rounded</code>, image
+            tiles <code className="inline-code">squared</code>).
+          </li>
+          <li>
+            When the skeleton wraps children, keep dimensions stable so
+            the reveal swap doesn&apos;t reflow surrounding content.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Wrap the loading region in{" "}
+            <code className="inline-code">
+              aria-busy=&quot;true&quot;
+            </code>{" "}
+            and announce completion with{" "}
+            <code className="inline-code">
+              aria-live=&quot;polite&quot;
+            </code>{" "}
+            on the destination container, not the skeleton itself.
+          </li>
+          <li>
+            Disable the shimmer with the{" "}
+            <code className="inline-code">noAnimation</code> prop on
+            low-power surfaces. The component already respects{" "}
+            <code className="inline-code">prefers-reduced-motion</code>{" "}
+            automatically.
+          </li>
+          <li>
+            Skeletons are decorative; avoid placing focusable controls
+            inside them while loading.
+          </li>
+        </ul>
       </Section>
 
       <Toast

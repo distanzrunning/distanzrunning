@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { ChevronDown, Shield, Zap } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -151,7 +152,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -248,8 +249,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -261,18 +262,18 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+    <div className="border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
-      <div className="p-6" style={{ background: "var(--ds-background-100)" }}>
+      <div className="p-6" style={{ background: "hsl(var(--color-surface))" }}>
         {children}
       </div>
 
       {/* Accordion trigger */}
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
@@ -281,14 +282,14 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {/* Collapsible code section */}
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               {/* Floating copy button */}
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
@@ -296,7 +297,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 
               {/* Code content */}
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -446,7 +447,7 @@ export default function BadgeComponent() {
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Badges come in multiple colour variants, each with a solid and subtle
           option. Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             variant
           </code>{" "}
           prop to set the style.
@@ -499,7 +500,7 @@ export default function BadgeComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Badges are available in three sizes: small, medium, and large. Use the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             size
           </code>{" "}
           prop to adjust.
@@ -526,7 +527,7 @@ export default function BadgeComponent() {
         </SectionHeader>
         <p className="text-copy-14 text-textSubtle mt-4 mb-6">
           Add an icon before the badge text using the{" "}
-          <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">
+          <code className="inline-code">
             icon
           </code>{" "}
           prop. Icons are sized automatically based on the badge size.
@@ -838,28 +839,28 @@ export default function BadgeComponent() {
           Available props for the Badge components.
         </p>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           Badge
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">children</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -908,28 +909,28 @@ export default function BadgeComponent() {
           </table>
         </div>
 
-        <h3 className="text-[16px] font-semibold text-textDefault mt-8 mb-4">
+        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
           BadgePill
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">children</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -975,6 +976,88 @@ export default function BadgeComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Badge for short, scannable metadata that sits next to the
+            thing it describes: status, plan tier, environment, or role. One
+            badge per row; two side by side is a sign the row needs a second
+            column.
+          </li>
+          <li>
+            For a colored dot without text, use{" "}
+            <ComponentRef name="Status Dot" />. For clickable filter chips
+            that toggle a query, use the{" "}
+            <code className="inline-code">pill</code> variant or a small{" "}
+            <ComponentRef name="Button" />.
+          </li>
+          <li>
+            Badges are static labels. Don&apos;t wire{" "}
+            <code className="inline-code">onClick</code> onto them; promote
+            to a <ComponentRef name="Button" /> or link if the user can act
+            on the value.
+          </li>
+          <li>
+            Keep badge content to text or{" "}
+            <code className="inline-code">icon</code> + text. Never stack two
+            icons or a child Badge inside a Badge.
+          </li>
+          <li>
+            Pair lifecycle badges (
+            <code className="inline-code">Alpha</code>,{" "}
+            <code className="inline-code">Beta</code>,{" "}
+            <code className="inline-code">Early Access</code>) with a{" "}
+            <ComponentRef name="Tooltip" /> that names the limit, like{" "}
+            <code className="inline-code">
+              Alpha: API may change before GA
+            </code>
+            .
+          </li>
+          <li>
+            Title Case, one word when possible, two max:{" "}
+            <code className="inline-code">Active</code>,{" "}
+            <code className="inline-code">Pending</code>,{" "}
+            <code className="inline-code">Pro</code>,{" "}
+            <code className="inline-code">Enterprise Trial</code>.
+            Match the canonical API or log term:{" "}
+            <code className="inline-code">Production</code> not{" "}
+            <code className="inline-code">Prod</code>,{" "}
+            <code className="inline-code">Deployed</code> not{" "}
+            <code className="inline-code">Live</code>; stay
+            consistent with how the data source spells it.
+          </li>
+          <li>
+            Don&apos;t add a checkmark icon for success states or an
+            X for errors; the variant carries that signal. Map
+            meaning to color:{" "}
+            <code className="inline-code">green</code> for healthy,{" "}
+            <code className="inline-code">red</code> for error,{" "}
+            <code className="inline-code">amber</code> for warning,{" "}
+            <code className="inline-code">blue</code> for
+            informational or production,{" "}
+            <code className="inline-code">gray</code> for neutral.
+            The <code className="inline-code">-subtle</code> suffix
+            tones any of them down on dense surfaces.
+          </li>
+          <li>
+            Skip stuffing sentences inside (
+            <code className="inline-code">Currently Active</code>,{" "}
+            <code className="inline-code">You are on Pro</code>);
+            the surrounding row supplies the context.
+          </li>
+          <li>
+            Set <code className="inline-code">title</code> for
+            icon-only or ambiguous badges so screen readers announce
+            the meaning. Don&apos;t rely on color alone; the text
+            has to be readable without it.
+          </li>
+        </ul>
       </Section>
     </>
   );

@@ -84,16 +84,16 @@ const navigationMenuTriggerStyle = cva(
     // loudest, matching v0.
     // rounded-sm = 6px in this project's scale (not 2px like Tailwind
     // default). rounded-md here is 10px, which would overshoot v0.
-    "group inline-flex h-7 w-max items-center justify-center rounded-sm px-2 py-1 text-[14px] leading-[20px] font-medium",
-    "text-[color:var(--ds-gray-900)]",
+    "group inline-flex h-7 w-max items-center justify-center rounded-sm px-2 py-1 text-button-14",
+    "text-textSubtle",
     "bg-transparent",
     "transition-all duration-150 outline-none",
-    "hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]",
-    "focus:bg-[color:var(--ds-gray-100)] focus:text-[color:var(--ds-gray-1000)]",
+    "hover:bg-[var(--ds-gray-100)] hover:text-textDefault",
+    "focus:bg-[var(--ds-gray-100)] focus:text-textDefault",
     "focus-visible:ring-[3px] focus-visible:ring-[color:var(--ds-focus-ring)] focus-visible:outline-1",
     "disabled:pointer-events-none disabled:opacity-50",
-    "data-[state=open]:bg-[color:var(--ds-gray-100)] data-[state=open]:text-[color:var(--ds-gray-1000)]",
-    "data-[active=true]:bg-transparent data-[active=true]:text-[color:var(--ds-gray-1000)]",
+    "data-[state=open]:bg-[var(--ds-gray-100)] data-[state=open]:text-textDefault",
+    "data-[active=true]:bg-transparent data-[active=true]:text-textDefault",
   ].join(" "),
 );
 
@@ -109,8 +109,11 @@ function NavigationMenuTrigger({
       {...props}
     >
       {children}{" "}
+      {/* 16 px chevron (size-4) paired with a 6 px gap (ml-1.5) —
+          matches the Frontify trigger anatomy. Rotates 180° when the
+          trigger is open. */}
       <ChevronDownIcon
-        className="relative top-[1px] ml-1 size-3 transition duration-150 group-data-[state=open]:rotate-180"
+        className="relative top-[1px] ml-1.5 size-4 transition duration-150 group-data-[state=open]:rotate-180"
         aria-hidden="true"
       />
     </NavigationMenuPrimitive.Trigger>
@@ -138,9 +141,9 @@ function NavigationMenuContent({
         "group-data-[viewport=false]/navigation-menu:overflow-hidden",
         "group-data-[viewport=false]/navigation-menu:rounded-md",
         "group-data-[viewport=false]/navigation-menu:border",
-        "group-data-[viewport=false]/navigation-menu:border-[color:var(--ds-gray-400)]",
-        "group-data-[viewport=false]/navigation-menu:bg-[color:var(--ds-background-100)]",
-        "group-data-[viewport=false]/navigation-menu:text-[color:var(--ds-gray-1000)]",
+        "group-data-[viewport=false]/navigation-menu:border-borderDefault",
+        "group-data-[viewport=false]/navigation-menu:bg-surface",
+        "group-data-[viewport=false]/navigation-menu:text-textDefault",
         "group-data-[viewport=false]/navigation-menu:shadow-[var(--ds-shadow-menu)]",
         "group-data-[viewport=false]/navigation-menu:duration-200",
         "**:data-[slot=navigation-menu-link]:focus:ring-0",
@@ -178,8 +181,8 @@ function NavigationMenuViewport({
           "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden",
           // rounded-lg = 12px in this project's scale (matches v0's
           // rounded-xl which lands on 12px with Tailwind defaults).
-          "rounded-lg border border-[color:var(--ds-gray-400)]",
-          "bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)]",
+          "rounded-lg border border-borderDefault",
+          "bg-surface text-textDefault",
           "shadow-[var(--ds-shadow-menu)]",
           "data-[state=closed]:animate-out data-[state=closed]:zoom-out-95",
           "data-[state=open]:animate-in data-[state=open]:zoom-in-90",
@@ -201,11 +204,11 @@ function NavigationMenuLink({
       data-slot="navigation-menu-link"
       className={cn(
         "flex flex-col gap-1 rounded-sm p-2 text-sm transition-all outline-none",
-        "text-[color:var(--ds-gray-900)]",
-        "hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]",
-        "focus:bg-[color:var(--ds-gray-100)] focus:text-[color:var(--ds-gray-1000)]",
+        "text-textSubtle",
+        "hover:bg-[var(--ds-gray-100)] hover:text-textDefault",
+        "focus:bg-[var(--ds-gray-100)] focus:text-textDefault",
         "focus-visible:ring-[3px] focus-visible:ring-[color:var(--ds-focus-ring)] focus-visible:outline-1",
-        "data-[active=true]:bg-[color:var(--ds-gray-100)] data-[active=true]:text-[color:var(--ds-gray-1000)]",
+        "data-[active=true]:bg-[var(--ds-gray-100)] data-[active=true]:text-textDefault",
         "[&_svg:not([class*='size-'])]:size-4",
         className,
       )}
@@ -229,7 +232,7 @@ function NavigationMenuIndicator({
       )}
       {...props}
     >
-      <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-[color:var(--ds-gray-400)] shadow-md" />
+      <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-borderDefault shadow-md" />
     </NavigationMenuPrimitive.Indicator>
   );
 }

@@ -132,7 +132,7 @@ function SectionHeader({
       id={id}
       style={{ scrollMarginTop: 32 }}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -198,8 +198,8 @@ function CodePreview({
           [
             {
               content: line,
-              color: "var(--ds-gray-1000)",
-              darkColor: "var(--ds-gray-1000)",
+              color: "hsl(var(--color-textDefault))",
+              darkColor: "hsl(var(--color-textDefault))",
             },
           ] as DualThemeToken[],
       );
@@ -209,40 +209,40 @@ function CodePreview({
     setTimeout(() => setCopied(false), 1000);
   }, [componentCode]);
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -282,8 +282,8 @@ function FooterAnatomy() {
     <div
       className="flex w-full flex-col gap-y-12 md:flex-row md:items-start md:justify-between md:gap-x-12"
       style={{
-        background: "var(--ds-background-100)",
-        border: "1px solid var(--ds-gray-400)",
+        background: "hsl(var(--color-surface))",
+        border: "1px solid hsl(var(--color-borderDefault))",
         borderRadius: 6,
         padding: 32,
       }}
@@ -312,9 +312,9 @@ function Zone({
       className="flex items-center justify-center px-3"
       style={{
         background: "var(--ds-gray-100)",
-        border: "1px dashed var(--ds-gray-400)",
+        border: "1px dashed hsl(var(--color-borderDefault))",
         borderRadius: 6,
-        color: "var(--ds-gray-700)",
+        color: "hsl(var(--color-textSubtler))",
         fontSize: 11,
         fontFamily: "var(--font-mono)",
         minHeight,
@@ -337,8 +337,8 @@ function FooterPreview() {
     <div
       className="w-full overflow-hidden"
       style={{
-        background: "var(--ds-background-100)",
-        border: "1px solid var(--ds-gray-400)",
+        background: "hsl(var(--color-surface))",
+        border: "1px solid hsl(var(--color-borderDefault))",
         borderRadius: 6,
       }}
     >
@@ -384,7 +384,7 @@ export default function FooterComponent() {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              color: "var(--ds-gray-1000)",
+              color: "hsl(var(--color-textDefault))",
               textDecoration: "underline",
             }}
           >
@@ -458,18 +458,18 @@ export default function FooterComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Column
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Items
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Notes
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">Category</td>
                 <td className="py-3 px-4">

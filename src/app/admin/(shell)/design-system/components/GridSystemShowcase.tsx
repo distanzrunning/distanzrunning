@@ -45,7 +45,7 @@ export default function GridSystemShowcase() {
           {Array.from({ length: 12 }).map((_, i) => (
             <div
               key={i}
-              className="bg-electric-pink/20 border border-neutral-400 dark:border-neutral-500 rounded p-2 text-center"
+              className="bg-textDefault/20 border border-neutral-400 dark:border-neutral-500 rounded p-2 text-center"
             >
               <span className="text-xs font-mono text-textSubtle">{i + 1}</span>
             </div>
@@ -67,10 +67,10 @@ export default function GridSystemShowcase() {
           <div>
             <p className="text-sm font-medium mb-3">Two Columns (6 + 6)</p>
             <div className="grid grid-cols-12 gap-4 max-w-[1585px] mx-auto">
-              <div className="col-span-6 bg-volt-green/20 border border-volt-green rounded p-6 text-center">
+              <div className="col-span-6 bg-green-600/20 border border-green-600 rounded p-6 text-center">
                 <span className="text-sm font-mono">col-span-6</span>
               </div>
-              <div className="col-span-6 bg-volt-green/20 border border-volt-green rounded p-6 text-center">
+              <div className="col-span-6 bg-green-600/20 border border-green-600 rounded p-6 text-center">
                 <span className="text-sm font-mono">col-span-6</span>
               </div>
             </div>
@@ -82,13 +82,13 @@ export default function GridSystemShowcase() {
               Three Columns (4 + 4 + 4)
             </p>
             <div className="grid grid-cols-12 gap-4 max-w-[1585px] mx-auto">
-              <div className="col-span-4 bg-pace-purple/20 border border-pace-purple rounded p-6 text-center">
+              <div className="col-span-4 bg-purple-600/20 border border-purple-600 rounded p-6 text-center">
                 <span className="text-sm font-mono">col-span-4</span>
               </div>
-              <div className="col-span-4 bg-pace-purple/20 border border-pace-purple rounded p-6 text-center">
+              <div className="col-span-4 bg-purple-600/20 border border-purple-600 rounded p-6 text-center">
                 <span className="text-sm font-mono">col-span-4</span>
               </div>
-              <div className="col-span-4 bg-pace-purple/20 border border-pace-purple rounded p-6 text-center">
+              <div className="col-span-4 bg-purple-600/20 border border-purple-600 rounded p-6 text-center">
                 <span className="text-sm font-mono">col-span-4</span>
               </div>
             </div>
@@ -103,7 +103,7 @@ export default function GridSystemShowcase() {
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={i}
-                  className="col-span-3 bg-tech-cyan/20 border border-tech-cyan rounded p-6 text-center"
+                  className="col-span-3 bg-teal-600/20 border border-teal-600 rounded p-6 text-center"
                 >
                   <span className="text-sm font-mono">col-span-3</span>
                 </div>
@@ -117,12 +117,12 @@ export default function GridSystemShowcase() {
               Primary + Secondary (8 + 4)
             </p>
             <div className="grid grid-cols-12 gap-4 max-w-[1585px] mx-auto">
-              <div className="col-span-8 bg-electric-pink/20 border border-electric-pink rounded p-6 text-center">
+              <div className="col-span-8 bg-textDefault/20 border border-textDefault rounded p-6 text-center">
                 <span className="text-sm font-mono">
                   col-span-8 (Main Content)
                 </span>
               </div>
-              <div className="col-span-4 bg-electric-pink/20 border border-electric-pink rounded p-6 text-center">
+              <div className="col-span-4 bg-textDefault/20 border border-textDefault rounded p-6 text-center">
                 <span className="text-sm font-mono">col-span-4 (Sidebar)</span>
               </div>
             </div>
@@ -134,10 +134,10 @@ export default function GridSystemShowcase() {
               Sidebar + Content (2 + 10)
             </p>
             <div className="grid grid-cols-12 gap-4 max-w-[1585px] mx-auto">
-              <div className="col-span-2 bg-volt-green/20 border border-volt-green rounded p-6 text-center">
+              <div className="col-span-2 bg-green-600/20 border border-green-600 rounded p-6 text-center">
                 <span className="text-sm font-mono">col-span-2</span>
               </div>
-              <div className="col-span-10 bg-volt-green/20 border border-volt-green rounded p-6 text-center">
+              <div className="col-span-10 bg-green-600/20 border border-green-600 rounded p-6 text-center">
                 <span className="text-sm font-mono">col-span-10 (Content)</span>
               </div>
             </div>
@@ -149,7 +149,7 @@ export default function GridSystemShowcase() {
               Centered Content (start-3, span-8)
             </p>
             <div className="grid grid-cols-12 gap-4 max-w-[1585px] mx-auto">
-              <div className="col-start-3 col-span-8 bg-pace-purple/20 border border-pace-purple rounded p-6 text-center">
+              <div className="col-start-3 col-span-8 bg-purple-600/20 border border-purple-600 rounded p-6 text-center">
                 <span className="text-sm font-mono">
                   col-start-3 col-span-8
                 </span>
@@ -205,7 +205,7 @@ export default function GridSystemShowcase() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Full Grid</p>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   max-w-[1585px]
                 </code>
               </div>
@@ -217,7 +217,7 @@ export default function GridSystemShowcase() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Content Container</p>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   max-w-7xl
                 </code>
               </div>
@@ -229,7 +229,7 @@ export default function GridSystemShowcase() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Reading Width (Articles)</p>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   max-w-4xl
                 </code>
               </div>
@@ -241,7 +241,7 @@ export default function GridSystemShowcase() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">Form Container</p>
-                <code className="text-xs text-textSubtler font-mono">
+                <code className="inline-code">
                   max-w-md
                 </code>
               </div>

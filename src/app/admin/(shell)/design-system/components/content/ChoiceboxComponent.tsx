@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -139,7 +140,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -230,8 +231,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -243,40 +244,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+    <div className="border border-borderDefault rounded-lg overflow-hidden">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -374,7 +375,7 @@ export function DisabledExamples() {
     <div className="flex flex-col gap-6">
       {/* Choicebox group disabled */}
       <div className="flex flex-col gap-3">
-        <span className="text-sm text-[var(--ds-gray-900)]">
+        <span className="text-sm text-textSubtle">
           Choicebox group disabled
         </span>
         <ChoiceboxGroup
@@ -400,7 +401,7 @@ export function DisabledExamples() {
 
       {/* Single input disabled */}
       <div className="flex flex-col gap-3">
-        <span className="text-sm text-[var(--ds-gray-900)]">
+        <span className="text-sm text-textSubtle">
           Single input disabled
         </span>
         <ChoiceboxGroup
@@ -646,7 +647,7 @@ export default function ChoiceboxComponent() {
             <div className="flex flex-col gap-6">
               {/* Choicebox group disabled */}
               <div className="flex flex-col gap-3">
-                <span className="text-sm text-[var(--ds-gray-900)]">
+                <span className="text-sm text-textSubtle">
                   Choicebox group disabled
                 </span>
                 <ChoiceboxGroup
@@ -672,7 +673,7 @@ export default function ChoiceboxComponent() {
 
               {/* Single input disabled */}
               <div className="flex flex-col gap-3">
-                <span className="text-sm text-[var(--ds-gray-900)]">
+                <span className="text-sm text-textSubtle">
                   Single input disabled
                 </span>
                 <SingleInputDisabledDemo />
@@ -708,21 +709,21 @@ export default function ChoiceboxComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">type</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -795,21 +796,21 @@ export default function ChoiceboxComponent() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Prop
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Type
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Default
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Description
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4 font-mono">value</td>
                 <td className="py-3 px-4 font-mono text-textSubtle">
@@ -863,6 +864,113 @@ export default function ChoiceboxComponent() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            A choice that benefits from a larger tap target plus a
+            description or icon, like a framework picker, plan comparison,
+            or deployment region with latency.
+          </li>
+          <li>
+            Single-select for mutually exclusive choices, multi-select for
+            additive ones. Don&apos;t mix the two within one group.
+          </li>
+          <li>
+            Cap at 4–6 tiles. Past that, switch to{" "}
+            <ComponentRef name="Select" /> or{" "}
+            <ComponentRef name="Combobox" /> so the page doesn&apos;t scroll
+            for a single field. For plain text labels with no description,
+            use <ComponentRef name="Radio" />.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            The whole tile is the click and focus target; tapping anywhere
+            inside selects it. Don&apos;t place nested buttons or links
+            inside a tile that would steal the click.
+          </li>
+          <li>
+            Selected state shows a check or filled dot in the corner. The
+            border highlight alone isn&apos;t enough on low-contrast
+            screens.
+          </li>
+          <li>
+            Disabled tiles need a <ComponentRef name="Tooltip" /> naming
+            why (<code className="inline-code">Available on Pro</code>). A
+            faded tile with no reason reads as broken.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Titles are parallel: one Title Case title plus one sentence-case
+            description per tile, ending in a period.
+          </li>
+          <li>
+            Don&apos;t restate the title in the description. The
+            description adds the differentiator (
+            <code className="inline-code">$20/mo · 100 GB bandwidth</code>),
+            not a synonym.
+          </li>
+          <li>
+            Icons are decorative when paired with a title; if the icon is
+            the only label, give the tile an{" "}
+            <code className="inline-code">aria-label</code> naming the
+            choice.
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Tiles render as radios or checkboxes under the hood, so keep
+            them inside a{" "}
+            <code className="inline-code">&lt;ChoiceboxGroup&gt;</code>{" "}
+            with a <code className="inline-code">label</code> so screen
+            readers announce the group.
+          </li>
+          <li>
+            Arrow keys move within a single-select group, Space toggles in
+            multi-select. Don&apos;t override those keys with custom
+            handlers.
+          </li>
+          <li>
+            Color is not the selection signal. Pair the highlight border
+            with the corner check so colorblind users still see what&apos;s
+            active.
+          </li>
+        </ul>
       </Section>
     </>
   );

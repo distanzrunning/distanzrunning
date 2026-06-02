@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -141,7 +142,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -232,8 +233,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -245,40 +246,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -396,9 +397,9 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
-      <Input size="small" placeholder="Small" />
-      <Input placeholder="Default" />
-      <Input size="large" placeholder="Large" />
+      <Input size="small" placeholder="Berlin Marathon" />
+      <Input placeholder="Berlin Marathon" />
+      <Input size="large" placeholder="Berlin Marathon" />
     </div>
   );
 }`;
@@ -409,15 +410,15 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <Input prefix={<SearchIcon />} prefixStyling={false} placeholder="Search..." />
-      <Input suffix={<UserIcon />} suffixStyling={false} placeholder="Username" />
-      <Input prefix="https://" suffix=".com" placeholder="domain" />
+      <Input prefix={<SearchIcon />} prefixStyling={false} placeholder="Search races" />
+      <Input suffix={<UserIcon />} suffixStyling={false} placeholder="sarah.chen" />
+      <Input prefix="https://" suffix=".com" placeholder="distanzrunning" />
       <Input
         prefix={<GlobeIcon />}
         prefixStyling={false}
         suffix={<SearchIcon />}
         suffixStyling={false}
-        placeholder="Search domains..."
+        placeholder="Search domains"
       />
     </div>
   );
@@ -429,10 +430,10 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <Input disabled placeholder="Disabled placeholder" />
-      <Input disabled value="Disabled with value" />
-      <Input disabled prefix={<SearchIcon />} prefixStyling={false} placeholder="Disabled prefix" />
-      <Input disabled prefix="https://" suffix=".com" placeholder="domain" />
+      <Input disabled placeholder="Berlin Marathon" />
+      <Input disabled value="Berlin Marathon 2025" />
+      <Input disabled prefix={<SearchIcon />} prefixStyling={false} placeholder="Search races" />
+      <Input disabled prefix="https://" suffix=".com" placeholder="distanzrunning" />
     </div>
   );
 }`;
@@ -449,7 +450,7 @@ export function Component(): JSX.Element {
       type="search"
       prefix={<SearchIcon />}
       prefixStyling={false}
-      placeholder="Search..."
+      placeholder="Search races"
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={(e) => { if (e.key === "Escape") setValue(""); }}
@@ -458,6 +459,7 @@ export function Component(): JSX.Element {
 }`;
 
 const commandKCode = `import { Input } from '@/components/ui/Input';
+import { Kbd } from '@/components/ui/Kbd';
 import { useState } from 'react';
 import type { JSX } from 'react';
 
@@ -465,9 +467,12 @@ export function Component(): JSX.Element {
   const [value, setValue] = useState("");
 
   const badge = value ? (
-    <kbd>Esc</kbd>
+    <Kbd size="small">Esc</Kbd>
   ) : (
-    <span><kbd>\u2318</kbd><kbd>K</kbd></span>
+    <span style={{ display: "inline-flex", gap: 2 }}>
+      <Kbd size="small" meta />
+      <Kbd size="small">K</Kbd>
+    </span>
   );
 
   return (
@@ -476,7 +481,7 @@ export function Component(): JSX.Element {
       prefixStyling={false}
       suffix={badge}
       suffixStyling={false}
-      placeholder="Search..."
+      placeholder="Search races"
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={(e) => { if (e.key === "Escape") setValue(""); }}
@@ -490,9 +495,9 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <Input size="small" error errorMessage="An error message." placeholder="Small" />
-      <Input error errorMessage="An error message." placeholder="Default" />
-      <Input size="large" error errorMessage="An error message." placeholder="Large" />
+      <Input size="small" error errorMessage="Race name is required." placeholder="Berlin Marathon" />
+      <Input error errorMessage="Race name is required." placeholder="Berlin Marathon" />
+      <Input size="large" error errorMessage="Race name is required." placeholder="Berlin Marathon" />
     </div>
   );
 }`;
@@ -502,7 +507,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Input label="Email address" placeholder="you@example.com" />
+    <Input label="Email Address" placeholder="you@example.com" />
   );
 }`;
 
@@ -513,9 +518,9 @@ export function Component(): JSX.Element {
 function DefaultDemo() {
   return (
     <div className="flex flex-col md:flex-row items-start justify-between gap-4 flex-initial">
-      <Input size="small" placeholder="Small" />
-      <Input placeholder="Default" />
-      <Input size="large" placeholder="Large" />
+      <Input size="small" placeholder="Berlin Marathon" />
+      <Input placeholder="Berlin Marathon" />
+      <Input size="large" placeholder="Berlin Marathon" />
     </div>
   );
 }
@@ -523,21 +528,21 @@ function DefaultDemo() {
 function PrefixSuffixDemo() {
   return (
     <div className="flex flex-col items-start justify-start gap-6 flex-initial">
-      <Input prefix={<UploadIcon />} placeholder="Default" />
-      <Input suffix={<UploadIcon />} placeholder="Default" />
-      <Input prefix="https://" suffix=".com" placeholder="Default" />
+      <Input prefix={<UploadIcon />} placeholder="route.gpx" />
+      <Input suffix={<UploadIcon />} placeholder="route.gpx" />
+      <Input prefix="https://" suffix=".com" placeholder="distanzrunning" />
       <Input
         prefix={<UploadIcon />}
         prefixStyling={false}
         suffix={<UploadIcon />}
         suffixStyling={false}
-        placeholder="Default"
+        placeholder="route.gpx"
       />
       <Input
         prefix="distanz/"
         suffix={<UploadIcon />}
         suffixStyling={false}
-        placeholder="Default"
+        placeholder="berlin-marathon"
       />
     </div>
   );
@@ -546,18 +551,18 @@ function PrefixSuffixDemo() {
 function DisabledDemo() {
   return (
     <div className="flex flex-col items-start justify-start gap-4 flex-initial">
-      <Input disabled placeholder="Disabled with placeholder" />
-      <Input disabled value="Disabled with value" readOnly />
-      <Input disabled prefix={<UploadIcon />} placeholder="Disabled with prefix" />
-      <Input disabled suffix={<UploadIcon />} placeholder="Disabled with suffix" />
-      <Input disabled prefix="https://" suffix=".com" placeholder="Disabled with prefix and suffix" />
+      <Input disabled placeholder="Berlin Marathon" />
+      <Input disabled value="Berlin Marathon 2025" readOnly />
+      <Input disabled prefix={<UploadIcon />} placeholder="route.gpx" />
+      <Input disabled suffix={<UploadIcon />} placeholder="route.gpx" />
+      <Input disabled prefix="https://" suffix=".com" placeholder="distanzrunning" />
       <Input
         disabled
         prefix={<UploadIcon />}
         prefixStyling={false}
         suffix={<UploadIcon />}
         suffixStyling={false}
-        placeholder="Disabled with prefix and suffix"
+        placeholder="route.gpx"
       />
     </div>
   );
@@ -593,7 +598,7 @@ function SearchDemo() {
         prefixStyling={false}
         suffix={value ? <EscBadge onClick={() => setValue("")} /> : undefined}
         suffixStyling={false}
-        placeholder="Enter some text..."
+        placeholder="Search races"
         aria-label="Search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -652,7 +657,7 @@ function CommandKBadge({ dirty }: { dirty: boolean }) {
           transition: `translate ${duration} ${spring}`,
         }}
       >
-        <span style={textStyle}>{"\u2318"}</span>
+        <span style={textStyle}>\u2318</span>
       </kbd>
       {/* Second kbd: contains both K and Esc, crossfades via translate */}
       <kbd
@@ -703,7 +708,7 @@ function CommandKDemo() {
         prefixStyling={false}
         suffix={<CommandKBadge dirty={!!value} />}
         suffixStyling={false}
-        placeholder="Enter some text..."
+        placeholder="Search races"
         aria-label="Search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -718,10 +723,10 @@ function CommandKDemo() {
 function ErrorDemo() {
   return (
     <div className="flex flex-col items-start justify-start gap-8 flex-initial">
-      <Input size="xSmall" error errorMessage="An error message." placeholder="long-error@gmail.com" />
-      <Input size="small" error errorMessage="An error message." placeholder="long-error@gmail.com" />
-      <Input error errorMessage="An error message." placeholder="long-error@gmail.com" />
-      <Input size="large" error errorMessage="An error message." placeholder="long-error@gmail.com" />
+      <Input size="xSmall" error errorMessage="Race name is required." placeholder="Berlin Marathon" />
+      <Input size="small" error errorMessage="Race name is required." placeholder="Berlin Marathon" />
+      <Input error errorMessage="Race name is required." placeholder="Berlin Marathon" />
+      <Input size="large" error errorMessage="Race name is required." placeholder="Berlin Marathon" />
     </div>
   );
 }
@@ -729,7 +734,7 @@ function ErrorDemo() {
 function LabelDemo() {
   return (
     <div className="flex flex-col items-start justify-start flex-initial">
-      <Input label="Label" placeholder="Label" />
+      <Input label="Email Address" placeholder="you@example.com" />
     </div>
   );
 }
@@ -748,7 +753,7 @@ export default function InputComponent() {
           Default
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Inputs at three sizes: <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">small</code>, <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">default</code>, and <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">large</code>. Controls height, font size, and padding.
+          Inputs at three sizes: <code className="inline-code">small</code>, <code className="inline-code">default</code>, and <code className="inline-code">large</code>. Controls height, font size, and padding.
         </p>
         <CodePreview componentCode={defaultCode}>
           <DefaultDemo />
@@ -760,7 +765,7 @@ export default function InputComponent() {
           Prefix and suffix
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Inputs with prefix and suffix content. Use <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">prefixStyling=&#123;false&#125;</code> or <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">suffixStyling=&#123;false&#125;</code> to place icons inside the input without a border separator. Text prefixes like <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">https://</code> use the default bordered style.
+          Inputs with prefix and suffix content. Use <code className="inline-code">prefixStyling=&#123;false&#125;</code> or <code className="inline-code">suffixStyling=&#123;false&#125;</code> to place icons inside the input without a border separator. Text prefixes like <code className="inline-code">https://</code> use the default bordered style.
         </p>
         <CodePreview componentCode={prefixSuffixCode}>
           <PrefixSuffixDemo />
@@ -772,7 +777,7 @@ export default function InputComponent() {
           Disabled
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Disabled inputs with reduced opacity and <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">cursor: not-allowed</code>. Works with all variants including prefix, suffix, and text decorations.
+          Disabled inputs with reduced opacity and <code className="inline-code">cursor: not-allowed</code>. Works with all variants including prefix, suffix, and text decorations.
         </p>
         <CodePreview componentCode={disabledCode}>
           <DisabledDemo />
@@ -784,7 +789,7 @@ export default function InputComponent() {
           Search
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          A search input with a magnifying glass icon prefix. Pressing <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">Escape</code> clears the value.
+          A search input with a magnifying glass icon prefix. Pressing <code className="inline-code">Escape</code> clears the value.
         </p>
         <CodePreview componentCode={searchCode}>
           <SearchDemo />
@@ -796,7 +801,7 @@ export default function InputComponent() {
           {"\u2318"}K
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3" style={{ lineHeight: 1.5 }}>
-          Displays the <Kbd size="small">{"\u2318"}</Kbd> <Kbd size="small">K</Kbd> shortcut to indicate that the input supports a command palette.
+          Displays the <Kbd size="small" meta /> <Kbd size="small">K</Kbd> shortcut to indicate that the input supports a command palette.
         </p>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
           Transitions to showing <Kbd size="small">Esc</Kbd> when the field is dirty.
@@ -811,7 +816,7 @@ export default function InputComponent() {
           Error
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Inputs in an error state with a red border and an error message displayed below. Set <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">error</code> and <code className="text-[13px] font-mono px-1.5 py-0.5 bg-surfaceSubtle border border-borderSubtle rounded text-textDefault">errorMessage</code> props.
+          Inputs in an error state with a red border and an error message displayed below. Set <code className="inline-code">error</code> and <code className="inline-code">errorMessage</code> props.
         </p>
         <CodePreview componentCode={errorCode}>
           <ErrorDemo />
@@ -828,6 +833,151 @@ export default function InputComponent() {
         <CodePreview componentCode={labelCode}>
           <LabelDemo />
         </CodePreview>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Pick <code className="inline-code">&lt;Input&gt;</code> for
+            a single line of free-form text such as names, domains, or
+            tokens.
+          </li>
+          <li>
+            Switch to <ComponentRef name="Textarea" /> the moment
+            content can wrap to multiple lines.
+          </li>
+          <li>
+            Use <ComponentRef name="Combobox" /> when the value comes
+            from a known list the user filters by typing.
+          </li>
+          <li>
+            For an inline search box, compose with a magnifying-glass
+            icon{" "}
+            <code className="inline-code">prefix</code> and a scoped
+            placeholder (<code className="inline-code">Search races</code>
+            ); don&apos;t drop a search-styled Input inside an
+            unrelated form.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Validate on blur, not on every keystroke; surface the
+            message via{" "}
+            <code className="inline-code">errorMessage</code>.
+          </li>
+          <li>
+            Trim leading and trailing whitespace before submit so{" "}
+            <code className="inline-code">{" example.com"}</code> and{" "}
+            <code className="inline-code">example.com</code> resolve to
+            one value.
+          </li>
+          <li>
+            Keep the field focusable while saving; pair{" "}
+            <code className="inline-code">disabled</code> with a
+            spinner only when input is impossible.
+          </li>
+          <li>
+            Don&apos;t wrap a labelled{" "}
+            <code className="inline-code">&lt;Input&gt;</code> in a{" "}
+            <ComponentRef name="Tooltip" />; put the explainer on a
+            sibling icon <ComponentRef name="Button" /> so the label
+            stays announced.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Labels are short Title Case nouns:{" "}
+            <code className="inline-code">Project Name</code>,{" "}
+            <code className="inline-code">Domain</code>,{" "}
+            <code className="inline-code">
+              Environment Variable Name
+            </code>
+            .
+          </li>
+          <li>
+            Placeholders show an example value (
+            <code className="inline-code">my-awesome-project</code>,{" "}
+            <code className="inline-code">example.com</code>), never
+            instructions like{" "}
+            <code className="inline-code">
+              Enter your project name
+            </code>
+            .
+          </li>
+          <li>
+            Helper text is sentence case, one sentence with a trailing
+            period, on a sibling element wired through{" "}
+            <code className="inline-code">aria-describedby</code>.
+          </li>
+          <li>
+            Validation names the field and the constraint, ends in a
+            period, and skips{" "}
+            <code className="inline-code">please</code> (
+            <code className="inline-code">
+              Project name is required.
+            </code>
+            ,{" "}
+            <code className="inline-code">
+              Code must be 6 digits.
+            </code>
+            ).
+          </li>
+        </ul>
+
+        <h3
+          id="accessibility"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Accessibility
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">id</code> is auto-generated
+            via <code className="inline-code">useId()</code> when one
+            isn&apos;t passed, so the label&rarr;input link always
+            works. Pass an explicit id only when an external element
+            needs to reference it.
+          </li>
+          <li>
+            For icon-only affordances inside a row of inputs, use{" "}
+            <code className="inline-code">
+              &lt;Button shape=&quot;circle&quot;
+              aria-label=&quot;&hellip;&quot;&gt;
+            </code>{" "}
+            rather than an unlabeled icon.
+          </li>
+          <li>
+            A search-composition Input&apos;s placeholder names the
+            scope (
+            <code className="inline-code">Search races</code>) so the
+            role is clear without sighted context.
+          </li>
+        </ul>
       </Section>
 
       <Toast

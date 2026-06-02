@@ -61,15 +61,15 @@ export interface AdSlotProps {
 
 function DefaultFallback({ width, height }: Dimensions) {
   const frameStyle: React.CSSProperties = {
-    borderColor: "var(--ds-gray-400)",
+    borderColor: "hsl(var(--color-borderDefault))",
     // bg-100 (white in light, elevated dark in dark) so the
     // fallback reads as a card raised above the PageFrame
     // surface — bg-200 blended with the surface in light mode.
-    background: "var(--ds-background-100)",
+    background: "hsl(var(--color-surface))",
   };
   const ctaStyle: React.CSSProperties = {
-    background: "var(--ds-gray-1000)",
-    color: "var(--ds-background-100)",
+    background: "hsl(var(--color-textDefault))",
+    color: "hsl(var(--color-textInverted))",
   };
 
   // Very small mobile banner (≤ 60px tall) — just an inline link
@@ -146,7 +146,7 @@ function DefaultFallback({ width, height }: Dimensions) {
       className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border p-6 text-center"
       style={frameStyle}
     >
-      <h4 className="text-[16px] font-semibold leading-tight text-textDefault">
+      <h4 className="text-heading-16 text-textDefault">
         Want to reach runners?
       </h4>
       <p className="text-[13px] leading-snug text-textSubtle max-w-[80%]">
@@ -278,7 +278,7 @@ export function AdSlot({
       {showLabel && (
         <div
           className="mb-1 text-center text-[10px] font-semibold uppercase tracking-[0.08em]"
-          style={{ color: "var(--ds-gray-700)" }}
+          style={{ color: "hsl(var(--color-textSubtler))" }}
         >
           Advertisement
         </div>
@@ -296,7 +296,7 @@ export function AdSlot({
         }}
       >
         {showFallback ? (
-          fallback ?? <DefaultFallback {...dimensions} />
+          (fallback ?? <DefaultFallback {...dimensions} />)
         ) : (
           <ins
             ref={insRef}

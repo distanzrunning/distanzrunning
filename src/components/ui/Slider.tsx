@@ -15,6 +15,10 @@ interface SliderBaseProps {
   className?: string;
   name?: string;
   width?: number;
+  /** Accessible name for the slider — required when no sibling label */
+  "aria-label"?: string;
+  /** Id of a sibling label element */
+  "aria-labelledby"?: string;
 }
 
 interface SingleSliderProps extends SliderBaseProps {
@@ -55,6 +59,64 @@ function getPercentFromEvent(
 }
 
 // ============================================================================
+// Thumb hover/focus styles (injected once)
+// ============================================================================
+
+const THUMB_STYLE_ID = "ds-slider-thumb-style";
+
+function ensureThumbStyles() {
+  if (typeof document === "undefined") return;
+  if (document.getElementById(THUMB_STYLE_ID)) return;
+  const style = document.createElement("style");
+  style.id = THUMB_STYLE_ID;
+  style.textContent = `
+    .ds-slider-thumb {
+      transition: box-shadow 0.15s ease, background 0.15s ease, transform 0.15s ease;
+    }
+    .ds-slider-thumb:hover:not([aria-disabled="true"]),
+    .ds-slider-thumb:focus-visible:not([aria-disabled="true"]) {
+      transform: scale(1.2);
+    }
+    .ds-slider-thumb:focus-visible {
+      outline: none;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+/**
+ * Standard ARIA slider keyboard pattern. Returns the new value for
+ * the recognized keys (Arrow / PageUp/Down / Home / End), or `null`
+ * if the key isn't ours to handle.
+ */
+function getKeyboardDelta(
+  key: string,
+  current: number,
+  min: number,
+  max: number,
+  step: number,
+): number | null {
+  switch (key) {
+    case "ArrowRight":
+    case "ArrowUp":
+      return current + step;
+    case "ArrowLeft":
+    case "ArrowDown":
+      return current - step;
+    case "PageUp":
+      return current + step * 10;
+    case "PageDown":
+      return current - step * 10;
+    case "Home":
+      return min;
+    case "End":
+      return max;
+    default:
+      return null;
+  }
+}
+
+// ============================================================================
 // Single Slider
 // ============================================================================
 
@@ -72,6 +134,8 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
       className = "",
       name,
       width = 216,
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledBy,
     },
     ref,
   ) => {
@@ -80,6 +144,10 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
     const currentValue = isControlled ? controlledValue : internalValue;
     const trackRef = useRef<HTMLSpanElement>(null);
     const dragging = useRef(false);
+
+    useEffect(() => {
+      ensureThumbStyles();
+    }, []);
 
     useEffect(() => {
       if (isControlled) setInternalValue(controlledValue);
@@ -151,7 +219,7 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
               flexGrow: 1,
               height: 8,
               borderRadius: 5,
-              background: "var(--ds-gray-400)",
+              background: "hsl(var(--color-borderDefault))",
               position: "relative",
               overflow: "hidden",
             }}
@@ -179,33 +247,39 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
             }}
           >
             <span
+              className="ds-slider-thumb"
               role="slider"
               tabIndex={disabled ? -1 : 0}
               aria-valuemin={min}
               aria-valuemax={max}
               aria-valuenow={currentValue}
               aria-orientation="horizontal"
+              aria-label={ariaLabel}
+              aria-labelledby={ariaLabelledBy}
+              aria-disabled={disabled || undefined}
               style={{
                 display: "block",
                 width: 6,
                 height: 14,
                 borderRadius: 1,
-                background: "var(--ds-background-100)",
+                background: "#FFFFFF",
                 boxShadow:
                   "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
                 cursor: disabled ? "not-allowed" : "pointer",
-                transition: "box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease",
                 position: "relative",
               }}
               onKeyDown={(e) => {
                 if (disabled) return;
-                if (e.key === "ArrowRight" || e.key === "ArrowUp") {
-                  e.preventDefault();
-                  updateValue(currentValue + step);
-                } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
-                  e.preventDefault();
-                  updateValue(currentValue - step);
-                }
+                const next = getKeyboardDelta(
+                  e.key,
+                  currentValue,
+                  min,
+                  max,
+                  step,
+                );
+                if (next === null) return;
+                e.preventDefault();
+                updateValue(next);
               }}
             />
           </span>
@@ -236,6 +310,8 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
       name,
       width = 216,
       allowCrossover = true,
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledBy,
     },
     ref,
   ) => {
@@ -244,6 +320,10 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
     const currentValue = isControlled ? controlledValue : internalValue;
     const trackRef = useRef<HTMLSpanElement>(null);
     const activeThumb = useRef<0 | 1 | null>(null);
+
+    useEffect(() => {
+      ensureThumbStyles();
+    }, []);
 
     useEffect(() => {
       if (isControlled) setInternalValue(controlledValue);
@@ -309,19 +389,20 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
     const handleThumbKeyDown = useCallback(
       (thumbIndex: 0 | 1, e: React.KeyboardEvent) => {
         if (disabled) return;
-        const delta =
-          e.key === "ArrowRight" || e.key === "ArrowUp"
-            ? step
-            : e.key === "ArrowLeft" || e.key === "ArrowDown"
-              ? -step
-              : 0;
-        if (delta === 0) return;
+        const next = getKeyboardDelta(
+          e.key,
+          currentValue[thumbIndex],
+          min,
+          max,
+          step,
+        );
+        if (next === null) return;
         e.preventDefault();
         const newVals: [number, number] = [...currentValue];
-        newVals[thumbIndex] = currentValue[thumbIndex] + delta;
+        newVals[thumbIndex] = next;
         updateValues(newVals);
       },
-      [disabled, step, currentValue, updateValues],
+      [disabled, min, max, step, currentValue, updateValues],
     );
 
     return (
@@ -353,7 +434,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
               flexGrow: 1,
               height: 8,
               borderRadius: 5,
-              background: "var(--ds-gray-400)",
+              background: "hsl(var(--color-borderDefault))",
               position: "relative",
             }}
           >
@@ -380,22 +461,25 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
             }}
           >
             <span
+              className="ds-slider-thumb"
               role="slider"
               tabIndex={disabled ? -1 : 0}
               aria-valuemin={min}
               aria-valuemax={max}
               aria-valuenow={currentValue[0]}
               aria-orientation="horizontal"
+              aria-label={ariaLabel ? `${ariaLabel} (minimum)` : undefined}
+              aria-labelledby={ariaLabelledBy}
+              aria-disabled={disabled || undefined}
               style={{
                 display: "block",
                 width: 6,
                 height: 14,
                 borderRadius: 1,
-                background: "var(--ds-background-100)",
+                background: "#FFFFFF",
                 boxShadow:
                   "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
                 cursor: disabled ? "not-allowed" : "pointer",
-                transition: "box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease",
                 position: "relative",
               }}
               onKeyDown={(e) => handleThumbKeyDown(0, e)}
@@ -412,22 +496,25 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
             }}
           >
             <span
+              className="ds-slider-thumb"
               role="slider"
               tabIndex={disabled ? -1 : 0}
               aria-valuemin={min}
               aria-valuemax={max}
               aria-valuenow={currentValue[1]}
               aria-orientation="horizontal"
+              aria-label={ariaLabel ? `${ariaLabel} (maximum)` : undefined}
+              aria-labelledby={ariaLabelledBy}
+              aria-disabled={disabled || undefined}
               style={{
                 display: "block",
                 width: 6,
                 height: 14,
                 borderRadius: 1,
-                background: "var(--ds-background-100)",
+                background: "#FFFFFF",
                 boxShadow:
                   "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
                 cursor: disabled ? "not-allowed" : "pointer",
-                transition: "box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease",
                 position: "relative",
               }}
               onKeyDown={(e) => handleThumbKeyDown(1, e)}

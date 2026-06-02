@@ -70,11 +70,31 @@ Token namespace: `--ds-{hue}-{shade}`.
 
 **Hues**: `gray`, `blue`, `red`, `amber`, `green`, `pink`, `purple`, `teal`. Shades 100–1000 (in steps of 100).
 
-**Backgrounds** (separate from the hue scale): `--ds-background-100` (primary canvas, white in light) / `--ds-background-200` (secondary surface, FAFAFA in light). They flip in dark mode.
+**Backgrounds** (separate from the hue scale, values are **Geist-verbatim**): `--ds-background-100` (the dominant surface — `#FFFFFF` light / `#0A0A0A` dark) / `--ds-background-200` (the page/recessed tone — `#FAFAFA` light / `#000000` dark). Note the Geist convention: **bg-100 is brighter than bg-200 in *both* themes** (raised things sit on bg-100, the page sits on bg-200), so in dark mode bg-200 (`#000`) is *darker* than bg-100 (`#0A0A0A`) — not a lighter "elevated" lift.
+
+**Surfaces — TWO roles, one rule. This is the whole system; there are no other surface tokens and no per-component exceptions.**
+
+| Role | Class | Light | Dark | Use for |
+|---|---|---|---|---|
+| **Canvas** (down) | `bg-canvas` (= `bg-200`) | `#FAFAFA` | `#000000` | the page / `PageFrame` / app-shell wrappers, **and** recessed sub-areas *within* a surface: modal & drawer footers/sections |
+| **Surface** (up) | `bg-surface` (= `bg-100`) | `#FFFFFF` | `#0A0A0A` | **everything raised, including all form controls**: cards, menus, popovers, dialogs, drawers, sheets, panels, toasts, badges, chips, filled/secondary buttons, **inputs, textareas, selects, date pickers**, checkbox/radio/switch boxes, the header pill |
+| **Interaction** (on a surface) | `--ds-gray-100/200/300` (`bg-[var(--ds-gray-100)]` …) | `#F2F2F2 / #EBEBEB / #E6E6E6` | `#1A1A1A / #1F1F1F / #292929` | **hover / active / selected** states *on* a surface — one+ step above it so they read |
+
+**The rule:** *Is it the page/shell, or a footer/section inside a surface? → `bg-canvas`. Otherwise (cards, menus, **and every control** — inputs, buttons, selects…) → `bg-surface`.* Controls are `surface` + a hairline border, so they sit flush-with-border inside a panel and lift off the page in a filter bar — and a filter row of inputs + dropdowns + buttons all share one tone. Floating things (menus/modals/popovers) add a `material-*` shadow — **extra depth = shadow, never more tones.**
+
+**Elevation = border + shadow, not a lighter fill (Geist model).** `surface` *is* `bg-100`, so a raised card/menu is the same tone as other surfaces — it reads as raised via its hairline border and (when floating) a `material-*` shadow, the way Geist does it. The **hover/active/selected** tones `gray-100/200/300` are always one+ step *above* `surface` so a child state doesn't collapse into it (the ThemeSwitcher bug): light `#F2F2F2/#EBEBEB/#E6E6E6` (darker than white surface), dark `#1A1A1A/#1F1F1F/#292929` (lighter than the `#0A0A0A` surface). **Segmented controls** share one pattern: track = `bg-canvas` (recessed), selected segment = `bg-surface` (raised) + a hairline ring — see `ThemeSwitcher`/`Switch`.
+
+**Hard anti-pattern: never use `bg-[var(--ds-background-100)]` or `bg-[var(--ds-background-200)]` (or their inline/CSS forms) as a fill.** Those raw tokens only *feed* `canvas`/`surface` internally. Components always use `bg-canvas` / `bg-surface` — that's what guarantees conformity (no component "does its own thing"). Don't reach for `bg-white`/`bg-black`/`neutral-*` either. (The only legitimate non-token fills are deliberate translucent **glass** effects, e.g. `bg-white/15` + blur.)
 
 **Alpha tokens**: `--ds-gray-alpha-{100..1000}` for translucent overlays.
 
-**RGB tuples** (for use inside `rgba()`): every token has a `-rgb` companion, e.g. `rgba(var(--ds-gray-1000-rgb), 0.04)`. The tuple flips with the theme automatically — preferred for theme-aware semi-transparent colors over a `dark:` override.
+**Token architecture (Geist two-layer model).** Each colour has a single source of truth — a `--ds-{hue}-{shade}-value` **HSL channel triplet** (e.g. `--ds-blue-700-value: 213, 100%, 48%;`, grays `0, 0%, 94%`). Only these triplets flip between themes (light in `:root,.light`, dark in `.dark`). The opaque token is resolved **once** in a shared block — `--ds-blue-700: hsl(var(--ds-blue-700-value))` — and never redeclared per theme. A `@media (color-gamut: p3) @supports (oklch)` block then overrides the resolved hue tokens with their exact **OKLCH** (the HSL triplet is the gamut-mapped sRGB base; OKLCH is the wide-gamut enhancement). Neutrals (gray/bg) carry no OKLCH layer — they're identical in both gamuts. This is Geist's exact structure (HSL base + OKLCH-P3).
+
+**There is no `-rgb` companion any more** (removed in the Geist-structure migration — the old hand-maintained `-rgb` tuples had drifted from the OKLCH values). For a theme-aware translucent colour use the `-value` triplet directly via **`hsla()`**: `hsla(var(--ds-gray-1000-value), 0.04)` (the triplet flips with the theme automatically). The semantic `--color-*` layer also holds HSL triplets and is consumed as **`hsl(var(--color-X))` / `hsla(var(--color-X), N)`** (Tailwind exposes them this way too) — never `rgb()`. **To recolour a token, edit only its `-value` triplet** (and, if the hue's wide-gamut rendering matters, the matching OKLCH override) — there's no second representation to keep in sync. Regenerate the HSL fallbacks from OKLCH with `node scripts/convert-tokens.mjs --emit`; the same script with no args is a drift guard (CI-friendly, exits 1 on mismatch).
+
+**Accessibility**: `textSubtle` (`gray-900`) is the readable secondary-text colour (Geist-verbatim `gray-900` is 30% L light / 63% L dark → ~7.8:1 light, ~6:1 dark — passes AA; note this is lower than the previously-tuned 20% L, a candidate tweak if you want AAA-grade secondary text). `textSubtler` (`gray-700`) is the **muted** tone for de-emphasised micro-text (line numbers, captions, tiny labels) — AA-Large in light, full AA in dark; still reserve it for non-essential text, prefer `textSubtle` for content. `textDisabled` (`gray-500`) is for disabled states only. An **increased-contrast mode** (`@media (prefers-contrast: more)` in `distanz-tokens.css`) automatically pushes the muted text + border tokens toward ink for users with the OS "Increase Contrast" setting — don't hand-roll your own; rely on the semantic tokens and it applies for free.
+
+**Links**: inline text links use the `link` token (`text-link` / `--color-link` = `blue-700` light, `blue-900` dark — the accent blue). Always pair it with an **underline** (or other non-colour affordance) so links don't rely on colour alone (HIG) and stay legible on any surface. Don't invent a different link colour.
 
 **Geist semantic system** (from ColourPalettes.tsx — applies to the gray scale):
 
@@ -87,12 +107,18 @@ Token namespace: `--ds-{hue}-{shade}`.
 
 So: borders = `var(--ds-gray-400)`, primary text = `var(--ds-gray-1000)`, subtle text = `var(--ds-gray-900)`, etc.
 
-**Brand accent**: `electric-pink` (Tailwind class) — used for category indicators, brand moments, accent dividers. **Sparingly.**
+**No brand accent colour.** The brand is **black and white** — i.e. the neutral ink/canvas that already flips with light/dark mode (`textDefault` on `--ds-background-100`), mirroring the logo. There is deliberately **no** pink/brand hue. Don't reintroduce one (the old `electric-pink` / `#e43c81` / `#D11B5C` brand pink has been retired everywhere).
+
+- **Accents that genuinely need a hue** — data-viz, race route lines, elevation charts, table/selection highlights, focus states — use **blue** (`--ds-blue-700` / `#0070F3`), matching the admin charts, Consent, and Feedback components. Don't invent a second accent hue.
+- **Editorial emphasis** (pull quotes, blockquotes, featured dividers) uses **neutral ink** — `border-textDefault` / the `--rule-heavy` / `--rule-emphasised` rules, not a colour.
+- The full hue scales (`blue`, `red`, `amber`, `green`, `pink`, `purple`, `teal`) still exist for **status/semantic** use (success, warning, error, info) — they are not brand colours.
 
 **Anti-patterns**:
 - Don't write raw hex / rgb values for semantic colors. Use a token.
 - Don't use `bg-white` / `bg-black` / `text-neutral-*` etc. (Tailwind defaults). Use `--ds-background-100` and `--ds-gray-*`.
-- For theme-flipping semi-transparent colors, prefer `rgba(var(--ds-X-rgb), N)` over a hardcoded rgba + `dark:` override.
+- The legacy named aliases (`asphalt-*`, `pace-purple`, `volt-green`, `tech-cyan`, `track-red`, `trail-brown`, `signal-orange`, `electric-pink*`) have been **removed**. Don't reintroduce them — use the core `gray`/`--ds-gray-*` neutral scale and the `blue`/`green`/`amber`/`red`/`purple`/`teal` hue scales (for status/semantic) directly.
+- For theme-flipping semi-transparent colors, use `hsla(var(--ds-X-value), N)` (or `hsla(var(--color-X), N)`) over a hardcoded rgba + `dark:` override. The `-value`/`--color-*` triplets are **HSL channels** — always wrap them in `hsl()`/`hsla()`, never `rgb()`. (The old `--ds-X-rgb` companions were removed — see the token-architecture note above.)
+- To recolour a token, edit its `--ds-X-value` HSL triplet (the single source of truth). Don't hand-edit the resolved `--ds-X` or the P3 OKLCH override out of step with it — regenerate via `node scripts/convert-tokens.mjs --emit`.
 
 ---
 
@@ -166,8 +192,7 @@ Prefer these classes over hand-rolling shadows.
 |---|---|---|
 | Default | `border-t border-borderSubtle` | Subtle separation, list/table rows |
 | Emphasised | `border-t border-textDefault` | After headings, distinct sections |
-| Heavy | `border-t-4 border-textDefault` | Major page sections, page titles |
-| Accent | `border-t-4 border-electric-pink` | Featured content, brand moments |
+| Heavy | `border-t-4 border-textDefault` | Major page sections, page titles, featured content |
 
 ---
 
@@ -201,3 +226,79 @@ The following live in `src/components/` (some in `src/components/ui/`). When int
 2. Grep `globals.css` (`grep '\-\-ds-' src/app/globals.css`) for a token that fits.
 3. Check `tailwind.config.js` for a custom utility (`text-heading-*`, `text-copy-*`, `material-*`).
 4. Only fall back to magic numbers if no token / class fits — and flag it in the PR.
+
+---
+
+## DS docs page convention (when adding a new component page)
+
+Every component page under `src/app/admin/(shell)/design-system/<slug>/page.tsx` follows the same shape. Use **`ModalComponent.tsx`** or **`AccordionComponent.tsx`** as the reference when copying.
+
+**Page wrapper (`<slug>/page.tsx`):**
+```tsx
+<ContentWithTOC
+  tocTitle="On this page"
+  pageTitle="Name"
+  pageSubtitle="One-line description in sentence case."
+  mainSectionId="<slug>"
+  headerRight={<RegistryInstallButtons slug="<slug>" />}  // if published
+>
+  <NameComponent />
+</ContentWithTOC>
+```
+
+**Content (`components/content/<Name>Component.tsx`):**
+
+1. **Page chrome** — inline these helpers at the top of the file: `Toast`, `LinkIcon`, `SectionHeader`, `CopyIconButton`, `RenderShikiToken`, `CodePreview`. Copy verbatim from `AccordionComponent.tsx` — they're identical across pages. *(TODO: extract into a shared module once we touch more than one of these in a single PR.)*
+
+2. **Each example** lives inside a `<CodePreview componentCode={…}>` card so the reader gets a Show-code toggle plus a Shiki-highlighted snippet with line numbers + copy button. Pair every demo component with a code string constant — the string is what the user sees in the panel.
+
+3. **`SectionHeader`** on every `<Section>` — hover surfaces a link icon, click copies the URL + smooth-scrolls. Pass `onCopyLink={showToast}` so the copy fires the toast.
+
+4. **Best Practices** section is required and follows this exact structure (in order):
+   - `<h3 id="when-to-use" className="text-heading-20 text-textDefault mt-8 scroll-mt-32">When to use</h3>`
+   - `<h3 id="behavior">Behavior</h3>`
+   - `<h3 id="content">Content</h3>`
+   - `<h3 id="accessibility">Accessibility</h3>`
+
+   Each followed by:
+   ```tsx
+   <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+     <li>…</li>
+   </ul>
+   ```
+
+5. **Inline references in body copy:**
+   - Component cross-refs → `<ComponentRef name="Modal" />` (from `../ComponentRef`) — never plain text like "Modal".
+   - Code literals (prop names, variant names, string examples) → `<code className="inline-code">…</code>` — `.inline-code` is defined in `globals.css`, gives the gray-100 pill treatment with mono font.
+   - Italic for example sentences (toast strings, label copy) → `<em>…</em>`.
+
+The same convention applies whether the component is hand-rolled, derived from Base UI via `npx shadcn add`, or wrapping a Radix primitive. The docs page reads identically; only the component source differs.
+
+---
+
+## Registry & MCP (for AI-assisted work in this repo)
+
+`components.json` registers two shadcn registries:
+- `@shadcn` (implicit) — the public ui.shadcn.com primitives
+- `@distanz` — our own registry at `distanzrunning.com/r/{name}.json`
+
+**Per-developer setup (run each once on your machine, not committed):**
+
+```bash
+# 1. Let AI tools search / install components from either registry via MCP
+npx shadcn mcp init --client claude   # or cursor / vscode / codex / opencode
+# → writes .mcp.json (gitignored — may carry per-dev secrets for other servers)
+
+# 2. Inject project setup (installed components, primitive in use, aliases)
+#    into your AI assistant's context so it stops fighting you on shadcn calls
+npx skills add shadcn/ui              # or pnpm dlx / yarn dlx / bun x
+```
+
+Step 1 (MCP) tells the AI **what could be installed**. Step 2 (the skill) tells the AI **what's already there and how the project is configured** — reads `shadcn info --json`. Together they remove the most common class of "AI invents the wrong API" failure mode. See `/admin/design-system/registry-mcp` for the full registry setup notes.
+
+### Primitives policy: Base UI vs Radix
+
+- **New components → Base UI.** That's what `npx shadcn add <name>` produces today (style `base-nova`), and it matches our registry-first posture: composable, render-prop based, fewer fighting-the-library moments for consumers.
+- **Existing Radix-based molecules** *(Combobox, ContextCard, Description, Sheet, Calendar)* → **leave alone**. They work, they're shipped, the migration is manual. No "let's modernise" sweep.
+- **Migrate opportunistically.** If an existing Radix molecule needs an unrelated update or a bug fix Radix is slow to ship, re-derive it from the Base UI equivalent at that point. Amortise the migration cost into work you'd be doing anyway.
+- **Rationale**: Radix dev has slowed post-WorkOS; Base UI ships actively (~7 engineers) and has components Radix doesn't (Combobox / Autocomplete). One real Base UI tradeoff today: less AI training data, so first-time prompts may need hand-holding. Our registry largely neutralises that — once a component is in `@distanz`, the AI installs *our restyled source* instead of authoring fresh.

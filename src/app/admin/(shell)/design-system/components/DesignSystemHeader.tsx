@@ -5,6 +5,7 @@ import { Search, ExternalLink, ArrowRight } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { CommandMenu } from "@/components/ui/CommandMenu";
+import { Kbd } from "@/components/ui/Kbd";
 import { navigation } from "./DesignSystemSidebar";
 
 interface DesignSystemHeaderProps {
@@ -39,7 +40,7 @@ export default function DesignSystemHeader({
   return (
     <header
       className="sticky top-0 z-40 w-full border-b border-borderSubtle"
-      style={{ background: "var(--ds-background-100)" }}
+      style={{ background: "hsl(var(--color-surface))" }}
     >
       <div className="flex w-full pl-[22px]">
         {/* Logo section - matches sidebar width */}
@@ -79,18 +80,12 @@ export default function DesignSystemHeader({
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="hidden xl:flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-[var(--ds-gray-400)] bg-transparent pl-2 pr-1.5 font-sans text-sm text-[var(--ds-gray-700)] outline-none transition-colors hover:bg-[var(--ds-background-200)]"
+              className="hidden xl:flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-borderDefault bg-transparent pl-2 pr-1.5 font-sans text-sm text-textSubtler outline-none transition-colors hover:bg-canvas"
             >
               Search Stride
-              <kbd
-                className="ml-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded bg-[var(--ds-background-100)] px-1 font-sans text-[12px] leading-5 text-[var(--ds-gray-900)]"
-                style={{ boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)" }}
-              >
-                <span style={{ minWidth: "1em", display: "inline-block" }}>
-                  ⌘
-                </span>
-                <span>K</span>
-              </kbd>
+              <Kbd size="small" meta>
+                K
+              </Kbd>
             </button>
 
             {/* Mobile search icon */}

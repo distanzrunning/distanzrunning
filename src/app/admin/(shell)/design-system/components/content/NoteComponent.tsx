@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/useShikiHighlighter";
 import { Note } from "@/components/ui/Note";
 import { Button } from "@/components/ui/Button";
+import { ComponentRef } from "../ComponentRef";
 
 // Toast notification for copy confirmation
 function Toast({
@@ -152,7 +153,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -249,8 +250,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -262,18 +263,18 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+    <div className="border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
-      <div className="p-6" style={{ background: "var(--ds-background-100)" }}>
+      <div className="p-6" style={{ background: "hsl(var(--color-surface))" }}>
         {children}
       </div>
 
       {/* Accordion trigger */}
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
@@ -282,14 +283,14 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {/* Collapsible code section */}
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               {/* Floating copy button */}
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
@@ -297,7 +298,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 
               {/* Code content */}
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -906,6 +907,103 @@ export default function NoteComponent() {
             </div>
           </div>
         </CodePreview>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use a Note for inline contextual feedback next to the field,
+            card, or section it describes: a region change warning above
+            a region picker, a rate-limit notice next to a usage gauge.
+          </li>
+          <li>
+            Pick a banner when the message is page-level or system-wide
+            and needs a CTA, <ComponentRef name="Toast" /> for transient
+            acknowledgments, <ComponentRef name="Modal" /> for
+            destructive confirmations.
+          </li>
+          <li>
+            Choose <code className="inline-code">type</code> by meaning:{" "}
+            <code className="inline-code">error</code> for a problem the
+            user must fix,{" "}
+            <code className="inline-code">warning</code> for a consequence
+            to acknowledge,{" "}
+            <code className="inline-code">success</code> for a passed
+            check, <code className="inline-code">secondary</code> for
+            neutral information.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            A Note is persistent until the underlying state changes;
+            don&apos;t add an ad hoc dismiss control because it competes
+            with the message.
+          </li>
+          <li>
+            One Note per concept. Stacking three Notes on a card means
+            the page architecture, not the Note copy, is wrong.
+          </li>
+          <li>
+            The optional{" "}
+            <code className="inline-code">action</code> is a single
+            inline CTA. Don&apos;t pair it with a second button.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            <code className="inline-code">label</code> is a 1&ndash;2
+            word Title Case prefix that names the topic:{" "}
+            <code className="inline-code">Region Change</code>,{" "}
+            <code className="inline-code">Rate Limit</code>,{" "}
+            <code className="inline-code">Plan Limit</code>. Cut hedges
+            like <code className="inline-code">Heads Up</code>,{" "}
+            <code className="inline-code">FYI</code>, and{" "}
+            <code className="inline-code">Note</code>.
+          </li>
+          <li>
+            <code className="inline-code">children</code> is one sentence
+            in active voice that names the impact:{" "}
+            <code className="inline-code">
+              Changing this region restarts all functions.
+            </code>
+          </li>
+          <li>
+            No <code className="inline-code">type=&quot;info&quot;</code>{" "}
+            exists; omit <code className="inline-code">type</code> for
+            the default info icon or use{" "}
+            <code className="inline-code">type=&quot;secondary&quot;</code>{" "}
+            for neutral copy.
+          </li>
+          <li>
+            Single-fragment labels take no period; full descriptive
+            sentences in the body do.
+          </li>
+        </ul>
       </Section>
     </>
   );

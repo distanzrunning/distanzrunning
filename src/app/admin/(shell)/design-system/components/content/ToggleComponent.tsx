@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -140,7 +141,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -231,8 +232,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -244,40 +245,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -431,20 +432,20 @@ export function Component(): JSX.Element {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }}>
-        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="right" />
-        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="left" />
+        <Toggle checked={on} onChange={setOn} labelPosition="right">Password Protection</Toggle>
+        <Toggle checked={on} onChange={setOn} labelPosition="left">Password Protection</Toggle>
       </div>
       <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }}>
-        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="right" size="large" />
-        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="left" size="large" />
+        <Toggle checked={on} onChange={setOn} labelPosition="right" size="large">Password Protection</Toggle>
+        <Toggle checked={on} onChange={setOn} labelPosition="left" size="large">Password Protection</Toggle>
       </div>
       <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }}>
-        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="right" thumbIcon={<LockIcon size={12} />} />
-        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="left" thumbIcon={<LockIcon size={12} />} />
+        <Toggle checked={on} onChange={setOn} labelPosition="right" thumbIcon={<LockIcon size={12} />}>Password Protection</Toggle>
+        <Toggle checked={on} onChange={setOn} labelPosition="left" thumbIcon={<LockIcon size={12} />}>Password Protection</Toggle>
       </div>
       <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }}>
-        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="right" size="large" thumbIcon={<LockIcon size={14} />} />
-        <Toggle checked={on} onChange={setOn} label="Enable Firewall" labelPosition="left" size="large" thumbIcon={<LockIcon size={14} />} />
+        <Toggle checked={on} onChange={setOn} labelPosition="right" size="large" thumbIcon={<LockIcon size={14} />}>Password Protection</Toggle>
+        <Toggle checked={on} onChange={setOn} labelPosition="left" size="large" thumbIcon={<LockIcon size={14} />}>Password Protection</Toggle>
       </div>
     </div>
   );
@@ -526,68 +527,68 @@ function WithLabelDemo() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div style={{ display: "flex", flexDirection: "row", gap: 24 }}>
-        <Toggle
-          checked={on}
-          onChange={setOn}
-          label="Enable Firewall"
-          labelPosition="right"
-        />
-        <Toggle
-          checked={on}
-          onChange={setOn}
-          label="Enable Firewall"
-          labelPosition="left"
-        />
+        <Toggle checked={on} onChange={setOn} labelPosition="right">
+          Password Protection
+        </Toggle>
+        <Toggle checked={on} onChange={setOn} labelPosition="left">
+          Password Protection
+        </Toggle>
       </div>
       <div style={{ display: "flex", flexDirection: "row", gap: 24 }}>
         <Toggle
           checked={on}
           onChange={setOn}
-          label="Enable Firewall"
           labelPosition="right"
           size="large"
-        />
+        >
+          Password Protection
+        </Toggle>
         <Toggle
           checked={on}
           onChange={setOn}
-          label="Enable Firewall"
           labelPosition="left"
           size="large"
-        />
+        >
+          Password Protection
+        </Toggle>
       </div>
       <div style={{ display: "flex", flexDirection: "row", gap: 24 }}>
         <Toggle
           checked={on}
           onChange={setOn}
-          label="Enable Firewall"
           labelPosition="right"
           thumbIcon={<LockIcon size={12} />}
-        />
+        >
+          Password Protection
+        </Toggle>
         <Toggle
           checked={on}
           onChange={setOn}
-          label="Enable Firewall"
           labelPosition="left"
           thumbIcon={<LockIcon size={12} />}
-        />
+        >
+          Password Protection
+        </Toggle>
       </div>
       <div style={{ display: "flex", flexDirection: "row", gap: 24 }}>
         <Toggle
           checked={on}
           onChange={setOn}
-          label="Enable Firewall"
           labelPosition="right"
           size="large"
           thumbIcon={<LockIcon size={14} />}
-        />
+        >
+          Password Protection
+        </Toggle>
         <Toggle
           checked={on}
           onChange={setOn}
-          label="Enable Firewall"
           labelPosition="left"
           size="large"
           thumbIcon={<LockIcon size={14} />}
-        />
+        >
+          Password Protection
+        </Toggle>
       </div>
     </div>
   );
@@ -655,6 +656,96 @@ export default function ToggleComponent() {
             <WithLabelDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Toggle for a single boolean setting where ON takes
+            effect immediately, like{" "}
+            <code className="inline-code">Password Protection</code>{" "}
+            or{" "}
+            <code className="inline-code">Auto-Cancel Builds</code>.
+            Switch to <ComponentRef name="Checkbox" /> for a
+            multi-select list, or to{" "}
+            <ComponentRef name="Switch" /> for 2–3 mutually exclusive
+            views.
+          </li>
+          <li>
+            For controlled use, pass{" "}
+            <code className="inline-code">checked</code> and update
+            from <code className="inline-code">onChange</code>; for
+            uncontrolled, pass{" "}
+            <code className="inline-code">defaultChecked</code> and
+            let the component own the state.
+          </li>
+          <li>
+            Persist on change and surface the result in a{" "}
+            <ComponentRef name="Toast" /> (
+            <code className="inline-code">
+              Password protection enabled
+            </code>
+            ); don&apos;t leave the user wondering whether the flip
+            stuck. Pair with a form footer only when the setting
+            needs an explicit{" "}
+            <code className="inline-code">Save</code> step.
+          </li>
+          <li>
+            Disable Toggle only when the action is impossible
+            (missing plan, locked policy); pair with helper text or a{" "}
+            <ComponentRef name="Tooltip" /> that names the resolver.
+          </li>
+          <li>
+            The label is <code className="inline-code">children</code>
+            , not a <code className="inline-code">label</code> prop.
+            Title Case noun phrase, 1–4 words, naming what is true
+            when ON:{" "}
+            <code className="inline-code">Password Protection</code>,
+            not{" "}
+            <code className="inline-code">
+              Enable Password Protection
+            </code>
+            .
+          </li>
+          <li>
+            Pass an optional one-sentence{" "}
+            <code className="inline-code">description</code> as a
+            sibling under the label that explains ON only.
+            Don&apos;t describe OFF; it&apos;s the negation.
+          </li>
+          <li>
+            Keep{" "}
+            <code className="inline-code">
+              labelCasing=&quot;title&quot;
+            </code>{" "}
+            (the default) so labels match other Title Case surfaces.
+            Use{" "}
+            <code className="inline-code">
+              labelCasing=&quot;normal&quot;
+            </code>{" "}
+            only when sentence-case content sits inline next to the
+            toggle.
+          </li>
+          <li>
+            Provide an accessible name through{" "}
+            <code className="inline-code">children</code>,{" "}
+            <code className="inline-code">aria-label</code>, or{" "}
+            <code className="inline-code">aria-labelledby</code>. The
+            component warns in development if all three are missing.
+          </li>
+          <li>
+            Set <code className="inline-code">aria-label</code> only
+            when the visible label sits elsewhere on the row;
+            otherwise let{" "}
+            <code className="inline-code">children</code> carry it so
+            sighted and screen-reader copy stay aligned.
+          </li>
+        </ul>
       </Section>
 
       <Toast

@@ -47,8 +47,22 @@ export interface ComboboxProps {
   listWidth?: number | string;
   /** Message shown when no options match the filter */
   emptyMessage?: string;
+  /**
+   * When true, show a loading row inside the dropdown instead of the
+   * empty / option list. Use while async results are in flight so the
+   * popover doesn't collapse — pair with onInputChange to refetch.
+   */
+  loading?: boolean;
+  /** Custom text for the loading row. Defaults to "Loading…". */
+  loadingMessage?: string;
   /** External label text rendered above the combobox */
   label?: string;
+  /**
+   * Accessible name for the input when no visible `label` is rendered
+   * (icon-only triggers, search inputs in toolbars). Ignored when
+   * `label` is set.
+   */
+  "aria-label"?: string;
   /** ID for label/input association */
   id?: string;
   /** Additional CSS class for the outermost wrapper */
@@ -159,7 +173,10 @@ export function Combobox({
   width,
   listWidth,
   emptyMessage = "No results found",
+  loading = false,
+  loadingMessage = "Loading…",
   label,
+  "aria-label": ariaLabel,
   id,
   className = "",
 }: ComboboxProps) {
@@ -313,12 +330,6 @@ export function Combobox({
     inputRef.current?.focus();
   }, [isControlled, onChange, onInputChange]);
 
-  const handleToggle = useCallback(() => {
-    if (disabled) return;
-    setIsOpen((prev) => !prev);
-    inputRef.current?.focus();
-  }, [disabled]);
-
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (disabled) return;
@@ -349,12 +360,12 @@ export function Combobox({
           break;
         }
         case "Enter": {
-          e.preventDefault();
           if (
             isOpen &&
             highlightedIndex >= 0 &&
             highlightedIndex < filteredOptions.length
           ) {
+            e.preventDefault();
             handleSelect(filteredOptions[highlightedIndex]);
           }
           break;
@@ -405,7 +416,7 @@ export function Combobox({
           style={{
             display: "block",
             marginBottom: 8,
-            color: "var(--ds-gray-900)",
+            color: "hsl(var(--color-textSubtle))",
           }}
         >
           {label}
@@ -456,7 +467,7 @@ export function Combobox({
                   height: 16,
                   pointerEvents: "none",
                   zIndex: 1,
-                  color: "var(--ds-gray-700)",
+                  color: "hsl(var(--color-textSubtler))",
                 }}
               >
                 <SearchIcon />
@@ -470,7 +481,10 @@ export function Combobox({
                 id={inputId}
                 aria-autocomplete="list"
                 aria-controls={listId}
-                aria-label={placeholder}
+                // Accessible name precedence: visible <label htmlFor> wins;
+                // otherwise use the explicit `aria-label` prop; only fall
+                // back to the placeholder when neither is supplied.
+                aria-label={label ? undefined : ariaLabel || placeholder}
                 aria-invalid={error || undefined}
                 autoComplete="off"
                 spellCheck={false}
@@ -489,7 +503,7 @@ export function Combobox({
                   }
                 }}
                 onKeyDown={handleKeyDown}
-                className={`${fontClass} placeholder:text-[var(--ds-gray-700)]`}
+                className={`${fontClass} placeholder:text-textSubtler`}
                 style={{
                   appearance: "none",
                   display: "inline-block",
@@ -502,12 +516,12 @@ export function Combobox({
                   boxShadow: inputBoxShadow,
                   background: disabled
                     ? "var(--ds-gray-100)"
-                    : "var(--ds-background-100)",
+                    : "hsl(var(--color-surface))",
                   color: disabled
-                    ? "var(--ds-gray-700)"
+                    ? "hsl(var(--color-textSubtler))"
                     : error
                       ? "var(--ds-red-800)"
-                      : "var(--ds-gray-1000)",
+                      : "hsl(var(--color-textDefault))",
                   fontFamily: "inherit",
                   fontSize: "inherit",
                   fontWeight: "inherit",
@@ -527,7 +541,7 @@ export function Combobox({
                 tabIndex={0}
                 onClick={handleClear}
                 disabled={disabled}
-                className={`${error ? "text-[var(--ds-red-800)]" : "text-[var(--ds-gray-700)]"} hover:text-[var(--ds-gray-1000)]`}
+                className={`${error ? "text-[var(--ds-red-800)]" : "text-textSubtler"} hover:text-textDefault`}
                 style={{
                   display: currentValue && !disabled ? "flex" : "none",
                   alignItems: "center",
@@ -568,7 +582,7 @@ export function Combobox({
                   }
                 }}
                 disabled={disabled}
-                className={`${error ? "text-[var(--ds-red-800)]" : "text-[var(--ds-gray-700)]"} ${!disabled ? "hover:text-[var(--ds-gray-1000)]" : ""}`}
+                className={`${error ? "text-[var(--ds-red-800)]" : "text-textSubtler"} ${!disabled ? "hover:text-textDefault" : ""}`}
                 style={{
                   display: currentValue && !disabled ? "none" : "flex",
                   alignItems: "center",
@@ -629,7 +643,7 @@ export function Combobox({
               width: listWidth || "var(--radix-popover-trigger-width)",
               padding: 8,
               borderRadius: 12,
-              background: "var(--ds-background-100)",
+              background: "hsl(var(--color-surface))",
               boxShadow: "var(--ds-shadow-menu)",
               maxHeight: 216,
               overflowY: "hidden",
@@ -641,6 +655,7 @@ export function Combobox({
               ref={listRef}
               id={listId}
               role="listbox"
+              aria-busy={loading || undefined}
               style={{
                 margin: 0,
                 padding: 0,
@@ -649,14 +664,30 @@ export function Combobox({
                 overflowY: "auto",
               }}
             >
-              {filteredOptions.length === 0 ? (
+              {loading ? (
+                <li
+                  role="status"
+                  aria-live="polite"
+                  style={{
+                    height: 36,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "hsl(var(--color-textSubtle))",
+                    fontSize: 14,
+                    userSelect: "none",
+                  }}
+                >
+                  {loadingMessage}
+                </li>
+              ) : filteredOptions.length === 0 ? (
                 <li
                   style={{
                     height: 36,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "var(--ds-gray-900)",
+                    color: "hsl(var(--color-textSubtle))",
                     fontSize: 14,
                     userSelect: "none",
                   }}
@@ -721,7 +752,7 @@ export function Combobox({
                           alignItems: "center",
                           marginLeft: 8,
                           flexShrink: 0,
-                          color: "var(--ds-gray-1000)",
+                          color: "hsl(var(--color-textDefault))",
                         }}
                       >
                         <CheckIcon />

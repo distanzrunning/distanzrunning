@@ -1,24 +1,12 @@
+import { PanelCard } from "@/components/ui/PanelCard";
+
 export const metadata = {
   title: "How our CMP works — Stride Admin",
   robots: { index: false, follow: false },
 };
 
 function DocCode({ children }: { children: React.ReactNode }) {
-  return (
-    <code
-      style={{
-        fontFamily: "var(--font-mono)",
-        fontSize: 12,
-        padding: "1px 5px",
-        borderRadius: 4,
-        background: "var(--ds-gray-100)",
-        color: "var(--ds-gray-1000)",
-        border: "1px solid var(--ds-gray-alpha-400)",
-      }}
-    >
-      {children}
-    </code>
-  );
+  return <code className="inline-code">{children}</code>;
 }
 
 function DocSection({
@@ -29,37 +17,11 @@ function DocSection({
   children: React.ReactNode;
 }) {
   return (
-    <section
-      style={{
-        padding: 20,
-        border: "1px solid var(--ds-gray-400)",
-        borderRadius: 12,
-        background: "var(--ds-background-100)",
-        display: "flex",
-        flexDirection: "column",
-        gap: 10,
-      }}
-    >
-      <h2
-        style={{
-          margin: 0,
-          fontSize: 14,
-          fontWeight: 600,
-          color: "var(--ds-gray-1000)",
-        }}
-      >
-        {title}
-      </h2>
-      <div
-        style={{
-          fontSize: 14,
-          lineHeight: 1.6,
-          color: "var(--ds-gray-900)",
-        }}
-      >
+    <PanelCard title={title}>
+      <div className="text-copy-14 text-textSubtle">
         {children}
       </div>
-    </section>
+    </PanelCard>
   );
 }
 
@@ -69,23 +31,14 @@ export default function HowItWorksPage() {
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <header style={{ marginBottom: 24 }}>
           <h1
-            style={{
-              fontSize: 24,
-              fontWeight: 600,
-              lineHeight: "32px",
-              margin: 0,
-              color: "var(--ds-gray-1000)",
-            }}
+            className="text-heading-32"
+            style={{ margin: 0, color: "hsl(var(--color-textDefault))" }}
           >
             How our CMP works
           </h1>
           <p
-            style={{
-              marginTop: 6,
-              marginBottom: 0,
-              fontSize: 13,
-              color: "var(--ds-gray-700)",
-            }}
+            className="text-copy-16"
+            style={{ marginTop: 6, marginBottom: 0, color: "hsl(var(--color-textSubtler))" }}
           >
             Internals of Distanz Running&apos;s self-built consent
             management platform.

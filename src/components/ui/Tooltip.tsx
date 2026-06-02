@@ -1,6 +1,13 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useEffect, cloneElement, isValidElement } from "react";
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  cloneElement,
+  isValidElement,
+} from "react";
 import { createPortal } from "react-dom";
 
 // ============================================================================
@@ -47,10 +54,16 @@ const typeStyles: Record<
   "default" | "success" | "error" | "warning",
   { bg: string; color: string }
 > = {
-  default: { bg: "var(--ds-gray-1000)", color: "var(--ds-background-100)" },
-  success: { bg: "var(--ds-blue-700)", color: "#fff" },
-  error: { bg: "var(--ds-red-700)", color: "#fff" },
-  warning: { bg: "var(--ds-amber-800)", color: "#fff" },
+  default: {
+    bg: "hsl(var(--color-textDefault))",
+    color: "hsl(var(--color-textInverted))",
+  },
+  success: {
+    bg: "var(--ds-blue-700)",
+    color: "hsl(var(--color-textInverted))",
+  },
+  error: { bg: "var(--ds-red-700)", color: "hsl(var(--color-textInverted))" },
+  warning: { bg: "var(--ds-amber-800)", color: "var(--ds-gray-1000)" },
 };
 
 // ============================================================================
@@ -61,7 +74,7 @@ export function Tooltip({
   content,
   side = "top",
   align = "center",
-  delay = 200,
+  delay = 150,
   showArrow = true,
   type = "default",
   textAlign = "center",
@@ -81,6 +94,78 @@ export function Tooltip({
     return () => setMounted(false);
   }, []);
 
+  // Measurement helper — uses raw getBoundingClientRect()
+  // (viewport-relative) coords, no scrollX/scrollY math, since
+  // the tooltip itself is rendered with position:fixed. For a
+  // sticky / fixed trigger that's the entire fix: the trigger
+  // stays at its viewport position and the tooltip stays at
+  // its viewport position, so they remain aligned during scroll
+  // without any extra work. For non-sticky triggers, scroll
+  // changes the trigger's viewport coords, so the scroll
+  // listener below re-runs this to keep them aligned.
+  const updatePosition = useCallback(() => {
+    if (!triggerRef.current || !tooltipRef.current) return;
+
+    const triggerRect = triggerRef.current.getBoundingClientRect();
+    const tooltipRect = tooltipRef.current.getBoundingClientRect();
+
+    let top = 0;
+    let left = 0;
+
+    switch (side) {
+      case "top":
+        top = triggerRect.top - tooltipRect.height - TOOLTIP_OFFSET;
+        break;
+      case "bottom":
+        top = triggerRect.bottom + TOOLTIP_OFFSET;
+        break;
+      case "left":
+        left = triggerRect.left - tooltipRect.width - TOOLTIP_OFFSET;
+        break;
+      case "right":
+        left = triggerRect.right + TOOLTIP_OFFSET;
+        break;
+    }
+
+    if (side === "top" || side === "bottom") {
+      switch (align) {
+        case "start":
+          left = triggerRect.left;
+          break;
+        case "center":
+          left =
+            triggerRect.left + triggerRect.width / 2 - tooltipRect.width / 2;
+          break;
+        case "end":
+          left = triggerRect.right - tooltipRect.width;
+          break;
+      }
+    } else {
+      switch (align) {
+        case "start":
+          top = triggerRect.top;
+          break;
+        case "center":
+          top =
+            triggerRect.top + triggerRect.height / 2 - tooltipRect.height / 2;
+          break;
+        case "end":
+          top = triggerRect.bottom - tooltipRect.height;
+          break;
+      }
+    }
+
+    let arrowOffset = 0;
+    if (side === "top" || side === "bottom") {
+      arrowOffset = triggerRect.left + triggerRect.width / 2 - left;
+    } else {
+      arrowOffset = triggerRect.top + triggerRect.height / 2 - top;
+    }
+
+    setPosition({ top, left, arrowOffset });
+    setIsPositioned(true);
+  }, [side, align]);
+
   // When tooltip becomes active, render it offscreen then measure & position
   useEffect(() => {
     if (!isActive || !mounted) {
@@ -90,74 +175,38 @@ export function Tooltip({
 
     // Wait for the tooltip DOM to render, then measure
     const raf1 = requestAnimationFrame(() => {
-      const raf2 = requestAnimationFrame(() => {
-        if (!triggerRef.current || !tooltipRef.current) return;
-
-        const triggerRect = triggerRef.current.getBoundingClientRect();
-        const tooltipRect = tooltipRef.current.getBoundingClientRect();
-        const scrollX = window.scrollX;
-        const scrollY = window.scrollY;
-
-        let top = 0;
-        let left = 0;
-
-        switch (side) {
-          case "top":
-            top = triggerRect.top + scrollY - tooltipRect.height - TOOLTIP_OFFSET;
-            break;
-          case "bottom":
-            top = triggerRect.bottom + scrollY + TOOLTIP_OFFSET;
-            break;
-          case "left":
-            left = triggerRect.left + scrollX - tooltipRect.width - TOOLTIP_OFFSET;
-            break;
-          case "right":
-            left = triggerRect.right + scrollX + TOOLTIP_OFFSET;
-            break;
-        }
-
-        if (side === "top" || side === "bottom") {
-          switch (align) {
-            case "start":
-              left = triggerRect.left + scrollX;
-              break;
-            case "center":
-              left = triggerRect.left + scrollX + triggerRect.width / 2 - tooltipRect.width / 2;
-              break;
-            case "end":
-              left = triggerRect.right + scrollX - tooltipRect.width;
-              break;
-          }
-        } else {
-          switch (align) {
-            case "start":
-              top = triggerRect.top + scrollY;
-              break;
-            case "center":
-              top = triggerRect.top + scrollY + triggerRect.height / 2 - tooltipRect.height / 2;
-              break;
-            case "end":
-              top = triggerRect.bottom + scrollY - tooltipRect.height;
-              break;
-          }
-        }
-
-        let arrowOffset = 0;
-        if (side === "top" || side === "bottom") {
-          arrowOffset = triggerRect.left + scrollX + triggerRect.width / 2 - left;
-        } else {
-          arrowOffset = triggerRect.top + scrollY + triggerRect.height / 2 - top;
-        }
-
-        setPosition({ top, left, arrowOffset });
-        setIsPositioned(true);
-      });
-
+      const raf2 = requestAnimationFrame(updatePosition);
       return () => cancelAnimationFrame(raf2);
     });
 
     return () => cancelAnimationFrame(raf1);
-  }, [isActive, mounted, side, align]);
+  }, [isActive, mounted, updatePosition]);
+
+  // Track scroll + resize while the tooltip is open so it stays
+  // glued to its trigger. Capture-phase scroll listener catches
+  // scrolls on any ancestor (nested scroll containers + window).
+  // rAF-throttled to one update per frame.
+  useEffect(() => {
+    if (!isActive) return;
+
+    let rafId: number | null = null;
+    const onScrollOrResize = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        updatePosition();
+        rafId = null;
+      });
+    };
+
+    window.addEventListener("scroll", onScrollOrResize, true);
+    window.addEventListener("resize", onScrollOrResize);
+
+    return () => {
+      window.removeEventListener("scroll", onScrollOrResize, true);
+      window.removeEventListener("resize", onScrollOrResize);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, [isActive, updatePosition]);
 
   const show = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -235,56 +284,82 @@ export function Tooltip({
     }
   };
 
-  const tooltipElement = isActive && mounted
-    ? createPortal(
-        <div
-          ref={tooltipRef}
-          role="tooltip"
-          style={{
-            position: "absolute",
-            top: isPositioned ? position.top : -9999,
-            left: isPositioned ? position.left : -9999,
-            zIndex: 9999,
-            pointerEvents: "none",
-            opacity: isPositioned ? 1 : 0,
-            animation: isPositioned ? "tooltip-fade-in 0.15s ease-out" : "none",
-          }}
-        >
+  const tooltipElement =
+    isActive && mounted
+      ? createPortal(
           <div
+            ref={tooltipRef}
+            role="tooltip"
             style={{
-              position: "relative",
-              backgroundColor: styles.bg,
-              color: styles.color,
-              fontSize: 13,
-              lineHeight: "20px",
-              fontWeight: 400,
-              padding: "6px 12px",
-              borderRadius: 8,
-              maxWidth: 250,
-              textAlign,
-              boxShadow: "var(--ds-shadow-tooltip)",
+              // position:fixed (not absolute) so the tooltip is
+              // anchored to the viewport rather than the page —
+              // sticky / fixed triggers (e.g. the race-detail map
+              // controls) keep the tooltip glued to the button
+              // through scroll without any recompute, since both
+              // are then viewport-anchored. Non-sticky triggers
+              // are handled by the scroll listener above.
+              position: "fixed",
+              top: isPositioned ? position.top : -9999,
+              left: isPositioned ? position.left : -9999,
+              zIndex: 9999,
+              pointerEvents: "none",
+              opacity: isPositioned ? 1 : 0,
+              animation: isPositioned
+                ? "tooltip-fade-in 0.15s ease-out"
+                : "none",
             }}
           >
-            {content}
-            {showArrow && <span style={getArrowStyle()} />}
-          </div>
-        </div>,
-        document.body,
-      )
-    : null;
+            <div
+              style={{
+                position: "relative",
+                backgroundColor: styles.bg,
+                color: styles.color,
+                fontSize: 13,
+                lineHeight: "20px",
+                fontWeight: 400,
+                padding: "6px 12px",
+                borderRadius: 8,
+                maxWidth: 250,
+                textAlign,
+                boxShadow: "var(--ds-shadow-tooltip)",
+              }}
+            >
+              {content}
+              {showArrow && <span style={getArrowStyle()} />}
+            </div>
+          </div>,
+          document.body,
+        )
+      : null;
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key !== "Escape" || !isActive) return;
+      e.stopPropagation();
+      hide();
+      // Return focus to the trigger so keyboard users keep their
+      // place. cloneElement / span fallback both forward the ref so
+      // triggerRef points at whichever element receives focus.
+      triggerRef.current?.focus();
+    },
+    [isActive, hide],
+  );
 
   const triggerProps = {
     onMouseEnter: show,
     onMouseLeave: hide,
     onFocus: show,
     onBlur: hide,
+    onKeyDown: handleKeyDown,
   };
 
   const trigger = isValidElement(children) ? (
     cloneElement(children as React.ReactElement<Record<string, unknown>>, {
       ref: triggerRef,
       ...triggerProps,
-      tabIndex: (children as React.ReactElement<Record<string, unknown>>).props.tabIndex ?? 0,
+      tabIndex:
+        (children as React.ReactElement<Record<string, unknown>>).props
+          .tabIndex ?? 0,
     })
   ) : (
     <span

@@ -3,11 +3,11 @@ export default function TextStyles() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-sm tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Typography
         </p>
         <h1
-          className="font-serif text-[40px] leading-[1.15] font-medium mb-0"
+          className="text-heading-40 font-serif mb-0"
           id="text-styles"
         >
           Text styles
@@ -16,7 +16,7 @@ export default function TextStyles() {
 
       <hr className="border-t-4 border-textDefault" />
 
-      <p className="text-base text-textSubtle">
+      <p className="text-copy-16 text-textSubtle">
         A complete hierarchy of text styles combining typeface, size, weight,
         and line-height into reusable patterns. These styles ensure consistent
         typography across the entire design system.
@@ -26,14 +26,14 @@ export default function TextStyles() {
       <section>
         <h2
           id="display"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Display
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Large-scale typography for hero sections and feature headlines. Uses
           the serif typeface for editorial impact. Display styles use fluid
           typography that scales smoothly between mobile and desktop viewports.
@@ -48,7 +48,7 @@ export default function TextStyles() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
-              <tbody className="text-sm whitespace-nowrap">
+              <tbody className="text-copy-14 whitespace-nowrap">
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle w-24">Style</td>
                   <td className="py-2 px-4 font-medium">Display Large</td>
@@ -95,7 +95,7 @@ export default function TextStyles() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
-              <tbody className="text-sm whitespace-nowrap">
+              <tbody className="text-copy-14 whitespace-nowrap">
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle w-24">Style</td>
                   <td className="py-2 px-4 font-medium">Display</td>
@@ -140,14 +140,14 @@ export default function TextStyles() {
       <section>
         <h2
           id="headings"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Headings
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Hierarchical heading styles for structuring content. All headings use
           the serif typeface with medium weight for editorial character.
           Headings use fluid typography that scales between mobile and desktop.
@@ -160,7 +160,7 @@ export default function TextStyles() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
-              <tbody className="text-sm whitespace-nowrap">
+              <tbody className="text-copy-14 whitespace-nowrap">
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle w-24">Style</td>
                   <td className="py-2 px-4 font-medium">Heading 1</td>
@@ -205,7 +205,7 @@ export default function TextStyles() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
-              <tbody className="text-sm whitespace-nowrap">
+              <tbody className="text-copy-14 whitespace-nowrap">
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle w-24">Style</td>
                   <td className="py-2 px-4 font-medium">Heading 2</td>
@@ -252,7 +252,7 @@ export default function TextStyles() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
-              <tbody className="text-sm whitespace-nowrap">
+              <tbody className="text-copy-14 whitespace-nowrap">
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle w-24">Style</td>
                   <td className="py-2 px-4 font-medium">Heading 3</td>
@@ -297,14 +297,14 @@ export default function TextStyles() {
       <section>
         <h2
           id="body"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Body
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Body text styles for paragraphs and general content. Uses the
           sans-serif typeface for optimal screen readability.
         </p>
@@ -320,7 +320,7 @@ export default function TextStyles() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
-              <tbody className="text-sm whitespace-nowrap">
+              <tbody className="text-copy-14 whitespace-nowrap">
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle w-24">Style</td>
                   <td className="py-2 px-4 font-medium">Body Large</td>
@@ -361,7 +361,7 @@ export default function TextStyles() {
         {/* Body */}
         <div className="mb-8">
           <div className="bg-surfaceSubtle p-6 mb-4">
-            <p className="font-sans text-base leading-[1.5] text-textDefault">
+            <p className="font-sans text-copy-16 leading-[1.5] text-textDefault">
               The marathon is a test of endurance that has captivated athletes
               for over a century. From the streets of Boston to the trails of
               the Rockies, runners push their limits in pursuit of the finish
@@ -370,7 +370,7 @@ export default function TextStyles() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
-              <tbody className="text-sm whitespace-nowrap">
+              <tbody className="text-copy-14 whitespace-nowrap">
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle w-24">Style</td>
                   <td className="py-2 px-4 font-medium">Body</td>
@@ -394,7 +394,7 @@ export default function TextStyles() {
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle">Tailwind</td>
                   <td className="py-2 px-4 font-mono text-xs">
-                    font-sans text-base leading-normal
+                    font-sans text-copy-16 leading-normal
                   </td>
                 </tr>
                 <tr className="border-b border-borderSubtle">
@@ -420,7 +420,7 @@ export default function TextStyles() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
-              <tbody className="text-sm whitespace-nowrap">
+              <tbody className="text-copy-14 whitespace-nowrap">
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle w-24">Style</td>
                   <td className="py-2 px-4 font-medium">Body Small</td>
@@ -469,14 +469,14 @@ export default function TextStyles() {
       <section>
         <h2
           id="ui"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           UI
         </h2>
 
         <hr className="border-t border-borderDefault mb-6" />
 
-        <p className="text-base text-textSubtle mb-6">
+        <p className="text-copy-16 text-textSubtle mb-6">
           Interface text styles for labels, buttons, navigation, and interactive
           elements. Designed for clarity and scanability.
         </p>
@@ -490,7 +490,7 @@ export default function TextStyles() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
-              <tbody className="text-sm whitespace-nowrap">
+              <tbody className="text-copy-14 whitespace-nowrap">
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle w-24">Style</td>
                   <td className="py-2 px-4 font-medium">Label</td>
@@ -527,13 +527,13 @@ export default function TextStyles() {
         {/* Overline */}
         <div className="mb-8">
           <div className="bg-surfaceSubtle p-6 mb-4">
-            <p className="font-sans text-xs font-medium uppercase tracking-wide text-electric-pink">
+            <p className="font-sans text-xs font-medium uppercase tracking-wide text-textSubtle">
               Training
             </p>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
-              <tbody className="text-sm whitespace-nowrap">
+              <tbody className="text-copy-14 whitespace-nowrap">
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle w-24">Style</td>
                   <td className="py-2 px-4 font-medium">Overline</td>
@@ -580,13 +580,13 @@ export default function TextStyles() {
         {/* Button */}
         <div className="mb-8">
           <div className="bg-surfaceSubtle p-6 mb-4">
-            <span className="inline-block font-sans text-sm font-semibold px-4 py-2 bg-electric-pink text-white rounded">
+            <span className="inline-block font-sans text-sm font-semibold px-4 py-2 bg-textDefault text-white rounded">
               Subscribe
             </span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
-              <tbody className="text-sm whitespace-nowrap">
+              <tbody className="text-copy-14 whitespace-nowrap">
                 <tr className="border-b border-borderSubtle">
                   <td className="py-2 pr-4 text-textSubtle w-24">Style</td>
                   <td className="py-2 px-4 font-medium">Button</td>
@@ -627,7 +627,7 @@ export default function TextStyles() {
       <section>
         <h2
           id="reference"
-          className="font-serif text-[28px] leading-[1.2] font-medium mb-2 scroll-mt-32"
+          className="text-heading-24 font-serif mb-2 scroll-mt-32"
         >
           Quick reference
         </h2>
@@ -638,24 +638,24 @@ export default function TextStyles() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 font-semibold text-sm">
+                <th className="text-left py-3 pr-4 text-heading-14">
                   Style
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Font
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Size
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Weight
                 </th>
-                <th className="text-left py-3 px-4 font-semibold text-sm">
+                <th className="text-left py-3 px-4 text-heading-14">
                   Line-height
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm whitespace-nowrap">
+            <tbody className="text-copy-14 whitespace-nowrap">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Display Large</td>
                 <td className="py-3 px-4">Serif</td>

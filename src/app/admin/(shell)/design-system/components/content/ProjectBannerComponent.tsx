@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -144,7 +145,7 @@ function SectionHeader({
       className="group relative -ml-5 inline-block pl-5 no-underline outline-none text-inherit text-left cursor-pointer bg-transparent border-none"
       id={id}
     >
-      <h2 className="text-[24px] leading-[1.2] font-semibold text-textDefault">
+      <h2 className="text-heading-24 text-textDefault">
         <div className="absolute left-0 top-[8px] opacity-0 outline-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
           <LinkIcon />
         </div>
@@ -235,8 +236,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -248,40 +249,40 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-[13px]"
-            style={{ background: "var(--ds-background-100)" }}
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
-                <code className="block text-[13px] leading-[20px] font-mono">
+                <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
                     <div
                       key={index}
@@ -480,7 +481,7 @@ function WarningDemo() {
             <Tooltip.Content
               className="z-[100] max-w-[250px] rounded-md px-3 py-2 text-xs leading-4 text-center select-none"
               style={{
-                background: "var(--ds-gray-1000)",
+                background: "hsl(var(--color-textDefault))",
                 color: "var(--ds-background-100)",
                 boxShadow: "var(--ds-shadow-tooltip)",
               }}
@@ -489,7 +490,7 @@ function WarningDemo() {
             >
               John Phamous — Team Member
               <Tooltip.Arrow
-                style={{ fill: "var(--ds-gray-1000)" }}
+                style={{ fill: "hsl(var(--color-textDefault))" }}
               />
             </Tooltip.Content>
           </Tooltip.Portal>
@@ -530,7 +531,7 @@ export default function ProjectBannerComponent() {
         </SectionHeader>
         <p
           className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "var(--ds-gray-900)" }}
+          style={{ color: "hsl(var(--color-textSubtle))" }}
         >
           For positive, temporary mitigations put in place to protect a project,
           e.g., Attack Challenge Mode
@@ -548,7 +549,7 @@ export default function ProjectBannerComponent() {
         </SectionHeader>
         <p
           className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "var(--ds-gray-900)" }}
+          style={{ color: "hsl(var(--color-textSubtle))" }}
         >
           When a project is in an exceptional state which requires non-immediate
           action to exit, e.g., during a rollback
@@ -566,7 +567,7 @@ export default function ProjectBannerComponent() {
         </SectionHeader>
         <p
           className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "var(--ds-gray-900)" }}
+          style={{ color: "hsl(var(--color-textSubtle))" }}
         >
           When a project is approaching or experiencing critical downtime which
           requires immediate attention, e.g., when payment is overdue
@@ -576,6 +577,106 @@ export default function ProjectBannerComponent() {
             <ErrorDemo />
           </CodePreview>
         </div>
+      </Section>
+
+      {/* Best Practices Section */}
+      <Section>
+        <SectionHeader id="best-practices" onCopyLink={showToast}>
+          Best Practices
+        </SectionHeader>
+
+        <h3
+          id="when-to-use"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          When to use
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Use Project Banner for project-wide states that need
+            resolution: overdue billing, an active rollback, attack
+            mitigation, an expiring trial blocking deploys.
+          </li>
+          <li>
+            Pick <ComponentRef name="Note" /> for inline contextual
+            messages tied to a single field or card,{" "}
+            <ComponentRef name="Toast" /> for transient acknowledgments,{" "}
+            <ComponentRef name="Modal" /> for confirmations.
+          </li>
+          <li>
+            Match <code className="inline-code">variant</code> to
+            severity:{" "}
+            <code className="inline-code">error</code> for critical
+            downtime or payment-blocking states,{" "}
+            <code className="inline-code">warning</code> for an
+            exceptional state with non-immediate action,{" "}
+            <code className="inline-code">success</code> for a positive
+            temporary mitigation.
+          </li>
+        </ul>
+
+        <h3
+          id="behavior"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Behavior
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Project Banner is non-dismissible by design. If the message
+            can be dismissed without resolving the underlying state, it
+            isn&apos;t banner-worthy; move it to a{" "}
+            <ComponentRef name="Note" />.
+          </li>
+          <li>
+            Show one Project Banner at a time. Stacking competing banners
+            drowns the most urgent state.
+          </li>
+          <li>
+            Always pass an{" "}
+            <code className="inline-code">action</code> that resolves
+            the state. A banner with no route is a dead end.
+          </li>
+        </ul>
+
+        <h3
+          id="content"
+          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
+        >
+          Content
+        </h3>
+        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
+          <li>
+            Message (
+            <code className="inline-code">children</code>) is one
+            sentence in sentence case that names the impact:{" "}
+            <code className="inline-code">
+              Your Pro trial expires in 3 days.
+            </code>{" "}
+            Don&apos;t open with <code className="inline-code">Heads up</code>{" "}
+            or apologetic preambles.
+          </li>
+          <li>
+            <code className="inline-code">action</code> label is Title
+            Case <code className="inline-code">Verb + Noun</code> and
+            points at the resolver:{" "}
+            <code className="inline-code">Update Payment Method</code>,{" "}
+            <code className="inline-code">Reactivate Project</code>,{" "}
+            <code className="inline-code">Review Tokens</code>.
+          </li>
+          <li>
+            Name the affected entity when the project context isn&apos;t
+            obvious from the surrounding chrome (
+            <code className="inline-code">
+              Production deployments are paused on my-project
+            </code>
+            ).
+          </li>
+          <li>
+            Don&apos;t encode severity in the copy with emoji or
+            interjections; the variant carries that signal.
+          </li>
+        </ul>
       </Section>
 
       <Toast

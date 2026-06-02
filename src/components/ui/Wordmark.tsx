@@ -19,7 +19,7 @@ export default function Wordmark({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 1579.12 484.75"
+      viewBox="0 0 1579.12 425"
       fill="currentColor"
       aria-hidden="true"
       focusable="false"
