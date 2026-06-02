@@ -120,7 +120,7 @@ export function ThemeSwitcher({
                 ? "rgb(var(--color-surface))"
                 : "transparent",
               boxShadow: isSelected
-                ? "rgba(0,0,0,0.06) 0px 2px 4px, rgba(0,0,0,0.04) 0px 0px 0px 1px"
+                ? "rgba(0,0,0,0.06) 0px 2px 4px, rgba(var(--ds-gray-1000-rgb), 0.14) 0px 0px 0px 1px"
                 : "none",
               color: disabled
                 ? "var(--ds-gray-600)"
