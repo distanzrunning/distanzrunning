@@ -431,11 +431,13 @@
     --color-borderNeutralHover: var(--color-borderDefaultHover);
     --color-borderNeutralSubtle: var(--color-borderSubtle);
 
-    /* Background/Surface colors */
-    --color-surface: 0, 0%, 100%; /* Primary surface - white */
-    --color-surfaceSubtle: var(--ds-background-100-value); /* Subtle surface */
+    /* Background/Surface colors — Geist model: surface = bg-100 (raised
+       cards/menus/inputs, elevation via border + shadow), canvas = bg-200
+       (page). surface is brighter than canvas in both themes. */
+    --color-surface: var(--ds-background-100-value); /* raised — #FFFFFF */
+    --color-surfaceSubtle: var(--ds-gray-100-value); /* subtle component fill */
     --color-surfaceWarm: var(--ds-gray-200-value); /* Warm-tinted surface */
-    --color-canvas: var(--ds-background-200-value); /* Page background */
+    --color-canvas: var(--ds-background-200-value); /* page — #FAFAFA */
 
     /* Elevated Surfaces */
     --color-surfaceElevated1: 0, 0%, 100%;
@@ -743,13 +745,11 @@
     --ds-overlay-backdrop-color: rgb(255, 255, 255);
     --ds-overlay-backdrop-opacity: 0.05;
 
-    /* Modal backgrounds — same semantics as light mode (panel = the
-       brighter body surface, sections = the softer tone). Because
-       bg-100 is the *darker* shade in dark mode (#121212) and bg-200
-       is the brighter one (#1F1F1F), the token assignments here
-       are inverted relative to light mode — using bg-200 for the
-       panel and bg-100 for the section keeps body brighter than
-       footer in both themes. */
+    /* Modal backgrounds — panel = surface (bg-100, the brighter body),
+       sections/footers = canvas (bg-200, the softer page tone). Same
+       assignment in both themes now: surface (bg-100) is brighter than
+       canvas (bg-200) in light AND dark, so body stays brighter than
+       footer without inverting the tokens. */
     --ds-modal-panel-bg: hsl(var(--color-surface)); /* raised panel */
     --ds-modal-section-bg: hsl(var(--color-canvas)); /* recessed section/footer */
 
@@ -761,9 +761,9 @@
       0 0 0 1px rgba(255, 255, 255, 0.145), 0 1px 2px 0 rgba(0, 0, 0, 0.16),
       0 0 0 1px #000;
     --ds-shadow-button-rounded-hover: 0 0 0 1px #2e2e2e;
-    /* Elevated control: rest sits on the raised surface (#262626), hover
-       lifts one step further (gray-100 #303030). Both advance above the
-       page so the control reads as raised — Material/Apple elevation. */
+    /* Elevated control: rest sits on the raised surface (bg-100 #0A0A0A),
+       hover lifts to gray-100 (#1A1A1A) — one step above surface, reads
+       against the page (bg-200 #000) via border + shadow. */
     --ds-button-rounded-hover-bg: var(--ds-gray-100);
     --ds-button-rounded-bg: hsl(var(--color-surface));
     --ds-button-rounded-text: var(--ds-gray-1000);
@@ -776,8 +776,8 @@
     --calendar-button-focus-ring: 0 0 0 1px #ffffff57, 0 0 0 4px #ffffff29;
 
     /* Calendar popover - Geist design tokens (dark mode).
-       Floating menu uses the raised surface (#262626) so it advances above
-       the page. */
+       Floating menu uses the raised surface (bg-100 #0A0A0A) + shadow so it
+       advances above the page (bg-200 #000). */
     --calendar-popover-bg: hsl(var(--color-surface));
     --calendar-popover-radius: 12px;
     --calendar-popover-shadow:
@@ -813,23 +813,16 @@
     --color-borderNeutralHover: var(--color-borderDefaultHover);
     --color-borderNeutralSubtle: var(--color-borderSubtle);
 
-    /* Background/Surface colors */
-    /* NOTE — dark scale is now Geist-verbatim, which changes the elevation
-       story and needs reconciliation (tracked as the next tweak):
-         • canvas/bg-100 = #0A0A0A (4%); bg-200 = #000 (0%, now DARKER than
-           bg-100 — inverts the prior "bg-200 is the lighter wrapper" model).
-         • Geist grays: gray-100 #1A1A1A (10%) · 200 #1F1F1F (12%) ·
-           300 #292929 (16%) — these are component-bg tones for a near-black
-           canvas, NOT hover tones above a lifted surface.
-         • surface below is still the prior literal #262626 (15%), so it sits
-           ABOVE gray-100/200 — the "hover one step above surface" pattern no
-           longer holds. Decide: either drop surface to a Geist-consistent
-           tone (≈ gray-100 #1A1A1A) and use 200/300 as hovers, or keep #262626
-           and remap the interaction tones. */
-    --color-surface: 0, 0%, 15%; /* #262626 — raised surfaces (cards, menus, popovers). Prior literal, retained pending the elevation reconciliation noted above. */
-    --color-surfaceSubtle: var(--ds-gray-200-value); /* Subtle elevation */
+    /* Background/Surface colors — Geist model (verbatim):
+         canvas = bg-200 (#000, the page) · surface = bg-100 (#0A0A0A, raised
+         cards/menus/inputs). surface is the brighter of the two; elevation
+         comes from border + shadow, NOT a lighter fill. Interaction tones
+         (hover/active/selected) use gray-100 #1A1A1A / 200 #1F1F1F / 300
+         #292929 — all lighter than surface, so they read on top of it. */
+    --color-surface: var(--ds-background-100-value); /* raised — #0A0A0A */
+    --color-surfaceSubtle: var(--ds-gray-100-value); /* subtle component fill */
     --color-surfaceWarm: var(--ds-gray-200-value); /* Warm-tinted surface */
-    --color-canvas: var(--ds-background-100-value); /* Page base — bg-100 #0A0A0A (Geist-verbatim) */
+    --color-canvas: var(--ds-background-200-value); /* page — #000 */
 
     /* Elevated Surfaces - Progressive lightening */
     --color-surfaceElevated1: var(--ds-gray-200-value); /* Level 1 */
