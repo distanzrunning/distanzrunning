@@ -61,7 +61,7 @@ function SectionCard({
       className="group flex flex-col gap-4 rounded-xl p-6 transition-colors no-underline"
       style={{
         border: "1px solid var(--ds-gray-400)",
-        background: "var(--ds-background-100)",
+        background: "rgb(var(--color-surface))",
         color: "var(--ds-gray-1000)",
         minHeight: 180,
       }}

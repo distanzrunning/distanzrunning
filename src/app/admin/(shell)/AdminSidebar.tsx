@@ -617,7 +617,7 @@ export default function AdminSidebar({
               right: 0,
               height: 16,
               background:
-                "linear-gradient(to bottom, var(--ds-background-200), transparent)",
+                "linear-gradient(to bottom, rgb(var(--color-canvas)), transparent)",
               pointerEvents: "none",
               zIndex: 1,
             }}

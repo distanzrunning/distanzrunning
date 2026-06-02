@@ -47,7 +47,7 @@ export default async function StudioLayout({
       <div
         className="flex h-10 shrink-0 items-center border-b px-3"
         style={{
-          background: "var(--ds-background-200)",
+          background: "rgb(var(--color-canvas))",
           borderBottomColor: "var(--ds-gray-400)",
         }}
       >

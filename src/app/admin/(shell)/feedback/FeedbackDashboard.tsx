@@ -689,7 +689,7 @@ export async function FeedbackDashboardContent({
               display: "grid",
               gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
               borderBottom: "1px solid var(--ds-gray-400)",
-              background: "var(--ds-background-200)",
+              background: "rgb(var(--color-canvas))",
             }}
           >
             <div>
@@ -977,7 +977,7 @@ export function FeedbackDashboardSkeleton() {
               display: "grid",
               gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
               borderBottom: "1px solid var(--ds-gray-400)",
-              background: "var(--ds-background-200)",
+              background: "rgb(var(--color-canvas))",
             }}
           >
             <div>

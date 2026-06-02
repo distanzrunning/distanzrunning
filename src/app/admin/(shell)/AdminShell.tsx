@@ -42,7 +42,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
     <div
       style={{
         minHeight: "100vh",
-        background: "var(--ds-background-200)",
+        background: "rgb(var(--color-canvas))",
         color: "var(--ds-gray-1000)",
       }}
     >
@@ -55,7 +55,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           height: "100vh",
           zIndex: 40,
           borderRight: "1px solid var(--ds-gray-400)",
-          background: "var(--ds-background-200)",
+          background: "rgb(var(--color-canvas))",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",

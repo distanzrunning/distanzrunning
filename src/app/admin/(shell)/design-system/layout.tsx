@@ -10,7 +10,7 @@ export default function DesignSystemLayout({
       id="main-content"
       className="flex flex-col"
       style={{
-        background: "var(--ds-background-200)",
+        background: "rgb(var(--color-canvas))",
         minHeight: "calc(100vh - 64px)",
       }}
     >
