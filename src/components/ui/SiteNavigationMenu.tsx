@@ -17,7 +17,6 @@ import {
   TbBottle,
   TbFlag,
   TbCalendarEvent,
-  TbDatabase,
 } from "react-icons/tb";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
@@ -164,12 +163,6 @@ export const raceLinks: ReadonlyArray<CategoryItem> = [
     href: "/races/calendar",
     description: "Upcoming races",
     Icon: TbCalendarEvent,
-  },
-  {
-    label: "Database",
-    href: "/races/database",
-    description: "Search every race",
-    Icon: TbDatabase,
   },
 ];
 
