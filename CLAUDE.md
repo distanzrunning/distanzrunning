@@ -70,19 +70,19 @@ Token namespace: `--ds-{hue}-{shade}`.
 
 **Hues**: `gray`, `blue`, `red`, `amber`, `green`, `pink`, `purple`, `teal`. Shades 100–1000 (in steps of 100).
 
-**Backgrounds** (separate from the hue scale): `--ds-background-100` (primary canvas — `#FFFFFF` light) / `--ds-background-200` (secondary surface, used sparingly — `#F5F5F5` light). They flip in dark mode following Apple's **base / elevated** model: `bg-100` = `#121212` (Material base canvas), `bg-200` = `#1F1F1F` (the *elevated* surface, ~7% white lift).
+**Backgrounds** (separate from the hue scale): `--ds-background-100` (primary canvas — `#FFFFFF` light) / `--ds-background-200` (secondary surface, used sparingly — `#F5F5F5` light). They flip in dark mode following Apple's **base / elevated** model: `bg-100` = `#121212` (base canvas), `bg-200` = `#262626` (the *elevated* surface — lifts clearly off the base).
 
 **Surfaces — TWO roles, one rule. This is the whole system; there are no other surface tokens and no per-component exceptions.**
 
 | Role | Class | Light | Dark | Use for |
 |---|---|---|---|---|
 | **Canvas** (down) | `bg-canvas` | `#F5F5F5` | `#121212` | the page / `PageFrame`, **and** anything recessed *within* a surface: input/textarea/select fields, modal & drawer footers/sections |
-| **Surface** (up) | `bg-surface` | `#FFFFFF` | `#1F1F1F` | **everything raised**: cards, menus, popovers, dialogs, drawers, sheets, panels, toasts, badges, chips, filled/secondary buttons, checkbox/radio/switch boxes, the header pill |
-| **Interaction** (on a surface) | `--ds-gray-100/200/300` (`bg-[var(--ds-gray-100)]` …) | `#F0F0F0`+ | `#262626 / #2E2E2E / #333` | **hover / active / selected** states *on* a surface — one+ step above it so they read |
+| **Surface** (up) | `bg-surface` | `#FFFFFF` | `#262626` | **everything raised**: cards, menus, popovers, dialogs, drawers, sheets, panels, toasts, badges, chips, filled/secondary buttons, checkbox/radio/switch boxes, the header pill |
+| **Interaction** (on a surface) | `--ds-gray-100/200/300` (`bg-[var(--ds-gray-100)]` …) | `#F0F0F0`+ | `#303030 / #3A3A3A / #444444` | **hover / active / selected** states *on* a surface — one+ step above it so they read |
 
 **The rule:** *Is it the page, or a field you type/select into, or a footer/section inside a surface? → `bg-canvas`. Otherwise → `bg-surface`.* Floating things (menus/modals/popovers) additionally carry a `material-*` shadow — **extra depth comes from shadow, never from more tones.**
 
-**Surface ≠ its own states.** `surface` is deliberately **`bg-200` (`#1F1F1F`), not `gray-100`** — because `gray-100/200/300` are the **hover/active/selected** tones (Geist "component backgrounds"). If `surface` were `gray-100`, a hover or selected child *on* a surface would collapse into it (this was the ThemeSwitcher bug). **Segmented controls** follow one shared pattern: track/container = `bg-canvas` (recessed), selected segment = `bg-surface` (raised) + a hairline ring — see `ThemeSwitcher`/`Switch`.
+**Surface ≠ its own states.** `surface` is **`bg-200` (`#262626`)**, and `gray-100/200/300` (`#303030/#3A3A3A/#444`) are the **hover/active/selected** tones one step above it — kept distinct so a hover or selected child *on* a surface doesn't collapse into it (this was the ThemeSwitcher bug). If `surface` were `gray-100`, a hover or selected child *on* a surface would collapse into it (this was the ThemeSwitcher bug). **Segmented controls** follow one shared pattern: track/container = `bg-canvas` (recessed), selected segment = `bg-surface` (raised) + a hairline ring — see `ThemeSwitcher`/`Switch`.
 
 **Hard anti-pattern: never use `bg-[var(--ds-background-100)]` or `bg-[var(--ds-background-200)]` (or their inline/CSS forms) as a fill.** Those raw tokens only *feed* `canvas`/`surface` internally. Components always use `bg-canvas` / `bg-surface` — that's what guarantees conformity (no component "does its own thing"). Don't reach for `bg-white`/`bg-black`/`neutral-*` either. (The only legitimate non-token fills are deliberate translucent **glass** effects, e.g. `bg-white/15` + blur.)
 
