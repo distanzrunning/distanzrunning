@@ -70,12 +70,17 @@ const directionStyles: Record<
   StatTileChangeDirection,
   { background: string; color: string }
 > = {
+  // Background tints are Vercel's literal web-analytics trend palette —
+  // a fixed coral (down) / mint (up) that reads on either theme at low
+  // opacity. These are intentionally raw rgb (not Geist hue tokens) to
+  // match Vercel's analytics exactly; the text stays on our theme-aware
+  // red/green-700 so it flips correctly. flat = neutral gray pill.
   up: {
-    background: "hsla(var(--ds-green-600-value), var(--chip-alpha))",
+    background: "rgba(94, 203, 117, var(--chip-alpha))",
     color: "var(--ds-green-700)",
   },
   down: {
-    background: "hsla(var(--ds-red-600-value), var(--chip-alpha))",
+    background: "rgba(255, 89, 89, var(--chip-alpha))",
     color: "var(--ds-red-700)",
   },
   flat: {
