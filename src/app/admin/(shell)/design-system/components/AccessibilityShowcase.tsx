@@ -64,13 +64,13 @@ export default function AccessibilityShowcase() {
                   Ratio: 7.1:1 (Light) / 4.9:1 (Dark)
                 </p>
               </div>
-              <div className="bg-electric-pink rounded-lg p-6">
+              <div className="bg-textDefault rounded-lg p-6">
                 <p className="text-white text-base mb-2">
                   White on Electric Pink
                 </p>
                 <p className="text-xs text-white/80 font-mono">Ratio: 5.8:1</p>
               </div>
-              <div className="bg-volt-green rounded-lg p-6">
+              <div className="bg-green-600 rounded-lg p-6">
                 <p className="text-neutral-900 text-base mb-2">
                   Dark on Volt Green
                 </p>
@@ -96,8 +96,8 @@ export default function AccessibilityShowcase() {
                   Ratio: 2.1:1 - Fails WCAG AA
                 </p>
               </div>
-              <div className="bg-electric-pink rounded-lg p-6 border border-red-200 dark:border-red-800">
-                <p className="text-deep-purple text-base mb-2">
+              <div className="bg-textDefault rounded-lg p-6 border border-red-200 dark:border-red-800">
+                <p className="text-purple-800 text-base mb-2">
                   Purple on Pink (Bad)
                 </p>
                 <p className="text-xs text-neutral-900 font-mono">
@@ -343,7 +343,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
               readOnly
             />
             <span className="text-textSubtle">
@@ -353,7 +353,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
               readOnly
             />
             <span className="text-textSubtle">
@@ -363,7 +363,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
               readOnly
             />
             <span className="text-textSubtle">
@@ -373,7 +373,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
               readOnly
             />
             <span className="text-textSubtle">
@@ -383,7 +383,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
               readOnly
             />
             <span className="text-textSubtle">
@@ -393,7 +393,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
               readOnly
             />
             <span className="text-textSubtle">
@@ -403,7 +403,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
               readOnly
             />
             <span className="text-textSubtle">
@@ -413,7 +413,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
               readOnly
             />
             <span className="text-textSubtle">
@@ -423,7 +423,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
               readOnly
             />
             <span className="text-textSubtle">
@@ -433,7 +433,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
               readOnly
             />
             <span className="text-textSubtle">

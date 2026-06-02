@@ -429,7 +429,7 @@ export function RaceRouteMap({
               'line-join': 'round'
             },
             paint: {
-              'line-color': isDark ? '#e43c81' : '#ff4d94',
+              'line-color': isDark ? '#0070F3' : '#0070F3',
               'line-width': 4
             }
           }, firstSymbolId)
@@ -479,7 +479,7 @@ export function RaceRouteMap({
           // Create and load arrow icon first
           if (!map.hasImage('arrow-right')) {
             const arrowOutlineColor = isDark ? '#2d2d2d' : '#ffffff'
-            const arrowPinkColor = isDark ? '#e43c81' : '#ff4d94'
+            const arrowPinkColor = isDark ? '#0070F3' : '#0070F3'
             const arrowSvg = `
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
                 <path fill="none" stroke="${arrowOutlineColor}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
@@ -1197,7 +1197,7 @@ function createCustomControls(
   const createDistanceMarkerElement = (number: string, isDark: boolean): HTMLElement => {
     const markerElement = document.createElement('div')
     markerElement.style.cssText = `
-      background: ${isDark ? '#e43c81' : '#ff4d94'};
+      background: ${isDark ? '#0070F3' : '#0070F3'};
       border: 2px solid white;
       border-radius: 50%;
       width: 20px;
@@ -1403,7 +1403,7 @@ function createCustomControls(
   markerToggleButton.innerHTML = `
     <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M9 2C6.24 2 4 4.24 4 7c0 3.5 5 9 5 9s5-5.5 5-9c0-2.76-2.24-5-5-5zm0 7c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"
-            fill="${showMarkers ? (isDark ? '#e43c81' : '#ff4d94') : (isDark ? '#bbb' : '#666')}"
+            fill="${showMarkers ? (isDark ? '#0070F3' : '#0070F3') : (isDark ? '#bbb' : '#666')}"
             stroke="${isDark ? '#bbb' : '#666'}"
             stroke-width="0.5"/>
     </svg>
@@ -1433,7 +1433,7 @@ function createCustomControls(
     markerToggleButton.innerHTML = `
       <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M9 2C6.24 2 4 4.24 4 7c0 3.5 5 9 5 9s5-5.5 5-9c0-2.76-2.24-5-5-5zm0 7c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"
-              fill="${newShowMarkers ? (isDark ? '#e43c81' : '#ff4d94') : (isDark ? '#bbb' : '#666')}"
+              fill="${newShowMarkers ? (isDark ? '#0070F3' : '#0070F3') : (isDark ? '#bbb' : '#666')}"
               stroke="${isDark ? '#bbb' : '#666'}"
               stroke-width="0.5"/>
       </svg>

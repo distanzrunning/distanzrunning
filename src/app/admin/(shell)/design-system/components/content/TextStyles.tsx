@@ -3,7 +3,7 @@ export default function TextStyles() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Typography
         </p>
         <h1
@@ -527,7 +527,7 @@ export default function TextStyles() {
         {/* Overline */}
         <div className="mb-8">
           <div className="bg-surfaceSubtle p-6 mb-4">
-            <p className="font-sans text-xs font-medium uppercase tracking-wide text-electric-pink">
+            <p className="font-sans text-xs font-medium uppercase tracking-wide text-textSubtle">
               Training
             </p>
           </div>
@@ -580,7 +580,7 @@ export default function TextStyles() {
         {/* Button */}
         <div className="mb-8">
           <div className="bg-surfaceSubtle p-6 mb-4">
-            <span className="inline-block font-sans text-sm font-semibold px-4 py-2 bg-electric-pink text-white rounded">
+            <span className="inline-block font-sans text-sm font-semibold px-4 py-2 bg-textDefault text-white rounded">
               Subscribe
             </span>
           </div>

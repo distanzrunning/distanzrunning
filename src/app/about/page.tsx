@@ -62,15 +62,15 @@ export default function AboutPage() {
             </p>
             <ul className="space-y-3 text-neutral-700 dark:text-neutral-300">
               <li className="flex items-start gap-3">
-                <span className="text-electric-pink mt-1">✓</span>
+                <span className="text-textSubtle mt-1">✓</span>
                 <span><strong>Expert Testing:</strong> Our gear reviews are based on real-world testing, not just manufacturer specs.</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-electric-pink mt-1">✓</span>
+                <span className="text-textSubtle mt-1">✓</span>
                 <span><strong>In-Depth Analysis:</strong> We go beyond surface-level coverage to deliver insights you won't find elsewhere.</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-electric-pink mt-1">✓</span>
+                <span className="text-textSubtle mt-1">✓</span>
                 <span><strong>Runner-First:</strong> Every decision we make puts the needs of runners first, not advertisers or sponsors.</span>
               </li>
             </ul>
@@ -88,13 +88,13 @@ export default function AboutPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/newsletter"
-              className="inline-flex items-center justify-center px-8 py-3 bg-electric-pink hover:bg-electric-pink/90 text-white font-semibold rounded-lg transition-colors"
+              className="inline-flex items-center justify-center px-8 py-3 bg-white hover:bg-neutral-100 text-neutral-900 font-semibold rounded-lg transition-colors"
             >
               Subscribe to Newsletter
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center px-8 py-3 bg-white dark:bg-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-600 text-neutral-900 dark:text-white font-semibold rounded-lg transition-colors"
+              className="inline-flex items-center justify-center px-8 py-3 bg-transparent border border-white/30 hover:bg-white/10 text-white font-semibold rounded-lg transition-colors"
             >
               Get in Touch
             </Link>

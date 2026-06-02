@@ -19,7 +19,7 @@ function SpacingItem({ name, value, pixelValue }: SpacingItemProps) {
 
       <div className="flex-1">
         <div
-          className="bg-electric-pink h-8 rounded transition-all"
+          className="bg-textDefault h-8 rounded transition-all"
           style={{ width: value }}
         />
       </div>

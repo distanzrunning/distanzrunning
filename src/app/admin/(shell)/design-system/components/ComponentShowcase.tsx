@@ -129,7 +129,7 @@ export default function ComponentShowcase() {
             <input
               type="checkbox"
               id="checkbox-example"
-              className="w-5 h-5 text-electric-pink border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
+              className="w-5 h-5 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
             />
             <label
               htmlFor="checkbox-example"
@@ -147,7 +147,7 @@ export default function ComponentShowcase() {
                 type="radio"
                 id="radio1"
                 name="radio-group"
-                className="w-5 h-5 text-electric-pink border-borderNeutral focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
+                className="w-5 h-5 text-textSubtle border-borderNeutral focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
               />
               <label htmlFor="radio1" className="text-sm cursor-pointer">
                 Option 1
@@ -158,7 +158,7 @@ export default function ComponentShowcase() {
                 type="radio"
                 id="radio2"
                 name="radio-group"
-                className="w-5 h-5 text-electric-pink border-borderNeutral focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
+                className="w-5 h-5 text-textSubtle border-borderNeutral focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-2"
               />
               <label htmlFor="radio2" className="text-sm cursor-pointer">
                 Option 2
@@ -178,9 +178,9 @@ export default function ComponentShowcase() {
         <div className="grid md:grid-cols-2 gap-6">
           {/* Basic Card */}
           <div className="bg-canvas rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
-            <div className="w-full h-48 bg-gradient-to-br from-electric-pink to-pace-purple" />
+            <div className="w-full h-48 bg-gradient-to-br from-blue-700 to-purple-600" />
             <div className="p-6">
-              <p className="text-xs uppercase tracking-wide text-electric-pink font-medium mb-2">
+              <p className="text-xs uppercase tracking-wide text-textSubtle font-medium mb-2">
                 CATEGORY
               </p>
               <h4 className="font-bold text-xl mb-2">Article Title</h4>
@@ -197,9 +197,9 @@ export default function ComponentShowcase() {
 
           {/* Card with Image */}
           <div className="bg-canvas rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
-            <div className="w-full h-48 bg-gradient-to-br from-volt-green to-signal-orange" />
+            <div className="w-full h-48 bg-gradient-to-br from-green-600 to-amber-600" />
             <div className="p-6">
-              <p className="text-xs uppercase tracking-wide text-volt-green font-medium mb-2">
+              <p className="text-xs uppercase tracking-wide text-green-600 font-medium mb-2">
                 FEATURED
               </p>
               <h4 className="font-bold text-xl mb-2">Featured Article</h4>
@@ -217,9 +217,9 @@ export default function ComponentShowcase() {
 
         <pre className="mt-6 p-3 bg-canvas rounded text-xs overflow-x-auto">
           <code>{`<div className="bg-surface rounded-lg overflow-hidden border border-borderNeutral hover:shadow-lg transition-shadow">
-  <div className="w-full h-48 bg-gradient-to-br from-electric-pink to-pace-purple" />
+  <div className="w-full h-48 bg-gradient-to-br from-blue-700 to-purple-600" />
   <div className="p-6">
-    <p className="text-xs uppercase tracking-wide text-electric-pink font-medium mb-2">
+    <p className="text-xs uppercase tracking-wide text-textSubtle font-medium mb-2">
       CATEGORY
     </p>
     <h4 className="font-bold text-xl mb-2">Article Title</h4>
@@ -243,13 +243,13 @@ export default function ComponentShowcase() {
               <span className="px-3 py-1 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-xs font-medium rounded-full">
                 Running
               </span>
-              <span className="px-3 py-1 bg-volt-green text-white text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded-full">
                 Training
               </span>
-              <span className="px-3 py-1 bg-pace-purple text-white text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-purple-600 text-white text-xs font-medium rounded-full">
                 Nutrition
               </span>
-              <span className="px-3 py-1 bg-signal-orange text-white text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-amber-600 text-white text-xs font-medium rounded-full">
                 Racing
               </span>
             </div>
@@ -258,13 +258,13 @@ export default function ComponentShowcase() {
           <div>
             <p className="text-sm font-medium mb-3">Outlined Tags</p>
             <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 border-2 border-neutral-400 dark:border-neutral-500 text-electric-pink text-xs font-medium rounded-full">
+              <span className="px-3 py-1 border-2 border-neutral-400 dark:border-neutral-500 text-textSubtle text-xs font-medium rounded-full">
                 Marathon
               </span>
-              <span className="px-3 py-1 border-2 border-volt-green text-volt-green text-xs font-medium rounded-full">
+              <span className="px-3 py-1 border-2 border-green-600 text-green-600 text-xs font-medium rounded-full">
                 Trail
               </span>
-              <span className="px-3 py-1 border-2 border-pace-purple text-pace-purple text-xs font-medium rounded-full">
+              <span className="px-3 py-1 border-2 border-purple-600 text-purple-600 text-xs font-medium rounded-full">
                 Ultra
               </span>
             </div>

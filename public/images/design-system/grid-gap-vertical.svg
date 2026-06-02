@@ -10,7 +10,7 @@
   <text x="56" y="63" fill="#333333" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Label</text>
 
   <!-- Gap indicator 1 -->
-  <rect x="346" y="76" width="2" height="16" fill="#E43C81"/>
+  <rect x="346" y="76" width="2" height="16" fill="#0070F3"/>
   <line x1="354" y1="76" x2="354" y2="92" stroke="#0A1757" stroke-width="1"/>
   <line x1="350" y1="76" x2="358" y2="76" stroke="#0A1757" stroke-width="1"/>
   <line x1="350" y1="92" x2="358" y2="92" stroke="#0A1757" stroke-width="1"/>
@@ -20,13 +20,13 @@
   <text x="56" y="115" fill="#999999" font-family="system-ui, sans-serif" font-size="13">Input field</text>
 
   <!-- Gap indicator 2 -->
-  <rect x="346" y="128" width="2" height="16" fill="#E43C81"/>
+  <rect x="346" y="128" width="2" height="16" fill="#0070F3"/>
   <line x1="354" y1="128" x2="354" y2="144" stroke="#0A1757" stroke-width="1"/>
   <line x1="350" y1="128" x2="358" y2="128" stroke="#0A1757" stroke-width="1"/>
   <line x1="350" y1="144" x2="358" y2="144" stroke="#0A1757" stroke-width="1"/>
 
   <!-- Third element (Button) -->
-  <rect x="40" y="144" width="120" height="36" rx="4" fill="#E43C81"/>
+  <rect x="40" y="144" width="120" height="36" rx="4" fill="#0070F3"/>
   <text x="100" y="167" text-anchor="middle" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Submit</text>
 
   <!-- Dimension labels -->

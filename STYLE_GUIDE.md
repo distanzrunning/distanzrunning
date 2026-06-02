@@ -122,18 +122,15 @@ Elegant, classic, for long-form content:
 
 ## 🎨 Colors
 
+> **Authoritative source:** the DS Colour page (`/admin/design-system/colour`) and the Color section of `CLAUDE.md`. The legacy sport-themed brand palette below (Electric Pink, Volt Green, etc.) has been **retired** — kept here only as a migration note.
+
 ### Brand Colors
 
-**Primary:**
-- **Electric Pink** `#e43c81` - Primary brand color, CTAs, links
-- Use for: Buttons, links, highlights, brand moments
+**The brand is black and white** — the neutral ink/canvas that flips with light/dark mode (`textDefault` on `--ds-background-100`), mirroring the logo. There is **no brand accent hue**.
 
-**Accents:**
-- **Volt Green** `#00D464` - Success, achievements
-- **Signal Orange** `#FF5722` - Alerts, warnings
-- **Pace Purple** `#7C3AED` - Premium features
-- **Trail Brown** `#8B4513` - Trail running content
-- **Track Red** `#DC2626` - Track racing content
+- **Accents that need a colour** (data-viz, route lines, charts, selection/focus) → **blue** `--ds-blue-700` (`#0070F3`).
+- **Status/semantic** → the hue scales: green (success), amber (warning), red (error), blue/purple (info). These are not brand colours.
+- **Retired (do not use):** ~~Electric Pink `#e43c81`~~, ~~Volt Green~~, ~~Signal Orange~~, ~~Pace Purple~~, ~~Trail Brown~~, ~~Track Red~~ and the `electric-pink*` Tailwind classes.
 
 ### Neutrals
 

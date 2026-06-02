@@ -425,8 +425,8 @@ export default function ContentWithTOC({
           flex border-l-2 border-solid py-1.5 pr-4 no-underline transition-all duration-150 ease-out
           ${
             isActive
-              ? "border-asphalt-10 dark:border-asphalt-95 text-textDefault font-medium"
-              : "border-borderSubtle text-textSubtle hover:text-textDefault hover:border-asphalt-40 dark:hover:border-asphalt-60"
+              ? "border-gray-1000 dark:border-gray-200 text-textDefault font-medium"
+              : "border-borderSubtle text-textSubtle hover:text-textDefault hover:border-gray-800 dark:hover:border-gray-600"
           }
           ${isChild ? "text-xs pl-7" : "text-sm pl-4"}
         `}

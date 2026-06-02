@@ -417,7 +417,7 @@ export function RaceEventPopup({
               <div className="grid grid-cols-3 gap-3">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <Route className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-electric-pink transition-colors" />
+                    <Route className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Surface</p>
@@ -428,7 +428,7 @@ export function RaceEventPopup({
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <Wallet className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-volt-green transition-colors" />
+                    <Wallet className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Entry Price</p>
@@ -443,7 +443,7 @@ export function RaceEventPopup({
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <Users className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-pace-purple transition-colors" />
+                    <Users className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Field size</p>
@@ -457,7 +457,7 @@ export function RaceEventPopup({
               <div className="grid grid-cols-3 gap-3">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <ArrowUpRight className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-trail-brown transition-colors" />
+                    <ArrowUpRight className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Gain</p>
@@ -472,7 +472,7 @@ export function RaceEventPopup({
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <ArrowDownRight className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-trail-brown transition-colors" />
+                    <ArrowDownRight className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Loss</p>
@@ -487,7 +487,7 @@ export function RaceEventPopup({
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <Mountain className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-signal-orange transition-colors" />
+                    <Mountain className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Profile</p>
@@ -501,7 +501,7 @@ export function RaceEventPopup({
               <div className="grid grid-cols-3 gap-3">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <ThermometerSun className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-signal-orange transition-colors" />
+                    <ThermometerSun className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Avg. Temp</p>

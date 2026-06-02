@@ -3,7 +3,7 @@ export default function Rules() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Foundations
         </p>
         <h1
@@ -139,41 +139,6 @@ export default function Rules() {
           </table>
         </div>
 
-        <hr className="border-t border-borderDefault mb-8" />
-
-        {/* Rule - Accent */}
-        <h3
-          id="styles-rule-accent"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
-        >
-          Rule (accent)
-        </h3>
-        <p className="text-copy-16 text-textSubtle mb-4">
-          Brand accent divider for featured content and emphasis.
-        </p>
-        <div className="p-6 bg-surface border border-borderSubtle rounded mb-4">
-          <hr className="border-t-4 border-electric-pink" />
-        </div>
-        <div className="overflow-x-auto mb-8">
-          <table className="w-full border-collapse">
-            <tbody className="text-copy-14 whitespace-nowrap">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-2 pr-4 text-textSubtle">Weight</td>
-                <td className="py-2 px-4">4px</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-2 pr-4 text-textSubtle">Color</td>
-                <td className="py-2 px-4 font-mono">electric-pink</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-2 pr-4 text-textSubtle">Tailwind</td>
-                <td className="py-2 px-4 font-mono">
-                  border-t-4 border-electric-pink
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </section>
 
       <hr className="border-t border-borderDefault" />
@@ -195,18 +160,15 @@ export default function Rules() {
         </p>
 
         {/* Dark mode examples */}
-        <div className="p-6 bg-asphalt-10 rounded mb-4">
-          <p className="text-asphalt-90 text-sm mb-4">Rule (default)</p>
-          <hr className="border-t border-asphalt-30 mb-6" />
+        <div className="p-6 bg-gray-1000 rounded mb-4">
+          <p className="text-gray-300 text-sm mb-4">Rule (default)</p>
+          <hr className="border-t border-gray-800 mb-6" />
 
-          <p className="text-asphalt-90 text-sm mb-4">Rule (emphasised)</p>
-          <hr className="border-t border-asphalt-90 mb-6" />
+          <p className="text-gray-300 text-sm mb-4">Rule (emphasised)</p>
+          <hr className="border-t border-gray-300 mb-6" />
 
-          <p className="text-asphalt-90 text-sm mb-4">Rule (heavy)</p>
-          <hr className="border-t-4 border-asphalt-90 mb-6" />
-
-          <p className="text-asphalt-90 text-sm mb-4">Rule (accent)</p>
-          <hr className="border-t-4 border-electric-pink" />
+          <p className="text-gray-300 text-sm mb-4">Rule (heavy)</p>
+          <hr className="border-t-4 border-gray-300" />
         </div>
       </section>
 
@@ -272,15 +234,6 @@ export default function Rules() {
                 </td>
                 <td className="py-3 px-4 font-mono">--rule-heavy</td>
               </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Rule (accent)</td>
-                <td className="py-3 px-4">4px</td>
-                <td className="py-3 px-4 font-mono">electric-pink</td>
-                <td className="py-3 px-4 font-mono">
-                  border-t-4 border-electric-pink
-                </td>
-                <td className="py-3 px-4 font-mono">--rule-accent</td>
-              </tr>
             </tbody>
           </table>
         </div>
@@ -329,12 +282,6 @@ export default function Rules() {
                 <td className="py-3 pr-4">Rule (heavy)</td>
                 <td className="py-3 px-4">
                   Major page sections, below page titles, article breaks
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Rule (accent)</td>
-                <td className="py-3 px-4">
-                  Featured content, brand moments, category indicators
                 </td>
               </tr>
             </tbody>

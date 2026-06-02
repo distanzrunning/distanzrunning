@@ -406,12 +406,12 @@ export function ElevationChart({
               <linearGradient id="elevationGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor={isDark ? '#e43c81' : '#ff4d94'}
+                  stopColor={isDark ? '#0070F3' : '#0070F3'}
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor={isDark ? '#e43c81' : '#ff4d94'}
+                  stopColor={isDark ? '#0070F3' : '#0070F3'}
                   stopOpacity={0.1}
                 />
               </linearGradient>
@@ -472,7 +472,7 @@ export function ElevationChart({
             <Area
               type="monotone"
               dataKey="elevation"
-              stroke={isDark ? '#e43c81' : '#ff4d94'}
+              stroke={isDark ? '#0070F3' : '#0070F3'}
               strokeWidth={2}
               fill="url(#elevationGradient)"
               isAnimationActive={false}

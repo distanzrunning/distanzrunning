@@ -28,16 +28,19 @@ module.exports = {
         // ─────────────────────────────────────────────────────────────────
         // GRAY SCALE - Geist pure neutral (100-1000)
         // ─────────────────────────────────────────────────────────────────
+        // Static mirror of the --ds-gray-* LIGHT-mode values (the token flips
+        // for theme; this static scale is for fixed, non-flipping contexts).
+        // Keep in sync with distanz-tokens.css :root --ds-gray-*.
         gray: {
-          100: "#F2F2F2",
+          100: "#F0F0F0",
           200: "#EBEBEB",
-          300: "#E6E6E6",
-          400: "#EBEBEB",
-          500: "#C9C9C9",
-          600: "#A8A8A8",
+          300: "#E5E5E5",
+          400: "#DCDCDC",
+          500: "#B3B3B3",
+          600: "#999999",
           700: "#8F8F8F",
-          800: "#7D7D7D",
-          900: "#666666",
+          800: "#4D4D4D",
+          900: "#333333",
           1000: "#171717",
         },
 
@@ -152,83 +155,6 @@ module.exports = {
           900: "#B92D64",
           1000: "#3C1426",
         },
-
-        // ═══════════════════════════════════════════════════════════════════
-        // LEGACY ALIASES - Backward compatibility
-        // These map old color names to new 100-1000 scale
-        // ═══════════════════════════════════════════════════════════════════
-
-        // Electric Pink aliases
-        "electric-pink": "#D11B5C",
-        "electric-pink-20": "#450820", // → pink-1000
-        "electric-pink-30": "#6A0D30", // → pink-900
-        "electric-pink-45": "#B8164F", // → pink-700
-        "electric-pink-55": "#D11B5C", // → pink-600
-        "electric-pink-90": "#F5D2E1", // → pink-300
-        "electric-pink-95": "#FAE9F0", // → pink-200
-
-        // Pace Purple aliases
-        "pace-purple": "#5E3FD1",
-        "pace-purple-45": "#452BB8", // → purple-700
-        "pace-purple-55": "#5E3FD1", // → purple-600
-        "pace-purple-90": "#DBD6F5", // → purple-300
-        "pace-purple-95": "#EDEBFA", // → purple-200
-
-        // Volt Green aliases
-        "volt-green": "#008C47",
-        "volt-green-45": "#00733A", // → green-700
-        "volt-green-55": "#008C47", // → green-600
-        "volt-green-90": "#CCF5E0", // → green-300
-        "volt-green-95": "#E6FAEF", // → green-200
-
-        // Tech Cyan aliases
-        "tech-cyan": "#008CB8",
-        "tech-cyan-45": "#007399", // → blue-700
-        "tech-cyan-55": "#008CB8", // → blue-600
-        "tech-cyan-90": "#CCF0F5", // → blue-300
-        "tech-cyan-95": "#E6F7FA", // → blue-200
-
-        // Track Red aliases
-        "track-red": "#D11B1B",
-        "track-red-45": "#B81616", // → red-700
-        "track-red-55": "#D11B1B", // → red-600
-        "track-red-90": "#F5D2D2", // → red-300
-        "track-red-95": "#FAE9E9", // → red-200
-
-        // Trail Brown (kept as-is, not part of new system)
-        "trail-brown": "#8C4623",
-        "trail-brown-45": "#73391D",
-        "trail-brown-55": "#8C4623",
-        "trail-brown-90": "#F5E6D9",
-        "trail-brown-95": "#FAF2EC",
-
-        // Signal Orange aliases → Amber
-        "signal-orange-45": "#B38208", // → amber-700
-        "signal-orange-55": "#D69E0A", // → amber-600
-        "signal-orange-90": "#FBEBC4", // → amber-300
-        "signal-orange-95": "#FDF5E0", // → amber-200
-
-        // Asphalt aliases → Gray (backward compatibility)
-        "asphalt-5": "#141413", // Darker than gray-1000
-        "asphalt-10": "#1F1E1C", // → gray-1000
-        "asphalt-15": "#2A2926", // Between gray-900 and gray-1000
-        "asphalt-20": "#363530", // → gray-900
-        "asphalt-25": "#42403A", // Between gray-800 and gray-900
-        "asphalt-30": "#4E4C45", // Between gray-800 and gray-900
-        "asphalt-35": "#5A574F", // → gray-800
-        "asphalt-40": "#666359", // Between gray-700 and gray-800
-        "asphalt-45": "#726F64", // Between gray-700 and gray-800
-        "asphalt-50": "#7E7B6F", // → gray-700
-        "asphalt-55": "#8B887C", // Between gray-600 and gray-700
-        "asphalt-60": "#989588", // Between gray-600 and gray-700
-        "asphalt-65": "#A5A295", // → gray-600
-        "asphalt-70": "#B3B0A3", // Between gray-500 and gray-600
-        "asphalt-75": "#C1BEAF", // → gray-500
-        "asphalt-80": "#CFCCBE", // Between gray-400 and gray-500
-        "asphalt-85": "#DDDACB", // → gray-400
-        "asphalt-90": "#EBE9DC", // → gray-300
-        "asphalt-95": "#F5F4ED", // → gray-200
-        "asphalt-98": "#FAF9F5", // → gray-100
 
         // ═══════════════════════════════════════════════════════════════════
         // SEMANTIC TOKENS (Dynamic - swap between light/dark mode via CSS vars)

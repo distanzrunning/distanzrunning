@@ -112,7 +112,7 @@ export default function ModularScale() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Typography
         </p>
         <h1
@@ -172,7 +172,7 @@ export default function ModularScale() {
                   <td className="py-3 px-4">{item.size}</td>
                   <td className="py-3 px-4">
                     {item.fluid ? (
-                      <span className="text-electric-pink">Fluid</span>
+                      <span className="text-textSubtle">Fluid</span>
                     ) : (
                       <span className="text-textSubtle">Fixed</span>
                     )}

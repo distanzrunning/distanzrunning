@@ -544,8 +544,8 @@
     --color-textDefault: var(--ds-gray-1000-rgb); /* Primary text (gray-1000) */
     --color-textSubtle: var(--ds-gray-900-rgb); /* Secondary text (gray-900) */
     --color-textSubtler: var(
-      --ds-gray-600-rgb
-    ); /* Muted text, placeholders (gray-600) */
+      --ds-gray-700-rgb
+    ); /* Muted text, placeholders (gray-700 — AA-Large light, AA dark; was gray-600 which failed) */
     --color-textInverted: var(--ds-gray-200-rgb); /* Inverted text */
     --color-textDisabled: var(--ds-gray-500-rgb); /* Disabled text */
 
@@ -623,10 +623,10 @@
     --color-info-border: var(--ds-purple-600-rgb);
 
     /* Rule (horizontal dividers) - Complete border patterns */
-    --rule-default: 1px solid rgb(var(--color-borderSubtle)); /* Light separation - Asphalt 90 */
-    --rule-emphasised: 1px solid rgb(var(--color-textDefault)); /* Strong separation - Asphalt 20 */
-    --rule-heavy: 4px solid rgb(var(--color-textDefault)); /* Major section divider - Asphalt 20 */
-    --rule-accent: 4px solid #e43c81; /* Brand accent divider - Electric Pink */
+    --rule-default: 1px solid rgb(var(--color-borderSubtle)); /* Light separation - borderSubtle (gray-300) */
+    --rule-emphasised: 1px solid rgb(var(--color-textDefault)); /* Strong separation - textDefault (gray-1000) */
+    --rule-heavy: 4px solid rgb(var(--color-textDefault)); /* Major section divider - textDefault (gray-1000) */
+    --rule-accent: 4px solid rgb(var(--color-textDefault)); /* Heavy neutral-ink divider (brand pink retired) */
 
     /* Grid Spacing - Responsive spacing values
        Small/Medium (<960px): Gap 12px, Gutter 24px, Outside 24px
@@ -710,8 +710,8 @@
     --ds-gray-500-rgb: 89, 89, 89;
     --ds-gray-600-rgb: 115, 115, 115;
     --ds-gray-700-rgb: 143, 143, 143;
-    --ds-gray-800-rgb: 125, 125, 125;
-    --ds-gray-900-rgb: 161, 161, 161;
+    --ds-gray-800-rgb: 179, 179, 179;  /* #B3B3B3 — must mirror --ds-gray-800 hsl above */
+    --ds-gray-900-rgb: 212, 212, 212;  /* #D4D4D4 — must mirror --ds-gray-900 hsl above */
     --ds-gray-1000-rgb: 237, 237, 237;
 
     /* Gray Alpha Scale - Dark mode (white-based transparency) */
@@ -1002,8 +1002,8 @@
 
     /* Modal backgrounds — same semantics as light mode (panel = the
        brighter body surface, sections = the softer tone). Because
-       bg-100 is the *darker* shade in dark mode (#000) and bg-200
-       is the brighter one (#0A0A0A), the token assignments here
+       bg-100 is the *darker* shade in dark mode (#121212) and bg-200
+       is the brighter one (#1F1F1F), the token assignments here
        are inverted relative to light mode — using bg-200 for the
        panel and bg-100 for the section keeps body brighter than
        footer in both themes. */
@@ -1018,9 +1018,14 @@
       0 0 0 1px rgba(255, 255, 255, 0.145), 0 1px 2px 0 rgba(0, 0, 0, 0.16),
       0 0 0 1px #000;
     --ds-shadow-button-rounded-hover: 0 0 0 1px #2e2e2e;
-    --ds-button-rounded-hover-bg: #1f1f1f;
-    --ds-button-rounded-bg: #0a0a0a;
-    --ds-button-rounded-text: #ededed;
+    /* Elevated control: rest sits on the lifted surface (bg-200), hover
+       lifts one step further (gray-100). Both are brighter than the
+       #121212 canvas so the control advances — Material/Apple elevation.
+       Previously rest was #0A0A0A, which sat *below* the new base canvas
+       and made the control recede. */
+    --ds-button-rounded-hover-bg: var(--ds-gray-100);
+    --ds-button-rounded-bg: var(--ds-background-200);
+    --ds-button-rounded-text: var(--ds-gray-1000);
 
     /* Calendar button - uses box-shadow for border effect (Geist dark mode tokens) */
     --calendar-button-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
@@ -1029,8 +1034,10 @@
     --calendar-button-bg-hover: var(--ds-gray-100);
     --calendar-button-focus-ring: 0 0 0 1px #ffffff57, 0 0 0 4px #ffffff29;
 
-    /* Calendar popover - Geist design tokens (dark mode) */
-    --calendar-popover-bg: rgb(10, 10, 10);
+    /* Calendar popover - Geist design tokens (dark mode).
+       Floating menu lifts to the elevated surface (bg-200, #1F1F1F) so it
+       advances above the #121212 canvas. Was #0A0A0A — below the base. */
+    --calendar-popover-bg: var(--ds-background-200);
     --calendar-popover-radius: 12px;
     --calendar-popover-shadow:
       rgba(255, 255, 255, 0.145) 0px 0px 0px 1px,
@@ -1048,7 +1055,7 @@
     /* Text colors - Dark mode uses lighter grays */
     --color-textDefault: var(--ds-gray-1000-rgb); /* Primary text - bright */
     --color-textSubtle: var(--ds-gray-900-rgb); /* Secondary text */
-    --color-textSubtler: var(--ds-gray-600-rgb); /* Muted text */
+    --color-textSubtler: var(--ds-gray-700-rgb); /* Muted text (gray-700 — was gray-600) */
     --color-textInverted: var(--ds-gray-100-rgb); /* Inverted text */
     --color-textDisabled: var(--ds-gray-500-rgb); /* Disabled text */
 
@@ -1090,7 +1097,7 @@
     --rule-default: 1px solid rgb(var(--color-borderSubtle));
     --rule-emphasised: 1px solid rgb(var(--color-textDefault));
     --rule-heavy: 4px solid rgb(var(--color-textDefault));
-    --rule-accent: 4px solid #e43c81;
+    --rule-accent: 4px solid rgb(var(--color-textDefault));
 
     /* Status colors - Dark mode (lighter text, darker backgrounds) */
     --color-success-text: var(--ds-green-900-rgb);
@@ -1117,4 +1124,33 @@
     --color-info-bg-subtle: var(--ds-purple-100-rgb);
     --color-info-border: var(--ds-purple-500-rgb);
 
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     INCREASED CONTRAST — Apple HIG "Increase Contrast" support
+     ───────────────────────────────────────────────────────────────────────
+     Opt-in via the OS setting (prefers-contrast: more). Remaps the muted
+     text + border semantic tokens to higher-contrast scale steps so
+     structure and de-emphasised text become clearly legible. The gray
+     -rgb tuples are theme-scoped, so referencing the same step yields the
+     correct value in light and dark — one block covers both. No effect on
+     the default experience. The legacy border aliases reference
+     --color-borderDefault/Subtle, so they inherit these overrides at use-time.
+     ═══════════════════════════════════════════════════════════════════════ */
+  @media (prefers-contrast: more) {
+    :root,
+    .light,
+    .dark {
+      /* Text — push the muted tiers toward ink */
+      --color-textSubtle: var(--ds-gray-1000-rgb); /* secondary → primary ink */
+      --color-textSubtler: var(--ds-gray-900-rgb); /* muted → secondary (clears AA) */
+      --color-textDisabled: var(--ds-gray-600-rgb); /* disabled, still distinct */
+
+      /* Borders — make structure clearly visible */
+      --color-borderDefault: var(--ds-gray-600-rgb);
+      --color-borderDefaultHover: var(--ds-gray-700-rgb);
+      --color-borderSubtle: var(--ds-gray-500-rgb);
+      --color-borderSubtleHover: var(--ds-gray-600-rgb);
+      --color-borderExtraSubtle: var(--ds-gray-400-rgb);
+    }
   }

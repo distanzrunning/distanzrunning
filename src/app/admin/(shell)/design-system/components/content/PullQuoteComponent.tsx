@@ -70,7 +70,7 @@ function VariantShowcase({ title, id, initialText }: VariantShowcaseProps) {
 
       {/* Preview area */}
       <div className="rounded-t-lg border border-b-0 border-borderSubtle overflow-hidden">
-        <div className="p-8 bg-white dark:bg-asphalt-10">
+        <div className="p-8 bg-white dark:bg-gray-1000">
           <PullQuote>{text}</PullQuote>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default function PullQuoteComponent() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">Content</p>
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Content</p>
         <h1
           id="pull-quote"
           className="text-heading-40 font-serif mb-0"
@@ -290,8 +290,8 @@ export default function PullQuoteComponent() {
             <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Border</td>
-                <td className="py-3 px-4 font-mono">electric-pink</td>
-                <td className="py-3 px-4 font-mono">electric-pink</td>
+                <td className="py-3 px-4 font-mono">textDefault</td>
+                <td className="py-3 px-4 font-mono">textDefault</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Text</td>

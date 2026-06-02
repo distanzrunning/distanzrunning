@@ -3,7 +3,7 @@ export default function ComponentsOverview() {
     <article className="space-y-4">
       {/* Title */}
       <div>
-        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Components
         </p>
         <h1

@@ -30,84 +30,6 @@ export const colors = {
     white: "#FFFFFF",
   },
 
-  // Electric Pink - Primary accent for UI, interactions, and structure (HSL: 333°, 74%)
-  // 1 color with 6 variations - used throughout UI for links, highlights, active states
-  electricPink: {
-    20: "#520A23",
-    30: "#7A0F35",
-    45: "#B8164F",
-    55: "#D11B5C",
-    90: "#F5D2E1",
-    95: "#FAE9F0",
-  },
-
-  // Asphalt (Greyscale) - Named after running surfaces
-  // 10-shade systematic scale with even 10% lightness distribution
-  // Optimized based on actual component usage patterns (1,092 occurrences analyzed)
-  asphalt: {
-    5: "#0D0D0D", // L=5%  - Dark mode canvas, extreme dark backgrounds
-    10: "#1A1A1A", // L=10% - Dark mode main backgrounds, light mode primary text (410 uses)
-    20: "#333333", // L=20% - Dark mode elevated surfaces, light mode headings (238 uses)
-    30: "#4D4D4D", // L=30% - Dark mode primary text, light mode secondary text (280 uses)
-    40: "#666666", // L=40% - Dark mode secondary text, light mode muted text (239 uses)
-    50: "#808080", // L=50% - True mid-grey, placeholders, disabled states (107 uses)
-    60: "#999999", // L=60% - Light mode focus rings, dark mode subtle text (211 uses)
-    70: "#B3B3B3", // L=70% - Light mode borders, dark mode body text (191 uses)
-    80: "#CCCCCC", // L=80% - Light mode dividers, dark mode hover backgrounds (233 uses)
-    90: "#E5E5E5", // L=90% - Light mode hover backgrounds, surfaces (151 uses)
-    95: "#F2F2F2", // L=95% - Light mode elevated surfaces, backgrounds (57 uses)
-  },
-
-  // Pace Purple - Secondary accent for Track/Tempo content (HSL: 262°, 60%)
-  // 2 colors with 4 variations each
-  pacePurple: {
-    45: "#452BB8",
-    55: "#5E3FD1",
-    90: "#DBD6F5",
-    95: "#EDEBFA",
-  },
-
-  // Volt Green - Secondary accent for Nutrition/Wellness (HSL: 146°, 100%)
-  voltGreen: {
-    45: "#00733A",
-    55: "#008C47",
-    90: "#CCF5E0",
-    95: "#E6FAEF",
-  },
-
-  // Tech Cyan - Tertiary accent for Gear/Equipment (HSL: 190°, 100%)
-  // 2 colors with 4 variations each
-  techCyan: {
-    45: "#007399",
-    55: "#008CB8",
-    90: "#CCF0F5",
-    95: "#E6F7FA",
-  },
-
-  // Track Red - Tertiary accent for Road/Races content (HSL: 0°, 79%)
-  trackRed: {
-    45: "#B81616",
-    55: "#D11B1B",
-    90: "#F5D2D2",
-    95: "#FAE9E9",
-  },
-
-  // Trail Brown - Tertiary accent for Trail/Exploration (HSL: 25°, 59%)
-  trailBrown: {
-    45: "#73391D",
-    55: "#8C4623",
-    90: "#F5E6D9",
-    95: "#FAF2EC",
-  },
-
-  // Signal Orange - Used for warning states (HSL: 20°, 100%)
-  signalOrange: {
-    45: "#732600",
-    55: "#8C2F00",
-    90: "#F5D6CC",
-    95: "#FAEBE6",
-  },
-
   // Canvas - Subtle background colors
   // 2 colors with 3 variations each for light mode, 2 colors for dark mode
   canvas: {
@@ -341,13 +263,6 @@ export const animation = {
 export type FontFamily = keyof typeof fonts;
 export type FontWeight = keyof typeof fontWeights;
 export type BrandColor = keyof typeof colors.brand;
-export type ElectricPinkColor = keyof typeof colors.electricPink;
-export type AsphaltColor = keyof typeof colors.asphalt;
-export type PacePurpleColor = keyof typeof colors.pacePurple;
-export type VoltGreenColor = keyof typeof colors.voltGreen;
-export type SignalOrangeColor = keyof typeof colors.signalOrange;
-export type TrackRedColor = keyof typeof colors.trackRed;
-export type TrailBrownColor = keyof typeof colors.trailBrown;
 export type CanvasColor = keyof typeof colors.canvas;
 export type SemanticLightColor = keyof typeof colors.semantic.light;
 export type SemanticDarkColor = keyof typeof colors.semantic.dark;

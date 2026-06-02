@@ -20,7 +20,7 @@ export default function ExpandableTags({ tags }: ExpandableTagsProps) {
     >
       {/* First tag - always visible */}
       <motion.li style={{ opacity: 1 }}>
-        <span className="border border-borderDefault text-textSubtle px-1.5 py-0.5 rounded-md hover:bg-asphalt-10 dark:hover:bg-asphalt-90 hover:text-textInverted hover:border-asphalt-10 dark:hover:border-asphalt-90 transition-colors cursor-pointer">
+        <span className="border border-borderDefault text-textSubtle px-1.5 py-0.5 rounded-md hover:bg-gray-1000 dark:hover:bg-gray-300 hover:text-textInverted hover:border-gray-1000 dark:hover:border-gray-300 transition-colors cursor-pointer">
           {tags[0]}
         </span>
       </motion.li>
@@ -40,7 +40,7 @@ export default function ExpandableTags({ tags }: ExpandableTagsProps) {
                 ease: "easeOut",
               }}
             >
-              <span className="border border-borderDefault text-textSubtle px-1.5 py-0.5 rounded-md hover:bg-asphalt-10 dark:hover:bg-asphalt-90 hover:text-textInverted hover:border-asphalt-10 dark:hover:border-asphalt-90 transition-colors cursor-pointer">
+              <span className="border border-borderDefault text-textSubtle px-1.5 py-0.5 rounded-md hover:bg-gray-1000 dark:hover:bg-gray-300 hover:text-textInverted hover:border-gray-1000 dark:hover:border-gray-300 transition-colors cursor-pointer">
                 {tag}
               </span>
             </motion.li>
@@ -61,7 +61,7 @@ export default function ExpandableTags({ tags }: ExpandableTagsProps) {
           <motion.button
             onClick={() => setIsExpanded(!isExpanded)}
             title={isExpanded ? "Hide tags" : "View more tags"}
-            className="border border-borderDefault text-textSubtle w-5 h-5 rounded-full hover:bg-asphalt-10 dark:hover:bg-asphalt-90 hover:text-textInverted hover:border-asphalt-10 dark:hover:border-asphalt-90 transition-all duration-200 flex items-center justify-center"
+            className="border border-borderDefault text-textSubtle w-5 h-5 rounded-full hover:bg-gray-1000 dark:hover:bg-gray-300 hover:text-textInverted hover:border-gray-1000 dark:hover:border-gray-300 transition-all duration-200 flex items-center justify-center"
             aria-label={isExpanded ? "Hide tags" : "View more tags"}
             whileTap={{ scale: 0.9 }}
           >

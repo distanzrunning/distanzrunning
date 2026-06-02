@@ -78,7 +78,7 @@ export function TypewriterText() {
             {currentText}
           </span>
           <span
-            className="text-electric-pink dark:text-electric-pink text-heading-24 md:text-heading-32 font-serif align-bottom transition-colors duration-300 animate-blink"
+            className="text-textSubtle dark:text-textSubtle text-heading-24 md:text-heading-32 font-serif align-bottom transition-colors duration-300 animate-blink"
             style={{ willChange: "opacity" }}
           >
             |

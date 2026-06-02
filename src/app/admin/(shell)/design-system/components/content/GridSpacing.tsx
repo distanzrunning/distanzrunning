@@ -33,7 +33,7 @@ export default function GridSpacing() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">Grid</p>
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Grid</p>
         <h1
           className="text-heading-40 font-serif mb-0"
           id="grid-spacing"
@@ -61,7 +61,7 @@ export default function GridSpacing() {
           micro adjustments.
         </p>
 
-        <div className="bg-surfaceWarm border-l-4 border-electric-pink p-6 mb-8">
+        <div className="bg-surfaceWarm border-l-4 border-textDefault p-6 mb-8">
           <h3 className="font-sans text-heading-14 uppercase tracking-wide text-textDefault mb-2">
             Grid System
           </h3>
@@ -87,7 +87,7 @@ export default function GridSpacing() {
                 {item.token}
               </span>
               <div
-                className="bg-electric-pink h-4"
+                className="bg-textDefault h-4"
                 style={{ width: `${item.px}px` }}
               />
               <span className="text-copy-14 text-textSubtle">{item.px}px</span>

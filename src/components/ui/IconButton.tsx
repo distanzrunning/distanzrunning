@@ -81,39 +81,39 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         if (variant === "primary") {
           if (inverse) {
             // Inverse disabled: dark grey for dark backgrounds (no dark mode switch)
-            return "bg-asphalt-20 text-asphalt-50 cursor-not-allowed";
+            return "bg-gray-900 text-gray-700 cursor-not-allowed";
           }
           // Primary disabled: light grey in light mode, dark grey in dark mode
-          return "bg-asphalt-90 dark:bg-asphalt-20 text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
+          return "bg-gray-300 dark:bg-gray-900 text-gray-600 dark:text-gray-700 cursor-not-allowed";
         }
         if (variant === "secondary") {
           if (inverse) {
             // Inverse secondary disabled: for dark backgrounds (no dark mode switch)
-            return "bg-transparent border border-asphalt-30 text-asphalt-50 cursor-not-allowed";
+            return "bg-transparent border border-gray-800 text-gray-700 cursor-not-allowed";
           }
           // Secondary disabled
-          return "bg-transparent border border-asphalt-80 dark:border-asphalt-30 text-asphalt-60 dark:text-asphalt-50 cursor-not-allowed";
+          return "bg-transparent border border-gray-500 dark:border-gray-800 text-gray-600 dark:text-gray-700 cursor-not-allowed";
         }
         if (variant === "tertiary") {
           if (inverse) {
             // Inverse tertiary disabled: for dark backgrounds
-            return "bg-transparent text-asphalt-50 cursor-not-allowed";
+            return "bg-transparent text-gray-700 cursor-not-allowed";
           }
           // Tertiary disabled
-          return "bg-transparent text-asphalt-70 dark:text-asphalt-50 cursor-not-allowed";
+          return "bg-transparent text-gray-600 dark:text-gray-700 cursor-not-allowed";
         }
       }
 
       if (variant === "primary") {
         if (inverse) {
           // Inverse primary: for dark backgrounds - contrasts (light button on dark bg)
-          return "bg-asphalt-95 text-asphalt-10 hover:bg-asphalt-90";
+          return "bg-gray-200 text-gray-1000 hover:bg-gray-300";
         }
         // Primary: blends with theme (light in light mode, dark in dark mode)
         if (ignoreDarkMode) {
-          return "bg-asphalt-95 text-asphalt-10 hover:bg-asphalt-90";
+          return "bg-gray-200 text-gray-1000 hover:bg-gray-300";
         }
-        return "bg-asphalt-95 dark:bg-asphalt-10 text-asphalt-10 dark:text-white hover:bg-asphalt-90 dark:hover:bg-asphalt-20";
+        return "bg-gray-200 dark:bg-gray-1000 text-gray-1000 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-900";
       }
 
       if (variant === "secondary") {
@@ -123,21 +123,21 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         }
         // Secondary: blends with theme
         if (ignoreDarkMode) {
-          return "bg-transparent border border-asphalt-70 text-asphalt-10 hover:border-asphalt-40 hover:bg-asphalt-95/50";
+          return "bg-transparent border border-gray-600 text-gray-1000 hover:border-gray-800 hover:bg-gray-200/50";
         }
-        return "bg-transparent border border-asphalt-70 dark:border-asphalt-40 text-asphalt-10 dark:text-asphalt-95 hover:border-asphalt-40 dark:hover:border-asphalt-60 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
+        return "bg-transparent border border-gray-600 dark:border-gray-800 text-gray-1000 dark:text-gray-200 hover:border-gray-800 dark:hover:border-gray-600 hover:bg-gray-200/50 dark:hover:bg-gray-900/30";
       }
 
       if (variant === "tertiary") {
         if (inverse) {
           // Inverse tertiary: muted icon for dark backgrounds, intensifies on hover
-          return "bg-transparent text-asphalt-80 hover:text-asphalt-95 hover:bg-asphalt-20/30";
+          return "bg-transparent text-gray-500 hover:text-gray-200 hover:bg-gray-900/30";
         }
         // Tertiary: muted icon that intensifies on hover
         if (ignoreDarkMode) {
-          return "bg-transparent text-asphalt-40 hover:text-asphalt-10 hover:bg-asphalt-95/50";
+          return "bg-transparent text-gray-800 hover:text-gray-1000 hover:bg-gray-200/50";
         }
-        return "bg-transparent text-asphalt-40 dark:text-asphalt-60 hover:text-asphalt-10 dark:hover:text-asphalt-95 hover:bg-asphalt-95/50 dark:hover:bg-asphalt-20/30";
+        return "bg-transparent text-gray-800 dark:text-gray-600 hover:text-gray-1000 dark:hover:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-gray-900/30";
       }
 
       return "";

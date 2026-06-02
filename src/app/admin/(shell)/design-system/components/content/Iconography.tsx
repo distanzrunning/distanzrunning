@@ -165,7 +165,7 @@ export default function Iconography() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Foundations
         </p>
         <h1
@@ -345,14 +345,14 @@ export default function Iconography() {
             <p className="font-mono text-xs text-textSubtle">text-textSubtle</p>
           </div>
           <div className="bg-surfaceSubtle p-4 text-center">
-            <Search className="w-6 h-6 mx-auto mb-2 text-electric-pink" />
+            <Search className="w-6 h-6 mx-auto mb-2 text-textSubtle" />
             <p className="font-mono text-xs text-textSubtle">
-              text-electric-pink
+              text-textSubtle
             </p>
           </div>
           <div className="bg-surfaceSubtle p-4 text-center">
-            <Search className="w-6 h-6 mx-auto mb-2 text-volt-green" />
-            <p className="font-mono text-xs text-textSubtle">text-volt-green</p>
+            <Search className="w-6 h-6 mx-auto mb-2 text-green-600" />
+            <p className="font-mono text-xs text-textSubtle">text-green-600</p>
           </div>
         </div>
       </section>
@@ -580,7 +580,7 @@ export default function Iconography() {
                     href="https://lucide.dev/icons/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-electric-pink hover:underline"
+                    className="text-textSubtle hover:underline"
                   >
                     lucide.dev/icons
                   </a>

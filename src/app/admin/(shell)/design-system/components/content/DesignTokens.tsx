@@ -5,7 +5,7 @@ export default function DesignTokens() {
     <div className="space-y-4">
       {/* Title */}
       <div>
-        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Principles
         </p>
         <h1 className="text-heading-40 font-serif mb-0">
@@ -42,7 +42,7 @@ export default function DesignTokens() {
         <p className="text-copy-16 text-textSubtle max-w-3xl mb-6">
           Instead of hard-coding values like{" "}
           <code className="inline-code">
-            #E43C81
+            #0070F3
           </code>{" "}
           or{" "}
           <code className="inline-code">
@@ -50,7 +50,7 @@ export default function DesignTokens() {
           </code>
           , we use tokens like{" "}
           <code className="inline-code">
-            electric-pink-55
+            blue-700
           </code>{" "}
           or{" "}
           <code className="inline-code">
@@ -60,7 +60,7 @@ export default function DesignTokens() {
           engineering.
         </p>
 
-        <div className="bg-surfaceWarm border-l-4 border-electric-pink p-6">
+        <div className="bg-surfaceWarm border-l-4 border-textDefault p-6">
           <h3 className="font-sans text-heading-14 uppercase tracking-wide text-textDefault mb-2">
             Why tokens matter
           </h3>
@@ -116,13 +116,13 @@ export default function DesignTokens() {
             </thead>
             <tbody className="font-mono text-xs">
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 px-4">asphalt-10</td>
+                <td className="py-3 px-4">gray-1000</td>
                 <td className="py-3 px-4">#1A1A1A</td>
                 <td className="py-3 px-4 font-sans text-textSubtle">Colour</td>
               </tr>
               <tr className="border-b border-borderSubtle">
-                <td className="py-3 px-4">electric-pink-55</td>
-                <td className="py-3 px-4">#D11B5C</td>
+                <td className="py-3 px-4">blue-700</td>
+                <td className="py-3 px-4">#0070F3</td>
                 <td className="py-3 px-4 font-sans text-textSubtle">Colour</td>
               </tr>
               <tr className="border-b border-borderSubtle">
@@ -172,23 +172,23 @@ export default function DesignTokens() {
             <tbody className="font-mono text-xs">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 px-4">textDefault</td>
-                <td className="py-3 px-4">asphalt-10</td>
-                <td className="py-3 px-4">asphalt-95</td>
+                <td className="py-3 px-4">gray-1000</td>
+                <td className="py-3 px-4">gray-200</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 px-4">textSubtle</td>
-                <td className="py-3 px-4">asphalt-40</td>
-                <td className="py-3 px-4">asphalt-60</td>
+                <td className="py-3 px-4">gray-800</td>
+                <td className="py-3 px-4">gray-600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 px-4">surface</td>
                 <td className="py-3 px-4">white</td>
-                <td className="py-3 px-4">asphalt-5</td>
+                <td className="py-3 px-4">gray-1000</td>
               </tr>
               <tr>
                 <td className="py-3 px-4">borderDefault</td>
-                <td className="py-3 px-4">asphalt-90</td>
-                <td className="py-3 px-4">asphalt-20</td>
+                <td className="py-3 px-4">gray-300</td>
+                <td className="py-3 px-4">gray-900</td>
               </tr>
             </tbody>
           </table>
@@ -268,11 +268,11 @@ export default function DesignTokens() {
         <p className="text-copy-14 text-textSubtle max-w-3xl">
           The raw hex value{" "}
           <code className="inline-code">
-            #D11B5C
+            #0070F3
           </code>{" "}
           is defined as the global token{" "}
           <code className="inline-code">
-            electric-pink-55
+            blue-700
           </code>
           , aliased by the semantic token{" "}
           <code className="inline-code">
@@ -445,7 +445,7 @@ export default function DesignTokens() {
               Don&apos;t
             </p>
             <code className="inline-code">
-              background: var(--color-asphalt-95);
+              background: var(--color-gray-200);
             </code>
           </div>
         </div>

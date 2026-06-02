@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
 
           .message-box {
             background-color: #f9f9f9;
-            border-left: 3px solid #e43c81;
+            border-left: 3px solid #0070F3;
             padding: 16px;
             border-radius: 4px;
             margin-top: 8px;
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
 
               <div class="field">
                 <div class="field-label">Email</div>
-                <div class="field-value"><a href="mailto:${email}" style="color: #e43c81; text-decoration: none;">${email}</a></div>
+                <div class="field-value"><a href="mailto:${email}" style="color: #0070F3; text-decoration: none;">${email}</a></div>
               </div>
 
               <div class="field">

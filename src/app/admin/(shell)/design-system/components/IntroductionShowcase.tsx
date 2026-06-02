@@ -32,7 +32,7 @@ export default function IntroductionShowcase({
             <li key={section.id}>
               <button
                 onClick={() => onSectionChange(section.id)}
-                className="text-left text-lg hover:text-electric-pink transition-colors underline"
+                className="text-left text-lg hover:text-textSubtle transition-colors underline"
               >
                 {section.label}
               </button>

@@ -3,7 +3,7 @@ export default function UXPrinciples() {
     <div className="space-y-4">
       {/* Title */}
       <div>
-        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Principles
         </p>
         <h1 className="text-heading-40 font-serif mb-0">

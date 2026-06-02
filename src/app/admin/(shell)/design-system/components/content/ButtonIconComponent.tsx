@@ -103,7 +103,7 @@ function VariantShowcase({
         {/* Preview area - fixed background regardless of theme */}
         <div
           className={`flex-1 p-8 flex items-center justify-start min-h-[120px] ${
-            inverse ? "bg-asphalt-10" : "bg-white"
+            inverse ? "bg-gray-1000" : "bg-white"
           }`}
         >
           <IconButton
@@ -141,15 +141,15 @@ function VariantShowcase({
                   transition-all duration-150 ease-out cursor-pointer
                   ${
                     isDisabled
-                      ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
-                      : "bg-white dark:bg-asphalt-10 border-asphalt-40 dark:border-asphalt-60 hover:border-asphalt-50"
+                      ? "bg-gray-1000 dark:bg-gray-200 border-gray-1000 dark:border-gray-200"
+                      : "bg-white dark:bg-gray-1000 border-gray-800 dark:border-gray-600 hover:border-gray-700"
                   }
                   peer-focus:ring-1 peer-focus:ring-borderNeutral peer-focus:ring-offset-0
                 `}
               >
                 {isDisabled && (
                   <svg
-                    className="w-3 h-3 text-white dark:text-asphalt-10"
+                    className="w-3 h-3 text-white dark:text-gray-1000"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth={2}
@@ -195,7 +195,7 @@ export default function ButtonIconComponent() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">Buttons</p>
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Buttons</p>
         <h1
           id="button-icon"
           className="text-heading-40 font-serif mb-0"
@@ -528,23 +528,23 @@ export default function ButtonIconComponent() {
             <tbody className="text-copy-14">
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">gray-1000</td>
                 <td className="py-3 px-4 font-mono">white</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (light)</td>
-                <td className="py-3 px-4 font-mono">asphalt-20</td>
+                <td className="py-3 px-4 font-mono">gray-900</td>
                 <td className="py-3 px-4 font-mono">white</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (dark)</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">gray-200</td>
+                <td className="py-3 px-4 font-mono">gray-1000</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (dark)</td>
-                <td className="py-3 px-4 font-mono">asphalt-90</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">gray-300</td>
+                <td className="py-3 px-4 font-mono">gray-1000</td>
               </tr>
             </tbody>
           </table>
@@ -579,26 +579,26 @@ export default function ButtonIconComponent() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
-                <td className="py-3 px-4 font-mono">asphalt-70</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">gray-600</td>
+                <td className="py-3 px-4 font-mono">gray-1000</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (light)</td>
-                <td className="py-3 px-4 font-mono">asphalt-95/50</td>
-                <td className="py-3 px-4 font-mono">asphalt-40</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">gray-200/50</td>
+                <td className="py-3 px-4 font-mono">gray-800</td>
+                <td className="py-3 px-4 font-mono">gray-1000</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (dark)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
-                <td className="py-3 px-4 font-mono">asphalt-40</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
+                <td className="py-3 px-4 font-mono">gray-800</td>
+                <td className="py-3 px-4 font-mono">gray-200</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (dark)</td>
-                <td className="py-3 px-4 font-mono">asphalt-20/30</td>
-                <td className="py-3 px-4 font-mono">asphalt-60</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
+                <td className="py-3 px-4 font-mono">gray-900/30</td>
+                <td className="py-3 px-4 font-mono">gray-600</td>
+                <td className="py-3 px-4 font-mono">gray-200</td>
               </tr>
             </tbody>
           </table>
@@ -630,22 +630,22 @@ export default function ButtonIconComponent() {
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (light)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
-                <td className="py-3 px-4 font-mono">asphalt-40</td>
+                <td className="py-3 px-4 font-mono">gray-800</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (light)</td>
-                <td className="py-3 px-4 font-mono">asphalt-95/50</td>
-                <td className="py-3 px-4 font-mono">asphalt-10</td>
+                <td className="py-3 px-4 font-mono">gray-200/50</td>
+                <td className="py-3 px-4 font-mono">gray-1000</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Default (dark)</td>
                 <td className="py-3 px-4 font-mono">transparent</td>
-                <td className="py-3 px-4 font-mono">asphalt-60</td>
+                <td className="py-3 px-4 font-mono">gray-600</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-3 pr-4">Hover (dark)</td>
-                <td className="py-3 px-4 font-mono">asphalt-20/30</td>
-                <td className="py-3 px-4 font-mono">asphalt-95</td>
+                <td className="py-3 px-4 font-mono">gray-900/30</td>
+                <td className="py-3 px-4 font-mono">gray-200</td>
               </tr>
             </tbody>
           </table>

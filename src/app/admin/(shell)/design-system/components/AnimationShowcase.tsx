@@ -64,7 +64,7 @@ export default function AnimationShowcase() {
           {transitions.map((transition) => (
             <div key={transition.name} className="text-center">
               <div
-                className={`w-full h-24 bg-electric-pink rounded-lg mb-3 transition-transform hover:scale-110 ${transition.class}`}
+                className={`w-full h-24 bg-textDefault rounded-lg mb-3 transition-transform hover:scale-110 ${transition.class}`}
               />
               <div className="space-y-1">
                 <p className="font-medium text-xs">{transition.name}</p>
@@ -100,7 +100,7 @@ export default function AnimationShowcase() {
               </div>
               <div className="bg-canvas rounded h-2 overflow-hidden">
                 <div
-                  className={`h-full bg-electric-pink transition-all duration-1000 ${easing.class} group-hover:w-full w-0`}
+                  className={`h-full bg-textDefault transition-all duration-1000 ${easing.class} group-hover:w-full w-0`}
                 />
               </div>
             </div>

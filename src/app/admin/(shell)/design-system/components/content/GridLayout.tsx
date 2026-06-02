@@ -5,7 +5,7 @@ export default function GridLayout() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">Grid</p>
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Grid</p>
         <h1
           className="text-heading-40 font-serif mb-0"
           id="grid-layout"

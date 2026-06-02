@@ -32,7 +32,7 @@ export function ExploreButton({ variant = "default" }: ExploreButtonProps) {
           ${
             variant === "pink"
               ? "text-textDefault transition-shadow after:transition-border after:border after:border-borderSubtle hover:bg-surfaceSubtle data-[state=open]:bg-surfaceSubtle hover:shadow-[0_0_20px_5px_rgba(228,60,129,0.2)] pr-4"
-              : "bg-asphalt-10 dark:bg-asphalt-90 text-textInverted hover:bg-asphalt-20 dark:hover:bg-asphalt-80"
+              : "bg-gray-1000 dark:bg-gray-300 text-textInverted hover:bg-gray-900 dark:hover:bg-gray-500"
           }`}
       >
         {/* Rotating gradient border - Distanz Electric Pink */}

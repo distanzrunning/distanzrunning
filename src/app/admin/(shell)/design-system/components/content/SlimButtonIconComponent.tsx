@@ -97,7 +97,7 @@ function VariantShowcase({
         {/* Preview area - fixed background regardless of theme */}
         <div
           className={`flex-1 p-8 flex items-center justify-start min-h-[120px] ${
-            inverse ? "bg-asphalt-10" : "bg-white"
+            inverse ? "bg-gray-1000" : "bg-white"
           }`}
         >
           <IconButton
@@ -135,15 +135,15 @@ function VariantShowcase({
                   transition-all duration-150 ease-out cursor-pointer
                   ${
                     isDisabled
-                      ? "bg-asphalt-10 dark:bg-asphalt-95 border-asphalt-10 dark:border-asphalt-95"
-                      : "bg-white dark:bg-asphalt-10 border-asphalt-40 dark:border-asphalt-60 hover:border-asphalt-50"
+                      ? "bg-gray-1000 dark:bg-gray-200 border-gray-1000 dark:border-gray-200"
+                      : "bg-white dark:bg-gray-1000 border-gray-800 dark:border-gray-600 hover:border-gray-700"
                   }
                   peer-focus:ring-1 peer-focus:ring-borderNeutral peer-focus:ring-offset-0
                 `}
               >
                 {isDisabled && (
                   <svg
-                    className="w-3 h-3 text-white dark:text-asphalt-10"
+                    className="w-3 h-3 text-white dark:text-gray-1000"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth={2}
@@ -186,7 +186,7 @@ export default function SlimButtonIconComponent() {
     <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">Buttons</p>
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Buttons</p>
         <h1
           id="slim-button-icon"
           className="text-heading-40 font-serif mb-0"

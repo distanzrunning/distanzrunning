@@ -3,7 +3,7 @@ export default function Collections() {
     <div className="space-y-12">
       {/* Page Title */}
       <div>
-        <p className="text-copy-14 tracking-wide text-electric-pink mb-2">Colour</p>
+        <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Colour</p>
         <h1
           className="text-heading-40 font-serif mb-4"
           id="collections"
