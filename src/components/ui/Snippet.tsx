@@ -175,8 +175,8 @@ export function Snippet({
         borderRadius: 6,
         padding: "10px 48px 10px 12px",
         border: "1px solid var(--ds-gray-alpha-400)",
-        background: vs ? vs.bg : dark ? "var(--ds-gray-1000)" : "var(--ds-background-100)",
-        color: vs ? vs.color : dark ? "var(--ds-background-100)" : "var(--ds-gray-1000)",
+        background: vs ? vs.bg : "rgb(var(--color-surface))",
+        color: vs ? vs.color : "rgb(var(--color-textDefault))",
         position: "relative",
       }}
     >

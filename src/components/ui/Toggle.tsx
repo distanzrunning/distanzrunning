@@ -109,16 +109,17 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     if (disabled) {
       trackBg = isChecked ? "var(--ds-gray-500)" : "var(--ds-gray-300)";
       trackBorder = isChecked ? "var(--ds-gray-500)" : "var(--ds-gray-300)";
-      thumbBg = isChecked
-        ? "var(--ds-gray-200)"
-        : "var(--ds-background-200)";
+      // Knob stays light in both themes (like the Slider thumb) so it
+      // always reads as the raised element above the track — disabled is
+      // conveyed by the muted track, not by darkening the knob.
+      thumbBg = "rgba(255, 255, 255, 0.6)";
       thumbShadow = "none";
     } else {
       trackBg = isChecked
         ? checkedColor || "var(--ds-blue-700)"
         : uncheckedColor || "var(--ds-gray-300)";
       trackBorder = "var(--ds-gray-alpha-200)";
-      thumbBg = isChecked ? "var(--ds-background-100)" : "var(--ds-background-200)";
+      thumbBg = "#FFFFFF"; // white knob in both themes — pops above any track
       thumbShadow =
         "rgba(0, 0, 0, 0.12) 0px 0px 4px 0px, rgba(0, 0, 0, 0.1) 0px 1px 1px 0px";
     }
