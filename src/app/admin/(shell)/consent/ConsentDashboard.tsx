@@ -461,7 +461,7 @@ export async function ConsentDashboardContent({
           border: "1px solid var(--ds-gray-400)",
           borderRadius: 10,
           overflow: "hidden",
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-surface))",
           marginBottom: 16,
         }}
       >
@@ -622,7 +622,7 @@ export function ConsentDashboardSkeleton() {
           border: "1px solid var(--ds-gray-400)",
           borderRadius: 10,
           overflow: "hidden",
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-surface))",
           marginBottom: 16,
         }}
       >

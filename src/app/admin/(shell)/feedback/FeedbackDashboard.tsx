@@ -678,7 +678,7 @@ export async function FeedbackDashboardContent({
           border: "1px solid var(--ds-gray-400)",
           borderRadius: 10,
           overflow: "hidden",
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-surface))",
           marginBottom: 16,
         }}
       >
@@ -809,7 +809,7 @@ export async function FeedbackDashboardContent({
       >
         <div
           style={{
-            background: "var(--ds-background-100)",
+            background: "rgb(var(--color-surface))",
             border: "1px solid var(--ds-gray-400)",
             borderRadius: 6,
             overflow: "hidden",
@@ -966,7 +966,7 @@ export function FeedbackDashboardSkeleton() {
           border: "1px solid var(--ds-gray-400)",
           borderRadius: 10,
           overflow: "hidden",
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-surface))",
           marginBottom: 16,
         }}
       >
@@ -1000,7 +1000,7 @@ export function FeedbackDashboardSkeleton() {
             </div>
           </div>
         </div>
-        <div style={{ height: 400, background: "var(--ds-background-100)" }} />
+        <div style={{ height: 400, background: "rgb(var(--color-surface))" }} />
       </div>
 
       {/* Per-emotion + Top pages share a row in the real dashboard;
@@ -1019,7 +1019,7 @@ export function FeedbackDashboardSkeleton() {
           <div
             key={i}
             style={{
-              background: "var(--ds-background-100)",
+              background: "rgb(var(--color-surface))",
               border: "1px solid var(--ds-gray-400)",
               borderRadius: 6,
               overflow: "hidden",

@@ -518,7 +518,7 @@
     /* Calendar button - uses box-shadow for border effect (Geist tokens) */
     --calendar-button-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
     --calendar-button-shadow-hover: var(--ds-gray-500) 0px 0px 0px 1px;
-    --calendar-button-bg: var(--ds-background-100);
+    --calendar-button-bg: rgb(var(--color-surface));
     --calendar-button-bg-hover: var(--ds-gray-100);
     --calendar-button-focus-ring: 0 0 0 1px #00000057, 0 0 0 4px #00000029;
 
@@ -1029,7 +1029,7 @@
     /* Calendar button - uses box-shadow for border effect (Geist dark mode tokens) */
     --calendar-button-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
     --calendar-button-shadow-hover: var(--ds-gray-500) 0px 0px 0px 1px;
-    --calendar-button-bg: var(--ds-background-100);
+    --calendar-button-bg: rgb(var(--color-surface));
     --calendar-button-bg-hover: var(--ds-gray-100);
     --calendar-button-focus-ring: 0 0 0 1px #ffffff57, 0 0 0 4px #ffffff29;
 
