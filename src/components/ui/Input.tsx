@@ -130,7 +130,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           height: config.height,
           maxWidth: "100%",
           borderRadius: config.borderRadius,
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-canvas))",
           transition: "box-shadow 0.15s ease",
           overflow: "hidden",
           fontSize: config.fontSize,
@@ -156,7 +156,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               cursor: "default",
               transition: "color 0.15s ease",
               ...(prefixStyling
-                ? { background: "var(--ds-background-200)" }
+                ? { background: "rgb(var(--color-surface))" }
                 : { marginRight: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
               ...(disabled ? { cursor: "not-allowed", color: "var(--ds-gray-700)" } : {}),
             }}
@@ -179,7 +179,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             height: "100%",
             border: "none",
             outline: "none",
-            background: disabled ? "var(--ds-gray-100)" : "var(--ds-background-100)",
+            background: disabled ? "var(--ds-gray-100)" : "rgb(var(--color-canvas))",
             fontSize: config.fontSize,
             lineHeight: "20px",
             color: disabled ? "var(--ds-gray-700)" : "var(--ds-gray-1000)",
@@ -218,7 +218,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               cursor: "default",
               transition: "color 0.15s ease",
               ...(suffixStyling
-                ? { background: "var(--ds-background-200)" }
+                ? { background: "rgb(var(--color-surface))" }
                 : { marginLeft: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
               ...(disabled ? { cursor: "not-allowed", color: "var(--ds-gray-700)" } : {}),
             }}

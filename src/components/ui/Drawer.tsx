@@ -145,7 +145,7 @@ const DRAWER_CSS = `
   .ds-drawer-footer {
     padding: var(--ds-space-4x) var(--ds-space-6x);
     border-top: 1px solid var(--ds-gray-alpha-400);
-    background: var(--ds-background-200);
+    background: rgb(var(--color-canvas));
   }
 `;
 

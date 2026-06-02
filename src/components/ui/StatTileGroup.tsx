@@ -27,7 +27,7 @@ export function StatTileGroup({ children, columns }: StatTileGroupProps) {
         border: "1px solid var(--ds-gray-400)",
         borderRadius: 12,
         overflow: "hidden",
-        background: "var(--ds-background-100)",
+        background: "rgb(var(--color-surface))",
       }}
     >
       <div

@@ -270,7 +270,7 @@ export function AvatarGroup({
             width: outerSize,
             height: outerSize,
             padding: borderWidth,
-            backgroundColor: "var(--ds-background-100)",
+            backgroundColor: "rgb(var(--color-surface))",
           }}
         >
           <div

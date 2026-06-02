@@ -87,7 +87,7 @@ function EntityField({ children }: EntityFieldProps) {
 function EntityList({ children, dividers = true, bordered = false, className = "", style, ...rest }: EntityListProps) {
   const borderedStyles: React.CSSProperties | undefined = bordered ? {
     borderRadius: 6,
-    backgroundColor: "var(--ds-background-100)",
+    backgroundColor: "rgb(var(--color-surface))",
     boxShadow: "var(--ds-gray-alpha-400) 0px 0px 0px 1px, var(--ds-background-100) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 6px 0px",
     overflow: "hidden",
   } : undefined;

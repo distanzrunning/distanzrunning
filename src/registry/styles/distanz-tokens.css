@@ -500,8 +500,8 @@
        contrasting tone. Dark mode below uses the *inverted* token
        assignments to preserve the same "body brighter than footer"
        semantics, since the shade ordering flips between themes. */
-    --ds-modal-panel-bg: var(--ds-background-100);
-    --ds-modal-section-bg: var(--ds-background-200);
+    --ds-modal-panel-bg: rgb(var(--color-surface)); /* raised panel */
+    --ds-modal-section-bg: rgb(var(--color-canvas)); /* recessed section/footer */
 
     /* Focus ring outer glow */
     --ds-focus-ring: #00000029;
@@ -1008,8 +1008,8 @@
        are inverted relative to light mode — using bg-200 for the
        panel and bg-100 for the section keeps body brighter than
        footer in both themes. */
-    --ds-modal-panel-bg: var(--ds-background-200);
-    --ds-modal-section-bg: var(--ds-background-100);
+    --ds-modal-panel-bg: rgb(var(--color-surface)); /* raised panel */
+    --ds-modal-section-bg: rgb(var(--color-canvas)); /* recessed section/footer */
 
     /* Focus ring outer glow */
     --ds-focus-ring: #ffffff3d;

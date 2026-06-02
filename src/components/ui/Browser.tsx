@@ -83,7 +83,7 @@ function AddressBar({
   }, [url]);
 
   return (
-    <div className="lg:max-w-xs bg-[var(--ds-background-200)] border border-[var(--ds-gray-400)] w-full rounded-full pl-4 pr-1 py-1 flex items-center justify-between">
+    <div className="lg:max-w-xs bg-canvas border border-[var(--ds-gray-400)] w-full rounded-full pl-4 pr-1 py-1 flex items-center justify-between">
       <div
         aria-hidden="true"
         className="text-[13px] text-[var(--ds-gray-1000)] truncate flex-1 min-w-0 text-center"
@@ -134,7 +134,7 @@ export const BrowserHeader = forwardRef<HTMLDivElement, BrowserHeaderProps>(
     return (
       <div
         ref={ref}
-        className={`px-4 py-2 md:px-5 md:py-2.5 flex justify-between gap-4 md:gap-6 bg-[var(--ds-background-100)] ${className}`}
+        className={`px-4 py-2 md:px-5 md:py-2.5 flex justify-between gap-4 md:gap-6 bg-surface ${className}`}
       >
         {/* Left section: traffic lights and navigation */}
         <div className="flex items-center flex-1 justify-center gap-4 min-w-0 first:justify-start md:first:max-w-[140px] max-md:first:flex-none last:justify-end md:last:max-w-[140px]">
@@ -182,7 +182,7 @@ export const Browser = forwardRef<HTMLDivElement, BrowserProps>(
     return (
       <div
         ref={ref}
-        className={`rounded-md overflow-hidden bg-[var(--ds-background-200)] shadow-[0_0_0_1px_var(--ds-gray-400)] md:rounded-xl ${className}`}
+        className={`rounded-md overflow-hidden bg-surface shadow-[0_0_0_1px_var(--ds-gray-400)] md:rounded-xl ${className}`}
       >
         <BrowserHeader
           url={url}

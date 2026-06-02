@@ -554,7 +554,7 @@ export function SiteNavigationMenuViewport() {
     <NavigationMenuPrimitive.Viewport
       className={cn(
         "relative w-full overflow-hidden",
-        "rounded-[8px] bg-[var(--ds-background-100)]",
+        "rounded-[8px] bg-surface",
         "shadow-[var(--ds-shadow-menu)]",
         "h-[var(--radix-navigation-menu-viewport-height)]",
         // Smooth resize between sections of different heights so a

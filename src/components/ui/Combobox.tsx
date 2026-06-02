@@ -522,7 +522,7 @@ export function Combobox({
                   boxShadow: inputBoxShadow,
                   background: disabled
                     ? "var(--ds-gray-100)"
-                    : "var(--ds-background-100)",
+                    : "rgb(var(--color-canvas))",
                   color: disabled
                     ? "var(--ds-gray-700)"
                     : error
@@ -649,7 +649,7 @@ export function Combobox({
               width: listWidth || "var(--radix-popover-trigger-width)",
               padding: 8,
               borderRadius: 12,
-              background: "var(--ds-background-100)",
+              background: "rgb(var(--color-surface))",
               boxShadow: "var(--ds-shadow-menu)",
               maxHeight: 216,
               overflowY: "hidden",

@@ -170,7 +170,7 @@ export const ProgressWithStops = forwardRef<HTMLDivElement, ProgressWithStopsPro
             />
             <div
               className="absolute w-px h-full"
-              style={{ background: "var(--ds-background-100)" }}
+              style={{ background: "rgb(var(--color-canvas))" }}
             />
           </div>
         ))}

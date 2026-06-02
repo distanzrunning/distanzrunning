@@ -142,9 +142,9 @@ export function StatTile({
   // Tab active: pop to background-100 with a black bottom rule.
   const background = isTab
     ? active
-      ? "var(--ds-background-100)"
+      ? "rgb(var(--color-surface))"
       : "transparent"
-    : "var(--ds-background-100)";
+    : "rgb(var(--color-surface))";
   const muted = isTab && !active;
 
   const body = (

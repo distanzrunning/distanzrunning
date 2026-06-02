@@ -183,7 +183,7 @@ const emailInputStyle: React.CSSProperties = {
   fontSize: 14,
   lineHeight: "20px",
   color: "var(--ds-gray-1000)",
-  background: "var(--ds-background-100)",
+  background: "rgb(var(--color-canvas))",
   outline: "none",
   fontFamily: "inherit",
   boxSizing: "border-box",
@@ -597,7 +597,7 @@ export function FeedbackInline({
                 alignItems: "center",
                 justifyContent: "flex-end",
                 padding: 12,
-                background: "var(--ds-background-200)",
+                background: "rgb(var(--color-canvas))",
                 borderTop: "1px solid var(--ds-gray-200)",
               }}
             >
@@ -639,7 +639,7 @@ export function FeedbackInline({
                       fontSize: 14,
                       lineHeight: "normal",
                       color: "var(--ds-gray-1000)",
-                      background: "var(--ds-background-100)",
+                      background: "rgb(var(--color-canvas))",
                       resize: "none",
                       outline: "none",
                       fontFamily: "inherit",
@@ -673,7 +673,7 @@ export function FeedbackInline({
                 alignItems: "center",
                 justifyContent: "flex-end",
                 padding: 12,
-                background: "var(--ds-background-200)",
+                background: "rgb(var(--color-canvas))",
                 borderTop: "1px solid var(--ds-gray-200)",
               }}
             >
@@ -722,7 +722,7 @@ export function FeedbackInline({
           min-width: 274px;
           height: 48px;
           border-radius: 30px;
-          background: var(--ds-background-100);
+          background: rgb(var(--color-surface));
           border: 1px solid var(--ds-gray-200);
           overflow: hidden;
           will-change: width, height, border-radius, box-shadow;
@@ -825,7 +825,7 @@ export function FeedbackInline({
           display: flex;
           width: 100%;
           border-radius: 6px;
-          background: var(--ds-background-100);
+          background: rgb(var(--color-canvas));
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
           transition: box-shadow 0.15s ease;
         }
@@ -1149,7 +1149,7 @@ export function FeedbackWithSelect({
               fontSize: 14,
               lineHeight: "normal",
               color: "var(--ds-gray-1000)",
-              background: "var(--ds-background-100)",
+              background: "rgb(var(--color-canvas))",
               resize: "none",
               outline: "none",
               fontFamily: "inherit",
@@ -1185,7 +1185,7 @@ export function FeedbackWithSelect({
         alignItems: "center",
         justifyContent: "space-between",
         padding: 12,
-        background: "var(--ds-background-200)",
+        background: "rgb(var(--color-canvas))",
         borderTop: "1px solid var(--ds-gray-200)",
       }}
     >
@@ -1264,7 +1264,7 @@ export function FeedbackWithSelect({
         alignItems: "center",
         justifyContent: "flex-end",
         padding: 12,
-        background: "var(--ds-background-200)",
+        background: "rgb(var(--color-canvas))",
         borderTop: "1px solid var(--ds-gray-200)",
       }}
     >
@@ -1306,7 +1306,7 @@ export function FeedbackWithSelect({
         ...panelPositionStyle,
         width: 340,
         borderRadius: 12,
-        background: "var(--ds-background-100)",
+        background: "rgb(var(--color-surface))",
         boxShadow:
           "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, var(--ds-gray-100) 0px 0px 0px 1px",
         overflow: "hidden",
@@ -1421,7 +1421,7 @@ function FeedbackWithSelectFormStyles() {
         font-size: 14px;
         line-height: 20px;
         color: var(--ds-gray-1000);
-        background: var(--ds-background-100);
+        background: rgb(var(--color-canvas));
         outline: none;
         font-family: inherit;
         box-sizing: border-box;
@@ -1673,7 +1673,7 @@ export function Feedback({
                 : {}),
               width: 340,
               borderRadius: 12,
-              background: "var(--ds-background-100)",
+              background: "rgb(var(--color-surface))",
               boxShadow:
                 "rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px, rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, var(--ds-gray-100) 0px 0px 0px 1px",
               overflow: "hidden",
@@ -1737,7 +1737,7 @@ export function Feedback({
                   alignItems: "center",
                   justifyContent: "flex-end",
                   padding: 12,
-                  background: "var(--ds-background-200)",
+                  background: "rgb(var(--color-canvas))",
                   borderTop: "1px solid var(--ds-gray-200)",
                 }}
               >
@@ -1779,7 +1779,7 @@ export function Feedback({
                         fontSize: 14,
                         lineHeight: "normal",
                         color: "var(--ds-gray-1000)",
-                        background: "var(--ds-background-100)",
+                        background: "rgb(var(--color-canvas))",
                         resize: "none",
                         outline: "none",
                         fontFamily: "inherit",
@@ -1815,7 +1815,7 @@ export function Feedback({
                   alignItems: "center",
                   justifyContent: "space-between",
                   padding: 12,
-                  background: "var(--ds-background-200)",
+                  background: "rgb(var(--color-canvas))",
                   borderTop: "1px solid var(--ds-gray-200)",
                 }}
               >

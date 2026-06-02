@@ -144,7 +144,7 @@ export function Switch({
     alignItems: "stretch",
     padding: config.containerPadding,
     borderRadius: config.borderRadius,
-    backgroundColor: "var(--ds-background-100)",
+    backgroundColor: "rgb(var(--color-surface))",
     boxShadow: "rgba(var(--ds-gray-1000-rgb), 0.1) 0px 0px 0px 1px",
     position: "relative",
     width: fullWidth ? "100%" : undefined,

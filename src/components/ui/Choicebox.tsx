@@ -54,7 +54,7 @@ function RadioIndicator({
         height: 16,
         borderRadius: "50%",
         border: `1px solid ${borderColor}`,
-        background: "var(--ds-background-100)",
+        background: "rgb(var(--color-surface))",
         transition: "border-color 0.2s ease, background 0.2s ease",
         position: "relative",
       }}
@@ -206,7 +206,7 @@ export function Choicebox({
             : "var(--ds-gray-400)",
         background: showHover
           ? "var(--ds-gray-100)"
-          : "var(--ds-background-100)",
+          : "rgb(var(--color-surface))",
         transition: "background 0.15s ease, border 0.15s ease, box-shadow 0.15s ease",
       }}
     >

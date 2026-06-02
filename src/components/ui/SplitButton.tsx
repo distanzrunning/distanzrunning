@@ -135,7 +135,7 @@ export function SplitButton({
   // Variant-specific colors
   const bgColor = isDefault
     ? "var(--ds-gray-1000)"
-    : "var(--ds-background-100)";
+    : "rgb(var(--color-surface))";
   const textColor = isDefault
     ? "var(--ds-background-100)"
     : "var(--ds-gray-1000)";
@@ -190,7 +190,7 @@ export function SplitButton({
     top: "calc(100% + 4px)",
     ...(menuAlignment === "bottom-end" ? { right: 0 } : { left: 0 }),
     width: 264,
-    background: "var(--ds-background-100)",
+    background: "rgb(var(--color-surface))",
     borderRadius: 12,
     boxShadow:
       "rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.02) 0px 1px 1px 0px, rgba(0,0,0,0.04) 0px 4px 8px -4px, rgba(0,0,0,0.06) 0px 16px 24px -8px, var(--ds-background-200) 0px 0px 0px 1px",

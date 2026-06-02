@@ -65,7 +65,7 @@ function DefaultFallback({ width, height }: Dimensions) {
     // bg-100 (white in light, elevated dark in dark) so the
     // fallback reads as a card raised above the PageFrame
     // surface — bg-200 blended with the surface in light mode.
-    background: "var(--ds-background-100)",
+    background: "rgb(var(--color-surface))",
   };
   const ctaStyle: React.CSSProperties = {
     background: "var(--ds-gray-1000)",

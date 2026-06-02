@@ -144,7 +144,7 @@ const CMDK_CSS = `
     width: 640px;
     max-width: calc(100vw - 32px);
     border-radius: 12px;
-    background: var(--ds-background-100);
+    background: rgb(var(--color-surface));
     box-shadow: var(--ds-shadow-modal);
     color: var(--ds-gray-1000);
     overflow: hidden;
@@ -183,7 +183,7 @@ const CMDK_CSS = `
     overscroll-behavior: contain;
     padding: 8px;
     max-height: 436px;
-    background: var(--ds-background-100);
+    background: rgb(var(--color-surface));
   }
 
   .ds-cmdk-content [cmdk-group-heading] {
@@ -251,7 +251,7 @@ const CMDK_CSS = `
 
   .ds-cmdk-esc-button {
     display: none;
-    background: var(--ds-background-100);
+    background: rgb(var(--color-surface));
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -537,7 +537,7 @@ export function CommandMenu({
             borderBottom: resultsHidden
               ? "none"
               : "1px solid var(--ds-gray-alpha-400)",
-            background: "var(--ds-background-100)",
+            background: "rgb(var(--color-surface))",
           }}
         >
           {/* Input wrapper — Geist: inputWrapper */}

@@ -254,7 +254,7 @@ export default function MobileNavDrawer({
           // caps at 384 px (max-w-sm) so on bigger phones / small
           // tablets it reads as a side panel sliding in from the
           // right rather than the whole screen swapping out.
-          className="fixed bottom-0 right-0 top-[50px] z-[100] flex w-full flex-col bg-[color:var(--ds-background-100)] shadow-[var(--ds-shadow-modal)] outline-none sm:max-w-sm"
+          className="fixed bottom-0 right-0 top-[50px] z-[100] flex w-full flex-col bg-surface shadow-[var(--ds-shadow-modal)] outline-none sm:max-w-sm"
         >
           {/* a11y: required by Radix Dialog */}
           <Dialog.Title className="sr-only">Site navigation</Dialog.Title>
@@ -389,7 +389,7 @@ function SectionDetail({
             type="button"
             onClick={onBack}
             aria-label="Back to all sections"
-            className="grid size-7 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)]"
+            className="grid size-7 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-surface text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-surface dark:hover:bg-[color:var(--ds-gray-100)]"
           >
             <ArrowLeft className="size-4" aria-hidden />
           </button>

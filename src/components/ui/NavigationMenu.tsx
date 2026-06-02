@@ -142,7 +142,7 @@ function NavigationMenuContent({
         "group-data-[viewport=false]/navigation-menu:rounded-md",
         "group-data-[viewport=false]/navigation-menu:border",
         "group-data-[viewport=false]/navigation-menu:border-[color:var(--ds-gray-400)]",
-        "group-data-[viewport=false]/navigation-menu:bg-[color:var(--ds-background-100)]",
+        "group-data-[viewport=false]/navigation-menu:bg-surface",
         "group-data-[viewport=false]/navigation-menu:text-[color:var(--ds-gray-1000)]",
         "group-data-[viewport=false]/navigation-menu:shadow-[var(--ds-shadow-menu)]",
         "group-data-[viewport=false]/navigation-menu:duration-200",
@@ -182,7 +182,7 @@ function NavigationMenuViewport({
           // rounded-lg = 12px in this project's scale (matches v0's
           // rounded-xl which lands on 12px with Tailwind defaults).
           "rounded-lg border border-[color:var(--ds-gray-400)]",
-          "bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)]",
+          "bg-surface text-[color:var(--ds-gray-1000)]",
           "shadow-[var(--ds-shadow-menu)]",
           "data-[state=closed]:animate-out data-[state=closed]:zoom-out-95",
           "data-[state=open]:animate-in data-[state=open]:zoom-in-90",

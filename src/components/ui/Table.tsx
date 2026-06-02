@@ -83,7 +83,7 @@ const TableBody = forwardRef<
       className={cn(
         "[&_td:first-child]:rounded-l [&_td:last-child]:rounded-r",
         striped &&
-          "[&_tr:where(:nth-child(odd))]:bg-[var(--ds-background-200)]",
+          "[&_tr:where(:nth-child(odd))]:bg-surface",
         bordered && "[&_tr:not(:last-child)]:border-b",
         interactive && "[&_tr:hover]:bg-[var(--ds-gray-100)]",
         className,

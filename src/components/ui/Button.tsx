@@ -191,7 +191,7 @@ const getVariantClasses = (
   if (isDisabled) {
     switch (variant) {
       case "secondary":
-        return "bg-[var(--ds-background-200)] text-[var(--ds-gray-700)] shadow-[0_0_0_1px_var(--ds-gray-400)] cursor-not-allowed";
+        return "bg-surface text-[var(--ds-gray-700)] shadow-[0_0_0_1px_var(--ds-gray-400)] cursor-not-allowed";
       case "tertiary":
         return "bg-transparent text-[var(--ds-gray-700)] cursor-not-allowed";
       default:
@@ -233,7 +233,7 @@ const getVariantClasses = (
       // Light: white bg, gray border via box-shadow, darker bg on hover
       // Dark: dark bg, subtle border via box-shadow, lighter bg on hover
       return `
-        bg-[var(--ds-background-100)] text-[var(--ds-gray-1000)]
+        bg-surface text-[var(--ds-gray-1000)]
         shadow-[0_0_0_1px_var(--ds-gray-400)]
         hover:bg-[var(--ds-gray-100)]
         dark:shadow-[0_0_0_1px_var(--ds-gray-400)]

@@ -76,7 +76,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       if (isActive && color) {
         return "";
       }
-      return "bg-[var(--ds-background-100)] border-[var(--ds-gray-700)]";
+      return "bg-surface border-[var(--ds-gray-700)]";
     };
 
     return (

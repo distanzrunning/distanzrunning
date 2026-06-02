@@ -238,7 +238,7 @@ function ToastCard({
           item.variant === "success" ? "var(--ds-blue-700)"
           : item.variant === "warning" ? "var(--ds-amber-800)"
           : item.variant === "error" ? "var(--ds-red-800)"
-          : "var(--ds-background-100)",
+          : "rgb(var(--color-surface))",
         boxShadow: item.variant === "default" ? "var(--ds-shadow-menu)" : "none",
         borderRadius: 12,
         padding: 16,

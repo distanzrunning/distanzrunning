@@ -512,7 +512,7 @@ function ChartInner({
           // it off.
           style={{
             position: "absolute",
-            background: "var(--ds-background-100)",
+            background: "rgb(var(--color-surface))",
             boxShadow: "var(--ds-shadow-tooltip)",
             borderRadius: 6,
             padding: "8px 16px",
@@ -574,7 +574,7 @@ function ChartInner({
             left: tooltipLeft,
             top: MARGIN.top + plotHeight + 19,
             transform: "translate(-50%, -50%)",
-            background: "var(--ds-background-100)",
+            background: "rgb(var(--color-surface))",
             color: "var(--ds-gray-1000)",
             fontSize: 12,
             lineHeight: "16px",

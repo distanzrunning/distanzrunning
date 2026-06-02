@@ -120,7 +120,7 @@ export default function NewsletterSignup({
   const cardBackground =
     theme === "grey"
       ? "var(--ds-gray-200)"
-      : "var(--ds-background-100)";
+      : "rgb(var(--color-surface))";
 
   return (
     <div className={themeClass}>

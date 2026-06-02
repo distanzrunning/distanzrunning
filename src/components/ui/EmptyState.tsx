@@ -48,7 +48,7 @@ const EMPTY_STATE_CSS = `
     padding: 48px 70px;
     border: 1px solid var(--ds-gray-400);
     border-radius: var(--ds-radius-small);
-    background-color: var(--ds-background-100);
+    background-color: rgb(var(--color-surface));
     text-align: center;
   }
 
@@ -61,7 +61,7 @@ const EMPTY_STATE_CSS = `
     padding: 14px;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 8px;
-    background-color: var(--ds-background-100);
+    background-color: rgb(var(--color-surface));
     color: var(--ds-gray-900);
   }
 
@@ -121,7 +121,7 @@ const EMPTY_STATE_CSS = `
     line-height: 20px;
     border: none;
     border-radius: 6px;
-    background-color: var(--ds-background-100);
+    background-color: rgb(var(--color-surface));
     color: var(--ds-gray-1000);
     box-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
     cursor: pointer;

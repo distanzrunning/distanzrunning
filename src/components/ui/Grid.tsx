@@ -204,7 +204,7 @@ export function GridCell({
         zIndex: 2,
         fontSize: "1rem",
         color: "var(--ds-gray-1000)",
-        ...(solid ? { backgroundColor: "var(--ds-background-100)" } : {}),
+        ...(solid ? { backgroundColor: "rgb(var(--color-surface))" } : {}),
         ...style,
       }}
     >

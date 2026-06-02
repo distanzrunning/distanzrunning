@@ -185,7 +185,7 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
         marginTop: 16,
         border: "1px solid var(--ds-gray-400)",
         borderRadius: 6,
-        background: "var(--ds-background-100)",
+        background: "rgb(var(--color-surface))",
       }}
     >
       <button
@@ -228,7 +228,7 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
             gap: 8,
             padding: "10px 12px",
             borderRadius: 6,
-            background: "var(--ds-background-200)",
+            background: "rgb(var(--color-canvas))",
             border: "1px solid var(--ds-gray-400)",
           }}
         >
@@ -256,7 +256,7 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
               height: 28,
               borderRadius: 6,
               border: "1px solid var(--ds-gray-400)",
-              background: "var(--ds-background-100)",
+              background: "rgb(var(--color-surface))",
               color: "var(--ds-gray-900)",
               cursor: anonId ? "pointer" : "not-allowed",
               opacity: anonId ? 1 : 0.5,
@@ -341,7 +341,7 @@ function ConsentSettingsModal() {
         style={{
           border: "1px solid var(--ds-gray-400)",
           borderRadius: 6,
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-surface))",
           marginTop: 24,
         }}
       >
@@ -448,7 +448,7 @@ function BottomBanner() {
           // (per the feedback-material-class-double-border lesson).
           className="flex flex-col gap-4 rounded-xl p-5"
           style={{
-            background: "var(--ds-background-100)",
+            background: "rgb(var(--color-surface))",
             boxShadow: "var(--ds-shadow-menu)",
           }}
         >

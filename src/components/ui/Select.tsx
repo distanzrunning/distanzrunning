@@ -192,7 +192,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               .join(" ")}
             style={{
               color: disabled ? "var(--ds-gray-600)" : "var(--ds-gray-1000)",
-              background: disabled ? "var(--ds-gray-200)" : "var(--ds-background-100)",
+              background: disabled ? "var(--ds-gray-200)" : "rgb(var(--color-canvas))",
             }}
             {...props}
           >

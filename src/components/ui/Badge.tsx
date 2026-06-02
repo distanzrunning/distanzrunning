@@ -173,7 +173,7 @@ export const BadgePill = forwardRef<
 >(({ children, size = "md", icon, href, onClick, className = "" }, ref) => {
   const pillStyles = `
     inline-flex items-center justify-center rounded-full font-medium whitespace-nowrap
-    bg-[var(--ds-background-100)] text-[var(--ds-gray-1000)]
+    bg-surface text-[var(--ds-gray-1000)]
     border border-[var(--ds-gray-400)]
     hover:bg-[var(--ds-gray-200)] hover:border-[var(--ds-gray-500)]
     transition-colors cursor-pointer

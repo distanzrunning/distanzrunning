@@ -52,7 +52,7 @@ export function Fieldset({
       style={{
         border: `1px solid ${borderColor}`,
         borderRadius: 10,
-        background: "var(--ds-background-100)",
+        background: "rgb(var(--color-surface))",
         overflow: "hidden",
         scrollMarginTop: 64,
       }}
@@ -114,7 +114,7 @@ export function Fieldset({
             gap: 16,
             padding: "12px 24px",
             borderTop: `1px solid ${borderColor}`,
-            background: "var(--ds-background-200)",
+            background: "rgb(var(--color-canvas))",
             color: "var(--ds-gray-900)",
           }}
         >

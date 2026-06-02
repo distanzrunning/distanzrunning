@@ -111,7 +111,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           className={`ds-textarea-container${error ? " ds-textarea--error" : ""}${disabled ? " ds-textarea--disabled" : ""}`}
           style={{
             borderRadius: 6,
-            background: "var(--ds-background-100)",
+            background: "rgb(var(--color-canvas))",
             transition: "box-shadow 0.15s ease",
             overflow: "hidden",
             ...(disabled ? { cursor: "not-allowed", opacity: 0.5 } : {}),
@@ -136,7 +136,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               outline: "none",
               background: disabled
                 ? "var(--ds-gray-100)"
-                : "var(--ds-background-100)",
+                : "rgb(var(--color-canvas))",
               fontSize: 14,
               lineHeight: "20px",
               color: disabled ? "var(--ds-gray-700)" : "var(--ds-gray-1000)",

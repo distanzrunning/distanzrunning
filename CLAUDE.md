@@ -72,15 +72,16 @@ Token namespace: `--ds-{hue}-{shade}`.
 
 **Backgrounds** (separate from the hue scale): `--ds-background-100` (primary canvas — `#FFFFFF` light) / `--ds-background-200` (secondary surface, used sparingly — `#F5F5F5` light). They flip in dark mode following Apple's **base / elevated** model: `bg-100` = `#121212` (Material base canvas), `bg-200` = `#1F1F1F` (the *elevated* surface, ~7% white lift).
 
-**Elevation ladder — use the semantic surface classes, don't hardcode `bg-[var(--ds-background-100)]`.** Depth is conveyed by an ascending tone ladder (brighter = higher, Apple base→elevated):
+**Surfaces — TWO roles, one rule. This is the whole system; there are no other surface tokens and no per-component exceptions.**
 
-| Tier | Class | Light | Dark | Use for |
+| Role | Class | Light | Dark | Use for |
 |---|---|---|---|---|
-| Base | `bg-canvas` | `#F5F5F5` | `#121212` | the page body / `PageFrame` — the darkest tone in dark |
-| Raised | `bg-surface` | `#FFFFFF` | `#262626` | cards, menus, popovers, drawers, panels — anything sitting *on* the page |
-| Section | `bg-[var(--ds-background-200)]` | `#F5F5F5` | `#1F1F1F` | softer sub-areas within a surface (modal footer, drawer footer) |
+| **Canvas** (down) | `bg-canvas` | `#F5F5F5` | `#121212` | the page / `PageFrame`, **and** anything recessed *within* a surface: input/textarea/select fields, modal & drawer footers/sections |
+| **Surface** (up) | `bg-surface` | `#FFFFFF` | `#262626` | **everything raised**: cards, menus, popovers, dialogs, drawers, sheets, panels, toasts, badges, chips, filled/secondary buttons, checkbox/radio/switch boxes, the header pill |
 
-A new card/menu/panel should be `bg-surface` (white in light, lifted in dark) — **not** `bg-[var(--ds-background-100)]`, which is the base canvas and makes the surface recede in dark. Floating elements add `material-menu`/`material-modal` shadow on top. (Light-mode depth also leans on these shadows + the hairline border.)
+**The rule:** *Is it the page, or a field you type/select into, or a footer/section inside a surface? → `bg-canvas`. Otherwise → `bg-surface`.* Floating things (menus/modals/popovers) additionally carry a `material-*` shadow — **extra depth comes from shadow, never from more tones.**
+
+**Hard anti-pattern: never use `bg-[var(--ds-background-100)]` or `bg-[var(--ds-background-200)]` (or their inline/CSS forms) as a fill.** Those raw tokens only *feed* `canvas`/`surface` internally. Components always use `bg-canvas` / `bg-surface` — that's what guarantees conformity (no component "does its own thing"). Don't reach for `bg-white`/`bg-black`/`neutral-*` either. (The only legitimate non-token fills are deliberate translucent **glass** effects, e.g. `bg-white/15` + blur.)
 
 **Alpha tokens**: `--ds-gray-alpha-{100..1000}` for translucent overlays.
 

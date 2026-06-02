@@ -117,7 +117,7 @@ export function ThemeSwitcher({
               borderRadius: optionRadius,
               cursor: disabled ? "not-allowed" : "pointer",
               background: isSelected
-                ? "var(--ds-background-100)"
+                ? "rgb(var(--color-surface))"
                 : "transparent",
               boxShadow: isSelected
                 ? "rgba(0,0,0,0.06) 0px 2px 4px, rgba(0,0,0,0.04) 0px 0px 0px 1px"

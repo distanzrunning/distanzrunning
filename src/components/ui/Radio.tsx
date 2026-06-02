@@ -149,8 +149,8 @@ function RadioGroupItem({ value, children, disabled: itemDisabled }: RadioGroupI
                   ? "border-[var(--ds-gray-600)] bg-[var(--ds-gray-100)]"
                   : "border-[var(--ds-gray-400)] bg-[var(--ds-gray-100)]"
                 : isChecked
-                  ? "border-[var(--ds-gray-1000)] bg-[var(--ds-background-100)]"
-                  : "border-[var(--ds-gray-alpha-400)] bg-[var(--ds-background-100)] group-hover/radio:bg-[var(--ds-gray-200)]"
+                  ? "border-[var(--ds-gray-1000)] bg-surface"
+                  : "border-[var(--ds-gray-alpha-400)] bg-surface group-hover/radio:bg-[var(--ds-gray-200)]"
             }
             ${!isDisabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
           `}
@@ -257,8 +257,8 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
                   ? "border-[var(--ds-gray-600)] bg-[var(--ds-gray-100)] cursor-not-allowed"
                   : "border-[var(--ds-gray-400)] bg-[var(--ds-gray-100)] cursor-not-allowed"
                 : isChecked
-                  ? "border-[var(--ds-gray-1000)] bg-[var(--ds-background-100)]"
-                  : "border-[var(--ds-gray-alpha-400)] bg-[var(--ds-background-100)] hover:bg-[var(--ds-gray-200)]"
+                  ? "border-[var(--ds-gray-1000)] bg-surface"
+                  : "border-[var(--ds-gray-alpha-400)] bg-surface hover:bg-[var(--ds-gray-200)]"
             }
             ${!disabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
           `}
