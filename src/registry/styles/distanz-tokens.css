@@ -143,7 +143,7 @@
        bg-200 = secondary differentiation (used sparingly — sections,
                 callout backgrounds, where you want subtle contrast)
        In dark mode bg-100 = Material's recommended #121212 base; bg-200
-       lifts via white overlay (~7% = #262626) for "subtle differentiation". */
+       lifts via white overlay (~7% = #1F1F1F) for "subtle differentiation". */
     --ds-background-100: hsl(0, 0%, 100%);  /* #FFFFFF - default canvas */
     --ds-background-200: hsl(0, 0%, 96%);   /* #F5F5F5 - sparingly */
 
@@ -676,15 +676,15 @@
     /* Background Scale - Dark mode */
     /* Dark backgrounds — Geist convention preserved (bg-100 = default
        canvas, bg-200 = secondary). Material's #121212 is the canonical
-       dark surface so bg-100 takes it. bg-200 lifts to #262626 (~7%
+       dark surface so bg-100 takes it. bg-200 lifts to #1F1F1F (~7%
        white overlay per Material elevation spec) for "subtle
        differentiation" sections. Drops pure black (#000) per
        Material/Apple/NN-G guidance. */
     --ds-background-100: hsl(0, 0%, 7%);    /* #121212 - default canvas */
-    --ds-background-200: hsl(0, 0%, 15%);   /* #262626 - secondary/raised surface (feeds bg-surface; lifts clearly off the #121212 canvas) */
+    --ds-background-200: hsl(0, 0%, 12%);   /* #1F1F1F - recessed/secondary PAGE tone (page wrappers, admin shell, DS preview areas). NOT the surface tone — see --color-surface below. */
 
     --ds-background-100-rgb: 18, 18, 18;
-    --ds-background-200-rgb: 38, 38, 38;
+    --ds-background-200-rgb: 31, 31, 31;
 
     /* Gray Scale — dark mode, monotonic, role-aware
        Same role mapping as light mode:
@@ -1004,7 +1004,7 @@
     /* Modal backgrounds — same semantics as light mode (panel = the
        brighter body surface, sections = the softer tone). Because
        bg-100 is the *darker* shade in dark mode (#121212) and bg-200
-       is the brighter one (#262626), the token assignments here
+       is the brighter one (#1F1F1F), the token assignments here
        are inverted relative to light mode — using bg-200 for the
        panel and bg-100 for the section keeps body brighter than
        footer in both themes. */
@@ -1019,13 +1019,11 @@
       0 0 0 1px rgba(255, 255, 255, 0.145), 0 1px 2px 0 rgba(0, 0, 0, 0.16),
       0 0 0 1px #000;
     --ds-shadow-button-rounded-hover: 0 0 0 1px #2e2e2e;
-    /* Elevated control: rest sits on the lifted surface (bg-200), hover
-       lifts one step further (gray-100). Both are brighter than the
-       #121212 canvas so the control advances — Material/Apple elevation.
-       Previously rest was #0A0A0A, which sat *below* the new base canvas
-       and made the control recede. */
+    /* Elevated control: rest sits on the raised surface (#262626), hover
+       lifts one step further (gray-100 #303030). Both advance above the
+       page so the control reads as raised — Material/Apple elevation. */
     --ds-button-rounded-hover-bg: var(--ds-gray-100);
-    --ds-button-rounded-bg: var(--ds-background-200);
+    --ds-button-rounded-bg: rgb(var(--color-surface));
     --ds-button-rounded-text: var(--ds-gray-1000);
 
     /* Calendar button - uses box-shadow for border effect (Geist dark mode tokens) */
@@ -1036,9 +1034,9 @@
     --calendar-button-focus-ring: 0 0 0 1px #ffffff57, 0 0 0 4px #ffffff29;
 
     /* Calendar popover - Geist design tokens (dark mode).
-       Floating menu lifts to the elevated surface (bg-200, #262626) so it
-       advances above the #121212 canvas. Was #0A0A0A — below the base. */
-    --calendar-popover-bg: var(--ds-background-200);
+       Floating menu uses the raised surface (#262626) so it advances above
+       the page. */
+    --calendar-popover-bg: rgb(var(--color-surface));
     --calendar-popover-radius: 12px;
     --calendar-popover-shadow:
       rgba(255, 255, 255, 0.145) 0px 0px 0px 1px,
@@ -1075,11 +1073,13 @@
 
     /* Background/Surface colors */
     /* Dark elevation ladder (Apple base→elevated; brighter = higher):
-       canvas #121212 (base/recessed) → surface #262626 (raised cards/menus)
-       → gray-100 #303030 (hover) → gray-200 #3A3A3A (active) → #444 selected.
+       canvas/body #121212 → bg-200 page-wrapper/shell #1F1F1F → surface
+       (raised cards/menus) #262626 → gray-100 #303030 (hover) → #3A3A3A
+       (active) → #444 (selected). Each ~14 apart; surface is its OWN value
+       (not bg-200) so cards lift off the page wrappers that use bg-200.
        Keeping surface OFF the gray-100 hover tone is what lets hover and
        nested/selected states read against the surface they sit on. */
-    --color-surface: var(--ds-background-200-rgb); /* Raised surfaces — cards, menus, popovers (#262626, +20 above the #121212 canvas). gray-100/200/300 (#303030/#3A3A3A/#444) are the hover/active/selected steps ABOVE surface. */
+    --color-surface: 38, 38, 38; /* #262626 — raised surfaces (cards, menus, popovers). Decoupled from bg-200 (the recessed page tone, #1F1F1F) so cards lift off the page; gray-100/200/300 (#303030/#3A3A3A/#444) are the hover/active/selected steps above surface. */
     --color-surfaceSubtle: var(--ds-gray-200-rgb); /* Subtle elevation */
     --color-surfaceWarm: var(--ds-gray-200-rgb); /* Warm-tinted surface */
     --color-canvas: var(--ds-background-100-rgb); /* Page base — the DARKEST tone (#121212), so raised surfaces advance above it */
