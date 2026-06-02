@@ -54,6 +54,9 @@ export interface RegistryItem {
     layer?: "foundation" | "atom" | "molecule" | "organism" | "template";
     /** Categories used by the shadcn registry MCP. */
     categories?: string[];
+    /** Informational item version — signals breaking changes to consumers
+     *  (shadcn copies files, so this is advisory, not enforced). */
+    version?: string;
   };
 }
 

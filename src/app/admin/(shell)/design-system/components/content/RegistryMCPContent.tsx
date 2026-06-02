@@ -284,6 +284,141 @@ export default function RegistryMCPContent() {
           />
         </div>
       </Section>
+
+      <Section>
+        <div id="token-conventions" style={{ scrollMarginTop: 96 }}>
+          <h2 className="text-heading-24 text-textDefault mb-3">
+            Token conventions &amp; v2 migration
+          </h2>
+          <p
+            className="text-copy-16"
+            style={{ color: "hsl(var(--color-textSubtle))", marginBottom: 16 }}
+          >
+            Colour tokens follow Geist&rsquo;s two-layer model. Each
+            colour&rsquo;s single source of truth is an{" "}
+            <strong>HSL channel triplet</strong> —{" "}
+            <code
+              className="text-label-13-mono"
+              style={{
+                background: "var(--ds-gray-100)",
+                padding: "2px 6px",
+                borderRadius: 4,
+              }}
+            >
+              --ds-blue-700-value: 213, 100%, 48%
+            </code>{" "}
+            — that flips between light/dark. The opaque token is
+            resolved once (<code
+              className="text-label-13-mono"
+              style={{
+                background: "var(--ds-gray-100)",
+                padding: "2px 6px",
+                borderRadius: 4,
+              }}
+            >
+              --ds-blue-700: hsl(var(--ds-blue-700-value))
+            </code>) and a P3 <code
+              className="text-label-13-mono"
+              style={{
+                background: "var(--ds-gray-100)",
+                padding: "2px 6px",
+                borderRadius: 4,
+              }}
+            >
+              @media
+            </code>{" "}
+            block layers exact OKLCH on top for wide-gamut displays.
+          </p>
+          <p
+            className="text-copy-16"
+            style={{ color: "hsl(var(--color-textSubtle))", marginBottom: 16 }}
+          >
+            Because channels are HSL, always consume them through{" "}
+            <code
+              className="text-label-13-mono"
+              style={{
+                background: "var(--ds-gray-100)",
+                padding: "2px 6px",
+                borderRadius: 4,
+              }}
+            >
+              hsl(var(--color-X))
+            </code>{" "}
+            or{" "}
+            <code
+              className="text-label-13-mono"
+              style={{
+                background: "var(--ds-gray-100)",
+                padding: "2px 6px",
+                borderRadius: 4,
+              }}
+            >
+              hsla(var(--ds-X-value), α)
+            </code>{" "}
+            — never <code
+              className="text-label-13-mono"
+              style={{
+                background: "var(--ds-gray-100)",
+                padding: "2px 6px",
+                borderRadius: 4,
+              }}
+            >
+              rgb()
+            </code>.
+          </p>
+          <div
+            style={{
+              border: "1px solid hsl(var(--color-borderSubtle))",
+              background: "hsl(var(--color-surface))",
+              borderRadius: 8,
+              padding: 16,
+            }}
+          >
+            <p
+              className="text-copy-14"
+              style={{ color: "hsl(var(--color-textDefault))", marginBottom: 8 }}
+            >
+              <strong>Breaking change — tokens v2.0.0.</strong> The old{" "}
+              <code
+                className="text-label-13-mono"
+                style={{
+                  background: "var(--ds-gray-100)",
+                  padding: "2px 6px",
+                  borderRadius: 4,
+                }}
+              >
+                --ds-*-rgb
+              </code>{" "}
+              companions were removed (they had drifted from the OKLCH
+              source). If you installed any item before v2, run this
+              find-and-replace across your code, then re-pull the tokens:
+            </p>
+            <ul
+              className="text-copy-14 list-disc pl-6"
+              style={{ color: "hsl(var(--color-textSubtle))", marginBottom: 12 }}
+            >
+              <li>
+                <code className="text-label-13-mono">rgb(var(--color-</code> →{" "}
+                <code className="text-label-13-mono">hsl(var(--color-</code>
+              </li>
+              <li>
+                <code className="text-label-13-mono">rgba(var(--color-</code> →{" "}
+                <code className="text-label-13-mono">hsla(var(--color-</code>
+              </li>
+              <li>
+                <code className="text-label-13-mono">--ds-X-rgb</code> →{" "}
+                <code className="text-label-13-mono">--ds-X-value</code>{" "}
+                (and wrap translucent uses in{" "}
+                <code className="text-label-13-mono">hsla()</code>)
+              </li>
+            </ul>
+            <Snippet
+              text="npx shadcn add https://distanzrunning.com/r/tokens.json"
+              prompt
+            />
+          </div>
+        </div>
+      </Section>
     </>
   );
 }

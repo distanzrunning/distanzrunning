@@ -12,7 +12,7 @@ export async function buildTokensItem(): Promise<RegistryItem> {
     type: "registry:style",
     title: "Distanz Running tokens",
     description:
-      "CSS variables (--ds-*) and typography utilities (text-heading-*, text-copy-*, text-button-*, text-label-*) for light and dark modes. Required by every other item in this registry — install this first, then add `@import \"./distanz-tokens.css\";` and `@import \"./distanz-utilities.css\";` to your app/globals.css.",
+      "CSS variables (--ds-*) and typography utilities (text-heading-*, text-copy-*, text-button-*, text-label-*) for light and dark modes. Required by every other item in this registry — install this first, then add `@import \"./distanz-tokens.css\";` and `@import \"./distanz-utilities.css\";` to your app/globals.css. Colour channels are HSL triplets — consume them as `hsl(var(--color-X))` / `hsla(var(--ds-X-value), α)`, never `rgb()`. BREAKING (v2): the old `--ds-*-rgb` companions were removed; replace `rgb(var(--color-` → `hsl(var(--color-` and `--ds-X-rgb` → `--ds-X-value` in any code installed before v2.",
     files: [
       {
         path: "styles/distanz-tokens.css",
@@ -27,6 +27,6 @@ export async function buildTokensItem(): Promise<RegistryItem> {
         content: utilitiesCss,
       },
     ],
-    meta: { layer: "foundation" },
+    meta: { layer: "foundation", version: "2.0.0" },
   };
 }
