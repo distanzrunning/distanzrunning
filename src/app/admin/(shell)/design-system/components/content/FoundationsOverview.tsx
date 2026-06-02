@@ -161,7 +161,7 @@ function ComponentsPreview() {
         className="-mt-px w-[214px] md:w-[246px]"
         style={{
           height: 42,
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-surface))",
           boxShadow: boxBorder,
           borderRadius: 6,
           padding: "10px 48px 10px 12px",
@@ -206,7 +206,7 @@ function ComponentsPreview() {
       <div
         style={{
           height: 40,
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-surface))",
           boxShadow: boxBorder,
           borderRadius: 6,
           padding: "0 10px",
@@ -233,7 +233,7 @@ function ComponentsPreview() {
         style={{
           width: 40,
           height: 40,
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-surface))",
           boxShadow: boxBorder,
           borderRadius: 6,
           display: "flex",
@@ -255,7 +255,7 @@ function ComponentsPreview() {
       <div
         style={{
           height: 40,
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-surface))",
           boxShadow: boxBorder,
           borderRadius: 6,
           display: "inline-flex",
@@ -315,7 +315,7 @@ function ComponentsPreview() {
               padding: "0 12px",
               height: 40,
               flexShrink: 0,
-              background: "var(--ds-background-100)",
+              background: "rgb(var(--color-surface))",
               color: "rgb(var(--color-textSubtler))",
               borderRight: "1px solid var(--ds-gray-alpha-400)",
             }}
@@ -331,7 +331,7 @@ function ComponentsPreview() {
               height: 40,
               flex: 1,
               minWidth: 0,
-              background: "var(--ds-background-100)",
+              background: "rgb(var(--color-surface))",
               color: "var(--ds-gray-600)",
             }}
           >
@@ -365,7 +365,7 @@ function ColoursPreview() {
             height: 96,
             width: 32,
             border: "1px solid var(--ds-gray-alpha-400)",
-            background: "var(--ds-background-200)",
+            background: "rgb(var(--color-canvas))",
           }}
         >
           <div

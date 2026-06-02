@@ -42,7 +42,7 @@ export default async function StudioLayout({
   return (
     <div
       className="fixed inset-0 z-[100] flex flex-col"
-      style={{ background: "var(--ds-background-100)" }}
+      style={{ background: "rgb(var(--color-surface))" }}
     >
       <div
         className="flex h-10 shrink-0 items-center border-b px-3"

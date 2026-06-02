@@ -63,18 +63,19 @@ export interface BadgePillProps extends Omit<BadgeProps, "variant"> {
 // ============================================================================
 
 const variantStyles: Record<BadgeVariant, string> = {
-  // Solid variants - Geist exact colors
-  // Gray: uses gray-900 in both modes with white text
-  gray: "bg-[var(--ds-gray-900)] text-white",
-  blue: "bg-[var(--ds-blue-800)] text-white",
-  purple: "bg-[var(--ds-purple-900)] text-white",
-  // Amber uses black text for contrast on the warm background
-  amber: "bg-[var(--ds-amber-700)] text-black",
-  red: "bg-[var(--ds-red-900)] text-white",
-  pink: "bg-[var(--ds-pink-900)] text-white",
-  green: "bg-[var(--ds-green-900)] text-white",
-  teal: "bg-[var(--ds-teal-900)] text-white",
-  inverted: "bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)] dark:bg-[var(--ds-background-100)] dark:text-[var(--ds-gray-1000)]",
+  // Solid variants - pair each theme-aware fill with a theme-aware foreground.
+  gray: "bg-[var(--ds-gray-1000)] text-textInverted",
+  blue: "bg-[var(--ds-blue-800)] text-textInverted dark:bg-[var(--ds-blue-900)] dark:text-[var(--ds-blue-100)]",
+  purple:
+    "bg-[var(--ds-purple-900)] text-textInverted dark:text-[var(--ds-purple-100)]",
+  amber:
+    "bg-[var(--ds-amber-700)] text-[var(--ds-gray-1000)] dark:bg-[var(--ds-amber-900)] dark:text-[var(--ds-amber-100)]",
+  red: "bg-[var(--ds-red-900)] text-textInverted dark:text-[var(--ds-red-100)]",
+  pink: "bg-[var(--ds-pink-900)] text-textInverted dark:text-[var(--ds-pink-100)]",
+  green:
+    "bg-[var(--ds-green-900)] text-textInverted dark:text-[var(--ds-green-100)]",
+  teal: "bg-[var(--ds-teal-900)] text-textInverted dark:text-[var(--ds-teal-100)]",
+  inverted: "bg-[var(--ds-gray-1000)] text-textInverted",
 
   // Subtle variants - light tinted backgrounds with dark text
   "gray-subtle": "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)]",
@@ -118,14 +119,7 @@ const iconSizeStyles: Record<BadgeSize, string> = {
  */
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   (
-    {
-      children,
-      variant = "gray",
-      size = "md",
-      icon,
-      title,
-      className = "",
-    },
+    { children, variant = "gray", size = "md", icon, title, className = "" },
     ref,
   ) => {
     return (

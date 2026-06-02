@@ -330,12 +330,6 @@ export function Combobox({
     inputRef.current?.focus();
   }, [isControlled, onChange, onInputChange]);
 
-  const handleToggle = useCallback(() => {
-    if (disabled) return;
-    setIsOpen((prev) => !prev);
-    inputRef.current?.focus();
-  }, [disabled]);
-
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (disabled) return;
@@ -522,7 +516,7 @@ export function Combobox({
                   boxShadow: inputBoxShadow,
                   background: disabled
                     ? "var(--ds-gray-100)"
-                    : "rgb(var(--color-canvas))",
+                    : "rgb(var(--color-surface))",
                   color: disabled
                     ? "rgb(var(--color-textSubtler))"
                     : error

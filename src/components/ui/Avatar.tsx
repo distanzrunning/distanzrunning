@@ -248,7 +248,7 @@ export function AvatarGroup({
             width: outerSize,
             height: outerSize,
             padding: borderWidth,
-            backgroundColor: member.borderColor || "var(--ds-background-100)",
+            backgroundColor: member.borderColor || "rgb(var(--color-surface))",
           }}
         >
           <Avatar

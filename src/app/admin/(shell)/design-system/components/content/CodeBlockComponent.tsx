@@ -224,7 +224,7 @@ function CodeBlock({
         <div
           className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-borderDefault"
           style={{
-            background: "var(--ds-background-200)",
+            background: "rgb(var(--color-canvas))",
             borderRadius: "4px 4px 0 0",
           }}
         >
@@ -256,7 +256,7 @@ function CodeBlock({
       {/* Code content */}
       <pre
         className="overflow-x-auto py-4"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "rgb(var(--color-surface))" }}
       >
         <code className="block text-copy-13 leading-[20px] font-mono">
           {lines.map((lineTokens, index) => {
@@ -398,7 +398,7 @@ function CodePreview({
       {/* Preview area */}
       <div
         className="p-6 group"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "rgb(var(--color-surface))" }}
       >
         <CodeBlock
           code={previewCode}
@@ -413,7 +413,7 @@ function CodePreview({
       </div>
 
       {/* Accordion trigger */}
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "rgb(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -427,7 +427,7 @@ function CodePreview({
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "var(--ds-background-100)" }}
+            style={{ background: "rgb(var(--color-surface))" }}
           >
             <div className="relative group">
               {/* Floating copy button */}
@@ -898,13 +898,13 @@ function LanguageSwitcherCodePreview() {
       {/* Preview area */}
       <div
         className="p-6 group"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "rgb(var(--color-surface))" }}
       >
         <LanguageSwitcherPreview />
       </div>
 
       {/* Accordion trigger */}
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "rgb(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -918,7 +918,7 @@ function LanguageSwitcherCodePreview() {
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "var(--ds-background-100)" }}
+            style={{ background: "rgb(var(--color-surface))" }}
           >
             <div className="relative group">
               {/* Floating copy button */}
@@ -1018,7 +1018,7 @@ function LanguageSwitcherPreview() {
       <div
         className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-borderDefault"
         style={{
-          background: "var(--ds-background-200)",
+          background: "rgb(var(--color-canvas))",
           borderRadius: "4px 4px 0 0",
         }}
       >
@@ -1077,7 +1077,7 @@ function LanguageSwitcherPreview() {
       {/* Code content */}
       <pre
         className="overflow-x-auto py-4"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "rgb(var(--color-surface))" }}
       >
         <code className="block text-copy-13 leading-[20px] font-mono">
           {lines.map((lineTokens, index) => (

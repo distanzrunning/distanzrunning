@@ -166,9 +166,13 @@ export function Menu({
         triggerRef,
       }}
     >
-      <div ref={containerRef} style={{ position: "relative", display: "inline-block" }}>
+      <div
+        ref={containerRef}
+        style={{ position: "relative", display: "inline-block" }}
+      >
         {trigger}
-        {isOpen && typeof document !== "undefined" &&
+        {isOpen &&
+          typeof document !== "undefined" &&
           createPortal(
             <MenuDropdown
               containerRef={containerRef}
@@ -233,19 +237,25 @@ function MenuDropdown({
       const spaceBelow = viewportH - rect.bottom;
       const spaceAbove = rect.top;
       if (spaceBelow < estimatedH && spaceAbove > spaceBelow) {
-        resolved = (position === "bottom-end" ? "top-end" : "top-start") as MenuPosition;
+        resolved = (
+          position === "bottom-end" ? "top-end" : "top-start"
+        ) as MenuPosition;
       }
     } else if (position.startsWith("right")) {
       const spaceRight = viewportW - rect.right;
       const spaceLeft = rect.left;
       if (spaceRight < widthPx && spaceLeft > spaceRight) {
-        resolved = (position === "right-end" ? "left-end" : "left-start") as MenuPosition;
+        resolved = (
+          position === "right-end" ? "left-end" : "left-start"
+        ) as MenuPosition;
       }
     } else if (position.startsWith("left")) {
       const spaceLeft = rect.left;
       const spaceRight = viewportW - rect.right;
       if (spaceLeft < widthPx && spaceRight > spaceLeft) {
-        resolved = (position === "left-end" ? "right-end" : "right-start") as MenuPosition;
+        resolved = (
+          position === "left-end" ? "right-end" : "right-start"
+        ) as MenuPosition;
       }
     }
     setResolvedPosition(resolved);
@@ -255,18 +265,22 @@ function MenuDropdown({
 
     if (resolved.startsWith("bottom")) {
       top = rect.bottom + scrollY + sideOffset;
-      left = resolved === "bottom-end" ? rect.right + scrollX : rect.left + scrollX;
+      left =
+        resolved === "bottom-end" ? rect.right + scrollX : rect.left + scrollX;
     } else if (resolved.startsWith("top")) {
       // Anchored to the bottom of the menu — `bottom` is computed by
       // the consumer using viewport height + scroll.
       top = rect.top + scrollY - sideOffset;
-      left = resolved === "top-end" ? rect.right + scrollX : rect.left + scrollX;
+      left =
+        resolved === "top-end" ? rect.right + scrollX : rect.left + scrollX;
     } else if (resolved.startsWith("left")) {
       left = rect.left + scrollX;
-      top = resolved === "left-end" ? rect.bottom + scrollY : rect.top + scrollY;
+      top =
+        resolved === "left-end" ? rect.bottom + scrollY : rect.top + scrollY;
     } else if (resolved.startsWith("right")) {
       left = rect.right + scrollX + sideOffset;
-      top = resolved === "right-end" ? rect.bottom + scrollY : rect.top + scrollY;
+      top =
+        resolved === "right-end" ? rect.bottom + scrollY : rect.top + scrollY;
     }
 
     setCoords({ top, left });
@@ -374,9 +388,7 @@ function MenuDropdown({
           const startIdx = currentIdx >= 0 ? currentIdx + 1 : 0;
           for (let i = 0; i < items.length; i++) {
             const idx = (startIdx + i) % items.length;
-            const label = (items[idx].textContent || "")
-              .trim()
-              .toLowerCase();
+            const label = (items[idx].textContent || "").trim().toLowerCase();
             if (label.startsWith(needle)) {
               e.preventDefault();
               items[idx].focus();
@@ -418,14 +430,12 @@ function MenuDropdown({
               coords.top +
               window.scrollY
             : undefined,
-          left:
-            isLeft || isBottomEnd || isTopEnd ? undefined : coords.left,
-          right:
-            isLeft
-              ? document.documentElement.clientWidth - coords.left + 4
-              : isBottomEnd || isTopEnd
-                ? document.documentElement.clientWidth - coords.left
-                : undefined,
+          left: isLeft || isBottomEnd || isTopEnd ? undefined : coords.left,
+          right: isLeft
+            ? document.documentElement.clientWidth - coords.left + 4
+            : isBottomEnd || isTopEnd
+              ? document.documentElement.clientWidth - coords.left
+              : undefined,
           background: "rgb(var(--color-surface))",
           borderRadius: 12,
           boxShadow: "var(--ds-shadow-menu)",
@@ -483,7 +493,7 @@ export function MenuButton({
       <button
         ref={triggerRef}
         type="button"
-        className={`inline-flex items-center justify-center cursor-pointer bg-transparent border-none p-0 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2 rounded-full ${className}`}
+        className={`inline-flex items-center justify-center cursor-pointer bg-transparent border-none p-0 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2 rounded-full ${className}`}
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-haspopup="menu"
@@ -497,7 +507,7 @@ export function MenuButton({
   const baseStyles = `
     inline-flex items-center justify-center select-none cursor-pointer border-none
     transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
-    focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
+    focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2
     rounded-[var(--ds-radius-small)]
   `;
 
@@ -521,14 +531,15 @@ export function MenuButton({
         dark:hover:bg-[var(--ds-gray-200)] dark:hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
       `
       : `
-        bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]
+        bg-[var(--ds-gray-1000)] text-textInverted
         hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),white_15%)]
         dark:hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),black_15%)]
       `;
 
-  const combinedClasses = `${baseStyles} ${sizeStyles} ${variantStyles} ${className}`
-    .replace(/\s+/g, " ")
-    .trim();
+  const combinedClasses =
+    `${baseStyles} ${sizeStyles} ${variantStyles} ${className}`
+      .replace(/\s+/g, " ")
+      .trim();
 
   return (
     <button
@@ -688,8 +699,12 @@ export function MenuItem({
     </>
   );
 
-  const hoverBg = destructive ? "var(--ds-red-100)" : "var(--ds-gray-alpha-100)";
-  const activeBg = destructive ? "var(--ds-red-200)" : "var(--ds-gray-alpha-200)";
+  const hoverBg = destructive
+    ? "var(--ds-red-100)"
+    : "var(--ds-gray-alpha-100)";
+  const activeBg = destructive
+    ? "var(--ds-red-200)"
+    : "var(--ds-gray-alpha-200)";
 
   const hoverHandlers = isDisabled
     ? {}

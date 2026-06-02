@@ -50,11 +50,35 @@ interface SplitButtonProps {
 
 const sizeStyles: Record<
   "small" | "medium" | "large",
-  { height: number; fontSize: number; lineHeight: string; padding: number; radius: number }
+  {
+    height: number;
+    fontSize: number;
+    lineHeight: string;
+    padding: number;
+    radius: number;
+  }
 > = {
-  small: { height: 32, fontSize: 14, lineHeight: "20px", padding: 6, radius: 6 },
-  medium: { height: 40, fontSize: 14, lineHeight: "20px", padding: 10, radius: 6 },
-  large: { height: 48, fontSize: 16, lineHeight: "24px", padding: 14, radius: 8 },
+  small: {
+    height: 32,
+    fontSize: 14,
+    lineHeight: "20px",
+    padding: 6,
+    radius: 6,
+  },
+  medium: {
+    height: 40,
+    fontSize: 14,
+    lineHeight: "20px",
+    padding: 10,
+    radius: 6,
+  },
+  large: {
+    height: 48,
+    fontSize: 16,
+    lineHeight: "24px",
+    padding: 14,
+    radius: 8,
+  },
 };
 
 // ============================================================================
@@ -124,7 +148,8 @@ export function SplitButton({
     fontSize: s.fontSize,
     fontWeight: 500,
     cursor: "pointer",
-    transition: "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
+    transition:
+      "border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease",
     outline: "none",
     lineHeight: s.lineHeight,
     userSelect: "none",
@@ -134,10 +159,10 @@ export function SplitButton({
 
   // Variant-specific colors
   const bgColor = isDefault
-    ? "var(--ds-gray-1000)"
+    ? "rgb(var(--color-textDefault))"
     : "rgb(var(--color-surface))";
   const textColor = isDefault
-    ? "var(--ds-background-100)"
+    ? "rgb(var(--color-textInverted))"
     : "rgb(var(--color-textDefault))";
   const borderOuterColor = "rgb(var(--color-borderDefault))";
 
@@ -193,7 +218,7 @@ export function SplitButton({
     background: "rgb(var(--color-surface))",
     borderRadius: 12,
     boxShadow:
-      "rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.02) 0px 1px 1px 0px, rgba(0,0,0,0.04) 0px 4px 8px -4px, rgba(0,0,0,0.06) 0px 16px 24px -8px, var(--ds-background-200) 0px 0px 0px 1px",
+      "var(--ds-shadow-menu), rgb(var(--color-canvas)) 0px 0px 0px 1px",
     padding: 8,
     zIndex: 2001,
     listStyle: "none",
@@ -222,7 +247,15 @@ export function SplitButton({
           e.currentTarget.style.backgroundColor = bgColor;
         }}
       >
-        <span style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", padding: "0 6px" }}>
+        <span
+          style={{
+            display: "block",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            padding: "0 6px",
+          }}
+        >
           {children}
         </span>
       </button>
@@ -246,7 +279,15 @@ export function SplitButton({
           e.currentTarget.style.backgroundColor = bgColor;
         }}
       >
-        <span style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 16, padding: "0 6px" }}>
+        <span
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: 16,
+            padding: "0 6px",
+          }}
+        >
           <ChevronDownIcon />
         </span>
       </button>

@@ -24,7 +24,7 @@ interface ScrollerProps {
   width?: string;
   /** Container height */
   height?: string;
-  /** Fade overlay color — defaults to var(--ds-background-100) */
+  /** Fade overlay color — defaults to the semantic canvas. */
   fadeColor?: string;
   /** Fade overlay size in px — defaults to 40 */
   fadeSize?: number;
@@ -132,9 +132,7 @@ export function ScrollerButtons({
   const isVertical = direction === "vertical";
 
   return (
-    <div
-      className="flex flex-row gap-2 justify-center"
-    >
+    <div className="flex flex-row gap-2 justify-center">
       <Button
         variant="secondary"
         shape="circle"
@@ -168,7 +166,7 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
       direction = "vertical",
       width,
       height,
-      fadeColor = "var(--ds-background-100)",
+      fadeColor = "rgb(var(--color-canvas))",
       fadeSize = 40,
       hideFade = false,
       className = "",
@@ -186,7 +184,8 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
     // Merge forwarded ref with internal ref
     const setRefs = useCallback(
       (node: HTMLDivElement | null) => {
-        (innerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        (innerRef as React.MutableRefObject<HTMLDivElement | null>).current =
+          node;
         if (typeof ref === "function") {
           ref(node);
         } else if (ref) {
@@ -206,12 +205,10 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
       setEdges({
         top: hasVertical && el.scrollTop > 1,
         bottom:
-          hasVertical &&
-          el.scrollTop < el.scrollHeight - el.clientHeight - 1,
+          hasVertical && el.scrollTop < el.scrollHeight - el.clientHeight - 1,
         left: hasHorizontal && el.scrollLeft > 1,
         right:
-          hasHorizontal &&
-          el.scrollLeft < el.scrollWidth - el.clientWidth - 1,
+          hasHorizontal && el.scrollLeft < el.scrollWidth - el.clientWidth - 1,
       });
     }, [direction]);
 

@@ -245,10 +245,10 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 
   return (
     <div className="border border-borderDefault rounded-lg overflow-hidden">
-      <div className="p-6" style={{ background: "var(--ds-background-100)" }}>
+      <div className="p-6" style={{ background: "rgb(var(--color-surface))" }}>
         {children}
       </div>
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "rgb(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -260,7 +260,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "var(--ds-background-100)" }}
+            style={{ background: "rgb(var(--color-surface))" }}
           >
             <div className="relative group">
               <button

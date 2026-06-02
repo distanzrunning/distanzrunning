@@ -168,12 +168,7 @@ const defaultSizes: Record<string, string> = {
 // Components
 // ============================================================================
 
-function SheetRoot({
-  children,
-  open,
-  onOpenChange,
-  modal = true,
-}: SheetProps) {
+function SheetRoot({ children, open, onOpenChange, modal = true }: SheetProps) {
   useEffect(() => {
     ensureKeyframes();
   }, []);
@@ -226,7 +221,7 @@ function SheetContent({
           gap: 16,
           background: "rgb(var(--color-surface))",
           boxShadow:
-            "rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0) 0px 0px 0px 0px, rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px 0px, rgba(0,0,0,0.04) 0px 8px 16px -4px, var(--ds-background-200) 0px 0px 0px 1px",
+            "var(--ds-shadow-modal), rgb(var(--color-canvas)) 0px 0px 0px 1px",
           outline: "none",
           transition:
             "color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter",
@@ -244,9 +239,7 @@ function SheetContent({
 
 function SheetHeader({ children }: SheetHeaderProps) {
   return (
-    <div className="flex flex-col sm:text-left p-6 text-left">
-      {children}
-    </div>
+    <div className="flex flex-col sm:text-left p-6 text-left">{children}</div>
   );
 }
 

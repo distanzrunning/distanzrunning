@@ -103,11 +103,21 @@ function removeToast(id: number) {
   }, 350);
 }
 
-
 function CloseIcon() {
   return (
-    <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
-      <path fillRule="evenodd" clipRule="evenodd" d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z" fill="currentColor" />
+    <svg
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12.4697 13.5303L13 14.0607L14.0607 13L13.5303 12.4697L9.06065 7.99999L13.5303 3.53032L14.0607 2.99999L13 1.93933L12.4697 2.46966L7.99999 6.93933L3.53032 2.46966L2.99999 1.93933L1.93933 2.99999L2.46966 3.53032L6.93933 7.99999L2.46966 12.4697L1.93933 13L2.99999 14.0607L3.53032 13.5303L7.99999 9.06065L12.4697 13.5303Z"
+        fill="currentColor"
+      />
     </svg>
   );
 }
@@ -119,7 +129,6 @@ function CloseIcon() {
 function ToastCard({
   item,
   index,
-  total,
   isHovered,
   stackOffset,
   frontHeight,
@@ -128,7 +137,6 @@ function ToastCard({
 }: {
   item: ToastItem;
   index: number;
-  total: number;
   isHovered: boolean;
   stackOffset: number;
   frontHeight: number;
@@ -153,7 +161,7 @@ function ToastCard({
       return () => cancelAnimationFrame(raf2);
     });
     return () => cancelAnimationFrame(raf1);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Geist approach: entry from below, visible = transform:none,
@@ -220,7 +228,8 @@ function ToastCard({
   }
 
   // Message opacity: non-front toasts hide message when not hovered
-  const messageOpacity = entered && !item.exiting && index > 0 && !isHovered ? 0 : 1;
+  const messageOpacity =
+    entered && !item.exiting && index > 0 && !isHovered ? 0 : 1;
 
   return (
     <div
@@ -228,34 +237,43 @@ function ToastCard({
       role="status"
       aria-atomic="true"
       data-exiting={item.exiting || undefined}
-      style={{
-        position: "absolute",
-        bottom: 0,
-        right: 0,
-        width: 420,
-        maxWidth: "min(420px, calc(100vw - 48px))",
-        backgroundColor:
-          item.variant === "success" ? "var(--ds-blue-700)"
-          : item.variant === "warning" ? "var(--ds-amber-800)"
-          : item.variant === "error" ? "var(--ds-red-800)"
-          : "rgb(var(--color-surface))",
-        boxShadow: item.variant === "default" ? "var(--ds-shadow-menu)" : "none",
-        borderRadius: 12,
-        padding: 16,
-        lineHeight: "20px",
-        color:
-          item.variant === "warning" ? "rgb(var(--color-textDefault))"
-          : item.variant !== "default" ? "#fff"
-          : "rgb(var(--color-textDefault))",
-        zIndex,
-        overflow: "hidden",
-        pointerEvents: item.exiting || index >= 3 ? "none" as const : "auto" as const,
-        // CSS custom properties for hover expansion
-        "--y": `${stackY}px`,
-        "--z": `${stackZ}px`,
-        "--max-height": `${measuredHeight}px`,
-        ...containerStyle,
-      } as React.CSSProperties}
+      style={
+        {
+          position: "absolute",
+          bottom: 0,
+          right: 0,
+          width: 420,
+          maxWidth: "min(420px, calc(100vw - 48px))",
+          backgroundColor:
+            item.variant === "success"
+              ? "var(--ds-blue-700)"
+              : item.variant === "warning"
+                ? "var(--ds-amber-800)"
+                : item.variant === "error"
+                  ? "var(--ds-red-800)"
+                  : "rgb(var(--color-surface))",
+          boxShadow:
+            item.variant === "default" ? "var(--ds-shadow-menu)" : "none",
+          borderRadius: 12,
+          padding: 16,
+          lineHeight: "20px",
+          color:
+            item.variant === "warning"
+              ? "rgb(var(--color-textDefault))"
+              : item.variant !== "default"
+                ? "rgb(var(--color-textInverted))"
+                : "rgb(var(--color-textDefault))",
+          zIndex,
+          overflow: "hidden",
+          pointerEvents:
+            item.exiting || index >= 3 ? ("none" as const) : ("auto" as const),
+          // CSS custom properties for hover expansion
+          "--y": `${stackY}px`,
+          "--z": `${stackZ}px`,
+          "--max-height": `${measuredHeight}px`,
+          ...containerStyle,
+        } as React.CSSProperties
+      }
     >
       <div
         style={{
@@ -283,12 +301,27 @@ function ToastCard({
             transition: "opacity 0.4s ease",
           }}
         >
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+            }}
+          >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               {item.jsx ? (
-                <span style={{ display: "block", lineHeight: "20px" }}>{item.jsx}</span>
+                <span style={{ display: "block", lineHeight: "20px" }}>
+                  {item.jsx}
+                </span>
               ) : (
-                <span style={{ display: "block", fontWeight: item.description ? 500 : 400, lineHeight: "20px" }}>
+                <span
+                  style={{
+                    display: "block",
+                    fontWeight: item.description ? 500 : 400,
+                    lineHeight: "20px",
+                  }}
+                >
                   {item.message}
                 </span>
               )}
@@ -304,8 +337,7 @@ function ToastCard({
                   //   warning  → gray-900   (amber bg keeps dark text)
                   //   success/error → rgba(white, .8)   (dark bg, white title)
                   color:
-                    item.variant === "default" ||
-                    item.variant === "warning"
+                    item.variant === "default" || item.variant === "warning"
                       ? "rgb(var(--color-textSubtle))"
                       : "rgba(255, 255, 255, 0.8)",
                   fontSize: 13,
@@ -318,11 +350,21 @@ function ToastCard({
           </div>
 
           {!item.action && (index === 0 || isHovered) && (
-            <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "nowrap" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                flexWrap: "nowrap",
+              }}
+            >
               {item.undo && (
                 <button
                   type="button"
-                  onClick={() => { item.undo?.(); onDismiss(); }}
+                  onClick={() => {
+                    item.undo?.();
+                    onDismiss();
+                  }}
                   aria-label="Undo"
                   style={{
                     background: "none",
@@ -340,14 +382,28 @@ function ToastCard({
                     transition: "background 0.15s ease",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = item.variant === "default" ? "var(--ds-gray-100)" : "rgba(0,0,0,0.1)";
+                    e.currentTarget.style.backgroundColor =
+                      item.variant === "default"
+                        ? "var(--ds-gray-100)"
+                        : "rgba(0,0,0,0.1)";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = "transparent";
                   }}
                 >
-                  <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color: "currentcolor" }}>
-                    <path fillRule="evenodd" clipRule="evenodd" d="M13.5 8C13.5 4.96643 11.0257 2.5 7.96452 2.5C5.42843 2.5 3.29365 4.19393 2.63724 6.5H5.25H6V8H5.25H0.75C0.335787 8 0 7.66421 0 7.25V2.75V2H1.5V2.75V5.23347C2.57851 2.74164 5.06835 1 7.96452 1C11.8461 1 15 4.13001 15 8C15 11.87 11.8461 15 7.96452 15C5.62368 15 3.54872 13.8617 2.27046 12.1122L1.828 11.5066L3.03915 10.6217L3.48161 11.2273C4.48831 12.6051 6.12055 13.5 7.96452 13.5C11.0257 13.5 13.5 11.0336 13.5 8Z" fill="currentColor" />
+                  <svg
+                    height="16"
+                    strokeLinejoin="round"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    style={{ color: "currentcolor" }}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M13.5 8C13.5 4.96643 11.0257 2.5 7.96452 2.5C5.42843 2.5 3.29365 4.19393 2.63724 6.5H5.25H6V8H5.25H0.75C0.335787 8 0 7.66421 0 7.25V2.75V2H1.5V2.75V5.23347C2.57851 2.74164 5.06835 1 7.96452 1C11.8461 1 15 4.13001 15 8C15 11.87 11.8461 15 7.96452 15C5.62368 15 3.54872 13.8617 2.27046 12.1122L1.828 11.5066L3.03915 10.6217L3.48161 11.2273C4.48831 12.6051 6.12055 13.5 7.96452 13.5C11.0257 13.5 13.5 11.0336 13.5 8Z"
+                      fill="currentColor"
+                    />
                   </svg>
                 </button>
               )}
@@ -371,7 +427,10 @@ function ToastCard({
                   transition: "background 0.15s ease",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = item.variant === "default" ? "var(--ds-gray-100)" : "rgba(0,0,0,0.1)";
+                  e.currentTarget.style.backgroundColor =
+                    item.variant === "default"
+                      ? "var(--ds-gray-100)"
+                      : "rgba(0,0,0,0.1)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = "transparent";
@@ -426,7 +485,10 @@ function ToastCard({
             {item.action && (
               <button
                 type="button"
-                onClick={() => { item.action?.onClick(); onDismiss(); }}
+                onClick={() => {
+                  item.action?.onClick();
+                  onDismiss();
+                }}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -435,8 +497,8 @@ function ToastCard({
                   padding: "0 6px",
                   border: "none",
                   borderRadius: 6,
-                  background: "var(--ds-gray-1000)",
-                  color: "#fff",
+                  background: "rgb(var(--color-textDefault))",
+                  color: "rgb(var(--color-textInverted))",
                   fontSize: 14,
                   fontWeight: 500,
                   lineHeight: "20px",
@@ -529,8 +591,9 @@ export function ToastContainer() {
         right: 24,
         zIndex: 5000,
         width: 420,
-        height: isHovered ? totalExpandedHeight : (heights[toasts[0]?.id] || 63),
-        transition: "transform 0.4s ease, bottom 0.4s ease, height 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
+        height: isHovered ? totalExpandedHeight : heights[toasts[0]?.id] || 63,
+        transition:
+          "transform 0.4s ease, bottom 0.4s ease, height 0.35s cubic-bezier(0.25, 0.75, 0.6, 0.98)",
         pointerEvents: "auto",
       }}
       onMouseEnter={() => setIsHovered(true)}
@@ -545,13 +608,12 @@ export function ToastContainer() {
         const effectiveIndex = isExiting ? activeCount : (activeIndex ?? 0);
         const stackOffset = isExiting
           ? cumulative
-          : activeStackOffsets[activeIndex ?? 0] ?? 0;
+          : (activeStackOffsets[activeIndex ?? 0] ?? 0);
         return (
           <ToastCard
             key={item.id}
             item={item}
             index={effectiveIndex}
-            total={activeCount}
             isHovered={isHovered && hasMultiple}
             stackOffset={stackOffset}
             frontHeight={frontHeight}
@@ -569,14 +631,18 @@ export function ToastContainer() {
 // Legacy Toast component (backwards-compatible wrapper)
 // ============================================================================
 
-export function Toast({
-  toast,
-  onDismiss,
-}: {
-  toast: { message: string; isVisible: boolean; isExiting?: boolean; variant?: string; [key: string]: unknown };
+export function Toast(_props: {
+  toast: {
+    message: string;
+    isVisible: boolean;
+    isExiting?: boolean;
+    variant?: string;
+    [key: string]: unknown;
+  };
   onDismiss: () => void;
 }) {
-  // This is a no-op — the ToastContainer handles rendering now
+  void _props;
+  // This is a no-op — the ToastContainer handles rendering now.
   return null;
 }
 
@@ -606,7 +672,12 @@ export function useToast() {
   }, []);
 
   // Return a dummy toast object for backwards compatibility
-  const toast = { message: "", isVisible: false, isExiting: false, variant: "default" as const };
+  const toast = {
+    message: "",
+    isVisible: false,
+    isExiting: false,
+    variant: "default" as const,
+  };
 
   return { toast, showToast, dismissToast };
 }

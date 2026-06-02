@@ -64,7 +64,7 @@ export default function LeaderboardPanel({
   return (
     <div
       style={{
-        background: "var(--ds-background-100)",
+        background: "rgb(var(--color-surface))",
         border: "1px solid rgb(var(--color-borderDefault))",
         borderRadius: 6,
         overflow: "hidden",
@@ -246,7 +246,7 @@ function LeaderboardRow({
                   display: "flex",
                   alignItems: "center",
                   padding: "0 4px",
-                  background: "var(--ds-background-100)",
+                  background: "rgb(var(--color-surface))",
                   borderRadius: 6,
                   transition: "opacity 0.15s ease",
                 }}

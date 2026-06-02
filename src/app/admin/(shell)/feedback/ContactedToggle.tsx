@@ -73,7 +73,7 @@ export default function ContactedToggle({
         color: "var(--ds-green-900)",
       }
     : {
-        background: "var(--ds-background-100)",
+        background: "rgb(var(--color-surface))",
         color: "rgb(var(--color-textSubtle))",
       };
 

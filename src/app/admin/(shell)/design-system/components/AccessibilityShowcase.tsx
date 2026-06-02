@@ -48,7 +48,7 @@ export default function AccessibilityShowcase() {
               <span className="text-green-600">✓</span> Passing Contrast Ratios
             </p>
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-white dark:bg-neutral-950 rounded-lg p-6 border border-borderNeutral">
+              <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
                 <p className="text-textDefault text-base mb-2">
                   Default Text on Canvas
                 </p>
@@ -56,7 +56,7 @@ export default function AccessibilityShowcase() {
                   Ratio: 19.5:1 (Light) / 18.2:1 (Dark)
                 </p>
               </div>
-              <div className="bg-white dark:bg-neutral-950 rounded-lg p-6 border border-borderNeutral">
+              <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
                 <p className="text-textSubtle text-base mb-2">
                   Subtle Text on Canvas
                 </p>
@@ -65,16 +65,16 @@ export default function AccessibilityShowcase() {
                 </p>
               </div>
               <div className="bg-textDefault rounded-lg p-6">
-                <p className="text-white text-base mb-2">
-                  White on Electric Pink
+                <p className="text-textInverted text-base mb-2">
+                  Inverted text on neutral ink
                 </p>
-                <p className="text-xs text-white/80 font-mono">Ratio: 5.8:1</p>
+                <p className="text-xs text-textInverted/80 font-mono">Ratio: 5.8:1</p>
               </div>
               <div className="bg-green-600 rounded-lg p-6">
-                <p className="text-neutral-900 text-base mb-2">
-                  Dark on Volt Green
+                <p className="text-textDefault text-base mb-2">
+                  Default text on success fill
                 </p>
-                <p className="text-xs text-neutral-900/80 font-mono">
+                <p className="text-xs text-textDefault/80 font-mono">
                   Ratio: 14.2:1
                 </p>
               </div>
@@ -88,8 +88,8 @@ export default function AccessibilityShowcase() {
               Ratios
             </p>
             <div className="grid md:grid-cols-2 gap-4 opacity-50">
-              <div className="bg-white dark:bg-neutral-950 rounded-lg p-6 border border-red-200 dark:border-red-800">
-                <p className="text-neutral-300 text-base mb-2">
+              <div className="bg-surface rounded-lg p-6 border border-red-200 dark:border-red-800">
+                <p className="text-textDisabled text-base mb-2">
                   Light Gray on White (Bad)
                 </p>
                 <p className="text-xs text-red-600 font-mono">
@@ -98,9 +98,9 @@ export default function AccessibilityShowcase() {
               </div>
               <div className="bg-textDefault rounded-lg p-6 border border-red-200 dark:border-red-800">
                 <p className="text-purple-800 text-base mb-2">
-                  Purple on Pink (Bad)
+                  Low contrast colour pairing (Bad)
                 </p>
-                <p className="text-xs text-neutral-900 font-mono">
+                <p className="text-xs text-textDefault font-mono">
                   Ratio: 1.8:1 - Fails WCAG AA
                 </p>
               </div>
@@ -179,7 +179,7 @@ export default function AccessibilityShowcase() {
           <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
             <p className="text-sm font-medium mb-4">Focus States</p>
             <div className="space-y-3">
-              <button className="px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium focus:ring-2 focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-offset-2 focus:outline-none transition-all">
+              <button className="px-6 py-3 bg-textDefault text-textInverted rounded-md font-medium focus:ring-2 focus:ring-[var(--ds-focus-ring)] focus:ring-offset-2 focus:outline-none transition-all">
                 Focus Me (Tab to see)
               </button>
               <p className="text-xs text-textSubtle">
@@ -187,7 +187,7 @@ export default function AccessibilityShowcase() {
               </p>
             </div>
             <pre className="mt-4 p-3 bg-canvas rounded text-xs overflow-x-auto">
-              <code>{`<button className="focus:ring-2 focus:ring-neutral-400 dark:ring-neutral-500 focus:ring-offset-2 focus:outline-none">
+              <code>{`<button className="focus:ring-2 focus:ring-[var(--ds-focus-ring)] focus:ring-offset-2 focus:outline-none">
   Button
 </button>`}</code>
             </pre>
@@ -201,7 +201,7 @@ export default function AccessibilityShowcase() {
             <pre className="p-3 bg-canvas rounded text-xs overflow-x-auto">
               <code>{`<a
   href="#main-content"
-  className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-neutral-900 dark:focus:bg-white focus:text-white dark:focus:text-neutral-900 focus:rounded"
+  className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-textDefault focus:text-textInverted focus:rounded"
 >
   Skip to main content
 </a>`}</code>
@@ -214,10 +214,14 @@ export default function AccessibilityShowcase() {
               <p>• Logical flow: top to bottom, left to right</p>
               <p>• Avoid positive tabindex values</p>
               <p>
-                • Use tabindex="-1" for elements that should not be in tab order
+                • Use{" "}
+                <code className="inline-code">tabindex=&quot;-1&quot;</code> for
+                elements that should not be in tab order
               </p>
               <p>
-                • Use tabindex="0" to add non-interactive elements to tab order
+                • Use{" "}
+                <code className="inline-code">tabindex=&quot;0&quot;</code> to
+                add non-interactive elements to tab order
               </p>
             </div>
           </div>
@@ -343,7 +347,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -353,7 +357,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -363,7 +367,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -373,7 +377,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -383,7 +387,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -393,7 +397,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -403,7 +407,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -413,7 +417,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -423,7 +427,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -433,7 +437,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-neutral-400 dark:ring-neutral-500"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
               readOnly
             />
             <span className="text-textSubtle">

@@ -118,12 +118,12 @@ export function CodePreview({
   return (
     <div className="border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
-      <div className="p-6" style={{ background: "var(--ds-background-100)" }}>
+      <div className="p-6" style={{ background: "rgb(var(--color-surface))" }}>
         {children}
       </div>
 
       {/* Accordion trigger */}
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "rgb(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -136,7 +136,7 @@ export function CodePreview({
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto"
-            style={{ background: "var(--ds-background-100)" }}
+            style={{ background: "rgb(var(--color-surface))" }}
           >
             <div className="relative group">
               <button

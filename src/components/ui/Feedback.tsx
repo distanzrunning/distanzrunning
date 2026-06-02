@@ -812,13 +812,13 @@ export function FeedbackInline({
           cursor: default;
         }
         .feedback-inline-wrapper .feedback-emoji--selected {
-          background: var(--ds-pink-300);
-          color: var(--ds-pink-800);
+          background: var(--ds-blue-300);
+          color: var(--ds-blue-800);
         }
         @media (hover: hover) {
           .feedback-inline-wrapper .feedback-emoji:hover {
-            background: var(--ds-pink-300);
-            color: var(--ds-pink-800);
+            background: var(--ds-blue-300);
+            color: var(--ds-blue-800);
           }
         }
         .feedback-inline-wrapper .feedback-textarea-wrapper {
@@ -1484,13 +1484,13 @@ function FeedbackWithSelectFormStyles() {
         transition: background 0.2s ease, border-color 0.2s ease;
       }
       .feedback-emoji--selected {
-        background: var(--ds-pink-300);
-        color: var(--ds-pink-800);
+        background: var(--ds-blue-300);
+        color: var(--ds-blue-800);
       }
       @media (hover: hover) {
         .feedback-emoji:hover {
-          background: var(--ds-pink-300);
-          color: var(--ds-pink-800);
+          background: var(--ds-blue-300);
+          color: var(--ds-blue-800);
         }
       }
       @keyframes feedbackFadeIn {
@@ -1891,13 +1891,13 @@ export function Feedback({
           transition: background 0.2s ease, border-color 0.2s ease;
         }
         .feedback-emoji--selected {
-          background: var(--ds-pink-300);
-          color: var(--ds-pink-800);
+          background: var(--ds-blue-300);
+          color: var(--ds-blue-800);
         }
         @media (hover: hover) {
           .feedback-emoji:hover {
-            background: var(--ds-pink-300);
-            color: var(--ds-pink-800);
+            background: var(--ds-blue-300);
+            color: var(--ds-blue-800);
           }
         }
         @keyframes feedbackFadeIn {

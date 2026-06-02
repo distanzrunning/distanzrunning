@@ -54,7 +54,7 @@ export default function DeleteFeedbackButton({
           height: 28,
           borderRadius: 6,
           border: "1px solid rgb(var(--color-borderDefault))",
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-surface))",
           color: "var(--ds-red-900)",
           cursor: "pointer",
           transition: "background 0.15s ease, color 0.15s ease",

@@ -367,15 +367,15 @@ function BackgroundsSection() {
       {/* Visual demo */}
       <div
         className="mt-10 flex h-[700px] w-full flex-col border border-borderNeutral md:h-[412px] md:flex-row"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "rgb(var(--color-surface))" }}
       >
         <div
           className="flex h-[50%] items-center justify-center border-r border-borderNeutral md:h-full md:w-[50%]"
-          style={{ background: "var(--ds-background-100)" }}
+          style={{ background: "rgb(var(--color-surface))" }}
         >
           <div
             className="relative flex h-[164px] w-[164px] items-center justify-center rounded-[12px] border border-borderNeutral"
-            style={{ background: "var(--ds-background-100)" }}
+            style={{ background: "rgb(var(--color-surface))" }}
           >
             <div
               className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-textSubtle font-mono"
@@ -393,11 +393,11 @@ function BackgroundsSection() {
         </div>
         <div
           className="flex h-[50%] items-center justify-center border-t border-borderNeutral md:h-full md:w-[50%] md:border-t-0"
-          style={{ background: "var(--ds-background-200)" }}
+          style={{ background: "rgb(var(--color-canvas))" }}
         >
           <div
             className="relative flex h-[164px] w-[164px] items-center justify-center rounded-[12px] border border-borderNeutral"
-            style={{ background: "var(--ds-background-100)" }}
+            style={{ background: "rgb(var(--color-surface))" }}
           >
             <div
               className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-textSubtle font-mono"
@@ -455,7 +455,7 @@ function ComponentBackgroundsSection() {
       {/* Visual demo */}
       <div
         className="mt-10 flex w-full flex-col border border-borderNeutral md:flex-row"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "rgb(var(--color-surface))" }}
       >
         <div className="border-borderNeutral p-2 md:p-12">
           <ul>
@@ -580,7 +580,7 @@ function BordersSection() {
       {/* Visual demo */}
       <div
         className="mt-10 flex h-[136px] w-full items-center justify-center border border-borderNeutral"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "rgb(var(--color-surface))" }}
       >
         <button
           className="inline-flex items-center justify-center font-sans font-medium text-sm transition-all duration-150 ease focus:outline-none active:scale-[0.98] active:duration-100"
@@ -589,7 +589,7 @@ function BordersSection() {
             minWidth: "160px",
             padding: "0 12px",
             borderRadius: "6px",
-            background: "var(--ds-background-100)",
+            background: "rgb(var(--color-surface))",
             boxShadow: "0 0 0 1px rgb(var(--color-borderDefault))",
             color: "rgb(var(--color-textDefault))",
           }}
@@ -634,7 +634,7 @@ function HighContrastBackgroundsSection() {
       {/* Visual demo */}
       <div
         className="mt-10 flex h-[260px] w-full flex-col items-center justify-center border border-borderNeutral md:h-[136px] md:flex-row"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "rgb(var(--color-surface))" }}
       >
         <div className="flex h-[65%] w-full items-center justify-center gap-5 border-borderNeutral md:h-full md:w-[50%] md:border-r">
           {/* Gauges */}
@@ -769,7 +769,7 @@ function TextAndIconsSection() {
       {/* Visual demo */}
       <div
         className="mt-10 flex h-[260px] w-full flex-col items-center justify-center border border-borderNeutral md:h-[198px] md:flex-row"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "rgb(var(--color-surface))" }}
       >
         <div className="flex h-[65%] w-[63%] items-center justify-center border-borderNeutral md:h-full md:w-[50%]">
           <div className="flex w-[316px] flex-col gap-1">

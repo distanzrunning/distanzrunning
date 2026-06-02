@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  type ReactNode,
-} from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 
 // ============================================================================
@@ -160,11 +154,15 @@ export function MultiSelect({
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
-          setActiveRow((prev) => prev === -1 ? 0 : Math.min(prev + 1, items.length - 1));
+          setActiveRow((prev) =>
+            prev === -1 ? 0 : Math.min(prev + 1, items.length - 1),
+          );
           break;
         case "ArrowUp":
           e.preventDefault();
-          setActiveRow((prev) => prev === -1 ? items.length - 1 : Math.max(prev - 1, 0));
+          setActiveRow((prev) =>
+            prev === -1 ? items.length - 1 : Math.max(prev - 1, 0),
+          );
           break;
         case "ArrowRight":
           e.preventDefault();
@@ -227,7 +225,7 @@ export function MultiSelect({
         className={`
           inline-flex items-center justify-center select-none cursor-pointer border-none
           transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
-          focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2
           rounded-[var(--ds-radius-small)]
           h-[var(--ds-button-height-medium)] px-[var(--ds-button-padding-medium)] text-button-14 gap-[var(--ds-button-gap-medium)]
           bg-surface text-textDefault
@@ -412,10 +410,13 @@ function MultiSelectRow({
   onAction: () => void;
   onMouseEnter: () => void;
 }) {
-  const [hoverArea, setHoverArea] = useState<"checkbox" | "button" | null>(null);
+  const [hoverArea, setHoverArea] = useState<"checkbox" | "button" | null>(
+    null,
+  );
   // Mouse hover takes priority, then keyboard focus
   const activeArea = hoverArea ?? (isActive ? activeFocus : null);
-  const displayLabel = activeArea === "checkbox" ? checkboxActionLabel : buttonActionLabel;
+  const displayLabel =
+    activeArea === "checkbox" ? checkboxActionLabel : buttonActionLabel;
 
   return (
     <div
@@ -488,14 +489,23 @@ function MultiSelectRow({
                 height: 16,
                 borderRadius: 4,
                 position: "relative",
-                background: isSelected ? "rgb(var(--color-textDefault))" : "transparent",
+                background: isSelected
+                  ? "rgb(var(--color-textDefault))"
+                  : "transparent",
                 border: isSelected
                   ? "1px solid rgb(var(--color-textDefault))"
                   : "1px solid var(--ds-gray-alpha-400)",
-                transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
+                transition:
+                  "border-color 0.2s, background 0.2s, box-shadow 0.2s",
               }}
             >
-              <svg fill="none" height="16" viewBox="0 0 20 20" width="16" style={{ display: "block", flexShrink: 0 }}>
+              <svg
+                fill="none"
+                height="16"
+                viewBox="0 0 20 20"
+                width="16"
+                style={{ display: "block", flexShrink: 0 }}
+              >
                 <path
                   d="M14 7L8.5 12.5L6 10"
                   stroke="var(--ds-background-100)"
@@ -543,7 +553,14 @@ function MultiSelectRow({
         className="multiselect-row-button"
       >
         <div style={{ display: "flex", alignItems: "center" }}>
-          <span style={{ fontSize: 14, lineHeight: "20px", color: "rgb(var(--color-textDefault))", whiteSpace: "nowrap" }}>
+          <span
+            style={{
+              fontSize: 14,
+              lineHeight: "20px",
+              color: "rgb(var(--color-textDefault))",
+              whiteSpace: "nowrap",
+            }}
+          >
             {item.label}
           </span>
         </div>

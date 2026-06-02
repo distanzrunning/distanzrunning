@@ -63,7 +63,7 @@ export function CommandMenuTrigger({ onOpen }: { onOpen: () => void }) {
         padding: 0,
         borderRadius: 6,
         border: "1px solid var(--ds-gray-alpha-400)",
-        background: "var(--ds-background-100)",
+        background: "rgb(var(--color-surface))",
         color: "rgb(var(--color-textDefault))",
         cursor: "text",
         textAlign: "left",

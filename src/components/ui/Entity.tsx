@@ -84,13 +84,23 @@ function EntityField({ children }: EntityFieldProps) {
 }
 
 /** A list container that renders Entity items with optional dividers */
-function EntityList({ children, dividers = true, bordered = false, className = "", style, ...rest }: EntityListProps) {
-  const borderedStyles: React.CSSProperties | undefined = bordered ? {
-    borderRadius: 6,
-    backgroundColor: "rgb(var(--color-surface))",
-    boxShadow: "var(--ds-gray-alpha-400) 0px 0px 0px 1px, var(--ds-background-100) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 6px 0px",
-    overflow: "hidden",
-  } : undefined;
+function EntityList({
+  children,
+  dividers = true,
+  bordered = false,
+  className = "",
+  style,
+  ...rest
+}: EntityListProps) {
+  const borderedStyles: React.CSSProperties | undefined = bordered
+    ? {
+        borderRadius: 6,
+        backgroundColor: "rgb(var(--color-surface))",
+        boxShadow:
+          "var(--ds-gray-alpha-400) 0px 0px 0px 1px, rgb(var(--color-canvas)) 0px 0px 0px 1px, rgba(var(--ds-gray-1000-rgb), 0.04) 0px 4px 6px 0px",
+        overflow: "hidden",
+      }
+    : undefined;
 
   return (
     <ul
@@ -122,7 +132,17 @@ function EntitySkeleton({ width = "100%", height = 20 }: SkeletonProps) {
 // ============================================================================
 
 const Entity = forwardRef<HTMLElement, EntityProps>(
-  ({ children, padding = 16, hoverable = false, className = "", style, ...rest }, ref) => {
+  (
+    {
+      children,
+      padding = 16,
+      hoverable = false,
+      className = "",
+      style,
+      ...rest
+    },
+    ref,
+  ) => {
     if (hoverable) {
       return (
         <button

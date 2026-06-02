@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useId, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useId,
+  useState,
+  type ReactNode,
+} from "react";
 import Checkbox from "./Checkbox";
 
 // ============================================================================
@@ -39,12 +45,12 @@ function RadioIndicator({
   const borderColor = disabled
     ? "rgb(var(--color-textDisabled))"
     : checked
-      ? "var(--ds-pink-900)"
+      ? "var(--ds-blue-900)"
       : "var(--ds-gray-600)";
 
   const dotColor = disabled
     ? "rgb(var(--color-textDisabled))"
-    : "var(--ds-pink-900)";
+    : "var(--ds-blue-900)";
 
   return (
     <span
@@ -193,21 +199,23 @@ export function Choicebox({
         flex flex-1 flex-col
         rounded-md border border-solid
         ${isDisabled ? "cursor-not-allowed" : "cursor-pointer"}
-        ${!isDisabled ? "focus-within:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
+        ${!isDisabled ? "focus-within:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-ring)]" : ""}
         ${className}
       `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        borderColor: isSelected && !isDisabled
-          ? "var(--ds-pink-700)"
-          : showHover
-            ? "rgb(var(--color-borderDefaultHover))"
-            : "rgb(var(--color-borderDefault))",
+        borderColor:
+          isSelected && !isDisabled
+            ? "var(--ds-blue-700)"
+            : showHover
+              ? "rgb(var(--color-borderDefaultHover))"
+              : "rgb(var(--color-borderDefault))",
         background: showHover
           ? "var(--ds-gray-100)"
           : "rgb(var(--color-surface))",
-        transition: "background 0.15s ease, border 0.15s ease, box-shadow 0.15s ease",
+        transition:
+          "background 0.15s ease, border 0.15s ease, box-shadow 0.15s ease",
       }}
     >
       <input
@@ -228,11 +236,12 @@ export function Choicebox({
           isSelected && children ? "rounded-t-md" : "rounded-md"
         }`}
         style={{
-          background: isSelected && !isDisabled
-            ? isHovered
-              ? "var(--ds-pink-200)"
-              : "color-mix(in oklch, var(--ds-pink-100) 40%, var(--ds-background-100))"
-            : "transparent",
+          background:
+            isSelected && !isDisabled
+              ? isHovered
+                ? "var(--ds-blue-200)"
+                : "color-mix(in oklch, var(--ds-blue-100) 40%, var(--ds-background-100))"
+              : "transparent",
           transition: "background 0.15s ease, border 0.15s ease",
         }}
       >
@@ -246,7 +255,7 @@ export function Choicebox({
                 color: isDisabled
                   ? "rgb(var(--color-textDisabled))"
                   : isSelected
-                    ? "var(--ds-pink-700)"
+                    ? "var(--ds-blue-700)"
                     : "rgb(var(--color-textDefault))",
               }}
             >
@@ -262,7 +271,7 @@ export function Choicebox({
                     color: isDisabled
                       ? "rgb(var(--color-textDisabled))"
                       : isSelected
-                        ? "var(--ds-pink-700)"
+                        ? "var(--ds-blue-700)"
                         : "rgb(var(--color-textDefault))",
                   }}
                 >
@@ -276,7 +285,7 @@ export function Choicebox({
                     color: isDisabled
                       ? "rgb(var(--color-textDisabled))"
                       : isSelected
-                        ? "var(--ds-pink-700)"
+                        ? "var(--ds-blue-700)"
                         : "rgb(var(--color-textSubtle))",
                   }}
                 >
@@ -295,7 +304,9 @@ export function Choicebox({
             <Checkbox
               checked={isSelected}
               disabled={isDisabled}
-              color={isSelected && !isDisabled ? "var(--ds-pink-700)" : undefined}
+              color={
+                isSelected && !isDisabled ? "var(--ds-blue-700)" : undefined
+              }
             />
           </span>
         )}
@@ -306,7 +317,7 @@ export function Choicebox({
         <div
           className="flex items-center justify-center px-3 pb-3 pt-3 rounded-b-md overflow-hidden transition-colors hover:bg-[var(--ds-gray-100)]"
           style={{
-            borderTop: `1px solid ${!isDisabled ? "var(--ds-pink-700)" : "rgb(var(--color-borderDefault))"}`,
+            borderTop: `1px solid ${!isDisabled ? "var(--ds-blue-700)" : "rgb(var(--color-borderDefault))"}`,
           }}
         >
           {children}

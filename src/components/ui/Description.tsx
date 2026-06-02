@@ -65,8 +65,8 @@ const DESCRIPTION_CSS = `
     max-width: 250px;
     padding: var(--ds-space-2x) var(--ds-space-3x);
     border-radius: var(--ds-radius-small);
-    background: var(--ds-gray-1000);
-    color: var(--ds-background-100);
+    background: rgb(var(--color-textDefault));
+    color: rgb(var(--color-textInverted));
     font-size: 12px;
     line-height: 16px;
     text-align: center;

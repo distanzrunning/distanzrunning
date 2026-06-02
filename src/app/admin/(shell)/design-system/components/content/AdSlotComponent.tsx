@@ -179,11 +179,11 @@ function CodePreview({ children, componentCode, minHeight = 200 }: CodePreviewPr
     <div className="border border-borderDefault rounded-lg w-full min-w-0 overflow-hidden">
       <div
         className="p-6 flex items-center justify-center"
-        style={{ background: "var(--ds-background-100)", minHeight }}
+        style={{ background: "rgb(var(--color-surface))", minHeight }}
       >
         {children}
       </div>
-      <div style={{ background: "var(--ds-background-200)" }}>
+      <div style={{ background: "rgb(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -195,7 +195,7 @@ function CodePreview({ children, componentCode, minHeight = 200 }: CodePreviewPr
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "var(--ds-background-100)" }}
+            style={{ background: "rgb(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
@@ -427,7 +427,7 @@ export default function AdSlotComponent() {
                   className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border p-6 text-center"
                   style={{
                     borderColor: "rgb(var(--color-borderDefault))",
-                    background: "var(--ds-background-200)",
+                    background: "rgb(var(--color-canvas))",
                   }}
                 >
                   <h4 className="text-heading-16 text-textDefault">

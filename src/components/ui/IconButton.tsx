@@ -67,7 +67,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       ${sizeClasses[size]}
       rounded-md
       transition-colors
-      focus:outline-none focus:ring-2 focus:ring-borderNeutral
+      focus:outline-none focus:ring-2 focus:ring-[var(--ds-focus-ring)]
       active:scale-[0.98] active:duration-100
     `;
 
@@ -95,17 +95,17 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
 
       if (variant === "primary") {
         if (inverse) {
-          return "bg-[var(--ds-background-100)] text-[var(--ds-gray-1000)] hover:bg-[var(--ds-gray-200)]";
+          return "bg-surface text-textDefault hover:bg-[var(--ds-gray-100)]";
         }
         if (ignoreDarkMode) {
           return "bg-[var(--ds-gray-200)] text-textDefault hover:bg-[var(--ds-gray-300)]";
         }
-        return "bg-[var(--ds-gray-200)] dark:bg-[var(--ds-gray-1000)] text-textDefault dark:text-[var(--ds-background-100)] hover:bg-[var(--ds-gray-300)] dark:hover:bg-[var(--ds-gray-900)]";
+        return "bg-[var(--ds-gray-200)] dark:bg-[var(--ds-gray-1000)] text-textDefault dark:text-textInverted hover:bg-[var(--ds-gray-300)] dark:hover:bg-[var(--ds-gray-900)]";
       }
 
       if (variant === "secondary") {
         if (inverse) {
-          return "bg-transparent border border-white text-white hover:bg-white/10";
+          return "bg-transparent border border-[rgb(var(--color-textInverted))] text-textInverted hover:bg-[var(--ds-gray-alpha-100)]";
         }
         if (ignoreDarkMode) {
           return "bg-transparent border border-borderDefaultHover text-textDefault hover:border-[var(--ds-gray-1000)] hover:bg-[var(--ds-gray-100)]";
@@ -115,7 +115,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
 
       if (variant === "tertiary") {
         if (inverse) {
-          return "bg-transparent text-[var(--ds-gray-500)] hover:text-[var(--ds-gray-200)] hover:bg-white/10";
+          return "bg-transparent text-textInverted hover:bg-[var(--ds-gray-alpha-100)]";
         }
         if (ignoreDarkMode) {
           return "bg-transparent text-textSubtler hover:text-textDefault hover:bg-[var(--ds-gray-100)]";

@@ -1,6 +1,13 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useEffect, cloneElement, isValidElement } from "react";
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  cloneElement,
+  isValidElement,
+} from "react";
 import { createPortal } from "react-dom";
 
 // ============================================================================
@@ -47,10 +54,16 @@ const typeStyles: Record<
   "default" | "success" | "error" | "warning",
   { bg: string; color: string }
 > = {
-  default: { bg: "var(--ds-gray-1000)", color: "var(--ds-background-100)" },
-  success: { bg: "var(--ds-blue-700)", color: "#fff" },
-  error: { bg: "var(--ds-red-700)", color: "#fff" },
-  warning: { bg: "var(--ds-amber-800)", color: "#fff" },
+  default: {
+    bg: "rgb(var(--color-textDefault))",
+    color: "rgb(var(--color-textInverted))",
+  },
+  success: {
+    bg: "var(--ds-blue-700)",
+    color: "rgb(var(--color-textInverted))",
+  },
+  error: { bg: "var(--ds-red-700)", color: "rgb(var(--color-textInverted))" },
+  warning: { bg: "var(--ds-amber-800)", color: "var(--ds-gray-1000)" },
 };
 
 // ============================================================================
@@ -271,50 +284,53 @@ export function Tooltip({
     }
   };
 
-  const tooltipElement = isActive && mounted
-    ? createPortal(
-        <div
-          ref={tooltipRef}
-          role="tooltip"
-          style={{
-            // position:fixed (not absolute) so the tooltip is
-            // anchored to the viewport rather than the page —
-            // sticky / fixed triggers (e.g. the race-detail map
-            // controls) keep the tooltip glued to the button
-            // through scroll without any recompute, since both
-            // are then viewport-anchored. Non-sticky triggers
-            // are handled by the scroll listener above.
-            position: "fixed",
-            top: isPositioned ? position.top : -9999,
-            left: isPositioned ? position.left : -9999,
-            zIndex: 9999,
-            pointerEvents: "none",
-            opacity: isPositioned ? 1 : 0,
-            animation: isPositioned ? "tooltip-fade-in 0.15s ease-out" : "none",
-          }}
-        >
+  const tooltipElement =
+    isActive && mounted
+      ? createPortal(
           <div
+            ref={tooltipRef}
+            role="tooltip"
             style={{
-              position: "relative",
-              backgroundColor: styles.bg,
-              color: styles.color,
-              fontSize: 13,
-              lineHeight: "20px",
-              fontWeight: 400,
-              padding: "6px 12px",
-              borderRadius: 8,
-              maxWidth: 250,
-              textAlign,
-              boxShadow: "var(--ds-shadow-tooltip)",
+              // position:fixed (not absolute) so the tooltip is
+              // anchored to the viewport rather than the page —
+              // sticky / fixed triggers (e.g. the race-detail map
+              // controls) keep the tooltip glued to the button
+              // through scroll without any recompute, since both
+              // are then viewport-anchored. Non-sticky triggers
+              // are handled by the scroll listener above.
+              position: "fixed",
+              top: isPositioned ? position.top : -9999,
+              left: isPositioned ? position.left : -9999,
+              zIndex: 9999,
+              pointerEvents: "none",
+              opacity: isPositioned ? 1 : 0,
+              animation: isPositioned
+                ? "tooltip-fade-in 0.15s ease-out"
+                : "none",
             }}
           >
-            {content}
-            {showArrow && <span style={getArrowStyle()} />}
-          </div>
-        </div>,
-        document.body,
-      )
-    : null;
+            <div
+              style={{
+                position: "relative",
+                backgroundColor: styles.bg,
+                color: styles.color,
+                fontSize: 13,
+                lineHeight: "20px",
+                fontWeight: 400,
+                padding: "6px 12px",
+                borderRadius: 8,
+                maxWidth: 250,
+                textAlign,
+                boxShadow: "var(--ds-shadow-tooltip)",
+              }}
+            >
+              {content}
+              {showArrow && <span style={getArrowStyle()} />}
+            </div>
+          </div>,
+          document.body,
+        )
+      : null;
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -341,7 +357,9 @@ export function Tooltip({
     cloneElement(children as React.ReactElement<Record<string, unknown>>, {
       ref: triggerRef,
       ...triggerProps,
-      tabIndex: (children as React.ReactElement<Record<string, unknown>>).props.tabIndex ?? 0,
+      tabIndex:
+        (children as React.ReactElement<Record<string, unknown>>).props
+          .tabIndex ?? 0,
     })
   ) : (
     <span

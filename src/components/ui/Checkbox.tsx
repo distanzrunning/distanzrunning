@@ -108,10 +108,11 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               w-4 h-4 rounded-[4px] border border-solid
               ${getBoxClasses()}
               ${!disabled && !isActive ? "group-hover/checkbox:bg-[var(--ds-gray-200)]" : ""}
-              ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]"}
+              ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-ring)]"}
             `}
             style={{
-              transition: "border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
+              transition:
+                "border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
               ...getBoxStyles(),
             }}
           >
@@ -137,7 +138,11 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
                   x2="12"
                   y1="8"
                   y2="8"
-                  stroke={isDisabledIndeterminate ? "rgb(var(--color-textDisabled))" : "rgb(var(--color-textSubtler))"}
+                  stroke={
+                    isDisabledIndeterminate
+                      ? "rgb(var(--color-textDisabled))"
+                      : "rgb(var(--color-textSubtler))"
+                  }
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
@@ -147,7 +152,9 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           </span>
         </span>
         {label && (
-          <span className={`text-copy-14 select-none ${disabled ? "text-textDisabled" : "text-textDefault"}`}>
+          <span
+            className={`text-copy-14 select-none ${disabled ? "text-textDisabled" : "text-textDefault"}`}
+          >
             {label}
           </span>
         )}

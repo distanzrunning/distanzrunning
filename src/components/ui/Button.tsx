@@ -208,13 +208,13 @@ const getVariantClasses = (
       `;
     case "error":
       return `
-        bg-[var(--ds-red-800)] text-white
+        bg-[var(--ds-red-800)] text-textInverted dark:text-[var(--ds-red-100)]
         hover:bg-[color-mix(in_srgb,var(--ds-red-800),black_15%)]
         dark:hover:bg-[var(--ds-red-900)]
       `;
     case "warning":
       return `
-        bg-[var(--ds-amber-800)] text-textDefault
+        bg-[var(--ds-amber-800)] text-[var(--ds-gray-1000)] dark:text-[var(--ds-amber-100)]
         hover:bg-[color-mix(in_srgb,var(--ds-amber-800),black_15%)]
       `;
     case "secondary":
@@ -305,7 +305,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       inline-flex items-center justify-center
       select-none
       transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
-      focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2
     `;
 
     const sizeClasses = getSizeClasses(size, shape);
@@ -405,7 +405,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       inline-flex items-center justify-center
       select-none
       transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
-      focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2
       no-underline
     `;
 

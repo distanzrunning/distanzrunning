@@ -68,8 +68,8 @@ function DefaultFallback({ width, height }: Dimensions) {
     background: "rgb(var(--color-surface))",
   };
   const ctaStyle: React.CSSProperties = {
-    background: "var(--ds-gray-1000)",
-    color: "var(--ds-background-100)",
+    background: "rgb(var(--color-textDefault))",
+    color: "rgb(var(--color-textInverted))",
   };
 
   // Very small mobile banner (≤ 60px tall) — just an inline link
@@ -296,7 +296,7 @@ export function AdSlot({
         }}
       >
         {showFallback ? (
-          fallback ?? <DefaultFallback {...dimensions} />
+          (fallback ?? <DefaultFallback {...dimensions} />)
         ) : (
           <ins
             ref={insRef}

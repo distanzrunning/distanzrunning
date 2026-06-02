@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useRef,
-} from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 export interface TabItem {
@@ -63,7 +58,7 @@ function ensureTabStyles() {
     }
     .ds-tabs-tab:focus-visible {
       box-shadow: 0 0 0 2px var(--ds-background-100),
-        0 0 0 4px var(--ds-focus-color, var(--ds-gray-alpha-600));
+        0 0 0 4px var(--ds-focus-ring);
       border-radius: 6px;
     }
     /* Default-variant hover: non-selected tabs (including disabled)
@@ -195,10 +190,10 @@ export function Tabs({
               whiteSpace: "nowrap",
               cursor: isDisabled ? "not-allowed" : "pointer",
               color: isDisabled
-                ? "var(--ds-gray-900)"
+                ? "rgb(var(--color-textDisabled))"
                 : isSelected
-                  ? "var(--ds-background-100)"
-                  : "var(--ds-gray-1000)",
+                  ? "rgb(var(--color-textInverted))"
+                  : "rgb(var(--color-textDefault))",
               backgroundColor: isDisabled
                 ? "var(--ds-gray-200)"
                 : isSelected

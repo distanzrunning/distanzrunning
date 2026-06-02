@@ -223,13 +223,13 @@ function CodePreview({
       <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "var(--ds-background-100)" }}
+        style={{ background: "rgb(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "var(--ds-background-200)" }}
+        style={{ background: "rgb(var(--color-canvas))" }}
       >
         <button
           type="button"
@@ -242,7 +242,7 @@ function CodePreview({
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "var(--ds-background-100)" }}>
+            style={{ background: "rgb(var(--color-surface))" }}>
             <div className="relative group">
               <button
                 onClick={handleCopy}
@@ -316,7 +316,7 @@ function HeaderInPagePreview() {
       <div
         className="w-full"
         style={{
-          background: "var(--ds-background-100)",
+          background: "rgb(var(--color-surface))",
           border: "1px solid rgb(var(--color-borderDefault))",
           borderRadius: 6,
           minHeight: 60,
@@ -346,7 +346,7 @@ function HeaderAnatomy() {
       className="flex w-full items-center justify-between px-3"
       style={{
         height: 50,
-        background: "var(--ds-background-100)",
+        background: "rgb(var(--color-surface))",
         border: "1px solid rgb(var(--color-borderDefault))",
         borderRadius: 6,
       }}
