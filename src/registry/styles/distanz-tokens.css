@@ -142,23 +142,23 @@
        bg-100 = default canvas (the dominant surface, used most often)
        bg-200 = secondary differentiation (used sparingly — sections,
                 callout backgrounds, where you want subtle contrast)
-       In dark mode bg-100 = Material's recommended #121212 base; bg-200
-       lifts via white overlay (~7% = #1F1F1F) for "subtle differentiation". */
+       In dark mode (Geist-verbatim) bg-100 = #0A0A0A (4%) base; bg-200 =
+       #000 (0%) — note bg-200 is now DARKER than bg-100, not a lighter lift. */
     /* COLOR — light value triplets
        sRGB channel triplets — the single source of truth. Only these
        flip between themes. Resolved to colours once below; wide-gamut
        OKLCH layered on top in the @media(p3) blocks. */
     --ds-background-100-value: 0, 0%, 100%;
-    --ds-background-200-value: 0, 0%, 96%;
-    --ds-gray-100-value: 0, 0%, 94%;
+    --ds-background-200-value: 0, 0%, 98%;
+    --ds-gray-100-value: 0, 0%, 95%;
     --ds-gray-200-value: 0, 0%, 92%;
     --ds-gray-300-value: 0, 0%, 90%;
-    --ds-gray-400-value: 0, 0%, 86%;
-    --ds-gray-500-value: 0, 0%, 70%;
-    --ds-gray-600-value: 0, 0%, 60%;
+    --ds-gray-400-value: 0, 0%, 92%;
+    --ds-gray-500-value: 0, 0%, 79%;
+    --ds-gray-600-value: 0, 0%, 66%;
     --ds-gray-700-value: 0, 0%, 56%;
-    --ds-gray-800-value: 0, 0%, 30%;
-    --ds-gray-900-value: 0, 0%, 20%;
+    --ds-gray-800-value: 0, 0%, 49%;
+    --ds-gray-900-value: 0, 0%, 30%;
     --ds-gray-1000-value: 0, 0%, 9%;
     --ds-blue-100-value: 212, 100%, 97%;
     --ds-blue-200-value: 211, 100%, 96%;
@@ -240,7 +240,7 @@
     --ds-gray-alpha-600: rgba(0, 0, 0, 0.34);
     --ds-gray-alpha-700: rgba(0, 0, 0, 0.44);
     --ds-gray-alpha-800: rgba(0, 0, 0, 0.51);
-    --ds-gray-alpha-900: rgba(0, 0, 0, 0.61);
+    --ds-gray-alpha-900: rgba(0, 0, 0, 0.7);
     --ds-gray-alpha-1000: rgba(0, 0, 0, 0.91);
 
     /* ─────────────────────────────────────────────────────────────────────────
@@ -532,28 +532,27 @@
        In dark mode, the entire scale shifts to work on dark backgrounds
        ───────────────────────────────────────────────────────────────────────── */
 
-    /* Background Scale - Dark mode */
-    /* Dark backgrounds — Geist convention preserved (bg-100 = default
-       canvas, bg-200 = secondary). Material's #121212 is the canonical
-       dark surface so bg-100 takes it. bg-200 lifts to #1F1F1F (~7%
-       white overlay per Material elevation spec) for "subtle
-       differentiation" sections. Drops pure black (#000) per
-       Material/Apple/NN-G guidance. */
+    /* Background Scale - Dark mode (Geist-verbatim) */
+    /* bg-100 = #0A0A0A (4%) default canvas; bg-200 = #000 (0%). Geist uses
+       pure black for bg-200, which sits BELOW bg-100 — the opposite of the
+       prior Material model (where bg-200 #1F1F1F was a lighter lift). If the
+       pure-black recessed tone reads too harsh, this is an early tweak
+       candidate (e.g. nudge bg-200 to ~3% / #080808). */
     /* COLOR — dark value triplets
        sRGB channel triplets — the single source of truth. Only these
        flip between themes. Resolved to colours once below; wide-gamut
        OKLCH layered on top in the @media(p3) blocks. */
-    --ds-background-100-value: 0, 0%, 7%;
-    --ds-background-200-value: 0, 0%, 12%;
-    --ds-gray-100-value: 0, 0%, 19%;
-    --ds-gray-200-value: 0, 0%, 23%;
-    --ds-gray-300-value: 0, 0%, 27%;
-    --ds-gray-400-value: 0, 0%, 33%;
-    --ds-gray-500-value: 0, 0%, 35%;
-    --ds-gray-600-value: 0, 0%, 45%;
+    --ds-background-100-value: 0, 0%, 4%;
+    --ds-background-200-value: 0, 0%, 0%;
+    --ds-gray-100-value: 0, 0%, 10%;
+    --ds-gray-200-value: 0, 0%, 12%;
+    --ds-gray-300-value: 0, 0%, 16%;
+    --ds-gray-400-value: 0, 0%, 18%;
+    --ds-gray-500-value: 0, 0%, 27%;
+    --ds-gray-600-value: 0, 0%, 53%;
     --ds-gray-700-value: 0, 0%, 56%;
-    --ds-gray-800-value: 0, 0%, 70%;
-    --ds-gray-900-value: 0, 0%, 83%;
+    --ds-gray-800-value: 0, 0%, 49%;
+    --ds-gray-900-value: 0, 0%, 63%;
     --ds-gray-1000-value: 0, 0%, 93%;
     --ds-blue-100-value: 218, 81%, 13%;
     --ds-blue-200-value: 213, 95%, 15%;
@@ -815,17 +814,22 @@
     --color-borderNeutralSubtle: var(--color-borderSubtle);
 
     /* Background/Surface colors */
-    /* Dark elevation ladder (Apple base→elevated; brighter = higher):
-       canvas/body #121212 → bg-200 page-wrapper/shell #1F1F1F → surface
-       (raised cards/menus) #262626 → gray-100 #303030 (hover) → #3A3A3A
-       (active) → #444 (selected). Each ~14 apart; surface is its OWN value
-       (not bg-200) so cards lift off the page wrappers that use bg-200.
-       Keeping surface OFF the gray-100 hover tone is what lets hover and
-       nested/selected states read against the surface they sit on. */
-    --color-surface: 0, 0%, 15%; /* #262626 — raised surfaces (cards, menus, popovers). Decoupled from bg-200 (the recessed page tone, #1F1F1F) so cards lift off the page; gray-100/200/300 (#303030/#3A3A3A/#444) are the hover/active/selected steps above surface. */
+    /* NOTE — dark scale is now Geist-verbatim, which changes the elevation
+       story and needs reconciliation (tracked as the next tweak):
+         • canvas/bg-100 = #0A0A0A (4%); bg-200 = #000 (0%, now DARKER than
+           bg-100 — inverts the prior "bg-200 is the lighter wrapper" model).
+         • Geist grays: gray-100 #1A1A1A (10%) · 200 #1F1F1F (12%) ·
+           300 #292929 (16%) — these are component-bg tones for a near-black
+           canvas, NOT hover tones above a lifted surface.
+         • surface below is still the prior literal #262626 (15%), so it sits
+           ABOVE gray-100/200 — the "hover one step above surface" pattern no
+           longer holds. Decide: either drop surface to a Geist-consistent
+           tone (≈ gray-100 #1A1A1A) and use 200/300 as hovers, or keep #262626
+           and remap the interaction tones. */
+    --color-surface: 0, 0%, 15%; /* #262626 — raised surfaces (cards, menus, popovers). Prior literal, retained pending the elevation reconciliation noted above. */
     --color-surfaceSubtle: var(--ds-gray-200-value); /* Subtle elevation */
     --color-surfaceWarm: var(--ds-gray-200-value); /* Warm-tinted surface */
-    --color-canvas: var(--ds-background-100-value); /* Page base — the DARKEST tone (#121212), so raised surfaces advance above it */
+    --color-canvas: var(--ds-background-100-value); /* Page base — bg-100 #0A0A0A (Geist-verbatim) */
 
     /* Elevated Surfaces - Progressive lightening */
     --color-surfaceElevated1: var(--ds-gray-200-value); /* Level 1 */

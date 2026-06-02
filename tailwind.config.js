@@ -33,15 +33,15 @@ module.exports = {
         // Canonical source: the --ds-*-value triplets in distanz-tokens.css
         // (:root/.light). Keep these hex values in sync with those triplets.
         gray: {
-          100: "#F0F0F0",
+          100: "#F2F2F2",
           200: "#EBEBEB",
-          300: "#E5E5E5",
-          400: "#DCDCDC",
-          500: "#B3B3B3",
-          600: "#999999",
+          300: "#E6E6E6",
+          400: "#EBEBEB",
+          500: "#C9C9C9",
+          600: "#A8A8A8",
           700: "#8F8F8F",
-          800: "#4D4D4D",
-          900: "#333333",
+          800: "#7D7D7D",
+          900: "#4D4D4D",
           1000: "#171717",
         },
 
