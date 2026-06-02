@@ -138,10 +138,10 @@ export default async function FeedbackDashboardPage({
               className="text-heading-32"
               style={{
                 margin: 0,
-                color: "var(--ds-gray-1000)",
+                color: "rgb(var(--color-textDefault))",
               }}
             >
-              <span style={{ color: "var(--ds-gray-700)" }}>Search: </span>
+              <span style={{ color: "rgb(var(--color-textSubtler))" }}>Search: </span>
               <span style={{ wordBreak: "break-word" }}>{query}</span>
             </h1>
           </header>

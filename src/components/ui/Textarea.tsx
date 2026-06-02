@@ -99,7 +99,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             style={{
               fontSize: 13,
               lineHeight: "20px",
-              color: "var(--ds-gray-900)",
+              color: "rgb(var(--color-textSubtle))",
               marginBottom: 8,
             }}
           >
@@ -139,7 +139,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 : "rgb(var(--color-surface))",
               fontSize: 14,
               lineHeight: "20px",
-              color: disabled ? "var(--ds-gray-700)" : "var(--ds-gray-1000)",
+              color: disabled ? "rgb(var(--color-textSubtler))" : "rgb(var(--color-textDefault))",
               fontFamily: "inherit",
               padding: 12,
               resize: "vertical",
@@ -180,7 +180,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               marginTop: 8,
               fontSize: 13,
               lineHeight: "20px",
-              color: "var(--ds-gray-900)",
+              color: "rgb(var(--color-textSubtle))",
             }}
           >
             {helperText}

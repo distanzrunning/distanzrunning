@@ -230,7 +230,7 @@ export function MultiSelect({
           focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2
           rounded-[var(--ds-radius-small)]
           h-[var(--ds-button-height-medium)] px-[var(--ds-button-padding-medium)] text-button-14 gap-[var(--ds-button-gap-medium)]
-          bg-surface text-[var(--ds-gray-1000)]
+          bg-surface text-textDefault
           shadow-[0_0_0_1px_var(--ds-gray-400)]
           hover:bg-[var(--ds-gray-100)] hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
           dark:hover:bg-[var(--ds-gray-200)] dark:hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
@@ -488,9 +488,9 @@ function MultiSelectRow({
                 height: 16,
                 borderRadius: 4,
                 position: "relative",
-                background: isSelected ? "var(--ds-gray-1000)" : "transparent",
+                background: isSelected ? "rgb(var(--color-textDefault))" : "transparent",
                 border: isSelected
-                  ? "1px solid var(--ds-gray-1000)"
+                  ? "1px solid rgb(var(--color-textDefault))"
                   : "1px solid var(--ds-gray-alpha-400)",
                 transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
               }}
@@ -543,7 +543,7 @@ function MultiSelectRow({
         className="multiselect-row-button"
       >
         <div style={{ display: "flex", alignItems: "center" }}>
-          <span style={{ fontSize: 14, lineHeight: "20px", color: "var(--ds-gray-1000)", whiteSpace: "nowrap" }}>
+          <span style={{ fontSize: 14, lineHeight: "20px", color: "rgb(var(--color-textDefault))", whiteSpace: "nowrap" }}>
             {item.label}
           </span>
         </div>
@@ -556,7 +556,7 @@ function MultiSelectRow({
               opacity: isActive ? 1 : 0,
               minWidth: 64,
               textAlign: "right",
-              color: "var(--ds-gray-900)",
+              color: "rgb(var(--color-textSubtle))",
               marginLeft: "auto",
               padding: "2px 4px",
               borderRadius: 2,

@@ -257,7 +257,7 @@ function SheetTitle({ children }: SheetTitleProps) {
       style={{
         fontSize: 18,
         lineHeight: "28px",
-        color: "var(--ds-gray-1000)",
+        color: "rgb(var(--color-textDefault))",
       }}
     >
       {children}
@@ -271,7 +271,7 @@ function SheetDescription({ children }: SheetDescriptionProps) {
       style={{
         fontSize: 14,
         lineHeight: "20px",
-        color: "var(--ds-gray-700)",
+        color: "rgb(var(--color-textSubtler))",
       }}
     >
       {children}
@@ -286,7 +286,7 @@ function SheetBody({ children }: { children: React.ReactNode }) {
       style={{
         fontSize: 14,
         lineHeight: "20px",
-        color: "var(--ds-gray-1000)",
+        color: "rgb(var(--color-textDefault))",
       }}
     >
       {children}

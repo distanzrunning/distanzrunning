@@ -311,11 +311,11 @@ export default function MobileNavDrawer({
                       key={s.id}
                       type="button"
                       onClick={() => setActiveSection(s.id)}
-                      className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-base text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
+                      className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-base text-textSubtle transition-colors hover:bg-[var(--ds-gray-100)] hover:text-textDefault"
                     >
                       <span>{s.label}</span>
                       <ChevronRight
-                        className="size-4 text-[color:var(--ds-gray-700)]"
+                        className="size-4 text-textSubtler"
                         aria-hidden
                       />
                     </button>
@@ -340,7 +340,7 @@ export default function MobileNavDrawer({
               on the right. Search opens the global full-viewport
               SearchProvider dialog; we close the drawer first so
               the two never stack. */}
-          <div className="flex items-center justify-between gap-2 border-t border-[color:var(--ds-gray-400)] px-5 py-4">
+          <div className="flex items-center justify-between gap-2 border-t border-borderDefault px-5 py-4">
             <Button
               variant="secondary"
               shape="rounded"
@@ -389,11 +389,11 @@ function SectionDetail({
             type="button"
             onClick={onBack}
             aria-label="Back to all sections"
-            className="grid size-7 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-surface text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] dark:bg-surface dark:hover:bg-[color:var(--ds-gray-100)]"
+            className="grid size-7 place-items-center rounded-md border border-borderDefault bg-surface text-textDefault transition-colors hover:bg-[var(--ds-gray-100)] dark:bg-surface dark:hover:bg-[var(--ds-gray-100)]"
           >
             <ArrowLeft className="size-4" aria-hidden />
           </button>
-          <h2 className="text-[18px] leading-6 font-medium text-[color:var(--ds-gray-1000)]">
+          <h2 className="text-[18px] leading-6 font-medium text-textDefault">
             {section.label}
           </h2>
         </div>
@@ -408,7 +408,7 @@ function SectionDetail({
 
       {/* Featured card — pinned to the bottom of the pane */}
       {section.featured && section.featuredHref && (
-        <div className="mt-auto border-t border-[color:var(--ds-gray-400)] p-4">
+        <div className="mt-auto border-t border-borderDefault p-4">
           <div className="mx-auto w-full max-w-md">
             <MobileFeaturedCard
               href={section.featuredHref}
@@ -437,7 +437,7 @@ function MobileSubItem({
     <Link
       href={item.href}
       onClick={onClick}
-      className="flex items-center rounded-lg px-3 py-2 text-base text-[color:var(--ds-gray-900)] transition-colors hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)]"
+      className="flex items-center rounded-lg px-3 py-2 text-base text-textSubtle transition-colors hover:bg-[var(--ds-gray-100)] hover:text-textDefault"
     >
       <span>{item.label}</span>
     </Link>

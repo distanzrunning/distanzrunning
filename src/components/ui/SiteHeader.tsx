@@ -156,7 +156,7 @@ export default function SiteHeader({
           <Link
             href="/"
             aria-label="Distanz Running — home"
-            className="inline-flex h-10 items-center px-1 text-[color:var(--ds-gray-1000)]"
+            className="inline-flex h-10 items-center px-1 text-textDefault"
           >
             {/* Inline SVG via <Wordmark /> — single render, no network
                 request, no light/dark download swap. Colour follows
@@ -229,7 +229,7 @@ export default function SiteHeader({
               aria-expanded={mobileOpen}
               data-mobile-nav-toggle
               onClick={() => setMobileOpen((prev) => !prev)}
-              className="pointer-events-auto relative z-[101] grid size-7 place-items-center rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] text-[color:var(--ds-gray-1000)] transition-colors hover:bg-[color:var(--ds-gray-100)] md:hidden dark:bg-[color:var(--ds-background-100)] dark:hover:bg-[color:var(--ds-gray-100)]"
+              className="pointer-events-auto relative z-[101] grid size-7 place-items-center rounded-md border border-borderDefault bg-canvas text-textDefault transition-colors hover:bg-[var(--ds-gray-100)] md:hidden dark:bg-canvas dark:hover:bg-[var(--ds-gray-100)]"
             >
               {mobileOpen ? (
                 <svg

@@ -198,8 +198,8 @@ function CodePreview({
           [
             {
               content: line,
-              color: "var(--ds-gray-1000)",
-              darkColor: "var(--ds-gray-1000)",
+              color: "rgb(var(--color-textDefault))",
+              darkColor: "rgb(var(--color-textDefault))",
             },
           ] as DualThemeToken[],
       );
@@ -209,7 +209,7 @@ function CodePreview({
     setTimeout(() => setCopied(false), 1000);
   }, [componentCode]);
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
         style={{ background: "var(--ds-background-100)" }}
@@ -223,20 +223,20 @@ function CodePreview({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
@@ -484,15 +484,15 @@ function AnatomyDemo() {
       />
       <ul
         className="flex flex-col gap-3 text-copy-13 leading-[1.5]"
-        style={{ color: "var(--ds-gray-900)" }}
+        style={{ color: "rgb(var(--color-textSubtle))" }}
       >
         <li>
-          <strong style={{ color: "var(--ds-gray-1000)" }}>Image —</strong>{" "}
+          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Image —</strong>{" "}
           16/8.75 cinematic ratio. Starts at scale 104% and settles to
           100% on hover so the photo &quot;sharpens into place.&quot;
         </li>
         <li>
-          <strong style={{ color: "var(--ds-gray-1000)" }}>
+          <strong style={{ color: "rgb(var(--color-textDefault))" }}>
             Category Badge —
           </strong>{" "}
           inverted Badge ({" "}
@@ -501,18 +501,18 @@ function AnatomyDemo() {
           against any photo.
         </li>
         <li>
-          <strong style={{ color: "var(--ds-gray-1000)" }}>Title —</strong>{" "}
+          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Title —</strong>{" "}
           <code>text-heading-20</code>, line-clamped to 2 lines. The
           title&apos;s anchor carries the card-wide click overlay (
           <code>::after</code> spans the whole article).
         </li>
         <li>
-          <strong style={{ color: "var(--ds-gray-1000)" }}>Location —</strong>{" "}
+          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Location —</strong>{" "}
           <code>text-copy-14</code>, single-line truncated. Pre-formatted
           by the caller as <code>City, State, Country</code>.
         </li>
         <li>
-          <strong style={{ color: "var(--ds-gray-1000)" }}>Date pill —</strong>{" "}
+          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Date pill —</strong>{" "}
           gray-300 pill at <code>h-7</code> / <code>text-copy-13</code>.
           Formats <code>eventDate</code> as <code>d MMM, yyyy</code>.
           Vertically centered against the title + location stack.
@@ -558,7 +558,7 @@ function HomepageRowDemo() {
         aria-label="Scroll races left"
         onClick={() => scrollByCard(-1)}
         disabled={!canScrollPrev}
-        className="absolute left-0 top-1/2 z-20 hidden size-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] shadow-sm transition-opacity hover:bg-[color:var(--ds-gray-100)] disabled:pointer-events-none disabled:opacity-0 sm:flex dark:bg-[color:var(--ds-background-200)]"
+        className="absolute left-0 top-1/2 z-20 hidden size-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-borderDefault bg-[color:var(--ds-background-100)] text-textDefault shadow-sm transition-opacity hover:bg-[color:var(--ds-gray-100)] disabled:pointer-events-none disabled:opacity-0 sm:flex dark:bg-[color:var(--ds-background-200)]"
       >
         <ChevronLeft className="size-4" aria-hidden />
       </button>
@@ -567,7 +567,7 @@ function HomepageRowDemo() {
         aria-label="Scroll races right"
         onClick={() => scrollByCard(1)}
         disabled={!canScrollNext}
-        className="absolute right-0 top-1/2 z-20 hidden size-8 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] shadow-sm transition-opacity hover:bg-[color:var(--ds-gray-100)] disabled:pointer-events-none disabled:opacity-0 sm:flex dark:bg-[color:var(--ds-background-200)]"
+        className="absolute right-0 top-1/2 z-20 hidden size-8 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-borderDefault bg-[color:var(--ds-background-100)] text-textDefault shadow-sm transition-opacity hover:bg-[color:var(--ds-gray-100)] disabled:pointer-events-none disabled:opacity-0 sm:flex dark:bg-[color:var(--ds-background-200)]"
       >
         <ChevronRight className="size-4" aria-hidden />
       </button>
@@ -629,12 +629,12 @@ export default function RaceCardComponent() {
           style={{ lineHeight: 1.6 }}
         >
           <li>
-            <strong style={{ color: "var(--ds-gray-1000)" }}>default</strong> —
+            <strong style={{ color: "rgb(var(--color-textDefault))" }}>default</strong> —
             homepage &quot;Upcoming races&quot; row. No hover affordance
             beyond the image settle-zoom.
           </li>
           <li>
-            <strong style={{ color: "var(--ds-gray-1000)" }}>index</strong> —
+            <strong style={{ color: "rgb(var(--color-textDefault))" }}>index</strong> —
             <code> /races</code> grid. Adds a glassy hover overlay over
             the image with three stat columns (Surface / Elevation /
             Price) that fades in on group hover. Outer corners use
@@ -743,12 +743,12 @@ export default function RaceCardComponent() {
           style={{ lineHeight: 1.6 }}
         >
           <li>
-            <strong style={{ color: "var(--ds-gray-1000)" }}>Surface —</strong>{" "}
+            <strong style={{ color: "rgb(var(--color-textDefault))" }}>Surface —</strong>{" "}
             value from <code>surface</code>; <code>surfaceBreakdown</code>{" "}
             shows beneath as the detail line.
           </li>
           <li>
-            <strong style={{ color: "var(--ds-gray-1000)" }}>
+            <strong style={{ color: "rgb(var(--color-textDefault))" }}>
               Elevation —
             </strong>{" "}
             <code>profile</code> (Flat / Rolling / Hilly) is the headline;{" "}
@@ -757,7 +757,7 @@ export default function RaceCardComponent() {
             <code>UnitsContext</code>.
           </li>
           <li>
-            <strong style={{ color: "var(--ds-gray-1000)" }}>Price —</strong>{" "}
+            <strong style={{ color: "rgb(var(--color-textDefault))" }}>Price —</strong>{" "}
             converted to the visitor&apos;s preferred display currency
             (or kept in the source currency when set to{" "}
             <code>local</code>) via <code>convertCurrencySync</code>.

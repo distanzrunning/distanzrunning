@@ -108,7 +108,7 @@ function outcomeBadge(
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h4 className="m-0 text-label-12 uppercase tracking-[0.04em] text-[color:var(--ds-gray-700)]">
+    <h4 className="m-0 text-label-12 uppercase tracking-[0.04em] text-textSubtler">
       {children}
     </h4>
   );
@@ -135,18 +135,18 @@ function PassSection({
           </Badge>
         )}
         {pass.suggestedDate && (
-          <span className="text-copy-13 font-medium text-[color:var(--ds-gray-1000)]">
+          <span className="text-copy-13 font-medium text-textDefault">
             {pass.suggestedDate}
           </span>
         )}
       </div>
       {pass.sourceQuote && (
-        <p className="m-0 text-copy-13 italic text-[color:var(--ds-gray-900)]">
+        <p className="m-0 text-copy-13 italic text-textSubtle">
           &ldquo;{pass.sourceQuote}&rdquo;
         </p>
       )}
       {pass.reasoning && (
-        <p className="m-0 text-copy-13 text-[color:var(--ds-gray-900)]">
+        <p className="m-0 text-copy-13 text-textSubtle">
           {pass.reasoning}
         </p>
       )}
@@ -190,7 +190,7 @@ export default function ScanLogPanel({ raceId }: { raceId: string }) {
 
   if (loading) {
     return (
-      <div className="px-6 py-4 text-left text-copy-13 text-[color:var(--ds-gray-700)]">
+      <div className="px-6 py-4 text-left text-copy-13 text-textSubtler">
         Loading scan log…
       </div>
     );
@@ -198,7 +198,7 @@ export default function ScanLogPanel({ raceId }: { raceId: string }) {
 
   if (error || !logJson) {
     return (
-      <div className="px-6 py-4 text-left text-copy-13 text-[color:var(--ds-gray-700)]">
+      <div className="px-6 py-4 text-left text-copy-13 text-textSubtler">
         {error ?? "Could not load scan log."}
       </div>
     );
@@ -209,7 +209,7 @@ export default function ScanLogPanel({ raceId }: { raceId: string }) {
     log = JSON.parse(logJson) as ScanLog;
   } catch {
     return (
-      <div className="px-6 py-4 text-left text-copy-13 text-[color:var(--ds-gray-700)]">
+      <div className="px-6 py-4 text-left text-copy-13 text-textSubtler">
         Could not parse scan log.
       </div>
     );
@@ -224,20 +224,20 @@ export default function ScanLogPanel({ raceId }: { raceId: string }) {
     <div className="flex flex-col items-stretch gap-5 px-6 py-5 text-left">
       {/* ── Header strip — three pieces of metadata laid out
             horizontally so they read left-to-right at the top. */}
-      <header className="flex flex-wrap items-center gap-x-6 gap-y-2 text-copy-13 text-[color:var(--ds-gray-700)]">
+      <header className="flex flex-wrap items-center gap-x-6 gap-y-2 text-copy-13 text-textSubtler">
         <span className="flex items-baseline gap-1">
           <span>Scanned</span>
-          <span className="text-[color:var(--ds-gray-1000)]">{scannedAt}</span>
+          <span className="text-textDefault">{scannedAt}</span>
         </span>
         <span className="flex items-baseline gap-1">
           <span>Duration</span>
-          <span className="text-[color:var(--ds-gray-1000)]">
+          <span className="text-textDefault">
             {(log.durationMs / 1000).toFixed(1)}s
           </span>
         </span>
         <span className="flex items-baseline gap-1">
           <span>Final status</span>
-          <span className="text-[color:var(--ds-gray-1000)]">
+          <span className="text-textDefault">
             {log.finalStatus}
           </span>
         </span>
@@ -246,7 +246,7 @@ export default function ScanLogPanel({ raceId }: { raceId: string }) {
       {/* ── Pages reviewed — vertical list, each entry stacks
             metadata above the URL so the URL gets a full row of
             its own and isn't competing with badges horizontally. */}
-      <section className="flex flex-col items-start gap-2 border-t border-[color:var(--ds-gray-300)] pt-4">
+      <section className="flex flex-col items-start gap-2 border-t border-borderSubtle pt-4">
         <SectionHeading>Pages reviewed ({log.pages.length})</SectionHeading>
         <ul className="m-0 flex w-full list-none flex-col gap-2 p-0">
           {log.pages.map((p, i) => {
@@ -257,14 +257,14 @@ export default function ScanLogPanel({ raceId }: { raceId: string }) {
                 className="flex flex-col items-start gap-1"
               >
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-label-12 text-[color:var(--ds-gray-700)]">
+                  <span className="text-label-12 text-textSubtler">
                     {sourceLabel[p.source] ?? p.source}
                   </span>
                   <Badge variant={sb.variant} size="sm">
                     {sb.label}
                   </Badge>
                   {typeof p.chars === "number" && (
-                    <span className="text-label-12 text-[color:var(--ds-gray-700)]">
+                    <span className="text-label-12 text-textSubtler">
                       {p.chars.toLocaleString()} chars
                     </span>
                   )}
@@ -274,7 +274,7 @@ export default function ScanLogPanel({ raceId }: { raceId: string }) {
                     href={p.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full break-all text-copy-13 text-[color:var(--ds-gray-900)] underline-offset-2 hover:text-[color:var(--ds-gray-1000)] hover:underline"
+                    className="block w-full break-all text-copy-13 text-textSubtle underline-offset-2 hover:text-textDefault hover:underline"
                   >
                     {p.url}
                   </a>
@@ -289,12 +289,12 @@ export default function ScanLogPanel({ raceId }: { raceId: string }) {
             its own divider and section heading so the editor can
             see at a glance what changed between the two passes. */}
       {log.pass1 && (
-        <div className="border-t border-[color:var(--ds-gray-300)] pt-4">
+        <div className="border-t border-borderSubtle pt-4">
           <PassSection label="Pass 1 (homepage only)" pass={log.pass1} />
         </div>
       )}
       {log.pass2 && (
-        <div className="border-t border-[color:var(--ds-gray-300)] pt-4">
+        <div className="border-t border-borderSubtle pt-4">
           <PassSection
             label="Pass 2 (multi-page + aggregators)"
             pass={log.pass2}
@@ -305,9 +305,9 @@ export default function ScanLogPanel({ raceId }: { raceId: string }) {
       {/* ── Final message — boxed so the closing summary stands
             out from the per-pass blocks above. */}
       {log.finalMessage && (
-        <section className="flex flex-col items-start gap-2 border-t border-[color:var(--ds-gray-300)] pt-4">
+        <section className="flex flex-col items-start gap-2 border-t border-borderSubtle pt-4">
           <SectionHeading>Final message</SectionHeading>
-          <div className="material-base px-3 py-2 text-copy-13 text-[color:var(--ds-gray-900)]">
+          <div className="material-base px-3 py-2 text-copy-13 text-textSubtle">
             {log.finalMessage}
           </div>
         </section>

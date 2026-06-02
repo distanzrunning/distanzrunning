@@ -58,7 +58,7 @@ export default function RaceRow({ race, state }: RaceRowProps) {
   return (
     <>
       <TableRow>
-        <TableCell className="max-w-[220px] text-copy-13 text-[color:var(--ds-gray-1000)]">
+        <TableCell className="max-w-[220px] text-copy-13 text-textDefault">
           <div className="flex items-center gap-2">
             {/* Chevron expander — disabled when there's no log
                 (race hasn't been scanned yet). The button takes
@@ -75,7 +75,7 @@ export default function RaceRow({ race, state }: RaceRowProps) {
                     : `Expand scan log for ${race.title}`
                   : "No scan log yet"
               }
-              className="inline-flex size-5 shrink-0 items-center justify-center rounded text-[color:var(--ds-gray-700)] hover:bg-[color:var(--ds-gray-100)] hover:text-[color:var(--ds-gray-1000)] disabled:cursor-not-allowed disabled:text-[color:var(--ds-gray-500)] disabled:hover:bg-transparent"
+              className="inline-flex size-5 shrink-0 items-center justify-center rounded text-textSubtler hover:bg-[color:var(--ds-gray-100)] hover:text-textDefault disabled:cursor-not-allowed disabled:text-textDisabled disabled:hover:bg-transparent"
             >
               {expanded ? (
                 <ChevronDown className="size-3.5" />
@@ -91,7 +91,7 @@ export default function RaceRow({ race, state }: RaceRowProps) {
                 rel="noopener noreferrer"
                 aria-label={`Open ${race.title} official website`}
                 title="Open official website"
-                className="inline-flex text-[color:var(--ds-gray-700)] hover:text-[color:var(--ds-gray-1000)]"
+                className="inline-flex text-textSubtler hover:text-textDefault"
               >
                 <ExternalLink className="size-3.5" />
               </a>
@@ -103,17 +103,17 @@ export default function RaceRow({ race, state }: RaceRowProps) {
             <Badge variant="red-subtle" size="sm">
               Past
             </Badge>
-            <span className="text-label-12 text-[color:var(--ds-gray-900)]">
+            <span className="text-label-12 text-textSubtle">
               {safeFormat(race.eventDate, "d MMM yyyy")}
             </span>
           </div>
         </TableCell>
-        <TableCell className="max-w-[320px] text-copy-13 italic text-[color:var(--ds-gray-900)]">
+        <TableCell className="max-w-[320px] text-copy-13 italic text-textSubtle">
           {race.suggestedNextDateSourceQuote
             ? `"${race.suggestedNextDateSourceQuote}"`
             : "—"}
         </TableCell>
-        <TableCell className="whitespace-nowrap text-label-12 text-[color:var(--ds-gray-700)]">
+        <TableCell className="whitespace-nowrap text-label-12 text-textSubtler">
           {safeFormat(
             race.suggestedNextDateScrapedAt ?? race.lastScanAt,
             "d MMM, HH:mm",

@@ -57,14 +57,14 @@ function EntityContent({ title, subtitle, thumbnail }: EntityContentProps) {
       <div className="flex flex-1 flex-col min-w-0">
         <p
           className="truncate m-0 text-[14px] leading-[20px] font-semibold"
-          style={{ color: "var(--ds-gray-1000)" }}
+          style={{ color: "rgb(var(--color-textDefault))" }}
         >
           {title}
         </p>
         {subtitle && (
           <p
             className="truncate m-0 text-[14px] leading-[20px]"
-            style={{ color: "var(--ds-gray-900)" }}
+            style={{ color: "rgb(var(--color-textSubtle))" }}
           >
             {subtitle}
           </p>
@@ -94,7 +94,7 @@ function EntityList({ children, dividers = true, bordered = false, className = "
 
   return (
     <ul
-      className={`list-none m-0 p-0 ${dividers ? "divide-y divide-[var(--ds-gray-400)]" : ""} ${className}`}
+      className={`list-none m-0 p-0 ${dividers ? "divide-y divide-borderDefault" : ""} ${className}`}
       style={{ ...borderedStyles, ...style }}
       {...rest}
     >
@@ -111,7 +111,7 @@ function EntitySkeleton({ width = "100%", height = 20 }: SkeletonProps) {
       style={{
         width: typeof width === "number" ? `${width}px` : width,
         minHeight: `${height}px`,
-        backgroundColor: "var(--ds-gray-300)",
+        backgroundColor: "rgb(var(--color-borderSubtle))",
       }}
     />
   );

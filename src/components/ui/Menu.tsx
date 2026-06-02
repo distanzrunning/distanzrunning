@@ -515,7 +515,7 @@ export function MenuButton({
   const variantStyles =
     variant === "secondary"
       ? `
-        bg-surface text-[var(--ds-gray-1000)]
+        bg-surface text-textDefault
         shadow-[0_0_0_1px_var(--ds-gray-400)]
         hover:bg-[var(--ds-gray-100)] hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
         dark:hover:bg-[var(--ds-gray-200)] dark:hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
@@ -651,7 +651,7 @@ export function MenuItem({
     height: 40,
     borderRadius: 6,
     fontSize: 14,
-    color: destructive ? "var(--ds-red-900)" : "var(--ds-gray-1000)",
+    color: destructive ? "var(--ds-red-900)" : "rgb(var(--color-textDefault))",
     cursor: isDisabled ? "default" : "pointer",
     opacity: isDisabled ? 0.5 : 1,
     background: "transparent",
@@ -679,7 +679,7 @@ export function MenuItem({
             display: "flex",
             alignItems: "center",
             flexShrink: 0,
-            color: "var(--ds-gray-900)",
+            color: "rgb(var(--color-textSubtle))",
           }}
         >
           {suffix}

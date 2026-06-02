@@ -25,7 +25,7 @@ export function Section({ children }: { children: React.ReactNode }) {
         columns={1}
         rows={1}
         showGuides={false}
-        style={{ border: "none", borderBottom: "1px solid var(--ds-gray-400)" }}
+        style={{ border: "none", borderBottom: "1px solid rgb(var(--color-borderDefault))" }}
       >
         <GridCell style={{ margin: 0, overflow: "visible" }}>
           {children}
@@ -446,7 +446,7 @@ export default function ContentWithTOC({
             columns={1}
             rows={1}
             showGuides={false}
-            style={{ border: "none", borderBottom: "1px solid var(--ds-gray-400)" }}
+            style={{ border: "none", borderBottom: "1px solid rgb(var(--color-borderDefault))" }}
           >
             <GridCell style={{ margin: 0, overflow: "visible" }}>
               <div className="flex items-end justify-between gap-4">

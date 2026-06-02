@@ -63,10 +63,10 @@ function OverviewCard({
     >
       <div className="flex-1">{children}</div>
       <div className="mt-auto">
-        <p className="text-heading-16 font-semibold" style={{ color: "var(--ds-gray-1000)" }}>
+        <p className="text-heading-16 font-semibold" style={{ color: "rgb(var(--color-textDefault))" }}>
           {title}
         </p>
-        <p className="text-copy-16" style={{ color: "var(--ds-gray-900)" }}>
+        <p className="text-copy-16" style={{ color: "rgb(var(--color-textSubtle))" }}>
           {description}
         </p>
       </div>
@@ -95,7 +95,7 @@ function BrandPreview() {
           wordmark-gray.svg tint. */}
       <Wordmark
         aria-label="Distanz Running"
-        className="relative z-10 mx-auto block text-[color:var(--ds-gray-700)]"
+        className="relative z-10 mx-auto block text-textSubtler"
         style={{ height: 96, width: "auto" }}
       />
       {/* Horizontal guide lines */}
@@ -166,7 +166,7 @@ function ComponentsPreview() {
           borderRadius: 6,
           padding: "10px 48px 10px 12px",
           position: "relative",
-          color: "var(--ds-gray-700)",
+          color: "rgb(var(--color-textSubtler))",
         }}
       >
         <pre
@@ -193,7 +193,7 @@ function ComponentsPreview() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "var(--ds-gray-700)",
+            color: "rgb(var(--color-textSubtler))",
           }}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -216,7 +216,7 @@ function ComponentsPreview() {
           fontSize: 14,
           fontWeight: 500,
           lineHeight: "20px",
-          color: "var(--ds-gray-700)",
+          color: "rgb(var(--color-textSubtler))",
         }}
       >
         {/* User plus icon */}
@@ -239,7 +239,7 @@ function ComponentsPreview() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: "var(--ds-gray-700)",
+          color: "rgb(var(--color-textSubtler))",
         }}
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor">
@@ -273,7 +273,7 @@ function ComponentsPreview() {
             padding: "8px 12px",
             borderRadius: 2,
             background: "var(--ds-gray-100)",
-            color: "var(--ds-gray-700)",
+            color: "rgb(var(--color-textSubtler))",
           }}
         >
           <LayoutGrid size={16} />
@@ -286,7 +286,7 @@ function ComponentsPreview() {
             justifyContent: "center",
             padding: "8px 12px",
             borderRadius: 2,
-            color: "var(--ds-gray-700)",
+            color: "rgb(var(--color-textSubtler))",
           }}
         >
           <BarChart3 size={16} />
@@ -316,7 +316,7 @@ function ComponentsPreview() {
               height: 40,
               flexShrink: 0,
               background: "var(--ds-background-100)",
-              color: "var(--ds-gray-700)",
+              color: "rgb(var(--color-textSubtler))",
               borderRight: "1px solid var(--ds-gray-alpha-400)",
             }}
           >
@@ -385,7 +385,7 @@ function ColoursPreview() {
 function GridCross({ style }: { style: React.CSSProperties }) {
   const crossSize = 21;
   const halfSize = 11;
-  const guideColor = "var(--ds-gray-700)";
+  const guideColor = "rgb(var(--color-textSubtler))";
 
   return (
     <div
@@ -427,7 +427,7 @@ function GridCross({ style }: { style: React.CSSProperties }) {
 function GridPreview() {
   const cols = 9;
   const rows = 2;
-  const guideColor = "var(--ds-gray-400)";
+  const guideColor = "rgb(var(--color-borderDefault))";
 
   return (
     <div className="w-full" style={{ position: "relative" }}>
@@ -481,13 +481,13 @@ function TypefacePreview() {
           borderRight: "1px dashed var(--ds-gray-alpha-400)",
         }}
       >
-        <p className="text-heading-24 text-center" style={{ fontFamily: "var(--font-family-sans)", color: "var(--ds-gray-700)" }}>
+        <p className="text-heading-24 text-center" style={{ fontFamily: "var(--font-family-sans)", color: "rgb(var(--color-textSubtler))" }}>
           Geist
         </p>
       </div>
       <p
         className="text-heading-24 text-center"
-        style={{ fontFamily: "var(--font-family-serif)", color: "var(--ds-gray-700)" }}
+        style={{ fontFamily: "var(--font-family-serif)", color: "rgb(var(--color-textSubtler))" }}
       >
         EB Garamond
       </p>
@@ -504,7 +504,7 @@ export default function FoundationsOverview({}: FoundationsOverviewProps) {
       {/* Cards Grid */}
       <div
         className="grid grid-cols-1 md:grid-cols-2"
-        style={{ borderBottom: "1px solid var(--ds-gray-400)" }}
+        style={{ borderBottom: "1px solid rgb(var(--color-borderDefault))" }}
       >
         <OverviewCard
           href="/admin/design-system/distanz-running"

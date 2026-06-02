@@ -219,7 +219,7 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
               flexGrow: 1,
               height: 8,
               borderRadius: 5,
-              background: "var(--ds-gray-400)",
+              background: "rgb(var(--color-borderDefault))",
               position: "relative",
               overflow: "hidden",
             }}
@@ -434,7 +434,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
               flexGrow: 1,
               height: 8,
               borderRadius: 5,
-              background: "var(--ds-gray-400)",
+              background: "rgb(var(--color-borderDefault))",
               position: "relative",
             }}
           >

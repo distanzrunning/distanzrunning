@@ -51,7 +51,7 @@ const Y_RANGE_TOP_PADDING = 24;
 // axes spread these into their tickLabelProps so any future change
 // (e.g. swapping gray-700 for gray-800) happens in one place.
 const AXIS_TICK_STYLE = {
-  fill: "var(--ds-gray-700)",
+  fill: "rgb(var(--color-textSubtler))",
   fontSize: 12,
 } as const;
 
@@ -326,7 +326,7 @@ function ChartInner({
             scale={yScale}
             width={plotWidth}
             tickValues={yTicks}
-            stroke="var(--ds-gray-400)"
+            stroke="rgb(var(--color-borderDefault))"
             strokeWidth={1}
           />
           <AreaClosed<TrendPoint>
@@ -403,7 +403,7 @@ function ChartInner({
             <Line
               from={{ x: activeX, y: 0 }}
               to={{ x: activeX, y: plotHeight + 7 }}
-              stroke="var(--ds-gray-1000)"
+              stroke="rgb(var(--color-textDefault))"
               strokeWidth={2}
               pointerEvents="none"
             />
@@ -481,7 +481,7 @@ function ChartInner({
         >
           <span
             className="text-copy-14"
-            style={{ color: "var(--ds-gray-700)" }}
+            style={{ color: "rgb(var(--color-textSubtler))" }}
           >
             No decisions in this range
           </span>
@@ -530,7 +530,7 @@ function ChartInner({
               flexDirection: "column",
               alignItems: "center",
               gap: 4,
-              color: "var(--ds-gray-1000)",
+              color: "rgb(var(--color-textDefault))",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -552,7 +552,7 @@ function ChartInner({
                   : "—"}
               </span>
             </div>
-            <span style={{ color: "var(--ds-gray-900)" }}>
+            <span style={{ color: "rgb(var(--color-textSubtle))" }}>
               {formatTickDate(tooltipData.date, tz)}
             </span>
           </div>
@@ -575,7 +575,7 @@ function ChartInner({
             top: MARGIN.top + plotHeight + 19,
             transform: "translate(-50%, -50%)",
             background: "rgb(var(--color-surface))",
-            color: "var(--ds-gray-1000)",
+            color: "rgb(var(--color-textDefault))",
             fontSize: 12,
             lineHeight: "16px",
             fontWeight: 500,

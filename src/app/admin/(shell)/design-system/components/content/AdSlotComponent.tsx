@@ -163,8 +163,8 @@ function CodePreview({ children, componentCode, minHeight = 200 }: CodePreviewPr
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "rgb(var(--color-textDefault))",
+            darkColor: "rgb(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -176,7 +176,7 @@ function CodePreview({ children, componentCode, minHeight = 200 }: CodePreviewPr
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg w-full min-w-0 overflow-hidden">
+    <div className="border border-borderDefault rounded-lg w-full min-w-0 overflow-hidden">
       <div
         className="p-6 flex items-center justify-center"
         style={{ background: "var(--ds-background-100)", minHeight }}
@@ -187,20 +187,20 @@ function CodePreview({ children, componentCode, minHeight = 200 }: CodePreviewPr
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
@@ -426,7 +426,7 @@ export default function AdSlotComponent() {
                 <div
                   className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border p-6 text-center"
                   style={{
-                    borderColor: "var(--ds-gray-400)",
+                    borderColor: "rgb(var(--color-borderDefault))",
                     background: "var(--ds-background-200)",
                   }}
                 >
@@ -440,7 +440,7 @@ export default function AdSlotComponent() {
                     href="/newsletter"
                     className="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-md font-sans text-copy-13 font-semibold no-underline"
                     style={{
-                      background: "var(--ds-gray-1000)",
+                      background: "rgb(var(--color-textDefault))",
                       color: "var(--ds-background-100)",
                     }}
                   >

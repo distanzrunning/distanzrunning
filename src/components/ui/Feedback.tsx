@@ -148,7 +148,7 @@ function FeedbackSuccess() {
         </div>
         <p
           style={{
-            color: "var(--ds-gray-1000)",
+            color: "rgb(var(--color-textDefault))",
             fontSize: 14,
             lineHeight: "20px",
             fontWeight: 600,
@@ -159,7 +159,7 @@ function FeedbackSuccess() {
         </p>
         <p
           style={{
-            color: "var(--ds-gray-700)",
+            color: "rgb(var(--color-textSubtler))",
             fontSize: 13,
             lineHeight: "18px",
             margin: 0,
@@ -182,7 +182,7 @@ const emailInputStyle: React.CSSProperties = {
   padding: "0 12px",
   fontSize: 14,
   lineHeight: "20px",
-  color: "var(--ds-gray-1000)",
+  color: "rgb(var(--color-textDefault))",
   background: "rgb(var(--color-canvas))",
   outline: "none",
   fontFamily: "inherit",
@@ -264,7 +264,7 @@ function MarkdownIcon() {
       <path
         clipRule="evenodd"
         d="M19.5 1.25H2.5C1.80964 1.25 1.25 1.80964 1.25 2.5V11.5C1.25 12.1904 1.80964 12.75 2.5 12.75H19.5C20.1904 12.75 20.75 12.1904 20.75 11.5V2.5C20.75 1.80964 20.1904 1.25 19.5 1.25ZM2.5 0C1.11929 0 0 1.11929 0 2.5V11.5C0 12.8807 1.11929 14 2.5 14H19.5C20.8807 14 22 12.8807 22 11.5V2.5C22 1.11929 20.8807 0 19.5 0H2.5ZM3 3.5H4H4.25H4.6899L4.98715 3.82428L7 6.02011L9.01285 3.82428L9.3101 3.5H9.75H10H11V4.5V10.5H9V6.79807L7.73715 8.17572L7 8.97989L6.26285 8.17572L5 6.79807V10.5H3V4.5V3.5ZM15 7V3.5H17V7H19.5L17 9.5L16 10.5L15 9.5L12.5 7H15Z"
-        fill="var(--ds-gray-700)"
+        fill="rgb(var(--color-textSubtler))"
         fillRule="evenodd"
       />
     </svg>
@@ -508,7 +508,7 @@ export function FeedbackInline({
         <div className="feedback-inline-trigger">
           <p
             style={{
-              color: "var(--ds-gray-900)",
+              color: "rgb(var(--color-textSubtle))",
               fontSize: 14,
               lineHeight: "20px",
               fontWeight: 400,
@@ -583,7 +583,7 @@ export function FeedbackInline({
                   lineHeight: "16px",
                   color: emailError
                     ? "var(--ds-red-900)"
-                    : "var(--ds-gray-700)",
+                    : "rgb(var(--color-textSubtler))",
                 }}
               >
                 {emailError ||
@@ -598,7 +598,7 @@ export function FeedbackInline({
                 justifyContent: "flex-end",
                 padding: 12,
                 background: "rgb(var(--color-canvas))",
-                borderTop: "1px solid var(--ds-gray-200)",
+                borderTop: "1px solid rgb(var(--color-borderSubtle))",
               }}
             >
               <Button type="submit" size="small" loading={isSending}>
@@ -638,7 +638,7 @@ export function FeedbackInline({
                       padding: "10px 12px",
                       fontSize: 14,
                       lineHeight: "normal",
-                      color: "var(--ds-gray-1000)",
+                      color: "rgb(var(--color-textDefault))",
                       background: "rgb(var(--color-canvas))",
                       resize: "none",
                       outline: "none",
@@ -659,7 +659,7 @@ export function FeedbackInline({
                   fontSize: 12,
                   lineHeight: "16px",
                   fontWeight: 400,
-                  color: "var(--ds-gray-900)",
+                  color: "rgb(var(--color-textSubtle))",
                 }}
               >
                 <MarkdownIcon />
@@ -674,7 +674,7 @@ export function FeedbackInline({
                 justifyContent: "flex-end",
                 padding: 12,
                 background: "rgb(var(--color-canvas))",
-                borderTop: "1px solid var(--ds-gray-200)",
+                borderTop: "1px solid rgb(var(--color-borderSubtle))",
               }}
             >
               <Button type="submit" size="small" loading={isSending}>
@@ -723,7 +723,7 @@ export function FeedbackInline({
           height: 48px;
           border-radius: 30px;
           background: rgb(var(--color-surface));
-          border: 1px solid var(--ds-gray-200);
+          border: 1px solid rgb(var(--color-borderSubtle));
           overflow: hidden;
           will-change: width, height, border-radius, box-shadow;
           transition:
@@ -734,7 +734,7 @@ export function FeedbackInline({
             box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         :is(.dark, [data-theme="dark"]) .feedback-inline-wrapper {
-          border-color: var(--ds-gray-400);
+          border-color: rgb(var(--color-borderDefault));
         }
         .feedback-inline-wrapper--expanded {
           width: 336px;
@@ -805,7 +805,7 @@ export function FeedbackInline({
           cursor: pointer;
           padding: 0;
           background: transparent;
-          color: var(--ds-gray-900);
+          color: rgb(var(--color-textSubtle));
           transition: background 0.2s ease, color 0.2s ease;
         }
         .feedback-inline-wrapper .feedback-emoji:disabled {
@@ -840,7 +840,7 @@ export function FeedbackInline({
             0 0 0 4px var(--ds-focus-ring);
         }
         .feedback-inline-wrapper .feedback-textarea-wrapper textarea::placeholder {
-          color: var(--ds-gray-700);
+          color: rgb(var(--color-textSubtler));
         }
       `}</style>
     </div>
@@ -1148,7 +1148,7 @@ export function FeedbackWithSelect({
               padding: "10px 12px",
               fontSize: 14,
               lineHeight: "normal",
-              color: "var(--ds-gray-1000)",
+              color: "rgb(var(--color-textDefault))",
               background: "rgb(var(--color-canvas))",
               resize: "none",
               outline: "none",
@@ -1169,7 +1169,7 @@ export function FeedbackWithSelect({
           fontSize: 12,
           lineHeight: "16px",
           fontWeight: 400,
-          color: "var(--ds-gray-900)",
+          color: "rgb(var(--color-textSubtle))",
         }}
       >
         <MarkdownIcon />
@@ -1186,7 +1186,7 @@ export function FeedbackWithSelect({
         justifyContent: "space-between",
         padding: 12,
         background: "rgb(var(--color-canvas))",
-        borderTop: "1px solid var(--ds-gray-200)",
+        borderTop: "1px solid rgb(var(--color-borderSubtle))",
       }}
     >
       <span style={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -1249,7 +1249,7 @@ export function FeedbackWithSelect({
         style={{
           fontSize: 12,
           lineHeight: "16px",
-          color: emailError ? "var(--ds-red-900)" : "var(--ds-gray-700)",
+          color: emailError ? "var(--ds-red-900)" : "rgb(var(--color-textSubtler))",
         }}
       >
         {emailError || "Optional — we'll only use this to follow up."}
@@ -1265,7 +1265,7 @@ export function FeedbackWithSelect({
         justifyContent: "flex-end",
         padding: 12,
         background: "rgb(var(--color-canvas))",
-        borderTop: "1px solid var(--ds-gray-200)",
+        borderTop: "1px solid rgb(var(--color-borderSubtle))",
       }}
     >
       <Button type="submit" size="small" loading={sending}>
@@ -1420,7 +1420,7 @@ function FeedbackWithSelectFormStyles() {
         padding: 0 36px 0 12px;
         font-size: 14px;
         line-height: 20px;
-        color: var(--ds-gray-1000);
+        color: rgb(var(--color-textDefault));
         background: rgb(var(--color-canvas));
         outline: none;
         font-family: inherit;
@@ -1431,10 +1431,10 @@ function FeedbackWithSelectFormStyles() {
       }
       .feedback-select:invalid,
       .feedback-select option[value=""][disabled] {
-        color: var(--ds-gray-700);
+        color: rgb(var(--color-textSubtler));
       }
       .feedback-select option {
-        color: var(--ds-gray-1000);
+        color: rgb(var(--color-textDefault));
       }
       .feedback-select-suffix {
         position: absolute;
@@ -1444,7 +1444,7 @@ function FeedbackWithSelectFormStyles() {
         pointer-events: none;
         display: flex;
         align-items: center;
-        color: var(--ds-gray-900);
+        color: rgb(var(--color-textSubtle));
       }
 
       /* Shared with the <Feedback /> popover. Defined here too so that
@@ -1466,7 +1466,7 @@ function FeedbackWithSelectFormStyles() {
       }
       .feedback-textarea-wrapper textarea::placeholder,
       .feedback-textarea-wrapper input::placeholder {
-        color: var(--ds-gray-700);
+        color: rgb(var(--color-textSubtler));
       }
       .feedback-emoji {
         display: flex;
@@ -1479,7 +1479,7 @@ function FeedbackWithSelectFormStyles() {
         cursor: pointer;
         padding: 0;
         background: transparent;
-        color: var(--ds-gray-900);
+        color: rgb(var(--color-textSubtle));
         flex-shrink: 0;
         transition: background 0.2s ease, border-color 0.2s ease;
       }
@@ -1723,7 +1723,7 @@ export function Feedback({
                     lineHeight: "16px",
                     color: emailError
                       ? "var(--ds-red-900)"
-                      : "var(--ds-gray-700)",
+                      : "rgb(var(--color-textSubtler))",
                   }}
                 >
                   {emailError ||
@@ -1738,7 +1738,7 @@ export function Feedback({
                   justifyContent: "flex-end",
                   padding: 12,
                   background: "rgb(var(--color-canvas))",
-                  borderTop: "1px solid var(--ds-gray-200)",
+                  borderTop: "1px solid rgb(var(--color-borderSubtle))",
                 }}
               >
                 <Button type="submit" size="small" loading={sending}>
@@ -1778,7 +1778,7 @@ export function Feedback({
                         padding: "10px 12px",
                         fontSize: 14,
                         lineHeight: "normal",
-                        color: "var(--ds-gray-1000)",
+                        color: "rgb(var(--color-textDefault))",
                         background: "rgb(var(--color-canvas))",
                         resize: "none",
                         outline: "none",
@@ -1800,7 +1800,7 @@ export function Feedback({
                     fontSize: 12,
                     lineHeight: "16px",
                     fontWeight: 400,
-                    color: "var(--ds-gray-900)",
+                    color: "rgb(var(--color-textSubtle))",
                   }}
                 >
                   <MarkdownIcon />
@@ -1816,7 +1816,7 @@ export function Feedback({
                   justifyContent: "space-between",
                   padding: 12,
                   background: "rgb(var(--color-canvas))",
-                  borderTop: "1px solid var(--ds-gray-200)",
+                  borderTop: "1px solid rgb(var(--color-borderSubtle))",
                 }}
               >
                   {/* Emoji buttons */}
@@ -1874,7 +1874,7 @@ export function Feedback({
           box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
         }
         .feedback-textarea-wrapper textarea::placeholder {
-          color: var(--ds-gray-700);
+          color: rgb(var(--color-textSubtler));
         }
         .feedback-emoji {
           display: flex;
@@ -1887,7 +1887,7 @@ export function Feedback({
           cursor: pointer;
           padding: 0;
           background: transparent;
-          color: var(--ds-gray-900);
+          color: rgb(var(--color-textSubtle));
           transition: background 0.2s ease, border-color 0.2s ease;
         }
         .feedback-emoji--selected {

@@ -37,13 +37,13 @@ function RadioIndicator({
   disabled: boolean;
 }) {
   const borderColor = disabled
-    ? "var(--ds-gray-500)"
+    ? "rgb(var(--color-textDisabled))"
     : checked
       ? "var(--ds-pink-900)"
       : "var(--ds-gray-600)";
 
   const dotColor = disabled
-    ? "var(--ds-gray-500)"
+    ? "rgb(var(--color-textDisabled))"
     : "var(--ds-pink-900)";
 
   return (
@@ -202,8 +202,8 @@ export function Choicebox({
         borderColor: isSelected && !isDisabled
           ? "var(--ds-pink-700)"
           : showHover
-            ? "var(--ds-gray-500)"
-            : "var(--ds-gray-400)",
+            ? "rgb(var(--color-borderDefaultHover))"
+            : "rgb(var(--color-borderDefault))",
         background: showHover
           ? "var(--ds-gray-100)"
           : "rgb(var(--color-surface))",
@@ -244,10 +244,10 @@ export function Choicebox({
               className="flex items-center justify-center flex-shrink-0"
               style={{
                 color: isDisabled
-                  ? "var(--ds-gray-500)"
+                  ? "rgb(var(--color-textDisabled))"
                   : isSelected
                     ? "var(--ds-pink-700)"
-                    : "var(--ds-gray-1000)",
+                    : "rgb(var(--color-textDefault))",
               }}
             >
               {icon}
@@ -260,10 +260,10 @@ export function Choicebox({
                   className="text-copy-14 font-medium"
                   style={{
                     color: isDisabled
-                      ? "var(--ds-gray-500)"
+                      ? "rgb(var(--color-textDisabled))"
                       : isSelected
                         ? "var(--ds-pink-700)"
-                        : "var(--ds-gray-1000)",
+                        : "rgb(var(--color-textDefault))",
                   }}
                 >
                   {title}
@@ -274,10 +274,10 @@ export function Choicebox({
                   className="text-copy-14"
                   style={{
                     color: isDisabled
-                      ? "var(--ds-gray-500)"
+                      ? "rgb(var(--color-textDisabled))"
                       : isSelected
                         ? "var(--ds-pink-700)"
-                        : "var(--ds-gray-900)",
+                        : "rgb(var(--color-textSubtle))",
                   }}
                 >
                   {description}
@@ -306,7 +306,7 @@ export function Choicebox({
         <div
           className="flex items-center justify-center px-3 pb-3 pt-3 rounded-b-md overflow-hidden transition-colors hover:bg-[var(--ds-gray-100)]"
           style={{
-            borderTop: `1px solid ${!isDisabled ? "var(--ds-pink-700)" : "var(--ds-gray-400)"}`,
+            borderTop: `1px solid ${!isDisabled ? "var(--ds-pink-700)" : "rgb(var(--color-borderDefault))"}`,
           }}
         >
           {children}

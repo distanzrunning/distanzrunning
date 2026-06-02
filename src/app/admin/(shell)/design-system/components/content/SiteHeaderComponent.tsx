@@ -209,8 +209,8 @@ function CodePreview({
           [
             {
               content: line,
-              color: "var(--ds-gray-1000)",
-              darkColor: "var(--ds-gray-1000)",
+              color: "rgb(var(--color-textDefault))",
+              darkColor: "rgb(var(--color-textDefault))",
             },
           ] as DualThemeToken[],
       );
@@ -220,7 +220,7 @@ function CodePreview({
     setTimeout(() => setCopied(false), 1000);
   }, [componentCode]);
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+      <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
         style={{ background: "var(--ds-background-100)" }}
@@ -234,20 +234,19 @@ function CodePreview({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
-            style={{ background: "var(--ds-background-100)" }}
-          >
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
+            style={{ background: "var(--ds-background-100)" }}>
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
@@ -318,7 +317,7 @@ function HeaderInPagePreview() {
         className="w-full"
         style={{
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
+          border: "1px solid rgb(var(--color-borderDefault))",
           borderRadius: 6,
           minHeight: 60,
           overflow: "visible",
@@ -348,7 +347,7 @@ function HeaderAnatomy() {
       style={{
         height: 50,
         background: "var(--ds-background-100)",
-        border: "1px solid var(--ds-gray-400)",
+        border: "1px solid rgb(var(--color-borderDefault))",
         borderRadius: 6,
       }}
     >
@@ -365,9 +364,9 @@ function Zone({ label, wide }: { label: string; wide?: boolean }) {
       className="flex h-8 items-center justify-center px-3"
       style={{
         background: "var(--ds-gray-100)",
-        border: "1px dashed var(--ds-gray-400)",
+        border: "1px dashed rgb(var(--color-borderDefault))",
         borderRadius: 6,
-        color: "var(--ds-gray-700)",
+        color: "rgb(var(--color-textSubtler))",
         fontSize: 11,
         fontFamily: "var(--font-mono)",
         minWidth: wide ? 320 : 160,
@@ -416,12 +415,12 @@ const demoLinks = [
 function DropdownAnatomy() {
   return (
     <div
-      className="grid w-full max-w-[800px] grid-cols-3 overflow-hidden border border-[color:var(--ds-gray-400)]"
+      className="grid w-full max-w-[800px] grid-cols-3 overflow-hidden border border-borderDefault"
       style={{ borderRadius: 12, minHeight: 360 }}
     >
       {/* Links column */}
-      <div className="col-span-1 flex flex-col gap-0.5 border-r border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-200)] p-2 dark:bg-[color:var(--ds-background-100)]">
-        <h4 className="px-3 pt-2.5 pb-1 text-[14px] leading-5 font-normal text-[color:var(--ds-gray-900)]">
+      <div className="col-span-1 flex flex-col gap-0.5 border-r border-borderDefault bg-canvas p-2">
+        <h4 className="px-3 pt-2.5 pb-1 text-[14px] leading-5 font-normal text-textSubtle">
           Shoes
         </h4>
         {demoLinks.map((item) => (
@@ -484,15 +483,15 @@ function DemoIconRow({
     <div className="group/row flex flex-row items-center gap-3 rounded-sm p-3">
       <span
         aria-hidden
-        className="grid size-8 shrink-0 place-items-center rounded-xs border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-900)]"
+        className="grid size-8 shrink-0 place-items-center rounded-xs border border-borderDefault bg-surface text-textSubtle"
       >
         <Icon className="size-5 stroke-[1.5]" />
       </span>
       <span className="flex min-w-0 flex-col">
-        <span className="text-[14px] leading-5 font-medium text-[color:var(--ds-gray-1000)]">
+        <span className="text-[14px] leading-5 font-medium text-textDefault">
           {label}
         </span>
-        <span className="text-[12px] leading-4 text-[color:var(--ds-gray-900)]">
+        <span className="text-[12px] leading-4 text-textSubtle">
           {description}
         </span>
       </span>
@@ -560,7 +559,7 @@ export default function SiteHeaderComponent() {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              color: "var(--ds-gray-1000)",
+              color: "rgb(var(--color-textDefault))",
               textDecoration: "underline",
             }}
           >
@@ -608,7 +607,7 @@ export default function SiteHeaderComponent() {
       <div
         style={{
           padding: 48,
-          borderBottom: "1px solid var(--ds-gray-400)",
+          borderBottom: "1px solid rgb(var(--color-borderDefault))",
         }}
       >
         <SectionHeader id="header-in-page" onCopyLink={showToast}>

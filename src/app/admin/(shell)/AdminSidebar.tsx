@@ -122,7 +122,7 @@ function BrandHeader() {
       <Link
         href="/admin"
         aria-label="Stride Admin"
-        className="flex items-center justify-center w-full h-9 gap-2 outline-none no-underline text-[var(--ds-gray-1000)]"
+        className="flex items-center justify-center w-full h-9 gap-2 outline-none no-underline text-textDefault"
       >
         <StrideIcon />
         <span
@@ -157,7 +157,7 @@ function BackHeader({
         type="button"
         onClick={onClick}
         aria-label={ariaLabel ?? label}
-        className="flex items-center justify-between w-full h-9 rounded-md outline-none transition-colors gap-1 text-[var(--ds-gray-900)] hover:text-[var(--ds-gray-1000)] hover:bg-[var(--ds-gray-100)] active:bg-[var(--ds-gray-200)] focus-visible:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] bg-transparent border-0 cursor-pointer"
+        className="flex items-center justify-between w-full h-9 rounded-md outline-none transition-colors gap-1 text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)] active:bg-[var(--ds-gray-200)] focus-visible:text-textDefault focus-visible:bg-[var(--ds-gray-100)] bg-transparent border-0 cursor-pointer"
       >
         <span
           className="grid place-content-center"
@@ -260,8 +260,8 @@ function AdminNav({ pathname }: { pathname: string }) {
           const baseClasses =
             "group flex items-center rounded-md outline-none transition-colors";
           const stateClasses = active
-            ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
-            : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+            ? "bg-[var(--ds-gray-200)] text-textDefault font-medium hover:bg-[var(--ds-gray-200)]"
+            : "text-textSubtle hover:bg-[var(--ds-gray-100)] hover:text-textDefault focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-textDefault";
           return (
             <li key={item.id}>
               <Link
@@ -348,7 +348,7 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
         {dsNavigation.map((section) => (
           <li key={section.id}>
             <p
-              className="flex items-center font-medium text-[var(--ds-gray-1000)]"
+              className="flex items-center font-medium text-textDefault"
               style={{
                 margin: 0,
                 height: 36,
@@ -375,8 +375,8 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
                 const baseClasses =
                   "group flex items-center rounded-md outline-none transition-colors";
                 const stateClasses = isActive
-                  ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
-                  : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+                  ? "bg-[var(--ds-gray-200)] text-textDefault font-medium hover:bg-[var(--ds-gray-200)]"
+                  : "text-textSubtle hover:bg-[var(--ds-gray-100)] hover:text-textDefault focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-textDefault";
                 const rowStyle = {
                   height: 36,
                   paddingLeft: 12,
@@ -395,7 +395,7 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
                       <button
                         type="button"
                         disabled
-                        className={`${baseClasses} w-full text-[var(--ds-gray-700)] cursor-not-allowed`}
+                        className={`${baseClasses} w-full text-textSubtler cursor-not-allowed`}
                         style={rowStyle}
                       >
                         {labelContent}
@@ -446,8 +446,8 @@ function ConsentNav({ pathname }: { pathname: string }) {
           const baseClasses =
             "group flex items-center rounded-md outline-none transition-colors";
           const stateClasses = active
-            ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
-            : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+            ? "bg-[var(--ds-gray-200)] text-textDefault font-medium hover:bg-[var(--ds-gray-200)]"
+            : "text-textSubtle hover:bg-[var(--ds-gray-100)] hover:text-textDefault focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-textDefault";
           return (
             <li key={item.id}>
               <Link
@@ -498,8 +498,8 @@ function FeedbackNav({ pathname }: { pathname: string }) {
           const baseClasses =
             "group flex items-center rounded-md outline-none transition-colors";
           const stateClasses = active
-            ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
-            : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+            ? "bg-[var(--ds-gray-200)] text-textDefault font-medium hover:bg-[var(--ds-gray-200)]"
+            : "text-textSubtle hover:bg-[var(--ds-gray-100)] hover:text-textDefault focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-textDefault";
           return (
             <li key={item.id}>
               <Link
@@ -550,8 +550,8 @@ function RacesNav({ pathname }: { pathname: string }) {
           const baseClasses =
             "group flex items-center rounded-md outline-none transition-colors";
           const stateClasses = active
-            ? "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)] font-medium hover:bg-[var(--ds-gray-200)]"
-            : "text-[var(--ds-gray-900)] hover:bg-[var(--ds-gray-100)] hover:text-[var(--ds-gray-1000)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-[var(--ds-gray-1000)]";
+            ? "bg-[var(--ds-gray-200)] text-textDefault font-medium hover:bg-[var(--ds-gray-200)]"
+            : "text-textSubtle hover:bg-[var(--ds-gray-100)] hover:text-textDefault focus-visible:bg-[var(--ds-gray-100)] focus-visible:text-textDefault";
           return (
             <li key={item.id}>
               <Link

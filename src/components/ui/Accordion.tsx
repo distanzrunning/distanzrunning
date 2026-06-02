@@ -30,7 +30,7 @@ function AccordionItem({
     <AccordionPrimitive.Item
       data-slot="accordion-item"
       className={cn(
-        "border-b border-[color:var(--ds-gray-400)] last:border-b-0",
+        "border-b border-borderDefault last:border-b-0",
         className,
       )}
       {...props}
@@ -51,9 +51,9 @@ function AccordionTrigger({
           // Layout
           "group/accordion-trigger flex flex-1 items-center justify-between gap-3 py-4 text-left outline-none cursor-pointer bg-transparent border-0",
           // Type
-          "text-button-14 text-[color:var(--ds-gray-1000)]",
+          "text-button-14 text-textDefault",
           // Hover / focus
-          "transition-colors hover:text-[color:var(--ds-gray-900)] focus-visible:text-[color:var(--ds-gray-1000)]",
+          "transition-colors hover:text-textSubtle focus-visible:text-textDefault",
           // Disabled
           "aria-disabled:pointer-events-none aria-disabled:opacity-50",
           className,
@@ -64,7 +64,7 @@ function AccordionTrigger({
         <ChevronDown
           data-slot="accordion-trigger-icon"
           aria-hidden="true"
-          className="shrink-0 transition-transform duration-200 ease-out text-[color:var(--ds-gray-900)] group-aria-expanded/accordion-trigger:rotate-180"
+          className="shrink-0 transition-transform duration-200 ease-out text-textSubtle group-aria-expanded/accordion-trigger:rotate-180"
         />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
@@ -90,7 +90,7 @@ function AccordionContent({
     >
       <div
         className={cn(
-          "pb-4 text-copy-14 text-[color:var(--ds-gray-900)]",
+          "pb-4 text-copy-14 text-textSubtle",
           className,
         )}
       >

@@ -18,7 +18,7 @@ function DocSection({
 }) {
   return (
     <PanelCard title={title}>
-      <div className="text-copy-14 text-[color:var(--ds-gray-900)]">
+      <div className="text-copy-14 text-textSubtle">
         {children}
       </div>
     </PanelCard>
@@ -32,13 +32,13 @@ export default function HowItWorksPage() {
         <header style={{ marginBottom: 24 }}>
           <h1
             className="text-heading-32"
-            style={{ margin: 0, color: "var(--ds-gray-1000)" }}
+            style={{ margin: 0, color: "rgb(var(--color-textDefault))" }}
           >
             How our CMP works
           </h1>
           <p
             className="text-copy-16"
-            style={{ marginTop: 6, marginBottom: 0, color: "var(--ds-gray-700)" }}
+            style={{ marginTop: 6, marginBottom: 0, color: "rgb(var(--color-textSubtler))" }}
           >
             Internals of Distanz Running&apos;s self-built consent
             management platform.

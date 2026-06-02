@@ -191,59 +191,46 @@ const getVariantClasses = (
   if (isDisabled) {
     switch (variant) {
       case "secondary":
-        return "bg-surface text-[var(--ds-gray-700)] shadow-[0_0_0_1px_var(--ds-gray-400)] cursor-not-allowed";
+        return "bg-surface text-textSubtler shadow-[0_0_0_1px_var(--ds-gray-400)] cursor-not-allowed";
       case "tertiary":
-        return "bg-transparent text-[var(--ds-gray-700)] cursor-not-allowed";
+        return "bg-transparent text-textSubtler cursor-not-allowed";
       default:
-        // Geist: background #f2f2f2 (gray-100), text #8f8f8f (gray-700)
-        return "bg-[var(--ds-gray-100)] text-[var(--ds-gray-700)] cursor-not-allowed";
+        return "bg-[var(--ds-gray-100)] text-textSubtler cursor-not-allowed";
     }
   }
 
   switch (variant) {
     case "default":
-      // Light mode: white overlay lightens dark button
-      // Dark mode: black overlay darkens light button
       return `
-        bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]
+        bg-[var(--ds-gray-1000)] text-textInverted
         hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),white_15%)]
         dark:hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),black_15%)]
       `;
     case "error":
-      // Light mode: darken on hover
-      // Dark mode: lighten to red-900 on hover
       return `
         bg-[var(--ds-red-800)] text-white
         hover:bg-[color-mix(in_srgb,var(--ds-red-800),black_15%)]
         dark:hover:bg-[var(--ds-red-900)]
       `;
     case "warning":
-      // Same color in light and dark modes
-      // Always darkens on hover (same hover in both modes)
-      // Warning uses dark text, not white
       return `
-        bg-[var(--ds-amber-800)] text-[var(--ds-gray-1000)]
+        bg-[var(--ds-amber-800)] text-textDefault
         hover:bg-[color-mix(in_srgb,var(--ds-amber-800),black_15%)]
       `;
     case "secondary":
-      // Secondary with shadow prop (rounded marketing style)
       if (shadow) {
         return `button-shadow-rounded`;
       }
-      // Light: white bg, gray border via box-shadow, darker bg on hover
-      // Dark: dark bg, subtle border via box-shadow, lighter bg on hover
       return `
-        bg-surface text-[var(--ds-gray-1000)]
+        bg-surface text-textDefault
         shadow-[0_0_0_1px_var(--ds-gray-400)]
         hover:bg-[var(--ds-gray-100)]
         dark:shadow-[0_0_0_1px_var(--ds-gray-400)]
         dark:hover:bg-[var(--ds-gray-200)]
       `;
     case "tertiary":
-      // Transparent bg, shows subtle overlay on hover
-      // Uses --ds-hover-overlay token (light: black 8%, dark: white 9%)
       return `
-        bg-transparent text-[var(--ds-gray-1000)]
+        bg-transparent text-textDefault
         hover:bg-[var(--ds-hover-overlay)]
       `;
     default:

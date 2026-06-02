@@ -124,7 +124,7 @@ export default async function ConsentDashboardPage({
               className="text-heading-32 font-mono"
               style={{
                 margin: 0,
-                color: "var(--ds-gray-1000)",
+                color: "rgb(var(--color-textDefault))",
                 wordBreak: "break-all",
               }}
             >

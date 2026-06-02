@@ -125,7 +125,7 @@ export const CollapsibleInput = forwardRef<
       className={`ds-input-container relative inline-flex items-center overflow-hidden rounded-sm bg-surface transition-[width,background-color] duration-200 ease-out ${
         expanded
           ? ""
-          : "cursor-pointer hover:bg-[color:var(--ds-gray-100)]"
+          : "cursor-pointer hover:bg-[var(--ds-gray-100)]"
       } ${className ?? ""}`}
       style={{
         width: expanded ? expandedWidth : config.height,
@@ -135,7 +135,7 @@ export const CollapsibleInput = forwardRef<
       onMouseDown={handleWrapperMouseDown}
     >
       <span
-        className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center text-[color:var(--ds-gray-1000)]"
+        className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center text-textDefault"
         style={{ width: config.prefixGutter }}
         aria-hidden="true"
       >
@@ -155,7 +155,7 @@ export const CollapsibleInput = forwardRef<
           paddingRight: expanded && expandedSuffix ? config.suffixGutter : 12,
           fontSize: config.fontSize,
           lineHeight: "20px",
-          color: "var(--ds-gray-1000)",
+          color: "rgb(var(--color-textDefault))",
           border: "none",
           minWidth: 0,
           fontFamily: "inherit",

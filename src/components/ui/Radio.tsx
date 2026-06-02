@@ -150,7 +150,7 @@ function RadioGroupItem({ value, children, disabled: itemDisabled }: RadioGroupI
                   : "border-[var(--ds-gray-400)] bg-[var(--ds-gray-100)]"
                 : isChecked
                   ? "border-[var(--ds-gray-1000)] bg-surface"
-                  : "border-[var(--ds-gray-alpha-400)] bg-surface group-hover/radio:bg-[var(--ds-gray-200)]"
+                  : "border-borderSubtle bg-surface group-hover/radio:bg-[var(--ds-gray-200)]"
             }
             ${!isDisabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
           `}
@@ -173,7 +173,7 @@ function RadioGroupItem({ value, children, disabled: itemDisabled }: RadioGroupI
       </span>
       <span
         className={`text-copy-13 select-none ${
-          isDisabled ? "text-[var(--ds-gray-500)]" : "text-[var(--ds-gray-1000)]"
+          isDisabled ? "text-textDisabled" : "text-textDefault"
         }`}
       >
         {children}
@@ -258,7 +258,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
                   : "border-[var(--ds-gray-400)] bg-[var(--ds-gray-100)] cursor-not-allowed"
                 : isChecked
                   ? "border-[var(--ds-gray-1000)] bg-surface"
-                  : "border-[var(--ds-gray-alpha-400)] bg-surface hover:bg-[var(--ds-gray-200)]"
+                  : "border-borderSubtle bg-surface hover:bg-[var(--ds-gray-200)]"
             }
             ${!disabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
           `}

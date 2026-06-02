@@ -422,7 +422,7 @@ export function Combobox({
           style={{
             display: "block",
             marginBottom: 8,
-            color: "var(--ds-gray-900)",
+            color: "rgb(var(--color-textSubtle))",
           }}
         >
           {label}
@@ -473,7 +473,7 @@ export function Combobox({
                   height: 16,
                   pointerEvents: "none",
                   zIndex: 1,
-                  color: "var(--ds-gray-700)",
+                  color: "rgb(var(--color-textSubtler))",
                 }}
               >
                 <SearchIcon />
@@ -509,7 +509,7 @@ export function Combobox({
                   }
                 }}
                 onKeyDown={handleKeyDown}
-                className={`${fontClass} placeholder:text-[var(--ds-gray-700)]`}
+                className={`${fontClass} placeholder:text-textSubtler`}
                 style={{
                   appearance: "none",
                   display: "inline-block",
@@ -524,10 +524,10 @@ export function Combobox({
                     ? "var(--ds-gray-100)"
                     : "rgb(var(--color-canvas))",
                   color: disabled
-                    ? "var(--ds-gray-700)"
+                    ? "rgb(var(--color-textSubtler))"
                     : error
                       ? "var(--ds-red-800)"
-                      : "var(--ds-gray-1000)",
+                      : "rgb(var(--color-textDefault))",
                   fontFamily: "inherit",
                   fontSize: "inherit",
                   fontWeight: "inherit",
@@ -547,7 +547,7 @@ export function Combobox({
                 tabIndex={0}
                 onClick={handleClear}
                 disabled={disabled}
-                className={`${error ? "text-[var(--ds-red-800)]" : "text-[var(--ds-gray-700)]"} hover:text-[var(--ds-gray-1000)]`}
+                className={`${error ? "text-[var(--ds-red-800)]" : "text-textSubtler"} hover:text-textDefault`}
                 style={{
                   display: currentValue && !disabled ? "flex" : "none",
                   alignItems: "center",
@@ -588,7 +588,7 @@ export function Combobox({
                   }
                 }}
                 disabled={disabled}
-                className={`${error ? "text-[var(--ds-red-800)]" : "text-[var(--ds-gray-700)]"} ${!disabled ? "hover:text-[var(--ds-gray-1000)]" : ""}`}
+                className={`${error ? "text-[var(--ds-red-800)]" : "text-textSubtler"} ${!disabled ? "hover:text-textDefault" : ""}`}
                 style={{
                   display: currentValue && !disabled ? "none" : "flex",
                   alignItems: "center",
@@ -679,7 +679,7 @@ export function Combobox({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "var(--ds-gray-900)",
+                    color: "rgb(var(--color-textSubtle))",
                     fontSize: 14,
                     userSelect: "none",
                   }}
@@ -693,7 +693,7 @@ export function Combobox({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "var(--ds-gray-900)",
+                    color: "rgb(var(--color-textSubtle))",
                     fontSize: 14,
                     userSelect: "none",
                   }}
@@ -758,7 +758,7 @@ export function Combobox({
                           alignItems: "center",
                           marginLeft: 8,
                           flexShrink: 0,
-                          color: "var(--ds-gray-1000)",
+                          color: "rgb(var(--color-textDefault))",
                         }}
                       >
                         <CheckIcon />

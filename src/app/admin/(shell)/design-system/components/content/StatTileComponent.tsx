@@ -23,11 +23,11 @@ function TabRowDemo() {
     };
   return (
     <div
-      className="divide-x divide-[color:var(--ds-gray-400)]"
+      className="divide-x divide-borderDefault"
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-        borderBottom: "1px solid var(--ds-gray-400)",
+        borderBottom: "1px solid rgb(var(--color-borderDefault))",
         background: "var(--ds-background-200)",
       }}
     >
@@ -133,11 +133,11 @@ export function Component({
 }) {
   return (
     <div
-      className="divide-x divide-[color:var(--ds-gray-400)]"
+      className="divide-x divide-borderDefault"
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-        borderBottom: "1px solid var(--ds-gray-400)",
+        borderBottom: "1px solid rgb(var(--color-borderDefault))",
         background: "var(--ds-background-200)",
       }}
     >

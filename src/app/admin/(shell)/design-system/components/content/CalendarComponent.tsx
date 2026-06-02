@@ -231,8 +231,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "rgb(var(--color-textDefault))",
+            darkColor: "rgb(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -244,7 +244,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg overflow-hidden">
+    <div className="border border-borderDefault rounded-lg overflow-hidden">
       <div
         className="p-6 rounded-t-lg"
         style={{ background: "var(--ds-background-100)" }}
@@ -258,20 +258,20 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
@@ -765,7 +765,7 @@ export default function CalendarComponent() {
         <SectionHeader id="horizontal-layout" onCopyLink={showToast}>
           Horizontal Layout
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Use{" "}
           <code className="inline-code">
             horizontalLayout
@@ -791,7 +791,7 @@ export default function CalendarComponent() {
         <SectionHeader id="sizes" onCopyLink={showToast}>
           Sizes
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Choose between{" "}
           <code className="inline-code">
             large
@@ -806,7 +806,7 @@ export default function CalendarComponent() {
           <CodePreview componentCode={sizesCode}>
             <div className="py-12 space-y-12">
               <div>
-                <p className="text-sm text-[var(--ds-gray-900)] mb-4 font-mono">
+                <p className="text-sm text-textSubtle mb-4 font-mono">
                   small
                 </p>
                 <div className="flex flex-wrap items-start gap-x-4 gap-y-8">
@@ -837,7 +837,7 @@ export default function CalendarComponent() {
                 </div>
               </div>
               <div>
-                <p className="text-sm text-[var(--ds-gray-900)] mb-4 font-mono">
+                <p className="text-sm text-textSubtle mb-4 font-mono">
                   default / large
                 </p>
                 <div className="flex flex-wrap items-start gap-x-4 gap-y-8">
@@ -870,7 +870,7 @@ export default function CalendarComponent() {
         <SectionHeader id="presets" onCopyLink={showToast}>
           Presets
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Provide common date ranges.
         </p>
         <div className="mt-4 xl:mt-7">
@@ -892,7 +892,7 @@ export default function CalendarComponent() {
         <SectionHeader id="compact" onCopyLink={showToast}>
           Compact
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Use{" "}
           <code className="inline-code">
             compact
@@ -919,7 +919,7 @@ export default function CalendarComponent() {
         <SectionHeader id="compact-preset-label" onCopyLink={showToast}>
           Compact with preset label
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Pair <code className="inline-code">compact</code> with{" "}
           <code className="inline-code">compactPresetLabel</code> to collapse
           the date trigger to an icon-only button and let the preset
@@ -948,7 +948,7 @@ export default function CalendarComponent() {
         <SectionHeader id="stacked" onCopyLink={showToast}>
           Stacked
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Use{" "}
           <code className="inline-code">
             stacked
@@ -975,7 +975,7 @@ export default function CalendarComponent() {
         <SectionHeader id="presets-with-default-value" onCopyLink={showToast}>
           Presets with default value
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Provide common date ranges with an additional default value.
         </p>
         <div className="mt-4 xl:mt-7">
@@ -997,7 +997,7 @@ export default function CalendarComponent() {
         <SectionHeader id="min-and-max-dates" onCopyLink={showToast}>
           Min and max dates
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Constrain the selectable date range with minimum and maximum dates.
         </p>
         <div className="mt-4 xl:mt-7">
@@ -1019,7 +1019,7 @@ export default function CalendarComponent() {
         <SectionHeader id="month-tab" onCopyLink={showToast}>
           Month tab
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Use{" "}
           <code className="inline-code">
             showMonthTab
@@ -1045,7 +1045,7 @@ export default function CalendarComponent() {
         <SectionHeader id="backdrop" onCopyLink={showToast}>
           With overlay
         </SectionHeader>
-        <p className="mt-2 leading-6 text-[var(--ds-gray-900)] xl:mt-4">
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
           Pass <code className="inline-code">backdrop</code> to render a
           page-dim overlay behind the open popover and lock document
           scroll while it&rsquo;s open. Off by default so most dashboards

@@ -189,22 +189,22 @@ export function CodeBlock({
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "rgb(var(--color-textDefault))",
+            darkColor: "rgb(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
 
   return (
     <div
-      className="relative border border-[var(--ds-gray-400)] rounded overflow-hidden group"
+      className="relative border border-borderDefault rounded overflow-hidden group"
       data-code-block
       aria-label={ariaLabel}
     >
       {/* Header with filename */}
       {filename && (
         <div
-          className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-[var(--ds-gray-400)]"
+          className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-borderDefault"
           style={{
             background: "rgb(var(--color-surface))",
             borderRadius: "4px 4px 0 0",
@@ -272,7 +272,7 @@ export function CodeBlock({
       {!filename && (
         <button
           onClick={handleCopy}
-          className={`absolute right-3 p-2 rounded border border-transparent opacity-0 group-hover:opacity-100 transition-all z-10 text-textSubtle hover:text-textDefault hover:bg-surface hover:border-[var(--ds-gray-400)] ${
+          className={`absolute right-3 p-2 rounded border border-transparent opacity-0 group-hover:opacity-100 transition-all z-10 text-textSubtle hover:text-textDefault hover:bg-surface hover:border-borderDefault ${
             lines.length === 1 ? "top-1/2 -translate-y-1/2" : "top-3"
           }`}
           aria-label="Copy code"

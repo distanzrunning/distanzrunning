@@ -69,7 +69,7 @@ export async function ConsentLookupContent({ query }: { query: string }) {
       {rows.length === 0 ? (
         <p
           className="text-copy-13"
-          style={{ margin: 0, color: "var(--ds-gray-700)" }}
+          style={{ margin: 0, color: "rgb(var(--color-textSubtler))" }}
         >
           No records found for this ID.
         </p>
@@ -86,7 +86,7 @@ export async function ConsentLookupContent({ query }: { query: string }) {
           >
             <div
               className="text-copy-13"
-              style={{ color: "var(--ds-gray-700)" }}
+              style={{ color: "rgb(var(--color-textSubtler))" }}
             >
               {rows.length} decision{rows.length === 1 ? "" : "s"} · latest{" "}
               {new Date(rows[0].created_at).toLocaleString()}

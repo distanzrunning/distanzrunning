@@ -80,7 +80,7 @@ export default function DesignSystemHeader({
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="hidden xl:flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-[var(--ds-gray-400)] bg-transparent pl-2 pr-1.5 font-sans text-sm text-[var(--ds-gray-700)] outline-none transition-colors hover:bg-[var(--ds-background-200)]"
+              className="hidden xl:flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-borderDefault bg-transparent pl-2 pr-1.5 font-sans text-sm text-textSubtler outline-none transition-colors hover:bg-canvas"
             >
               Search Stride
               <Kbd size="small" meta>

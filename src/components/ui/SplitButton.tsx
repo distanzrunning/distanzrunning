@@ -138,8 +138,8 @@ export function SplitButton({
     : "rgb(var(--color-surface))";
   const textColor = isDefault
     ? "var(--ds-background-100)"
-    : "var(--ds-gray-1000)";
-  const borderOuterColor = "var(--ds-gray-400)";
+    : "rgb(var(--color-textDefault))";
+  const borderOuterColor = "rgb(var(--color-borderDefault))";
 
   // Primary button styles
   const primaryStyle: React.CSSProperties = {
@@ -175,7 +175,7 @@ export function SplitButton({
 
   const dividerColor = isDefault
     ? "var(--ds-gray-alpha-900)"
-    : "var(--ds-gray-300)";
+    : "rgb(var(--color-borderSubtle))";
 
   // Divider styles
   const dividerStyle: React.CSSProperties = {
@@ -289,7 +289,7 @@ export function SplitButton({
                       fontSize: 14,
                       lineHeight: "20px",
                       fontWeight: 500,
-                      color: "var(--ds-gray-1000)",
+                      color: "rgb(var(--color-textDefault))",
                     }}
                   >
                     {item.label}
@@ -301,7 +301,7 @@ export function SplitButton({
                       fontSize: 14,
                       lineHeight: "20px",
                       fontWeight: 400,
-                      color: "var(--ds-gray-900)",
+                      color: "rgb(var(--color-textSubtle))",
                     }}
                   >
                     {item.description}

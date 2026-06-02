@@ -108,13 +108,13 @@ export async function FeedbackLookupContent({
                 </TableCell>
                 <TableCell
                   className="text-copy-13"
-                  style={{ maxWidth: 360, color: "var(--ds-gray-1000)" }}
+                  style={{ maxWidth: 360, color: "rgb(var(--color-textDefault))" }}
                 >
                   {snippet}
                 </TableCell>
                 <TableCell>
                   {row.topic ?? (
-                    <span style={{ color: "var(--ds-gray-700)" }}>—</span>
+                    <span style={{ color: "rgb(var(--color-textSubtler))" }}>—</span>
                   )}
                 </TableCell>
                 <TableCell>
@@ -122,20 +122,20 @@ export async function FeedbackLookupContent({
                     <a
                       href={`mailto:${row.email}`}
                       style={{
-                        color: "var(--ds-gray-900)",
+                        color: "rgb(var(--color-textSubtle))",
                         textDecoration: "underline",
                       }}
                     >
                       {row.email}
                     </a>
                   ) : (
-                    <span style={{ color: "var(--ds-gray-700)" }}>—</span>
+                    <span style={{ color: "rgb(var(--color-textSubtler))" }}>—</span>
                   )}
                 </TableCell>
                 <TableCell
                   className="text-label-12-mono"
                   style={{
-                    color: "var(--ds-gray-700)",
+                    color: "rgb(var(--color-textSubtler))",
                     maxWidth: 180,
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -143,7 +143,7 @@ export async function FeedbackLookupContent({
                   }}
                 >
                   {row.page_path ?? (
-                    <span style={{ color: "var(--ds-gray-700)" }}>—</span>
+                    <span style={{ color: "rgb(var(--color-textSubtler))" }}>—</span>
                   )}
                 </TableCell>
                 <TableCell>

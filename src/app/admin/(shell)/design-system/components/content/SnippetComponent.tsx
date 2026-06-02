@@ -233,8 +233,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "rgb(var(--color-textDefault))",
+            darkColor: "rgb(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -246,7 +246,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
         style={{ background: "var(--ds-background-100)" }}
@@ -260,20 +260,20 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
@@ -453,7 +453,7 @@ function ControlledCopiedDemo() {
   const cardContent = (
     <div
       className="font-mono text-copy-13 w-96 whitespace-pre-line"
-      style={{ color: "var(--ds-gray-1000)" }}
+      style={{ color: "rgb(var(--color-textDefault))" }}
     >
       {`# About\nTemplate for a full-featured Next.js AI chatbot\n\n# Requirements\nThis template uses the Vercel AI Gateway to access multiple AI models through a unified interface. The default model is OpenAI GPT-4.1 Mini, with support for Anthropic, Google, and xAI models.`}
     </div>
@@ -564,7 +564,7 @@ export default function SnippetComponent() {
         </SectionHeader>
         <p
           className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "var(--ds-gray-900)" }}
+          style={{ color: "rgb(var(--color-textSubtle))" }}
         >
           Pair{" "}
           <code className="inline-code">placeholder</code> with{" "}

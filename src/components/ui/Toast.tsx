@@ -244,9 +244,9 @@ function ToastCard({
         padding: 16,
         lineHeight: "20px",
         color:
-          item.variant === "warning" ? "var(--ds-gray-1000)"
+          item.variant === "warning" ? "rgb(var(--color-textDefault))"
           : item.variant !== "default" ? "#fff"
-          : "var(--ds-gray-1000)",
+          : "rgb(var(--color-textDefault))",
         zIndex,
         overflow: "hidden",
         pointerEvents: item.exiting || index >= 3 ? "none" as const : "auto" as const,
@@ -306,7 +306,7 @@ function ToastCard({
                   color:
                     item.variant === "default" ||
                     item.variant === "warning"
-                      ? "var(--ds-gray-900)"
+                      ? "rgb(var(--color-textSubtle))"
                       : "rgba(255, 255, 255, 0.8)",
                   fontSize: 13,
                   lineHeight: "18px",
@@ -407,7 +407,7 @@ function ToastCard({
                 border: "none",
                 borderRadius: 6,
                 background: "transparent",
-                color: "var(--ds-gray-1000)",
+                color: "rgb(var(--color-textDefault))",
                 fontSize: 14,
                 fontWeight: 500,
                 lineHeight: "20px",

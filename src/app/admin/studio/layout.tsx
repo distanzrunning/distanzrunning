@@ -48,13 +48,13 @@ export default async function StudioLayout({
         className="flex h-10 shrink-0 items-center border-b px-3"
         style={{
           background: "rgb(var(--color-canvas))",
-          borderBottomColor: "var(--ds-gray-400)",
+          borderBottomColor: "rgb(var(--color-borderDefault))",
         }}
       >
         <Link
           href="/admin"
           className="inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-[13px] leading-5 transition-colors"
-          style={{ color: "var(--ds-gray-900)" }}
+          style={{ color: "rgb(var(--color-textSubtle))" }}
         >
           <ArrowLeft className="size-3.5" aria-hidden />
           Back to admin

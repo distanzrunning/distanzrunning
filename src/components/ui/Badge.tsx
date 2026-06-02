@@ -74,8 +74,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   pink: "bg-[var(--ds-pink-900)] text-white",
   green: "bg-[var(--ds-green-900)] text-white",
   teal: "bg-[var(--ds-teal-900)] text-white",
-  // Inverted: black bg in light mode, white bg in dark mode (stands out against page)
-  inverted: "bg-black text-white dark:bg-white dark:text-black",
+  inverted: "bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)] dark:bg-[var(--ds-background-100)] dark:text-[var(--ds-gray-1000)]",
 
   // Subtle variants - light tinted backgrounds with dark text
   "gray-subtle": "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)]",
@@ -173,9 +172,9 @@ export const BadgePill = forwardRef<
 >(({ children, size = "md", icon, href, onClick, className = "" }, ref) => {
   const pillStyles = `
     inline-flex items-center justify-center rounded-full font-medium whitespace-nowrap
-    bg-surface text-[var(--ds-gray-1000)]
-    border border-[var(--ds-gray-400)]
-    hover:bg-[var(--ds-gray-200)] hover:border-[var(--ds-gray-500)]
+    bg-surface text-textDefault
+    border border-borderDefault
+    hover:bg-[var(--ds-gray-200)] hover:border-borderDefaultHover
     transition-colors cursor-pointer
     ${pillSizeStyles[size]}
     ${className}

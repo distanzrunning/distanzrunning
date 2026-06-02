@@ -83,7 +83,7 @@ export async function RaceDateReviewContent() {
 
   return (
     <>
-      <p className="mb-6 mt-2 text-copy-14 text-[color:var(--ds-gray-700)]">
+      <p className="mb-6 mt-2 text-copy-14 text-textSubtler">
         {past.length} race{past.length === 1 ? "" : "s"} with a past eventDate.{" "}
         {pendingCount > 0
           ? `${pendingCount} ${
@@ -101,7 +101,7 @@ export async function RaceDateReviewContent() {
               <TableRow>
                 <TableCell
                   colSpan={6}
-                  className="py-8 text-center text-copy-13 text-[color:var(--ds-gray-700)]"
+                  className="py-8 text-center text-copy-13 text-textSubtler"
                 >
                   No past-dated races found.
                 </TableCell>

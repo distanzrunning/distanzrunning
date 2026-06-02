@@ -99,14 +99,14 @@ export default function MegaMenuPanel({
       {/* ---------------------------------------------------------- */}
       {/* Left column — section intro                                */}
       {/* ---------------------------------------------------------- */}
-      <div className="flex h-full flex-col border-r border-[color:var(--ds-gray-300)] pr-8">
-        <p className="text-heading-14 text-[color:var(--ds-gray-900)]">
+      <div className="flex h-full flex-col border-r border-borderSubtle pr-8">
+        <p className="text-heading-14 text-textSubtle">
           {eyebrow}
         </p>
-        <h3 className="mt-3 text-heading-32 font-serif text-balance text-[color:var(--ds-gray-1000)]">
+        <h3 className="mt-3 text-heading-32 font-serif text-balance text-textDefault">
           {heading}
         </h3>
-        <p className="mt-3 text-copy-14 text-[color:var(--ds-gray-900)]">
+        <p className="mt-3 text-copy-14 text-textSubtle">
           {tagline}
         </p>
         <div className="mt-auto">
@@ -130,7 +130,7 @@ export default function MegaMenuPanel({
       {/* Middle column — category link grid                         */}
       {/* ---------------------------------------------------------- */}
       <div className="flex h-full flex-col">
-        <p className="pl-2 text-heading-14 text-[color:var(--ds-gray-900)]">
+        <p className="pl-2 text-heading-14 text-textSubtle">
           Categories
         </p>
         {/* grid-flow-col + grid-rows-4 fills column-by-column: the
@@ -146,12 +146,12 @@ export default function MegaMenuPanel({
             <NavigationMenuPrimitive.Link asChild key={item.href}>
               <Link
                 href={item.href}
-                className="rounded-[8px] p-2 transition-colors hover:bg-[color:var(--ds-gray-100)] focus-visible:bg-[color:var(--ds-gray-100)] focus-visible:outline-none"
+                className="rounded-[8px] p-2 transition-colors hover:bg-[var(--ds-gray-100)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:outline-none"
               >
-                <span className="block text-heading-20 text-[color:var(--ds-gray-1000)]">
+                <span className="block text-heading-20 text-textDefault">
                   {item.label}
                 </span>
-                <span className="mt-1 block text-copy-14 text-[color:var(--ds-gray-900)]">
+                <span className="mt-1 block text-copy-14 text-textSubtle">
                   {item.description}
                 </span>
               </Link>
@@ -164,24 +164,24 @@ export default function MegaMenuPanel({
       {/* Right column — featured card                               */}
       {/* ---------------------------------------------------------- */}
       <div className="flex h-full flex-col">
-        <p className="text-heading-14 text-[color:var(--ds-gray-900)]">
+        <p className="text-heading-14 text-textSubtle">
           Featured
         </p>
         {featured ? (
           <NavigationMenuPrimitive.Link asChild>
             <Link
               href={featured.href}
-              className="mt-3 block rounded-[8px] bg-[color:var(--ds-gray-1000)] px-2 pt-2 pb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--ds-focus-ring)]"
+              className="mt-3 block rounded-[8px] bg-textDefault px-2 pt-2 pb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--ds-focus-ring)]"
             >
               <FeaturedImage
                 image={featured.image}
                 alt={featured.title}
               />
-              <h4 className="mt-2 px-2 text-button-14 font-bold text-[color:var(--ds-gray-100)]">
+              <h4 className="mt-2 px-2 text-button-14 font-bold text-[var(--ds-gray-100)]">
                 {featured.title}
               </h4>
               {featured.description && (
-                <p className="mt-1 px-2 text-copy-14 text-[color:var(--ds-gray-100)] line-clamp-3">
+                <p className="mt-1 px-2 text-copy-14 text-[var(--ds-gray-100)] line-clamp-3">
                   {featured.description}
                 </p>
               )}
@@ -192,7 +192,7 @@ export default function MegaMenuPanel({
           // render a placeholder at the same 4/3 aspect as the image
           // slot so the right column keeps the same footprint and
           // the panel doesn't shrink for unfeatured sections.
-          <div className="mt-3 flex aspect-[4/3] w-full items-center justify-center rounded-[8px] border border-dashed border-[color:var(--ds-gray-300)] p-4 text-copy-14 text-[color:var(--ds-gray-900)]">
+          <div            className="mt-3 flex aspect-[4/3] w-full items-center justify-center rounded-[8px] border border-dashed border-borderSubtle bg-[var(--ds-gray-100)] p-4 text-copy-14 text-textSubtle">
             No featured item yet
           </div>
         )}
@@ -219,11 +219,11 @@ function FeaturedImage({
 }) {
   if (!image) {
     return (
-      <div className="aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-[color:var(--ds-gray-700)]" />
+      <div className="aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-[var(--ds-gray-700)]" />
     );
   }
   return (
-    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-[color:var(--ds-gray-700)]">
+    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-[var(--ds-gray-700)]">
       <Image
         src={urlFor(image).width(720).height(540).auto("format").url()}
         alt={alt}

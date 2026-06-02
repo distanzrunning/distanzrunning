@@ -65,7 +65,7 @@ export default function LeaderboardPanel({
     <div
       style={{
         background: "var(--ds-background-100)",
-        border: "1px solid var(--ds-gray-400)",
+        border: "1px solid rgb(var(--color-borderDefault))",
         borderRadius: 6,
         overflow: "hidden",
       }}
@@ -102,7 +102,7 @@ export default function LeaderboardPanel({
             fontWeight: 500,
             textTransform: "uppercase",
             letterSpacing: "0.04em",
-            color: "var(--ds-gray-900)",
+            color: "rgb(var(--color-textSubtle))",
             // Same 1px line the Tabs container's inset shadow paints
             // — extended across the column-header gap to the right
             // edge of the panel.
@@ -120,7 +120,7 @@ export default function LeaderboardPanel({
             style={{
               padding: "24px 32px",
               textAlign: "center",
-              color: "var(--ds-gray-700)",
+              color: "rgb(var(--color-textSubtler))",
               fontSize: 14,
               lineHeight: "20px",
             }}
@@ -202,7 +202,7 @@ function LeaderboardRow({
                 style={{
                   fontSize: 14,
                   lineHeight: "32px",
-                  color: "var(--ds-gray-1000)",
+                  color: "rgb(var(--color-textDefault))",
                   textDecoration: "none",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -221,8 +221,8 @@ function LeaderboardRow({
                   fontSize: 14,
                   lineHeight: "32px",
                   color: row.italic
-                    ? "var(--ds-gray-700)"
-                    : "var(--ds-gray-1000)",
+                    ? "rgb(var(--color-textSubtler))"
+                    : "rgb(var(--color-textDefault))",
                   fontStyle: row.italic ? "italic" : "normal",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -269,7 +269,7 @@ function LeaderboardRow({
                 fontSize: 14,
                 lineHeight: "20px",
                 fontWeight: 600,
-                color: "var(--ds-gray-1000)",
+                color: "rgb(var(--color-textDefault))",
                 fontVariantNumeric: "tabular-nums",
               }}
             >

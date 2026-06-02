@@ -39,7 +39,7 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
               "w-full caption-bottom",
               className,
             )}
-            style={{ color: "var(--ds-gray-900)", fontSize: 14, lineHeight: "20px" }}
+            style={{ color: "rgb(var(--color-textSubtle))", fontSize: 14, lineHeight: "20px" }}
             {...props}
           >
             {children}
@@ -123,10 +123,10 @@ const TableHead = forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-10 px-2 text-left align-middle font-medium last:text-right border-[var(--ds-gray-400)]",
+      "h-10 px-2 text-left align-middle font-medium last:text-right border-borderDefault",
       className,
     )}
-    style={{ color: "var(--ds-gray-900)" }}
+    style={{ color: "rgb(var(--color-textSubtle))" }}
     {...props}
   />
 ));

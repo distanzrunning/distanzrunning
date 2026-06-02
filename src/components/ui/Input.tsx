@@ -158,7 +158,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               ...(prefixStyling
                 ? { background: "rgb(var(--color-surface))" }
                 : { marginRight: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
-              ...(disabled ? { cursor: "not-allowed", color: "var(--ds-gray-700)" } : {}),
+              ...(disabled ? { cursor: "not-allowed", color: "rgb(var(--color-textSubtler))" } : {}),
             }}
           >
             {prefix}
@@ -182,7 +182,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             background: disabled ? "var(--ds-gray-100)" : "rgb(var(--color-surface))",
             fontSize: config.fontSize,
             lineHeight: "20px",
-            color: disabled ? "var(--ds-gray-700)" : "var(--ds-gray-1000)",
+            color: disabled ? "rgb(var(--color-textSubtler))" : "rgb(var(--color-textDefault))",
             fontFamily: "inherit",
             paddingLeft: config.paddingX,
             paddingRight: config.paddingX,
@@ -220,7 +220,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               ...(suffixStyling
                 ? { background: "rgb(var(--color-surface))" }
                 : { marginLeft: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
-              ...(disabled ? { cursor: "not-allowed", color: "var(--ds-gray-700)" } : {}),
+              ...(disabled ? { cursor: "not-allowed", color: "rgb(var(--color-textSubtler))" } : {}),
             }}
           >
             {suffix}

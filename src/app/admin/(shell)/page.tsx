@@ -60,9 +60,9 @@ function SectionCard({
       href={href}
       className="group flex flex-col gap-4 rounded-xl p-6 transition-colors no-underline"
       style={{
-        border: "1px solid var(--ds-gray-400)",
+        border: "1px solid rgb(var(--color-borderDefault))",
         background: "rgb(var(--color-surface))",
-        color: "var(--ds-gray-1000)",
+        color: "rgb(var(--color-textDefault))",
         minHeight: 180,
       }}
     >
@@ -73,7 +73,7 @@ function SectionCard({
             width: 40,
             height: 40,
             background: "var(--ds-gray-100)",
-            color: "var(--ds-gray-900)",
+            color: "rgb(var(--color-textSubtle))",
           }}
         >
           {icon}
@@ -83,7 +83,7 @@ function SectionCard({
           style={{
             width: 28,
             height: 28,
-            color: "var(--ds-gray-900)",
+            color: "rgb(var(--color-textSubtle))",
             background: "var(--ds-gray-100)",
           }}
           aria-hidden="true"
@@ -94,13 +94,13 @@ function SectionCard({
       <div className="flex flex-col gap-2">
         <h2
           className="text-heading-16"
-          style={{ margin: 0, color: "var(--ds-gray-1000)" }}
+          style={{ margin: 0, color: "rgb(var(--color-textDefault))" }}
         >
           {label}
         </h2>
         <p
           className="text-copy-14"
-          style={{ margin: 0, color: "var(--ds-gray-700)" }}
+          style={{ margin: 0, color: "rgb(var(--color-textSubtler))" }}
         >
           {description}
         </p>
@@ -116,13 +116,13 @@ export default function AdminOverviewPage() {
         <header style={{ marginBottom: 24 }}>
           <h1
             className="text-heading-32"
-            style={{ margin: 0, color: "var(--ds-gray-1000)" }}
+            style={{ margin: 0, color: "rgb(var(--color-textDefault))" }}
           >
             Overview
           </h1>
           <p
             className="text-copy-16"
-            style={{ marginTop: 6, marginBottom: 0, color: "var(--ds-gray-700)" }}
+            style={{ marginTop: 6, marginBottom: 0, color: "rgb(var(--color-textSubtler))" }}
           >
             Jump into any area of Stride Admin.
           </p>

@@ -149,7 +149,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <div
             className="text-[13px] capitalize mb-2 max-w-full"
-            style={{ color: "var(--ds-gray-700)" }}
+            style={{ color: "rgb(var(--color-textSubtler))" }}
           >
             {label}
           </div>
@@ -167,7 +167,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               className="absolute left-0 flex items-center justify-center pointer-events-none z-10"
               style={{
                 left: size === "xsmall" ? "8px" : size === "small" ? "10px" : size === "large" ? "14px" : "12px",
-                color: "var(--ds-gray-900)",
+                color: "rgb(var(--color-textSubtle))",
               }}
             >
               {prefix}
@@ -191,7 +191,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               .filter(Boolean)
               .join(" ")}
             style={{
-              color: disabled ? "var(--ds-gray-600)" : "var(--ds-gray-1000)",
+              color: disabled ? "var(--ds-gray-600)" : "rgb(var(--color-textDefault))",
               background: disabled ? "var(--ds-gray-200)" : "rgb(var(--color-surface))",
             }}
             {...props}
@@ -204,7 +204,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             className="absolute right-0 flex items-center justify-center pointer-events-none"
             style={{
               right: size === "xsmall" ? "8px" : size === "small" ? "10px" : size === "large" ? "14px" : "12px",
-              color: disabled ? "var(--ds-gray-600)" : "var(--ds-gray-900)",
+              color: disabled ? "var(--ds-gray-600)" : "rgb(var(--color-textSubtle))",
             }}
           >
             {suffix || <ChevronDownIcon />}

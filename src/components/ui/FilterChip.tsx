@@ -99,8 +99,8 @@ export default function FilterChip({
           // as the rest of the DS's hairline chips.
           className={`inline-flex h-8 cursor-pointer items-center gap-1 rounded-sm pl-3 pr-1.5 text-[14px] font-normal leading-[20px] [box-shadow:var(--ds-gray-400)_0_0_0_1px] hover:[box-shadow:var(--ds-gray-500)_0_0_0_1px] ${
             isActiveStyled
-              ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)] hover:bg-[color:var(--ds-gray-900)]"
-              : "bg-surface text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-100)]"
+              ? "bg-[color:var(--ds-gray-1000)] text-[var(--ds-background-100)] hover:bg-[var(--ds-gray-900)]"
+              : "bg-surface text-textDefault hover:bg-[var(--ds-gray-100)]"
           }`}
         >
           <span>{isActive && activeLabel ? activeLabel : label}</span>
@@ -128,8 +128,8 @@ export default function FilterChip({
             <ChevronDown
               className={`size-4 ${
                 isActiveStyled
-                  ? "text-[color:var(--ds-background-100)] opacity-70"
-                  : "text-[color:var(--ds-gray-900)]"
+                  ? "text-[var(--ds-background-100)] opacity-70"
+                  : "text-textSubtle"
               }`}
             />
           )}

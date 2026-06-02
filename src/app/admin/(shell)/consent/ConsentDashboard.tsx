@@ -258,10 +258,10 @@ function CategoryBar({
     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
       <div
         className="flex justify-between text-copy-13"
-        style={{ color: "var(--ds-gray-1000)" }}
+        style={{ color: "rgb(var(--color-textDefault))" }}
       >
         <span className="font-medium">{label}</span>
-        <span style={{ color: "var(--ds-gray-700)" }}>
+        <span style={{ color: "rgb(var(--color-textSubtler))" }}>
           {count.toLocaleString()} · {fmtPct(pct(count, total))}
         </span>
       </div>
@@ -458,7 +458,7 @@ export async function ConsentDashboardContent({
           two surfaces read as one panel. */}
       <div
         style={{
-          border: "1px solid var(--ds-gray-400)",
+          border: "1px solid rgb(var(--color-borderDefault))",
           borderRadius: 10,
           overflow: "hidden",
           background: "rgb(var(--color-surface))",
@@ -477,11 +477,11 @@ export async function ConsentDashboardContent({
             structure) and leaves room for a horizontal scrollbar. */}
         <div style={{ overflowX: "auto", paddingBottom: 6 }}>
         <div
-          className="divide-x divide-[color:var(--ds-gray-400)]"
+          className="divide-x divide-borderDefault"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-            borderBottom: "1px solid var(--ds-gray-400)",
+            borderBottom: "1px solid rgb(var(--color-borderDefault))",
             background: "rgb(var(--color-canvas))",
           }}
         >
@@ -619,7 +619,7 @@ export function ConsentDashboardSkeleton() {
     <div aria-busy="true" aria-live="polite">
       <div
         style={{
-          border: "1px solid var(--ds-gray-400)",
+          border: "1px solid rgb(var(--color-borderDefault))",
           borderRadius: 10,
           overflow: "hidden",
           background: "rgb(var(--color-surface))",
@@ -627,11 +627,11 @@ export function ConsentDashboardSkeleton() {
         }}
       >
         <div
-          className="divide-x divide-[color:var(--ds-gray-400)]"
+          className="divide-x divide-borderDefault"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-            borderBottom: "1px solid var(--ds-gray-400)",
+            borderBottom: "1px solid rgb(var(--color-borderDefault))",
             background: "rgb(var(--color-canvas))",
           }}
         >
@@ -663,7 +663,7 @@ export function ConsentDashboardSkeleton() {
               >
                 <div
                   className="flex justify-between text-copy-13"
-                  style={{ color: "var(--ds-gray-1000)" }}
+                  style={{ color: "rgb(var(--color-textDefault))" }}
                 >
                   <span className="font-medium">{label}</span>
                   <Skeleton width={60} height={14} style={block} />

@@ -522,7 +522,7 @@ function ComponentBackgroundsSection() {
             className="px-2 py-1 text-xs font-medium rounded capitalize"
             style={{
               background: "var(--ds-gray-200)",
-              color: "var(--ds-gray-900)",
+              color: "rgb(var(--color-textSubtle))",
             }}
           >
             Hobby
@@ -590,8 +590,8 @@ function BordersSection() {
             padding: "0 12px",
             borderRadius: "6px",
             background: "var(--ds-background-100)",
-            boxShadow: "0 0 0 1px var(--ds-gray-400)",
-            color: "var(--ds-gray-1000)",
+            boxShadow: "0 0 0 1px rgb(var(--color-borderDefault))",
+            color: "rgb(var(--color-textDefault))",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "var(--ds-gray-alpha-200)";
@@ -775,11 +775,11 @@ function TextAndIconsSection() {
           <div className="flex w-[316px] flex-col gap-1">
             <p
               className="text-heading-16"
-              style={{ color: "var(--ds-gray-1000)" }}
+              style={{ color: "rgb(var(--color-textDefault))" }}
             >
               The Frontend Cloud
             </p>
-            <p className="text-[14px]" style={{ color: "var(--ds-gray-900)" }}>
+            <p className="text-[14px]" style={{ color: "rgb(var(--color-textSubtle))" }}>
               Build, scale, and secure a faster, personalized web with Distanz.
             </p>
             <a

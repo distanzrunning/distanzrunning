@@ -205,8 +205,8 @@ function CodePreview({
           [
             {
               content: line,
-              color: "var(--ds-gray-1000)",
-              darkColor: "var(--ds-gray-1000)",
+              color: "rgb(var(--color-textDefault))",
+              darkColor: "rgb(var(--color-textDefault))",
             },
           ] as DualThemeToken[],
       );
@@ -216,7 +216,7 @@ function CodePreview({
     setTimeout(() => setCopied(false), 1000);
   }, [componentCode]);
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg">
+    <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
         style={{ background: "var(--ds-background-100)" }}
@@ -230,20 +230,20 @@ function CodePreview({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
@@ -433,34 +433,34 @@ function AnatomyDemo() {
       />
       <ul
         className="flex flex-col gap-3 text-copy-13 leading-[1.5]"
-        style={{ color: "var(--ds-gray-900)" }}
+        style={{ color: "rgb(var(--color-textSubtle))" }}
       >
         <li>
-          <strong style={{ color: "var(--ds-gray-1000)" }}>Image —</strong>{" "}
+          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Image —</strong>{" "}
           16/8.75 cinematic ratio, rounded-md, starts at scale 104% and
           settles to 100% on hover (image visually &quot;sharpens into
           place&quot;).
         </li>
         <li>
-          <strong style={{ color: "var(--ds-gray-1000)" }}>Kicker —</strong>{" "}
+          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Kicker —</strong>{" "}
           11 px medium label. Becomes a clickable link when{" "}
           <code>kickerHref</code> is set; falls back to a plain span
           otherwise.
         </li>
         <li>
-          <strong style={{ color: "var(--ds-gray-1000)" }}>Date —</strong>{" "}
+          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Date —</strong>{" "}
           formatted as <code>d MMM yyyy</code>. Sits after the kicker with
           a faint dot separator.
         </li>
         <li>
-          <strong style={{ color: "var(--ds-gray-1000)" }}>Title —</strong>{" "}
+          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Title —</strong>{" "}
           19 px semibold, clamped to 2 lines on mobile and 3 on{" "}
           <code>md+</code>. The title&apos;s anchor carries the
           card-wide click overlay (<code>::after</code> spans the whole
           article).
         </li>
         <li>
-          <strong style={{ color: "var(--ds-gray-1000)" }}>Excerpt —</strong>{" "}
+          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Excerpt —</strong>{" "}
           15 px medium, clamped to 2 lines, capped at{" "}
           <code>max-w-3xl</code>.
         </li>
@@ -669,14 +669,14 @@ export default function ArticleCardComponent() {
           style={{ lineHeight: 1.6 }}
         >
           <li>
-            <strong style={{ color: "var(--ds-gray-1000)" }}>
+            <strong style={{ color: "rgb(var(--color-textDefault))" }}>
               Image settle —
             </strong>{" "}
             scales from 104% to 100% over 300 ms (group-hover on the
             outer <code>&lt;article&gt;</code>).
           </li>
           <li>
-            <strong style={{ color: "var(--ds-gray-1000)" }}>
+            <strong style={{ color: "rgb(var(--color-textDefault))" }}>
               Kicker colour shift —
             </strong>{" "}
             kicker text fades from <code>--ds-gray-900</code> to{" "}

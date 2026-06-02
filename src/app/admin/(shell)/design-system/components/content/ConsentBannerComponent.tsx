@@ -133,7 +133,7 @@ function CodePreview({ children, componentCode, minHeight = 220 }: { children: R
   const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
   const lines: DualThemeToken[][] =
     tokenizedLines ||
-    componentCode.split("\n").map((line) => [{ content: line, color: "var(--ds-gray-1000)", darkColor: "var(--ds-gray-1000)" }] as DualThemeToken[]);
+    componentCode.split("\n").map((line) => [{ content: line, color: "rgb(var(--color-textDefault))", darkColor: "rgb(var(--color-textDefault))" }] as DualThemeToken[]);
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(componentCode);
@@ -142,19 +142,19 @@ function CodePreview({ children, componentCode, minHeight = 220 }: { children: R
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg w-full min-w-0 overflow-hidden">
+    <div className="border border-borderDefault rounded-lg w-full min-w-0 overflow-hidden">
       <div className="p-6 flex items-center justify-center" style={{ background: "var(--ds-background-100)", minHeight }}>
         {children}
       </div>
       <div style={{ background: "var(--ds-background-200)" }}>
-        <button type="button" onClick={() => setIsOpen(!isOpen)} className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]">
+        <button type="button" onClick={() => setIsOpen(!isOpen)} className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault">
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
-          <div className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13" style={{ background: "var(--ds-background-100)" }}>
+          <div className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13" style={{ background: "var(--ds-background-100)" }}>
             <div className="relative group">
-              <button onClick={handleCopy} className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]" aria-label="Copy code">
+              <button onClick={handleCopy} className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]" aria-label="Copy code">
                 <CopyIconButton copied={copied} />
               </button>
               <pre className="overflow-x-auto py-4" data-code-block>
@@ -230,7 +230,7 @@ function DemoFloatingBanner({
           className="flex flex-col gap-4 rounded-xl p-5"
           style={{
             background: "var(--ds-background-100)",
-            border: "1px solid var(--ds-gray-400)",
+            border: "1px solid rgb(var(--color-borderDefault))",
             boxShadow: "var(--ds-shadow-menu)",
           }}
         >
@@ -315,7 +315,7 @@ function DemoSettingsModal({
       <div
         className="overflow-hidden"
         style={{
-          border: "1px solid var(--ds-gray-400)",
+          border: "1px solid rgb(var(--color-borderDefault))",
           borderRadius: 6,
           background: "var(--ds-background-100)",
           marginTop: 24,
@@ -357,7 +357,7 @@ function DemoSettingsModal({
           </div>
           <p
             className="text-[12px] leading-[1.6]"
-            style={{ color: "var(--ds-gray-700)", margin: 0 }}
+            style={{ color: "rgb(var(--color-textSubtler))", margin: 0 }}
           >
             For more information, see our{" "}
             <a

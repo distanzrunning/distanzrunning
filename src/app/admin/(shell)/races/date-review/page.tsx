@@ -26,7 +26,7 @@ export default function RaceDateReviewPage() {
     <div className="px-6 py-8">
       <div className="mx-auto max-w-[1280px]">
         <header className="mb-2">
-          <h1 className="m-0 text-heading-24 text-[color:var(--ds-gray-1000)]">
+          <h1 className="m-0 text-heading-24 text-textDefault">
             Race Date Review
           </h1>
         </header>

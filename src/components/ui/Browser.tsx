@@ -54,9 +54,9 @@ function TrafficLights() {
 function NavigationButtons() {
   return (
     <div aria-hidden="true" className="flex items-center gap-4 max-md:hidden">
-      <ArrowLeft size={14} className="text-[var(--ds-gray-900)]" />
-      <ArrowRight size={14} className="text-[var(--ds-gray-900)]" />
-      <RotateCw size={14} className="text-[var(--ds-gray-900)]" />
+      <ArrowLeft size={14} className="text-textSubtle" />
+      <ArrowRight size={14} className="text-textSubtle" />
+      <RotateCw size={14} className="text-textSubtle" />
     </div>
   );
 }
@@ -83,10 +83,10 @@ function AddressBar({
   }, [url]);
 
   return (
-    <div className="lg:max-w-xs bg-canvas border border-[var(--ds-gray-400)] w-full rounded-full pl-4 pr-1 py-1 flex items-center justify-between">
+    <div className="lg:max-w-xs bg-canvas border border-borderDefault w-full rounded-full pl-4 pr-1 py-1 flex items-center justify-between">
       <div
         aria-hidden="true"
-        className="text-[13px] text-[var(--ds-gray-1000)] truncate flex-1 min-w-0 text-center"
+        className="text-[13px] text-textDefault truncate flex-1 min-w-0 text-center"
       >
         {url}
       </div>
@@ -103,14 +103,14 @@ function AddressBar({
                 copied ? "opacity-0 scale-75" : "opacity-100 scale-100"
               }`}
             >
-              <Copy size={12} className="text-[var(--ds-gray-900)]" />
+              <Copy size={12} className="text-textSubtle" />
             </span>
             <span
               className={`absolute inset-0 flex items-center justify-center transition-all duration-150 ease-out ${
                 copied ? "opacity-100 scale-100" : "opacity-0 scale-75"
               }`}
             >
-              <Check size={12} className="text-[var(--ds-gray-900)]" />
+              <Check size={12} className="text-textSubtle" />
             </span>
           </div>
         </button>

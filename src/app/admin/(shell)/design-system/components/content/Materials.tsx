@@ -185,7 +185,7 @@ function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
           {materials.map((material) => (
             <tr
               key={material.className}
-              className="transition-colors hover:bg-[var(--ds-gray-100)] cursor-copy border-b border-[var(--ds-gray-400)]"
+              className="transition-colors hover:bg-[var(--ds-gray-100)] cursor-copy border-b border-borderDefault"
               onClick={() => handleCopyClassName(material.className)}
               style={{ height: 120 }}
             >

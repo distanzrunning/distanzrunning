@@ -87,8 +87,8 @@ function PaginationRail({
   const isPrev = direction === "previous";
   const ariaLabel = `Go to ${direction} page: ${slot.title}`;
   const innerClass = isPrev
-    ? "inline-block py-1 pl-7 pr-2 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200"
-    : "inline-block py-1 pl-2 pr-7 text-left text-[var(--ds-gray-900)] hover:text-black dark:hover:text-white transition-colors duration-200";
+    ? "inline-block py-1 pl-7 pr-2 text-left text-textSubtle hover:text-black dark:hover:text-white transition-colors duration-200"
+    : "inline-block py-1 pl-2 pr-7 text-left text-textSubtle hover:text-black dark:hover:text-white transition-colors duration-200";
 
   const content = (
     <>
@@ -96,7 +96,7 @@ function PaginationRail({
         {isPrev ? "Previous" : "Next"}
       </span>
       <div className="relative flex items-center">
-        <span className="text-[1rem] leading-[1.5rem] font-medium text-[var(--ds-gray-1000)]">
+        <span className="text-[1rem] leading-[1.5rem] font-medium text-textDefault">
           {slot.title}
         </span>
         <span

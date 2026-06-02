@@ -64,7 +64,7 @@ export function CommandMenuTrigger({ onOpen }: { onOpen: () => void }) {
         borderRadius: 6,
         border: "1px solid var(--ds-gray-alpha-400)",
         background: "var(--ds-background-100)",
-        color: "var(--ds-gray-1000)",
+        color: "rgb(var(--color-textDefault))",
         cursor: "text",
         textAlign: "left",
         fontFamily: "inherit",
@@ -77,7 +77,7 @@ export function CommandMenuTrigger({ onOpen }: { onOpen: () => void }) {
           width: 36,
           height: 36,
           paddingLeft: 4,
-          color: "var(--ds-gray-900)",
+          color: "rgb(var(--color-textSubtle))",
           flexShrink: 0,
         }}
       >
@@ -115,7 +115,7 @@ export function CommandMenuTrigger({ onOpen }: { onOpen: () => void }) {
             borderRadius: 4,
             boxShadow:
               "var(--ds-gray-alpha-400) 0px 0px 0px 1px, var(--ds-gray-100) 0px 0px 0px 1px",
-            color: "var(--ds-gray-1000)",
+            color: "rgb(var(--color-textDefault))",
             fontFamily: "inherit",
           }}
         >
@@ -147,7 +147,7 @@ function ConsentLookupItem({ onSelect }: { onSelect: () => void }) {
     >
       Look up consent ID:{" "}
       <span
-        style={{ fontFamily: "var(--font-mono)", color: "var(--ds-gray-700)" }}
+        style={{ fontFamily: "var(--font-mono)", color: "rgb(var(--color-textSubtler))" }}
       >
         {search}
       </span>

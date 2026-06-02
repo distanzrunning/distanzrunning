@@ -313,10 +313,10 @@ function RejectedRow({ id, title }: RowActionsProps) {
 function NoWebsiteRow() {
   return (
     <>
-      <TableCell className="text-copy-13 text-[color:var(--ds-gray-700)]">
+      <TableCell className="text-copy-13 text-textSubtler">
         —
       </TableCell>
-      <TableCell className="text-copy-13 text-[color:var(--ds-gray-700)]">
+      <TableCell className="text-copy-13 text-textSubtler">
         No officialWebsite set
       </TableCell>
     </>

@@ -43,7 +43,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       style={{
         minHeight: "100vh",
         background: "rgb(var(--color-canvas))",
-        color: "var(--ds-gray-1000)",
+        color: "rgb(var(--color-textDefault))",
       }}
     >
       <aside
@@ -54,7 +54,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           width: SIDEBAR_WIDTH,
           height: "100vh",
           zIndex: 40,
-          borderRight: "1px solid var(--ds-gray-400)",
+          borderRight: "1px solid rgb(var(--color-borderDefault))",
           background: "rgb(var(--color-canvas))",
           display: "flex",
           flexDirection: "column",

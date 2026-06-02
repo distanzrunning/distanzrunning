@@ -125,7 +125,7 @@ export function ThemeSwitcher({
               color: disabled
                 ? "var(--ds-gray-600)"
                 : isSelected
-                  ? "var(--ds-gray-1000)"
+                  ? "rgb(var(--color-textDefault))"
                   : "var(--ds-gray-800)",
               transition:
                 "background 0.15s ease, box-shadow 0.15s ease, color 0.15s ease",

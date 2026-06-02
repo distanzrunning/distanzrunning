@@ -150,7 +150,7 @@ export function StatTile({
   const body = (
     <>
       <span
-        className="text-heading-14 text-[color:var(--ds-gray-900)] truncate"
+        className="text-heading-14 text-textSubtle truncate"
         style={muted ? { opacity: 0.8 } : undefined}
         title={label}
       >
@@ -160,14 +160,14 @@ export function StatTile({
         className="flex flex-row items-center gap-4"
         style={muted ? { opacity: 0.8 } : undefined}
       >
-        <span className="text-heading-32 text-[color:var(--ds-gray-1000)]">
+        <span className="text-heading-32 text-textDefault">
           {value}
         </span>
         {change && <ChangeChip change={change} />}
       </div>
       {hint && (
         <span
-          className="text-copy-13 text-[color:var(--ds-gray-700)]"
+          className="text-copy-13 text-textSubtler"
           style={muted ? { opacity: 0.8 } : undefined}
         >
           {hint}

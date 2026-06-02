@@ -147,7 +147,7 @@ export const Kbd = forwardRef<HTMLElement, KbdProps>(
       alignItems: "center",
       boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)",
       fontWeight: 500,
-      color: "var(--ds-gray-900)",
+      color: "rgb(var(--color-textSubtle))",
       fontFamily: "inherit",
       background: "rgb(var(--color-surface))",
       lineHeight: "normal",

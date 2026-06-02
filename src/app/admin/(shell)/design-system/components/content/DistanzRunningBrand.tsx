@@ -76,7 +76,7 @@ export default function DistanzRunningBrand() {
       <Section>
         <div className="flex flex-col">
           <SectionHeading id="distanz-running-logo" title="Distanz Running" />
-          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+          <p className="text-copy-16 mt-4" style={{ color: "rgb(var(--color-textSubtle))" }}>
             The Distanz Running trademark includes the Distanz Running name &amp; logo.
             Please don&apos;t modify the trademarks or use them in an altered way,
             including suggesting sponsorship or endorsement by Distanz Running, or in a
@@ -139,7 +139,7 @@ export default function DistanzRunningBrand() {
 
       {/* Code block for full logo usage */}
       <div
-        style={{ borderTop: "1px solid var(--ds-gray-400)", borderBottom: "1px solid var(--ds-gray-400)" }}
+        style={{ borderTop: "1px solid rgb(var(--color-borderDefault))", borderBottom: "1px solid rgb(var(--color-borderDefault))" }}
         className="[&>div]:border-0 [&>div]:rounded-none"
       >
         <CodeBlock
@@ -153,7 +153,7 @@ export default function DistanzRunningBrand() {
       <Section>
         <div className="flex flex-col">
           <SectionHeading id="email-logo" title="Email logo" />
-          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+          <p className="text-copy-16 mt-4" style={{ color: "rgb(var(--color-textSubtle))" }}>
             A variant of the full logo for emails. The black shapes carry a
             thin white outline rendered with{" "}
             <code className="inline-code">
@@ -198,7 +198,7 @@ export default function DistanzRunningBrand() {
       <Section>
         <div className="flex flex-col">
           <SectionHeading id="wordmark" title="Wordmark" />
-          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+          <p className="text-copy-16 mt-4" style={{ color: "rgb(var(--color-textSubtle))" }}>
             The Distanz Running wordmark can be used as an alternative when the full logo
             would be too vertical or when a more horizontal brand presence is needed.
           </p>
@@ -239,7 +239,7 @@ export default function DistanzRunningBrand() {
 
       {/* Code block for wordmark usage */}
       <div
-        style={{ borderTop: "1px solid var(--ds-gray-400)", borderBottom: "1px solid var(--ds-gray-400)" }}
+        style={{ borderTop: "1px solid rgb(var(--color-borderDefault))", borderBottom: "1px solid rgb(var(--color-borderDefault))" }}
         className="[&>div]:border-0 [&>div]:rounded-none"
       >
         <CodeBlock
@@ -253,7 +253,7 @@ export default function DistanzRunningBrand() {
       <Section>
         <div className="flex flex-col">
           <SectionHeading id="symbol" title="Symbol" />
-          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+          <p className="text-copy-16 mt-4" style={{ color: "rgb(var(--color-textSubtle))" }}>
             The Distanz Running symbol should only be used in places where there is not
             enough room to display the full logo, or in cases where only brand symbols
             are displayed.
@@ -295,7 +295,7 @@ export default function DistanzRunningBrand() {
 
       {/* Code block for symbol usage */}
       <div
-        style={{ borderTop: "1px solid var(--ds-gray-400)", borderBottom: "1px solid var(--ds-gray-400)" }}
+        style={{ borderTop: "1px solid rgb(var(--color-borderDefault))", borderBottom: "1px solid rgb(var(--color-borderDefault))" }}
         className="[&>div]:border-0 [&>div]:rounded-none"
       >
         <CodeBlock
@@ -309,7 +309,7 @@ export default function DistanzRunningBrand() {
       <Section>
         <div className="flex flex-col">
           <SectionHeading id="badge" title="Badge" />
-          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+          <p className="text-copy-16 mt-4" style={{ color: "rgb(var(--color-textSubtle))" }}>
             A self-contained badge version of the symbol for contexts where
             the background is unknown or can switch between light and dark —
             email signatures, user avatars, partner decks. The outlined mark
@@ -349,7 +349,7 @@ export default function DistanzRunningBrand() {
       <Section>
         <div className="flex flex-col">
           <SectionHeading id="app-icon" title="App icon" />
-          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+          <p className="text-copy-16 mt-4" style={{ color: "rgb(var(--color-textSubtle))" }}>
             The app-icon master follows Apple&apos;s Human Interface Guidelines:
             a 1024×1024 square canvas with the Distanz mark centered on a
             subtly graduated black surface. The artwork ships with square
@@ -467,7 +467,7 @@ export default function DistanzRunningBrand() {
               // icon's edge readable in dark mode when its gradient top
               // matches the panel colour.
               boxShadow:
-                "0 0 0 1px var(--ds-gray-400), 0 8px 24px rgba(0, 0, 0, 0.28)",
+                "0 0 0 1px rgb(var(--color-borderDefault)), 0 8px 24px rgba(0, 0, 0, 0.28)",
             }}
           />
         </div>
@@ -565,7 +565,7 @@ export default function DistanzRunningBrand() {
               width: 180,
               borderRadius: "22.37%",
               boxShadow:
-                "0 0 0 1px var(--ds-gray-400), 0 8px 24px rgba(0, 0, 0, 0.28)",
+                "0 0 0 1px rgb(var(--color-borderDefault)), 0 8px 24px rgba(0, 0, 0, 0.28)",
             }}
           />
         </div>
@@ -575,7 +575,7 @@ export default function DistanzRunningBrand() {
       <Section>
         <div className="flex flex-col">
           <SectionHeading id="general-information" title="General Information" />
-          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+          <p className="text-copy-16 mt-4" style={{ color: "rgb(var(--color-textSubtle))" }}>
             By using the Distanz Running trademarks you agree to the guidelines as well
             as our{" "}
             <a className="text-inherit" href="/legal/terms">
@@ -597,7 +597,7 @@ export default function DistanzRunningBrand() {
       <Section>
         <div className="flex flex-col">
           <SectionHeading id="usage" title="Usage" />
-          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+          <p className="text-copy-16 mt-4" style={{ color: "rgb(var(--color-textSubtle))" }}>
             You may use the Distanz Running marks to truthfully describe the products,
             services, and experiences that we offer. You may also use Distanz Running
             marks to truthfully state that you are a runner or partner using a Distanz
@@ -627,11 +627,11 @@ export default function DistanzRunningBrand() {
       <Section>
         <div className="flex flex-col">
           <SectionHeading id="misuse" title="Misuse" />
-          <p className="text-copy-16 mt-4" style={{ color: "var(--ds-gray-900)" }}>
+          <p className="text-copy-16 mt-4" style={{ color: "rgb(var(--color-textSubtle))" }}>
             Here are some examples of ways that you should not use the Distanz Running
             marks:
           </p>
-          <ul className="mt-4 space-y-4" style={{ color: "var(--ds-gray-900)" }}>
+          <ul className="mt-4 space-y-4" style={{ color: "rgb(var(--color-textSubtle))" }}>
             {[
               "Do not use Distanz Running marks in the name of your business, product, service, application, domain name, publication, or other offering.",
               "Do not use marks, logos, company names, slogans, domain names, or designs that are confusingly similar to any Distanz Running marks.",

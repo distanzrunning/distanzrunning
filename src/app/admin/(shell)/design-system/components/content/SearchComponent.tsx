@@ -164,8 +164,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "var(--ds-gray-1000)",
-            darkColor: "var(--ds-gray-1000)",
+            color: "rgb(var(--color-textDefault))",
+            darkColor: "rgb(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -177,7 +177,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-[var(--ds-gray-400)] rounded-lg w-full min-w-0 overflow-hidden">
+    <div className="border border-borderDefault rounded-lg w-full min-w-0 overflow-hidden">
       <div
         className="p-6 flex items-center justify-center min-h-[200px]"
         style={{ background: "var(--ds-background-100)" }}
@@ -191,20 +191,20 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-[var(--ds-gray-400)]"
+          className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault"
         >
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
           <div
-            className="border-t border-[var(--ds-gray-400)] overflow-x-auto font-mono text-copy-13"
+            className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
             style={{ background: "var(--ds-background-100)" }}
           >
             <div className="relative group">
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded border border-[var(--ds-gray-400)] opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-[var(--ds-background-200)] hover:bg-[var(--ds-gray-100)]"
+                className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
                 aria-label="Copy code"
               >
                 <CopyIconButton copied={copied} />
@@ -291,7 +291,7 @@ export function SearchTrigger() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex h-8 w-[220px] items-center justify-between rounded border border-[var(--ds-gray-400)] bg-transparent pl-2 pr-1.5 text-sm text-[var(--ds-gray-700)] hover:bg-[var(--ds-background-200)]"
+        className="flex h-8 w-[220px] items-center justify-between rounded border border-borderDefault bg-transparent pl-2 pr-1.5 text-sm text-textSubtler hover:bg-canvas"
       >
         Search Stride
         <Kbd size="small" meta>K</Kbd>
@@ -515,7 +515,7 @@ export default function SearchComponent() {
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-[var(--ds-gray-400)] bg-transparent pl-2 pr-1.5 font-sans text-sm text-[var(--ds-gray-700)] outline-none transition-colors hover:bg-[var(--ds-background-200)]"
+              className="flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-borderDefault bg-transparent pl-2 pr-1.5 font-sans text-sm text-textSubtler outline-none transition-colors hover:bg-canvas"
             >
               Search Stride
               <Kbd size="small" meta>K</Kbd>
@@ -624,7 +624,7 @@ export default function SearchComponent() {
             <button
               type="button"
               onClick={() => setTypeAheadOpen(true)}
-              className="flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-[var(--ds-gray-400)] bg-transparent pl-2 pr-1.5 font-sans text-sm text-[var(--ds-gray-700)] outline-none transition-colors hover:bg-[var(--ds-background-200)]"
+              className="flex h-8 w-[220px] cursor-pointer items-center justify-between rounded border border-borderDefault bg-transparent pl-2 pr-1.5 font-sans text-sm text-textSubtler outline-none transition-colors hover:bg-canvas"
             >
               Search
             </button>

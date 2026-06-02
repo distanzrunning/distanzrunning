@@ -46,7 +46,7 @@ const EMPTY_STATE_CSS = `
     justify-content: center;
     gap: var(--ds-space-6x);
     padding: 48px 70px;
-    border: 1px solid var(--ds-gray-400);
+    border: 1px solid rgb(var(--color-borderDefault));
     border-radius: var(--ds-radius-small);
     background-color: rgb(var(--color-surface));
     text-align: center;
@@ -62,7 +62,7 @@ const EMPTY_STATE_CSS = `
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 8px;
     background-color: rgb(var(--color-surface));
-    color: var(--ds-gray-900);
+    color: rgb(var(--color-textSubtle));
   }
 
   :is(.dark, [data-theme="dark"]) .ds-empty-state-icon {
@@ -86,7 +86,7 @@ const EMPTY_STATE_CSS = `
     font-weight: 500;
     line-height: 24px;
     letter-spacing: -0.32px;
-    color: var(--ds-gray-1000);
+    color: rgb(var(--color-textDefault));
     margin: 0;
     max-width: 340px;
     text-align: center;
@@ -96,7 +96,7 @@ const EMPTY_STATE_CSS = `
   .ds-empty-state-description {
     font-size: 14px;
     line-height: 20px;
-    color: var(--ds-gray-900);
+    color: rgb(var(--color-textSubtle));
     margin: 0;
     max-width: 340px;
     text-align: center;
@@ -122,8 +122,8 @@ const EMPTY_STATE_CSS = `
     border: none;
     border-radius: 6px;
     background-color: rgb(var(--color-surface));
-    color: var(--ds-gray-1000);
-    box-shadow: var(--ds-gray-400) 0px 0px 0px 1px;
+    color: rgb(var(--color-textDefault));
+    box-shadow: rgb(var(--color-borderDefault)) 0px 0px 0px 1px;
     cursor: pointer;
     transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
   }
@@ -147,7 +147,7 @@ const EMPTY_STATE_CSS = `
   }
 
   .ds-empty-state-link:hover {
-    color: var(--ds-gray-1000);
+    color: rgb(var(--color-textDefault));
   }
 
   .ds-empty-state-link svg {

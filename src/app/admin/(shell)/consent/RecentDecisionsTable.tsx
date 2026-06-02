@@ -154,7 +154,7 @@ export default function RecentDecisionsTable({
                     <a
                       href={`/admin/consent?q=${encodeURIComponent(row.anon_id)}`}
                       style={{
-                        color: "var(--ds-gray-700)",
+                        color: "rgb(var(--color-textSubtler))",
                         textDecoration: "underline",
                       }}
                     >

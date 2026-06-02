@@ -275,7 +275,7 @@ const TRIGGER_CLASS = cn(
   // data-state=open for the whole-menu open flag).
   "group/trigger inline-flex h-9 items-center gap-1.5 rounded-full px-4 py-2",
   "text-[14px] leading-[21px] font-medium",
-  "text-[color:var(--ds-gray-1000)]",
+  "text-textDefault",
   "transition-colors",
   "hover:bg-[var(--ds-gray-200)] focus-visible:bg-[var(--ds-gray-200)]",
   "data-[state=open]:bg-[var(--ds-gray-200)]",

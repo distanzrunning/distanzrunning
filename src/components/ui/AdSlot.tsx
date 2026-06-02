@@ -61,7 +61,7 @@ export interface AdSlotProps {
 
 function DefaultFallback({ width, height }: Dimensions) {
   const frameStyle: React.CSSProperties = {
-    borderColor: "var(--ds-gray-400)",
+    borderColor: "rgb(var(--color-borderDefault))",
     // bg-100 (white in light, elevated dark in dark) so the
     // fallback reads as a card raised above the PageFrame
     // surface — bg-200 blended with the surface in light mode.
@@ -278,7 +278,7 @@ export function AdSlot({
       {showLabel && (
         <div
           className="mb-1 text-center text-[10px] font-semibold uppercase tracking-[0.08em]"
-          style={{ color: "var(--ds-gray-700)" }}
+          style={{ color: "rgb(var(--color-textSubtler))" }}
         >
           Advertisement
         </div>
