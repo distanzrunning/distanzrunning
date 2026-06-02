@@ -1330,9 +1330,9 @@ function clearTerrain(map: mapboxgl.Map): void {
 export function getRouteLineColor(): string {
   if (typeof document === "undefined") return ROUTE_LINE_COLOR_FALLBACK;
   const triplet = getComputedStyle(document.documentElement)
-    .getPropertyValue("--ds-pink-800-rgb")
+    .getPropertyValue("--ds-pink-800-value")
     .trim();
-  return triplet ? `rgb(${triplet})` : ROUTE_LINE_COLOR_FALLBACK;
+  return triplet ? `hsl(${triplet})` : ROUTE_LINE_COLOR_FALLBACK;
 }
 
 // ============================================================================

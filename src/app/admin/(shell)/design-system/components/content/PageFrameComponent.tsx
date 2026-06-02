@@ -198,8 +198,8 @@ function CodePreview({
           [
             {
               content: line,
-              color: "rgb(var(--color-textDefault))",
-              darkColor: "rgb(var(--color-textDefault))",
+              color: "hsl(var(--color-textDefault))",
+              darkColor: "hsl(var(--color-textDefault))",
             },
           ] as DualThemeToken[],
       );
@@ -212,13 +212,13 @@ function CodePreview({
     <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "rgb(var(--color-canvas))" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
@@ -231,7 +231,7 @@ function CodePreview({
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
@@ -285,11 +285,11 @@ function AnatomyDemo() {
         className="flex items-center px-4"
         style={{
           height: 48,
-          background: "rgb(var(--color-surface))",
-          color: "rgb(var(--color-textDefault))",
+          background: "hsl(var(--color-surface))",
+          color: "hsl(var(--color-textDefault))",
           fontSize: 13,
           fontWeight: 500,
-          borderBottom: "1px solid rgb(var(--color-borderDefault))",
+          borderBottom: "1px solid hsl(var(--color-borderDefault))",
         }}
       >
         Navbar (sits outside the frame)
@@ -300,7 +300,7 @@ function AnatomyDemo() {
         <div
           className="flex flex-1 items-center justify-center text-center"
           style={{
-            color: "rgb(var(--color-textSubtler))",
+            color: "hsl(var(--color-textSubtler))",
             fontSize: 13,
             padding: 24,
           }}
@@ -314,7 +314,7 @@ function AnatomyDemo() {
         className="flex items-center px-4"
         style={{
           height: 40,
-          color: "rgb(var(--color-textSubtler))",
+          color: "hsl(var(--color-textSubtler))",
           fontSize: 12,
         }}
       >
@@ -384,7 +384,7 @@ export default function PageFrameComponent() {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              color: "rgb(var(--color-textDefault))",
+              color: "hsl(var(--color-textDefault))",
               textDecoration: "underline",
             }}
           >
@@ -440,7 +440,7 @@ export default function PageFrameComponent() {
         <CodePreview componentCode={containerQueryCode}>
           <div
             className="text-sm"
-            style={{ color: "rgb(var(--color-textSubtler))", padding: 16 }}
+            style={{ color: "hsl(var(--color-textSubtler))", padding: 16 }}
           >
             (No live preview — the rule lives on consumer markup.)
           </div>

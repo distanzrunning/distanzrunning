@@ -55,14 +55,14 @@ const typeStyles: Record<
   { bg: string; color: string }
 > = {
   default: {
-    bg: "rgb(var(--color-textDefault))",
-    color: "rgb(var(--color-textInverted))",
+    bg: "hsl(var(--color-textDefault))",
+    color: "hsl(var(--color-textInverted))",
   },
   success: {
     bg: "var(--ds-blue-700)",
-    color: "rgb(var(--color-textInverted))",
+    color: "hsl(var(--color-textInverted))",
   },
-  error: { bg: "var(--ds-red-700)", color: "rgb(var(--color-textInverted))" },
+  error: { bg: "var(--ds-red-700)", color: "hsl(var(--color-textInverted))" },
   warning: { bg: "var(--ds-amber-800)", color: "var(--ds-gray-1000)" },
 };
 

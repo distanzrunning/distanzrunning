@@ -140,8 +140,8 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
                   y2="8"
                   stroke={
                     isDisabledIndeterminate
-                      ? "rgb(var(--color-textDisabled))"
-                      : "rgb(var(--color-textSubtler))"
+                      ? "hsl(var(--color-textDisabled))"
+                      : "hsl(var(--color-textSubtler))"
                   }
                   strokeLinecap="round"
                   strokeLinejoin="round"

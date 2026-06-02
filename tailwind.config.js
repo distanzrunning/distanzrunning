@@ -30,7 +30,8 @@ module.exports = {
         // ─────────────────────────────────────────────────────────────────
         // Static mirror of the --ds-gray-* LIGHT-mode values (the token flips
         // for theme; this static scale is for fixed, non-flipping contexts).
-        // Keep in sync with distanz-tokens.css :root --ds-gray-*.
+        // Canonical source: the --ds-*-value triplets in distanz-tokens.css
+        // (:root/.light). Keep these hex values in sync with those triplets.
         gray: {
           100: "#F0F0F0",
           200: "#EBEBEB",
@@ -161,74 +162,74 @@ module.exports = {
         // ═══════════════════════════════════════════════════════════════════
 
         // Text colors
-        textDefault: "rgb(var(--color-textDefault))",
-        textSubtle: "rgb(var(--color-textSubtle))",
-        textSubtler: "rgb(var(--color-textSubtler))",
-        textInverted: "rgb(var(--color-textInverted))",
-        textDisabled: "rgb(var(--color-textDisabled))",
-        link: "rgb(var(--color-link))",
+        textDefault: "hsl(var(--color-textDefault))",
+        textSubtle: "hsl(var(--color-textSubtle))",
+        textSubtler: "hsl(var(--color-textSubtler))",
+        textInverted: "hsl(var(--color-textInverted))",
+        textDisabled: "hsl(var(--color-textDisabled))",
+        link: "hsl(var(--color-link))",
 
         // Border colors
-        borderDefault: "rgb(var(--color-borderDefault))",
-        borderDefaultHover: "rgb(var(--color-borderDefaultHover))",
-        borderSubtle: "rgb(var(--color-borderSubtle))",
-        borderSubtleHover: "rgb(var(--color-borderSubtleHover))",
-        borderExtraSubtle: "rgb(var(--color-borderExtraSubtle))",
-        borderNeutral: "rgb(var(--color-borderNeutral))",
-        borderNeutralHover: "rgb(var(--color-borderNeutralHover))",
-        borderNeutralSubtle: "rgb(var(--color-borderNeutralSubtle))",
+        borderDefault: "hsl(var(--color-borderDefault))",
+        borderDefaultHover: "hsl(var(--color-borderDefaultHover))",
+        borderSubtle: "hsl(var(--color-borderSubtle))",
+        borderSubtleHover: "hsl(var(--color-borderSubtleHover))",
+        borderExtraSubtle: "hsl(var(--color-borderExtraSubtle))",
+        borderNeutral: "hsl(var(--color-borderNeutral))",
+        borderNeutralHover: "hsl(var(--color-borderNeutralHover))",
+        borderNeutralSubtle: "hsl(var(--color-borderNeutralSubtle))",
 
         // Surface colors
-        surface: "rgb(var(--color-surface))",
-        surfaceSubtle: "rgb(var(--color-surfaceSubtle))",
-        surfaceWarm: "rgb(var(--color-surfaceWarm))",
-        canvas: "rgb(var(--color-canvas))",
-        neutralBgSubtle: "rgb(var(--color-neutralBgSubtle))",
+        surface: "hsl(var(--color-surface))",
+        surfaceSubtle: "hsl(var(--color-surfaceSubtle))",
+        surfaceWarm: "hsl(var(--color-surfaceWarm))",
+        canvas: "hsl(var(--color-canvas))",
+        neutralBgSubtle: "hsl(var(--color-neutralBgSubtle))",
 
         // Elevated surfaces - layered depth hierarchy
-        "surface-elevated-1": "rgb(var(--color-surfaceElevated1))",
-        "surface-elevated-2": "rgb(var(--color-surfaceElevated2))",
-        "surface-elevated-3": "rgb(var(--color-surfaceElevated3))",
+        "surface-elevated-1": "hsl(var(--color-surfaceElevated1))",
+        "surface-elevated-2": "hsl(var(--color-surfaceElevated2))",
+        "surface-elevated-3": "hsl(var(--color-surfaceElevated3))",
 
         // Status colors - Success
-        "success-text": "rgb(var(--color-success-text))",
-        "success-text-subtle": "rgb(var(--color-success-text-subtle))",
-        "success-bg": "rgb(var(--color-success-bg))",
-        "success-bg-subtle": "rgb(var(--color-success-bg-subtle))",
-        "success-border": "rgb(var(--color-success-border))",
+        "success-text": "hsl(var(--color-success-text))",
+        "success-text-subtle": "hsl(var(--color-success-text-subtle))",
+        "success-bg": "hsl(var(--color-success-bg))",
+        "success-bg-subtle": "hsl(var(--color-success-bg-subtle))",
+        "success-border": "hsl(var(--color-success-border))",
 
         // Status colors - Warning
-        "warning-text": "rgb(var(--color-warning-text))",
-        "warning-text-subtle": "rgb(var(--color-warning-text-subtle))",
-        "warning-bg": "rgb(var(--color-warning-bg))",
-        "warning-bg-subtle": "rgb(var(--color-warning-bg-subtle))",
-        "warning-border": "rgb(var(--color-warning-border))",
+        "warning-text": "hsl(var(--color-warning-text))",
+        "warning-text-subtle": "hsl(var(--color-warning-text-subtle))",
+        "warning-bg": "hsl(var(--color-warning-bg))",
+        "warning-bg-subtle": "hsl(var(--color-warning-bg-subtle))",
+        "warning-border": "hsl(var(--color-warning-border))",
 
         // Status colors - Error
-        "error-text": "rgb(var(--color-error-text))",
-        "error-text-subtle": "rgb(var(--color-error-text-subtle))",
-        "error-bg": "rgb(var(--color-error-bg))",
-        "error-bg-subtle": "rgb(var(--color-error-bg-subtle))",
-        "error-border": "rgb(var(--color-error-border))",
+        "error-text": "hsl(var(--color-error-text))",
+        "error-text-subtle": "hsl(var(--color-error-text-subtle))",
+        "error-bg": "hsl(var(--color-error-bg))",
+        "error-bg-subtle": "hsl(var(--color-error-bg-subtle))",
+        "error-border": "hsl(var(--color-error-border))",
 
         // Status colors - Info
-        "info-text": "rgb(var(--color-info-text))",
-        "info-text-subtle": "rgb(var(--color-info-text-subtle))",
-        "info-bg": "rgb(var(--color-info-bg))",
-        "info-bg-subtle": "rgb(var(--color-info-bg-subtle))",
-        "info-border": "rgb(var(--color-info-border))",
+        "info-text": "hsl(var(--color-info-text))",
+        "info-text-subtle": "hsl(var(--color-info-text-subtle))",
+        "info-bg": "hsl(var(--color-info-bg))",
+        "info-bg-subtle": "hsl(var(--color-info-bg-subtle))",
+        "info-border": "hsl(var(--color-info-border))",
       },
       backgroundColor: {
         // Surface tokens (semantic)
-        surface: "rgb(var(--color-surface))",
-        surfaceSubtle: "rgb(var(--color-surfaceSubtle))",
-        surfaceWarm: "rgb(var(--color-surfaceWarm))",
-        canvas: "rgb(var(--color-canvas))",
-        neutralBgSubtle: "rgb(var(--color-neutralBgSubtle))",
+        surface: "hsl(var(--color-surface))",
+        surfaceSubtle: "hsl(var(--color-surfaceSubtle))",
+        surfaceWarm: "hsl(var(--color-surfaceWarm))",
+        canvas: "hsl(var(--color-canvas))",
+        neutralBgSubtle: "hsl(var(--color-neutralBgSubtle))",
         // Elevated surfaces
-        "surface-elevated-1": "rgb(var(--color-surfaceElevated1))",
-        "surface-elevated-2": "rgb(var(--color-surfaceElevated2))",
-        "surface-elevated-3": "rgb(var(--color-surfaceElevated3))",
+        "surface-elevated-1": "hsl(var(--color-surfaceElevated1))",
+        "surface-elevated-2": "hsl(var(--color-surfaceElevated2))",
+        "surface-elevated-3": "hsl(var(--color-surfaceElevated3))",
       },
       keyframes: {
         navContentIn: {
@@ -328,19 +329,19 @@ module.exports = {
       },
       textColor: {
         // Semantic text colors (dynamic via CSS vars)
-        textDefault: "rgb(var(--color-textDefault))",
-        textSubtle: "rgb(var(--color-textSubtle))",
-        textSubtler: "rgb(var(--color-textSubtler))",
-        textInverted: "rgb(var(--color-textInverted))",
-        textDisabled: "rgb(var(--color-textDisabled))",
-        link: "rgb(var(--color-link))",
+        textDefault: "hsl(var(--color-textDefault))",
+        textSubtle: "hsl(var(--color-textSubtle))",
+        textSubtler: "hsl(var(--color-textSubtler))",
+        textInverted: "hsl(var(--color-textInverted))",
+        textDisabled: "hsl(var(--color-textDisabled))",
+        link: "hsl(var(--color-link))",
       },
       borderColor: {
         // Semantic border colors (dynamic via CSS vars)
-        borderDefault: "rgb(var(--color-borderDefault))",
-        borderNeutral: "rgb(var(--color-borderNeutral))",
-        borderNeutralHover: "rgb(var(--color-borderNeutralHover))",
-        borderNeutralSubtle: "rgb(var(--color-borderNeutralSubtle))",
+        borderDefault: "hsl(var(--color-borderDefault))",
+        borderNeutral: "hsl(var(--color-borderNeutral))",
+        borderNeutralHover: "hsl(var(--color-borderNeutralHover))",
+        borderNeutralSubtle: "hsl(var(--color-borderNeutralSubtle))",
       },
       fontFamily: {
         // Distanz Typography System
@@ -1141,15 +1142,15 @@ module.exports = {
         },
         "@media (min-width: 768px)": {
           ".main-bordered": {
-            borderLeft: "1px solid rgb(var(--color-borderNeutral))",
-            borderRight: "1px solid rgb(var(--color-borderNeutral))",
+            borderLeft: "1px solid hsl(var(--color-borderNeutral))",
+            borderRight: "1px solid hsl(var(--color-borderNeutral))",
           },
         },
 
         // Vertical separator utility (borders only)
         ".v-sep": {
-          borderLeft: "1px solid rgb(var(--color-borderNeutral))",
-          borderRight: "1px solid rgb(var(--color-borderNeutral))",
+          borderLeft: "1px solid hsl(var(--color-borderNeutral))",
+          borderRight: "1px solid hsl(var(--color-borderNeutral))",
         },
         "@media (max-width: 767px)": {
           ".v-sep": {

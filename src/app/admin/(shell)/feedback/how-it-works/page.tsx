@@ -32,13 +32,13 @@ export default function HowFeedbackWorksPage() {
         <header style={{ marginBottom: 24 }}>
           <h1
             className="text-heading-32"
-            style={{ margin: 0, color: "rgb(var(--color-textDefault))" }}
+            style={{ margin: 0, color: "hsl(var(--color-textDefault))" }}
           >
             How feedback works
           </h1>
           <p
             className="text-copy-16"
-            style={{ marginTop: 6, marginBottom: 0, color: "rgb(var(--color-textSubtler))" }}
+            style={{ marginTop: 6, marginBottom: 0, color: "hsl(var(--color-textSubtler))" }}
           >
             Internals of the self-built feedback capture pipeline.
           </p>
@@ -111,7 +111,7 @@ export default function HowFeedbackWorksPage() {
                 padding: 12,
                 borderRadius: 8,
                 background: "var(--ds-gray-100)",
-                color: "rgb(var(--color-textDefault))",
+                color: "hsl(var(--color-textDefault))",
                 border: "1px solid var(--ds-gray-alpha-400)",
                 overflowX: "auto",
               }}

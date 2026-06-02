@@ -67,7 +67,7 @@ export function ThemeSwitcher({
         gap: 2,
         padding: containerPadding,
         borderRadius: containerRadius,
-        background: "rgb(var(--color-canvas))",
+        background: "hsl(var(--color-canvas))",
         border: "none",
         margin: 0,
         ...styleProp,
@@ -117,15 +117,15 @@ export function ThemeSwitcher({
               borderRadius: optionRadius,
               cursor: disabled ? "not-allowed" : "pointer",
               background: isSelected
-                ? "rgb(var(--color-surface))"
+                ? "hsl(var(--color-surface))"
                 : "transparent",
               boxShadow: isSelected
-                ? "rgba(0,0,0,0.06) 0px 2px 4px, rgba(var(--ds-gray-1000-rgb), 0.14) 0px 0px 0px 1px"
+                ? "rgba(0,0,0,0.06) 0px 2px 4px, hsla(var(--ds-gray-1000-value), 0.14) 0px 0px 0px 1px"
                 : "none",
               color: disabled
                 ? "var(--ds-gray-600)"
                 : isSelected
-                  ? "rgb(var(--color-textDefault))"
+                  ? "hsl(var(--color-textDefault))"
                   : "var(--ds-gray-800)",
               transition:
                 "background 0.15s ease, box-shadow 0.15s ease, color 0.15s ease",

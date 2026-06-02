@@ -32,13 +32,13 @@ export default function HowItWorksPage() {
         <header style={{ marginBottom: 24 }}>
           <h1
             className="text-heading-32"
-            style={{ margin: 0, color: "rgb(var(--color-textDefault))" }}
+            style={{ margin: 0, color: "hsl(var(--color-textDefault))" }}
           >
             How our CMP works
           </h1>
           <p
             className="text-copy-16"
-            style={{ marginTop: 6, marginBottom: 0, color: "rgb(var(--color-textSubtler))" }}
+            style={{ marginTop: 6, marginBottom: 0, color: "hsl(var(--color-textSubtler))" }}
           >
             Internals of Distanz Running&apos;s self-built consent
             management platform.

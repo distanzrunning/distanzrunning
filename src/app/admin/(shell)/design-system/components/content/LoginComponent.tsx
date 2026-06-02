@@ -161,8 +161,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "rgb(var(--color-textDefault))",
-            darkColor: "rgb(var(--color-textDefault))",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -177,11 +177,11 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
     <div className="border border-borderDefault rounded-lg w-full min-w-0 overflow-hidden">
       <div
         className="p-6 flex items-center justify-center min-h-[320px]"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
-      <div style={{ background: "rgb(var(--color-canvas))" }}>
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -193,7 +193,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button

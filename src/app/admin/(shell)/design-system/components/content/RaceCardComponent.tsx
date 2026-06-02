@@ -198,8 +198,8 @@ function CodePreview({
           [
             {
               content: line,
-              color: "rgb(var(--color-textDefault))",
-              darkColor: "rgb(var(--color-textDefault))",
+              color: "hsl(var(--color-textDefault))",
+              darkColor: "hsl(var(--color-textDefault))",
             },
           ] as DualThemeToken[],
       );
@@ -212,13 +212,13 @@ function CodePreview({
     <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "rgb(var(--color-canvas))" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
@@ -231,7 +231,7 @@ function CodePreview({
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
@@ -484,15 +484,15 @@ function AnatomyDemo() {
       />
       <ul
         className="flex flex-col gap-3 text-copy-13 leading-[1.5]"
-        style={{ color: "rgb(var(--color-textSubtle))" }}
+        style={{ color: "hsl(var(--color-textSubtle))" }}
       >
         <li>
-          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Image —</strong>{" "}
+          <strong style={{ color: "hsl(var(--color-textDefault))" }}>Image —</strong>{" "}
           16/8.75 cinematic ratio. Starts at scale 104% and settles to
           100% on hover so the photo &quot;sharpens into place.&quot;
         </li>
         <li>
-          <strong style={{ color: "rgb(var(--color-textDefault))" }}>
+          <strong style={{ color: "hsl(var(--color-textDefault))" }}>
             Category Badge —
           </strong>{" "}
           inverted Badge ({" "}
@@ -501,18 +501,18 @@ function AnatomyDemo() {
           against any photo.
         </li>
         <li>
-          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Title —</strong>{" "}
+          <strong style={{ color: "hsl(var(--color-textDefault))" }}>Title —</strong>{" "}
           <code>text-heading-20</code>, line-clamped to 2 lines. The
           title&apos;s anchor carries the card-wide click overlay (
           <code>::after</code> spans the whole article).
         </li>
         <li>
-          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Location —</strong>{" "}
+          <strong style={{ color: "hsl(var(--color-textDefault))" }}>Location —</strong>{" "}
           <code>text-copy-14</code>, single-line truncated. Pre-formatted
           by the caller as <code>City, State, Country</code>.
         </li>
         <li>
-          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Date pill —</strong>{" "}
+          <strong style={{ color: "hsl(var(--color-textDefault))" }}>Date pill —</strong>{" "}
           gray-300 pill at <code>h-7</code> / <code>text-copy-13</code>.
           Formats <code>eventDate</code> as <code>d MMM, yyyy</code>.
           Vertically centered against the title + location stack.
@@ -629,12 +629,12 @@ export default function RaceCardComponent() {
           style={{ lineHeight: 1.6 }}
         >
           <li>
-            <strong style={{ color: "rgb(var(--color-textDefault))" }}>default</strong> —
+            <strong style={{ color: "hsl(var(--color-textDefault))" }}>default</strong> —
             homepage &quot;Upcoming races&quot; row. No hover affordance
             beyond the image settle-zoom.
           </li>
           <li>
-            <strong style={{ color: "rgb(var(--color-textDefault))" }}>index</strong> —
+            <strong style={{ color: "hsl(var(--color-textDefault))" }}>index</strong> —
             <code> /races</code> grid. Adds a glassy hover overlay over
             the image with three stat columns (Surface / Elevation /
             Price) that fades in on group hover. Outer corners use
@@ -743,12 +743,12 @@ export default function RaceCardComponent() {
           style={{ lineHeight: 1.6 }}
         >
           <li>
-            <strong style={{ color: "rgb(var(--color-textDefault))" }}>Surface —</strong>{" "}
+            <strong style={{ color: "hsl(var(--color-textDefault))" }}>Surface —</strong>{" "}
             value from <code>surface</code>; <code>surfaceBreakdown</code>{" "}
             shows beneath as the detail line.
           </li>
           <li>
-            <strong style={{ color: "rgb(var(--color-textDefault))" }}>
+            <strong style={{ color: "hsl(var(--color-textDefault))" }}>
               Elevation —
             </strong>{" "}
             <code>profile</code> (Flat / Rolling / Hilly) is the headline;{" "}
@@ -757,7 +757,7 @@ export default function RaceCardComponent() {
             <code>UnitsContext</code>.
           </li>
           <li>
-            <strong style={{ color: "rgb(var(--color-textDefault))" }}>Price —</strong>{" "}
+            <strong style={{ color: "hsl(var(--color-textDefault))" }}>Price —</strong>{" "}
             converted to the visitor&apos;s preferred display currency
             (or kept in the source currency when set to{" "}
             <code>local</code>) via <code>convertCurrencySync</code>.

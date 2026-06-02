@@ -133,7 +133,7 @@ function CodePreview({ children, componentCode, minHeight = 220 }: { children: R
   const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
   const lines: DualThemeToken[][] =
     tokenizedLines ||
-    componentCode.split("\n").map((line) => [{ content: line, color: "rgb(var(--color-textDefault))", darkColor: "rgb(var(--color-textDefault))" }] as DualThemeToken[]);
+    componentCode.split("\n").map((line) => [{ content: line, color: "hsl(var(--color-textDefault))", darkColor: "hsl(var(--color-textDefault))" }] as DualThemeToken[]);
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(componentCode);
@@ -143,16 +143,16 @@ function CodePreview({ children, componentCode, minHeight = 220 }: { children: R
 
   return (
     <div className="border border-borderDefault rounded-lg w-full min-w-0 overflow-hidden">
-      <div className="p-6 flex items-center justify-center" style={{ background: "rgb(var(--color-surface))", minHeight }}>
+      <div className="p-6 flex items-center justify-center" style={{ background: "hsl(var(--color-surface))", minHeight }}>
         {children}
       </div>
-      <div style={{ background: "rgb(var(--color-canvas))" }}>
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
         <button type="button" onClick={() => setIsOpen(!isOpen)} className="flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-left text-sm text-textDefault border-t border-borderDefault">
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
         {isOpen && (
-          <div className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13" style={{ background: "rgb(var(--color-surface))" }}>
+          <div className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13" style={{ background: "hsl(var(--color-surface))" }}>
             <div className="relative group">
               <button onClick={handleCopy} className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]" aria-label="Copy code">
                 <CopyIconButton copied={copied} />
@@ -229,8 +229,8 @@ function DemoFloatingBanner({
         <div
           className="flex flex-col gap-4 rounded-xl p-5"
           style={{
-            background: "rgb(var(--color-surface))",
-            border: "1px solid rgb(var(--color-borderDefault))",
+            background: "hsl(var(--color-surface))",
+            border: "1px solid hsl(var(--color-borderDefault))",
             boxShadow: "var(--ds-shadow-menu)",
           }}
         >
@@ -315,9 +315,9 @@ function DemoSettingsModal({
       <div
         className="overflow-hidden"
         style={{
-          border: "1px solid rgb(var(--color-borderDefault))",
+          border: "1px solid hsl(var(--color-borderDefault))",
           borderRadius: 6,
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           marginTop: 24,
         }}
       >
@@ -357,7 +357,7 @@ function DemoSettingsModal({
           </div>
           <p
             className="text-[12px] leading-[1.6]"
-            style={{ color: "rgb(var(--color-textSubtler))", margin: 0 }}
+            style={{ color: "hsl(var(--color-textSubtler))", margin: 0 }}
           >
             For more information, see our{" "}
             <a

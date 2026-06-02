@@ -239,8 +239,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "rgb(var(--color-textDefault))",
-            darkColor: "rgb(var(--color-textDefault))",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -255,13 +255,13 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
     <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "rgb(var(--color-canvas))" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
@@ -274,7 +274,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
@@ -730,7 +730,7 @@ export default function MenuComponent() {
         <SectionHeader id="locked-items" onCopyLink={showToast}>
           Locked items
         </SectionHeader>
-        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "rgb(var(--color-textSubtle))" }}>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
           Use <code>MenuItemLocked</code> to indicate an action that requires additional permissions. The item is rendered as disabled with a lock icon suffix.
         </p>
         <div className="mt-6">
@@ -755,7 +755,7 @@ export default function MenuComponent() {
         <SectionHeader id="custom-trigger" onCopyLink={showToast}>
           Custom trigger
         </SectionHeader>
-        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "rgb(var(--color-textSubtle))" }}>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
           The trigger is still wrapped by an unstyled button.
         </p>
         <div className="mt-6">
@@ -769,7 +769,7 @@ export default function MenuComponent() {
         <SectionHeader id="prefix-and-suffix" onCopyLink={showToast}>
           Prefix and suffix
         </SectionHeader>
-        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "rgb(var(--color-textSubtle))" }}>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
           The trigger is still wrapped by an unstyled button.
         </p>
         <div className="mt-6">
@@ -783,7 +783,7 @@ export default function MenuComponent() {
         <SectionHeader id="menu-position" onCopyLink={showToast}>
           Menu position
         </SectionHeader>
-        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "rgb(var(--color-textSubtle))" }}>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
           The position will automatically adapt based on the window bounds.
         </p>
         <div className="mt-6">
@@ -797,7 +797,7 @@ export default function MenuComponent() {
         <SectionHeader id="menu-section" onCopyLink={showToast}>
           Menu sections
         </SectionHeader>
-        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "rgb(var(--color-textSubtle))" }}>
+        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
           Group related items under a Title Case header with{" "}
           <code className="inline-code">&lt;MenuSection title=&quot;&hellip;&quot;&gt;</code>{" "}
           when the menu starts to crowd past ~10 items.

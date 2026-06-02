@@ -46,9 +46,9 @@ const EMPTY_STATE_CSS = `
     justify-content: center;
     gap: var(--ds-space-6x);
     padding: 48px 70px;
-    border: 1px solid rgb(var(--color-borderDefault));
+    border: 1px solid hsl(var(--color-borderDefault));
     border-radius: var(--ds-radius-small);
-    background-color: rgb(var(--color-surface));
+    background-color: hsl(var(--color-surface));
     text-align: center;
   }
 
@@ -61,8 +61,8 @@ const EMPTY_STATE_CSS = `
     padding: 14px;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 8px;
-    background-color: rgb(var(--color-surface));
-    color: rgb(var(--color-textSubtle));
+    background-color: hsl(var(--color-surface));
+    color: hsl(var(--color-textSubtle));
   }
 
   :is(.dark, [data-theme="dark"]) .ds-empty-state-icon {
@@ -86,7 +86,7 @@ const EMPTY_STATE_CSS = `
     font-weight: 500;
     line-height: 24px;
     letter-spacing: -0.32px;
-    color: rgb(var(--color-textDefault));
+    color: hsl(var(--color-textDefault));
     margin: 0;
     max-width: 340px;
     text-align: center;
@@ -96,7 +96,7 @@ const EMPTY_STATE_CSS = `
   .ds-empty-state-description {
     font-size: 14px;
     line-height: 20px;
-    color: rgb(var(--color-textSubtle));
+    color: hsl(var(--color-textSubtle));
     margin: 0;
     max-width: 340px;
     text-align: center;
@@ -121,9 +121,9 @@ const EMPTY_STATE_CSS = `
     line-height: 20px;
     border: none;
     border-radius: 6px;
-    background-color: rgb(var(--color-surface));
-    color: rgb(var(--color-textDefault));
-    box-shadow: rgb(var(--color-borderDefault)) 0px 0px 0px 1px;
+    background-color: hsl(var(--color-surface));
+    color: hsl(var(--color-textDefault));
+    box-shadow: hsl(var(--color-borderDefault)) 0px 0px 0px 1px;
     cursor: pointer;
     transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
   }
@@ -147,7 +147,7 @@ const EMPTY_STATE_CSS = `
   }
 
   .ds-empty-state-link:hover {
-    color: rgb(var(--color-textDefault));
+    color: hsl(var(--color-textDefault));
   }
 
   .ds-empty-state-link svg {

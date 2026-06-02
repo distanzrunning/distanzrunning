@@ -88,7 +88,7 @@ const DRAWER_CSS = `
     border-top-left-radius: var(--ds-radius-small);
     border-top-right-radius: var(--ds-radius-small);
     border: none;
-    background-color: rgb(var(--color-surface));
+    background-color: hsl(var(--color-surface));
     color: var(--ds-gray-1000);
     box-shadow: var(--ds-shadow-menu), var(--ds-gray-100) 0px 0px 0px 1px;
     max-width: 100%;
@@ -104,7 +104,7 @@ const DRAWER_CSS = `
   }
 
   .ds-drawer-inner {
-    background-color: rgb(var(--color-surface));
+    background-color: hsl(var(--color-surface));
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     overflow-y: auto;
@@ -145,7 +145,7 @@ const DRAWER_CSS = `
   .ds-drawer-footer {
     padding: var(--ds-space-4x) var(--ds-space-6x);
     border-top: 1px solid var(--ds-gray-alpha-400);
-    background: rgb(var(--color-canvas));
+    background: hsl(var(--color-canvas));
   }
 `;
 

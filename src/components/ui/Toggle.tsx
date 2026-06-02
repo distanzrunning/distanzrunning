@@ -107,8 +107,8 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     let thumbShadow: string;
 
     if (disabled) {
-      trackBg = isChecked ? "rgb(var(--color-textDisabled))" : "rgb(var(--color-borderSubtle))";
-      trackBorder = isChecked ? "rgb(var(--color-textDisabled))" : "rgb(var(--color-borderSubtle))";
+      trackBg = isChecked ? "hsl(var(--color-textDisabled))" : "hsl(var(--color-borderSubtle))";
+      trackBorder = isChecked ? "hsl(var(--color-textDisabled))" : "hsl(var(--color-borderSubtle))";
       // Knob stays light in both themes (like the Slider thumb) so it
       // always reads as the raised element above the track — disabled is
       // conveyed by the muted track, not by darkening the knob.
@@ -117,7 +117,7 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     } else {
       trackBg = isChecked
         ? checkedColor || "var(--ds-blue-700)"
-        : uncheckedColor || "rgb(var(--color-borderSubtle))";
+        : uncheckedColor || "hsl(var(--color-borderSubtle))";
       trackBorder = "var(--ds-gray-alpha-200)";
       thumbBg = "#FFFFFF"; // white knob in both themes — pops above any track
       thumbShadow =
@@ -188,14 +188,14 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     const labelTextStyle: React.CSSProperties = {
       fontSize: 14,
       lineHeight: "20px",
-      color: "rgb(var(--color-textDefault))",
+      color: "hsl(var(--color-textDefault))",
       textTransform: labelCasing === "title" ? "capitalize" : "none",
     };
 
     const descriptionStyle: React.CSSProperties = {
       fontSize: 13,
       lineHeight: "18px",
-      color: "rgb(var(--color-textSubtle))",
+      color: "hsl(var(--color-textSubtle))",
       marginTop: 2,
       whiteSpace: "normal",
       maxWidth: 360,

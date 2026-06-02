@@ -39,7 +39,7 @@ export default function CopyPathButton({ value }: { value: string }) {
           borderRadius: 4,
           border: "none",
           background: "transparent",
-          color: "rgb(var(--color-textSubtle))",
+          color: "hsl(var(--color-textSubtle))",
           cursor: "pointer",
         }}
       >

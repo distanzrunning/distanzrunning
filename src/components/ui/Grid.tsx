@@ -203,8 +203,8 @@ export function GridCell({
         position: "relative",
         zIndex: 2,
         fontSize: "1rem",
-        color: "rgb(var(--color-textDefault))",
-        ...(solid ? { backgroundColor: "rgb(var(--color-surface))" } : {}),
+        color: "hsl(var(--color-textDefault))",
+        ...(solid ? { backgroundColor: "hsl(var(--color-surface))" } : {}),
         ...style,
       }}
     >

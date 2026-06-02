@@ -258,10 +258,10 @@ function CategoryBar({
     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
       <div
         className="flex justify-between text-copy-13"
-        style={{ color: "rgb(var(--color-textDefault))" }}
+        style={{ color: "hsl(var(--color-textDefault))" }}
       >
         <span className="font-medium">{label}</span>
-        <span style={{ color: "rgb(var(--color-textSubtler))" }}>
+        <span style={{ color: "hsl(var(--color-textSubtler))" }}>
           {count.toLocaleString()} · {fmtPct(pct(count, total))}
         </span>
       </div>
@@ -458,10 +458,10 @@ export async function ConsentDashboardContent({
           two surfaces read as one panel. */}
       <div
         style={{
-          border: "1px solid rgb(var(--color-borderDefault))",
+          border: "1px solid hsl(var(--color-borderDefault))",
           borderRadius: 10,
           overflow: "hidden",
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           marginBottom: 16,
         }}
       >
@@ -481,8 +481,8 @@ export async function ConsentDashboardContent({
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-            borderBottom: "1px solid rgb(var(--color-borderDefault))",
-            background: "rgb(var(--color-canvas))",
+            borderBottom: "1px solid hsl(var(--color-borderDefault))",
+            background: "hsl(var(--color-canvas))",
           }}
         >
           <div>
@@ -619,10 +619,10 @@ export function ConsentDashboardSkeleton() {
     <div aria-busy="true" aria-live="polite">
       <div
         style={{
-          border: "1px solid rgb(var(--color-borderDefault))",
+          border: "1px solid hsl(var(--color-borderDefault))",
           borderRadius: 10,
           overflow: "hidden",
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           marginBottom: 16,
         }}
       >
@@ -631,8 +631,8 @@ export function ConsentDashboardSkeleton() {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-            borderBottom: "1px solid rgb(var(--color-borderDefault))",
-            background: "rgb(var(--color-canvas))",
+            borderBottom: "1px solid hsl(var(--color-borderDefault))",
+            background: "hsl(var(--color-canvas))",
           }}
         >
           <StatTileSkeleton label="Unique visitors" />
@@ -663,7 +663,7 @@ export function ConsentDashboardSkeleton() {
               >
                 <div
                   className="flex justify-between text-copy-13"
-                  style={{ color: "rgb(var(--color-textDefault))" }}
+                  style={{ color: "hsl(var(--color-textDefault))" }}
                 >
                   <span className="font-medium">{label}</span>
                   <Skeleton width={60} height={14} style={block} />

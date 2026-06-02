@@ -146,7 +146,7 @@ export default function SiteHeader({
             // CTA, not a nav trigger, so its filled-black hover should
             // not chameleon the surrounding pill. 260 ms ease-out keeps
             // the transition smooth enough to read as deliberate.
-            <header className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[rgba(var(--ds-background-200-rgb),0.8)] p-4 transition-colors duration-[260ms] ease-out has-[[data-nav-trigger]:hover]:bg-surface group-data-[state=open]/menu:bg-surface [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]">
+            <header className="pointer-events-auto relative mx-auto flex h-[72px] max-w-[1600px] items-center justify-between rounded-[8px] bg-[hsla(var(--ds-background-200-value),0.8)] p-4 transition-colors duration-[260ms] ease-out has-[[data-nav-trigger]:hover]:bg-surface group-data-[state=open]/menu:bg-surface [backdrop-filter:blur(200px)] [-webkit-backdrop-filter:blur(200px)]">
           {/* Left: wordmark only. The primary nav lives in its own
               absolute-centred slot below so the three-zone layout
               (brand / nav / actions) reads symmetrically — diverges

@@ -1089,7 +1089,7 @@ function ElevationCard({
 
   const distanceUnit = useMetric ? "km" : "mi";
   const elevationUnit = useMetric ? "m" : "ft";
-  const axisColor = "rgba(var(--ds-gray-1000-rgb), 0.55)";
+  const axisColor = "hsla(var(--ds-gray-1000-value), 0.55)";
   const gridColor = "var(--ds-gray-400)";
 
   return (

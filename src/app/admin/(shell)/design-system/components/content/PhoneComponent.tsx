@@ -249,8 +249,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "rgb(var(--color-textDefault))",
-            darkColor: "rgb(var(--color-textDefault))",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -264,12 +264,12 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   return (
     <div className="border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
-      <div className="p-6" style={{ background: "rgb(var(--color-surface))" }}>
+      <div className="p-6" style={{ background: "hsl(var(--color-surface))" }}>
         {children}
       </div>
 
       {/* Accordion trigger */}
-      <div style={{ background: "rgb(var(--color-canvas))" }}>
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -283,7 +283,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               {/* Floating copy button */}

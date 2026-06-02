@@ -98,7 +98,7 @@ export function ConsentCategoryRow({
           // follows it — either the next row's title, or this row's own
           // description when it's open.
           borderBottom:
-            !isLast || open ? "1px solid rgb(var(--color-borderDefault))" : "none",
+            !isLast || open ? "1px solid hsl(var(--color-borderDefault))" : "none",
         }}
       >
         <button
@@ -142,7 +142,7 @@ export function ConsentCategoryRow({
         className="text-[13px] leading-[1.55] text-textSubtle"
         style={{
           padding: "12px 16px 16px",
-          borderBottom: isLast ? "none" : "1px solid rgb(var(--color-borderDefault))",
+          borderBottom: isLast ? "none" : "1px solid hsl(var(--color-borderDefault))",
         }}
       >
         {category.description}
@@ -183,9 +183,9 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
       className="overflow-hidden"
       style={{
         marginTop: 16,
-        border: "1px solid rgb(var(--color-borderDefault))",
+        border: "1px solid hsl(var(--color-borderDefault))",
         borderRadius: 6,
-        background: "rgb(var(--color-surface))",
+        background: "hsl(var(--color-surface))",
       }}
     >
       <button
@@ -214,7 +214,7 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
         hidden={!open}
         style={{
           padding: "0 16px 16px",
-          borderTop: "1px solid rgb(var(--color-borderDefault))",
+          borderTop: "1px solid hsl(var(--color-borderDefault))",
           display: "flex",
           flexDirection: "column",
           gap: 12,
@@ -228,8 +228,8 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
             gap: 8,
             padding: "10px 12px",
             borderRadius: 6,
-            background: "rgb(var(--color-canvas))",
-            border: "1px solid rgb(var(--color-borderDefault))",
+            background: "hsl(var(--color-canvas))",
+            border: "1px solid hsl(var(--color-borderDefault))",
           }}
         >
           <span
@@ -255,9 +255,9 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
               width: 28,
               height: 28,
               borderRadius: 6,
-              border: "1px solid rgb(var(--color-borderDefault))",
-              background: "rgb(var(--color-surface))",
-              color: "rgb(var(--color-textSubtle))",
+              border: "1px solid hsl(var(--color-borderDefault))",
+              background: "hsl(var(--color-surface))",
+              color: "hsl(var(--color-textSubtle))",
               cursor: anonId ? "pointer" : "not-allowed",
               opacity: anonId ? 1 : 0.5,
               flexShrink: 0,
@@ -272,7 +272,7 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
         </div>
         <p
           className="text-[12px] leading-[1.55]"
-          style={{ color: "rgb(var(--color-textSubtler))", margin: 0 }}
+          style={{ color: "hsl(var(--color-textSubtler))", margin: 0 }}
         >
           Email{" "}
           <a
@@ -339,9 +339,9 @@ function ConsentSettingsModal() {
       <div
         className="overflow-hidden"
         style={{
-          border: "1px solid rgb(var(--color-borderDefault))",
+          border: "1px solid hsl(var(--color-borderDefault))",
           borderRadius: 6,
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           marginTop: 24,
         }}
       >
@@ -374,7 +374,7 @@ function ConsentSettingsModal() {
           </div>
           <p
             className="text-[12px] leading-[1.6]"
-          style={{ color: "rgb(var(--color-textSubtler))", margin: 0 }}
+          style={{ color: "hsl(var(--color-textSubtler))", margin: 0 }}
           >
             For more information, see our{" "}
             <a
@@ -448,7 +448,7 @@ function BottomBanner() {
           // (per the feedback-material-class-double-border lesson).
           className="flex flex-col gap-4 rounded-xl p-5"
           style={{
-            background: "rgb(var(--color-surface))",
+            background: "hsl(var(--color-surface))",
             boxShadow: "var(--ds-shadow-menu)",
           }}
         >

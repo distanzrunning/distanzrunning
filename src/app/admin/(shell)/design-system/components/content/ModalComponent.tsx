@@ -233,8 +233,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "rgb(var(--color-textDefault))",
-            darkColor: "rgb(var(--color-textDefault))",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -249,13 +249,13 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
     <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "rgb(var(--color-canvas))" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
@@ -268,7 +268,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
@@ -364,7 +364,7 @@ export function StickyExample() {
         </Modal.Header>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* Long content that causes scrolling */}
-          <p className="text-copy-14" style={{ color: "rgb(var(--color-textSubtle))", margin: 0 }}>
+          <p className="text-copy-14" style={{ color: "hsl(var(--color-textSubtle))", margin: 0 }}>
             Lorem ipsum dolor sit amet...
           </p>
         </div>
@@ -594,7 +594,7 @@ function StickyDemo() {
             <p
               key={i}
               className="text-copy-14"
-              style={{ color: "rgb(var(--color-textSubtle))", margin: 0 }}
+              style={{ color: "hsl(var(--color-textSubtle))", margin: 0 }}
             >
               {text}
             </p>
@@ -889,7 +889,7 @@ export default function ModalComponent() {
                 style={{
                   fontSize: 14,
                   fontWeight: 600,
-                  color: "rgb(var(--color-textDefault))",
+                  color: "hsl(var(--color-textDefault))",
                 }}
               >
                 Newsletter Modal →
@@ -898,7 +898,7 @@ export default function ModalComponent() {
                 style={{
                   marginTop: 4,
                   fontSize: 13,
-                  color: "rgb(var(--color-textSubtler))",
+                  color: "hsl(var(--color-textSubtler))",
                 }}
               >
                 Email sign-up dialog with a branded hero. Wired to Mailgun

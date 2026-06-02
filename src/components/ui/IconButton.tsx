@@ -105,7 +105,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
 
       if (variant === "secondary") {
         if (inverse) {
-          return "bg-transparent border border-[rgb(var(--color-textInverted))] text-textInverted hover:bg-[var(--ds-gray-alpha-100)]";
+          return "bg-transparent border border-[hsl(var(--color-textInverted))] text-textInverted hover:bg-[var(--ds-gray-alpha-100)]";
         }
         if (ignoreDarkMode) {
           return "bg-transparent border border-borderDefaultHover text-textDefault hover:border-[var(--ds-gray-1000)] hover:bg-[var(--ds-gray-100)]";

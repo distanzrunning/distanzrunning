@@ -130,7 +130,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           height: config.height,
           maxWidth: "100%",
           borderRadius: config.borderRadius,
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           transition: "box-shadow 0.15s ease",
           overflow: "hidden",
           fontSize: config.fontSize,
@@ -156,9 +156,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               cursor: "default",
               transition: "color 0.15s ease",
               ...(prefixStyling
-                ? { background: "rgb(var(--color-surface))" }
+                ? { background: "hsl(var(--color-surface))" }
                 : { marginRight: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
-              ...(disabled ? { cursor: "not-allowed", color: "rgb(var(--color-textSubtler))" } : {}),
+              ...(disabled ? { cursor: "not-allowed", color: "hsl(var(--color-textSubtler))" } : {}),
             }}
           >
             {prefix}
@@ -179,10 +179,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             height: "100%",
             border: "none",
             outline: "none",
-            background: disabled ? "var(--ds-gray-100)" : "rgb(var(--color-surface))",
+            background: disabled ? "var(--ds-gray-100)" : "hsl(var(--color-surface))",
             fontSize: config.fontSize,
             lineHeight: "20px",
-            color: disabled ? "rgb(var(--color-textSubtler))" : "rgb(var(--color-textDefault))",
+            color: disabled ? "hsl(var(--color-textSubtler))" : "hsl(var(--color-textDefault))",
             fontFamily: "inherit",
             paddingLeft: config.paddingX,
             paddingRight: config.paddingX,
@@ -218,9 +218,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               cursor: "default",
               transition: "color 0.15s ease",
               ...(suffixStyling
-                ? { background: "rgb(var(--color-surface))" }
+                ? { background: "hsl(var(--color-surface))" }
                 : { marginLeft: -config.paddingX, ...(disabled ? { background: "var(--ds-gray-100)" } : {}) }),
-              ...(disabled ? { cursor: "not-allowed", color: "rgb(var(--color-textSubtler))" } : {}),
+              ...(disabled ? { cursor: "not-allowed", color: "hsl(var(--color-textSubtler))" } : {}),
             }}
           >
             {suffix}

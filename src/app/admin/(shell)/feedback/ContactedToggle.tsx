@@ -32,7 +32,7 @@ export default function ContactedToggle({
   if (!hasEmail) {
     return (
       <Tooltip content="No email — nothing to follow up on">
-        <span style={{ color: "rgb(var(--color-textSubtler))" }}>—</span>
+        <span style={{ color: "hsl(var(--color-textSubtler))" }}>—</span>
       </Tooltip>
     );
   }
@@ -61,7 +61,7 @@ export default function ContactedToggle({
     width: 28,
     height: 28,
     borderRadius: 6,
-    border: "1px solid rgb(var(--color-borderDefault))",
+    border: "1px solid hsl(var(--color-borderDefault))",
     cursor: "pointer",
     transition: "background 0.15s ease, color 0.15s ease",
     opacity: pending ? 0.6 : 1,
@@ -73,8 +73,8 @@ export default function ContactedToggle({
         color: "var(--ds-green-900)",
       }
     : {
-        background: "rgb(var(--color-surface))",
-        color: "rgb(var(--color-textSubtle))",
+        background: "hsl(var(--color-surface))",
+        color: "hsl(var(--color-textSubtle))",
       };
 
   return (

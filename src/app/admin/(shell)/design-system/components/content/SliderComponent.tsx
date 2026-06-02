@@ -232,8 +232,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "rgb(var(--color-textDefault))",
-            darkColor: "rgb(var(--color-textDefault))",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -248,13 +248,13 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
     <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "rgb(var(--color-canvas))" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
@@ -267,7 +267,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
@@ -330,7 +330,7 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div className="flex flex-col gap-6">
-      <Slider defaultValue={60} color="rgb(var(--color-textDefault))" />
+      <Slider defaultValue={60} color="hsl(var(--color-textDefault))" />
       <Slider defaultValue={40} color="var(--ds-pink-700)" />
       <Slider range defaultValue={[25, 75]} color="var(--ds-pink-700)" />
     </div>
@@ -359,7 +359,7 @@ function RangeDemo() {
 function CustomColorDemo() {
   return (
     <div className="flex flex-col gap-6">
-      <Slider defaultValue={60} color="rgb(var(--color-textDefault))" />
+      <Slider defaultValue={60} color="hsl(var(--color-textDefault))" />
       <Slider defaultValue={40} color="var(--ds-pink-700)" />
       <Slider range defaultValue={[25, 75]} color="var(--ds-pink-700)" />
     </div>
@@ -396,7 +396,7 @@ export default function SliderComponent() {
         </SectionHeader>
         <p
           className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "rgb(var(--color-textSubtle))" }}
+          style={{ color: "hsl(var(--color-textSubtle))" }}
         >
           Dual-thumb slider for selecting a range. Thumbs can cross over each
           other and values auto-swap.

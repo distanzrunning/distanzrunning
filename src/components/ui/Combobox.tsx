@@ -416,7 +416,7 @@ export function Combobox({
           style={{
             display: "block",
             marginBottom: 8,
-            color: "rgb(var(--color-textSubtle))",
+            color: "hsl(var(--color-textSubtle))",
           }}
         >
           {label}
@@ -467,7 +467,7 @@ export function Combobox({
                   height: 16,
                   pointerEvents: "none",
                   zIndex: 1,
-                  color: "rgb(var(--color-textSubtler))",
+                  color: "hsl(var(--color-textSubtler))",
                 }}
               >
                 <SearchIcon />
@@ -516,12 +516,12 @@ export function Combobox({
                   boxShadow: inputBoxShadow,
                   background: disabled
                     ? "var(--ds-gray-100)"
-                    : "rgb(var(--color-surface))",
+                    : "hsl(var(--color-surface))",
                   color: disabled
-                    ? "rgb(var(--color-textSubtler))"
+                    ? "hsl(var(--color-textSubtler))"
                     : error
                       ? "var(--ds-red-800)"
-                      : "rgb(var(--color-textDefault))",
+                      : "hsl(var(--color-textDefault))",
                   fontFamily: "inherit",
                   fontSize: "inherit",
                   fontWeight: "inherit",
@@ -643,7 +643,7 @@ export function Combobox({
               width: listWidth || "var(--radix-popover-trigger-width)",
               padding: 8,
               borderRadius: 12,
-              background: "rgb(var(--color-surface))",
+              background: "hsl(var(--color-surface))",
               boxShadow: "var(--ds-shadow-menu)",
               maxHeight: 216,
               overflowY: "hidden",
@@ -673,7 +673,7 @@ export function Combobox({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "rgb(var(--color-textSubtle))",
+                    color: "hsl(var(--color-textSubtle))",
                     fontSize: 14,
                     userSelect: "none",
                   }}
@@ -687,7 +687,7 @@ export function Combobox({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "rgb(var(--color-textSubtle))",
+                    color: "hsl(var(--color-textSubtle))",
                     fontSize: 14,
                     userSelect: "none",
                   }}
@@ -752,7 +752,7 @@ export function Combobox({
                           alignItems: "center",
                           marginLeft: 8,
                           flexShrink: 0,
-                          color: "rgb(var(--color-textDefault))",
+                          color: "hsl(var(--color-textDefault))",
                         }}
                       >
                         <CheckIcon />

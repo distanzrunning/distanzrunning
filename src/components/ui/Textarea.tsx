@@ -99,7 +99,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             style={{
               fontSize: 13,
               lineHeight: "20px",
-              color: "rgb(var(--color-textSubtle))",
+              color: "hsl(var(--color-textSubtle))",
               marginBottom: 8,
             }}
           >
@@ -111,7 +111,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           className={`ds-textarea-container${error ? " ds-textarea--error" : ""}${disabled ? " ds-textarea--disabled" : ""}`}
           style={{
             borderRadius: 6,
-            background: "rgb(var(--color-surface))",
+            background: "hsl(var(--color-surface))",
             transition: "box-shadow 0.15s ease",
             overflow: "hidden",
             ...(disabled ? { cursor: "not-allowed", opacity: 0.5 } : {}),
@@ -136,10 +136,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               outline: "none",
               background: disabled
                 ? "var(--ds-gray-100)"
-                : "rgb(var(--color-surface))",
+                : "hsl(var(--color-surface))",
               fontSize: 14,
               lineHeight: "20px",
-              color: disabled ? "rgb(var(--color-textSubtler))" : "rgb(var(--color-textDefault))",
+              color: disabled ? "hsl(var(--color-textSubtler))" : "hsl(var(--color-textDefault))",
               fontFamily: "inherit",
               padding: 12,
               resize: "vertical",
@@ -180,7 +180,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               marginTop: 8,
               fontSize: 13,
               lineHeight: "20px",
-              color: "rgb(var(--color-textSubtle))",
+              color: "hsl(var(--color-textSubtle))",
             }}
           >
             {helperText}

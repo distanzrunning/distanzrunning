@@ -64,8 +64,8 @@ export default function LeaderboardPanel({
   return (
     <div
       style={{
-        background: "rgb(var(--color-surface))",
-        border: "1px solid rgb(var(--color-borderDefault))",
+        background: "hsl(var(--color-surface))",
+        border: "1px solid hsl(var(--color-borderDefault))",
         borderRadius: 6,
         overflow: "hidden",
       }}
@@ -102,7 +102,7 @@ export default function LeaderboardPanel({
             fontWeight: 500,
             textTransform: "uppercase",
             letterSpacing: "0.04em",
-            color: "rgb(var(--color-textSubtle))",
+            color: "hsl(var(--color-textSubtle))",
             // Same 1px line the Tabs container's inset shadow paints
             // — extended across the column-header gap to the right
             // edge of the panel.
@@ -120,7 +120,7 @@ export default function LeaderboardPanel({
             style={{
               padding: "24px 32px",
               textAlign: "center",
-              color: "rgb(var(--color-textSubtler))",
+              color: "hsl(var(--color-textSubtler))",
               fontSize: 14,
               lineHeight: "20px",
             }}
@@ -202,7 +202,7 @@ function LeaderboardRow({
                 style={{
                   fontSize: 14,
                   lineHeight: "32px",
-                  color: "rgb(var(--color-textDefault))",
+                  color: "hsl(var(--color-textDefault))",
                   textDecoration: "none",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -221,8 +221,8 @@ function LeaderboardRow({
                   fontSize: 14,
                   lineHeight: "32px",
                   color: row.italic
-                    ? "rgb(var(--color-textSubtler))"
-                    : "rgb(var(--color-textDefault))",
+                    ? "hsl(var(--color-textSubtler))"
+                    : "hsl(var(--color-textDefault))",
                   fontStyle: row.italic ? "italic" : "normal",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -246,7 +246,7 @@ function LeaderboardRow({
                   display: "flex",
                   alignItems: "center",
                   padding: "0 4px",
-                  background: "rgb(var(--color-surface))",
+                  background: "hsl(var(--color-surface))",
                   borderRadius: 6,
                   transition: "opacity 0.15s ease",
                 }}
@@ -269,7 +269,7 @@ function LeaderboardRow({
                 fontSize: 14,
                 lineHeight: "20px",
                 fontWeight: 600,
-                color: "rgb(var(--color-textDefault))",
+                color: "hsl(var(--color-textDefault))",
                 fontVariantNumeric: "tabular-nums",
               }}
             >

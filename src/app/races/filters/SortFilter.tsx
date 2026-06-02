@@ -82,7 +82,7 @@ export default function SortFilter({ value, onChange }: SortFilterProps) {
           // inverted icon when sort != default. Same hairline
           // ring + hover shift as the rest of the chip row so
           // the icon button reads as part of the same family.
-          className={`inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-[6px] outline-none [box-shadow:0_0_0_1px_rgba(var(--ds-gray-1000-rgb),0.1)] hover:[box-shadow:0_0_0_1px_var(--ds-gray-alpha-600)] ${
+          className={`inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-[6px] outline-none [box-shadow:0_0_0_1px_hsla(var(--ds-gray-1000-value),0.1)] hover:[box-shadow:0_0_0_1px_var(--ds-gray-alpha-600)] ${
             isActive
               ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)] hover:bg-[color:var(--ds-gray-900)]"
               : "bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-100)]"

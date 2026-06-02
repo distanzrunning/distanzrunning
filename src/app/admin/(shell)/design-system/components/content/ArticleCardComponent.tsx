@@ -205,8 +205,8 @@ function CodePreview({
           [
             {
               content: line,
-              color: "rgb(var(--color-textDefault))",
-              darkColor: "rgb(var(--color-textDefault))",
+              color: "hsl(var(--color-textDefault))",
+              darkColor: "hsl(var(--color-textDefault))",
             },
           ] as DualThemeToken[],
       );
@@ -219,13 +219,13 @@ function CodePreview({
     <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "rgb(var(--color-canvas))" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
@@ -238,7 +238,7 @@ function CodePreview({
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
@@ -433,34 +433,34 @@ function AnatomyDemo() {
       />
       <ul
         className="flex flex-col gap-3 text-copy-13 leading-[1.5]"
-        style={{ color: "rgb(var(--color-textSubtle))" }}
+        style={{ color: "hsl(var(--color-textSubtle))" }}
       >
         <li>
-          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Image —</strong>{" "}
+          <strong style={{ color: "hsl(var(--color-textDefault))" }}>Image —</strong>{" "}
           16/8.75 cinematic ratio, rounded-md, starts at scale 104% and
           settles to 100% on hover (image visually &quot;sharpens into
           place&quot;).
         </li>
         <li>
-          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Kicker —</strong>{" "}
+          <strong style={{ color: "hsl(var(--color-textDefault))" }}>Kicker —</strong>{" "}
           11 px medium label. Becomes a clickable link when{" "}
           <code>kickerHref</code> is set; falls back to a plain span
           otherwise.
         </li>
         <li>
-          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Date —</strong>{" "}
+          <strong style={{ color: "hsl(var(--color-textDefault))" }}>Date —</strong>{" "}
           formatted as <code>d MMM yyyy</code>. Sits after the kicker with
           a faint dot separator.
         </li>
         <li>
-          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Title —</strong>{" "}
+          <strong style={{ color: "hsl(var(--color-textDefault))" }}>Title —</strong>{" "}
           19 px semibold, clamped to 2 lines on mobile and 3 on{" "}
           <code>md+</code>. The title&apos;s anchor carries the
           card-wide click overlay (<code>::after</code> spans the whole
           article).
         </li>
         <li>
-          <strong style={{ color: "rgb(var(--color-textDefault))" }}>Excerpt —</strong>{" "}
+          <strong style={{ color: "hsl(var(--color-textDefault))" }}>Excerpt —</strong>{" "}
           15 px medium, clamped to 2 lines, capped at{" "}
           <code>max-w-3xl</code>.
         </li>
@@ -669,14 +669,14 @@ export default function ArticleCardComponent() {
           style={{ lineHeight: 1.6 }}
         >
           <li>
-            <strong style={{ color: "rgb(var(--color-textDefault))" }}>
+            <strong style={{ color: "hsl(var(--color-textDefault))" }}>
               Image settle —
             </strong>{" "}
             scales from 104% to 100% over 300 ms (group-hover on the
             outer <code>&lt;article&gt;</code>).
           </li>
           <li>
-            <strong style={{ color: "rgb(var(--color-textDefault))" }}>
+            <strong style={{ color: "hsl(var(--color-textDefault))" }}>
               Kicker colour shift —
             </strong>{" "}
             kicker text fades from <code>--ds-gray-900</code> to{" "}

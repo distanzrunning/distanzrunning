@@ -189,8 +189,8 @@ export function CodeBlock({
         [
           {
             content: line,
-            color: "rgb(var(--color-textDefault))",
-            darkColor: "rgb(var(--color-textDefault))",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -206,7 +206,7 @@ export function CodeBlock({
         <div
           className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-borderDefault"
           style={{
-            background: "rgb(var(--color-surface))",
+            background: "hsl(var(--color-surface))",
             borderRadius: "4px 4px 0 0",
           }}
         >
@@ -284,7 +284,7 @@ export function CodeBlock({
       {/* Code content */}
       <pre
         className="overflow-x-auto py-4"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         <code className="block text-[13px] leading-[20px] font-mono">
           {lines.map((lineTokens, index) => {

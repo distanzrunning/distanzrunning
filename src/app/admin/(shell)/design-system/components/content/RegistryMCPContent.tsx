@@ -24,7 +24,7 @@ export default function RegistryMCPContent() {
           </h2>
           <p
             className="text-copy-16"
-            style={{ color: "rgb(var(--color-textSubtle))", marginBottom: 16 }}
+            style={{ color: "hsl(var(--color-textSubtle))", marginBottom: 16 }}
           >
             Every component in this design system is published as a
             shadcn-compatible registry item at{" "}
@@ -46,7 +46,7 @@ export default function RegistryMCPContent() {
           </p>
           <p
             className="text-copy-16"
-            style={{ color: "rgb(var(--color-textSubtle))" }}
+            style={{ color: "hsl(var(--color-textSubtle))" }}
           >
             77 items are currently published — 26 atoms, 33
             molecules, 16 organisms, 1 template, plus the tokens
@@ -62,7 +62,7 @@ export default function RegistryMCPContent() {
           </h2>
           <p
             className="text-copy-16"
-            style={{ color: "rgb(var(--color-textSubtle))", marginBottom: 16 }}
+            style={{ color: "hsl(var(--color-textSubtle))", marginBottom: 16 }}
           >
             Inside any Next.js project that already runs shadcn (i.e.{" "}
             <code
@@ -95,7 +95,7 @@ export default function RegistryMCPContent() {
           <p
             className="text-copy-16"
             style={{
-              color: "rgb(var(--color-textSubtle))",
+              color: "hsl(var(--color-textSubtle))",
               marginTop: 16,
             }}
           >
@@ -107,7 +107,7 @@ export default function RegistryMCPContent() {
           <p
             className="text-copy-13"
             style={{
-              color: "rgb(var(--color-textSubtler))",
+              color: "hsl(var(--color-textSubtler))",
               marginTop: 12,
             }}
           >
@@ -125,7 +125,7 @@ export default function RegistryMCPContent() {
           </h2>
           <p
             className="text-copy-16"
-            style={{ color: "rgb(var(--color-textSubtle))", marginBottom: 16 }}
+            style={{ color: "hsl(var(--color-textSubtle))", marginBottom: 16 }}
           >
             With the registry registered, point your AI tool at it
             via the Model Context Protocol. shadcn ships its own
@@ -138,7 +138,7 @@ export default function RegistryMCPContent() {
           <p
             className="text-copy-16"
             style={{
-              color: "rgb(var(--color-textSubtle))",
+              color: "hsl(var(--color-textSubtle))",
               marginTop: 16,
               marginBottom: 8,
             }}
@@ -159,7 +159,7 @@ export default function RegistryMCPContent() {
           <ul
             className="text-copy-14"
             style={{
-              color: "rgb(var(--color-textSubtle))",
+              color: "hsl(var(--color-textSubtle))",
               listStyle: "none",
               padding: 0,
               margin: 0,
@@ -170,7 +170,7 @@ export default function RegistryMCPContent() {
                 key={c.id}
                 style={{
                   padding: "6px 0",
-                  borderBottom: "1px solid rgb(var(--color-borderDefault))",
+                  borderBottom: "1px solid hsl(var(--color-borderDefault))",
                   display: "flex",
                   gap: 16,
                   alignItems: "baseline",
@@ -179,13 +179,13 @@ export default function RegistryMCPContent() {
                 <code
                   className="text-label-13-mono"
                   style={{
-                    color: "rgb(var(--color-textDefault))",
+                    color: "hsl(var(--color-textDefault))",
                     minWidth: 90,
                   }}
                 >
                   {c.label}
                 </code>
-                <span style={{ color: "rgb(var(--color-textSubtler))" }}>
+                <span style={{ color: "hsl(var(--color-textSubtler))" }}>
                   {c.note}
                 </span>
               </li>
@@ -193,7 +193,7 @@ export default function RegistryMCPContent() {
           </ul>
           <p
             className="text-copy-13"
-            style={{ color: "rgb(var(--color-textSubtler))", marginTop: 16 }}
+            style={{ color: "hsl(var(--color-textSubtler))", marginTop: 16 }}
           >
             Each variant writes the same{" "}
             <code
@@ -230,7 +230,7 @@ export default function RegistryMCPContent() {
           </h2>
           <p
             className="text-copy-16"
-            style={{ color: "rgb(var(--color-textSubtle))", marginBottom: 16 }}
+            style={{ color: "hsl(var(--color-textSubtle))", marginBottom: 16 }}
           >
             Once the MCP server is running, the model can search
             and install Distanz components on its own. A prompt
@@ -243,7 +243,7 @@ export default function RegistryMCPContent() {
               background: "var(--ds-gray-100)",
               borderRadius: 6,
               padding: 16,
-              color: "rgb(var(--color-textDefault))",
+              color: "hsl(var(--color-textDefault))",
               fontStyle: "italic",
             }}
             className="text-copy-14"
@@ -255,7 +255,7 @@ export default function RegistryMCPContent() {
           </div>
           <p
             className="text-copy-13"
-            style={{ color: "rgb(var(--color-textSubtler))", marginTop: 16 }}
+            style={{ color: "hsl(var(--color-textSubtler))", marginTop: 16 }}
           >
             Without MCP, the model would hallucinate prop names and
             variants. With MCP, it queries the registry first and
@@ -271,7 +271,7 @@ export default function RegistryMCPContent() {
           </h2>
           <p
             className="text-copy-16"
-            style={{ color: "rgb(var(--color-textSubtle))", marginBottom: 16 }}
+            style={{ color: "hsl(var(--color-textSubtle))", marginBottom: 16 }}
           >
             Every component page in this DS also exposes a “Copy
             npx command” button in the top-right of its header. If

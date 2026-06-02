@@ -36,7 +36,7 @@
     margin: 0;
     line-height: inherit;
     scroll-behavior: smooth;
-    color: rgb(var(--color-textDefault));
+    color: hsl(var(--color-textDefault));
     overscroll-behavior: none;
     position: relative;
   }

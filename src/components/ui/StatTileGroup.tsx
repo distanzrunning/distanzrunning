@@ -24,10 +24,10 @@ export function StatTileGroup({ children, columns }: StatTileGroupProps) {
   return (
     <div
       style={{
-        border: "1px solid rgb(var(--color-borderDefault))",
+        border: "1px solid hsl(var(--color-borderDefault))",
         borderRadius: 12,
         overflow: "hidden",
-        background: "rgb(var(--color-surface))",
+        background: "hsl(var(--color-surface))",
       }}
     >
       <div
@@ -45,10 +45,10 @@ export function StatTileGroup({ children, columns }: StatTileGroupProps) {
               style={{
                 borderRight: isLastInRow
                   ? "none"
-                  : "1px solid rgb(var(--color-borderDefault))",
+                  : "1px solid hsl(var(--color-borderDefault))",
                 borderBottom: isInLastRow
                   ? "none"
-                  : "1px solid rgb(var(--color-borderDefault))",
+                  : "1px solid hsl(var(--color-borderDefault))",
               }}
             >
               {child}

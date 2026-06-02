@@ -436,7 +436,7 @@ function MenuDropdown({
             : isBottomEnd || isTopEnd
               ? document.documentElement.clientWidth - coords.left
               : undefined,
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           borderRadius: 12,
           boxShadow: "var(--ds-shadow-menu)",
           padding: 8,
@@ -662,7 +662,7 @@ export function MenuItem({
     height: 40,
     borderRadius: 6,
     fontSize: 14,
-    color: destructive ? "var(--ds-red-900)" : "rgb(var(--color-textDefault))",
+    color: destructive ? "var(--ds-red-900)" : "hsl(var(--color-textDefault))",
     cursor: isDisabled ? "default" : "pointer",
     opacity: isDisabled ? 0.5 : 1,
     background: "transparent",
@@ -690,7 +690,7 @@ export function MenuItem({
             display: "flex",
             alignItems: "center",
             flexShrink: 0,
-            color: "rgb(var(--color-textSubtle))",
+            color: "hsl(var(--color-textSubtle))",
           }}
         >
           {suffix}

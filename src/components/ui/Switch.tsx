@@ -144,8 +144,8 @@ export function Switch({
     alignItems: "stretch",
     padding: config.containerPadding,
     borderRadius: config.borderRadius,
-    backgroundColor: "rgb(var(--color-canvas))",
-    boxShadow: "rgba(var(--ds-gray-1000-rgb), 0.1) 0px 0px 0px 1px",
+    backgroundColor: "hsl(var(--color-canvas))",
+    boxShadow: "hsla(var(--ds-gray-1000-value), 0.1) 0px 0px 0px 1px",
     position: "relative",
     width: fullWidth ? "100%" : undefined,
     gap: 0,
@@ -217,7 +217,7 @@ export function Switch({
                 userSelect: "none",
                 transition: "color 0.15s ease",
                 backgroundColor: isSelected
-                  ? "rgb(var(--color-surface))"
+                  ? "hsl(var(--color-surface))"
                   : "transparent",
                 color: isDisabled
                   ? "var(--ds-gray-600)"

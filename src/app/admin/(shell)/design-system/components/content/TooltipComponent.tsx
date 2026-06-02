@@ -235,8 +235,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "rgb(var(--color-textDefault))",
-            darkColor: "rgb(var(--color-textDefault))",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -251,13 +251,13 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
     <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "rgb(var(--color-canvas))" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
@@ -270,7 +270,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
@@ -407,7 +407,7 @@ export function Component(): JSX.Element {
   const customContent = (
     <div style={{ padding: '4px 0' }}>
       <div style={{ fontWeight: 500, marginBottom: 2 }}>Custom tooltip</div>
-      <div style={{ color: 'rgb(var(--color-borderDefault))', fontSize: 12 }}>
+      <div style={{ color: 'hsl(var(--color-borderDefault))', fontSize: 12 }}>
         With additional details
       </div>
     </div>
@@ -651,7 +651,7 @@ function CustomContentDemo() {
   const customContent = (
     <div style={{ padding: "4px 0" }}>
       <div style={{ fontWeight: 500, marginBottom: 2 }}>Custom tooltip</div>
-      <div style={{ color: "rgb(var(--color-borderDefault))", fontSize: 12 }}>
+      <div style={{ color: "hsl(var(--color-borderDefault))", fontSize: 12 }}>
         With additional details
       </div>
     </div>

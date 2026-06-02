@@ -61,15 +61,15 @@ export interface AdSlotProps {
 
 function DefaultFallback({ width, height }: Dimensions) {
   const frameStyle: React.CSSProperties = {
-    borderColor: "rgb(var(--color-borderDefault))",
+    borderColor: "hsl(var(--color-borderDefault))",
     // bg-100 (white in light, elevated dark in dark) so the
     // fallback reads as a card raised above the PageFrame
     // surface — bg-200 blended with the surface in light mode.
-    background: "rgb(var(--color-surface))",
+    background: "hsl(var(--color-surface))",
   };
   const ctaStyle: React.CSSProperties = {
-    background: "rgb(var(--color-textDefault))",
-    color: "rgb(var(--color-textInverted))",
+    background: "hsl(var(--color-textDefault))",
+    color: "hsl(var(--color-textInverted))",
   };
 
   // Very small mobile banner (≤ 60px tall) — just an inline link
@@ -278,7 +278,7 @@ export function AdSlot({
       {showLabel && (
         <div
           className="mb-1 text-center text-[10px] font-semibold uppercase tracking-[0.08em]"
-          style={{ color: "rgb(var(--color-textSubtler))" }}
+          style={{ color: "hsl(var(--color-textSubtler))" }}
         >
           Advertisement
         </div>

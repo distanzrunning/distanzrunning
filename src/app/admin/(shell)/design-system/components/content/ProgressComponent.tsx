@@ -233,8 +233,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "rgb(var(--color-textDefault))",
-            darkColor: "rgb(var(--color-textDefault))",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -249,13 +249,13 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
     <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "rgb(var(--color-canvas))" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
@@ -268,7 +268,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
@@ -333,7 +333,7 @@ export function Component(): JSX.Element {
   const [value, setValue] = useState(0);
 
   const getColor = (v: number) => {
-    if (v <= 25) return 'rgb(var(--color-textDefault))';
+    if (v <= 25) return 'hsl(var(--color-textDefault))';
     if (v <= 50) return 'var(--ds-amber-700)';
     if (v <= 75) return 'var(--ds-blue-700)';
     return 'var(--ds-green-700)';
@@ -374,7 +374,7 @@ export function Component(): JSX.Element {
       <Progress value={100} color="var(--ds-blue-700)" />
       <Progress value={10} color="var(--ds-red-700)" />
       <Progress value={40} color="var(--ds-amber-700)" />
-      <Progress value={70} color="rgb(var(--color-textSubtler))" />
+      <Progress value={70} color="hsl(var(--color-textSubtler))" />
     </div>
   );
 }`;
@@ -419,7 +419,7 @@ function DynamicColorsDemo() {
   const [value, setValue] = useState(0);
 
   const getColor = (v: number) => {
-    if (v <= 25) return "rgb(var(--color-textDefault))";
+    if (v <= 25) return "hsl(var(--color-textDefault))";
     if (v <= 50) return "var(--ds-amber-700)";
     if (v <= 75) return "var(--ds-blue-700)";
     return "var(--ds-green-700)";
@@ -457,7 +457,7 @@ function ThemedDemo() {
       <Progress value={100} color="var(--ds-blue-700)" />
       <Progress value={10} color="var(--ds-red-700)" />
       <Progress value={40} color="var(--ds-amber-700)" />
-      <Progress value={70} color="rgb(var(--color-textSubtler))" />
+      <Progress value={70} color="hsl(var(--color-textSubtler))" />
     </div>
   );
 }

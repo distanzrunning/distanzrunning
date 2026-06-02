@@ -190,10 +190,10 @@ export function Tabs({
               whiteSpace: "nowrap",
               cursor: isDisabled ? "not-allowed" : "pointer",
               color: isDisabled
-                ? "rgb(var(--color-textDisabled))"
+                ? "hsl(var(--color-textDisabled))"
                 : isSelected
-                  ? "rgb(var(--color-textInverted))"
-                  : "rgb(var(--color-textDefault))",
+                  ? "hsl(var(--color-textInverted))"
+                  : "hsl(var(--color-textDefault))",
               backgroundColor: isDisabled
                 ? "var(--ds-gray-200)"
                 : isSelected

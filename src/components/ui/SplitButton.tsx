@@ -159,12 +159,12 @@ export function SplitButton({
 
   // Variant-specific colors
   const bgColor = isDefault
-    ? "rgb(var(--color-textDefault))"
-    : "rgb(var(--color-surface))";
+    ? "hsl(var(--color-textDefault))"
+    : "hsl(var(--color-surface))";
   const textColor = isDefault
-    ? "rgb(var(--color-textInverted))"
-    : "rgb(var(--color-textDefault))";
-  const borderOuterColor = "rgb(var(--color-borderDefault))";
+    ? "hsl(var(--color-textInverted))"
+    : "hsl(var(--color-textDefault))";
+  const borderOuterColor = "hsl(var(--color-borderDefault))";
 
   // Primary button styles
   const primaryStyle: React.CSSProperties = {
@@ -200,7 +200,7 @@ export function SplitButton({
 
   const dividerColor = isDefault
     ? "var(--ds-gray-alpha-900)"
-    : "rgb(var(--color-borderSubtle))";
+    : "hsl(var(--color-borderSubtle))";
 
   // Divider styles
   const dividerStyle: React.CSSProperties = {
@@ -215,10 +215,10 @@ export function SplitButton({
     top: "calc(100% + 4px)",
     ...(menuAlignment === "bottom-end" ? { right: 0 } : { left: 0 }),
     width: 264,
-    background: "rgb(var(--color-surface))",
+    background: "hsl(var(--color-surface))",
     borderRadius: 12,
     boxShadow:
-      "var(--ds-shadow-menu), rgb(var(--color-canvas)) 0px 0px 0px 1px",
+      "var(--ds-shadow-menu), hsl(var(--color-canvas)) 0px 0px 0px 1px",
     padding: 8,
     zIndex: 2001,
     listStyle: "none",
@@ -330,7 +330,7 @@ export function SplitButton({
                       fontSize: 14,
                       lineHeight: "20px",
                       fontWeight: 500,
-                      color: "rgb(var(--color-textDefault))",
+                      color: "hsl(var(--color-textDefault))",
                     }}
                   >
                     {item.label}
@@ -342,7 +342,7 @@ export function SplitButton({
                       fontSize: 14,
                       lineHeight: "20px",
                       fontWeight: 400,
-                      color: "rgb(var(--color-textSubtle))",
+                      color: "hsl(var(--color-textSubtle))",
                     }}
                   >
                     {item.description}

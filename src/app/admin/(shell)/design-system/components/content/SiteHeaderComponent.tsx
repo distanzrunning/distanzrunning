@@ -209,8 +209,8 @@ function CodePreview({
           [
             {
               content: line,
-              color: "rgb(var(--color-textDefault))",
-              darkColor: "rgb(var(--color-textDefault))",
+              color: "hsl(var(--color-textDefault))",
+              darkColor: "hsl(var(--color-textDefault))",
             },
           ] as DualThemeToken[],
       );
@@ -223,13 +223,13 @@ function CodePreview({
       <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "rgb(var(--color-canvas))" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
@@ -242,7 +242,7 @@ function CodePreview({
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}>
+            style={{ background: "hsl(var(--color-surface))" }}>
             <div className="relative group">
               <button
                 onClick={handleCopy}
@@ -316,8 +316,8 @@ function HeaderInPagePreview() {
       <div
         className="w-full"
         style={{
-          background: "rgb(var(--color-surface))",
-          border: "1px solid rgb(var(--color-borderDefault))",
+          background: "hsl(var(--color-surface))",
+          border: "1px solid hsl(var(--color-borderDefault))",
           borderRadius: 6,
           minHeight: 60,
           overflow: "visible",
@@ -346,8 +346,8 @@ function HeaderAnatomy() {
       className="flex w-full items-center justify-between px-3"
       style={{
         height: 50,
-        background: "rgb(var(--color-surface))",
-        border: "1px solid rgb(var(--color-borderDefault))",
+        background: "hsl(var(--color-surface))",
+        border: "1px solid hsl(var(--color-borderDefault))",
         borderRadius: 6,
       }}
     >
@@ -364,9 +364,9 @@ function Zone({ label, wide }: { label: string; wide?: boolean }) {
       className="flex h-8 items-center justify-center px-3"
       style={{
         background: "var(--ds-gray-100)",
-        border: "1px dashed rgb(var(--color-borderDefault))",
+        border: "1px dashed hsl(var(--color-borderDefault))",
         borderRadius: 6,
-        color: "rgb(var(--color-textSubtler))",
+        color: "hsl(var(--color-textSubtler))",
         fontSize: 11,
         fontFamily: "var(--font-mono)",
         minWidth: wide ? 320 : 160,
@@ -559,7 +559,7 @@ export default function SiteHeaderComponent() {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              color: "rgb(var(--color-textDefault))",
+              color: "hsl(var(--color-textDefault))",
               textDecoration: "underline",
             }}
           >
@@ -607,7 +607,7 @@ export default function SiteHeaderComponent() {
       <div
         style={{
           padding: 48,
-          borderBottom: "1px solid rgb(var(--color-borderDefault))",
+          borderBottom: "1px solid hsl(var(--color-borderDefault))",
         }}
       >
         <SectionHeader id="header-in-page" onCopyLink={showToast}>

@@ -57,17 +57,17 @@ export interface StatTileProps {
   anchorProps?: AnchorHTMLAttributes<HTMLAnchorElement>;
 }
 
-// Chip color per direction. Background uses the `-rgb` companion of
+// Chip color per direction. Background uses the `-value` HSL triplet of
 // the same hue's 900 token, scaled by --chip-alpha (0.2 default, 0.5
-// on focus) — matches Vercel's `rgba(R,G,B,var(--trend-background-
+// on focus) via hsla() — matches Vercel's `hsla(H,S,L,var(--trend-background-
 // opacity))` pattern and flips correctly in dark mode.
 const directionStyles: Record<
   StatTileChangeDirection,
   { rgb: string; color: string }
 > = {
-  up: { rgb: "var(--ds-green-900-rgb)", color: "var(--ds-green-900)" },
-  down: { rgb: "var(--ds-red-900-rgb)", color: "var(--ds-red-900)" },
-  flat: { rgb: "var(--ds-gray-900-rgb)", color: "var(--ds-gray-900)" },
+  up: { rgb: "var(--ds-green-900-value)", color: "var(--ds-green-900)" },
+  down: { rgb: "var(--ds-red-900-value)", color: "var(--ds-red-900)" },
+  flat: { rgb: "var(--ds-gray-900-value)", color: "var(--ds-gray-900)" },
 };
 
 // Tiny focus-aware pill that holds the trend %. Bg alpha is driven
@@ -104,7 +104,7 @@ function ChangeChip({ change }: { change: StatTileChange }) {
         // Custom property defaults to 0.2; bumps to 0.5 on focus
         // via the className above (CSS variable cascade, no state).
         ["--chip-alpha" as string]: 0.2,
-        background: `rgba(${rgb}, var(--chip-alpha))`,
+        background: `hsla(${rgb}, var(--chip-alpha))`,
         color,
         whiteSpace: "nowrap",
         cursor: change.ariaLabel ? "pointer" : "default",
@@ -142,9 +142,9 @@ export function StatTile({
   // Tab active: pop to background-100 with a black bottom rule.
   const background = isTab
     ? active
-      ? "rgb(var(--color-surface))"
+      ? "hsl(var(--color-surface))"
       : "transparent"
-    : "rgb(var(--color-surface))";
+    : "hsl(var(--color-surface))";
   const muted = isTab && !active;
 
   const body = (

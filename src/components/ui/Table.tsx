@@ -39,7 +39,7 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
               "w-full caption-bottom",
               className,
             )}
-            style={{ color: "rgb(var(--color-textSubtle))", fontSize: 14, lineHeight: "20px" }}
+            style={{ color: "hsl(var(--color-textSubtle))", fontSize: 14, lineHeight: "20px" }}
             {...props}
           >
             {children}
@@ -126,7 +126,7 @@ const TableHead = forwardRef<
       "h-10 px-2 text-left align-middle font-medium last:text-right border-borderDefault",
       className,
     )}
-    style={{ color: "rgb(var(--color-textSubtle))" }}
+    style={{ color: "hsl(var(--color-textSubtle))" }}
     {...props}
   />
 ));

@@ -42,19 +42,19 @@ export default async function StudioLayout({
   return (
     <div
       className="fixed inset-0 z-[100] flex flex-col"
-      style={{ background: "rgb(var(--color-surface))" }}
+      style={{ background: "hsl(var(--color-surface))" }}
     >
       <div
         className="flex h-10 shrink-0 items-center border-b px-3"
         style={{
-          background: "rgb(var(--color-canvas))",
-          borderBottomColor: "rgb(var(--color-borderDefault))",
+          background: "hsl(var(--color-canvas))",
+          borderBottomColor: "hsl(var(--color-borderDefault))",
         }}
       >
         <Link
           href="/admin"
           className="inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-[13px] leading-5 transition-colors"
-          style={{ color: "rgb(var(--color-textSubtle))" }}
+          style={{ color: "hsl(var(--color-textSubtle))" }}
         >
           <ArrowLeft className="size-3.5" aria-hidden />
           Back to admin

@@ -219,9 +219,9 @@ function SheetContent({
           display: "flex",
           flexDirection: "column",
           gap: 16,
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           boxShadow:
-            "var(--ds-shadow-modal), rgb(var(--color-canvas)) 0px 0px 0px 1px",
+            "var(--ds-shadow-modal), hsl(var(--color-canvas)) 0px 0px 0px 1px",
           outline: "none",
           transition:
             "color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter",
@@ -250,7 +250,7 @@ function SheetTitle({ children }: SheetTitleProps) {
       style={{
         fontSize: 18,
         lineHeight: "28px",
-        color: "rgb(var(--color-textDefault))",
+        color: "hsl(var(--color-textDefault))",
       }}
     >
       {children}
@@ -264,7 +264,7 @@ function SheetDescription({ children }: SheetDescriptionProps) {
       style={{
         fontSize: 14,
         lineHeight: "20px",
-        color: "rgb(var(--color-textSubtler))",
+        color: "hsl(var(--color-textSubtler))",
       }}
     >
       {children}
@@ -279,7 +279,7 @@ function SheetBody({ children }: { children: React.ReactNode }) {
       style={{
         fontSize: 14,
         lineHeight: "20px",
-        color: "rgb(var(--color-textDefault))",
+        color: "hsl(var(--color-textDefault))",
       }}
     >
       {children}

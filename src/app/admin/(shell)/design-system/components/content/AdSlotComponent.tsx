@@ -163,8 +163,8 @@ function CodePreview({ children, componentCode, minHeight = 200 }: CodePreviewPr
         [
           {
             content: line,
-            color: "rgb(var(--color-textDefault))",
-            darkColor: "rgb(var(--color-textDefault))",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -179,11 +179,11 @@ function CodePreview({ children, componentCode, minHeight = 200 }: CodePreviewPr
     <div className="border border-borderDefault rounded-lg w-full min-w-0 overflow-hidden">
       <div
         className="p-6 flex items-center justify-center"
-        style={{ background: "rgb(var(--color-surface))", minHeight }}
+        style={{ background: "hsl(var(--color-surface))", minHeight }}
       >
         {children}
       </div>
-      <div style={{ background: "rgb(var(--color-canvas))" }}>
+      <div style={{ background: "hsl(var(--color-canvas))" }}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -195,7 +195,7 @@ function CodePreview({ children, componentCode, minHeight = 200 }: CodePreviewPr
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
@@ -426,8 +426,8 @@ export default function AdSlotComponent() {
                 <div
                   className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border p-6 text-center"
                   style={{
-                    borderColor: "rgb(var(--color-borderDefault))",
-                    background: "rgb(var(--color-canvas))",
+                    borderColor: "hsl(var(--color-borderDefault))",
+                    background: "hsl(var(--color-canvas))",
                   }}
                 >
                   <h4 className="text-heading-16 text-textDefault">
@@ -440,7 +440,7 @@ export default function AdSlotComponent() {
                     href="/newsletter"
                     className="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-md font-sans text-copy-13 font-semibold no-underline"
                     style={{
-                      background: "rgb(var(--color-textDefault))",
+                      background: "hsl(var(--color-textDefault))",
                       color: "var(--ds-background-100)",
                     }}
                   >

@@ -251,7 +251,7 @@ function ToastCard({
                 ? "var(--ds-amber-800)"
                 : item.variant === "error"
                   ? "var(--ds-red-800)"
-                  : "rgb(var(--color-surface))",
+                  : "hsl(var(--color-surface))",
           boxShadow:
             item.variant === "default" ? "var(--ds-shadow-menu)" : "none",
           borderRadius: 12,
@@ -259,10 +259,10 @@ function ToastCard({
           lineHeight: "20px",
           color:
             item.variant === "warning"
-              ? "rgb(var(--color-textDefault))"
+              ? "hsl(var(--color-textDefault))"
               : item.variant !== "default"
-                ? "rgb(var(--color-textInverted))"
-                : "rgb(var(--color-textDefault))",
+                ? "hsl(var(--color-textInverted))"
+                : "hsl(var(--color-textDefault))",
           zIndex,
           overflow: "hidden",
           pointerEvents:
@@ -338,7 +338,7 @@ function ToastCard({
                   //   success/error → rgba(white, .8)   (dark bg, white title)
                   color:
                     item.variant === "default" || item.variant === "warning"
-                      ? "rgb(var(--color-textSubtle))"
+                      ? "hsl(var(--color-textSubtle))"
                       : "rgba(255, 255, 255, 0.8)",
                   fontSize: 13,
                   lineHeight: "18px",
@@ -466,7 +466,7 @@ function ToastCard({
                 border: "none",
                 borderRadius: 6,
                 background: "transparent",
-                color: "rgb(var(--color-textDefault))",
+                color: "hsl(var(--color-textDefault))",
                 fontSize: 14,
                 fontWeight: 500,
                 lineHeight: "20px",
@@ -497,8 +497,8 @@ function ToastCard({
                   padding: "0 6px",
                   border: "none",
                   borderRadius: 6,
-                  background: "rgb(var(--color-textDefault))",
-                  color: "rgb(var(--color-textInverted))",
+                  background: "hsl(var(--color-textDefault))",
+                  color: "hsl(var(--color-textInverted))",
                   fontSize: 14,
                   fontWeight: 500,
                   lineHeight: "20px",

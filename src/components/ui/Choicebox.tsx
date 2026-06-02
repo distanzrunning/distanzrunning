@@ -43,13 +43,13 @@ function RadioIndicator({
   disabled: boolean;
 }) {
   const borderColor = disabled
-    ? "rgb(var(--color-textDisabled))"
+    ? "hsl(var(--color-textDisabled))"
     : checked
       ? "var(--ds-blue-900)"
       : "var(--ds-gray-600)";
 
   const dotColor = disabled
-    ? "rgb(var(--color-textDisabled))"
+    ? "hsl(var(--color-textDisabled))"
     : "var(--ds-blue-900)";
 
   return (
@@ -60,7 +60,7 @@ function RadioIndicator({
         height: 16,
         borderRadius: "50%",
         border: `1px solid ${borderColor}`,
-        background: "rgb(var(--color-surface))",
+        background: "hsl(var(--color-surface))",
         transition: "border-color 0.2s ease, background 0.2s ease",
         position: "relative",
       }}
@@ -209,11 +209,11 @@ export function Choicebox({
           isSelected && !isDisabled
             ? "var(--ds-blue-700)"
             : showHover
-              ? "rgb(var(--color-borderDefaultHover))"
-              : "rgb(var(--color-borderDefault))",
+              ? "hsl(var(--color-borderDefaultHover))"
+              : "hsl(var(--color-borderDefault))",
         background: showHover
           ? "var(--ds-gray-100)"
-          : "rgb(var(--color-surface))",
+          : "hsl(var(--color-surface))",
         transition:
           "background 0.15s ease, border 0.15s ease, box-shadow 0.15s ease",
       }}
@@ -253,10 +253,10 @@ export function Choicebox({
               className="flex items-center justify-center flex-shrink-0"
               style={{
                 color: isDisabled
-                  ? "rgb(var(--color-textDisabled))"
+                  ? "hsl(var(--color-textDisabled))"
                   : isSelected
                     ? "var(--ds-blue-700)"
-                    : "rgb(var(--color-textDefault))",
+                    : "hsl(var(--color-textDefault))",
               }}
             >
               {icon}
@@ -269,10 +269,10 @@ export function Choicebox({
                   className="text-copy-14 font-medium"
                   style={{
                     color: isDisabled
-                      ? "rgb(var(--color-textDisabled))"
+                      ? "hsl(var(--color-textDisabled))"
                       : isSelected
                         ? "var(--ds-blue-700)"
-                        : "rgb(var(--color-textDefault))",
+                        : "hsl(var(--color-textDefault))",
                   }}
                 >
                   {title}
@@ -283,10 +283,10 @@ export function Choicebox({
                   className="text-copy-14"
                   style={{
                     color: isDisabled
-                      ? "rgb(var(--color-textDisabled))"
+                      ? "hsl(var(--color-textDisabled))"
                       : isSelected
                         ? "var(--ds-blue-700)"
-                        : "rgb(var(--color-textSubtle))",
+                        : "hsl(var(--color-textSubtle))",
                   }}
                 >
                   {description}
@@ -317,7 +317,7 @@ export function Choicebox({
         <div
           className="flex items-center justify-center px-3 pb-3 pt-3 rounded-b-md overflow-hidden transition-colors hover:bg-[var(--ds-gray-100)]"
           style={{
-            borderTop: `1px solid ${!isDisabled ? "var(--ds-blue-700)" : "rgb(var(--color-borderDefault))"}`,
+            borderTop: `1px solid ${!isDisabled ? "var(--ds-blue-700)" : "hsl(var(--color-borderDefault))"}`,
           }}
         >
           {children}

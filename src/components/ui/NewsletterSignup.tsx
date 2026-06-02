@@ -120,7 +120,7 @@ export default function NewsletterSignup({
   const cardBackground =
     theme === "grey"
       ? "var(--ds-gray-200)"
-      : "rgb(var(--color-surface))";
+      : "hsl(var(--color-surface))";
 
   return (
     <div className={themeClass}>
@@ -139,7 +139,7 @@ export default function NewsletterSignup({
                 lineHeight: 1.1,
                 fontWeight: 400,
                 letterSpacing: "-0.04em",
-                color: "rgb(var(--color-textDefault))",
+                color: "hsl(var(--color-textDefault))",
               }}
             >
               Subscribe to the{" "}
@@ -152,7 +152,7 @@ export default function NewsletterSignup({
                 fontSize: 15,
                 lineHeight: 1.4,
                 fontWeight: 500,
-                color: "rgb(var(--color-textDefault))",
+                color: "hsl(var(--color-textDefault))",
                 maxWidth: 448,
               }}
             >
@@ -234,7 +234,7 @@ export default function NewsletterSignup({
                   style={{
                     margin: 0,
                     lineHeight: 1.5,
-                    color: "rgb(var(--color-textSubtler))",
+                    color: "hsl(var(--color-textSubtler))",
                   }}
                 >
                   This site is protected by reCAPTCHA and the Google{" "}
@@ -243,7 +243,7 @@ export default function NewsletterSignup({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline"
-                    style={{ color: "rgb(var(--color-textSubtle))" }}
+                    style={{ color: "hsl(var(--color-textSubtle))" }}
                   >
                     Privacy Policy
                   </a>{" "}
@@ -253,7 +253,7 @@ export default function NewsletterSignup({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline"
-                    style={{ color: "rgb(var(--color-textSubtle))" }}
+                    style={{ color: "hsl(var(--color-textSubtle))" }}
                   >
                     Terms of Service
                   </a>{" "}

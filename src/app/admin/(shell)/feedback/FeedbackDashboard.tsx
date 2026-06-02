@@ -261,10 +261,10 @@ function CategoryBar({
     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
       <div
         className="flex justify-between text-copy-13"
-        style={{ color: "rgb(var(--color-textDefault))" }}
+        style={{ color: "hsl(var(--color-textDefault))" }}
       >
         <span className="font-medium">{label}</span>
-        <span style={{ color: "rgb(var(--color-textSubtler))" }}>
+        <span style={{ color: "hsl(var(--color-textSubtler))" }}>
           {count.toLocaleString()} · {fmtPct(pct(count, total))}
         </span>
       </div>
@@ -414,13 +414,13 @@ function RecentFeedbackTable({
                 </TableCell>
                 <TableCell
                   className="text-copy-13"
-                  style={{ maxWidth: 360, color: "rgb(var(--color-textDefault))" }}
+                  style={{ maxWidth: 360, color: "hsl(var(--color-textDefault))" }}
                 >
                   {snippet}
                 </TableCell>
                 <TableCell>
                   {row.topic ?? (
-                    <span style={{ color: "rgb(var(--color-textSubtler))" }}>—</span>
+                    <span style={{ color: "hsl(var(--color-textSubtler))" }}>—</span>
                   )}
                 </TableCell>
                 <TableCell>
@@ -428,20 +428,20 @@ function RecentFeedbackTable({
                     <a
                       href={`mailto:${row.email}`}
                       style={{
-                        color: "rgb(var(--color-textSubtle))",
+                        color: "hsl(var(--color-textSubtle))",
                         textDecoration: "underline",
                       }}
                     >
                       {row.email}
                     </a>
                   ) : (
-                    <span style={{ color: "rgb(var(--color-textSubtler))" }}>—</span>
+                    <span style={{ color: "hsl(var(--color-textSubtler))" }}>—</span>
                   )}
                 </TableCell>
                 <TableCell
                   className="text-label-12-mono"
                   style={{
-                    color: "rgb(var(--color-textSubtler))",
+                    color: "hsl(var(--color-textSubtler))",
                     maxWidth: 180,
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -449,7 +449,7 @@ function RecentFeedbackTable({
                   }}
                 >
                   {row.page_path ?? (
-                    <span style={{ color: "rgb(var(--color-textSubtler))" }}>—</span>
+                    <span style={{ color: "hsl(var(--color-textSubtler))" }}>—</span>
                   )}
                 </TableCell>
                 <TableCell>
@@ -675,10 +675,10 @@ export async function FeedbackDashboardContent({
           surfaces read as one panel. */}
       <div
         style={{
-          border: "1px solid rgb(var(--color-borderDefault))",
+          border: "1px solid hsl(var(--color-borderDefault))",
           borderRadius: 10,
           overflow: "hidden",
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           marginBottom: 16,
         }}
       >
@@ -688,8 +688,8 @@ export async function FeedbackDashboardContent({
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-              borderBottom: "1px solid rgb(var(--color-borderDefault))",
-              background: "rgb(var(--color-canvas))",
+              borderBottom: "1px solid hsl(var(--color-borderDefault))",
+              background: "hsl(var(--color-canvas))",
             }}
           >
             <div>
@@ -809,8 +809,8 @@ export async function FeedbackDashboardContent({
       >
         <div
           style={{
-            background: "rgb(var(--color-surface))",
-            border: "1px solid rgb(var(--color-borderDefault))",
+            background: "hsl(var(--color-surface))",
+            border: "1px solid hsl(var(--color-borderDefault))",
             borderRadius: 6,
             overflow: "hidden",
           }}
@@ -820,7 +820,7 @@ export async function FeedbackDashboardContent({
               display: "flex",
               alignItems: "center",
               padding: "4px 20px 0",
-              borderBottom: "1px solid rgb(var(--color-borderDefault))",
+              borderBottom: "1px solid hsl(var(--color-borderDefault))",
             }}
           >
             <div
@@ -845,8 +845,8 @@ export async function FeedbackDashboardContent({
                   padding: "14px 2px",
                   fontSize: 14,
                   fontWeight: 400,
-                  color: "rgb(var(--color-textDefault))",
-                  borderBottom: "2px solid rgb(var(--color-textDefault))",
+                  color: "hsl(var(--color-textDefault))",
+                  borderBottom: "2px solid hsl(var(--color-textDefault))",
                   marginBottom: -1,
                 }}
               >
@@ -862,7 +862,7 @@ export async function FeedbackDashboardContent({
                 fontWeight: 500,
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
-                color: "rgb(var(--color-textSubtle))",
+                color: "hsl(var(--color-textSubtle))",
               }}
             >
               Feedback
@@ -963,10 +963,10 @@ export function FeedbackDashboardSkeleton() {
     <div aria-busy="true" aria-live="polite">
       <div
         style={{
-          border: "1px solid rgb(var(--color-borderDefault))",
+          border: "1px solid hsl(var(--color-borderDefault))",
           borderRadius: 10,
           overflow: "hidden",
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           marginBottom: 16,
         }}
       >
@@ -976,8 +976,8 @@ export function FeedbackDashboardSkeleton() {
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-              borderBottom: "1px solid rgb(var(--color-borderDefault))",
-              background: "rgb(var(--color-canvas))",
+              borderBottom: "1px solid hsl(var(--color-borderDefault))",
+              background: "hsl(var(--color-canvas))",
             }}
           >
             <div>
@@ -1000,7 +1000,7 @@ export function FeedbackDashboardSkeleton() {
             </div>
           </div>
         </div>
-        <div style={{ height: 400, background: "rgb(var(--color-surface))" }} />
+        <div style={{ height: 400, background: "hsl(var(--color-surface))" }} />
       </div>
 
       {/* Per-emotion + Top pages share a row in the real dashboard;
@@ -1019,8 +1019,8 @@ export function FeedbackDashboardSkeleton() {
           <div
             key={i}
             style={{
-              background: "rgb(var(--color-surface))",
-              border: "1px solid rgb(var(--color-borderDefault))",
+              background: "hsl(var(--color-surface))",
+              border: "1px solid hsl(var(--color-borderDefault))",
               borderRadius: 6,
               overflow: "hidden",
             }}
@@ -1028,7 +1028,7 @@ export function FeedbackDashboardSkeleton() {
             <div
               style={{
                 height: 49,
-                borderBottom: "1px solid rgb(var(--color-borderDefault))",
+                borderBottom: "1px solid hsl(var(--color-borderDefault))",
               }}
             />
             <div

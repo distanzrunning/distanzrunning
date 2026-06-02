@@ -54,7 +54,7 @@ const CONTEXT_MENU_CSS = `
   .ds-context-menu-content {
     padding: var(--ds-space-2x);
     border-radius: var(--ds-radius-large);
-    background: rgb(var(--color-surface));
+    background: hsl(var(--color-surface));
     box-shadow: var(--ds-shadow-menu);
     color: var(--ds-gray-1000);
     font-size: 14px;

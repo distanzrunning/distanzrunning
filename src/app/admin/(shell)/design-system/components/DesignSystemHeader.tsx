@@ -40,7 +40,7 @@ export default function DesignSystemHeader({
   return (
     <header
       className="sticky top-0 z-40 w-full border-b border-borderSubtle"
-      style={{ background: "rgb(var(--color-surface))" }}
+      style={{ background: "hsl(var(--color-surface))" }}
     >
       <div className="flex w-full pl-[22px]">
         {/* Logo section - matches sidebar width */}

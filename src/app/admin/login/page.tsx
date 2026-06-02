@@ -13,7 +13,7 @@ export default function AdminLoginPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "rgb(var(--color-canvas))",
+        background: "hsl(var(--color-canvas))",
         padding: 24,
       }}
     >

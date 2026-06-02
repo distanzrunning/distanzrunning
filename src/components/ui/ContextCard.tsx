@@ -52,7 +52,7 @@ const CONTEXT_CARD_CSS = `
     font-size: 16px;
     line-height: 20px;
     max-width: max-content;
-    background: rgb(var(--color-surface));
+    background: hsl(var(--color-surface));
     color: var(--ds-gray-1000);
     box-shadow: var(--ds-shadow-tooltip);
     will-change: transform, opacity;
@@ -98,7 +98,7 @@ const CONTEXT_CARD_CSS = `
   }
 
   .ds-context-card-arrow path {
-    fill: rgb(var(--color-surface));
+    fill: hsl(var(--color-surface));
     stroke: var(--ds-gray-400);
     stroke-width: 1px;
     shape-rendering: geometricPrecision;

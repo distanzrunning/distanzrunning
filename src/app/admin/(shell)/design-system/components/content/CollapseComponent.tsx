@@ -231,8 +231,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "rgb(var(--color-textDefault))",
-            darkColor: "rgb(var(--color-textDefault))",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -247,13 +247,13 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
     <div className="border border-borderDefault rounded-lg overflow-hidden">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg"
-        style={{ background: "rgb(var(--color-canvas))" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
@@ -266,7 +266,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
@@ -401,7 +401,7 @@ function DefaultDemo() {
       <Collapse title="Question A">
         <p
           className="text-copy-16 mb-4"
-          style={{ color: "rgb(var(--color-textDefault))" }}
+          style={{ color: "hsl(var(--color-textDefault))" }}
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
@@ -412,7 +412,7 @@ function DefaultDemo() {
       <Collapse title="Question B">
         <p
           className="text-copy-16 mb-4"
-          style={{ color: "rgb(var(--color-textDefault))" }}
+          style={{ color: "hsl(var(--color-textDefault))" }}
         >
           Duis aute irure dolor in reprehenderit in voluptate velit esse
           cillum dolore eu fugiat nulla pariatur.
@@ -428,7 +428,7 @@ function ExpandedDemo() {
       <Collapse title="Question A">
         <p
           className="text-copy-16 mb-4"
-          style={{ color: "rgb(var(--color-textDefault))" }}
+          style={{ color: "hsl(var(--color-textDefault))" }}
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
@@ -439,7 +439,7 @@ function ExpandedDemo() {
       <Collapse title="Question B" defaultExpanded>
         <p
           className="text-copy-16 mb-4"
-          style={{ color: "rgb(var(--color-textDefault))" }}
+          style={{ color: "hsl(var(--color-textDefault))" }}
         >
           Duis aute irure dolor in reprehenderit in voluptate velit esse
           cillum dolore eu fugiat nulla pariatur.
@@ -455,7 +455,7 @@ function MultipleDemo() {
       <Collapse title="Question A">
         <p
           className="text-copy-16 mb-4"
-          style={{ color: "rgb(var(--color-textDefault))" }}
+          style={{ color: "hsl(var(--color-textDefault))" }}
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
@@ -466,7 +466,7 @@ function MultipleDemo() {
       <Collapse title="Question B">
         <p
           className="text-copy-16 mb-4"
-          style={{ color: "rgb(var(--color-textDefault))" }}
+          style={{ color: "hsl(var(--color-textDefault))" }}
         >
           Duis aute irure dolor in reprehenderit in voluptate velit esse
           cillum dolore eu fugiat nulla pariatur.
@@ -481,7 +481,7 @@ function SmallDemo() {
     <Collapse title="Question A" size="small">
       <p
         className="text-copy-16 mb-4"
-        style={{ color: "rgb(var(--color-textDefault))" }}
+        style={{ color: "hsl(var(--color-textDefault))" }}
       >
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
         eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim

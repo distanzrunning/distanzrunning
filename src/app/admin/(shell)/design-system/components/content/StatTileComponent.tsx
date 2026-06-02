@@ -27,8 +27,8 @@ function TabRowDemo() {
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-        borderBottom: "1px solid rgb(var(--color-borderDefault))",
-        background: "rgb(var(--color-canvas))",
+        borderBottom: "1px solid hsl(var(--color-borderDefault))",
+        background: "hsl(var(--color-canvas))",
       }}
     >
       <StatTile
@@ -137,8 +137,8 @@ export function Component({
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-        borderBottom: "1px solid rgb(var(--color-borderDefault))",
-        background: "rgb(var(--color-canvas))",
+        borderBottom: "1px solid hsl(var(--color-borderDefault))",
+        background: "hsl(var(--color-canvas))",
       }}
     >
       <StatTile

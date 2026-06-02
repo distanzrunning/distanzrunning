@@ -76,7 +76,7 @@ export const Material = forwardRef<HTMLDivElement, MaterialProps>(
       display: "flex",
       flexDirection: "column",
       alignItems: "stretch",
-      background: "rgb(var(--color-surface))",
+      background: "hsl(var(--color-surface))",
       borderRadius: radiusMap[type],
       overflow: "hidden",
       boxShadow: shadowMap[type],

@@ -108,13 +108,13 @@ export async function FeedbackLookupContent({
                 </TableCell>
                 <TableCell
                   className="text-copy-13"
-                  style={{ maxWidth: 360, color: "rgb(var(--color-textDefault))" }}
+                  style={{ maxWidth: 360, color: "hsl(var(--color-textDefault))" }}
                 >
                   {snippet}
                 </TableCell>
                 <TableCell>
                   {row.topic ?? (
-                    <span style={{ color: "rgb(var(--color-textSubtler))" }}>—</span>
+                    <span style={{ color: "hsl(var(--color-textSubtler))" }}>—</span>
                   )}
                 </TableCell>
                 <TableCell>
@@ -122,20 +122,20 @@ export async function FeedbackLookupContent({
                     <a
                       href={`mailto:${row.email}`}
                       style={{
-                        color: "rgb(var(--color-textSubtle))",
+                        color: "hsl(var(--color-textSubtle))",
                         textDecoration: "underline",
                       }}
                     >
                       {row.email}
                     </a>
                   ) : (
-                    <span style={{ color: "rgb(var(--color-textSubtler))" }}>—</span>
+                    <span style={{ color: "hsl(var(--color-textSubtler))" }}>—</span>
                   )}
                 </TableCell>
                 <TableCell
                   className="text-label-12-mono"
                   style={{
-                    color: "rgb(var(--color-textSubtler))",
+                    color: "hsl(var(--color-textSubtler))",
                     maxWidth: 180,
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -143,7 +143,7 @@ export async function FeedbackLookupContent({
                   }}
                 >
                   {row.page_path ?? (
-                    <span style={{ color: "rgb(var(--color-textSubtler))" }}>—</span>
+                    <span style={{ color: "hsl(var(--color-textSubtler))" }}>—</span>
                   )}
                 </TableCell>
                 <TableCell>

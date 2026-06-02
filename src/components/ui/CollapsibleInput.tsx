@@ -155,7 +155,7 @@ export const CollapsibleInput = forwardRef<
           paddingRight: expanded && expandedSuffix ? config.suffixGutter : 12,
           fontSize: config.fontSize,
           lineHeight: "20px",
-          color: "rgb(var(--color-textDefault))",
+          color: "hsl(var(--color-textDefault))",
           border: "none",
           minWidth: 0,
           fontFamily: "inherit",

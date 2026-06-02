@@ -140,8 +140,8 @@ export default function AdminPageHeader() {
         top: 0,
         zIndex: 30,
         height: HEADER_HEIGHT,
-        background: "rgb(var(--color-canvas))",
-        borderBottom: "1px solid rgb(var(--color-borderDefault))",
+        background: "hsl(var(--color-canvas))",
+        borderBottom: "1px solid hsl(var(--color-borderDefault))",
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-end",
@@ -163,7 +163,7 @@ export default function AdminPageHeader() {
         )}
         <span
           className="flex items-center gap-0.5 truncate text-button-14"
-          style={{ color: "rgb(var(--color-textDefault))" }}
+          style={{ color: "hsl(var(--color-textDefault))" }}
         >
           <span className="min-w-0 truncate">{page}</span>
         </span>
@@ -176,7 +176,7 @@ export default function AdminPageHeader() {
             style={{
               width: 32,
               height: 32,
-              color: "rgb(var(--color-textSubtle))",
+              color: "hsl(var(--color-textSubtle))",
             }}
           >
             <MoreHorizontal className="w-4 h-4" />
@@ -193,7 +193,7 @@ export default function AdminPageHeader() {
             borderRadius: 6,
           }}
         >
-          <span className="text-copy-14" style={{ color: "rgb(var(--color-textDefault))" }}>
+          <span className="text-copy-14" style={{ color: "hsl(var(--color-textDefault))" }}>
             Theme
           </span>
           <ThemeSwitcher

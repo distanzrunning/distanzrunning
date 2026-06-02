@@ -51,7 +51,7 @@ const Y_RANGE_TOP_PADDING = 24;
 // axes spread these into their tickLabelProps so any future change
 // (e.g. swapping gray-700 for gray-800) happens in one place.
 const AXIS_TICK_STYLE = {
-  fill: "rgb(var(--color-textSubtler))",
+  fill: "hsl(var(--color-textSubtler))",
   fontSize: 12,
 } as const;
 
@@ -326,7 +326,7 @@ function ChartInner({
             scale={yScale}
             width={plotWidth}
             tickValues={yTicks}
-            stroke="rgb(var(--color-borderDefault))"
+            stroke="hsl(var(--color-borderDefault))"
             strokeWidth={1}
           />
           <AreaClosed<TrendPoint>
@@ -336,9 +336,9 @@ function ChartInner({
             yScale={yScale}
             // rgba(token-rgb, alpha) is the project's preferred shape
             // for theme-aware semi-transparent fills (per CLAUDE.md).
-            // --ds-blue-700-rgb flips with the .dark class so the
+            // --ds-blue-700-value flips with the .dark class so the
             // tint stays balanced against either background.
-            fill="rgba(var(--ds-blue-700-rgb), 0.10)"
+            fill="hsla(var(--ds-blue-700-value), 0.10)"
             curve={curveLinear}
             defined={(d) => d.value != null}
           />
@@ -403,7 +403,7 @@ function ChartInner({
             <Line
               from={{ x: activeX, y: 0 }}
               to={{ x: activeX, y: plotHeight + 7 }}
-              stroke="rgb(var(--color-textDefault))"
+              stroke="hsl(var(--color-textDefault))"
               strokeWidth={2}
               pointerEvents="none"
             />
@@ -481,7 +481,7 @@ function ChartInner({
         >
           <span
             className="text-copy-14"
-            style={{ color: "rgb(var(--color-textSubtler))" }}
+            style={{ color: "hsl(var(--color-textSubtler))" }}
           >
             No decisions in this range
           </span>
@@ -512,7 +512,7 @@ function ChartInner({
           // it off.
           style={{
             position: "absolute",
-            background: "rgb(var(--color-surface))",
+            background: "hsl(var(--color-surface))",
             boxShadow: "var(--ds-shadow-tooltip)",
             borderRadius: 6,
             padding: "8px 16px",
@@ -530,7 +530,7 @@ function ChartInner({
               flexDirection: "column",
               alignItems: "center",
               gap: 4,
-              color: "rgb(var(--color-textDefault))",
+              color: "hsl(var(--color-textDefault))",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -552,7 +552,7 @@ function ChartInner({
                   : "—"}
               </span>
             </div>
-            <span style={{ color: "rgb(var(--color-textSubtle))" }}>
+            <span style={{ color: "hsl(var(--color-textSubtle))" }}>
               {formatTickDate(tooltipData.date, tz)}
             </span>
           </div>
@@ -574,8 +574,8 @@ function ChartInner({
             left: tooltipLeft,
             top: MARGIN.top + plotHeight + 19,
             transform: "translate(-50%, -50%)",
-            background: "rgb(var(--color-surface))",
-            color: "rgb(var(--color-textDefault))",
+            background: "hsl(var(--color-surface))",
+            color: "hsl(var(--color-textDefault))",
             fontSize: 12,
             lineHeight: "16px",
             fontWeight: 500,

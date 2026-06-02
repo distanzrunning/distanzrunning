@@ -63,10 +63,10 @@ function OverviewCard({
     >
       <div className="flex-1">{children}</div>
       <div className="mt-auto">
-        <p className="text-heading-16 font-semibold" style={{ color: "rgb(var(--color-textDefault))" }}>
+        <p className="text-heading-16 font-semibold" style={{ color: "hsl(var(--color-textDefault))" }}>
           {title}
         </p>
-        <p className="text-copy-16" style={{ color: "rgb(var(--color-textSubtle))" }}>
+        <p className="text-copy-16" style={{ color: "hsl(var(--color-textSubtle))" }}>
           {description}
         </p>
       </div>
@@ -161,12 +161,12 @@ function ComponentsPreview() {
         className="-mt-px w-[214px] md:w-[246px]"
         style={{
           height: 42,
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           boxShadow: boxBorder,
           borderRadius: 6,
           padding: "10px 48px 10px 12px",
           position: "relative",
-          color: "rgb(var(--color-textSubtler))",
+          color: "hsl(var(--color-textSubtler))",
         }}
       >
         <pre
@@ -193,7 +193,7 @@ function ComponentsPreview() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "rgb(var(--color-textSubtler))",
+            color: "hsl(var(--color-textSubtler))",
           }}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -206,7 +206,7 @@ function ComponentsPreview() {
       <div
         style={{
           height: 40,
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           boxShadow: boxBorder,
           borderRadius: 6,
           padding: "0 10px",
@@ -216,7 +216,7 @@ function ComponentsPreview() {
           fontSize: 14,
           fontWeight: 500,
           lineHeight: "20px",
-          color: "rgb(var(--color-textSubtler))",
+          color: "hsl(var(--color-textSubtler))",
         }}
       >
         {/* User plus icon */}
@@ -233,13 +233,13 @@ function ComponentsPreview() {
         style={{
           width: 40,
           height: 40,
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           boxShadow: boxBorder,
           borderRadius: 6,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: "rgb(var(--color-textSubtler))",
+          color: "hsl(var(--color-textSubtler))",
         }}
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor">
@@ -255,7 +255,7 @@ function ComponentsPreview() {
       <div
         style={{
           height: 40,
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           boxShadow: boxBorder,
           borderRadius: 6,
           display: "inline-flex",
@@ -273,7 +273,7 @@ function ComponentsPreview() {
             padding: "8px 12px",
             borderRadius: 2,
             background: "var(--ds-gray-100)",
-            color: "rgb(var(--color-textSubtler))",
+            color: "hsl(var(--color-textSubtler))",
           }}
         >
           <LayoutGrid size={16} />
@@ -286,7 +286,7 @@ function ComponentsPreview() {
             justifyContent: "center",
             padding: "8px 12px",
             borderRadius: 2,
-            color: "rgb(var(--color-textSubtler))",
+            color: "hsl(var(--color-textSubtler))",
           }}
         >
           <BarChart3 size={16} />
@@ -315,8 +315,8 @@ function ComponentsPreview() {
               padding: "0 12px",
               height: 40,
               flexShrink: 0,
-              background: "rgb(var(--color-surface))",
-              color: "rgb(var(--color-textSubtler))",
+              background: "hsl(var(--color-surface))",
+              color: "hsl(var(--color-textSubtler))",
               borderRight: "1px solid var(--ds-gray-alpha-400)",
             }}
           >
@@ -331,7 +331,7 @@ function ComponentsPreview() {
               height: 40,
               flex: 1,
               minWidth: 0,
-              background: "rgb(var(--color-surface))",
+              background: "hsl(var(--color-surface))",
               color: "var(--ds-gray-600)",
             }}
           >
@@ -365,7 +365,7 @@ function ColoursPreview() {
             height: 96,
             width: 32,
             border: "1px solid var(--ds-gray-alpha-400)",
-            background: "rgb(var(--color-canvas))",
+            background: "hsl(var(--color-canvas))",
           }}
         >
           <div
@@ -385,7 +385,7 @@ function ColoursPreview() {
 function GridCross({ style }: { style: React.CSSProperties }) {
   const crossSize = 21;
   const halfSize = 11;
-  const guideColor = "rgb(var(--color-textSubtler))";
+  const guideColor = "hsl(var(--color-textSubtler))";
 
   return (
     <div
@@ -427,7 +427,7 @@ function GridCross({ style }: { style: React.CSSProperties }) {
 function GridPreview() {
   const cols = 9;
   const rows = 2;
-  const guideColor = "rgb(var(--color-borderDefault))";
+  const guideColor = "hsl(var(--color-borderDefault))";
 
   return (
     <div className="w-full" style={{ position: "relative" }}>
@@ -481,13 +481,13 @@ function TypefacePreview() {
           borderRight: "1px dashed var(--ds-gray-alpha-400)",
         }}
       >
-        <p className="text-heading-24 text-center" style={{ fontFamily: "var(--font-family-sans)", color: "rgb(var(--color-textSubtler))" }}>
+        <p className="text-heading-24 text-center" style={{ fontFamily: "var(--font-family-sans)", color: "hsl(var(--color-textSubtler))" }}>
           Geist
         </p>
       </div>
       <p
         className="text-heading-24 text-center"
-        style={{ fontFamily: "var(--font-family-serif)", color: "rgb(var(--color-textSubtler))" }}
+        style={{ fontFamily: "var(--font-family-serif)", color: "hsl(var(--color-textSubtler))" }}
       >
         EB Garamond
       </p>
@@ -504,7 +504,7 @@ export default function FoundationsOverview({}: FoundationsOverviewProps) {
       {/* Cards Grid */}
       <div
         className="grid grid-cols-1 md:grid-cols-2"
-        style={{ borderBottom: "1px solid rgb(var(--color-borderDefault))" }}
+        style={{ borderBottom: "1px solid hsl(var(--color-borderDefault))" }}
       >
         <OverviewCard
           href="/admin/design-system/distanz-running"

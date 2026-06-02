@@ -490,7 +490,7 @@ function SearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full h-11 pl-11 pr-4 text-sm rounded-md border border-borderNeutral outline-none placeholder:text-textSubtler hover:border-borderNeutralHover focus:border-borderNeutralHover focus:ring-2 focus:ring-borderNeutral transition-colors"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       />
       <label
         aria-hidden="true"

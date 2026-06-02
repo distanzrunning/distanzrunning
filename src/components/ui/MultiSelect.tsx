@@ -346,7 +346,7 @@ function MultiSelectDropdown({
           position: "absolute",
           top: coords.top,
           left: coords.left,
-          background: "rgb(var(--color-surface))",
+          background: "hsl(var(--color-surface))",
           borderRadius: 12,
           boxShadow: "var(--ds-shadow-menu)",
           padding: 8,
@@ -490,10 +490,10 @@ function MultiSelectRow({
                 borderRadius: 4,
                 position: "relative",
                 background: isSelected
-                  ? "rgb(var(--color-textDefault))"
+                  ? "hsl(var(--color-textDefault))"
                   : "transparent",
                 border: isSelected
-                  ? "1px solid rgb(var(--color-textDefault))"
+                  ? "1px solid hsl(var(--color-textDefault))"
                   : "1px solid var(--ds-gray-alpha-400)",
                 transition:
                   "border-color 0.2s, background 0.2s, box-shadow 0.2s",
@@ -557,7 +557,7 @@ function MultiSelectRow({
             style={{
               fontSize: 14,
               lineHeight: "20px",
-              color: "rgb(var(--color-textDefault))",
+              color: "hsl(var(--color-textDefault))",
               whiteSpace: "nowrap",
             }}
           >
@@ -573,7 +573,7 @@ function MultiSelectRow({
               opacity: isActive ? 1 : 0,
               minWidth: 64,
               textAlign: "right",
-              color: "rgb(var(--color-textSubtle))",
+              color: "hsl(var(--color-textSubtle))",
               marginLeft: "auto",
               padding: "2px 4px",
               borderRadius: 2,

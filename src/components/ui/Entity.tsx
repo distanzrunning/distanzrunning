@@ -57,14 +57,14 @@ function EntityContent({ title, subtitle, thumbnail }: EntityContentProps) {
       <div className="flex flex-1 flex-col min-w-0">
         <p
           className="truncate m-0 text-[14px] leading-[20px] font-semibold"
-          style={{ color: "rgb(var(--color-textDefault))" }}
+          style={{ color: "hsl(var(--color-textDefault))" }}
         >
           {title}
         </p>
         {subtitle && (
           <p
             className="truncate m-0 text-[14px] leading-[20px]"
-            style={{ color: "rgb(var(--color-textSubtle))" }}
+            style={{ color: "hsl(var(--color-textSubtle))" }}
           >
             {subtitle}
           </p>
@@ -95,9 +95,9 @@ function EntityList({
   const borderedStyles: React.CSSProperties | undefined = bordered
     ? {
         borderRadius: 6,
-        backgroundColor: "rgb(var(--color-surface))",
+        backgroundColor: "hsl(var(--color-surface))",
         boxShadow:
-          "var(--ds-gray-alpha-400) 0px 0px 0px 1px, rgb(var(--color-canvas)) 0px 0px 0px 1px, rgba(var(--ds-gray-1000-rgb), 0.04) 0px 4px 6px 0px",
+          "var(--ds-gray-alpha-400) 0px 0px 0px 1px, hsl(var(--color-canvas)) 0px 0px 0px 1px, hsla(var(--ds-gray-1000-value), 0.04) 0px 4px 6px 0px",
         overflow: "hidden",
       }
     : undefined;
@@ -121,7 +121,7 @@ function EntitySkeleton({ width = "100%", height = 20 }: SkeletonProps) {
       style={{
         width: typeof width === "number" ? `${width}px` : width,
         minHeight: `${height}px`,
-        backgroundColor: "rgb(var(--color-borderSubtle))",
+        backgroundColor: "hsl(var(--color-borderSubtle))",
       }}
     />
   );

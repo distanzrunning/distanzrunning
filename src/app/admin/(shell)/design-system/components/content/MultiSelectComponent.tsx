@@ -232,8 +232,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         [
           {
             content: line,
-            color: "rgb(var(--color-textDefault))",
-            darkColor: "rgb(var(--color-textDefault))",
+            color: "hsl(var(--color-textDefault))",
+            darkColor: "hsl(var(--color-textDefault))",
           },
         ] as DualThemeToken[],
     );
@@ -248,13 +248,13 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
     <div className="border border-borderDefault rounded-lg">
       <div
         className="p-6 rounded-t-lg"
-        style={{ background: "rgb(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-surface))" }}
       >
         {children}
       </div>
       <div
         className="rounded-b-lg overflow-hidden"
-        style={{ background: "rgb(var(--color-canvas))" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         <button
           type="button"
@@ -267,7 +267,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
-            style={{ background: "rgb(var(--color-surface))" }}
+            style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
               <button
@@ -404,7 +404,7 @@ function KeyboardNavDemo() {
         defaultSelected={["engineering"]}
         placeholder="Select teams..."
       />
-      <p className="text-copy-14" style={{ color: "rgb(var(--color-textSubtle))" }}>
+      <p className="text-copy-14" style={{ color: "hsl(var(--color-textSubtle))" }}>
         Try keyboard navigation: ↑ ↓ for rows, ← → for checkbox/button focus, Tab to cycle through all elements
       </p>
     </div>
@@ -490,7 +490,7 @@ export default function MultiSelectComponent() {
         </p>
         <ul
           className="text-copy-16 mb-6 space-y-2 pl-6"
-          style={{ lineHeight: 1.5, color: "rgb(var(--color-textSubtle))", listStyleType: "disc" }}
+          style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))", listStyleType: "disc" }}
         >
           <li>
             <strong className="text-textDefault">
@@ -529,7 +529,7 @@ export default function MultiSelectComponent() {
         </p>
         <ul
           className="text-copy-16 mb-6 space-y-2 pl-6"
-          style={{ lineHeight: 1.5, color: "rgb(var(--color-textSubtle))", listStyleType: "disc" }}
+          style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))", listStyleType: "disc" }}
         >
           <li>
             <strong className="text-textDefault">Up/Down arrows</strong>:

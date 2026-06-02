@@ -63,8 +63,8 @@ export function CommandMenuTrigger({ onOpen }: { onOpen: () => void }) {
         padding: 0,
         borderRadius: 6,
         border: "1px solid var(--ds-gray-alpha-400)",
-        background: "rgb(var(--color-surface))",
-        color: "rgb(var(--color-textDefault))",
+        background: "hsl(var(--color-surface))",
+        color: "hsl(var(--color-textDefault))",
         cursor: "text",
         textAlign: "left",
         fontFamily: "inherit",
@@ -77,7 +77,7 @@ export function CommandMenuTrigger({ onOpen }: { onOpen: () => void }) {
           width: 36,
           height: 36,
           paddingLeft: 4,
-          color: "rgb(var(--color-textSubtle))",
+          color: "hsl(var(--color-textSubtle))",
           flexShrink: 0,
         }}
       >
@@ -115,7 +115,7 @@ export function CommandMenuTrigger({ onOpen }: { onOpen: () => void }) {
             borderRadius: 4,
             boxShadow:
               "var(--ds-gray-alpha-400) 0px 0px 0px 1px, var(--ds-gray-100) 0px 0px 0px 1px",
-            color: "rgb(var(--color-textDefault))",
+            color: "hsl(var(--color-textDefault))",
             fontFamily: "inherit",
           }}
         >
@@ -147,7 +147,7 @@ function ConsentLookupItem({ onSelect }: { onSelect: () => void }) {
     >
       Look up consent ID:{" "}
       <span
-        style={{ fontFamily: "var(--font-mono)", color: "rgb(var(--color-textSubtler))" }}
+        style={{ fontFamily: "var(--font-mono)", color: "hsl(var(--color-textSubtler))" }}
       >
         {search}
       </span>

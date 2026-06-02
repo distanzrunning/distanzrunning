@@ -248,7 +248,7 @@ export function AvatarGroup({
             width: outerSize,
             height: outerSize,
             padding: borderWidth,
-            backgroundColor: member.borderColor || "rgb(var(--color-surface))",
+            backgroundColor: member.borderColor || "hsl(var(--color-surface))",
           }}
         >
           <Avatar
@@ -270,7 +270,7 @@ export function AvatarGroup({
             width: outerSize,
             height: outerSize,
             padding: borderWidth,
-            backgroundColor: "rgb(var(--color-surface))",
+            backgroundColor: "hsl(var(--color-surface))",
           }}
         >
           <div

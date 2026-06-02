@@ -166,7 +166,7 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
       direction = "vertical",
       width,
       height,
-      fadeColor = "rgb(var(--color-canvas))",
+      fadeColor = "hsl(var(--color-canvas))",
       fadeSize = 40,
       hideFade = false,
       className = "",

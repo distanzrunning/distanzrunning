@@ -45,14 +45,14 @@ export function Fieldset({
   const borderColor =
     variant === "error"
       ? "var(--ds-red-700)"
-      : "rgb(var(--color-borderDefault))";
+      : "hsl(var(--color-borderDefault))";
   return (
     <section
       id={id}
       style={{
         border: `1px solid ${borderColor}`,
         borderRadius: 10,
-        background: "rgb(var(--color-surface))",
+        background: "hsl(var(--color-surface))",
         overflow: "hidden",
         scrollMarginTop: 64,
       }}
@@ -65,7 +65,7 @@ export function Fieldset({
             is modelled on). Inline values are deliberate. */}
         <h2
           style={{
-            color: "rgb(var(--color-textDefault))",
+            color: "hsl(var(--color-textDefault))",
             margin: 0,
             fontSize: 20,
             lineHeight: "32px",
@@ -82,7 +82,7 @@ export function Fieldset({
               <LinkIcon
                 aria-hidden
                 className="w-4 h-4 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100"
-                style={{ color: "rgb(var(--color-textSubtler))" }}
+                style={{ color: "hsl(var(--color-textSubtler))" }}
               />
             </a>
           ) : (
@@ -94,7 +94,7 @@ export function Fieldset({
             style={{
               marginTop: 8,
               marginBottom: 0,
-              color: "rgb(var(--color-textDefault))",
+              color: "hsl(var(--color-textDefault))",
               fontSize: 14,
               lineHeight: "24px",
               fontWeight: 400,
@@ -114,8 +114,8 @@ export function Fieldset({
             gap: 16,
             padding: "12px 24px",
             borderTop: `1px solid ${borderColor}`,
-            background: "rgb(var(--color-canvas))",
-            color: "rgb(var(--color-textSubtle))",
+            background: "hsl(var(--color-canvas))",
+            color: "hsl(var(--color-textSubtle))",
           }}
         >
           <div className="text-copy-14" style={{ flex: "1 1 auto", minWidth: 0 }}>
