@@ -57,24 +57,38 @@ export interface StatTileProps {
   anchorProps?: AnchorHTMLAttributes<HTMLAnchorElement>;
 }
 
-// Chip color per direction. Background uses the `-value` HSL triplet of
-// the same hue's 900 token, scaled by --chip-alpha (0.2 default, 0.5
-// on focus) via hsla() — matches Vercel's `hsla(H,S,L,var(--trend-background-
-// opacity))` pattern and flips correctly in dark mode.
+// Chip background + text per direction — Vercel's split-tone model:
+//   up / down  → a lighter hue tint (600 @ --chip-alpha, 0.2 default →
+//                0.5 on focus) behind the saturated semantic text (700,
+//                the Geist success/error red-green). Two tones, not one,
+//                so the low-opacity tint reads clean while the text stays
+//                vivid. Both flip with the theme via the -value triplet.
+//   flat       → a solid neutral pill (gray-200 bg / gray-700 text,
+//                the Geist accents-2 / accents-4 equivalents). Solid, so
+//                it doesn't respond to --chip-alpha — matches Vercel.
 const directionStyles: Record<
   StatTileChangeDirection,
-  { rgb: string; color: string }
+  { background: string; color: string }
 > = {
-  up: { rgb: "var(--ds-green-900-value)", color: "var(--ds-green-900)" },
-  down: { rgb: "var(--ds-red-900-value)", color: "var(--ds-red-900)" },
-  flat: { rgb: "var(--ds-gray-900-value)", color: "var(--ds-gray-900)" },
+  up: {
+    background: "hsla(var(--ds-green-600-value), var(--chip-alpha))",
+    color: "var(--ds-green-700)",
+  },
+  down: {
+    background: "hsla(var(--ds-red-600-value), var(--chip-alpha))",
+    color: "var(--ds-red-700)",
+  },
+  flat: {
+    background: "var(--ds-gray-200)",
+    color: "var(--ds-gray-700)",
+  },
 };
 
 // Tiny focus-aware pill that holds the trend %. Bg alpha is driven
 // by a custom property so the focus-visible bump can change it
 // declaratively (CSS variable cascade) rather than via state.
 function ChangeChip({ change }: { change: StatTileChange }) {
-  const { rgb, color } = directionStyles[change.direction];
+  const { background, color } = directionStyles[change.direction];
   const chip = (
     <span
       tabIndex={change.ariaLabel ? 0 : undefined}
@@ -104,7 +118,7 @@ function ChangeChip({ change }: { change: StatTileChange }) {
         // Custom property defaults to 0.2; bumps to 0.5 on focus
         // via the className above (CSS variable cascade, no state).
         ["--chip-alpha" as string]: 0.2,
-        background: `hsla(${rgb}, var(--chip-alpha))`,
+        background,
         color,
         whiteSpace: "nowrap",
         cursor: change.ariaLabel ? "pointer" : "default",
@@ -136,42 +150,36 @@ export function StatTile({
   anchorProps,
 }: StatTileProps) {
   const isTab = !!href;
-  // Standalone: paint background-100 (the group's canvas).
-  // Tab inactive: transparent — let the parent tab-row's bg-200
-  //   show through so all inactive tabs share one continuous canvas.
-  // Tab active: pop to background-100 with a black bottom rule.
+  // Standalone: paint surface (bg-100, the group's canvas).
+  // Tab inactive: bg-canvas (bg-200, the recessed page tone) so the
+  //   inactive tabs read as a recessed tray — Vercel's bg-background-200.
+  // Tab active: pop to surface (bg-100) flush with the chart panel
+  //   below, marked by a gray-1000 bottom rule.
   const background = isTab
     ? active
       ? "hsl(var(--color-surface))"
-      : "transparent"
+      : "hsl(var(--color-canvas))"
     : "hsl(var(--color-surface))";
+  // Inactive tabs dim only the value number (Vercel keeps the title at
+  // full strength), via opacity on that span alone — not the whole tile.
   const muted = isTab && !active;
 
   const body = (
     <>
-      <span
-        className="text-heading-14 text-textSubtle truncate"
-        style={muted ? { opacity: 0.8 } : undefined}
-        title={label}
-      >
+      <span className="text-heading-14 text-textSubtle truncate" title={label}>
         {label}
       </span>
-      <div
-        className="flex flex-row items-center gap-4"
-        style={muted ? { opacity: 0.8 } : undefined}
-      >
-        <span className="text-heading-32 text-textDefault">
+      <div className="flex flex-row items-center gap-4">
+        <span
+          className="text-heading-32 text-textDefault"
+          style={muted ? { opacity: 0.8 } : undefined}
+        >
           {value}
         </span>
         {change && <ChangeChip change={change} />}
       </div>
       {hint && (
-        <span
-          className="text-copy-13 text-textSubtler"
-          style={muted ? { opacity: 0.8 } : undefined}
-        >
-          {hint}
-        </span>
+        <span className="text-copy-13 text-textSubtler">{hint}</span>
       )}
     </>
   );
@@ -182,19 +190,20 @@ export function StatTile({
     // new data while the previous tile content stays visible —
     // letting NumberTicker tween between old and new values instead
     // of flashing a skeleton.
+    // Bottom rule lives in classNames (not inline style) so the inactive
+    // tab can show a gray-600 underline on focus — Vercel's
+    // `focus:border-b-gray-600`. An inline borderBottom would outrank the
+    // focus class and the underline would never appear.
+    const borderClass = active
+      ? "border-b-2 border-b-[var(--ds-gray-1000)]"
+      : "border-b-2 border-b-transparent focus:border-b-[var(--ds-gray-600)]";
     return (
       <Link
         href={href}
         aria-current={active ? "true" : undefined}
         {...anchorProps}
-        className={`${baseClass} ${linkClass} ${anchorProps?.className ?? ""}`}
-        style={{
-          background,
-          color: "inherit",
-          borderBottom: active
-            ? "2px solid var(--ds-gray-1000)"
-            : "2px solid transparent",
-        }}
+        className={`${baseClass} ${linkClass} ${borderClass} ${anchorProps?.className ?? ""}`}
+        style={{ background, color: "inherit" }}
       >
         {body}
       </Link>

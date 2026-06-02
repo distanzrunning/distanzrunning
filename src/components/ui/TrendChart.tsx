@@ -334,11 +334,12 @@ function ChartInner({
             x={(d) => xScale(d.date) ?? 0}
             y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
             yScale={yScale}
-            // rgba(token-rgb, alpha) is the project's preferred shape
+            // hsla(token-value, alpha) is the project's preferred shape
             // for theme-aware semi-transparent fills (per CLAUDE.md).
-            // --ds-blue-700-value flips with the .dark class so the
-            // tint stays balanced against either background.
-            fill="hsla(var(--ds-blue-700-value), 0.10)"
+            // --ds-blue-800-value flips with the .dark class so the
+            // tint stays balanced against either background. blue-800
+            // (not 700) matches Vercel's analytics line + area accent.
+            fill="hsla(var(--ds-blue-800-value), 0.10)"
             curve={curveLinear}
             defined={(d) => d.value != null}
           />
@@ -346,7 +347,7 @@ function ChartInner({
             data={solidTrend}
             x={(d) => xScale(d.date) ?? 0}
             y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
-            stroke="var(--ds-blue-700)"
+            stroke="var(--ds-blue-800)"
             strokeWidth={2}
             curve={curveLinear}
             defined={(d) => d.value != null}
@@ -356,7 +357,7 @@ function ChartInner({
               data={dashedTrend}
               x={(d) => xScale(d.date) ?? 0}
               y={(d) => (d.value != null ? yScale(d.value) : yScale(0))}
-              stroke="var(--ds-blue-700)"
+              stroke="var(--ds-blue-800)"
               strokeWidth={2}
               strokeDasharray="4 8"
               strokeLinecap="round"
@@ -418,7 +419,7 @@ function ChartInner({
                   cx={activeX}
                   cy={activeY}
                   r={4}
-                  fill="var(--ds-blue-700)"
+                  fill="var(--ds-blue-800)"
                   opacity={0.4}
                 >
                   <animate
@@ -441,7 +442,7 @@ function ChartInner({
                 cx={activeX}
                 cy={activeY}
                 r={4}
-                fill="var(--ds-blue-700)"
+                fill="var(--ds-blue-800)"
               />
             </g>
           )}
@@ -540,7 +541,7 @@ function ChartInner({
                   width: 8,
                   height: 8,
                   borderRadius: 9999,
-                  background: "var(--ds-blue-700)",
+                  background: "var(--ds-blue-800)",
                 }}
               />
               <span style={{ fontWeight: 400 }}>{metricLabel}</span>

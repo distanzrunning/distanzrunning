@@ -540,9 +540,9 @@ export default function TrendChartComponent() {
           <li>
             <strong>Theme-aware fill.</strong> The area fill uses{" "}
             <code className="inline-code">
-              hsla(var(--ds-blue-700-value), 0.10)
+              hsla(var(--ds-blue-800-value), 0.10)
             </code>{" "}
-            — the RGB tuple flips with the{" "}
+            — the HSL triplet flips with the{" "}
             <code className="inline-code">.dark</code> class so the
             tint stays balanced on either background, no{" "}
             <code className="inline-code">dark:</code> override
