@@ -91,20 +91,60 @@ function SectionHeader({
   );
 }
 
-// Normalise a resolved CSS color (from getComputedStyle) for display/copy.
-// Opaque rgb() → hex; translucent rgba() and any modern color function
-// (oklch(), color(srgb …)) pass through verbatim. Keeps the displayed
-// value honest to what the browser actually rendered.
-function formatColor(value: string): string {
+// Parse a getComputedStyle colour into channels. Handles rgb()/rgba()
+// (what browsers resolve hsl()/var() to); returns null for modern colour
+// functions (oklch(), color(srgb …)) so callers can pass those through.
+function parseRgb(
+  value: string,
+): { r: number; g: number; b: number; a: number } | null {
   const m = value.match(/^rgba?\(([^)]+)\)$/);
-  if (m) {
-    const parts = m[1].split(/[\s,/]+/).filter(Boolean).map(Number);
-    const [r, g, b, a] = parts;
-    if (a !== undefined && a < 1) return `rgba(${r}, ${g}, ${b}, ${a})`;
-    const hex = (n: number) => Math.round(n).toString(16).padStart(2, "0");
-    return `#${hex(r)}${hex(g)}${hex(b)}`.toUpperCase();
+  if (!m) return null;
+  const [r, g, b, a = 1] = m[1].split(/[\s,/]+/).filter(Boolean).map(Number);
+  return { r, g, b, a };
+}
+
+// Normalise a resolved CSS color for display/copy. Opaque → #RRGGBB,
+// translucent → #RRGGBBAA (8-digit hex), any non-rgb function passes
+// through verbatim. Honest to what the browser actually rendered.
+function formatColor(value: string): string {
+  const c = parseRgb(value);
+  if (!c) return value;
+  const hex = (n: number) => Math.round(n).toString(16).padStart(2, "0");
+  const base = `#${hex(c.r)}${hex(c.g)}${hex(c.b)}`;
+  return (c.a < 1 ? `${base}${hex(c.a * 255)}` : base).toUpperCase();
+}
+
+// Same colour as an HSLA() string (matches Vercel's colour menu), e.g.
+// HSLA(0, 0%, 4%, 1). Hue/sat/light rounded to integers; alpha kept as-is.
+function formatColorHsla(value: string): string {
+  const c = parseRgb(value);
+  if (!c) return value;
+  const r = c.r / 255,
+    g = c.g / 255,
+    b = c.b / 255;
+  const max = Math.max(r, g, b),
+    min = Math.min(r, g, b);
+  let h = 0,
+    s = 0;
+  const l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      default:
+        h = (r - g) / d + 4;
+    }
+    h /= 6;
   }
-  return value;
+  return `HSLA(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(
+    l * 100,
+  )}%, ${c.a})`;
 }
 
 // Color swatch with context menu (matches Geist).
@@ -121,12 +161,15 @@ function ColorSwatch({
 }) {
   const { showToast } = useToast();
   const [showTick, setShowTick] = useState(false);
-  const [resolved, setResolved] = useState("");
+  const [hex, setHex] = useState("");
+  const [hsla, setHsla] = useState("");
   const ref = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (ref.current) {
-      setResolved(formatColor(getComputedStyle(ref.current).backgroundColor));
+      const bg = getComputedStyle(ref.current).backgroundColor;
+      setHex(formatColor(bg));
+      setHsla(formatColorHsla(bg));
     }
   }, [cssVar, themeKey]);
 
@@ -141,11 +184,17 @@ function ColorSwatch({
     flash();
   }, [cssVar, showToast, flash]);
 
-  const handleCopyValue = useCallback(() => {
-    navigator.clipboard.writeText(resolved);
-    showToast(`Copied ${resolved}`);
+  const handleCopyHex = useCallback(() => {
+    navigator.clipboard.writeText(hex);
+    showToast(`Copied ${hex}`);
     flash();
-  }, [resolved, showToast, flash]);
+  }, [hex, showToast, flash]);
+
+  const handleCopyHsla = useCallback(() => {
+    navigator.clipboard.writeText(hsla);
+    showToast(`Copied ${hsla}`);
+    flash();
+  }, [hsla, showToast, flash]);
 
   return (
     <ContextMenu.Root modal={false}>
@@ -170,13 +219,20 @@ function ColorSwatch({
         </button>
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
-        <ContextMenu.Content className="material-menu min-w-[240px] p-1.5 z-50">
+        <ContextMenu.Content className="material-menu min-w-[260px] p-1.5 z-50">
           <ContextMenu.Item
             className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-[var(--ds-gray-100)] rounded-md cursor-pointer outline-none"
-            onSelect={handleCopyValue}
+            onSelect={handleCopyHex}
           >
-            Copy value
-            <span className="text-copy-13 text-textSubtle">{resolved}</span>
+            Copy HEX
+            <span className="text-copy-13 text-textSubtle">{hex}</span>
+          </ContextMenu.Item>
+          <ContextMenu.Item
+            className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-[var(--ds-gray-100)] rounded-md cursor-pointer outline-none"
+            onSelect={handleCopyHsla}
+          >
+            Copy HSLA
+            <span className="text-copy-13 text-textSubtle">{hsla}</span>
           </ContextMenu.Item>
           <ContextMenu.Item
             className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-[var(--ds-gray-100)] rounded-md cursor-pointer outline-none"
