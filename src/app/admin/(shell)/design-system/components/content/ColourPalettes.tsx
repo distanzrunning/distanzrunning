@@ -219,7 +219,17 @@ function ColorSwatch({
         </button>
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
-        <ContextMenu.Content className="material-menu min-w-[260px] p-1.5 z-50">
+        <ContextMenu.Content
+          className="min-w-[260px] p-1.5 z-50"
+          // Shadow-only (matches Geist + our DS ContextMenu): --ds-shadow-menu
+          // already opens with a 0 0 0 1px hairline ring, so adding the
+          // material-menu border on top would double it (thicker than Geist).
+          style={{
+            background: "hsl(var(--color-surface))",
+            borderRadius: "var(--ds-radius-large)",
+            boxShadow: "var(--ds-shadow-menu)",
+          }}
+        >
           <ContextMenu.Item
             className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-[var(--ds-gray-100)] rounded-md cursor-pointer outline-none"
             onSelect={handleCopyHex}
