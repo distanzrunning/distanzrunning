@@ -17,6 +17,7 @@ import * as ContextMenu from "@radix-ui/react-context-menu";
 import { Section } from "../ContentWithTOC";
 import { useToast } from "@/components/ui/Toast";
 import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
 
 // Link icon for section headers (matches Geist)
 function LinkIcon() {
@@ -598,31 +599,16 @@ function BordersSection() {
           showBorder={false}
         />
       </div>
-      {/* Visual demo */}
+      {/* Visual demo — the DS Button (secondary) in a bordered frame, like
+          Geist's `button secondary`. The frame's border is gray-400
+          (Color 4); the button's hairline border demonstrates the same. */}
       <div
         className="mt-10 flex h-[136px] w-full items-center justify-center border border-borderNeutral"
         style={{ background: "hsl(var(--color-surface))" }}
       >
-        <button
-          className="inline-flex items-center justify-center font-sans font-medium text-sm transition-all duration-150 ease focus:outline-none active:scale-[0.98] active:duration-100"
-          style={{
-            height: "40px",
-            minWidth: "160px",
-            padding: "0 12px",
-            borderRadius: "6px",
-            background: "hsl(var(--color-surface))",
-            boxShadow: "0 0 0 1px hsl(var(--color-borderDefault))",
-            color: "hsl(var(--color-textDefault))",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "var(--ds-gray-alpha-200)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "var(--ds-background-100)";
-          }}
-        >
+        <Button variant="secondary" className="min-w-[160px] max-w-[160px]">
           New Project
-        </button>
+        </Button>
       </div>
     </Section>
   );
