@@ -365,7 +365,8 @@ function ScalesSection({ isDark }: { isDark: boolean }) {
     <Section>
       <SectionHeader id="scales">Scales</SectionHeader>
       <p className="text-copy-16 text-textSubtle mt-4">
-        There are 10 color scales in the system. Right click to copy raw values.
+        There are 10 color scales in the system. P3 colors are used on
+        supported browsers and displays.
       </p>
       <div className="mt-10 space-y-6">
         {allScales.map((scale) => (
