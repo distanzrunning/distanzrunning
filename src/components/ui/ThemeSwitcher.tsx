@@ -68,6 +68,11 @@ export function ThemeSwitcher({
         padding: containerPadding,
         borderRadius: containerRadius,
         background: "hsl(var(--color-canvas))",
+        // Hairline ring (Geist's --ds-shadow-border) so the pill stays
+        // visible even when its canvas fill matches the page — e.g. dark,
+        // where both are #000. This is what fixes the "track vanishes in
+        // dark" regression; the ring flips to ~14% white on dark.
+        boxShadow: "var(--ds-shadow-border)",
         border: "none",
         margin: 0,
         ...styleProp,
@@ -119,14 +124,17 @@ export function ThemeSwitcher({
               background: isSelected
                 ? "hsl(var(--color-surface))"
                 : "transparent",
+              // Selected segment = Geist's treatment: bg-100 fill + a
+              // gray-400 ring (defines it without relying on the now-tiny
+              // bg-100-vs-canvas tone gap) + a subtle gray-alpha-100 lift.
               boxShadow: isSelected
-                ? "rgba(0,0,0,0.06) 0px 2px 4px, hsla(var(--ds-gray-1000-value), 0.14) 0px 0px 0px 1px"
+                ? "0 0 0 1px var(--ds-gray-400), 0px 1px 2px 0px var(--ds-gray-alpha-100)"
                 : "none",
               color: disabled
                 ? "var(--ds-gray-600)"
                 : isSelected
                   ? "hsl(var(--color-textDefault))"
-                  : "var(--ds-gray-800)",
+                  : "var(--ds-gray-700)",
               transition:
                 "background 0.15s ease, box-shadow 0.15s ease, color 0.15s ease",
             }}
