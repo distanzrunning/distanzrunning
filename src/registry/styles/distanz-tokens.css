@@ -371,6 +371,10 @@
     /* Focus ring outer glow */
     --ds-focus-ring: #00000029;
 
+    /* Fixed white foreground for text/icons on solid coloured fills
+       (badges, etc.). #fff in both themes — Geist's --ds-contrast-fg. */
+    --ds-contrast-fg: #fff;
+
     /* Rounded shadow button - marketing style */
     --ds-shadow-button-rounded:
       0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 2px 0 rgba(0, 0, 0, 0.04),
@@ -768,6 +772,10 @@
 
     /* Focus ring outer glow */
     --ds-focus-ring: #ffffff3d;
+
+    /* Fixed white foreground for solid coloured fills — #fff in both
+       themes (Geist's --ds-contrast-fg). */
+    --ds-contrast-fg: #fff;
 
     /* Rounded shadow button - marketing style (dark mode) */
     --ds-shadow-button-rounded:

@@ -537,7 +537,7 @@ function ComponentBackgroundsSection() {
           </ul>
         </div>
         <div className="flex h-[120px] grow items-center justify-center gap-2 border-t border-borderNeutral md:h-auto md:border-l md:border-t-0">
-          <Badge variant="gray-subtle">Hobby</Badge>
+          <Badge variant="gray">Hobby</Badge>
           <Badge variant="blue-subtle">Pro</Badge>
           <Badge variant="purple-subtle">Enterprise</Badge>
         </div>

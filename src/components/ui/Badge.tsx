@@ -63,21 +63,23 @@ export interface BadgePillProps extends Omit<BadgeProps, "variant"> {
 // ============================================================================
 
 const variantStyles: Record<BadgeVariant, string> = {
-  // Solid variants - pair each theme-aware fill with a theme-aware foreground.
-  gray: "bg-[var(--ds-gray-1000)] text-textInverted",
-  blue: "bg-[var(--ds-blue-800)] text-textInverted dark:bg-[var(--ds-blue-900)] dark:text-[var(--ds-blue-100)]",
+  // Solid variants — Geist's exact mapping: a coloured fill + fixed white
+  // text (--ds-contrast-fg). The -900 (and gray-900) fills flip light in
+  // dark mode, so dark overrides drop to a mid shade that keeps white text
+  // legible. blue needs no dark override; amber pairs with black text.
+  gray: "bg-[var(--ds-gray-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-gray-500)]",
+  blue: "bg-[var(--ds-blue-800)] text-[var(--ds-contrast-fg)]",
   purple:
-    "bg-[var(--ds-purple-900)] text-textInverted dark:text-[var(--ds-purple-100)]",
-  amber:
-    "bg-[var(--ds-amber-700)] text-[var(--ds-gray-1000)] dark:bg-[var(--ds-amber-900)] dark:text-[var(--ds-amber-100)]",
-  red: "bg-[var(--ds-red-900)] text-textInverted dark:text-[var(--ds-red-100)]",
-  pink: "bg-[var(--ds-pink-900)] text-textInverted dark:text-[var(--ds-pink-100)]",
+    "bg-[var(--ds-purple-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-purple-500)]",
+  amber: "bg-[var(--ds-amber-700)] text-[#000]",
+  red: "bg-[var(--ds-red-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-red-800)]",
+  pink: "bg-[var(--ds-pink-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-pink-600)]",
   green:
-    "bg-[var(--ds-green-900)] text-textInverted dark:text-[var(--ds-green-100)]",
-  teal: "bg-[var(--ds-teal-900)] text-textInverted dark:text-[var(--ds-teal-100)]",
-  inverted: "bg-[var(--ds-gray-1000)] text-textInverted",
+    "bg-[var(--ds-green-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-green-600)]",
+  teal: "bg-[var(--ds-teal-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-teal-600)]",
+  inverted: "bg-[var(--ds-gray-1000)] text-[var(--ds-gray-100)]",
 
-  // Subtle variants - light tinted backgrounds with dark text
+  // Subtle variants - light tinted backgrounds with dark text (Geist-exact)
   "gray-subtle": "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)]",
   "blue-subtle": "bg-[var(--ds-blue-200)] text-[var(--ds-blue-900)]",
   "purple-subtle": "bg-[var(--ds-purple-200)] text-[var(--ds-purple-900)]",
@@ -88,20 +90,23 @@ const variantStyles: Record<BadgeVariant, string> = {
   "teal-subtle": "bg-[var(--ds-teal-300)] text-[var(--ds-teal-900)]",
 };
 
+// Geist sizing: sm 11/20/6px, md 12/24/10px, lg 14/32/12px; icon gaps
+// 3/4/6px. (text-sm in our config is 12px, so lg uses explicit 14px.)
 const sizeStyles: Record<BadgeSize, string> = {
-  sm: "h-5 px-1.5 text-[11px] tracking-[0.2px] gap-1",
-  md: "h-6 px-2.5 text-xs gap-1.5",
-  lg: "h-8 px-3 text-sm gap-1.5",
+  sm: "h-5 px-1.5 text-[11px] tracking-[0.2px] gap-[3px]",
+  md: "h-6 px-2.5 text-[12px] gap-1",
+  lg: "h-8 px-3 text-[14px] gap-1.5",
 };
 
+// Pill uses slightly tighter horizontal padding (Geist: sm 6 / md 8 / lg 10).
 const pillSizeStyles: Record<BadgeSize, string> = {
-  sm: "h-5 px-1.5 text-[11px] tracking-[0.2px] gap-1",
-  md: "h-6 px-2.5 text-xs gap-1.5",
-  lg: "h-8 px-3 text-sm gap-1.5",
+  sm: "h-5 px-1.5 text-[11px] tracking-[0.2px] gap-[3px]",
+  md: "h-6 px-2 text-[12px] gap-1",
+  lg: "h-8 px-2.5 text-[14px] gap-1.5",
 };
 
 const iconSizeStyles: Record<BadgeSize, string> = {
-  sm: "w-3 h-3 [&>svg]:w-full [&>svg]:h-full",
+  sm: "w-[11px] h-[11px] [&>svg]:w-full [&>svg]:h-full",
   md: "w-3.5 h-3.5 [&>svg]:w-full [&>svg]:h-full",
   lg: "w-4 h-4 [&>svg]:w-full [&>svg]:h-full",
 };
