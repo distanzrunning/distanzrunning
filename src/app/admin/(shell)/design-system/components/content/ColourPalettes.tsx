@@ -395,10 +395,11 @@ function ColorRowItem({
         className="h-4 w-4 rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
         style={{ background: `var(${cssVar})` }}
       />
-      <p className="text-heading-14 text-textDefault w-[120px]">
+      {/* Geist's row label is 14/20 font-medium (500), not heading-14 (600). */}
+      <p className="text-[14px] leading-[20px] font-medium text-textDefault w-[120px]">
         {label}
       </p>
-      <p className="text-label-14 text-textSubtle">
+      <p className="text-copy-14 text-textSubtle">
         {description}
       </p>
     </div>
