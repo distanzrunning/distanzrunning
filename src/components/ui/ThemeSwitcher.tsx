@@ -67,12 +67,12 @@ export function ThemeSwitcher({
         gap: 2,
         padding: containerPadding,
         borderRadius: containerRadius,
-        background: "hsl(var(--color-canvas))",
-        // Hairline ring (Geist's --ds-shadow-border) so the pill stays
-        // visible even when its canvas fill matches the page — e.g. dark,
-        // where both are #000. This is what fixes the "track vanishes in
-        // dark" regression; the ring flips to ~14% white on dark.
-        boxShadow: "var(--ds-shadow-border)",
+        // Track sits one grey step BELOW the selected thumb (gray-100 via
+        // surfaceSubtle: #F2F2F2 light / #1A1A1A dark), so the container
+        // reads on the page and the thumb can be defined by fill alone.
+        // No ring/border — our switcher intentionally diverges from Geist
+        // here (their bg-100/bg-200 are too close to differentiate by fill).
+        background: "hsl(var(--color-surfaceSubtle))",
         border: "none",
         margin: 0,
         ...styleProp,
@@ -121,15 +121,13 @@ export function ThemeSwitcher({
               border: "none",
               borderRadius: optionRadius,
               cursor: disabled ? "not-allowed" : "pointer",
+              // Selected thumb is defined by BACKGROUND ALONE — one grey
+              // step above the track: white in light, gray-300 (#292929) in
+              // dark (via surfaceElevated2). No ring or shadow.
               background: isSelected
-                ? "hsl(var(--color-surface))"
+                ? "hsl(var(--color-surfaceElevated2))"
                 : "transparent",
-              // Selected segment = Geist's treatment: bg-100 fill + a
-              // gray-400 ring (defines it without relying on the now-tiny
-              // bg-100-vs-canvas tone gap) + a subtle gray-alpha-100 lift.
-              boxShadow: isSelected
-                ? "0 0 0 1px var(--ds-gray-400), 0px 1px 2px 0px var(--ds-gray-alpha-100)"
-                : "none",
+              boxShadow: "none",
               color: disabled
                 ? "var(--ds-gray-600)"
                 : isSelected
