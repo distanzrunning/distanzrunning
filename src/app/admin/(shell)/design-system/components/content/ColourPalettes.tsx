@@ -330,28 +330,26 @@ function ColorScaleRow({
   scale: ColorScale;
   isDark: boolean;
 }) {
-  const fullSteps = 10;
-  const emptySlots = fullSteps - scale.steps.length;
-
   return (
     <div className="flex flex-col items-start gap-2 md:flex-row md:items-center">
       <div className="w-[100px] flex-shrink-0">
+        {/* Geist scale labels are 14/20 font-medium (500) — lighter than
+            text-heading-14 (600). No DS slot is 14/20/500, so match Geist
+            verbatim. */}
         <p
-          className="text-heading-14 text-textDefault"
+          className="text-[14px] leading-[20px] font-medium text-textDefault"
           id={scale.name}
         >
           {scale.name}
         </p>
       </div>
+      {/* No empty padding slots — like Geist, short scales (Backgrounds)
+          just render their swatches; w-full max-w-[68px] caps each so they
+          sit left-aligned with the rest. */}
       <ul aria-describedby={scale.name} className="flex w-full gap-1 md:gap-2">
         {scale.steps.map((step) => (
           <li key={step.step} className="w-full max-w-[68px]">
             <ColorSwatch cssVar={step.cssVar} themeKey={isDark} />
-          </li>
-        ))}
-        {Array.from({ length: emptySlots }).map((_, i) => (
-          <li key={`empty-${i}`} className="w-full max-w-[68px]">
-            <div className="w-full aspect-square md:h-10 md:aspect-auto" />
           </li>
         ))}
       </ul>
