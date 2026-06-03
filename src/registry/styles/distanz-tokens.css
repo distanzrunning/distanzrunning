@@ -723,9 +723,15 @@
     --ds-shadow-tooltip:
       0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
       0px 4px 8px rgba(0, 0, 0, 0.2);
+    /* Black-based, matching Geist's --ds-shadow-menu (it isn't theme-
+       overridden on their side). The bright white inner ring was an
+       earlier "edges read in dark" tweak from the old surface model;
+       under the Geist bg model the edge now comes from the menu (bg-100
+       #0A0A0A) sitting on the darker page (bg-200 #000) + soft shadow. */
     --ds-shadow-menu:
-      0 0 0 1px rgba(255, 255, 255, 0.22), 0px 2px 2px rgba(0, 0, 0, 0.04),
-      0px 8px 16px -4px rgba(0, 0, 0, 0.04), 0 0 0 1px rgb(0, 0, 0);
+      0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
+      0px 4px 8px -4px rgba(0, 0, 0, 0.04),
+      0px 16px 24px -8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgb(0, 0, 0);
     --ds-shadow-modal:
       0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
       0px 8px 16px -4px rgba(0, 0, 0, 0.2),
