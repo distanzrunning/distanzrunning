@@ -207,15 +207,21 @@ const getVariantClasses = (
         dark:hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),black_15%)]
       `;
     case "error":
+      // Geist error-fill: bg red-800, fixed white text (--ds-contrast-fg) in
+      // both themes, hover → red-900. (Geist's light hover is #ae292f; the
+      // red-900 token is the clean equivalent and matches Geist's dark hover
+      // exactly.) The old dark:red-100 tint read weak on the saturated fill.
       return `
-        bg-[var(--ds-red-800)] text-textInverted dark:text-[var(--ds-red-100)]
-        hover:bg-[color-mix(in_srgb,var(--ds-red-800),black_15%)]
-        dark:hover:bg-[var(--ds-red-900)]
+        bg-[var(--ds-red-800)] text-[var(--ds-contrast-fg)]
+        hover:bg-[var(--ds-red-900)]
       `;
     case "warning":
+      // Geist warning-fill: bg amber-800, fixed BLACK text in both themes
+      // (amber-800 stays light enough that black reads), hover → darker amber.
+      // Black mirrors the Badge `amber` variant's text-[#000].
       return `
-        bg-[var(--ds-amber-800)] text-[var(--ds-gray-1000)] dark:text-[var(--ds-amber-100)]
-        hover:bg-[color-mix(in_srgb,var(--ds-amber-800),black_15%)]
+        bg-[var(--ds-amber-800)] text-[#000]
+        hover:bg-[color-mix(in_srgb,var(--ds-amber-800),black_12%)]
       `;
     case "secondary":
       if (shadow) {
