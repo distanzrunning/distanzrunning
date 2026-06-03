@@ -10,10 +10,13 @@ import {
   Star,
   Bell,
   CircleCheck,
+  Info,
+  TriangleAlert,
 } from "lucide-react";
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import { Section } from "../ContentWithTOC";
 import { useToast } from "@/components/ui/Toast";
+import { Badge } from "@/components/ui/Badge";
 
 // Link icon for section headers (matches Geist)
 function LinkIcon() {
@@ -518,102 +521,54 @@ function ComponentBackgroundsSection() {
         background. On smaller UI elements like badges, you can use Color 2 or
         Color 3 as the background.
       </p>
-      {/* Visual demo */}
+      {/* Visual demo — left: hand-rolled activity-log rows (no DS component
+          for this pattern; Geist hand-rolls it too). One row is highlighted
+          with amber-100 to show a component bg in use. Right: DS Badge. */}
       <div
         className="mt-10 flex w-full flex-col border border-borderNeutral md:flex-row"
         style={{ background: "hsl(var(--color-surface))" }}
       >
         <div className="border-borderNeutral p-2 md:p-12">
           <ul>
-            <li className="flex h-10 w-full items-center gap-3 rounded-sm px-3 md:w-[420px]">
-              <span className="text-textSubtle">○</span>
-              <p className="text-xs font-mono text-textSubtle">
-                APR 26 15:54:21.12
-              </p>
-              <div className="h-5 w-px bg-borderNeutral" />
-              <p className="text-xs font-mono text-textSubtle">
-                <span className="hidden md:inline-block">/dashboard</span>
-                /overview
-              </p>
-            </li>
-            <li
-              className="flex h-10 w-full items-center gap-3 rounded-sm px-3 md:w-[420px]"
-              style={{ background: "var(--ds-amber-100)" }}
-            >
-              <span style={{ color: "var(--ds-amber-900)" }}>⚠</span>
-              <p
-                className="text-xs font-mono"
-                style={{ color: "var(--ds-amber-900)" }}
-              >
-                APR 26 15:54:21.12
-              </p>
-              <div
-                className="h-5 w-px"
-                style={{ background: "var(--ds-amber-400)" }}
-              />
-              <p
-                className="text-xs font-mono"
-                style={{ color: "var(--ds-amber-900)" }}
-              >
-                <span className="hidden md:inline-block">/dashboard</span>
-                /overview
-              </p>
-            </li>
-            <li className="flex h-10 w-full items-center gap-3 rounded-sm px-3 md:w-[420px]">
-              <span className="text-textSubtle">○</span>
-              <p className="text-xs font-mono text-textSubtle whitespace-nowrap">
-                APR 26 15:54:21.12
-              </p>
-              <div className="h-5 w-px bg-borderNeutral" />
-              <p className="text-xs font-mono text-textSubtle">
-                <span className="hidden md:inline-block">/dashboard</span>
-                /overview
-              </p>
-            </li>
-            <li className="flex h-10 w-full items-center gap-3 rounded-sm px-3 md:w-[420px]">
-              <span className="text-textSubtle">○</span>
-              <p className="text-xs font-mono text-textSubtle">
-                APR 26 15:54:21.12
-              </p>
-              <div className="h-5 w-px bg-borderNeutral" />
-              <p className="text-xs font-mono text-textSubtle">
-                <span className="hidden md:inline-block">/dashboard</span>
-                /overview
-              </p>
-            </li>
+            <LogRow />
+            <LogRow alert />
+            <LogRow />
+            <LogRow />
           </ul>
         </div>
-        <div className="flex h-[120px] grow items-center justify-center gap-2 border-t md:h-auto md:border-l md:border-t-0">
-          <span
-            className="px-2 py-1 text-xs font-medium rounded capitalize"
-            style={{
-              background: "var(--ds-gray-200)",
-              color: "hsl(var(--color-textSubtle))",
-            }}
-          >
-            Hobby
-          </span>
-          <span
-            className="px-2 py-1 text-xs font-medium rounded capitalize"
-            style={{
-              background: "var(--ds-blue-100)",
-              color: "var(--ds-blue-900)",
-            }}
-          >
-            Pro
-          </span>
-          <span
-            className="px-2 py-1 text-xs font-medium rounded capitalize"
-            style={{
-              background: "var(--ds-purple-100)",
-              color: "var(--ds-purple-900)",
-            }}
-          >
-            Enterprise
-          </span>
+        <div className="flex h-[120px] grow items-center justify-center gap-2 border-t border-borderNeutral md:h-auto md:border-l md:border-t-0">
+          <Badge variant="gray-subtle">Hobby</Badge>
+          <Badge variant="blue-subtle">Pro</Badge>
+          <Badge variant="purple-subtle">Enterprise</Badge>
         </div>
       </div>
     </Section>
+  );
+}
+
+// One activity-log row for the Colors 1-3 demo. `alert` swaps to the
+// amber-highlighted treatment (amber-100 bg + amber-900 text/icon),
+// matching Geist's highlighted row.
+function LogRow({ alert = false }: { alert?: boolean }) {
+  const Icon = alert ? TriangleAlert : Info;
+  const fg = alert ? "var(--ds-amber-900)" : "hsl(var(--color-textSubtle))";
+  return (
+    <li
+      className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-sm px-3 md:w-[420px]"
+      style={alert ? { background: "var(--ds-amber-100)" } : undefined}
+    >
+      <Icon className="h-4 w-4 shrink-0" strokeWidth={1.5} style={{ color: fg }} />
+      <p className="text-copy-13-mono" style={{ color: fg }}>
+        APR 26 15:54:21.12
+      </p>
+      <div
+        className={`h-5 w-px ${alert ? "" : "bg-borderNeutral"}`}
+        style={alert ? { background: "var(--ds-amber-400)" } : undefined}
+      />
+      <p className="text-copy-13-mono" style={{ color: fg }}>
+        <span className="hidden md:inline-block">/dashboard</span>/overview
+      </p>
+    </li>
   );
 }
 
