@@ -713,13 +713,16 @@ function TextAndIconsSection() {
             >
               The Frontend Cloud
             </p>
-            <p className="text-[14px]" style={{ color: "hsl(var(--color-textSubtle))" }}>
+            <p className="text-copy-14 text-textSubtle">
               Build, scale, and secure a faster, personalized web with Distanz.
             </p>
+            {/* "Learn More" CTA — Geist uses blue-900 (a text-grade accent that
+                fits this section's 900 text shades), with the arrow as the
+                non-colour affordance, so no underline. */}
             <a
-              className="mt-2 flex items-center gap-0.5 text-sm no-underline"
+              className="mt-2 flex items-center gap-0.5 text-copy-14 no-underline"
               href="#"
-              style={{ color: "var(--ds-pink-900)" }}
+              style={{ color: "var(--ds-blue-900)" }}
             >
               Learn More
               <svg
