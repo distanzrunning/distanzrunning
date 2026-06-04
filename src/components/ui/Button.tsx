@@ -20,6 +20,36 @@ export type ButtonVariant =
   | "tertiary";
 export type ButtonShape = "default" | "square" | "circle" | "rounded";
 
+/**
+ * Custom colour set for a one-off button (Geist's `--button-custom-*`
+ * mechanism). Supply `fg`/`bg` (and optionally `border` + hover/active
+ * overrides); any colour string is accepted — a token (`var(--ds-blue-700)`)
+ * or a literal. Hover falls back to the base colour; active falls back to
+ * hover → base. Pass via the `customColors` prop; it overrides `variant`.
+ * Reserve this for genuinely bespoke buttons (e.g. an "Upgrade" CTA) — for
+ * normal actions use a built-in variant.
+ */
+export interface ButtonCustomColors {
+  /** Text colour */
+  fg: string;
+  /** Background fill */
+  bg: string;
+  /** Hairline border colour (defaults to `bg`) */
+  border?: string;
+  /** Hover text (defaults to `fg`) */
+  fgHover?: string;
+  /** Hover fill (defaults to `bg`) */
+  bgHover?: string;
+  /** Hover border (defaults to `border`) */
+  borderHover?: string;
+  /** Active text (defaults to `fgHover`) */
+  fgActive?: string;
+  /** Active fill (defaults to `bgHover`) */
+  bgActive?: string;
+  /** Active border (defaults to `borderHover`) */
+  borderActive?: string;
+}
+
 export interface ButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "prefix"> {
   /** Button content */
@@ -38,6 +68,8 @@ export interface ButtonProps
   loading?: boolean;
   /** Add shadow effect (typically used with rounded shape) */
   shadow?: boolean;
+  /** Bespoke colour set — overrides `variant`. See {@link ButtonCustomColors}. */
+  customColors?: ButtonCustomColors;
   /** Additional CSS classes */
   className?: string;
 }
@@ -58,6 +90,8 @@ export interface ButtonLinkProps
   suffixIcon?: ReactNode;
   /** Add shadow effect */
   shadow?: boolean;
+  /** Bespoke colour set — overrides `variant`. See {@link ButtonCustomColors}. */
+  customColors?: ButtonCustomColors;
   /** Additional CSS classes */
   className?: string;
 }
@@ -247,6 +281,38 @@ const getVariantClasses = (
   }
 };
 
+// Custom-colour buttons (Geist's `--button-custom-*` mechanism). The colours
+// are driven through CSS vars set inline, so the hover/active pseudo-classes
+// resolve them at render time. The border is a hairline ring (box-shadow),
+// matching `secondary`. Disabled custom buttons fall back to the normal
+// disabled styling (Geist applies custom only to `:not([disabled])`).
+const CUSTOM_COLOR_CLASSES = `
+  bg-[var(--btn-c-bg)] text-[var(--btn-c-fg)]
+  shadow-[0_0_0_1px_var(--btn-c-border)]
+  hover:bg-[var(--btn-c-bg-hover)] hover:text-[var(--btn-c-fg-hover)] hover:shadow-[0_0_0_1px_var(--btn-c-border-hover)]
+  active:bg-[var(--btn-c-bg-active)] active:text-[var(--btn-c-fg-active)] active:shadow-[0_0_0_1px_var(--btn-c-border-active)]
+`;
+
+// Resolve the custom palette into the CSS vars the classes above consume,
+// applying Geist's fallback chain: hover → base, active → hover → base.
+const getCustomColorStyle = (c: ButtonCustomColors): React.CSSProperties => {
+  const border = c.border ?? c.bg;
+  const fgHover = c.fgHover ?? c.fg;
+  const bgHover = c.bgHover ?? c.bg;
+  const borderHover = c.borderHover ?? border;
+  return {
+    "--btn-c-fg": c.fg,
+    "--btn-c-bg": c.bg,
+    "--btn-c-border": border,
+    "--btn-c-fg-hover": fgHover,
+    "--btn-c-bg-hover": bgHover,
+    "--btn-c-border-hover": borderHover,
+    "--btn-c-fg-active": c.fgActive ?? fgHover,
+    "--btn-c-bg-active": c.bgActive ?? bgHover,
+    "--btn-c-border-active": c.borderActive ?? borderHover,
+  } as React.CSSProperties;
+};
+
 // ============================================================================
 // Button Component
 // ============================================================================
@@ -292,6 +358,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       suffixIcon,
       loading = false,
       shadow = false,
+      customColors,
       disabled = false,
       className = "",
       type = "button",
@@ -319,12 +386,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const sizeClasses = getSizeClasses(size, shape);
     const shapeClasses = getShapeClasses(shape);
-    const variantClasses = getVariantClasses(
-      variant,
-      disabled,
-      loading,
-      shadow,
-    );
+    // Custom colours override the variant, but only while interactive —
+    // disabled/loading still use the standard disabled styling.
+    const useCustomColors = !!customColors && !isVisuallyDisabled;
+    const variantClasses = useCustomColors
+      ? CUSTOM_COLOR_CLASSES
+      : getVariantClasses(variant, disabled, loading, shadow);
 
     const combinedClasses = `
       ${baseClasses}
@@ -360,6 +427,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         style={
           {
             "--ds-icon-size": iconSize,
+            ...(useCustomColors ? getCustomColorStyle(customColors!) : null),
             ...(isVisuallyDisabled ? { cursor: "not-allowed" } : null),
           } as React.CSSProperties
         }
@@ -405,6 +473,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       prefixIcon,
       suffixIcon,
       shadow = false,
+      customColors,
       className = "",
       ...props
     },
@@ -420,7 +489,9 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
 
     const sizeClasses = getSizeClasses(size, shape);
     const shapeClasses = getShapeClasses(shape);
-    const variantClasses = getVariantClasses(variant, false, false, shadow);
+    const variantClasses = customColors
+      ? CUSTOM_COLOR_CLASSES
+      : getVariantClasses(variant, false, false, shadow);
 
     const combinedClasses = `
       ${baseClasses}
@@ -438,7 +509,12 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       <a
         ref={ref}
         className={combinedClasses}
-        style={{ "--ds-icon-size": iconSize } as React.CSSProperties}
+        style={
+          {
+            "--ds-icon-size": iconSize,
+            ...(customColors ? getCustomColorStyle(customColors) : null),
+          } as React.CSSProperties
+        }
         {...props}
       >
         {prefixIcon && <span className="prefix">{prefixIcon}</span>}

@@ -18,6 +18,7 @@ import { Section } from "../ContentWithTOC";
 import { useToast } from "@/components/ui/Toast";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { Gauge } from "@/components/ui/Gauge";
 
 // Link icon for section headers (matches Geist)
 function LinkIcon() {
@@ -644,106 +645,32 @@ function HighContrastBackgroundsSection() {
         style={{ background: "hsl(var(--color-surface))" }}
       >
         <div className="flex h-[65%] w-full items-center justify-center gap-5 border-borderNeutral md:h-full md:w-[50%] md:border-r">
-          {/* Gauges */}
-          <div className="relative w-8 h-8">
-            <svg viewBox="0 0 36 36" className="w-full h-full">
-              <circle
-                cx="18"
-                cy="18"
-                r="15"
-                fill="none"
-                stroke="var(--ds-gray-alpha-400)"
-                strokeWidth="3"
-              />
-              <circle
-                cx="18"
-                cy="18"
-                r="15"
-                fill="none"
-                stroke="var(--ds-green-700)"
-                strokeWidth="3"
-                strokeDasharray="85 100"
-                strokeLinecap="round"
-                transform="rotate(-90 18 18)"
-              />
-            </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-medium">
-              90
-            </span>
-          </div>
-          <div className="relative w-8 h-8">
-            <svg viewBox="0 0 36 36" className="w-full h-full">
-              <circle
-                cx="18"
-                cy="18"
-                r="15"
-                fill="none"
-                stroke="var(--ds-gray-alpha-400)"
-                strokeWidth="3"
-              />
-              <circle
-                cx="18"
-                cy="18"
-                r="15"
-                fill="none"
-                stroke="var(--ds-amber-700)"
-                strokeWidth="3"
-                strokeDasharray="55 100"
-                strokeLinecap="round"
-                transform="rotate(-90 18 18)"
-              />
-            </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-medium">
-              55
-            </span>
-          </div>
-          <div className="relative w-8 h-8">
-            <svg viewBox="0 0 36 36" className="w-full h-full">
-              <circle
-                cx="18"
-                cy="18"
-                r="15"
-                fill="none"
-                stroke="var(--ds-gray-alpha-400)"
-                strokeWidth="3"
-              />
-              <circle
-                cx="18"
-                cy="18"
-                r="15"
-                fill="none"
-                stroke="var(--ds-red-800)"
-                strokeWidth="3"
-                strokeDasharray="20 100"
-                strokeLinecap="round"
-                transform="rotate(-90 18 18)"
-              />
-            </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-medium">
-              20
-            </span>
-          </div>
+          {/* Three Gauges, each pinned to its Geist demo colour so the value
+              and hue stay paired (auto-colour would tint 55 green). */}
+          <Gauge value={90} size={32} color="var(--ds-green-700)" showLabel />
+          <Gauge value={55} size={32} color="var(--ds-amber-700)" showLabel />
+          <Gauge value={20} size={32} color="var(--ds-red-800)" showLabel />
         </div>
-        <div className="flex w-full justify-center md:w-[50%] py-6 md:py-0">
-          <button
-            className="inline-flex items-center justify-center font-sans font-medium text-sm transition-all duration-150 ease focus:outline-none active:scale-[0.98] active:duration-100"
-            style={{
-              height: "40px",
-              minWidth: "160px",
-              padding: "0 12px",
-              borderRadius: "6px",
-              background: "var(--ds-blue-700)",
-              color: "white",
+        <div className="flex w-full justify-center py-6 md:w-[50%] md:py-0">
+          {/* The DS Button with a bespoke palette — Geist's `--button-custom-*`
+              "Upgrade to Pro" CTA: blue-700 fill, white text, hover lifts to
+              #0B7BFE, active returns to blue-700. */}
+          <Button
+            customColors={{
+              fg: "#fff",
+              bg: "var(--ds-blue-700)",
+              border: "var(--ds-blue-700)",
+              fgHover: "#fff",
+              bgHover: "#0B7BFE",
+              borderHover: "var(--ds-blue-700)",
+              fgActive: "#fff",
+              bgActive: "var(--ds-blue-700)",
+              borderActive: "var(--ds-blue-700)",
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#0B7BFE";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "var(--ds-blue-700)";
-            }}
+            className="min-w-[160px] max-w-[160px]"
           >
             Upgrade to Pro
-          </button>
+          </Button>
         </div>
       </div>
     </Section>
