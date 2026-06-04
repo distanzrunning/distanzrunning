@@ -742,7 +742,7 @@ function TextAndIconsSection() {
             </a>
           </div>
         </div>
-        <div className="flex h-[35%] w-full items-center justify-center gap-7 border-t md:h-full md:w-[50%] md:gap-5 md:border-l md:border-t-0">
+        <div className="flex h-[35%] w-full items-center justify-center gap-7 border-t border-borderNeutral md:h-full md:w-[50%] md:gap-5 md:border-l md:border-t-0">
           <CircleDollarSign
             size={16}
             style={{ color: "var(--ds-green-900)" }}
