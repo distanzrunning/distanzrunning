@@ -206,8 +206,13 @@ function ColorSwatch({
       <ContextMenu.Trigger asChild>
         <button
           ref={ref}
-          className="relative w-full aspect-square md:h-10 md:aspect-auto rounded-sm cursor-copy shadow-[var(--ds-shadow-border-inset)]"
-          style={{ backgroundColor: `var(${cssVar})` }}
+          className="relative w-full aspect-square md:h-10 md:aspect-auto rounded-sm cursor-copy"
+          // boxShadow via inline style: Tailwind mis-reads a bare var() in
+          // shadow-[…] as a shadow *colour*, producing no shadow.
+          style={{
+            backgroundColor: `var(${cssVar})`,
+            boxShadow: "var(--ds-shadow-border-inset)",
+          }}
           onClick={handleCopyToken}
         >
           <span
@@ -397,8 +402,13 @@ function ColorRowItem({
       className={`flex h-10 items-center gap-3 ${showBorder ? "border-b border-borderNeutral" : ""}`}
     >
       <div
-        className="h-4 w-4 rounded-full shadow-[var(--ds-shadow-border-inset)]"
-        style={{ background: `var(${cssVar})` }}
+        className="h-4 w-4 rounded-full"
+        // boxShadow via inline style: Tailwind mis-reads a bare var() in
+        // shadow-[…] as a shadow *colour*, producing no shadow.
+        style={{
+          background: `var(${cssVar})`,
+          boxShadow: "var(--ds-shadow-border-inset)",
+        }}
       />
       {/* Geist's row label is 14/20 font-medium (500), not heading-14 (600). */}
       <p className="text-[14px] leading-[20px] font-medium text-textDefault w-[120px]">
