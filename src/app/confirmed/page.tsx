@@ -54,11 +54,11 @@ function ConfirmedContent() {
 
           {/* Main Heading */}
           {already ? (
-            <h1 className="text-heading-32 md:text-heading-40 font-serif text-textDefault transition-colors duration-300 mb-4">
+            <h1 className="text-heading-32 md:text-heading-40 text-textDefault transition-colors duration-300 mb-4">
               Already Confirmed!
             </h1>
           ) : (
-            <h1 className="text-heading-32 md:text-heading-40 font-serif text-textDefault transition-colors duration-300 mb-4">
+            <h1 className="text-heading-32 md:text-heading-40 text-textDefault transition-colors duration-300 mb-4">
               You're All Set!
             </h1>
           )}

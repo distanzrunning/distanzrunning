@@ -62,7 +62,7 @@ export function TypewriterText() {
     <div className="inline-block relative max-w-full overflow-visible align-bottom">
       {/* Invisible placeholder to fix width */}
       <span
-        className="invisible inline-block text-heading-24 md:text-heading-32 font-serif whitespace-nowrap align-bottom"
+        className="invisible inline-block text-heading-24 md:text-heading-32 whitespace-nowrap align-bottom"
         aria-hidden="true"
       >
         Interactive Race Guides
@@ -72,13 +72,13 @@ export function TypewriterText() {
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="flex items-end">
           <span
-            className="text-heading-24 md:text-heading-32 font-serif text-textDefault whitespace-nowrap align-bottom transition-colors duration-300"
+            className="text-heading-24 md:text-heading-32 text-textDefault whitespace-nowrap align-bottom transition-colors duration-300"
             style={{ willChange: "contents" }}
           >
             {currentText}
           </span>
           <span
-            className="text-textSubtle dark:text-textSubtle text-heading-24 md:text-heading-32 font-serif align-bottom transition-colors duration-300 animate-blink"
+            className="text-textSubtle dark:text-textSubtle text-heading-24 md:text-heading-32 align-bottom transition-colors duration-300 animate-blink"
             style={{ willChange: "opacity" }}
           >
             |

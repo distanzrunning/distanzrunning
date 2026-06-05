@@ -130,7 +130,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
 
           <div className="col-span-full lg:col-span-12 lg:col-start-4 lg:justify-self-center">
             <div className="flex flex-col gap-6 pb-9 md:gap-9">
-              <h1 className="text-heading-32 md:text-heading-56 font-serif text-textDefault">
+              <h1 className="text-heading-32 md:text-heading-56 text-textDefault">
                 {post.title}
               </h1>
 

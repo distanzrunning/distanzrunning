@@ -103,7 +103,7 @@ export default function MegaMenuPanel({
         <p className="text-heading-14 text-textSubtle">
           {eyebrow}
         </p>
-        <h3 className="mt-3 text-heading-32 font-serif text-balance text-textDefault">
+        <h3 className="mt-3 text-heading-32 text-balance text-textDefault">
           {heading}
         </h3>
         <p className="mt-3 text-copy-14 text-textSubtle">

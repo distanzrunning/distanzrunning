@@ -27,7 +27,7 @@ export default function Blockquote({
       className={`
         border-l-4 border-textDefault
         pl-6 my-8
-        font-serif text-[19px] leading-[28px] md:text-[21px] md:leading-[32px]
+        text-[19px] leading-[28px] md:text-[21px] md:leading-[32px]
         text-textDefault
         ${className}
       `
