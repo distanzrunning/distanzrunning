@@ -259,11 +259,12 @@ const getVariantClasses = (
       `;
     case "warning":
       // Geist warning-fill: bg amber-800 (identical in both themes), fixed
-      // BLACK text both themes (amber stays light enough that black reads;
-      // mirrors the Badge `amber` variant). Hover is Geist's literal #d27504
-      // — a darkened amber with no token equivalent on our scale.
+      // near-black ink #0a0a0a both themes — Geist's literal
+      // `geist-new-warning-fill { --themed-fg: #0a0a0a }` (a hair softer
+      // than pure black; amber stays light enough that it reads). Hover is
+      // Geist's literal #d27504 — a darkened amber with no token on our scale.
       return `
-        bg-[var(--ds-amber-800)] text-[#000]
+        bg-[var(--ds-amber-800)] text-[#0a0a0a]
         hover:bg-[#d27504]
       `;
     case "secondary":
