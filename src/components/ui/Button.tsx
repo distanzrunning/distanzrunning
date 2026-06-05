@@ -160,7 +160,7 @@ const getSizeClasses = (size: ButtonSize, shape: ButtonShape): string => {
       case "tiny":
         return "h-[var(--ds-button-height-tiny)] w-[var(--ds-button-height-tiny)] text-button-12";
       case "small":
-        return "h-[var(--ds-button-height-small)] w-[var(--ds-button-height-small)] text-button-12";
+        return "h-[var(--ds-button-height-small)] w-[var(--ds-button-height-small)] text-button-14";
       case "medium":
         return "h-[var(--ds-button-height-medium)] w-[var(--ds-button-height-medium)] text-button-14";
       case "large":
@@ -175,7 +175,7 @@ const getSizeClasses = (size: ButtonSize, shape: ButtonShape): string => {
     case "tiny":
       return "h-[var(--ds-button-height-tiny)] px-[var(--ds-button-padding-tiny)] text-button-12 gap-[var(--ds-button-gap-tiny)]";
     case "small":
-      return "h-[var(--ds-button-height-small)] px-[var(--ds-button-padding-small)] text-button-12 gap-[var(--ds-button-gap-small)]";
+      return "h-[var(--ds-button-height-small)] px-[var(--ds-button-padding-small)] text-button-14 gap-[var(--ds-button-gap-small)]";
     case "medium":
       return "h-[var(--ds-button-height-medium)] px-[var(--ds-button-padding-medium)] text-button-14 gap-[var(--ds-button-gap-medium)]";
     case "large":
@@ -201,16 +201,19 @@ const getIconSize = (size: ButtonSize): string => {
   }
 };
 
-const getShapeClasses = (shape: ButtonShape): string => {
-  switch (shape) {
-    case "square":
-      return "rounded-[var(--ds-radius-small)]";
-    case "circle":
-      return "rounded-[var(--ds-radius-full)]";
-    case "rounded":
-      return "rounded-[var(--ds-radius-full)]";
+// Radius tracks the SIZE for default/square shapes (Geist: tiny 4px,
+// small+medium 6px, large 8px); circle/rounded are fully round.
+const getRadiusClasses = (size: ButtonSize, shape: ButtonShape): string => {
+  if (shape === "circle" || shape === "rounded") {
+    return "rounded-[var(--ds-radius-full)]";
+  }
+  switch (size) {
+    case "tiny":
+      return "rounded-[4px]";
+    case "large":
+      return "rounded-[8px]";
     default:
-      return "rounded-[var(--ds-radius-small)]";
+      return "rounded-[var(--ds-radius-small)]"; // small + medium = 6px
   }
 };
 
@@ -225,7 +228,7 @@ const getVariantClasses = (
   if (isDisabled) {
     switch (variant) {
       case "secondary":
-        return "bg-surface text-textSubtler shadow-[0_0_0_1px_var(--ds-gray-400)] cursor-not-allowed";
+        return "bg-[var(--ds-gray-100)] text-textSubtler shadow-[0_0_0_1px_var(--ds-gray-400)] cursor-not-allowed";
       case "tertiary":
         return "bg-transparent text-textSubtler cursor-not-allowed";
       default:
@@ -385,7 +388,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     `;
 
     const sizeClasses = getSizeClasses(size, shape);
-    const shapeClasses = getShapeClasses(shape);
+    const shapeClasses = getRadiusClasses(size, shape);
     // Custom colours override the variant, but only while interactive —
     // disabled/loading still use the standard disabled styling.
     const useCustomColors = !!customColors && !isVisuallyDisabled;
@@ -488,7 +491,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
     `;
 
     const sizeClasses = getSizeClasses(size, shape);
-    const shapeClasses = getShapeClasses(shape);
+    const shapeClasses = getRadiusClasses(size, shape);
     const variantClasses = customColors
       ? CUSTOM_COLOR_CLASSES
       : getVariantClasses(variant, false, false, shadow);
