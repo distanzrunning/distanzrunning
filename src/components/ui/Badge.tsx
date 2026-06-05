@@ -146,7 +146,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
             {icon}
           </span>
         )}
-        <span className="leading-none">{children}</span>
+        <span>{children}</span>
       </span>
     );
   },
