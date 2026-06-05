@@ -55,7 +55,7 @@ function OverviewCard({
   return (
     <Link
       href={href}
-      className={`group relative flex h-full flex-col gap-6 p-8 no-underline cursor-pointer hover:bg-[var(--ds-background-100)] ${isLeftColumn ? "md:border-r" : ""} ${isLastCard ? "border-b-0" : "border-b"} ${isSecondLastCard ? "md:border-b-0" : ""}`}
+      className={`group relative flex h-full flex-col gap-6 p-8 no-underline cursor-pointer hover:bg-surface ${isLeftColumn ? "md:border-r" : ""} ${isLastCard ? "border-b-0" : "border-b"} ${isSecondLastCard ? "md:border-b-0" : ""}`}
       style={{
         backgroundClip: "padding-box",
         borderColor: "var(--ds-gray-alpha-400)",
@@ -472,13 +472,13 @@ function TypefacePreview() {
     <div
       className="relative grid h-20 grow grid-cols-2 place-items-center rounded-sm"
       style={{
-        border: "1px dashed var(--ds-gray-alpha-400)",
+        border: "1px dashed var(--ds-gray-400)",
       }}
     >
       <div
         className="flex h-full w-full items-center justify-center"
         style={{
-          borderRight: "1px dashed var(--ds-gray-alpha-400)",
+          borderRight: "1px dashed var(--ds-gray-400)",
         }}
       >
         <p className="text-heading-24 text-center" style={{ fontFamily: "var(--font-family-sans)", color: "hsl(var(--color-textSubtler))" }}>
@@ -504,7 +504,7 @@ export default function FoundationsOverview({}: FoundationsOverviewProps) {
       {/* Cards Grid */}
       <div
         className="grid grid-cols-1 md:grid-cols-2"
-        style={{ borderBottom: "1px solid hsl(var(--color-borderDefault))" }}
+        style={{ borderBottom: "1px solid var(--ds-gray-alpha-400)" }}
       >
         <OverviewCard
           href="/admin/design-system/distanz-running"
