@@ -58,7 +58,7 @@ function ensureTabStyles() {
     }
     .ds-tabs-tab:focus-visible {
       box-shadow: 0 0 0 2px var(--ds-background-100),
-        0 0 0 4px var(--ds-focus-ring);
+        0 0 0 4px var(--ds-focus-color);
       border-radius: 6px;
     }
     /* Default-variant hover: non-selected tabs (including disabled)

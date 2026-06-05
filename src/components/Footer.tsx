@@ -204,4 +204,4 @@ function SocialColumn() {
 // links that have a trailing arrow icon. With text-only links the
 // gap is invisible.
 const linkClasses =
-  "inline-flex items-center gap-x-0.5 rounded-sm text-[14px] leading-5 text-[color:var(--ds-gray-900)] transition-colors hover:text-[color:var(--ds-gray-1000)] focus-visible:text-[color:var(--ds-gray-1000)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--ds-focus-ring)]";
+  "inline-flex items-center gap-x-0.5 rounded-sm text-[14px] leading-5 text-[color:var(--ds-gray-900)] transition-colors hover:text-[color:var(--ds-gray-1000)] focus-visible:text-[color:var(--ds-gray-1000)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--ds-focus-color)]";

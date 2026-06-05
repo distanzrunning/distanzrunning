@@ -837,7 +837,7 @@ export function FeedbackInline({
         .feedback-inline-wrapper .feedback-textarea-wrapper:focus-within {
           box-shadow:
             0 0 0 1px var(--ds-gray-alpha-600),
-            0 0 0 4px var(--ds-focus-ring);
+            0 0 0 4px var(--ds-focus-color);
         }
         .feedback-inline-wrapper .feedback-textarea-wrapper textarea::placeholder {
           color: hsl(var(--color-textSubtler));

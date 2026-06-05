@@ -171,7 +171,7 @@ export default function MegaMenuPanel({
           <NavigationMenuPrimitive.Link asChild>
             <Link
               href={featured.href}
-              className="mt-3 block rounded-[8px] bg-textDefault px-2 pt-2 pb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--ds-focus-ring)]"
+              className="mt-3 block rounded-[8px] bg-textDefault px-2 pt-2 pb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--ds-focus-color)]"
             >
               <FeaturedImage
                 image={featured.image}

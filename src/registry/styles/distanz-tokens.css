@@ -371,8 +371,12 @@
     --ds-modal-panel-bg: hsl(var(--color-surface)); /* raised panel */
     --ds-modal-section-bg: hsl(var(--color-canvas)); /* recessed section/footer */
 
-    /* Focus ring outer glow */
-    --ds-focus-ring: #00000029;
+    /* Focus ring (Geist): a blue halo — 2px page-bg gap then a 2px focus
+       ring. --ds-focus-color is the accent (blue-900); --ds-focus-ring is the
+       full shadow; --ds-focus-ring-outline is the outline form. */
+    --ds-focus-color: var(--ds-blue-900);
+    --ds-focus-ring-outline: 2px solid var(--ds-focus-color);
+    --ds-focus-ring: 0 0 0 2px var(--ds-background-100), 0 0 0 4px var(--ds-focus-color);
 
     /* Fixed white foreground for text/icons on solid coloured fills
        (badges, etc.). #fff in both themes — Geist's --ds-contrast-fg. */
@@ -775,8 +779,10 @@
     --ds-modal-panel-bg: hsl(var(--color-surface)); /* raised panel */
     --ds-modal-section-bg: hsl(var(--color-canvas)); /* recessed section/footer */
 
-    /* Focus ring outer glow */
-    --ds-focus-ring: #ffffff3d;
+    /* Focus ring (Geist) — references flip automatically; see :root. */
+    --ds-focus-color: var(--ds-blue-900);
+    --ds-focus-ring-outline: 2px solid var(--ds-focus-color);
+    --ds-focus-ring: 0 0 0 2px var(--ds-background-100), 0 0 0 4px var(--ds-focus-color);
 
     /* Fixed white foreground for solid coloured fills — #fff in both
        themes (Geist's --ds-contrast-fg). */

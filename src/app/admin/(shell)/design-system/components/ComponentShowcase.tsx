@@ -86,7 +86,7 @@ export default function ComponentShowcase() {
             <label className="block text-sm font-medium mb-2">Text Input</label>
             <input
               type="text"
-              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-borderDefaultHover focus:ring-1 focus:ring-[var(--ds-focus-ring)] outline-none transition-colors bg-surface"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-borderDefaultHover focus:ring-1 focus:ring-[var(--ds-focus-color)] outline-none transition-colors bg-surface"
               placeholder="Enter text..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
@@ -94,7 +94,7 @@ export default function ComponentShowcase() {
             <pre className="mt-3 p-3 bg-canvas rounded text-xs overflow-x-auto">
               <code>{`<input
   type="text"
-  className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-borderDefaultHover focus:ring-1 focus:ring-[var(--ds-focus-ring)] outline-none transition-colors"
+  className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-borderDefaultHover focus:ring-1 focus:ring-[var(--ds-focus-color)] outline-none transition-colors"
   placeholder="Enter text..."
 />`}</code>
             </pre>
@@ -104,7 +104,7 @@ export default function ComponentShowcase() {
           <div>
             <label className="block text-sm font-medium mb-2">Textarea</label>
             <textarea
-              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-borderDefaultHover focus:ring-1 focus:ring-[var(--ds-focus-ring)] outline-none transition-colors resize-y bg-surface"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-borderDefaultHover focus:ring-1 focus:ring-[var(--ds-focus-color)] outline-none transition-colors resize-y bg-surface"
               placeholder="Enter longer text..."
               rows={4}
             />
@@ -114,7 +114,7 @@ export default function ComponentShowcase() {
           <div>
             <label className="block text-sm font-medium mb-2">Select</label>
             <select
-              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-borderDefaultHover focus:ring-1 focus:ring-[var(--ds-focus-ring)] outline-none transition-colors bg-surface"
+              className="w-full px-4 py-3 border border-borderNeutral rounded-md focus:border-borderDefaultHover focus:ring-1 focus:ring-[var(--ds-focus-color)] outline-none transition-colors bg-surface"
               value={selectedOption}
               onChange={(e) => setSelectedOption(e.target.value)}
             >
@@ -129,7 +129,7 @@ export default function ComponentShowcase() {
             <input
               type="checkbox"
               id="checkbox-example"
-              className="w-5 h-5 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)] focus:ring-2"
+              className="w-5 h-5 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-color)] focus:ring-2"
             />
             <label
               htmlFor="checkbox-example"
@@ -147,7 +147,7 @@ export default function ComponentShowcase() {
                 type="radio"
                 id="radio1"
                 name="radio-group"
-                className="w-5 h-5 text-textSubtle border-borderNeutral focus:ring-[var(--ds-focus-ring)] focus:ring-2"
+                className="w-5 h-5 text-textSubtle border-borderNeutral focus:ring-[var(--ds-focus-color)] focus:ring-2"
               />
               <label htmlFor="radio1" className="text-sm cursor-pointer">
                 Option 1
@@ -158,7 +158,7 @@ export default function ComponentShowcase() {
                 type="radio"
                 id="radio2"
                 name="radio-group"
-                className="w-5 h-5 text-textSubtle border-borderNeutral focus:ring-[var(--ds-focus-ring)] focus:ring-2"
+                className="w-5 h-5 text-textSubtle border-borderNeutral focus:ring-[var(--ds-focus-color)] focus:ring-2"
               />
               <label htmlFor="radio2" className="text-sm cursor-pointer">
                 Option 2

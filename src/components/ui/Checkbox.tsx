@@ -108,7 +108,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               w-4 h-4 rounded-[4px] border border-solid
               ${getBoxClasses()}
               ${!disabled && !isActive ? "group-hover/checkbox:bg-[var(--ds-gray-200)]" : ""}
-              ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-ring)]"}
+              ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]"}
             `}
             style={{
               transition:

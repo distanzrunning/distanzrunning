@@ -179,7 +179,7 @@ export default function AccessibilityShowcase() {
           <div className="bg-surface rounded-lg p-6 border border-borderNeutral">
             <p className="text-sm font-medium mb-4">Focus States</p>
             <div className="space-y-3">
-              <button className="px-6 py-3 bg-textDefault text-textInverted rounded-md font-medium focus:ring-2 focus:ring-[var(--ds-focus-ring)] focus:ring-offset-2 focus:outline-none transition-all">
+              <button className="px-6 py-3 bg-textDefault text-textInverted rounded-md font-medium focus:ring-2 focus:ring-[var(--ds-focus-color)] focus:ring-offset-2 focus:outline-none transition-all">
                 Focus Me (Tab to see)
               </button>
               <p className="text-xs text-textSubtle">
@@ -187,7 +187,7 @@ export default function AccessibilityShowcase() {
               </p>
             </div>
             <pre className="mt-4 p-3 bg-canvas rounded text-xs overflow-x-auto">
-              <code>{`<button className="focus:ring-2 focus:ring-[var(--ds-focus-ring)] focus:ring-offset-2 focus:outline-none">
+              <code>{`<button className="focus:ring-2 focus:ring-[var(--ds-focus-color)] focus:ring-offset-2 focus:outline-none">
   Button
 </button>`}</code>
             </pre>
@@ -347,7 +347,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-color)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -357,7 +357,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-color)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -367,7 +367,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-color)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -377,7 +377,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-color)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -387,7 +387,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-color)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -397,7 +397,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-color)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -407,7 +407,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-color)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -417,7 +417,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-color)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -427,7 +427,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-color)]"
               readOnly
             />
             <span className="text-textSubtle">
@@ -437,7 +437,7 @@ export default function AccessibilityShowcase() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
-              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-ring)]"
+              className="mt-1 w-4 h-4 text-textSubtle border-borderNeutral rounded focus:ring-[var(--ds-focus-color)]"
               readOnly
             />
             <span className="text-textSubtle">

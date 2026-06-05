@@ -493,7 +493,7 @@ export function MenuButton({
       <button
         ref={triggerRef}
         type="button"
-        className={`inline-flex items-center justify-center cursor-pointer bg-transparent border-none p-0 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2 rounded-full ${className}`}
+        className={`inline-flex items-center justify-center cursor-pointer bg-transparent border-none p-0 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ds-background-100)] rounded-full ${className}`}
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-haspopup="menu"
@@ -507,7 +507,7 @@ export function MenuButton({
   const baseStyles = `
     inline-flex items-center justify-center select-none cursor-pointer border-none
     transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
-    focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2
+    focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ds-background-100)]
     rounded-[var(--ds-radius-small)]
   `;
 

@@ -207,7 +207,7 @@ export default function HomepageHeroCarousel({
                           {slide.kicker && slide.kickerHref ? (
                             <Link
                               href={slide.kickerHref}
-                              className="rounded-sm transition-colors hover:text-[color:var(--ds-gray-1000)] focus-visible:text-[color:var(--ds-gray-1000)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--ds-focus-ring)]"
+                              className="rounded-sm transition-colors hover:text-[color:var(--ds-gray-1000)] focus-visible:text-[color:var(--ds-gray-1000)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--ds-focus-color)]"
                             >
                               {slide.kicker}
                             </Link>

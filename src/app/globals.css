@@ -209,7 +209,7 @@
   .ds-input-container:focus-within:not(.ds-input--error) {
     box-shadow:
       0 0 0 1px var(--ds-gray-alpha-600),
-      0px 0px 0px 4px var(--ds-focus-ring) !important;
+      0px 0px 0px 4px var(--ds-focus-color) !important;
   }
   .ds-input-container.ds-input--error {
     box-shadow: 0 0 0 1px var(--ds-red-900);
@@ -247,7 +247,7 @@
   .ds-textarea-container:focus-within:not(.ds-textarea--error) {
     box-shadow:
       0 0 0 1px var(--ds-gray-alpha-600),
-      0px 0px 0px 4px var(--ds-focus-ring) !important;
+      0px 0px 0px 4px var(--ds-focus-color) !important;
   }
   .ds-textarea-container.ds-textarea--error {
     box-shadow:
@@ -987,7 +987,7 @@
     outline: none;
     box-shadow:
       0 0 0 1px var(--ds-gray-alpha-600),
-      0px 0px 0px 4px var(--ds-focus-ring);
+      0px 0px 0px 4px var(--ds-focus-color);
   }
 
   .calendar-select-suffix {
@@ -1931,7 +1931,7 @@
     outline: none !important;
     box-shadow:
       0 0 0 1px var(--ds-gray-alpha-600),
-      0 0 0 4px var(--ds-focus-ring) !important;
+      0 0 0 4px var(--ds-focus-color) !important;
     /* Lift the trigger above adjacent siblings so the 4px outer
        ring isn't clipped (matches the calendar trigger). */
     z-index: 2;

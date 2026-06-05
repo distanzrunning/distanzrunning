@@ -67,7 +67,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       ${sizeClasses[size]}
       rounded-md
       transition-colors
-      focus:outline-none focus:ring-2 focus:ring-[var(--ds-focus-ring)]
+      focus:outline-none focus:ring-2 focus:ring-[var(--ds-focus-color)] focus:ring-offset-2 focus:ring-offset-[var(--ds-background-100)]
       active:scale-[0.98] active:duration-100
     `;
 

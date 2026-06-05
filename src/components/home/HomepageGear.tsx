@@ -118,7 +118,7 @@ function FeaturedArticle({ item }: { item: HomepageGearItem }) {
         <h3 className="text-heading-32 text-balance text-[color:var(--ds-gray-1000)]">
           <Link
             href={item.href}
-            className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
+            className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
           >
             {item.title}
           </Link>

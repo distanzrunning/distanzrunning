@@ -152,7 +152,7 @@ function RadioGroupItem({ value, children, disabled: itemDisabled }: RadioGroupI
                   ? "border-[var(--ds-gray-1000)] bg-surface"
                   : "border-borderSubtle bg-surface group-hover/radio:bg-[var(--ds-gray-200)]"
             }
-            ${!isDisabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-ring)]" : ""}
+            ${!isDisabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
           `}
           style={{
             transition:
@@ -260,7 +260,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
                   ? "border-[var(--ds-gray-1000)] bg-surface"
                   : "border-borderSubtle bg-surface hover:bg-[var(--ds-gray-200)]"
             }
-            ${!disabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-ring)]" : ""}
+            ${!disabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
           `}
           style={{
             transition:

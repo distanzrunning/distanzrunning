@@ -199,7 +199,7 @@ export function Choicebox({
         flex flex-1 flex-col
         rounded-md border border-solid
         ${isDisabled ? "cursor-not-allowed" : "cursor-pointer"}
-        ${!isDisabled ? "focus-within:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-ring)]" : ""}
+        ${!isDisabled ? "focus-within:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
         ${className}
       `}
       onMouseEnter={() => setIsHovered(true)}

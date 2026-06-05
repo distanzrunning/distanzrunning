@@ -230,7 +230,7 @@ export default function RaceCard({
           <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
             <Link
               href={href}
-              className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-ring)]"
+              className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
             >
               {title}
             </Link>
