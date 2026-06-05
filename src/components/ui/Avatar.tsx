@@ -116,19 +116,23 @@ export function Avatar({
 }: AvatarProps) {
   const [imageError, setImageError] = useState(false);
 
-  // Show shimmer placeholder when no src and placeholder is true (without custom icon)
+  // Show shimmer placeholder when no src and placeholder is true (without
+  // custom icon). Geist's loading shell shimmers gray-100 → gray-200 and
+  // still carries the avatar's gray-alpha-400 hairline ring.
   if (placeholder && !placeholderIcon && !fallback && !src) {
     return (
       <div
-        className="rounded-full overflow-hidden flex-shrink-0 animate-shimmer"
+        className="relative rounded-full overflow-hidden flex-shrink-0 animate-shimmer"
         style={{
           width: size,
           height: size,
           background:
-            "linear-gradient(90deg, var(--ds-gray-300) 0%, var(--ds-gray-200) 50%, var(--ds-gray-300) 100%)",
+            "linear-gradient(90deg, var(--ds-gray-100) 0%, var(--ds-gray-200) 50%, var(--ds-gray-100) 100%)",
           backgroundSize: "200% 100%",
         }}
-      />
+      >
+        <AvatarRing />
+      </div>
     );
   }
 
@@ -200,7 +204,21 @@ export function Avatar({
           style={{ width: size * 0.5, height: size * 0.5 }}
         />
       )}
+      <AvatarRing />
     </div>
+  );
+}
+
+// Geist puts a 1px gray-alpha-400 hairline ring on every avatar (the avatar
+// `:after`). It sits above the image, so it's a positioned overlay rather
+// than a border on the clipped container.
+function AvatarRing() {
+  return (
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 rounded-full"
+      style={{ border: "1px solid var(--ds-gray-alpha-400)" }}
+    />
   );
 }
 
@@ -227,11 +245,10 @@ export function AvatarGroup({
   const visibleMembers = limit ? members.slice(0, limit) : members;
   const remainingCount = limit ? Math.max(0, members.length - limit) : 0;
 
-  const borderWidth = 2;
-  const innerSize = size;
-  const outerSize = size + borderWidth * 2;
-  const fontSize = Math.round(innerSize * 0.35);
-  const overlap = outerSize * 0.25;
+  // Geist stacking: each avatar carries a 1px ring in the page-background
+  // colour (the separator) and overlaps the previous by 10px (at 32px). No
+  // notch/mask — the bg-coloured ring is what reads as the gap.
+  const overlap = Math.round(size * 0.3125); // 10px at size 32
 
   const groupLabel =
     label ?? `${members.length} avatar${members.length === 1 ? "" : "s"}`;
@@ -239,51 +256,52 @@ export function AvatarGroup({
   return (
     <div role="img" aria-label={groupLabel} className="flex items-center">
       {visibleMembers.map((member, index) => (
-        <div
+        <span
           key={index}
           aria-hidden="true"
-          className="relative rounded-full"
+          className="relative inline-flex rounded-full"
           style={{
             marginLeft: index === 0 ? 0 : -overlap,
-            width: outerSize,
-            height: outerSize,
-            padding: borderWidth,
-            backgroundColor: member.borderColor || "hsl(var(--color-surface))",
+            boxShadow: `0 0 0 1px ${member.borderColor || "hsl(var(--color-surface))"}`,
           }}
         >
           <Avatar
             src={member.src}
             alt={member.alt || `Avatar ${index + 1}`}
-            size={innerSize}
+            size={size}
             placeholder={member.placeholder}
             placeholderIcon={member.placeholderIcon}
             bgColor={member.bgColor}
           />
-        </div>
+        </span>
       ))}
       {remainingCount > 0 && (
-        <div
+        <span
           aria-hidden="true"
-          className="relative rounded-full"
+          className="relative inline-flex rounded-full"
           style={{
             marginLeft: -overlap,
-            width: outerSize,
-            height: outerSize,
-            padding: borderWidth,
-            backgroundColor: "hsl(var(--color-surface))",
+            boxShadow: "0 0 0 1px hsl(var(--color-surface))",
           }}
         >
-          <div
-            className="flex items-center justify-center rounded-full bg-[var(--ds-gray-300)] text-textDefault font-semibold"
+          {/* Geist's +N note: a gray-100 pill with a gray-400 hairline over
+              the slot, gray-1000 text at 10px / 600. */}
+          <span
+            className="flex items-center justify-center rounded-full"
             style={{
-              width: innerSize,
-              height: innerSize,
-              fontSize,
+              width: size,
+              height: size,
+              background: "var(--ds-gray-100)",
+              border: "1px solid var(--ds-gray-400)",
+              color: "var(--ds-gray-1000)",
+              fontSize: 10,
+              lineHeight: "12px",
+              fontWeight: 600,
             }}
           >
             +{remainingCount}
-          </div>
-        </div>
+          </span>
+        </span>
       )}
     </div>
   );
@@ -406,8 +424,10 @@ export function AvatarWithIcon({
   size = 32,
   fallback,
   icon,
-  iconBgColor = "var(--ds-blue-600)",
-  iconColor = "white",
+  // Geist's custom-icon badge (icon `data-background`) is a page-bg circle
+  // (white / #0A0A0A dark) carrying a gray-900 icon — not a coloured fill.
+  iconBgColor = "hsl(var(--color-surface))",
+  iconColor = "var(--ds-gray-900)",
   gradient,
   badgeSize: customBadgeSize,
 }: AvatarWithIconProps) {
