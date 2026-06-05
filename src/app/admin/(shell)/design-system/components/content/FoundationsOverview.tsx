@@ -180,17 +180,31 @@ function ComponentsPreview() {
   // Real DS primitives (the card's overlay link + `inert` wrapper keep them
   // decorative). Mirrors Geist's "Components" card, which also composes its
   // real Snippet / Button / Switch / Input.
+  // Geist mutes this preview to gray-700 (text-gray-700 / --themed-fg:
+  // gray-700) so it reads as a faded showcase. Mute the snippet text via a
+  // coloured node (Snippet hardcodes its color inline) and both buttons via
+  // customColors (= Geist's themed secondary, gray-700 on a gray-400 ring).
+  const muted = {
+    fg: "var(--ds-gray-700)",
+    bg: "hsl(var(--color-surface))",
+    border: "var(--ds-gray-400)",
+  };
+
   return (
     <div className="flex flex-wrap gap-4">
       <div className="w-[214px] md:w-[246px]">
-        <Snippet text="npx create-next-app" width="100%" />
+        <Snippet
+          text={<span className="text-[color:var(--ds-gray-700)]">$ npx create-next-app</span>}
+          copyText="npx create-next-app"
+          width="100%"
+        />
       </div>
 
-      <Button variant="secondary" prefixIcon={<UserPlus size={16} />}>
+      <Button customColors={muted} prefixIcon={<UserPlus size={16} />}>
         Collaborate
       </Button>
 
-      <Button variant="secondary" shape="square" aria-label="Shield">
+      <Button customColors={muted} shape="square" aria-label="Shield">
         <Shield size={16} />
       </Button>
 
