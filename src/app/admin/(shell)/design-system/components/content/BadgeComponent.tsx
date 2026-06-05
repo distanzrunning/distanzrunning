@@ -363,8 +363,11 @@ export function Component() {
         <Badge variant="teal">Teal</Badge>
         <Badge variant="teal-subtle">Teal Subtle</Badge>
       </div>
-      <div>
+      <div className="flex gap-1">
         <Badge variant="inverted">Inverted</Badge>
+        {/* Gradient badges are styled per-instance via className */}
+        <Badge variant="gray" className="bg-[linear-gradient(135deg,#0070F3,#F81CE5)]">Trial</Badge>
+        <Badge variant="gray" className="bg-[linear-gradient(135deg,#FF1E56,#0096FF)]">Turborepo</Badge>
       </div>
     </div>
   );
@@ -486,8 +489,22 @@ export default function BadgeComponent() {
               <Badge variant="teal">Teal</Badge>
               <Badge variant="teal-subtle">Teal Subtle</Badge>
             </div>
-            <div>
+            <div className="flex gap-1">
               <Badge variant="inverted">Inverted</Badge>
+              {/* Gradient badges — Geist styles these per-instance via
+                  className (a gradient background-image over a solid base). */}
+              <Badge
+                variant="gray"
+                className="bg-[linear-gradient(135deg,#0070F3,#F81CE5)]"
+              >
+                Trial
+              </Badge>
+              <Badge
+                variant="gray"
+                className="bg-[linear-gradient(135deg,#FF1E56,#0096FF)]"
+              >
+                Turborepo
+              </Badge>
             </div>
           </div>
         </CodePreview>
