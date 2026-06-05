@@ -548,6 +548,38 @@ export function Component() {
   );
 }`;
 
+const disabledVariantsCode = `import { Button } from '@/components/ui/Button';
+
+export function Component() {
+  return (
+    <div className="flex flex-col md:flex-row items-start gap-4">
+      <Button disabled>Default</Button>
+      <Button disabled variant="secondary">Secondary</Button>
+      <Button disabled variant="tertiary">Tertiary</Button>
+      <Button disabled variant="error">Error</Button>
+      <Button disabled variant="warning">Warning</Button>
+    </div>
+  );
+}`;
+
+const customCode = `import { Button } from '@/components/ui/Button';
+
+export function Component() {
+  return (
+    <Button
+      customColors={{
+        fg: '#fff',
+        bg: 'var(--ds-blue-700)',
+        border: 'var(--ds-blue-700)',
+        bgHover: '#0B7BFE',
+      }}
+      className="min-w-[160px] max-w-[160px]"
+    >
+      Upgrade to Pro
+    </Button>
+  );
+}`;
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -893,6 +925,32 @@ export default function ButtonComponentNew() {
         </div>
       </Section>
 
+      {/* Disabled variants Section */}
+      <Section>
+        <SectionHeader id="disabled-variants" onCopyLink={showToast}>
+          Disabled variants
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={disabledVariantsCode}>
+            <div className="flex flex-col md:flex-row items-start gap-4 flex-initial">
+              <Button disabled>Default</Button>
+              <Button disabled variant="secondary">
+                Secondary
+              </Button>
+              <Button disabled variant="tertiary">
+                Tertiary
+              </Button>
+              <Button disabled variant="error">
+                Error
+              </Button>
+              <Button disabled variant="warning">
+                Warning
+              </Button>
+            </div>
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* Link Section */}
       <Section>
         <SectionHeader id="link" onCopyLink={showToast}>
@@ -914,6 +972,38 @@ export default function ButtonComponentNew() {
             <ButtonLink className="w-fit" href="#">
               Sign Up
             </ButtonLink>
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Custom Section */}
+      <Section>
+        <SectionHeader id="custom" onCopyLink={showToast}>
+          Custom
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
+          Pass{" "}
+          <code className="inline-code">
+            customColors
+          </code>{" "}
+          to override foreground, background, and border across normal, hover,
+          and active states.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={customCode}>
+            <div className="flex flex-col md:flex-row items-start gap-4 flex-initial">
+              <Button
+                customColors={{
+                  fg: "#fff",
+                  bg: "var(--ds-blue-700)",
+                  border: "var(--ds-blue-700)",
+                  bgHover: "#0B7BFE",
+                }}
+                className="min-w-[160px] max-w-[160px]"
+              >
+                Upgrade to Pro
+              </Button>
+            </div>
           </CodePreview>
         </div>
       </Section>
