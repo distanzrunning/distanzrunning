@@ -238,8 +238,11 @@ const getVariantClasses = (
 
   switch (variant) {
     case "default":
+      // Geist primary fg is --ds-background-100 (pure #fff light / #0A0A0A
+      // dark — flips with the theme), NOT textInverted (gray-200/gray-100),
+      // which read as a greyish off-white on the dark fill.
       return `
-        bg-[var(--ds-gray-1000)] text-textInverted
+        bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]
         hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),white_15%)]
         dark:hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),black_15%)]
       `;
