@@ -210,18 +210,20 @@ export default function Typography() {
         </p>
 
         <p className="text-copy-16 text-textSubtle mb-6">
-          The{" "}
+          To use the <strong>Subtle</strong> and <strong>Strong</strong>{" "}
+          modifiers, nest a{" "}
           <code className="inline-code">
             strong
           </code>{" "}
-          element can be used as a modifier to change the font weight. For
-          Headings, this reduces the weight (for creating subtle variants),
-          while for Copy text it increases the weight for emphasis.
+          element inside a typography class. In Headings it creates a Subtle
+          variant (muted <code className="inline-code">gray-900</code>, lighter
+          weight); in Copy and Label it creates a Strong variant (
+          <code className="inline-code">gray-1000</code>, heavier weight).
         </p>
 
         <CodeBlock language="html">
-          {`<p className="text-heading-32 font-serif">
-  Heading with <strong>subtle</strong> text
+          {`<p className="text-copy-16">
+  Copy 16 <strong>with Strong</strong>
 </p>`}
         </CodeBlock>
       </Section>
