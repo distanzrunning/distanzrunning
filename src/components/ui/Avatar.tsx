@@ -296,6 +296,8 @@ export function AvatarGroup({
               fontSize: 10,
               lineHeight: "12px",
               fontWeight: 600,
+              // Geist scales the note 1% to cover the slot edge cleanly.
+              transform: "scale(1.01)",
             }}
           >
             +{remainingCount}
@@ -450,6 +452,9 @@ export function AvatarWithIcon({
           height: badgeSize,
           backgroundColor: iconBgColor,
           color: iconColor,
+          // Geist extends the badge circle 1px in its own bg colour so it
+          // punches cleanly over the avatar edge (the `border: 1px solid #fff`).
+          boxShadow: `0 0 0 1px ${iconBgColor}`,
           bottom: -5,
           left: -3,
         }}
