@@ -170,7 +170,10 @@ export function Avatar({
       style={{
         width: size,
         height: size,
-        backgroundColor: bgColor || "var(--ds-gray-300)",
+        // Geist letter avatars sit on accents-6 (mid-gray ≈ gray-700); other
+        // states keep the lighter gray-300 shell. transition matches Geist.
+        backgroundColor: bgColor || (initials ? "var(--ds-gray-700)" : "var(--ds-gray-300)"),
+        transition: "background 0.2s",
       }}
     >
       {!showFallback ? (
@@ -191,8 +194,9 @@ export function Avatar({
       ) : fallback ? (
         <span
           aria-hidden="true"
-          className="font-medium text-textSubtle"
-          style={{ fontSize }}
+          className="font-medium"
+          // Geist initials: white at 50% opacity over the mid-gray fill.
+          style={{ fontSize, color: "#fff", opacity: 0.5 }}
         >
           {initials}
         </span>
