@@ -90,24 +90,24 @@ const variantStyles: Record<BadgeVariant, string> = {
   "teal-subtle": "bg-[var(--ds-teal-300)] text-[var(--ds-teal-900)]",
 };
 
-// Geist sizing: sm 11/20/6px, md 12/24/10px, lg 14/32/12px; icon gaps
-// 3/4/6px. (text-sm in our config is 12px, so lg uses explicit 14px.)
+// Geist sizing: sm 11/h-5/px-1.5/gap-1/0.2px, md 12/h-6/px-3/gap-1, lg
+// 14/h-8/px-3/gap-1.5. Icons: sm 12px, md 14px (tucked -ml-0.5), lg 16px.
 const sizeStyles: Record<BadgeSize, string> = {
-  sm: "h-5 px-1.5 text-[11px] tracking-[0.2px] gap-[3px]",
-  md: "h-6 px-2.5 text-[12px] gap-1",
+  sm: "h-5 px-1.5 text-[11px] tracking-[0.2px] gap-1",
+  md: "h-6 px-3 text-[12px] gap-1",
   lg: "h-8 px-3 text-[14px] gap-1.5",
 };
 
-// Pill uses slightly tighter horizontal padding (Geist: sm 6 / md 8 / lg 10).
+// Geist's pill uses the same padding as the badge (not tighter).
 const pillSizeStyles: Record<BadgeSize, string> = {
-  sm: "h-5 px-1.5 text-[11px] tracking-[0.2px] gap-[3px]",
-  md: "h-6 px-2 text-[12px] gap-1",
-  lg: "h-8 px-2.5 text-[14px] gap-1.5",
+  sm: "h-5 px-1.5 text-[11px] tracking-[0.2px] gap-1",
+  md: "h-6 px-3 text-[12px] gap-1",
+  lg: "h-8 px-3 text-[14px] gap-1.5",
 };
 
 const iconSizeStyles: Record<BadgeSize, string> = {
-  sm: "w-[11px] h-[11px] [&>svg]:w-full [&>svg]:h-full",
-  md: "w-3.5 h-3.5 [&>svg]:w-full [&>svg]:h-full",
+  sm: "w-3 h-3 [&>svg]:w-full [&>svg]:h-full",
+  md: "w-3.5 h-3.5 -ml-0.5 [&>svg]:w-full [&>svg]:h-full",
   lg: "w-4 h-4 [&>svg]:w-full [&>svg]:h-full",
 };
 
@@ -133,7 +133,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         title={title}
         aria-label={title}
         className={`
-          inline-flex items-center justify-center rounded-full font-medium whitespace-nowrap
+          inline-flex shrink-0 items-center justify-center rounded-full font-medium whitespace-nowrap tabular-nums
           ${variantStyles[variant]}
           ${sizeStyles[size]}
           ${className}
@@ -169,11 +169,13 @@ export const BadgePill = forwardRef<
   HTMLAnchorElement | HTMLButtonElement,
   BadgePillProps
 >(({ children, size = "md", icon, href, onClick, className = "" }, ref) => {
+  // Geist pill: surface fill, gray-1000 text, a gray-alpha-400 INSET ring
+  // (not a solid border), hover → gray-200. It's a link, so no underline.
   const pillStyles = `
-    inline-flex items-center justify-center rounded-full font-medium whitespace-nowrap
-    bg-surface text-textDefault
-    border border-borderDefault
-    hover:bg-[var(--ds-gray-200)] hover:border-borderDefaultHover
+    inline-flex shrink-0 items-center justify-center rounded-full font-medium whitespace-nowrap tabular-nums
+    bg-surface text-textDefault no-underline
+    ring-1 ring-inset ring-[var(--ds-gray-alpha-400)]
+    hover:bg-[var(--ds-gray-200)]
     transition-colors cursor-pointer
     ${pillSizeStyles[size]}
     ${className}

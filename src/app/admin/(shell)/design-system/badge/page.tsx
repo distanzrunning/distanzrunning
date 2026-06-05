@@ -10,7 +10,7 @@ export default function BadgePage() {
     <ContentWithTOC
       tocTitle="On this page"
       pageTitle="Badge"
-      pageSubtitle="Badges are used to highlight important information or status."
+      pageSubtitle="A label that emphasizes an element that requires attention, or helps categorize with other similar elements."
       mainSectionId="badge"
       headerRight={<RegistryInstallButtons slug="badge" />}
     >
