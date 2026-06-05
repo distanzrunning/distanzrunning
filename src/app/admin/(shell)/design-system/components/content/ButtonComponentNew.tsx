@@ -429,7 +429,7 @@ export function Component() {
   return (
     <div className="flex flex-col gap-4 w-full">
       {/* Default variant - Square and Circle */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start gap-4">
         <Button shape="square" size="tiny" aria-label="Upload"><UploadIcon /></Button>
         <Button shape="square" size="small" aria-label="Upload"><UploadIcon /></Button>
         <Button shape="square" aria-label="Upload"><UploadIcon /></Button>
@@ -440,7 +440,7 @@ export function Component() {
         <Button shape="circle" size="large" aria-label="Upload"><UploadIcon /></Button>
       </div>
       {/* Secondary variant - Square and Circle */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start gap-4">
         <Button shape="square" size="tiny" variant="secondary" aria-label="Upload"><UploadIcon /></Button>
         <Button shape="square" size="small" variant="secondary" aria-label="Upload"><UploadIcon /></Button>
         <Button shape="square" variant="secondary" aria-label="Upload"><UploadIcon /></Button>
@@ -451,7 +451,7 @@ export function Component() {
         <Button shape="circle" size="large" variant="secondary" aria-label="Upload"><UploadIcon /></Button>
       </div>
       {/* Tertiary variant - Square and Circle */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start gap-4">
         <Button shape="square" size="tiny" variant="tertiary" aria-label="Upload"><UploadIcon /></Button>
         <Button shape="square" size="small" variant="tertiary" aria-label="Upload"><UploadIcon /></Button>
         <Button shape="square" variant="tertiary" aria-label="Upload"><UploadIcon /></Button>
@@ -520,7 +520,7 @@ const loadingCode = `import { Button } from '@/components/ui/Button';
 
 export function Component() {
   return (
-    <div className="flex flex-col md:flex-row items-start justify-between gap-4 flex-initial">
+    <div className="flex flex-col md:flex-row items-start gap-4 flex-initial">
       <Button loading size="small">Upload</Button>
       <Button loading>Upload</Button>
       <Button loading size="large">Upload</Button>
@@ -532,7 +532,7 @@ const disabledCode = `import { Button } from '@/components/ui/Button';
 
 export function Component() {
   return (
-    <div className="flex flex-col md:flex-row items-start justify-between gap-4 flex-initial">
+    <div className="flex flex-col md:flex-row items-start gap-4 flex-initial">
       <Button disabled size="small">Upload</Button>
       <Button disabled>Upload</Button>
       <Button disabled size="large">Upload</Button>
@@ -573,7 +573,7 @@ export default function ButtonComponentNew() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={sizesCode}>
-            <div className="flex flex-col md:flex-row items-start justify-between gap-4 flex-initial">
+            <div className="flex flex-col md:flex-row items-start gap-4 flex-initial">
               <Button size="small">Upload</Button>
               <Button>Upload</Button>
               <Button size="large">Upload</Button>
@@ -654,7 +654,7 @@ export default function ButtonComponentNew() {
           <CodePreview componentCode={shapesCode}>
             <div className="flex flex-col gap-4 w-full">
               {/* Default variant - Square and Circle */}
-              <div className="flex items-center justify-between">
+              <div className="flex items-start gap-4">
                 <Button shape="square" size="tiny" aria-label="Upload">
                   <UploadIcon />
                 </Button>
@@ -681,7 +681,7 @@ export default function ButtonComponentNew() {
                 </Button>
               </div>
               {/* Secondary variant - Square and Circle */}
-              <div className="flex items-center justify-between">
+              <div className="flex items-start gap-4">
                 <Button
                   shape="square"
                   size="tiny"
@@ -738,7 +738,7 @@ export default function ButtonComponentNew() {
                 </Button>
               </div>
               {/* Tertiary variant - Square and Circle */}
-              <div className="flex items-center justify-between">
+              <div className="flex items-start gap-4">
                 <Button
                   shape="square"
                   size="tiny"
@@ -806,7 +806,7 @@ export default function ButtonComponentNew() {
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={prefixSuffixCode}>
-            <div className="flex flex-col md:flex-row items-start justify-between gap-4 flex-initial">
+            <div className="flex flex-col md:flex-row items-start gap-4 flex-initial">
               <Button prefixIcon={<ArrowLeftIcon />}>Upload</Button>
               <Button suffixIcon={<ArrowRightIcon />}>Upload</Button>
               <Button
@@ -838,7 +838,7 @@ export default function ButtonComponentNew() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={roundedCode}>
-            <div className="flex flex-col md:flex-row items-start justify-between gap-4 flex-initial">
+            <div className="flex flex-col md:flex-row items-start gap-4 flex-initial">
               <Button shape="rounded" shadow variant="secondary" size="small">
                 Upload
               </Button>
@@ -860,7 +860,7 @@ export default function ButtonComponentNew() {
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={loadingCode}>
-            <div className="flex flex-col md:flex-row items-start justify-between gap-4 flex-initial">
+            <div className="flex flex-col md:flex-row items-start gap-4 flex-initial">
               <Button loading size="small">
                 Upload
               </Button>
@@ -880,7 +880,7 @@ export default function ButtonComponentNew() {
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={disabledCode}>
-            <div className="flex flex-col md:flex-row items-start justify-between gap-4 flex-initial">
+            <div className="flex flex-col md:flex-row items-start gap-4 flex-initial">
               <Button disabled size="small">
                 Upload
               </Button>
