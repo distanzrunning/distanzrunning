@@ -117,12 +117,13 @@ export function Avatar({
   const [imageError, setImageError] = useState(false);
 
   // Show shimmer placeholder when no src and placeholder is true (without
-  // custom icon). Geist's loading shell shimmers gray-100 → gray-200 and
-  // still carries the avatar's gray-alpha-400 hairline ring.
+  // custom icon). Geist's loading shell shimmers gray-100 → gray-200 with no
+  // visible ring — the shimmer is the whole visual (the hairline ring is
+  // reserved for resolved avatars; matching Geist's live render).
   if (placeholder && !placeholderIcon && !fallback && !src) {
     return (
       <div
-        className="relative rounded-full overflow-hidden flex-shrink-0 animate-shimmer"
+        className="rounded-full overflow-hidden flex-shrink-0 animate-shimmer"
         style={{
           width: size,
           height: size,
@@ -130,9 +131,7 @@ export function Avatar({
             "linear-gradient(90deg, var(--ds-gray-100) 0%, var(--ds-gray-200) 50%, var(--ds-gray-100) 100%)",
           backgroundSize: "200% 100%",
         }}
-      >
-        <AvatarRing />
-      </div>
+      />
     );
   }
 
