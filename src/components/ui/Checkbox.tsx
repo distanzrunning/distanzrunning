@@ -110,6 +110,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               checkbox-icon
               relative flex items-center justify-center
               w-4 h-4 rounded-[4px] border border-solid
+              rotate-[0.000001deg]
               ${getBoxClasses()}
               ${!disabled && !isActive ? "group-hover/checkbox:bg-[var(--ds-gray-200)] peer-focus-visible:bg-[var(--ds-gray-200)]" : ""}
               ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]"}
