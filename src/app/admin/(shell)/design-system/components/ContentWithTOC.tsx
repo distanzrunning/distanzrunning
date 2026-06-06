@@ -453,12 +453,23 @@ export default function ContentWithTOC({
             <GridCell style={{ margin: 0, overflow: "visible" }}>
               <div className="flex items-end justify-between gap-4">
                 <div className="min-w-0 flex-1">
-                  <h1
-                    id={mainSectionId}
-                    className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault mb-3"
-                  >
-                    {pageTitle}
-                  </h1>
+                  {/* Title + the component's atomic-type badge, inline. */}
+                  <div className="mb-3 flex flex-wrap items-center gap-3">
+                    <h1
+                      id={mainSectionId}
+                      className="text-[24px] md:text-[40px] leading-[1.2] font-semibold text-textDefault"
+                    >
+                      {pageTitle}
+                    </h1>
+                    {(() => {
+                      const autoType = mainSectionId
+                        ? componentTypeBySlug[mainSectionId]
+                        : undefined;
+                      return autoType ? (
+                        <ComponentTypeBadge type={autoType} />
+                      ) : null;
+                    })()}
+                  </div>
                   {pageSubtitle && (
                     <p
                       className="text-[16px] md:text-[20px] text-textSubtle"
@@ -468,19 +479,10 @@ export default function ContentWithTOC({
                     </p>
                   )}
                 </div>
-                {(() => {
-                  // Component pages auto-render their atomic-type badge from
-                  // the slug; an explicit headerRight (rare) still wins.
-                  const autoType = mainSectionId
-                    ? componentTypeBySlug[mainSectionId]
-                    : undefined;
-                  const right =
-                    headerRight ??
-                    (autoType ? <ComponentTypeBadge type={autoType} /> : null);
-                  return right ? (
-                    <div className="flex-shrink-0">{right}</div>
-                  ) : null;
-                })()}
+                {/* Explicit override (rare) stays on the right. */}
+                {headerRight && (
+                  <div className="flex-shrink-0">{headerRight}</div>
+                )}
               </div>
             </GridCell>
           </Grid>

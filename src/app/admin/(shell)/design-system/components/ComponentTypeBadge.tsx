@@ -15,7 +15,7 @@ const TYPE_VARIANT: Record<ComponentType, BadgeVariant> = {
  */
 export function ComponentTypeBadge({ type }: { type: ComponentType }) {
   return (
-    <Badge variant={TYPE_VARIANT[type]} size="sm">
+    <Badge variant={TYPE_VARIANT[type]} size="lg">
       {type}
     </Badge>
   );
