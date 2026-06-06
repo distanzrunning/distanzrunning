@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import ContentWithTOC from "../components/ContentWithTOC";
 import ButtonComponentNew from "../components/content/ButtonComponentNew";
-import { RegistryInstallButtons } from "../components/RegistryInstallButtons";
 
 export const metadata: Metadata = { title: "Button" };
 
@@ -12,7 +11,6 @@ export default function ButtonPage() {
       pageTitle="Button"
       pageSubtitle="Trigger an action or event, such as submitting a form or displaying a dialog."
       mainSectionId="button"
-      headerRight={<RegistryInstallButtons slug="button" />}
     >
       <ButtonComponentNew />
     </ContentWithTOC>

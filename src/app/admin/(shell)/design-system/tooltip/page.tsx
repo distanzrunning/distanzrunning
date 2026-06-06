@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import ContentWithTOC from "../components/ContentWithTOC";
 import TooltipComponent from "../components/content/TooltipComponent";
-import { RegistryInstallButtons } from "../components/RegistryInstallButtons";
 
 export const metadata: Metadata = { title: "Tooltip" };
 

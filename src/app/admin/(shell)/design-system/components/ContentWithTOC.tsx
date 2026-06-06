@@ -10,6 +10,8 @@ import {
 } from "react";
 import PagePagination from "./PagePagination";
 import { Grid, GridCell } from "@/components/ui/Grid";
+import { componentTypeBySlug } from "./DesignSystemSidebar";
+import { ComponentTypeBadge } from "./ComponentTypeBadge";
 
 // Context to allow sections to break out of padding
 const SectionContext = createContext<boolean>(false);
@@ -466,9 +468,19 @@ export default function ContentWithTOC({
                     </p>
                   )}
                 </div>
-                {headerRight && (
-                  <div className="flex-shrink-0">{headerRight}</div>
-                )}
+                {(() => {
+                  // Component pages auto-render their atomic-type badge from
+                  // the slug; an explicit headerRight (rare) still wins.
+                  const autoType = mainSectionId
+                    ? componentTypeBySlug[mainSectionId]
+                    : undefined;
+                  const right =
+                    headerRight ??
+                    (autoType ? <ComponentTypeBadge type={autoType} /> : null);
+                  return right ? (
+                    <div className="flex-shrink-0">{right}</div>
+                  ) : null;
+                })()}
               </div>
             </GridCell>
           </Grid>

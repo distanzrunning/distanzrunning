@@ -33,7 +33,13 @@ output**, not byte-identical class strings.
    anti-alias fix). Keep ours when it's equal-or-better and less fragile
    (e.g. explicit transition lists, `group-hover` over `peer-hover`).
 3. **No Props tables** on any DS page.
-4. **`RegistryInstallButtons` only when published** to the `@distanz` registry.
+4. **No registry install buttons for now.** Each component page shows an
+   atomic-**type badge** (Atom / Molecule / Organism) in its header instead,
+   auto-rendered from the slug via `componentTypeBySlug` in `ContentWithTOC`.
+   Re-enable the `npx` install buttons per component in Phase 4.
+7. **Sidebar is one flat, alphabetical "Components" section** (atoms/molecules/
+   organisms merged). Keep `DesignSystemSidebar.tsx`'s `components` list sorted
+   by label; each item carries a `type` that feeds the page badge.
 5. **Two axes, both required:** token/value parity *and* markup-structure parity.
    Same tokens ≠ verbatim component (cf. the Button chevron-gap, a structural,
    not token, divergence).
@@ -88,7 +94,10 @@ As each component stabilises, publish `/r/<slug>.json` and re-enable its
 
 ## Component checklist
 
-Order = sidebar. ✅ verbatim-aligned this effort · 🟡 partially touched · ☐ pending.
+Sidebar is now a single flat **Components** list (alphabetical); the Atom/
+Molecule/Organism split below is kept only for *tracking* + the page badge.
+**Footer** and **Page Frame** DS pages were removed (the underlying
+`Footer.tsx` / `PageFrame.tsx` components stay). ✅ aligned · 🟡 touched · ☐ pending.
 
 ### Foundations / system
 - ✅ Colours (two-layer HSL→OKLCH tokens)
@@ -119,12 +128,10 @@ Order = sidebar. ✅ verbatim-aligned this effort · 🟡 partially touched · �
 
 ### Organisms
 - ☐ Command Menu · ☐ Consent Banner · ☐ Context Menu · ☐ Destructive Action Modal
-- 🟡 Drawer (token refs updated) · 🟡 Feedback (focus-border dedup) · 🟡 Footer
+- 🟡 Drawer (token refs updated) · 🟡 Feedback (focus-border dedup)
 - ☐ Login · ☐ Menu · ☐ Modal · ☐ Newsletter Modal · ☐ Newsletter Signup
 - ☐ Project Banner · ☐ Sheet · ☐ Site Header · ☐ Table · ☐ Toast
-
-### Templates
-- 🟡 Page Frame (uses our grid — verify)
+- ~~Footer~~, ~~Page Frame~~ — DS pages removed (components themselves stay)
 
 ### New components to add (Geist has, we lack) — add as encountered
 - ✅ Banner · ☐ Book · …(log others as the audit surfaces them)
