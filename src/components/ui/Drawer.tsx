@@ -122,7 +122,7 @@ const DRAWER_CSS = `
     justify-content: flex-start;
     gap: var(--ds-space-2x);
     flex: 0 1 auto;
-    padding: var(--ds-space-12x);
+    padding: var(--ds-space-large);
   }
 
   .ds-drawer-title {
