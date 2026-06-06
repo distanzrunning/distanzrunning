@@ -1,5 +1,12 @@
-import { Badge } from "@/components/ui/Badge";
+import { Badge, type BadgeVariant } from "@/components/ui/Badge";
 import type { ComponentType } from "./DesignSystemSidebar";
+
+/** A distinct subtle hue per atomic tier (smallest → largest). */
+const TYPE_VARIANT: Record<ComponentType, BadgeVariant> = {
+  Atom: "blue-subtle",
+  Molecule: "purple-subtle",
+  Organism: "amber-subtle",
+};
 
 /**
  * The atomic-design classification badge shown in a component page's header.
@@ -8,7 +15,7 @@ import type { ComponentType } from "./DesignSystemSidebar";
  */
 export function ComponentTypeBadge({ type }: { type: ComponentType }) {
   return (
-    <Badge variant="gray-subtle" size="sm">
+    <Badge variant={TYPE_VARIANT[type]} size="sm">
       {type}
     </Badge>
   );

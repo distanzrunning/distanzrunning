@@ -131,7 +131,12 @@ Molecule/Organism split below is kept only for *tracking* + the page badge.
 - 🟡 Drawer (token refs updated) · 🟡 Feedback (focus-border dedup)
 - ☐ Login · ☐ Menu · ☐ Modal · ☐ Newsletter Modal · ☐ Newsletter Signup
 - ☐ Project Banner · ☐ Sheet · ☐ Site Header · ☐ Table · ☐ Toast
-- ~~Footer~~, ~~Page Frame~~ — DS pages removed (components themselves stay)
+- ~~Footer~~, ~~Page Frame~~, ~~Article Card~~, ~~Newsletter Modal~~,
+  ~~Newsletter Signup~~, ~~Race Card~~, ~~Site Header~~ — DS pages removed
+  (the underlying components themselves stay)
+
+Type badge hues: **Atom** = blue-subtle · **Molecule** = purple-subtle ·
+**Organism** = amber-subtle.
 
 ### New components to add (Geist has, we lack) — add as encountered
 - ✅ Banner · ☐ Book · …(log others as the audit surfaces them)

@@ -64,7 +64,6 @@ export const navigation: NavSection[] = [
     items: [
       { id: "accordion", label: "Accordion", type: "Molecule" },
       { id: "ad-slot", label: "Ad Slot", type: "Molecule" },
-      { id: "article-card", label: "Article Card", type: "Molecule" },
       { id: "avatar", label: "Avatar", type: "Atom" },
       { id: "badge", label: "Badge", type: "Atom" },
       { id: "banner", label: "Banner", type: "Molecule" },
@@ -103,8 +102,6 @@ export const navigation: NavSection[] = [
       { id: "menu", label: "Menu", type: "Organism" },
       { id: "modal", label: "Modal", type: "Organism" },
       { id: "multi-select", label: "Multi Select", type: "Molecule" },
-      { id: "newsletter-modal", label: "Newsletter Modal", type: "Organism" },
-      { id: "newsletter-signup", label: "Newsletter Signup", type: "Organism" },
       { id: "note", label: "Note", type: "Molecule" },
       { id: "number-ticker", label: "Number Ticker", type: "Atom" },
       { id: "pagination", label: "Pagination", type: "Molecule" },
@@ -112,7 +109,6 @@ export const navigation: NavSection[] = [
       { id: "phone", label: "Phone", type: "Molecule" },
       { id: "progress", label: "Progress", type: "Atom" },
       { id: "project-banner", label: "Project Banner", type: "Organism" },
-      { id: "race-card", label: "Race Card", type: "Molecule" },
       { id: "radio", label: "Radio", type: "Atom" },
       {
         id: "relative-time-card",
@@ -124,7 +120,6 @@ export const navigation: NavSection[] = [
       { id: "select", label: "Select", type: "Molecule" },
       { id: "sheet", label: "Sheet", type: "Organism" },
       { id: "show-more", label: "Show More", type: "Atom" },
-      { id: "site-header", label: "Site Header", type: "Organism" },
       { id: "skeleton", label: "Skeleton", type: "Atom" },
       { id: "slider", label: "Slider", type: "Molecule" },
       { id: "snippet", label: "Snippet", type: "Molecule" },
