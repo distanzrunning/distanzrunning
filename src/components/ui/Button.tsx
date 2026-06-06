@@ -482,6 +482,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       shadow = false,
       customColors,
       className = "",
+      style: styleProp,
       ...props
     },
     ref,
@@ -520,6 +521,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
           {
             "--ds-icon-size": iconSize,
             ...(customColors ? getCustomColorStyle(customColors) : null),
+            ...styleProp,
           } as React.CSSProperties
         }
         {...props}

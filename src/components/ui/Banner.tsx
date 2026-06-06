@@ -43,14 +43,19 @@ export function Banner({
 
   return (
     <div className={`w-full ${className}`}>
-      {/* Mobile: the entire message is one pill button */}
+      {/* Mobile: the entire message is one pill button.
+          - boxShadow → Geist's raised `shadow-border-small` (the secondary
+            variant's flat gray-400 ring is overridden here; inline wins).
+          - !gap-0 → Geist's 6px text↔chevron (our flex gap would otherwise
+            stack on the content padding and double it to 12px). */}
       <ButtonLink
         href={href}
         variant="secondary"
         size="small"
         shape="rounded"
         suffixIcon={arrow}
-        className="!mx-auto !w-fit lg:!hidden"
+        className="!mx-auto !w-fit !gap-0 lg:!hidden"
+        style={{ boxShadow: "var(--ds-shadow-border-small)" }}
       >
         {children}
       </ButtonLink>
@@ -64,7 +69,8 @@ export function Banner({
           size="small"
           shape="rounded"
           suffixIcon={arrow}
-          className="shrink-0"
+          className="shrink-0 !gap-0"
+          style={{ boxShadow: "var(--ds-shadow-border-small)" }}
         >
           {actionLabel}
         </ButtonLink>
