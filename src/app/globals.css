@@ -1,6 +1,22 @@
-/* src/app/globals.css */
-@import "@progress/kendo-theme-default/dist/all.css";
+/* ===========================================================================
+   globals.css — app-wide stylesheet (Geist-style cascade)
+   ---------------------------------------------------------------------------
+   Layer order (lowest → highest precedence), mirroring Geist's structure:
 
+     1. @tailwind base / components / utilities   — Tailwind's own layers
+     2. top-level keyframes + ::selection         — global primitives
+     3. @layer base       — resets + the DESIGN TOKENS
+                              (@import ../registry/styles/distanz-tokens.css:
+                              the single source of truth, shipped to the
+                              @distanz registry; HSL base + OKLCH-P3)
+     4. @layer components — hand-rolled component CSS (.ds-*). Geist is
+                              utility-first; these are being folded into
+                              inline Tailwind component-by-component (plan B).
+     5. @layer utilities  — project utility classes
+
+   Rule of thumb: colours/spacing/shadows/radii/focus/motion come from the
+   token layer (--ds-*); never hardcode a hex/rgba when a token exists.
+   =========================================================================== */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -90,8 +106,6 @@
 .animate-shimmer {
   animation: shimmer 5s ease-in-out infinite;
 }
-
-@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0");
 
 @layer base {
   /* Reserve the scrollbar gutter on <html> so the page width

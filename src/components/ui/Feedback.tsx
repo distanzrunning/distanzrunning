@@ -1409,7 +1409,7 @@ function FeedbackWithSelectFormStyles() {
         }
       }
       .feedback-select-wrapper:focus-within {
-        box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+        box-shadow: var(--ds-focus-border);
       }
       .feedback-select {
         display: flex;
@@ -1462,7 +1462,7 @@ function FeedbackWithSelectFormStyles() {
         }
       }
       .feedback-textarea-wrapper:focus-within {
-        box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+        box-shadow: var(--ds-focus-border);
       }
       .feedback-textarea-wrapper textarea::placeholder,
       .feedback-textarea-wrapper input::placeholder {
@@ -1871,7 +1871,7 @@ export function Feedback({
           }
         }
         .feedback-textarea-wrapper:focus-within {
-          box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+          box-shadow: var(--ds-focus-border);
         }
         .feedback-textarea-wrapper textarea::placeholder {
           color: hsl(var(--color-textSubtler));
