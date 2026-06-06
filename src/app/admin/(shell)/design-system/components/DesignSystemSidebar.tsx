@@ -82,6 +82,7 @@ export const navigation: NavSection[] = [
       { id: "accordion", label: "Accordion" },
       { id: "ad-slot", label: "Ad Slot" },
       { id: "article-card", label: "Article Card" },
+      { id: "banner", label: "Banner" },
       { id: "browser", label: "Browser" },
       { id: "calendar", label: "Calendar" },
       { id: "choicebox", label: "Choicebox" },
