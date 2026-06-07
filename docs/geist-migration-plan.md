@@ -73,6 +73,13 @@ Walk the sidebar. Each component: verbatim diff → fix → drop Props → CSS�
 - Props tables: confirm none remain on any DS page.
 - Serif: confirm `font-serif` only on article titles + pull quotes.
 - Hardcoded values: grep for stray hex/rgba/`bg-white`/`neutral-*`; replace with tokens.
+  **Known debt (measured 2026-06-07):** ~88 `bg-white`/`bg-black` + ~270
+  `bg-neutral-*`/`text-neutral-*` + a few raw `bg-[var(--ds-background-*)]` fills,
+  almost all in *feature* components (ElevationChart, RaceMap, DraggableWindow,
+  article/product layouts) built pre-token-system — some still reference the
+  retired brand pink (`ring-pink-500`). Sweep area-by-area, not one regex
+  (watch `dark:` pairings + glass `bg-white/NN`). The semantic tokens
+  (`bg-surface`/`bg-canvas`/`--ds-gray-*`) are the source; this is enforcement.
 - `.ds-*` residue: whatever component CSS couldn't migrate — confirm it's justified
   (keyframes / complex selectors), document why.
 

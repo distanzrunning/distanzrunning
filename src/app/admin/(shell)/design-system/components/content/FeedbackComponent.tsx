@@ -451,7 +451,7 @@ function CenteredDemo() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="h-8 px-3 rounded-md border border-borderDefault bg-[var(--ds-background-100)] text-[14px] text-textDefault hover:bg-[var(--ds-gray-100)]"
+        className="h-8 px-3 rounded-md border border-borderDefault bg-surface text-[14px] text-textDefault hover:bg-[var(--ds-gray-100)]"
       >
         Open centered feedback
       </button>
