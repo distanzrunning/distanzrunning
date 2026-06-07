@@ -1,59 +1,37 @@
 "use client";
 
-import { Fragment } from "react";
-import {
-  useShikiHighlighter,
-  getTokenStyle,
-  type DualThemeToken,
-} from "./useShikiHighlighter";
-
 export interface CodeProps {
   /** The code snippet to render (a string). */
   children: string;
-  /** Shiki language id (default `tsx`). */
+  /**
+   * Language id, applied as a class on the `<pre>` for semantics. Geist's
+   * Code renders monochrome (no per-token colours), so this does not tint
+   * the text — for coloured, copyable output use <CodeBlock>.
+   */
   language?: string;
   className?: string;
 }
 
 /**
- * Code — a bordered, syntax-highlighted snippet. A read-only `<pre><code>`
- * with no chrome (no copy button, filename, or line numbers); for a
- * copyable, titled block use <CodeBlock> instead.
+ * Code — a bordered, monochrome code snippet (read-only `<pre><code>`,
+ * rendered in the foreground colour, no chrome). Matches Geist's Code:
+ * plain text in `--geist-foreground`, not per-token syntax colours. For a
+ * copyable, titled, colour-highlighted block use <CodeBlock>.
  */
-export function Code({ children, language = "tsx", className = "" }: CodeProps) {
-  const code = children.replace(/\n$/, "");
-  const tokenizedLines = useShikiHighlighter(code, language);
-  const lines: DualThemeToken[][] =
-    tokenizedLines ||
-    code.split("\n").map(
-      (line) =>
-        [
-          {
-            content: line,
-            color: "hsl(var(--color-textDefault))",
-            darkColor: "hsl(var(--color-textDefault))",
-          },
-        ] as DualThemeToken[],
-    );
-
+export function Code({
+  children,
+  language = "tsx",
+  className = "",
+}: CodeProps) {
   return (
     <pre
-      className={`touch-pan-y overflow-x-auto whitespace-pre rounded-[5px] border border-[var(--ds-gray-alpha-400)] p-6 ${className}`}
+      className={`touch-pan-y overflow-x-auto whitespace-pre rounded-[5px] border border-[var(--ds-gray-alpha-400)] p-6 ${language} ${className}`}
     >
       <code
         className="block font-mono text-[13px] leading-[20px] text-textDefault"
         style={{ fontFeatureSettings: '"liga" 0' }}
       >
-        {lines.map((lineTokens, i) => (
-          <Fragment key={i}>
-            {lineTokens.map((token, j) => (
-              <span key={j} style={getTokenStyle(token)}>
-                {token.content}
-              </span>
-            ))}
-            {i < lines.length - 1 ? "\n" : null}
-          </Fragment>
-        ))}
+        {children.replace(/\n$/, "")}
       </code>
     </pre>
   );
