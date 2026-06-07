@@ -175,6 +175,8 @@ Columns: 6 at ≥600 px, 12 at ≥960 px.
 
 Prefer these classes over hand-rolling shadows.
 
+Each `material-*` is **Geist-verbatim**: `background: --ds-background-100` + `box-shadow: var(--ds-shadow-border{,-small,-medium,-large} | --ds-shadow-{tooltip,menu,modal,fullscreen})` + `border-radius` — and **no `border`** (the hairline lives *inside* the shadow token). Don't add a `border` to a material (that was the old double-border bug). To put a material on a recessed tone, override only the fill (e.g. `material-small bg-canvas`), as `Browser` does.
+
 ---
 
 ## Iconography

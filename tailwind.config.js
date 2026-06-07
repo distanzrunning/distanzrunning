@@ -1168,55 +1168,52 @@ module.exports = {
     // Based on Vercel's Geist Design System materials
     // ═══════════════════════════════════════════════════════════════════
     function ({ addUtilities }) {
+      // Geist-verbatim: bg-100 + a shadow-border-* token (the hairline lives
+      // INSIDE the shadow, so there is NO separate `border` — adding one is the
+      // double-border bug). Surface = shadow-border{,-small,-medium,-large};
+      // floating = shadow-{tooltip,menu,modal,fullscreen}.
       const materialUtilities = {
         // Surface materials - on the page
         ".material-base": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
+          boxShadow: "var(--ds-shadow-border)",
           borderRadius: "6px",
         },
         ".material-small": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
+          boxShadow: "var(--ds-shadow-border-small)",
           borderRadius: "6px",
-          boxShadow: "var(--ds-shadow-small)",
         },
         ".material-medium": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
+          boxShadow: "var(--ds-shadow-border-medium)",
           borderRadius: "12px",
-          boxShadow: "var(--ds-shadow-medium)",
         },
         ".material-large": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
+          boxShadow: "var(--ds-shadow-border-large)",
           borderRadius: "12px",
-          boxShadow: "var(--ds-shadow-large)",
         },
         // Floating materials - above the page
         ".material-tooltip": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
-          borderRadius: "6px",
           boxShadow: "var(--ds-shadow-tooltip)",
+          borderRadius: "6px",
         },
         ".material-menu": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
-          borderRadius: "12px",
           boxShadow: "var(--ds-shadow-menu)",
+          borderRadius: "12px",
         },
         ".material-modal": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
-          borderRadius: "12px",
           boxShadow: "var(--ds-shadow-modal)",
+          borderRadius: "12px",
         },
         ".material-fullscreen": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
-          borderRadius: "16px",
           boxShadow: "var(--ds-shadow-fullscreen)",
+          borderRadius: "16px",
         },
       };
       addUtilities(materialUtilities);

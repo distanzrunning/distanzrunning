@@ -183,13 +183,10 @@ export const Browser = forwardRef<HTMLDivElement, BrowserProps>(
       // container-type wrapper so the frame's md:rounded-[1.5cqw] (Geist's
       // width-relative corner radius) resolves against the Browser's own width.
       <div ref={ref} className={`[container-type:inline-size] ${className}`}>
-        {/* Geist's `material-small`: bg-canvas (bg-200) + the raised
-            shadow-border-small hairline (no separate 1px border) + 6px radius
-            that grows to 1.5cqw at md. */}
-        <div
-          className="overflow-hidden rounded-md bg-canvas md:rounded-[1.5cqw]"
-          style={{ boxShadow: "var(--ds-shadow-border-small)" }}
-        >
+        {/* Geist-verbatim frame: the `material-small` primitive (now borderless
+            = shadow-border-small + 6px radius) with bg overridden to canvas
+            (bg-200) and the radius growing to 1.5cqw at md. */}
+        <div className="material-small overflow-hidden rounded-md bg-canvas md:rounded-[1.5cqw]">
           <BrowserHeader
             url={url}
             showNavigation={showNavigation}
