@@ -335,7 +335,7 @@ const EXAMPLE_ROWS: { label: string; value: string; mono?: boolean }[] = [
   { label: "Fits as-is", value: "sidebar.tsx" },
 ];
 
-const WIDTH_MIN = 80;
+const WIDTH_MIN = 0;
 const WIDTH_MAX = 600;
 
 function MiddleTruncateDemo() {
@@ -379,20 +379,22 @@ function MiddleTruncateDemo() {
           </div>
         ))}
       </div>
-      <aside className="flex flex-wrap items-center gap-x-6 gap-y-3">
-        <div className="flex items-center gap-3">
-          <span className="text-copy-13 text-textSubtle">Width</span>
-          <div className="min-w-[180px] max-w-xs grow">
-            <Slider
-              min={WIDTH_MIN}
-              max={WIDTH_MAX}
-              value={width}
-              onChange={setWidth}
-            />
+      <aside className="flex flex-col gap-3">
+        <div>
+          <div className="text-copy-13 text-textSubtle mb-2">Width</div>
+          <div className="flex items-center gap-3">
+            <div className="min-w-[180px] max-w-xs grow">
+              <Slider
+                min={WIDTH_MIN}
+                max={WIDTH_MAX}
+                value={width}
+                onChange={setWidth}
+              />
+            </div>
+            <span className="font-mono text-copy-13 text-textSubtle tabular-nums">
+              {width}px
+            </span>
           </div>
-          <span className="font-mono text-copy-13 text-textSubtle tabular-nums">
-            {width}px
-          </span>
         </div>
         <Toggle checked={animate} onChange={setAnimate} label="Animate" />
       </aside>
