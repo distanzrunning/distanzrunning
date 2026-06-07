@@ -468,7 +468,7 @@ function MenuDropdown({
 
 interface MenuButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "tertiary";
   size?: "small" | "default";
   shape?: "square";
   chevron?: boolean;
@@ -530,7 +530,15 @@ export function MenuButton({
         hover:bg-[var(--ds-gray-100)] hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
         dark:hover:bg-[var(--ds-gray-200)] dark:hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
       `
-      : `
+      : variant === "tertiary"
+        ? // Geist tertiary: transparent, gray-1000 ink, gray-alpha-200 hover,
+          // gray-alpha-100 while open (aria-expanded). Used by DotsMenu.
+          `
+        bg-transparent text-[var(--ds-gray-1000)]
+        hover:bg-[var(--ds-gray-alpha-200)]
+        aria-expanded:bg-[var(--ds-gray-alpha-100)]
+      `
+        : `
         bg-[var(--ds-gray-1000)] text-textInverted
         hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),white_15%)]
         dark:hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),black_15%)]

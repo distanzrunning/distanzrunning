@@ -90,6 +90,7 @@ export const navigation: NavSection[] = [
         label: "Destructive Action Modal",
         type: "Organism",
       },
+      { id: "dots-menu", label: "Dots Menu", type: "Molecule" },
       { id: "drawer", label: "Drawer", type: "Organism" },
       { id: "empty-state", label: "Empty State", type: "Molecule" },
       { id: "entity", label: "Entity", type: "Molecule" },
