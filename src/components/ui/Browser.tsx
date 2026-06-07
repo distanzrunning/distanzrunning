@@ -209,7 +209,7 @@ export const Browser = forwardRef<HTMLDivElement, BrowserProps>(
       >
         {/* Geist `material-small` (borderless: shadow-border-small + 6px) with
             the fill overridden to canvas (bg-200) and radius growing at md. */}
-        <div className="material-small overflow-hidden rounded-md bg-canvas md:rounded-[1.5cqw]">
+        <div className="material-small overflow-hidden rounded-md !bg-canvas md:rounded-[1.5cqw]">
           <BrowserHeader
             url={url}
             showNavigation={showNavigation}

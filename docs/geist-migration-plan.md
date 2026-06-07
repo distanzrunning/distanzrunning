@@ -146,7 +146,7 @@ Type badge hues: **Atom** = blue-subtle · **Molecule** = purple-subtle ·
 **Organism** = amber-subtle.
 
 ### New components to add (Geist has, we lack) — add as encountered
-- ✅ Banner · ☐ Book · …(log others as the audit surfaces them)
+- ✅ Banner · ✅ Middle Truncate · ☐ Book · …(log others as surfaced)
 
 ---
 

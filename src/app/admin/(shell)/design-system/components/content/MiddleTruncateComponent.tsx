@@ -1,16 +1,21 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
+import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
-import { Browser } from "@/components/ui/Browser";
+import { MiddleTruncate } from "@/components/ui/MiddleTruncate";
+import { Slider } from "@/components/ui/Slider";
 
-// Toast notification for copy confirmation
+// ============================================================================
+// Toast
+// ============================================================================
+
 function Toast({
   message,
   isVisible,
@@ -38,14 +43,9 @@ function Toast({
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss toast"
-          className="p-1 rounded hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
+          className="p-1 rounded hover:bg-[var(--ds-gray-100)] transition-colors"
         >
-          <svg
-            height="16"
-            strokeLinejoin="round"
-            viewBox="0 0 16 16"
-            width="16"
-          >
+          <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16">
             <path
               fillRule="evenodd"
               clipRule="evenodd"
@@ -59,33 +59,33 @@ function Toast({
   );
 }
 
-// Global toast state management
-let toastTimeout: NodeJS.Timeout | null = null;
-
 function useToast() {
   const [toast, setToast] = useState({ message: "", isVisible: false });
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const showToast = useCallback((message: string) => {
-    if (toastTimeout) {
-      clearTimeout(toastTimeout);
-    }
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
     setToast({ message, isVisible: true });
-    toastTimeout = setTimeout(() => {
+    toastTimeoutRef.current = setTimeout(() => {
       setToast((prev) => ({ ...prev, isVisible: false }));
     }, 2000);
   }, []);
 
   const dismissToast = useCallback(() => {
-    if (toastTimeout) {
-      clearTimeout(toastTimeout);
-    }
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
     setToast((prev) => ({ ...prev, isVisible: false }));
   }, []);
 
   return { toast, showToast, dismissToast };
 }
 
-// Link icon for section headers
+// ============================================================================
+// Section header
+// ============================================================================
+
+const HEADER_HEIGHT = 112;
+const SECTION_PADDING = 48;
+
 function LinkIcon() {
   return (
     <svg
@@ -105,11 +105,6 @@ function LinkIcon() {
   );
 }
 
-// Header height and section padding constants (must match ContentWithTOC)
-const HEADER_HEIGHT = 112;
-const SECTION_PADDING = 48;
-
-// Section header with link icon on hover
 function SectionHeader({
   id,
   children,
@@ -121,26 +116,16 @@ function SectionHeader({
 }) {
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-
-    // Copy URL with hash to clipboard
     const url = `${window.location.origin}${window.location.pathname}#${id}`;
     navigator.clipboard.writeText(url);
     onCopyLink?.("Copied link to clipboard");
-
-    // Update URL
     window.history.pushState(null, "", `#${id}`);
-
-    // Scroll to correct position (accounting for header and padding)
     const element = document.getElementById(id);
     if (element) {
       const elementRect = element.getBoundingClientRect();
       const absoluteElementTop = elementRect.top + window.scrollY;
       const scrollTarget = absoluteElementTop - HEADER_HEIGHT - SECTION_PADDING;
-
-      window.scrollTo({
-        top: scrollTarget,
-        behavior: "smooth",
-      });
+      window.scrollTo({ top: scrollTarget, behavior: "smooth" });
     }
   };
 
@@ -161,13 +146,15 @@ function SectionHeader({
   );
 }
 
-// Render a single Shiki token with dual theme support
+// ============================================================================
+// Code preview
+// ============================================================================
+
 function RenderShikiToken({ token }: { token: DualThemeToken }) {
   const style = getTokenStyle(token);
   return <span style={style}>{token.content}</span>;
 }
 
-// Copy icon
 function CopyIcon() {
   return (
     <svg
@@ -187,7 +174,6 @@ function CopyIcon() {
   );
 }
 
-// Check icon for copy confirmation
 function CheckIcon() {
   return (
     <svg
@@ -207,21 +193,16 @@ function CheckIcon() {
   );
 }
 
-// Animated copy button with scale + opacity transition
 function CopyIconButton({ copied }: { copied: boolean }) {
   return (
     <div className="relative w-4 h-4">
       <span
-        className={`absolute inset-0 transition-all duration-150 ease-out ${
-          copied ? "opacity-0 scale-75" : "opacity-100 scale-100"
-        }`}
+        className={`absolute inset-0 transition-all duration-150 ease-out ${copied ? "opacity-0 scale-75" : "opacity-100 scale-100"}`}
       >
         <CopyIcon />
       </span>
       <span
-        className={`absolute inset-0 transition-all duration-150 ease-out ${
-          copied ? "opacity-100 scale-100" : "opacity-0 scale-75"
-        }`}
+        className={`absolute inset-0 transition-all duration-150 ease-out ${copied ? "opacity-100 scale-100" : "opacity-0 scale-75"}`}
       >
         <CheckIcon />
       </span>
@@ -229,7 +210,6 @@ function CopyIconButton({ copied }: { copied: boolean }) {
   );
 }
 
-// Code Preview component with Shiki syntax highlighting
 interface CodePreviewProps {
   children: React.ReactNode;
   componentCode: string;
@@ -239,7 +219,6 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Use Shiki for syntax highlighting
   const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
   const lines: DualThemeToken[][] =
     tokenizedLines ||
@@ -262,13 +241,16 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 
   return (
     <div className="border border-borderDefault rounded-lg overflow-hidden">
-      {/* Preview area */}
-      <div className="p-6" style={{ background: "hsl(var(--color-surface))" }}>
+      <div
+        className="p-6 rounded-t-lg"
+        style={{ background: "hsl(var(--color-surface))" }}
+      >
         {children}
       </div>
-
-      {/* Accordion trigger */}
-      <div style={{ background: "hsl(var(--color-canvas))" }}>
+      <div
+        className="rounded-b-lg"
+        style={{ background: "hsl(var(--color-canvas))" }}
+      >
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -277,15 +259,12 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
           <ChevronDown size={16} className={isOpen ? "" : "-rotate-90"} />
           {isOpen ? "Hide code" : "Show code"}
         </button>
-
-        {/* Collapsible code section */}
         {isOpen && (
           <div
             className="border-t border-borderDefault overflow-x-auto font-mono text-copy-13"
             style={{ background: "hsl(var(--color-surface))" }}
           >
             <div className="relative group">
-              {/* Floating copy button */}
               <button
                 onClick={handleCopy}
                 className="absolute top-3 right-3 p-2 rounded border border-borderDefault opacity-0 group-hover:opacity-100 transition-opacity z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-100)]"
@@ -293,8 +272,6 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
               >
                 <CopyIconButton copied={copied} />
               </button>
-
-              {/* Code content */}
               <pre className="overflow-x-auto py-4" data-code-block>
                 <code className="block text-copy-13 leading-[20px] font-mono">
                   {lines.map((lineTokens, index) => (
@@ -324,41 +301,110 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   );
 }
 
-// Code example
-const compositionCode = `import { Browser } from '@/components/ui/Browser';
+// ============================================================================
+// Demo
+// ============================================================================
 
-export function Component() {
+const EXAMPLE_ROWS: { label: string; value: string; mono?: boolean }[] = [
+  {
+    label: "Branch",
+    value: "feature/redesign-dashboard-navigation-with-sidebar-improvements",
+  },
+  {
+    label: "Preview URL",
+    value:
+      "platform-web-git-feature-redesign-dashboard-navigation-phamous.vercel.app",
+  },
+  { label: "Deployment ID", value: "dpl_8gmXTT1yJRP8UbGfXD7A3sp4RKhW" },
+  { label: "Env var key", value: "STRIPE_WEBHOOK_SIGNING_SECRET", mono: true },
+  {
+    label: "Commit SHA",
+    value: "2b0874e797d7c2a4092d0033ee0c2f0f9aef2869",
+  },
+  {
+    label: "File path",
+    value:
+      "apps/vercel-site/app/(dashboard)/[teamSlug]/[project]/settings/page.tsx",
+  },
+  {
+    label: "Custom domain",
+    value: "api.internal.platform-observability.example.com",
+  },
+  { label: "Model name", value: "google/gemini-3.1-flash-image-preview" },
+  { label: "Fits as-is", value: "sidebar.tsx" },
+];
+
+function MiddleTruncateDemo() {
+  const [width, setWidth] = useState(600);
+
   return (
-    <Browser url="distanzrunning.com">
-      {/* Your content here */}
-    </Browser>
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-3">
+        {EXAMPLE_ROWS.map((row) => (
+          <div
+            key={row.label}
+            className="flex items-center gap-4 rounded-md border border-[var(--ds-gray-alpha-400)] px-4 py-3"
+          >
+            <div className="basis-32 shrink-0 text-copy-13 text-textSubtler">
+              {row.label}
+            </div>
+            <div className="min-w-0 grow" style={{ maxWidth: width }}>
+              <MiddleTruncate
+                text={row.value}
+                className={`text-label-14 text-textDefault ${row.mono ? "font-mono" : ""}`}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+      <aside className="flex items-center gap-3">
+        <span className="text-copy-13 text-textSubtle">Width</span>
+        <div className="min-w-[180px] max-w-xs grow">
+          <Slider min={80} max={600} value={width} onChange={setWidth} />
+        </div>
+        <span className="font-mono text-copy-13 text-textSubtle tabular-nums">
+          {width}px
+        </span>
+      </aside>
+    </div>
+  );
+}
+
+const exampleCode = `import { MiddleTruncate } from '@/components/ui/MiddleTruncate';
+
+export function Example() {
+  return (
+    <div className="max-w-[280px]">
+      <MiddleTruncate text="apps/vercel-site/app/(dashboard)/[project]/settings/page.tsx" />
+    </div>
   );
 }`;
 
-export default function BrowserComponent() {
+// ============================================================================
+// Main
+// ============================================================================
+
+export default function MiddleTruncateComponent() {
   const { toast, showToast, dismissToast } = useToast();
 
   return (
     <>
-      <Toast
-        message={toast.message}
-        isVisible={toast.isVisible}
-        onDismiss={dismissToast}
-      />
-
-      {/* Composition Section */}
+      {/* Examples */}
       <Section>
-        <SectionHeader id="composition" onCopyLink={showToast}>
-          Composition
+        <SectionHeader id="examples" onCopyLink={showToast}>
+          Examples
         </SectionHeader>
-        <CodePreview componentCode={compositionCode}>
-          <div className="max-w-4xl mx-auto">
-            <Browser url="distanzrunning.com" />
-          </div>
-        </CodePreview>
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
+          Covers strings that benefit from middle truncation.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={exampleCode}>
+            <MiddleTruncateDemo />
+          </CodePreview>
+        </div>
       </Section>
 
-      {/* Best Practices Section */}
+      {/* Best Practices */}
       <Section>
         <SectionHeader id="best-practices" onCopyLink={showToast}>
           Best Practices
@@ -372,22 +418,21 @@ export default function BrowserComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Use Browser as marketing chrome around screenshots,
-            demos, and recordings shown on landing pages, docs, and
-            changelog posts.
+            Use Middle Truncate for strings whose head and tail both carry
+            information: file paths (
+            <code className="inline-code">apps/…/page.tsx</code>), URLs,
+            deployment IDs (<code className="inline-code">dpl_…abc123</code>),
+            commit hashes, branch names with prefixes.
           </li>
           <li>
-            Don&apos;t render real product UI inside a Browser
-            frame; the chrome implies a screenshot, not a live
-            surface.
+            For prose, descriptions, and headings, use end-truncation with{" "}
+            <code className="inline-code">…</code> instead; cutting the middle of
+            a sentence destroys meaning.
           </li>
           <li>
-            Compose from the building blocks (
-            <code className="inline-code">&lt;BrowserDots&gt;</code>,{" "}
-            <code className="inline-code">&lt;BrowserControls&gt;</code>,{" "}
-            <code className="inline-code">&lt;BrowserAddressBar&gt;</code>) when
-            the canned <code className="inline-code">&lt;Browser&gt;</code> shape
-            doesn&apos;t fit the layout; don&apos;t fork the chrome.
+            For any truncated value the user might need verbatim, pair with a{" "}
+            <ComponentRef name="Tooltip" /> showing the full string or a
+            copy-on-click affordance.
           </li>
         </ul>
 
@@ -399,23 +444,26 @@ export default function BrowserComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Match the variant to the surrounding theme:{" "}
-            <code className="inline-code">variant=&quot;light&quot;</code> on
-            light backgrounds,{" "}
-            <code className="inline-code">variant=&quot;dark&quot;</code> on
-            dark, so the frame doesn&apos;t fight the page. Omit{" "}
-            <code className="inline-code">variant</code> to follow the page
-            theme automatically.
+            Middle Truncate renders a single ellipsis glyph (
+            <code className="inline-code">…</code>) rather than three periods.
+            This keeps monospace values — env var keys, IDs, hashes, and paths —
+            from reserving three character cells for the truncation marker.
           </li>
           <li>
-            For long URLs, the address bar uses{" "}
-            <code className="inline-code">&lt;MiddleTruncate&gt;</code> so the
-            host and path tail both remain visible.
+            The component tracks its container width, so layouts that change
+            width on hover (expanding cards, animated rows) make the truncation
+            point jitter. Lock the width during interaction.
           </li>
           <li>
-            Lock the inner image aspect ratio so the chrome
-            doesn&apos;t reflow when an image is missing or slow to
-            load.
+            Copying yields the full original string (kept in the DOM), not the
+            visible ellipsis form. Confirm this holds if you wrap it with a
+            custom <code className="inline-code">onCopy</code>.
+          </li>
+          <li>
+            Don&apos;t wrap Middle Truncate in another{" "}
+            <code className="inline-code">text-overflow: ellipsis</code>{" "}
+            container; the two strategies fight and the inner ellipsis wins
+            inconsistently.
           </li>
         </ul>
 
@@ -427,22 +475,27 @@ export default function BrowserComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The browser chrome is decorative and carries{" "}
-            <code className="inline-code">aria-hidden=&quot;true&quot;</code>
-            ; meaning lives on the inner image or video.
+            Expose the full string to assistive tech via the wrapping
+            element&apos;s accessible name (the component keeps the full value in
+            the DOM and as a <code className="inline-code">title</code>).
           </li>
           <li>
-            Give the inner screenshot meaningful alt text describing
-            what the user is seeing, not{" "}
-            <code className="inline-code">browser screenshot</code>.
+            Avoid Middle Truncate inside focusable controls without an explicit{" "}
+            <code className="inline-code">aria-label</code>; the ellipsis on its
+            own gives screen readers nothing to announce.
           </li>
           <li>
-            Don&apos;t add focusable dot controls or back/forward
-            buttons; the chrome is a frame, and unreachable controls
-            confuse keyboard users.
+            Keep the visible string long enough on small viewports that the head
+            still identifies the resource (path segment, ID prefix).
           </li>
         </ul>
       </Section>
+
+      <Toast
+        message={toast.message}
+        isVisible={toast.isVisible}
+        onDismiss={dismissToast}
+      />
     </>
   );
 }

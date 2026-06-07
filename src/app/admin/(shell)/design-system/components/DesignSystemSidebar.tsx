@@ -100,6 +100,7 @@ export const navigation: NavSection[] = [
       { id: "login", label: "Login", type: "Organism" },
       { id: "material", label: "Material", type: "Atom" },
       { id: "menu", label: "Menu", type: "Organism" },
+      { id: "middle-truncate", label: "Middle Truncate", type: "Atom" },
       { id: "modal", label: "Modal", type: "Organism" },
       { id: "multi-select", label: "Multi Select", type: "Molecule" },
       { id: "note", label: "Note", type: "Molecule" },
