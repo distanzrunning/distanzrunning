@@ -405,6 +405,18 @@ export function CustomEmptyMessageExample() {
   );
 }`;
 
+const clearableCode = `import { Combobox } from '@/components/ui/Combobox';
+
+export function Clearable() {
+  return (
+    <Combobox
+      options={['One', 'Two', 'Three']}
+      defaultValue="Two"
+      placeholder="Search..."
+    />
+  );
+}`;
+
 const withPrefixIconsCode = `import { Combobox } from '@/components/ui/Combobox';
 import { Triangle } from 'lucide-react';
 
@@ -711,6 +723,26 @@ export default function ComboboxComponent() {
               placeholder="Search..."
               width={256}
               emptyMessage="Nothing to see here.."
+            />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Clearable */}
+      <Section>
+        <SectionHeader id="clearable" onCopyLink={showToast}>
+          Clearable
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
+          A clear button appears whenever a value is selected, resetting the
+          combobox when clicked.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={clearableCode}>
+            <Combobox
+              options={["One", "Two", "Three"]}
+              defaultValue="Two"
+              placeholder="Search..."
             />
           </CodePreview>
         </div>
