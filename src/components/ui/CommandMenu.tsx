@@ -76,8 +76,11 @@ interface CommandMenuItemProps {
   disabled?: boolean;
   /** Optional icon rendered before the label */
   icon?: ReactNode;
-  /** Optional keyboard shortcut label (e.g. "⌘K") */
+  /** Optional keyboard shortcut label (e.g. "⌘K"), rendered as a kbd. */
   shortcut?: string;
+  /** Optional trailing slot (text or icon) pinned to the right in
+   *  muted gray-700 — e.g. a country code or status icon. */
+  suffix?: ReactNode;
   /** Optional secondary line (e.g. category / breadcrumb) */
   subtitle?: ReactNode;
   /** Explicit cmdk value used for filter matching */
@@ -137,7 +140,7 @@ const CMDK_CSS = `
 
   .ds-cmdk-content {
     position: fixed;
-    top: 20vh;
+    top: 15%;
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
@@ -192,7 +195,7 @@ const CMDK_CSS = `
     height: 40px;
     padding: 0 8px;
     font-size: 13px;
-    color: var(--ds-gray-700);
+    color: var(--ds-gray-900);
     user-select: none;
   }
 
@@ -219,7 +222,7 @@ const CMDK_CSS = `
   }
 
   .ds-cmdk-content [cmdk-item][data-selected="true"] {
-    background: var(--ds-gray-alpha-200);
+    background: var(--ds-gray-alpha-100);
   }
 
   .ds-cmdk-content [cmdk-item][data-disabled="true"] {
@@ -313,6 +316,7 @@ function CommandMenuItem({
   disabled = false,
   icon,
   shortcut,
+  suffix,
   subtitle,
   value,
   keywords,
@@ -389,6 +393,22 @@ function CommandMenuItem({
         </span>
       ) : (
         <span style={{ flex: 1 }}>{children}</span>
+      )}
+      {suffix && (
+        <span
+          style={{
+            marginLeft: "auto",
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
+            fontSize: 14,
+            lineHeight: "20px",
+            color: "var(--ds-gray-700)",
+            flexShrink: 0,
+          }}
+        >
+          {suffix}
+        </span>
       )}
       {shortcut && (
         <kbd

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useRef } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, CircleCheck } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import { ComponentRef } from "../ComponentRef";
 import {
@@ -524,13 +524,13 @@ export function WithDivider() {
     <>
       <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
       <CommandMenu open={open} onClose={() => setOpen(false)} placeholder="What do you need?">
-        <CommandMenu.Group heading="Suggestions">
-          <CommandMenu.Item onSelect={() => setOpen(false)}>Figma Import</CommandMenu.Item>
-        </CommandMenu.Group>
+        <CommandMenu.Item onSelect={() => setOpen(false)}>Item 1</CommandMenu.Item>
+        <CommandMenu.Item onSelect={() => setOpen(false)}>Item 2</CommandMenu.Item>
         <CommandMenu.Separator />
-        <CommandMenu.Group heading="Commands">
-          <CommandMenu.Item onSelect={() => setOpen(false)}>Import Extension</CommandMenu.Item>
-          <CommandMenu.Item onSelect={() => setOpen(false)}>Manage Extensions</CommandMenu.Item>
+        <CommandMenu.Item onSelect={() => setOpen(false)}>Item 3</CommandMenu.Item>
+        <CommandMenu.Group heading="Group 1">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>Grouped Item 1</CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>Grouped Item 2</CommandMenu.Item>
         </CommandMenu.Group>
       </CommandMenu>
     </>
@@ -547,18 +547,16 @@ function WithDividerDemo() {
         onClose={() => setOpen(false)}
         placeholder="What do you need?"
       >
-        <CommandMenu.Group heading="Suggestions">
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Figma Import
-          </CommandMenu.Item>
-        </CommandMenu.Group>
+        <CommandMenu.Item onSelect={() => setOpen(false)}>Item 1</CommandMenu.Item>
+        <CommandMenu.Item onSelect={() => setOpen(false)}>Item 2</CommandMenu.Item>
         <CommandMenu.Separator />
-        <CommandMenu.Group heading="Commands">
+        <CommandMenu.Item onSelect={() => setOpen(false)}>Item 3</CommandMenu.Item>
+        <CommandMenu.Group heading="Group 1">
           <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Import Extension
+            Grouped Item 1
           </CommandMenu.Item>
           <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Manage Extensions
+            Grouped Item 2
           </CommandMenu.Item>
         </CommandMenu.Group>
       </CommandMenu>
@@ -567,6 +565,7 @@ function WithDividerDemo() {
 }
 
 const withSuffixCode = `import { useState } from 'react';
+import { CircleCheck } from 'lucide-react';
 import { CommandMenu } from '@/components/ui/CommandMenu';
 import { Button } from '@/components/ui/Button';
 
@@ -576,10 +575,15 @@ export function WithSuffix() {
     <>
       <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
       <CommandMenu open={open} onClose={() => setOpen(false)} placeholder="What do you need?">
-        <CommandMenu.Group heading="Commands">
-          <CommandMenu.Item shortcut="⌘N" onSelect={() => setOpen(false)}>New Project</CommandMenu.Item>
-          <CommandMenu.Item shortcut="⌘K" onSelect={() => setOpen(false)}>Search Docs</CommandMenu.Item>
-          <CommandMenu.Item shortcut="⌘," onSelect={() => setOpen(false)}>Settings</CommandMenu.Item>
+        <CommandMenu.Group heading="Group 1">
+          <CommandMenu.Item suffix="USA">United States of America</CommandMenu.Item>
+          <CommandMenu.Item suffix="ESP">Spain</CommandMenu.Item>
+          <CommandMenu.Item suffix="FRA">France</CommandMenu.Item>
+        </CommandMenu.Group>
+        <CommandMenu.Group heading="Group 2">
+          <CommandMenu.Item suffix="AUT">Austria</CommandMenu.Item>
+          <CommandMenu.Item suffix={<CircleCheck size={16} />}>Switzerland</CommandMenu.Item>
+          <CommandMenu.Item suffix="GER">Germany</CommandMenu.Item>
         </CommandMenu.Group>
       </CommandMenu>
     </>
@@ -596,15 +600,29 @@ function WithSuffixDemo() {
         onClose={() => setOpen(false)}
         placeholder="What do you need?"
       >
-        <CommandMenu.Group heading="Commands">
-          <CommandMenu.Item shortcut="⌘N" onSelect={() => setOpen(false)}>
-            New Project
+        <CommandMenu.Group heading="Group 1">
+          <CommandMenu.Item suffix="USA" onSelect={() => setOpen(false)}>
+            United States of America
           </CommandMenu.Item>
-          <CommandMenu.Item shortcut="⌘K" onSelect={() => setOpen(false)}>
-            Search Docs
+          <CommandMenu.Item suffix="ESP" onSelect={() => setOpen(false)}>
+            Spain
           </CommandMenu.Item>
-          <CommandMenu.Item shortcut="⌘," onSelect={() => setOpen(false)}>
-            Settings
+          <CommandMenu.Item suffix="FRA" onSelect={() => setOpen(false)}>
+            France
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+        <CommandMenu.Group heading="Group 2">
+          <CommandMenu.Item suffix="AUT" onSelect={() => setOpen(false)}>
+            Austria
+          </CommandMenu.Item>
+          <CommandMenu.Item
+            suffix={<CircleCheck size={16} />}
+            onSelect={() => setOpen(false)}
+          >
+            Switzerland
+          </CommandMenu.Item>
+          <CommandMenu.Item suffix="GER" onSelect={() => setOpen(false)}>
+            Germany
           </CommandMenu.Item>
         </CommandMenu.Group>
       </CommandMenu>
