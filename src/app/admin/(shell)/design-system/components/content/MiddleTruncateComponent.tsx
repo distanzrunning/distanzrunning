@@ -379,24 +379,29 @@ function MiddleTruncateDemo() {
           </div>
         ))}
       </div>
-      <aside className="flex flex-col gap-3">
+      <aside>
+        {/* Width control: label, then a compact slider + px readout (Geist) */}
         <div>
-          <div className="text-copy-13 text-textSubtle mb-2">Width</div>
-          <div className="flex items-center gap-3">
-            <div className="min-w-[180px] max-w-xs grow">
-              <Slider
-                min={WIDTH_MIN}
-                max={WIDTH_MAX}
-                value={width}
-                onChange={setWidth}
-              />
-            </div>
+          <div className="text-copy-13 text-textSubtle mb-2 capitalize">
+            Width
+          </div>
+          <div className="flex items-center gap-2">
+            <Slider
+              width={216}
+              min={WIDTH_MIN}
+              max={WIDTH_MAX}
+              value={width}
+              onChange={setWidth}
+            />
             <span className="font-mono text-copy-13 text-textSubtle tabular-nums">
               {width}px
             </span>
           </div>
         </div>
-        <Toggle checked={animate} onChange={setAnimate} label="Animate" />
+        {/* Animate toggle on its own row */}
+        <div className="mt-3">
+          <Toggle checked={animate} onChange={setAnimate} label="Animate" />
+        </div>
       </aside>
     </div>
   );
