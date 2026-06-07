@@ -102,10 +102,12 @@ export const ClearableInput = forwardRef<HTMLInputElement, ClearableInputProps>(
         </button>
       );
     } else if (cmdk && !disabled) {
+      // Geist renders ⌘ and K as two separate key boxes, not one combined.
       suffix = (
-        <Kbd size="small" meta>
-          K
-        </Kbd>
+        <span className="flex items-center gap-1">
+          <Kbd size="small" meta />
+          <Kbd size="small">K</Kbd>
+        </span>
       );
     }
 
