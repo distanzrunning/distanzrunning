@@ -82,7 +82,9 @@ function ModalTitle({
       style={{
         color: "var(--ds-gray-1000)",
         fontSize: 24,
-        fontWeight: 600,
+        // Geist modal titles are font-medium (500) — heading-24's 600 is
+        // deliberately overridden via `data-geist-modal-title`.
+        fontWeight: 500,
         lineHeight: "32px",
         letterSpacing: "-0.029375rem",
         // Title sits flush against the next element so it groups
@@ -159,7 +161,9 @@ function ModalHeader({
             : {
                 display: "flex",
                 flexDirection: "column",
-                gap: 12,
+                // Geist: title carries `pb-1` (4px) to the subtitle, then the
+                // header `mb-6` (24px) to the body.
+                gap: 4,
                 marginBottom: 24,
                 zIndex: 10,
               }
