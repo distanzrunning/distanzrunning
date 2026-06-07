@@ -318,9 +318,9 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 const defaultCode = `import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
 const items = [
-  { label: 'Home', href: '#' },
-  { label: 'Dashboard', href: '#' },
-  { label: 'Overview', href: '#' },
+  { label: 'Home' },
+  { label: 'Dashboard' },
+  { label: 'Overview' },
 ];
 
 export function Component() {
@@ -340,9 +340,9 @@ export function Component() {
   return (
     <Breadcrumbs
       items={[
-        { label: 'Home', href: '#' },
-        { label: 'Dashboard', href: '#', active: true },
-        { label: 'Overview', href: '#' },
+        { label: 'Home' },
+        { label: 'Dashboard', active: true },
+        { label: 'Overview' },
       ]}
     />
   );
@@ -354,18 +354,18 @@ export function Component() {
   return (
     <Breadcrumbs
       items={[
-        { label: 'Home', href: '#' },
+        { label: 'Home' },
         { label: 'Dashboard', disabled: true },
-        { label: 'Overview', href: '#' },
+        { label: 'Overview' },
       ]}
     />
   );
 }`;
 
 const baseItems = [
-  { label: "Home", href: "#" },
-  { label: "Dashboard", href: "#" },
-  { label: "Overview", href: "#" },
+  { label: "Home" },
+  { label: "Dashboard" },
+  { label: "Overview" },
 ];
 
 export default function BreadcrumbsComponent() {
@@ -409,9 +409,9 @@ export default function BreadcrumbsComponent() {
           <CodePreview componentCode={activeCode}>
             <Breadcrumbs
               items={[
-                { label: "Home", href: "#" },
-                { label: "Dashboard", href: "#", active: true },
-                { label: "Overview", href: "#" },
+                { label: "Home" },
+                { label: "Dashboard", active: true },
+                { label: "Overview" },
               ]}
             />
           </CodePreview>
@@ -431,9 +431,9 @@ export default function BreadcrumbsComponent() {
           <CodePreview componentCode={disabledCode}>
             <Breadcrumbs
               items={[
-                { label: "Home", href: "#" },
+                { label: "Home" },
                 { label: "Dashboard", disabled: true },
-                { label: "Overview", href: "#" },
+                { label: "Overview" },
               ]}
             />
           </CodePreview>

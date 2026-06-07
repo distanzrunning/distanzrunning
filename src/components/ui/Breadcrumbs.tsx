@@ -1,6 +1,27 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+// Geist's in-house chevron-right glyph (a small filled wedge), inlined so
+// the separator is pixel-identical to Geist. This is a deliberate one-off:
+// the rest of the codebase uses lucide-react, but the breadcrumb separator
+// is a verbatim Geist detail, not a general icon.
+function ChevronSeparator() {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      height="16"
+      width="16"
+      aria-hidden="true"
+      className="shrink-0 text-textSubtle"
+    >
+      <path
+        fill="currentColor"
+        fillRule="evenodd"
+        d="m5.5 1.94.53.53 4.82 4.82a1 1 0 0 1 0 1.42l-4.82 4.82-.53.53L4.44 13l.53-.53L9.44 8 4.97 3.53 4.44 3z"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}
 
 export interface BreadcrumbItem {
   /** Visible label. */
@@ -108,9 +129,7 @@ export function Breadcrumbs({
             ) : (
               item.label
             )}
-            {i < items.length - 1 && (
-              <ChevronRight aria-hidden className="h-4 w-4 shrink-0 text-textSubtle" />
-            )}
+            {i < items.length - 1 && <ChevronSeparator />}
           </li>
         ))}
       </ol>
