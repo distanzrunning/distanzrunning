@@ -113,7 +113,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             display: "block",
             fontSize: 13,
             maxWidth: "100%",
-            color: "var(--ds-gray-800)",
+            color: "hsl(var(--color-textSubtle))",
             textTransform: "capitalize",
             marginBottom: 8,
             cursor: "text",
