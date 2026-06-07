@@ -46,7 +46,7 @@ function RadioIndicator({
     ? "hsl(var(--color-textDisabled))"
     : checked
       ? "var(--ds-blue-900)"
-      : "var(--ds-gray-600)";
+      : "var(--ds-gray-500)";
 
   const dotColor = disabled
     ? "hsl(var(--color-textDisabled))"
@@ -207,7 +207,7 @@ export function Choicebox({
       style={{
         borderColor:
           isSelected && !isDisabled
-            ? "var(--ds-blue-700)"
+            ? "var(--ds-blue-600)"
             : showHover
               ? "hsl(var(--color-borderDefaultHover))"
               : "hsl(var(--color-borderDefault))",
@@ -240,7 +240,7 @@ export function Choicebox({
             isSelected && !isDisabled
               ? isHovered
                 ? "var(--ds-blue-200)"
-                : "color-mix(in oklch, var(--ds-blue-100) 40%, var(--ds-background-100))"
+                : "var(--ds-blue-100)"
               : "transparent",
           transition: "background 0.15s ease, border 0.15s ease",
         }}
@@ -255,7 +255,7 @@ export function Choicebox({
                 color: isDisabled
                   ? "hsl(var(--color-textDisabled))"
                   : isSelected
-                    ? "var(--ds-blue-700)"
+                    ? "var(--ds-blue-900)"
                     : "hsl(var(--color-textDefault))",
               }}
             >
@@ -271,7 +271,7 @@ export function Choicebox({
                     color: isDisabled
                       ? "hsl(var(--color-textDisabled))"
                       : isSelected
-                        ? "var(--ds-blue-700)"
+                        ? "var(--ds-blue-900)"
                         : "hsl(var(--color-textDefault))",
                   }}
                 >
@@ -285,7 +285,7 @@ export function Choicebox({
                     color: isDisabled
                       ? "hsl(var(--color-textDisabled))"
                       : isSelected
-                        ? "var(--ds-blue-700)"
+                        ? "var(--ds-blue-900)"
                         : "hsl(var(--color-textSubtle))",
                   }}
                 >
@@ -305,7 +305,7 @@ export function Choicebox({
               checked={isSelected}
               disabled={isDisabled}
               color={
-                isSelected && !isDisabled ? "var(--ds-blue-700)" : undefined
+                isSelected && !isDisabled ? "var(--ds-blue-900)" : undefined
               }
             />
           </span>
@@ -317,7 +317,7 @@ export function Choicebox({
         <div
           className="flex items-center justify-center px-3 pb-3 pt-3 rounded-b-md overflow-hidden transition-colors hover:bg-[var(--ds-gray-100)]"
           style={{
-            borderTop: `1px solid ${!isDisabled ? "var(--ds-blue-700)" : "hsl(var(--color-borderDefault))"}`,
+            borderTop: `1px solid ${!isDisabled ? "var(--ds-blue-600)" : "hsl(var(--color-borderDefault))"}`,
           }}
         >
           {children}
