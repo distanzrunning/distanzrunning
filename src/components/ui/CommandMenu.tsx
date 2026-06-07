@@ -129,12 +129,10 @@ const CMDK_CSS = `
     position: fixed;
     inset: 0;
     z-index: 100;
-    background: var(--ds-overlay-backdrop-color);
-    opacity: var(--ds-overlay-backdrop-opacity);
-    /* Match the Modal + Mega-menu scrim: dim/lift + 8px frost so
-       all three overlays read as the same product moment. */
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    /* Geist's Command Menu overlay is its own treatment — a bg-100 wash at
+       80% opacity with no blur (distinct from the dark Modal/Sheet scrim). */
+    background: hsl(var(--color-surface));
+    opacity: 0.8;
     animation: ds-cmdk-fade-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
   }
 
