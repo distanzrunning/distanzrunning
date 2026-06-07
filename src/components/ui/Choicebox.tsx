@@ -38,9 +38,11 @@ function useChoiceboxContext() {
 function RadioIndicator({
   checked,
   disabled,
+  focusRing,
 }: {
   checked: boolean;
   disabled: boolean;
+  focusRing: boolean;
 }) {
   const borderColor = disabled
     ? "hsl(var(--color-textDisabled))"
@@ -63,6 +65,7 @@ function RadioIndicator({
         background: "hsl(var(--color-surface))",
         transition: "border-color 0.2s ease, background 0.2s ease",
         position: "relative",
+        boxShadow: focusRing ? "var(--ds-focus-ring)" : undefined,
       }}
     >
       {checked && (
@@ -169,6 +172,10 @@ export function Choicebox({
   const inputId = `choicebox-${value}-${reactId}`;
 
   const [isHovered, setIsHovered] = useState(false);
+  // Keyboard-focus state: the focus ring shows on the radio/checkbox
+  // control (like Geist's peer-focus-visible), not on the tile, and only
+  // for keyboard focus — clicking selects without a ring.
+  const [focusVisible, setFocusVisible] = useState(false);
 
   const isDisabled = disabled || ctx.groupDisabled;
   const isSelected =
@@ -199,7 +206,6 @@ export function Choicebox({
         flex flex-1 flex-col
         rounded-md border border-solid
         ${isDisabled ? "cursor-not-allowed" : "cursor-pointer"}
-        ${!isDisabled ? "has-[:focus-visible]:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
         ${className}
       `}
       onMouseEnter={() => setIsHovered(true)}
@@ -226,6 +232,8 @@ export function Choicebox({
         checked={isSelected}
         disabled={isDisabled}
         onChange={handleChange}
+        onFocus={(e) => setFocusVisible(e.target.matches(":focus-visible"))}
+        onBlur={() => setFocusVisible(false)}
         aria-label={ariaLabel}
         className="sr-only peer"
       />
@@ -298,9 +306,19 @@ export function Choicebox({
 
         {/* Indicator */}
         {ctx.type === "single" ? (
-          <RadioIndicator checked={isSelected} disabled={isDisabled} />
+          <RadioIndicator
+            checked={isSelected}
+            disabled={isDisabled}
+            focusRing={focusVisible}
+          />
         ) : (
-          <span style={{ pointerEvents: "none" }}>
+          <span
+            style={{
+              pointerEvents: "none",
+              borderRadius: 4,
+              boxShadow: focusVisible ? "var(--ds-focus-ring)" : undefined,
+            }}
+          >
             <Checkbox
               checked={isSelected}
               disabled={isDisabled}
