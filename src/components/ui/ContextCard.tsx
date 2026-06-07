@@ -61,43 +61,30 @@ const CONTEXT_CARD_CSS = `
     box-shadow: var(--ds-shadow-tooltip), 0 0 0 1px var(--ds-background-100);
     /* Geist's dedicated stem outline (not gray-400) */
     --ds-context-card-tip-stroke: #dbdbdb;
-    will-change: transform, opacity;
-    animation-duration: 250ms;
-    animation-timing-function: cubic-bezier(0.29, -0.31, -0.05, 0.96);
+    will-change: opacity;
+    /* Geist: a pure 150ms opacity fade, no directional slide */
+    animation-duration: 150ms;
+    animation-timing-function: cubic-bezier(0.3, 0.57, 0.07, 0.95);
   }
 
   .dark .ds-context-card {
     --ds-context-card-tip-stroke: #252525;
   }
 
-  .ds-context-card[data-state="open"][data-side="top"] {
-    animation-name: ds-context-card-slide-down-fade;
+  .ds-context-card[data-state="open"] {
+    animation-name: ds-context-card-fade-in;
   }
-  .ds-context-card[data-state="open"][data-side="bottom"] {
-    animation-name: ds-context-card-slide-up-fade;
-  }
-  .ds-context-card[data-state="open"][data-side="left"] {
-    animation-name: ds-context-card-slide-right-fade;
-  }
-  .ds-context-card[data-state="open"][data-side="right"] {
-    animation-name: ds-context-card-slide-left-fade;
+  .ds-context-card[data-state="closed"] {
+    animation-name: ds-context-card-fade-out;
   }
 
-  @keyframes ds-context-card-slide-up-fade {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
+  @keyframes ds-context-card-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
-  @keyframes ds-context-card-slide-down-fade {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes ds-context-card-slide-left-fade {
-    from { opacity: 0; transform: translateX(4px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-  @keyframes ds-context-card-slide-right-fade {
-    from { opacity: 0; transform: translateX(-4px); }
-    to { opacity: 1; transform: translateX(0); }
+  @keyframes ds-context-card-fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
   }
 
   /* Radix positions + rotates the stem so it always points at the trigger,
