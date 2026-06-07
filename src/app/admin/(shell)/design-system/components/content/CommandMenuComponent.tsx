@@ -662,16 +662,6 @@ export default function CommandMenuComponent() {
         <SectionHeader id="pages" onCopyLink={showToast}>
           Pages
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
-          For deep palettes, drill into a sub-page by pairing an item
-          with{" "}
-          <code className="inline-code">subPage=&quot;…&quot;</code> and
-          declaring a matching{" "}
-          <code className="inline-code">&lt;CommandMenu.Page id=&quot;…&quot;&gt;</code>{" "}
-          with its own label and placeholder. A breadcrumb chip appears
-          next to the input; Backspace at an empty input pops back to the
-          previous page, and clicking the chip jumps back to the root.
-        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={pagesCode}>
             <PagesDemo />
