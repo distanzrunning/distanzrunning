@@ -408,9 +408,9 @@ export default function BrowserComponent() {
             theme automatically.
           </li>
           <li>
-            For long URLs, pass a pre-shortened display value to{" "}
-            <code className="inline-code">url</code> so the host and
-            path tail both remain visible.
+            For long URLs, the address bar uses{" "}
+            <code className="inline-code">&lt;MiddleTruncate&gt;</code> so the
+            host and path tail both remain visible.
           </li>
           <li>
             Lock the inner image aspect ratio so the chrome

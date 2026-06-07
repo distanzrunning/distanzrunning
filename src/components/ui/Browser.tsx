@@ -2,6 +2,7 @@
 
 import { forwardRef, useState, useCallback } from "react";
 import { ArrowLeft, ArrowRight, RotateCw, Copy, Check } from "lucide-react";
+import { MiddleTruncate } from "./MiddleTruncate";
 
 // ============================================================================
 // Types
@@ -102,12 +103,11 @@ export function BrowserAddressBar({
     <div
       className={`lg:max-w-xs bg-canvas border border-borderDefault w-full rounded-full pl-4 pr-1 py-1 flex items-center justify-between ${className}`}
     >
-      <div
+      <MiddleTruncate
+        text={url}
         aria-hidden="true"
-        className="text-copy-13 text-textDefault truncate flex-1 min-w-0 text-center"
-      >
-        {url}
-      </div>
+        className="text-copy-13 text-textDefault flex-1 min-w-0 justify-center"
+      />
       {showCopyButton && (
         <button
           type="button"
