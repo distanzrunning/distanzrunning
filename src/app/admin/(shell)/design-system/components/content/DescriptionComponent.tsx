@@ -324,6 +324,38 @@ function DefaultExample() {
   );
 }`;
 
+const textRightCode = `import { Description } from '@/components/ui/Description';
+
+function TextRightExample() {
+  return (
+    <Description align="right">
+      <Description.Title tooltip="Additional context about what this section refers to.">
+        Section Title
+      </Description.Title>
+      <Description.Content>
+        Data about this section.
+      </Description.Content>
+    </Description>
+  );
+}`;
+
+const ellipsisCode = `import { Description } from '@/components/ui/Description';
+
+function EllipsisExample() {
+  return (
+    <Description ellipsis>
+      <Description.Title tooltip="Additional context about what this section refers to.">
+        Section Title
+      </Description.Title>
+      <Description.Content>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
+        sed venenatis libero. Phasellus consectetur turpis ac est pulvinar
+        finibus.
+      </Description.Content>
+    </Description>
+  );
+}`;
+
 // ============================================================================
 // Demo Components
 // ============================================================================
@@ -335,6 +367,34 @@ function DefaultDemo() {
         Section Title
       </Description.Title>
       <Description.Content>Data about this section.</Description.Content>
+    </Description>
+  );
+}
+
+function TextRightDemo() {
+  return (
+    <Description align="right">
+      <Description.Title tooltip="Additional context about what this section refers to.">
+        Section Title
+      </Description.Title>
+      <Description.Content>Data about this section.</Description.Content>
+    </Description>
+  );
+}
+
+function EllipsisDemo() {
+  return (
+    <Description ellipsis>
+      <Description.Title tooltip="Additional context about what this section refers to.">
+        Section Title
+      </Description.Title>
+      <Description.Content>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
+        sed venenatis libero. Phasellus consectetur turpis ac est pulvinar
+        finibus. Mauris non tellus pretium, vehicula lectus sed, iaculis ex.
+        Integer eu aliquet turpis. Cras sem nulla, commodo ut libero id,
+        suscipit pulvinar lorem.
+      </Description.Content>
     </Description>
   );
 }
@@ -366,56 +426,27 @@ export default function DescriptionComponent() {
         </div>
       </Section>
 
-      {/* Props */}
+      {/* Text right */}
       <Section>
-        <SectionHeader id="props" onCopyLink={showToast}>
-          Props
+        <SectionHeader id="text-right" onCopyLink={showToast}>
+          Text right
         </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={textRightCode}>
+            <TextRightDemo />
+          </CodePreview>
+        </div>
+      </Section>
 
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
-          Description.Title props.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Title text content
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">tooltip</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  If provided, renders an info icon with tooltip content on hover
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      {/* Ellipsis */}
+      <Section>
+        <SectionHeader id="ellipsis" onCopyLink={showToast}>
+          Ellipsis
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={ellipsisCode}>
+            <EllipsisDemo />
+          </CodePreview>
         </div>
       </Section>
 
