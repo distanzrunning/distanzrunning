@@ -92,10 +92,9 @@ const CONTEXT_CARD_CSS = `
     to { opacity: 1; transform: translateX(0); }
   }
 
+  /* Radix positions + rotates the stem so it always points at the trigger,
+     for every side and align value. We only style the glyph here. */
   .ds-context-card-arrow {
-    position: absolute;
-    width: 14px;
-    height: 7px;
     pointer-events: none;
   }
 
@@ -104,30 +103,6 @@ const CONTEXT_CARD_CSS = `
     stroke: var(--ds-gray-400);
     stroke-width: 1px;
     shape-rendering: geometricPrecision;
-  }
-
-  /* Always center the arrow on the card edge, regardless of trigger position */
-  .ds-context-card[data-side="top"] .ds-context-card-arrow {
-    bottom: -7px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .ds-context-card[data-side="bottom"] .ds-context-card-arrow {
-    top: -7px;
-    left: 50%;
-    transform: translateX(-50%) rotate(180deg);
-  }
-  .ds-context-card[data-side="left"] .ds-context-card-arrow {
-    right: -10.5px;
-    top: 50%;
-    transform: translateY(-50%) rotate(-90deg);
-    transform-origin: center;
-  }
-  .ds-context-card[data-side="right"] .ds-context-card-arrow {
-    left: -10.5px;
-    top: 50%;
-    transform: translateY(-50%) rotate(90deg);
-    transform-origin: center;
   }
 `;
 
@@ -193,7 +168,9 @@ function ContextCardTrigger({
           align={align}
         >
           {content}
-          <GeistArrow />
+          <HoverCard.Arrow asChild width={14} height={7}>
+            <GeistArrow />
+          </HoverCard.Arrow>
         </HoverCard.Content>
       </HoverCard.Portal>
     </HoverCard.Root>
