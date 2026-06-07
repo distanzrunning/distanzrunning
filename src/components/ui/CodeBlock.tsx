@@ -108,6 +108,11 @@ export interface SwitcherProps {
   options: SwitcherOption[];
   value: string;
   onChange: (value: string) => void;
+  /**
+   * Render the switcher as a secondary tab bar above the header instead of
+   * the default select dropdown in the header.
+   */
+  tabs?: boolean;
 }
 
 export interface CodeBlockProps {
@@ -201,6 +206,41 @@ export function CodeBlock({
       data-code-block
       aria-label={ariaLabel}
     >
+      {/* Language switcher as a secondary tab bar (Geist `tabs`) */}
+      {switcher?.tabs && (
+        <div
+          className="flex items-center bg-canvas pt-3 pl-4 overflow-x-auto"
+          style={{ scrollbarWidth: "none" }}
+        >
+          <div
+            role="tablist"
+            aria-orientation="horizontal"
+            className="flex flex-nowrap items-center gap-2 pb-px"
+          >
+            {switcher.options.map((option) => {
+              const selected = option.value === switcher.value;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  role="tab"
+                  aria-selected={selected}
+                  tabIndex={selected ? 0 : -1}
+                  onClick={() => switcher.onChange(option.value)}
+                  className={`flex h-6 cursor-pointer items-center rounded-md px-1.5 text-[13px] outline-none transition-colors focus-visible:shadow-[var(--ds-focus-ring)] ${
+                    selected
+                      ? "bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]"
+                      : "bg-[var(--ds-gray-alpha-200)] text-textDefault"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Header with filename */}
       {filename && (
         <div
@@ -217,7 +257,7 @@ export function CodeBlock({
           </div>
           <div className="flex items-center gap-1">
             {/* Language Switcher - Geist style with visible label overlay */}
-            {switcher && (
+            {switcher && !switcher.tabs && (
               <div className="relative rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors">
                 <div
                   aria-hidden="true"
