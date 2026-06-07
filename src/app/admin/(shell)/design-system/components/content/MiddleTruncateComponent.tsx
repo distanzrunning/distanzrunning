@@ -400,7 +400,9 @@ function MiddleTruncateDemo() {
         </div>
         {/* Animate toggle on its own row */}
         <div className="mt-3">
-          <Toggle checked={animate} onChange={setAnimate} label="Animate" />
+          <Toggle checked={animate} onChange={setAnimate}>
+            Animate
+          </Toggle>
         </div>
       </aside>
     </div>
