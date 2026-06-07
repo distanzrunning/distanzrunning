@@ -70,18 +70,18 @@ export function CopyButton({
       <span className="inline-flex shrink-0 items-center justify-center px-1.5">
         <span className="relative block h-4 w-4">
           <span
-            className={`absolute left-0 top-0 transition-all duration-200 ease-in-out ${
+            className={`absolute inset-0 flex items-center justify-center transition-all duration-200 ease-in-out ${
               copied ? "opacity-100 scale-100" : "opacity-0 scale-50"
             }`}
           >
-            <Check size={16} />
+            <Check size={16} className="block" />
           </span>
           <span
-            className={`absolute left-0 top-0 transition-all duration-200 ease-in-out ${
+            className={`absolute inset-0 flex items-center justify-center transition-all duration-200 ease-in-out ${
               copied ? "opacity-0 scale-50" : "opacity-100 scale-100"
             }`}
           >
-            <Copy size={16} />
+            <Copy size={16} className="block" />
           </span>
         </span>
       </span>
