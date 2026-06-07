@@ -221,9 +221,9 @@
     box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
   }
   .ds-input-container:focus-within:not(.ds-input--error) {
-    box-shadow:
-      0 0 0 1px var(--ds-gray-alpha-600),
-      0px 0px 0px 4px var(--ds-focus-color) !important;
+    /* Grey input-focus (Geist forms): gray-alpha-600 hairline + theme-aware
+       halo. Not the blue --ds-focus-ring, which is for actionable elements. */
+    box-shadow: var(--ds-focus-border) !important;
   }
   .ds-input-container.ds-input--error {
     box-shadow: 0 0 0 1px var(--ds-red-900);
@@ -259,9 +259,8 @@
     box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
   }
   .ds-textarea-container:focus-within:not(.ds-textarea--error) {
-    box-shadow:
-      0 0 0 1px var(--ds-gray-alpha-600),
-      0px 0px 0px 4px var(--ds-focus-color) !important;
+    /* Grey input-focus (Geist forms) — see .ds-input-container. */
+    box-shadow: var(--ds-focus-border) !important;
   }
   .ds-textarea-container.ds-textarea--error {
     box-shadow:

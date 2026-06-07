@@ -231,7 +231,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             box-shadow: 0 0 0 1px var(--ds-gray-alpha-600);
           }
           .ds-select:focus-visible:not(:disabled) {
-            box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0 0 0 4px hsla(var(--ds-gray-1000-value), 0.16);
+            /* Grey input-focus (Geist forms) — shared token, theme-aware
+               halo (0.16 light / 0.24 dark). Was a hand-rolled 0.16 both. */
+            box-shadow: var(--ds-focus-border);
           }
           .ds-select-error {
             box-shadow: 0 0 0 1px var(--ds-red-700) !important;
