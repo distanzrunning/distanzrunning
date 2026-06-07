@@ -299,7 +299,7 @@ function LoadingDemo() {
   return (
     <>
       <Button variant="error" size="small" onClick={() => setOpen(true)}>
-        Delete Project (loading)
+        Delete Project
       </Button>
       <DestructiveActionModal
         open={open}
@@ -327,7 +327,7 @@ function ErrorDemo() {
   return (
     <>
       <Button variant="error" size="small" onClick={() => setOpen(true)}>
-        Delete Project (with error)
+        Delete Project
       </Button>
       <DestructiveActionModal
         open={open}
