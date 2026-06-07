@@ -64,20 +64,26 @@ export function CopyButton({
       onClick={handleCopy}
       {...props}
     >
-      {/* Crossfade copy ↔ check (Geist: 200ms ease-in-out, scale 50 → 100) */}
-      <span className="relative inline-flex h-4 w-4 items-center justify-center">
-        <Check
-          size={16}
-          className={`absolute transition-all duration-200 ease-in-out ${
-            copied ? "opacity-100 scale-100" : "opacity-0 scale-50"
-          }`}
-        />
-        <Copy
-          size={16}
-          className={`absolute transition-all duration-200 ease-in-out ${
-            copied ? "opacity-0 scale-50" : "opacity-100 scale-100"
-          }`}
-        />
+      {/* Geist's exact inner markup: a block 16px box with the two glyphs in
+         absolute wrappers pinned to it, crossfading (200ms ease-in-out,
+         scale 50 → 100). Block + pinned-absolute keeps them dead-centre. */}
+      <span className="inline-flex shrink-0 items-center justify-center px-1.5">
+        <span className="relative block h-4 w-4">
+          <span
+            className={`absolute left-0 top-0 transition-all duration-200 ease-in-out ${
+              copied ? "opacity-100 scale-100" : "opacity-0 scale-50"
+            }`}
+          >
+            <Check size={16} />
+          </span>
+          <span
+            className={`absolute left-0 top-0 transition-all duration-200 ease-in-out ${
+              copied ? "opacity-0 scale-50" : "opacity-100 scale-100"
+            }`}
+          >
+            <Copy size={16} />
+          </span>
+        </span>
       </span>
     </Button>
   );
