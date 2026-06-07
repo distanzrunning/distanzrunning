@@ -74,6 +74,7 @@ export const navigation: NavSection[] = [
       { id: "checkbox", label: "Checkbox", type: "Atom" },
       { id: "choicebox", label: "Choicebox", type: "Molecule" },
       { id: "clearable-input", label: "Clearable Input", type: "Molecule" },
+      { id: "code", label: "Code", type: "Atom" },
       { id: "code-block", label: "Code Block", type: "Molecule" },
       { id: "collapse", label: "Collapse", type: "Molecule" },
       { id: "collapsible-input", label: "Collapsible Input", type: "Molecule" },
