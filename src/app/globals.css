@@ -437,11 +437,11 @@
     background-color: var(--calendar-button-bg);
     box-shadow: var(--calendar-button-shadow);
     transition:
-      border-color 0.15s ease,
-      background 0.15s ease,
-      color 0.15s ease,
-      transform 0.15s ease,
-      box-shadow 0.15s ease;
+      border-color 0.15s ease-in-out,
+      background 0.15s ease-in-out,
+      color 0.15s ease-in-out,
+      transform 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out;
   }
 
   .calendar-trigger-button:hover {
