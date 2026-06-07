@@ -147,33 +147,27 @@ const floatingMaterials: MaterialDefinition[] = [
   },
 ];
 
-// Material table component
+// Material table component (Geist-verbatim: borderless body rows with a
+// rounded hover fill, a spacer tbody under the header, auto layout).
 function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
-  const { showToast } = useToast();
-
-  const handleCopyClassName = (className: string) => {
-    navigator.clipboard.writeText(className);
-    showToast(`Copied ${className}`);
-  };
-
   return (
     <div className="overflow-x-auto">
-      <table className="w-full caption-bottom text-copy-14 text-textSubtle table-fixed">
-        <thead>
-          <tr className="transition-colors">
-            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral w-[340px]">
+      <table className="w-full caption-bottom text-copy-14 text-textSubtle">
+        <thead className="[&_tr]:border-borderDefault [&_tr]:border-b">
+          <tr>
+            <th className="h-10 px-2 font-medium text-left align-middle whitespace-nowrap">
               <div className="inline-flex gap-1.5 items-center">
                 <ExampleIcon />
                 Example
               </div>
             </th>
-            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral">
+            <th className="h-10 px-2 font-medium text-left align-middle whitespace-nowrap">
               <div className="inline-flex gap-1.5 items-center">
                 <SiTailwindcss size={16} className="text-[#38bdf8]" />
                 Class name
               </div>
             </th>
-            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral">
+            <th className="h-10 px-2 font-medium text-left align-middle whitespace-nowrap">
               <div className="inline-flex gap-1.5 items-center">
                 <HelpCircle size={16} />
                 Usage
@@ -181,23 +175,20 @@ function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
             </th>
           </tr>
         </thead>
-        <tbody>
+        {/* 12px spacer between header and rows (Geist) */}
+        <tbody aria-hidden="true" className="h-3 block" />
+        <tbody className="[&_td:first-child]:rounded-l-[4px] [&_td:last-child]:rounded-r-[4px] [&_tr:hover]:bg-[var(--ds-gray-100)]">
           {materials.map((material) => (
-            <tr
-              key={material.className}
-              className="transition-colors hover:bg-[var(--ds-gray-100)] cursor-copy border-b border-borderDefault"
-              onClick={() => handleCopyClassName(material.className)}
-              style={{ height: 120 }}
-            >
-              <td className="px-2 py-2.5 align-middle">
+            <tr key={material.className} className="transition-colors">
+              <td className="px-2 py-2.5 align-middle whitespace-nowrap">
                 <div
                   className={`${material.className} max-w-[240px] h-[100px]`}
                 />
               </td>
-              <td className="px-2 py-2.5 align-middle text-left text-label-13-mono">
+              <td className="px-2 py-2.5 align-middle whitespace-nowrap text-left text-label-13-mono">
                 {material.className}
               </td>
-              <td className="px-2 py-2.5 align-middle text-left text-label-14 text-textSubtle">
+              <td className="px-2 py-2.5 align-middle text-left text-label-14 text-textSubtle max-w-[160px] text-pretty whitespace-normal">
                 {material.usage}
               </td>
             </tr>
