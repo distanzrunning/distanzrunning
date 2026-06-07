@@ -490,8 +490,8 @@ export default function DestructiveActionModalComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-4 xl:mb-6">
           A type-to-confirm gate disables submit until the user types the
-          verification phrase exactly. The red band at the bottom names
-          what cannot be undone.
+          verification phrase exactly. The red striped band at the bottom
+          names what cannot be undone.
         </p>
         <CodePreview componentCode={defaultCode}>
           <DefaultDemo />
@@ -620,15 +620,25 @@ export default function DestructiveActionModalComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            <code className="inline-code">title</code> is Title Case, Verb +
-            Noun, a statement — never a question.{" "}
+            <code className="inline-code">title</code> is Title Case,{" "}
+            <code className="inline-code">Verb + Noun</code>, a statement —
+            never a question.{" "}
             <code className="inline-code">Delete Project</code>, not{" "}
             <code className="inline-code">Delete this project?</code>.
           </li>
           <li>
             <code className="inline-code">description</code> is sentence case,
             names the consequence, and interpolates the specific resource when
-            relevant.
+            relevant.{" "}
+            <code className="inline-code">
+              &lt;b&gt;my-project&lt;/b&gt; and all its deployments will be
+              permanently deleted.
+            </code>{" "}
+            reads stronger than{" "}
+            <code className="inline-code">
+              This project and all its deployments will be deleted.
+            </code>
+            .
           </li>
           <li>
             <code className="inline-code">confirmLabel</code> matches the
@@ -640,18 +650,40 @@ export default function DestructiveActionModalComponent() {
           </li>
           <li>
             <code className="inline-code">verificationPhrase</code>: for
-            entity deletes, type the resource name itself and pair with{" "}
+            entity deletes, type the{" "}
+            <strong className="font-semibold text-textDefault">
+              resource name itself
+            </strong>{" "}
+            (<code className="inline-code">my-project</code>) and pair with{" "}
             <code className="inline-code">verificationLabel=&quot;project name&quot;</code>{" "}
             so the prompt reads{" "}
-            <em>To confirm, type the project name &quot;my-project&quot;</em>.
-            Fall back to a lowercase verb phrase only when there&apos;s no
-            entity to name.
+            <code className="inline-code">
+              To confirm, type the project name &quot;my-project&quot;
+            </code>
+            . That&apos;s the canonical signal that the user knows which thing
+            they&apos;re acting on. Fall back to a lowercase verb phrase (
+            <code className="inline-code">disable vercel authentication</code>)
+            only when there&apos;s no entity to name.
+          </li>
+          <li>
+            <code className="inline-code">irreversibleDescription</code> names
+            the specific action and resource and ends with{" "}
+            <code className="inline-code">cannot be undone.</code> —{" "}
+            <code className="inline-code">
+              Deleting my-project cannot be undone.
+            </code>{" "}
+            rather than the generic{" "}
+            <code className="inline-code">This cannot be undone.</code>. Omit
+            the prop entirely for reversible actions; the prop&apos;s absence
+            is the signal, not a falsy value.
           </li>
           <li>
             <code className="inline-code">error</code> surfaces the API
             failure verbatim in Distanz voice:{" "}
-            <em>Couldn&apos;t save settings. Try again.</em> Never dump a raw
-            error object.
+            <code className="inline-code">
+              Couldn&apos;t save settings. Try again.
+            </code>
+            . Never dump a raw error object.
           </li>
         </ul>
 
