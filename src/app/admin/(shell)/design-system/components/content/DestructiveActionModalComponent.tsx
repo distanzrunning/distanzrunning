@@ -279,16 +279,16 @@ function ReversibleDemo() {
   return (
     <>
       <Button variant="error" size="small" onClick={() => setOpen(true)}>
-        Disable Vercel Authentication
+        Disable Authentication
       </Button>
       <DestructiveActionModal
         open={open}
         onOpenChange={setOpen}
         onConfirm={() => setOpen(false)}
-        title="Disable Vercel Authentication"
+        title="Disable Authentication"
         description="Anyone with a deployment URL will be able to view your project without signing in."
-        verificationPhrase="disable vercel authentication"
-        confirmLabel="Disable Vercel Authentication"
+        verificationPhrase="disable authentication"
+        confirmLabel="Disable Authentication"
       />
     </>
   );
@@ -396,16 +396,16 @@ export function Example() {
   return (
     <>
       <Button variant="error" size="small" onClick={() => setOpen(true)}>
-        Disable Vercel Authentication
+        Disable Authentication
       </Button>
       <DestructiveActionModal
         open={open}
         onOpenChange={setOpen}
         onConfirm={() => setOpen(false)}
-        title="Disable Vercel Authentication"
+        title="Disable Authentication"
         description="Anyone with a deployment URL will be able to view your project without signing in."
-        verificationPhrase="disable vercel authentication"
-        confirmLabel="Disable Vercel Authentication"
+        verificationPhrase="disable authentication"
+        confirmLabel="Disable Authentication"
       />
     </>
   );
@@ -662,7 +662,7 @@ export default function DestructiveActionModalComponent() {
             </code>
             . That&apos;s the canonical signal that the user knows which thing
             they&apos;re acting on. Fall back to a lowercase verb phrase (
-            <code className="inline-code">disable vercel authentication</code>)
+            <code className="inline-code">disable authentication</code>)
             only when there&apos;s no entity to name.
           </li>
           <li>
