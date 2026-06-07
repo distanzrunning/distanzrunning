@@ -554,7 +554,7 @@ export default function ContextCardComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             Context Card opens on hover and keyboard focus and closes on
-            cursor exit or blur. Preserve the default entry delay so it
+            cursor exit or blur. Preserve the ~150ms entry delay so it
             doesn&apos;t flash on a fast mouse sweep.
           </li>
           <li>

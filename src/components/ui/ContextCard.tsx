@@ -10,7 +10,7 @@ import { createContext, useContext, useId, type ReactNode } from "react";
 export interface ContextCardProps {
   /** Wrap triggers so they share the same delay defaults */
   children: ReactNode;
-  /** Delay in ms before the card opens on hover. Defaults to 200. */
+  /** Delay in ms before the card opens on hover. Defaults to 150. */
   delayDuration?: number;
   /** Delay in ms before the card closes on cursor exit. Defaults to 150. */
   closeDelay?: number;
@@ -40,7 +40,7 @@ interface ContextCardTriggerProps {
 const ContextCardDelaysContext = createContext<{
   openDelay: number;
   closeDelay: number;
-}>({ openDelay: 200, closeDelay: 150 });
+}>({ openDelay: 150, closeDelay: 150 });
 
 // ============================================================================
 // Styles
@@ -191,7 +191,7 @@ function ContextCardTrigger({
 
 export function ContextCard({
   children,
-  delayDuration = 200,
+  delayDuration = 150,
   closeDelay = 150,
 }: ContextCardProps) {
   return (
