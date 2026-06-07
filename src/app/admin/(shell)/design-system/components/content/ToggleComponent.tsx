@@ -310,14 +310,15 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // Lock Icon for Custom Color section
 // ============================================================================
 
-function LockIcon({ size = 16 }: { size?: number }) {
+function LockIcon({
+  size = 16,
+  className = "",
+}: {
+  size?: number;
+  className?: string;
+}) {
   return (
-    <svg
-      height={size}
-      viewBox="0 0 16 16"
-      width={size}
-      style={{ color: "currentcolor" }}
-    >
+    <svg height={size} viewBox="0 0 16 16" width={size} className={className}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -392,32 +393,36 @@ export function Component(): JSX.Element {
       <Toggle
         checked={on}
         onChange={setOn}
-        uncheckedColor="#f59e0b"
-        checkedColor="#f59e0b"
-        thumbIcon={<LockIcon size={12} />}
+        uncheckedColor="var(--ds-amber-700)"
+        checkedColor="var(--ds-gray-100)"
+        thumbIcon={
+          <LockIcon size={12} className="text-[var(--ds-amber-1000)]" />
+        }
       />
       <Toggle
         checked={on}
         onChange={setOn}
-        uncheckedColor="#ef4444"
-        checkedColor="#ef4444"
-        thumbIcon={<LockIcon size={12} />}
-      />
-      <Toggle
-        checked={on}
-        onChange={setOn}
-        size="large"
-        uncheckedColor="#f59e0b"
-        checkedColor="#f59e0b"
-        thumbIcon={<LockIcon size={14} />}
+        uncheckedColor="var(--ds-red-600)"
+        checkedColor="var(--ds-gray-100)"
+        thumbIcon={<LockIcon size={12} className="text-[var(--ds-red-1000)]" />}
       />
       <Toggle
         checked={on}
         onChange={setOn}
         size="large"
-        uncheckedColor="#ef4444"
-        checkedColor="#ef4444"
-        thumbIcon={<LockIcon size={14} />}
+        uncheckedColor="var(--ds-amber-700)"
+        checkedColor="var(--ds-gray-100)"
+        thumbIcon={
+          <LockIcon size={14} className="text-[var(--ds-amber-1000)]" />
+        }
+      />
+      <Toggle
+        checked={on}
+        onChange={setOn}
+        size="large"
+        uncheckedColor="var(--ds-red-600)"
+        checkedColor="var(--ds-gray-100)"
+        thumbIcon={<LockIcon size={14} className="text-[var(--ds-red-1000)]" />}
       />
     </div>
   );
@@ -490,32 +495,36 @@ function CustomColorDemo() {
       <Toggle
         checked={on}
         onChange={setOn}
-        uncheckedColor="#f59e0b"
-        checkedColor="#f59e0b"
-        thumbIcon={<LockIcon size={12} />}
+        uncheckedColor="var(--ds-amber-700)"
+        checkedColor="var(--ds-gray-100)"
+        thumbIcon={
+          <LockIcon size={12} className="text-[var(--ds-amber-1000)]" />
+        }
       />
       <Toggle
         checked={on}
         onChange={setOn}
-        uncheckedColor="#ef4444"
-        checkedColor="#ef4444"
-        thumbIcon={<LockIcon size={12} />}
-      />
-      <Toggle
-        checked={on}
-        onChange={setOn}
-        size="large"
-        uncheckedColor="#f59e0b"
-        checkedColor="#f59e0b"
-        thumbIcon={<LockIcon size={14} />}
+        uncheckedColor="var(--ds-red-600)"
+        checkedColor="var(--ds-gray-100)"
+        thumbIcon={<LockIcon size={12} className="text-[var(--ds-red-1000)]" />}
       />
       <Toggle
         checked={on}
         onChange={setOn}
         size="large"
-        uncheckedColor="#ef4444"
-        checkedColor="#ef4444"
-        thumbIcon={<LockIcon size={14} />}
+        uncheckedColor="var(--ds-amber-700)"
+        checkedColor="var(--ds-gray-100)"
+        thumbIcon={
+          <LockIcon size={14} className="text-[var(--ds-amber-1000)]" />
+        }
+      />
+      <Toggle
+        checked={on}
+        onChange={setOn}
+        size="large"
+        uncheckedColor="var(--ds-red-600)"
+        checkedColor="var(--ds-gray-100)"
+        thumbIcon={<LockIcon size={14} className="text-[var(--ds-red-1000)]" />}
       />
     </div>
   );
