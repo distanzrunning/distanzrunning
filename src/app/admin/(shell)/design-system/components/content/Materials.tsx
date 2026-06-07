@@ -148,8 +148,16 @@ const floatingMaterials: MaterialDefinition[] = [
 ];
 
 // Material table component (Geist-verbatim: borderless body rows with a
-// rounded hover fill, a spacer tbody under the header, auto layout).
+// rounded hover fill, a spacer tbody under the header, auto layout). Rows are
+// click-to-copy the class name (Geist's interactive table rows).
 function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
+  const { showToast } = useToast();
+
+  const handleCopyClassName = (className: string) => {
+    navigator.clipboard.writeText(className);
+    showToast(`Copied ${className}`);
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full caption-bottom text-copy-14 text-textSubtle">
@@ -179,7 +187,11 @@ function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
         <tbody aria-hidden="true" className="h-3 block" />
         <tbody className="[&_td:first-child]:rounded-l-[4px] [&_td:last-child]:rounded-r-[4px] [&_tr:hover]:bg-[var(--ds-gray-100)]">
           {materials.map((material) => (
-            <tr key={material.className} className="transition-colors">
+            <tr
+              key={material.className}
+              className="transition-colors cursor-copy"
+              onClick={() => handleCopyClassName(material.className)}
+            >
               <td className="px-2 py-2.5 align-middle whitespace-nowrap">
                 <div
                   className={`${material.className} max-w-[240px] h-[100px]`}
