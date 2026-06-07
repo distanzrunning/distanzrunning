@@ -181,7 +181,7 @@ Each `material-*` is **Geist-verbatim**: `background: --ds-background-100` + `bo
 
 ## Iconography
 
-- **Library**: `lucide-react`. Don't introduce alternative icon sets.
+- **Library**: `lucide-react` is the default for general UI icons. For components that must match Geist **class-for-class**, inlining Geist's exact SVG glyphs is allowed (e.g. `CopyButton`'s copy/check). Don't pull in a *third* icon library — lucide or Geist-verbatim inline SVGs only.
 - **Sizes**: Small 16 px (`w-4 h-4`) inline / Medium 20 px (`w-5 h-5`) buttons / Large 24 px (`w-6 h-6`) prominent actions.
 - **Stroke**: 1.5 default/inactive, 2.5 active/selected.
 - **Color**: inherits via `currentColor` — apply Tailwind text utilities (e.g. `text-[color:var(--ds-gray-900)]`).
