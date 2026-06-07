@@ -55,6 +55,9 @@ function CopyGlyph() {
 // Types
 // ============================================================================
 
+export type CopyButtonVariant = "secondary" | "ghost";
+export type CopyButtonSize = "small" | "medium";
+
 export interface CopyButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick" | "value"> {
   /** The string written to the clipboard when pressed */
@@ -63,7 +66,38 @@ export interface CopyButtonProps
   feedbackDuration?: number;
   /** Fired after a successful copy */
   onCopy?: (value: string) => void;
+  /**
+   * `secondary` (default) is Geist's bordered Copy Button. `ghost` is the
+   * borderless icon button used inside chrome like code-block headers.
+   */
+  variant?: CopyButtonVariant;
+  /** `medium` (40px, default) or `small` (32px). */
+  size?: CopyButtonSize;
 }
+
+const SIZE_CLASSES: Record<CopyButtonSize, string> = {
+  medium:
+    "h-[var(--ds-button-height-medium)] w-[var(--ds-button-height-medium)]",
+  small: "h-[var(--ds-button-height-small)] w-[var(--ds-button-height-small)]",
+};
+
+const VARIANT_CLASSES: Record<CopyButtonVariant, string> = {
+  // Geist's bordered Copy Button verbatim: surface fill, 1px gray-400 ring,
+  // gray-1000 ink, gray-100/200 hover, 3-layer focus shadow.
+  secondary: [
+    "bg-surface text-textDefault shadow-[0_0_0_1px_var(--ds-gray-400)]",
+    "hover:bg-[var(--ds-gray-100)] hover:text-textDefault dark:hover:bg-[var(--ds-gray-200)]",
+    "focus-visible:shadow-[0_0_0_1px_var(--ds-gray-400),0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)] focus-visible:transition-none",
+    "disabled:bg-[var(--ds-gray-100)] disabled:text-textSubtler",
+  ].join(" "),
+  // Borderless ghost for embedding in chrome (code-block header / floating).
+  ghost: [
+    "bg-transparent text-textSubtle",
+    "hover:bg-[var(--ds-gray-200)] hover:text-textDefault dark:hover:bg-[var(--ds-gray-100)]",
+    "focus-visible:shadow-[var(--ds-focus-ring)]",
+    "disabled:text-textSubtler",
+  ].join(" "),
+};
 
 // ============================================================================
 // CopyButton
@@ -82,6 +116,8 @@ export function CopyButton({
   feedbackDuration = 2000,
   onCopy,
   "aria-label": ariaLabel = "Copy",
+  variant = "secondary",
+  size = "medium",
   className = "",
   disabled = false,
   ...props
@@ -111,16 +147,10 @@ export function CopyButton({
         // Geist's data-geist-button base, square icon-only
         "relative m-0 flex max-w-full transform-gpu select-none items-center justify-center",
         "border-0 p-0 align-baseline font-medium no-underline outline-none",
-        "h-[var(--ds-button-height-medium)] w-[var(--ds-button-height-medium)]",
-        "cursor-pointer rounded-md text-[14px]",
-        // secondary themed tokens: surface fill, gray-1000 ink, 1px gray-400 border
-        "bg-surface text-textDefault shadow-[0_0_0_1px_var(--ds-gray-400)]",
+        "cursor-pointer rounded-md text-[14px] [&_svg]:shrink-0 disabled:cursor-not-allowed",
         "transition-[border-color,background,color,transform,box-shadow] duration-150 ease-in-out",
-        "hover:bg-[var(--ds-gray-100)] hover:text-textDefault dark:hover:bg-[var(--ds-gray-200)]",
-        // Geist focus: 1px border + 2px bg gap + 4px focus colour, no transition
-        "focus-visible:shadow-[0_0_0_1px_var(--ds-gray-400),0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)] focus-visible:transition-none",
-        "[&_svg]:shrink-0",
-        "disabled:cursor-not-allowed disabled:bg-[var(--ds-gray-100)] disabled:text-textSubtler",
+        SIZE_CLASSES[size],
+        VARIANT_CLASSES[variant],
         className,
       ].join(" ")}
       {...props}
