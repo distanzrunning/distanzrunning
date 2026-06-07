@@ -241,78 +241,73 @@ function BestPracticesSection() {
     <Section>
       <SectionHeader id="best-practices">Best Practices</SectionHeader>
 
-      <h3
-        id="when-to-use"
-        className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
-      >
-        When to use
-      </h3>
-      <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-        <li>
-          Use Material instead of hand-rolling radii, fills, strokes, and
-          shadows on a surface; the type encodes the elevation role.
-        </li>
-        <li>
-          Pick the type from where the element sits in the layered hierarchy:{" "}
-          <code className="inline-code">base</code> for resting cards,{" "}
-          <code className="inline-code">small</code>–
-          <code className="inline-code">large</code> for raised content,{" "}
-          <code className="inline-code">tooltip</code> and{" "}
-          <code className="inline-code">menu</code> for floating popovers,{" "}
-          <code className="inline-code">modal</code> for dialogs,{" "}
-          <code className="inline-code">fullscreen</code> for takeovers.
-        </li>
-        <li>
-          Don&apos;t stack two Materials on the same element; if a child needs
-          more elevation, lift it into its own Material with a higher type.
-        </li>
-      </ul>
+      <div className="mt-4">
+        <div className="mb-6 last:mb-0">
+          <h4 className="text-label-16 text-textDefault mb-2">When to use</h4>
+          <ul className="text-copy-14 text-textSubtle list-disc pl-5 space-y-1.5">
+            <li>
+              Use Material instead of hand-rolling radii, fills, strokes, and
+              shadows on a surface; the type encodes the elevation role.
+            </li>
+            <li>
+              Pick the type from where the element sits in the layered hierarchy:{" "}
+              <code className="inline-code">base</code> for resting cards,{" "}
+              <code className="inline-code">small</code>–
+              <code className="inline-code">large</code> for raised content,{" "}
+              <code className="inline-code">tooltip</code> and{" "}
+              <code className="inline-code">menu</code> for floating popovers,{" "}
+              <code className="inline-code">modal</code> for dialogs,{" "}
+              <code className="inline-code">fullscreen</code> for takeovers.
+            </li>
+            <li>
+              Don&apos;t stack two Materials on the same element; if a child needs
+              more elevation, lift it into its own Material with a higher type.
+            </li>
+          </ul>
+        </div>
 
-      <h3
-        id="behavior"
-        className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
-      >
-        Behavior
-      </h3>
-      <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-        <li>
-          Align the elevation choice with the element&apos;s{" "}
-          <code className="inline-code">z-index</code> band so a{" "}
-          <code className="inline-code">tooltip</code>-typed surface doesn&apos;t
-          sit visually below a <code className="inline-code">base</code> card.
-        </li>
-        <li>
-          Favor the lowest elevation that still reads as elevated against its
-          background; over-elevating is a common source of visual noise.
-        </li>
-        <li>
-          Let the type drive chrome and use layout spacing for layout instead of
-          overriding shadows on the same element.
-        </li>
-      </ul>
+        <div className="mb-6 last:mb-0">
+          <h4 className="text-label-16 text-textDefault mb-2">Behavior</h4>
+          <ul className="text-copy-14 text-textSubtle list-disc pl-5 space-y-1.5">
+            <li>
+              Align the elevation choice with the element&apos;s{" "}
+              <code className="inline-code">z-index</code> band so a{" "}
+              <code className="inline-code">tooltip</code>-typed surface
+              doesn&apos;t sit visually below a{" "}
+              <code className="inline-code">base</code> card.
+            </li>
+            <li>
+              Favor the lowest elevation that still reads as elevated against its
+              background; over-elevating is a common source of visual noise.
+            </li>
+            <li>
+              Let the type drive chrome and use layout spacing for layout instead
+              of overriding shadows on the same element.
+            </li>
+          </ul>
+        </div>
 
-      <h3
-        id="accessibility"
-        className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
-      >
-        Accessibility
-      </h3>
-      <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-        <li>
-          Material is decorative chrome; semantics live on the role-bearing
-          wrapper (<code className="inline-code">role=&quot;dialog&quot;</code> on
-          a modal, <code className="inline-code">role=&quot;tooltip&quot;</code>{" "}
-          on a tooltip, etc.).
-        </li>
-        <li>
-          Don&apos;t rely on shadow alone to communicate elevation; pair with the
-          matching focus-visible ring on focusable children inside.
-        </li>
-        <li>
-          Test materials in both themes: shadow contrast on dark backgrounds is
-          weaker than on light, so confirm separation still reads.
-        </li>
-      </ul>
+        <div className="mb-6 last:mb-0">
+          <h4 className="text-label-16 text-textDefault mb-2">Accessibility</h4>
+          <ul className="text-copy-14 text-textSubtle list-disc pl-5 space-y-1.5">
+            <li>
+              Material is decorative chrome; semantics live on the role-bearing
+              wrapper (<code className="inline-code">role=&quot;dialog&quot;</code>{" "}
+              on a modal,{" "}
+              <code className="inline-code">role=&quot;tooltip&quot;</code> on a
+              tooltip, etc.).
+            </li>
+            <li>
+              Don&apos;t rely on shadow alone to communicate elevation; pair with
+              the matching focus-visible ring on focusable children inside.
+            </li>
+            <li>
+              Test materials in both themes: shadow contrast on dark backgrounds
+              is weaker than on light, so confirm separation still reads.
+            </li>
+          </ul>
+        </div>
+      </div>
     </Section>
   );
 }

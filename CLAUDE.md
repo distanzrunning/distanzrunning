@@ -256,18 +256,14 @@ Every component page under `src/app/admin/(shell)/design-system/<slug>/page.tsx`
 
 3. **`SectionHeader`** on every `<Section>` — hover surfaces a link icon, click copies the URL + smooth-scrolls. Pass `onCopyLink={showToast}` so the copy fires the toast.
 
-4. **Best Practices** section is required and follows this exact structure (in order):
+4. **Best Practices** section is required. **Match Geist's BP for that specific
+   page** (per-page convention — Geist isn't uniform, so don't force one style).
+   The common/default shape (Checkbox, Banner, Browser, …):
    - `<h3 id="when-to-use" className="text-heading-20 text-textDefault mt-8 scroll-mt-32">When to use</h3>`
-   - `<h3 id="behavior">Behavior</h3>`
-   - `<h3 id="content">Content</h3>`
-   - `<h3 id="accessibility">Accessibility</h3>`
+   - `<h3 id="behavior">Behavior</h3>` · `<h3 id="content">Content</h3>` · `<h3 id="accessibility">Accessibility</h3>`
+   - each followed by `<ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">`
 
-   Each followed by:
-   ```tsx
-   <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-     <li>…</li>
-   </ul>
-   ```
+   But some pages differ — e.g. **Materials** uses denser BP chrome (`<h4 className="text-label-16 …">` subheadings in `mb-6 last:mb-0` wrappers, lists `text-copy-14 … pl-5 space-y-1.5`) and **omits Content**. Reproduce whatever that page does in Geist rather than the default.
 
 5. **Inline references in body copy:**
    - Component cross-refs → `<ComponentRef name="Modal" />` (from `../ComponentRef`) — never plain text like "Modal".
