@@ -344,7 +344,7 @@ function ErrorDemo() {
         verificationPhrase="next-year-boilerplate"
         verificationLabel="project name"
         confirmLabel="Delete Project"
-        error="Couldn't delete the project. Try again."
+        error="Couldn't delete project. Try again."
       />
     </>
   );
@@ -461,7 +461,7 @@ export function Example() {
         verificationPhrase="next-year-boilerplate"
         verificationLabel="project name"
         confirmLabel="Delete Project"
-        error="Couldn't delete the project. Try again."
+        error="Couldn't delete project. Try again."
       />
     </>
   );

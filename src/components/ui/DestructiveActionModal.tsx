@@ -188,11 +188,9 @@ export function DestructiveActionModal({
             translate="no"
           />
           {errMsg && (
-            <div style={{ marginTop: 4 }}>
-              <Error size="small" live="assertive">
-                {errMsg}
-              </Error>
-            </div>
+            <Error size="small" live="assertive">
+              {errMsg}
+            </Error>
           )}
         </div>
       </div>
