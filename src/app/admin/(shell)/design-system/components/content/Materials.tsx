@@ -158,7 +158,7 @@ function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full caption-bottom text-sm text-textDefault table-fixed">
+      <table className="w-full caption-bottom text-copy-14 text-textSubtle table-fixed">
         <thead>
           <tr className="transition-colors">
             <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral w-[340px]">
@@ -194,10 +194,10 @@ function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
                   className={`${material.className} max-w-[240px] h-[100px]`}
                 />
               </td>
-              <td className="px-2 py-2.5 align-middle text-left font-mono text-copy-13">
+              <td className="px-2 py-2.5 align-middle text-left text-label-13-mono">
                 {material.className}
               </td>
-              <td className="px-2 py-2.5 align-middle text-left text-textSubtle">
+              <td className="px-2 py-2.5 align-middle text-left text-label-14 text-textSubtle">
                 {material.usage}
               </td>
             </tr>
