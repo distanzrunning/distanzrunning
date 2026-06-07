@@ -43,12 +43,14 @@ function menuCrumbState(item: BreadcrumbItem) {
 }
 
 // Geist text-link affordance: inherit colour, no underline, 2px focus
-// radius + the blue focus ring (links are actionable). Last separator is
-// hidden via `last-of-type:[&_svg]:hidden`.
+// radius + the blue focus ring (links are actionable). The trailing
+// separator is omitted in JS rather than hidden via a stacked
+// `last-of-type:[&_svg]:hidden` variant, which mis-compiles here and
+// would hide every chevron.
 const TEXT_ITEM_BASE =
   "text-copy-14 flex items-center gap-1.5 transition-colors duration-200 " +
   "[&_a]:text-inherit [&_a]:no-underline [&_a]:rounded-[2px] [&_a]:outline-none " +
-  "[&_a]:focus-visible:shadow-[var(--ds-focus-ring)] last-of-type:[&_svg]:hidden";
+  "[&_a]:focus-visible:shadow-[var(--ds-focus-ring)]";
 
 const MENU_ITEM_BASE =
   "inline-block min-w-0 max-w-full truncate whitespace-nowrap rounded-[4px] " +
@@ -106,7 +108,9 @@ export function Breadcrumbs({
             ) : (
               item.label
             )}
-            <ChevronRight aria-hidden className="h-4 w-4 shrink-0 text-textSubtle" />
+            {i < items.length - 1 && (
+              <ChevronRight aria-hidden className="h-4 w-4 shrink-0 text-textSubtle" />
+            )}
           </li>
         ))}
       </ol>
