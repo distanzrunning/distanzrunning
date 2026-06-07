@@ -197,7 +197,7 @@ export function CodeBlock({
 
   return (
     <div
-      className="relative border border-borderDefault rounded overflow-hidden group"
+      className="relative border border-borderDefault rounded-md overflow-hidden group"
       data-code-block
       aria-label={ariaLabel}
     >
@@ -206,8 +206,9 @@ export function CodeBlock({
         <div
           className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-borderDefault"
           style={{
-            background: "hsl(var(--color-surface))",
-            borderRadius: "4px 4px 0 0",
+            // Geist: recessed header on bg-200 over the bg-100 code body.
+            background: "hsl(var(--color-canvas))",
+            borderRadius: "6px 6px 0 0",
           }}
         >
           <div className="flex items-center gap-2">
@@ -272,7 +273,7 @@ export function CodeBlock({
       {!filename && (
         <button
           onClick={handleCopy}
-          className={`absolute right-3 p-2 rounded border border-transparent opacity-0 group-hover:opacity-100 transition-all z-10 text-textSubtle hover:text-textDefault hover:bg-surface hover:border-borderDefault ${
+          className={`absolute right-4 p-2 rounded-[5px] opacity-0 group-hover:opacity-100 transition-all z-10 text-textSubtle hover:text-textDefault bg-canvas hover:bg-[var(--ds-gray-200)] ${
             lines.length === 1 ? "top-1/2 -translate-y-1/2" : "top-3"
           }`}
           aria-label="Copy code"
