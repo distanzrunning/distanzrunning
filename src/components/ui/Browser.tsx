@@ -7,6 +7,9 @@ import { ArrowLeft, ArrowRight, RotateCw, Copy, Check } from "lucide-react";
 // Types
 // ============================================================================
 
+/** Forces the chrome theme regardless of the page theme. Omit to follow it. */
+export type BrowserVariant = "light" | "dark";
+
 /** Props for the Browser component */
 export interface BrowserProps {
   /** Content to display inside the browser frame */
@@ -17,6 +20,8 @@ export interface BrowserProps {
   showNavigation?: boolean;
   /** Whether to show the copy button in the address bar */
   showCopyButton?: boolean;
+  /** Force light/dark chrome. Omit to follow the surrounding page theme. */
+  variant?: BrowserVariant;
   /** Additional CSS classes */
   className?: string;
 }
@@ -33,11 +38,32 @@ export interface BrowserHeaderProps {
   className?: string;
 }
 
+/** Props for the BrowserAddressBar building block */
+export interface BrowserAddressBarProps {
+  /** URL to display */
+  url?: string;
+  /** Whether to show the copy button */
+  showCopyButton?: boolean;
+  /** Additional CSS classes */
+  className?: string;
+}
+
+// Our --ds-* tokens redeclare under `.light` / `.dark`, so wrapping a subtree
+// in that class forces its palette regardless of the page theme.
+function variantClass(variant?: BrowserVariant): string {
+  return variant === "light" ? "light" : variant === "dark" ? "dark" : "";
+}
+
+// Shared class for the header's three flex slots (left / center / right).
+const HEADER_SLOT =
+  "flex items-center flex-1 justify-center gap-4 min-w-0 first:justify-start md:first:max-w-[140px] max-md:first:flex-none last:justify-end md:last:max-w-[140px]";
+
 // ============================================================================
-// Traffic Light Dots
+// Building blocks (composable — named exports for custom chrome layouts)
 // ============================================================================
 
-function TrafficLights() {
+/** Traffic-light dots (macOS-style window controls). */
+export function BrowserDots() {
   return (
     <div aria-hidden="true" className="flex items-center gap-2">
       <div className="w-3 h-3 rounded-full bg-[#FE5F57]" />
@@ -47,11 +73,8 @@ function TrafficLights() {
   );
 }
 
-// ============================================================================
-// Navigation Buttons
-// ============================================================================
-
-function NavigationButtons() {
+/** Back / forward / refresh nav controls (hidden below md, like Geist). */
+export function BrowserControls() {
   return (
     <div aria-hidden="true" className="flex items-center gap-4 max-md:hidden">
       <ArrowLeft size={14} className="text-textSubtle" />
@@ -61,19 +84,12 @@ function NavigationButtons() {
   );
 }
 
-// ============================================================================
-// Address Bar
-// ============================================================================
-
-interface AddressBarProps {
-  url?: string;
-  showCopyButton?: boolean;
-}
-
-function AddressBar({
+/** The address-bar pill (URL + optional copy button). */
+export function BrowserAddressBar({
   url = "distanzrunning.com",
   showCopyButton = true,
-}: AddressBarProps) {
+  className = "",
+}: BrowserAddressBarProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(() => {
@@ -83,7 +99,9 @@ function AddressBar({
   }, [url]);
 
   return (
-    <div className="lg:max-w-xs bg-canvas border border-borderDefault w-full rounded-full pl-4 pr-1 py-1 flex items-center justify-between">
+    <div
+      className={`lg:max-w-xs bg-canvas border border-borderDefault w-full rounded-full pl-4 pr-1 py-1 flex items-center justify-between ${className}`}
+    >
       <div
         aria-hidden="true"
         className="text-copy-13 text-textDefault truncate flex-1 min-w-0 text-center"
@@ -120,12 +138,10 @@ function AddressBar({
 }
 
 // ============================================================================
-// Browser Header Component
+// Browser Header
 // ============================================================================
 
-/**
- * BrowserHeader component - the top bar of the browser frame.
- */
+/** The canned browser chrome bar (dots + controls · address bar · spacer). */
 export const BrowserHeader = forwardRef<HTMLDivElement, BrowserHeaderProps>(
   (
     { url, showNavigation = true, showCopyButton = true, className = "" },
@@ -136,19 +152,19 @@ export const BrowserHeader = forwardRef<HTMLDivElement, BrowserHeaderProps>(
         ref={ref}
         className={`px-4 py-2 md:px-5 md:py-2.5 flex justify-between gap-4 md:gap-6 bg-surface ${className}`}
       >
-        {/* Left section: traffic lights and navigation */}
-        <div className="flex items-center flex-1 justify-center gap-4 min-w-0 first:justify-start md:first:max-w-[140px] max-md:first:flex-none last:justify-end md:last:max-w-[140px]">
-          <TrafficLights />
-          {showNavigation && <NavigationButtons />}
+        {/* Left: traffic lights + nav controls */}
+        <div className={HEADER_SLOT}>
+          <BrowserDots />
+          {showNavigation && <BrowserControls />}
         </div>
 
-        {/* Center section: address bar */}
-        <div className="flex items-center flex-1 justify-center gap-4 min-w-0 first:justify-start md:first:max-w-[140px] max-md:first:flex-none last:justify-end md:last:max-w-[140px]">
-          <AddressBar url={url} showCopyButton={showCopyButton} />
+        {/* Center: address bar */}
+        <div className={HEADER_SLOT}>
+          <BrowserAddressBar url={url} showCopyButton={showCopyButton} />
         </div>
 
-        {/* Right section: placeholder for additional controls */}
-        <div className="flex items-center flex-1 justify-center gap-4 min-w-0 first:justify-start md:first:max-w-[140px] max-md:first:flex-none last:justify-end md:last:max-w-[140px] max-lg:hidden" />
+        {/* Right: spacer (balances the address bar; hidden below lg) */}
+        <div className={`${HEADER_SLOT} max-lg:hidden`} />
       </div>
     );
   },
@@ -157,15 +173,19 @@ export const BrowserHeader = forwardRef<HTMLDivElement, BrowserHeaderProps>(
 BrowserHeader.displayName = "BrowserHeader";
 
 // ============================================================================
-// Browser Component
+// Browser
 // ============================================================================
 
 /**
- * Browser component - a realistic browser-style frame for showcasing content.
+ * Browser — a realistic browser-style frame for showcasing screenshots,
+ * demos, or recordings. Use the canned `Browser`, or compose your own chrome
+ * from the building blocks (`BrowserDots`, `BrowserControls`,
+ * `BrowserAddressBar`). Pass `variant="light" | "dark"` to force the chrome
+ * theme; omit it to follow the page theme.
  *
  * @example
  * <Browser url="distanzrunning.com">
- *   <img src="/screenshot.png" alt="Website screenshot" />
+ *   <img src="/screenshot.png" alt="Race calendar on Distanz" />
  * </Browser>
  */
 export const Browser = forwardRef<HTMLDivElement, BrowserProps>(
@@ -175,17 +195,20 @@ export const Browser = forwardRef<HTMLDivElement, BrowserProps>(
       url = "distanzrunning.com",
       showNavigation = true,
       showCopyButton = true,
+      variant,
       className = "",
     },
     ref,
   ) => {
     return (
-      // container-type wrapper so the frame's md:rounded-[1.5cqw] (Geist's
-      // width-relative corner radius) resolves against the Browser's own width.
-      <div ref={ref} className={`[container-type:inline-size] ${className}`}>
-        {/* Geist-verbatim frame: the `material-small` primitive (now borderless
-            = shadow-border-small + 6px radius) with bg overridden to canvas
-            (bg-200) and the radius growing to 1.5cqw at md. */}
+      // container-type so md:rounded-[1.5cqw] resolves to the Browser's width;
+      // the variant class forces the chrome palette for this subtree.
+      <div
+        ref={ref}
+        className={`[container-type:inline-size] ${variantClass(variant)} ${className}`}
+      >
+        {/* Geist `material-small` (borderless: shadow-border-small + 6px) with
+            the fill overridden to canvas (bg-200) and radius growing at md. */}
         <div className="material-small overflow-hidden rounded-md bg-canvas md:rounded-[1.5cqw]">
           <BrowserHeader
             url={url}

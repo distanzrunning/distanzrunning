@@ -351,10 +351,6 @@ export default function BrowserComponent() {
         <SectionHeader id="composition" onCopyLink={showToast}>
           Composition
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          The Browser component provides a realistic browser-style frame for
-          showcasing website screenshots or any other content.
-        </p>
         <CodePreview componentCode={compositionCode}>
           <div className="max-w-4xl">
             <Browser url="distanzrunning.com" />
@@ -386,12 +382,12 @@ export default function BrowserComponent() {
             surface.
           </li>
           <li>
-            Use{" "}
-            <code className="inline-code">&lt;BrowserHeader&gt;</code>{" "}
-            when the canned{" "}
-            <code className="inline-code">&lt;Browser&gt;</code>{" "}
-            shape doesn&apos;t fit the layout; don&apos;t fork the
-            chrome.
+            Compose from the building blocks (
+            <code className="inline-code">&lt;BrowserDots&gt;</code>,{" "}
+            <code className="inline-code">&lt;BrowserControls&gt;</code>,{" "}
+            <code className="inline-code">&lt;BrowserAddressBar&gt;</code>) when
+            the canned <code className="inline-code">&lt;Browser&gt;</code> shape
+            doesn&apos;t fit the layout; don&apos;t fork the chrome.
           </li>
         </ul>
 
@@ -403,10 +399,13 @@ export default function BrowserComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The chrome reads correctly on both light and dark
-            surfaces &mdash; background, border, and text colours
-            flip automatically with the page theme so the frame
-            doesn&apos;t fight the page.
+            Match the variant to the surrounding theme:{" "}
+            <code className="inline-code">variant=&quot;light&quot;</code> on
+            light backgrounds,{" "}
+            <code className="inline-code">variant=&quot;dark&quot;</code> on
+            dark, so the frame doesn&apos;t fight the page. Omit{" "}
+            <code className="inline-code">variant</code> to follow the page
+            theme automatically.
           </li>
           <li>
             For long URLs, pass a pre-shortened display value to{" "}
