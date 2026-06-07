@@ -10,6 +10,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { ContextCard } from "@/components/ui/ContextCard";
+import { Button } from "@/components/ui/Button";
 
 // ============================================================================
 // Toast Component
@@ -351,6 +352,45 @@ function Demo(): JSX.Element {
   );
 }`;
 
+const alignmentCode = `import { ContextCard } from '@/components/ui/ContextCard';
+import { Button } from '@/components/ui/Button';
+import type { JSX } from 'react';
+
+function Demo(): JSX.Element {
+  return (
+    <ContextCard>
+      <div style={{
+        display: 'flex',
+        gap: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        <ContextCard.Trigger
+          content="The Evil Rabbit Jumped over the Fence"
+          side="bottom"
+          align="start"
+        >
+          <Button>Start</Button>
+        </ContextCard.Trigger>
+        <ContextCard.Trigger
+          content="The Evil Rabbit Jumped over the Fence"
+          side="bottom"
+          align="center"
+        >
+          <Button>Center</Button>
+        </ContextCard.Trigger>
+        <ContextCard.Trigger
+          content="The Evil Rabbit Jumped over the Fence"
+          side="bottom"
+          align="end"
+        >
+          <Button>End</Button>
+        </ContextCard.Trigger>
+      </div>
+    </ContextCard>
+  );
+}`;
+
 // ============================================================================
 // Demo Components
 // ============================================================================
@@ -395,6 +435,43 @@ function DefaultDemo() {
   );
 }
 
+function AlignmentDemo() {
+  return (
+    <ContextCard>
+      <div
+        style={{
+          display: "flex",
+          gap: 16,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ContextCard.Trigger
+          content="The Evil Rabbit Jumped over the Fence"
+          side="bottom"
+          align="start"
+        >
+          <Button>Start</Button>
+        </ContextCard.Trigger>
+        <ContextCard.Trigger
+          content="The Evil Rabbit Jumped over the Fence"
+          side="bottom"
+          align="center"
+        >
+          <Button>Center</Button>
+        </ContextCard.Trigger>
+        <ContextCard.Trigger
+          content="The Evil Rabbit Jumped over the Fence"
+          side="bottom"
+          align="end"
+        >
+          <Button>End</Button>
+        </ContextCard.Trigger>
+      </div>
+    </ContextCard>
+  );
+}
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -422,132 +499,19 @@ export default function ContextCardComponent() {
         </div>
       </Section>
 
-      {/* Props */}
+      {/* Alignment */}
       <Section>
-        <SectionHeader id="props" onCopyLink={showToast}>
-          Props
+        <SectionHeader id="alignment" onCopyLink={showToast}>
+          Alignment
         </SectionHeader>
-
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
-          Available props for the ContextCard component.
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
+          Use <code className="inline-code">align</code> to position the card
+          at the start, center, or end of the trigger.
         </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Wrap trigger elements to share delay defaults
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">delayDuration</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  number
-                </td>
-                <td className="py-3 px-4 text-textSubtle">200</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Delay in ms before the card opens on hover
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">closeDelay</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  number
-                </td>
-                <td className="py-3 px-4 text-textSubtle">150</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Delay in ms before the card closes on cursor exit
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p className="text-copy-14 text-textSubtle mt-8 mb-4">
-          ContextCard.Trigger props.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  The element that triggers the card on hover or focus
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">content</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Content shown inside the card
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">side</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {`"top" | "bottom" | "left" | "right"`}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">{`"top"`}</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Which side of the trigger the tooltip appears on
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">sideOffset</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  number
-                </td>
-                <td className="py-3 px-4 text-textSubtle">8</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Distance in px between trigger and tooltip
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={alignmentCode}>
+            <AlignmentDemo />
+          </CodePreview>
         </div>
       </Section>
 

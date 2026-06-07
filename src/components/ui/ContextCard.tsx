@@ -23,6 +23,8 @@ interface ContextCardTriggerProps {
   content: ReactNode;
   /** Which side of the trigger the card appears on */
   side?: "top" | "bottom" | "left" | "right";
+  /** Alignment of the card against the trigger */
+  align?: "start" | "center" | "end";
   /** Distance in px between trigger and card */
   sideOffset?: number;
   /** Override the open delay for this trigger */
@@ -161,6 +163,7 @@ function ContextCardTrigger({
   children,
   content,
   side = "top",
+  align = "center",
   sideOffset = 8,
   openDelay,
   closeDelay,
@@ -187,7 +190,7 @@ function ContextCardTrigger({
           className="ds-context-card"
           side={side}
           sideOffset={sideOffset}
-          align="center"
+          align={align}
         >
           {content}
           <GeistArrow />
