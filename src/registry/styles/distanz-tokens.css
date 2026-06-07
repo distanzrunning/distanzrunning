@@ -464,11 +464,8 @@
     /* Calendar popover - Geist design tokens */
     --calendar-popover-bg: hsl(var(--color-surface));
     --calendar-popover-radius: 12px;
-    --calendar-popover-shadow:
-      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px,
-      rgba(0, 0, 0, 0.04) 0px 4px 8px -4px,
-      rgba(0, 0, 0, 0.06) 0px 16px 24px -8px,
-      rgb(250, 250, 250) 0px 0px 0px 1px inset;
+    /* Floating menu material (Geist-verbatim, theme-aware). */
+    --calendar-popover-shadow: var(--ds-shadow-menu);
     --calendar-day-radius: 4px;
     --calendar-day-color: hsl(var(--color-textDefault));
     --calendar-day-outside-color: hsl(var(--color-textSubtler));
@@ -904,13 +901,10 @@
 
     /* Calendar popover - Geist design tokens (dark mode).
        Floating menu uses the raised surface (bg-100 #0A0A0A) + shadow so it
-       advances above the page (bg-200 #000). */
+       advances above the page (bg-200 #000). --calendar-popover-shadow
+       inherits --ds-shadow-menu from :root, which flips by theme. */
     --calendar-popover-bg: hsl(var(--color-surface));
     --calendar-popover-radius: 12px;
-    --calendar-popover-shadow:
-      rgba(255, 255, 255, 0.145) 0px 0px 0px 1px,
-      rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px,
-      rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, rgb(0, 0, 0) 0px 0px 0px 1px inset;
     --calendar-day-radius: 4px;
     --calendar-day-color: hsl(var(--color-textDefault));
     --calendar-day-outside-color: hsl(var(--color-textSubtler));

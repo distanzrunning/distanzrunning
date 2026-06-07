@@ -452,10 +452,13 @@
   .calendar-trigger-button:focus-visible {
     outline: none;
     box-shadow: var(--calendar-button-focus-ring);
+    /* Geist: data-[focus]:transition-none — the ring snaps in, no fade. */
+    transition: none;
   }
 
   .calendar-trigger-button-expanded {
     box-shadow: var(--calendar-button-focus-ring);
+    transition: none;
   }
 
   /* Calendar dropdown styles */
@@ -517,27 +520,17 @@
   }
 
   .calendar-inputs-wrapper {
-    border-top: 1px solid rgb(242, 242, 242);
+    border-top: 1px solid var(--ds-gray-alpha-400);
     margin: 12px -12px 0;
     padding: 10px 12px 0;
-  }
-
-  :is(.dark, [data-theme="dark"]) .calendar-inputs-wrapper {
-    border-top-color: rgb(46, 46, 46);
   }
 
   /* When popover opens above trigger, border should be on bottom */
   .calendar-dropdown[data-side="top"] .calendar-inputs-wrapper {
     border-top: none;
-    border-bottom: 1px solid rgb(242, 242, 242);
+    border-bottom: 1px solid var(--ds-gray-alpha-400);
     margin: 0 -12px 12px;
     padding: 0 12px 10px;
-  }
-
-  :is(.dark, [data-theme="dark"])
-    .calendar-dropdown[data-side="top"]
-    .calendar-inputs-wrapper {
-    border-bottom-color: rgb(46, 46, 46);
   }
 
   .calendar-month-label {
@@ -868,18 +861,24 @@
     max-width: 100%;
   }
 
+  /* Geist combobox input: gray-400 hairline, gray-500 on hover, grey focus
+     ring, 5px radius, gray-100 hover fill. Border tokens flip by theme. */
   .calendar-input-container {
     display: flex;
     align-items: center;
     height: 32px;
     max-width: 100%;
-    border-radius: 6px;
-    box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-    transition: box-shadow 0.15s ease;
+    border-radius: 5px;
+    box-shadow: var(--calendar-button-shadow);
+    transition: box-shadow 0.15s ease-in-out;
   }
 
-  :is(.dark, [data-theme="dark"]) .calendar-input-container {
-    box-shadow: rgba(255, 255, 255, 0.14) 0px 0px 0px 1px;
+  .calendar-input-container:hover {
+    box-shadow: var(--calendar-button-shadow-hover);
+  }
+
+  .calendar-input-container:hover .calendar-input {
+    background-color: var(--ds-gray-100);
   }
 
   .calendar-input-container:focus-within {
@@ -891,7 +890,7 @@
     height: 32px;
     min-width: 0;
     border: none;
-    border-radius: 6px;
+    border-radius: 5px;
     background-color: hsl(var(--color-surface));
     padding: 0 12px;
     font-size: 14px;
@@ -901,8 +900,9 @@
     order: 1;
     appearance: none;
     transition:
-      border-color 0.15s ease,
-      box-shadow 0.15s ease;
+      background 0.15s ease-in-out,
+      border-color 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out;
   }
 
   .calendar-input::placeholder {
@@ -990,18 +990,13 @@
   }
 
   .calendar-select:hover {
-    box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-  }
-
-  :is(.dark, [data-theme="dark"]) .calendar-select:hover {
-    box-shadow: rgba(255, 255, 255, 0.14) 0px 0px 0px 1px;
+    box-shadow: var(--ds-gray-alpha-400) 0px 0px 0px 1px;
   }
 
   .calendar-select:focus {
     outline: none;
-    box-shadow:
-      0 0 0 1px var(--ds-gray-alpha-600),
-      0px 0px 0px 4px var(--ds-focus-color);
+    /* Grey input focus, matching the trigger + inputs (Geist forms). */
+    box-shadow: var(--calendar-button-focus-ring);
   }
 
   .calendar-select-suffix {
