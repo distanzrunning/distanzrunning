@@ -68,7 +68,11 @@ export function DotsMenu({
         aria-label={ariaLabel}
         disabled={disabled}
         className={
-          disabled ? "shadow-none opacity-50 cursor-not-allowed" : undefined
+          disabled
+            ? // Geist disabled: gray-100 fill + gray-700 ink + opacity-50,
+              // no shadow. `disabled:` beats the tertiary `bg-transparent`.
+              "shadow-none opacity-50 cursor-not-allowed disabled:bg-[var(--ds-gray-100)] disabled:text-[var(--ds-gray-700)]"
+            : undefined
         }
         // The glyph sizes via --ds-icon-size (the global `button svg` rule),
         // so the inline svg width/height alone wouldn't take. small/medium/
