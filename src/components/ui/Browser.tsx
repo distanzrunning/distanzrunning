@@ -86,7 +86,7 @@ function AddressBar({
     <div className="lg:max-w-xs bg-canvas border border-borderDefault w-full rounded-full pl-4 pr-1 py-1 flex items-center justify-between">
       <div
         aria-hidden="true"
-        className="text-[13px] text-textDefault truncate flex-1 min-w-0 text-center"
+        className="text-copy-13 text-textDefault truncate flex-1 min-w-0 text-center"
       >
         {url}
       </div>
@@ -95,7 +95,7 @@ function AddressBar({
           type="button"
           onClick={handleCopy}
           aria-label="Copy URL"
-          className="p-1.5 rounded-full hover:bg-[var(--ds-gray-300)] transition-colors"
+          className="flex h-6 w-6 items-center justify-center rounded-[4px] text-textDefault hover:bg-[var(--ds-gray-alpha-200)] transition-colors"
         >
           <div className="relative w-3 h-3">
             <span
@@ -103,14 +103,14 @@ function AddressBar({
                 copied ? "opacity-0 scale-75" : "opacity-100 scale-100"
               }`}
             >
-              <Copy size={12} className="text-textSubtle" />
+              <Copy size={12} />
             </span>
             <span
               className={`absolute inset-0 flex items-center justify-center transition-all duration-150 ease-out ${
                 copied ? "opacity-100 scale-100" : "opacity-0 scale-75"
               }`}
             >
-              <Check size={12} className="text-textSubtle" />
+              <Check size={12} />
             </span>
           </div>
         </button>
@@ -180,16 +180,23 @@ export const Browser = forwardRef<HTMLDivElement, BrowserProps>(
     ref,
   ) => {
     return (
-      <div
-        ref={ref}
-        className={`rounded-md overflow-hidden bg-surface shadow-[0_0_0_1px_var(--ds-gray-400)] md:rounded-xl ${className}`}
-      >
-        <BrowserHeader
-          url={url}
-          showNavigation={showNavigation}
-          showCopyButton={showCopyButton}
-        />
-        <div className="p-6">{children}</div>
+      // container-type wrapper so the frame's md:rounded-[1.5cqw] (Geist's
+      // width-relative corner radius) resolves against the Browser's own width.
+      <div ref={ref} className={`[container-type:inline-size] ${className}`}>
+        {/* Geist's `material-small`: bg-canvas (bg-200) + the raised
+            shadow-border-small hairline (no separate 1px border) + 6px radius
+            that grows to 1.5cqw at md. */}
+        <div
+          className="overflow-hidden rounded-md bg-canvas md:rounded-[1.5cqw]"
+          style={{ boxShadow: "var(--ds-shadow-border-small)" }}
+        >
+          <BrowserHeader
+            url={url}
+            showNavigation={showNavigation}
+            showCopyButton={showCopyButton}
+          />
+          <div className="p-6">{children}</div>
+        </div>
       </div>
     );
   },

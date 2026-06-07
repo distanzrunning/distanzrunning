@@ -356,7 +356,9 @@ export default function BrowserComponent() {
           showcasing website screenshots or any other content.
         </p>
         <CodePreview componentCode={compositionCode}>
-          <Browser url="distanzrunning.com" />
+          <div className="max-w-4xl">
+            <Browser url="distanzrunning.com" />
+          </div>
         </CodePreview>
       </Section>
 

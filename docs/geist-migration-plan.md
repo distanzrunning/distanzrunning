@@ -118,11 +118,11 @@ Molecule/Organism split below is kept only for *tracking* + the page badge.
 
 ### Molecules
 - ✅ Banner *(new — added)*
-- ☐ Accordion · ☐ Ad Slot · ☐ Article Card · ☐ Browser · ☐ Calendar
-- ☐ Choicebox **(next)** · ☐ Code Block · ☐ Collapse · ☐ Collapsible Input
+- ☐ Accordion · ☐ Ad Slot · ✅ Browser · ☐ Calendar **(next)**
+- ☐ Choicebox · ☐ Code Block · ☐ Collapse · ☐ Collapsible Input
 - ☐ Combobox · ☐ Context Card · ☐ Description · ☐ Empty State · ☐ Entity
 - ☐ Error · ☐ Fieldset · ☐ Grid · ☐ Multi Select · ☐ Note · ☐ Pagination
-- ☐ Panel Card · ☐ Phone · ☐ Race Card · ☐ Relative Time Card · ☐ Scroller
+- ☐ Panel Card · ☐ Phone · ☐ Relative Time Card · ☐ Scroller
 - ☐ Search · ☐ Select · ☐ Slider · ☐ Snippet · ☐ Split Button · ☐ Stat Tile
 - ☐ Tabs · ☐ Theme Switcher · ☐ Tooltip · ☐ Trend Chart
 
