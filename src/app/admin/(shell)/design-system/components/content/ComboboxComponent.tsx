@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useRef } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Triangle } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import { ComponentRef } from "../ComponentRef";
 import {
@@ -405,6 +405,30 @@ export function CustomEmptyMessageExample() {
   );
 }`;
 
+const withPrefixIconsCode = `import { Combobox } from '@/components/ui/Combobox';
+import { Triangle } from 'lucide-react';
+
+export function WithPrefixIcons() {
+  const options = ['One', 'Two', 'Three'].map((label) => ({
+    value: label,
+    label,
+    icon: <Triangle size={16} />,
+  }));
+  return <Combobox options={options} placeholder="Search..." />;
+}`;
+
+const withSuffixIconsCode = `import { Combobox } from '@/components/ui/Combobox';
+import { Triangle } from 'lucide-react';
+
+export function WithSuffixIcons() {
+  const options = ['One', 'Two', 'Three'].map((label) => ({
+    value: label,
+    label,
+    suffixIcon: <Triangle size={16} />,
+  }));
+  return <Combobox options={options} placeholder="Search..." />;
+}`;
+
 const withLabelCode = `import { Combobox } from '@/components/ui/Combobox';
 import * as flags from 'country-flag-icons/react/3x2';
 
@@ -687,6 +711,44 @@ export default function ComboboxComponent() {
               placeholder="Search..."
               width={256}
               emptyMessage="Nothing to see here.."
+            />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* With Prefix Icons */}
+      <Section>
+        <SectionHeader id="with-prefix-icons" onCopyLink={showToast}>
+          With prefix icons
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={withPrefixIconsCode}>
+            <Combobox
+              options={["One", "Two", "Three"].map((label) => ({
+                value: label,
+                label,
+                icon: <Triangle size={16} />,
+              }))}
+              placeholder="Search..."
+            />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* With Suffix Icons */}
+      <Section>
+        <SectionHeader id="with-suffix-icons" onCopyLink={showToast}>
+          With suffix icons
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={withSuffixIconsCode}>
+            <Combobox
+              options={["One", "Two", "Three"].map((label) => ({
+                value: label,
+                label,
+                suffixIcon: <Triangle size={16} />,
+              }))}
+              placeholder="Search..."
             />
           </CodePreview>
         </div>

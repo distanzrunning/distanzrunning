@@ -251,7 +251,18 @@ export function Modal({
       }
       rest.push(child);
     });
-    return { bodyChildren: rest, footerChild: footer, hasStickyHeader: stickyHeader };
+    // When the last body child is a full-bleed Inset, the body's bottom
+    // padding would leave a gap before the footer; flag it so we can drop
+    // that padding and let the inset meet the footer (Geist).
+    const lastChild = rest[rest.length - 1];
+    const lastChildIsInset =
+      React.isValidElement(lastChild) && lastChild.type === ModalInset;
+    return {
+      bodyChildren: rest,
+      footerChild: footer,
+      hasStickyHeader: stickyHeader,
+      lastChildIsInset,
+    };
   }, [children]);
 
   // Respect the user's OS-level "reduce motion" preference. When true we
@@ -449,7 +460,9 @@ export function Modal({
           {/* Modal body */}
           <div
             style={{
-              padding: hasStickyHeader ? "0 24px 24px" : 24,
+              padding: `${hasStickyHeader ? 0 : 24}px 24px ${
+                lastChildIsInset && footerChild ? 0 : 24
+              }px`,
               overflowX: "hidden",
               overflowY: "auto",
               position: "relative",

@@ -17,7 +17,10 @@ import * as Popover from "@radix-ui/react-popover";
 export interface ComboboxOption {
   value: string;
   label: string;
+  /** Icon rendered before the label. */
   icon?: React.ReactNode;
+  /** Icon rendered after the label, pushed to the trailing edge. */
+  suffixIcon?: React.ReactNode;
 }
 
 export type ComboboxSize = "small" | "default" | "large";
@@ -630,7 +633,9 @@ export function Combobox({
         <Popover.Portal>
           <Popover.Content
             sideOffset={9}
-            align="start"
+            // A custom (wider) list centers on the trigger like Geist; the
+            // default trigger-width list stays left-aligned.
+            align={listWidth ? "center" : "start"}
             tabIndex={-1}
             onOpenAutoFocus={(e) => e.preventDefault()}
             onCloseAutoFocus={(e) => e.preventDefault()}
@@ -747,6 +752,19 @@ export function Combobox({
                     >
                       {option.label}
                     </span>
+                    {option.suffixIcon && (
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginLeft: "auto",
+                          paddingLeft: 8,
+                          flexShrink: 0,
+                        }}
+                      >
+                        {option.suffixIcon}
+                      </span>
+                    )}
                     {option.value === currentValue && (
                       <span
                         style={{
