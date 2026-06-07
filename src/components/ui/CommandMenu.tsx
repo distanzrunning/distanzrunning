@@ -196,6 +196,12 @@ const CMDK_CSS = `
     user-select: none;
   }
 
+  .ds-cmdk-content [cmdk-separator] {
+    height: 1px;
+    margin: 8px -8px;
+    background: var(--ds-gray-alpha-400);
+  }
+
   .ds-cmdk-content [cmdk-item] {
     display: flex;
     align-items: center;
@@ -294,6 +300,11 @@ function ResultCountAnnouncer() {
 
 function CommandMenuGroup({ heading, children }: CommandMenuGroupProps) {
   return <Command.Group heading={heading}>{children}</Command.Group>;
+}
+
+/** A horizontal divider between groups/items in the list. */
+function CommandMenuSeparator() {
+  return <Command.Separator />;
 }
 
 function CommandMenuItem({
@@ -612,3 +623,4 @@ export function CommandMenu({
 CommandMenu.Group = CommandMenuGroup;
 CommandMenu.Item = CommandMenuItem;
 CommandMenu.Page = CommandMenuPage;
+CommandMenu.Separator = CommandMenuSeparator;

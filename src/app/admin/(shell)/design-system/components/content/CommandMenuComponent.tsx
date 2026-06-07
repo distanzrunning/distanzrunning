@@ -514,6 +514,104 @@ function DefaultDemo() {
   );
 }
 
+const withDividerCode = `import { useState } from 'react';
+import { CommandMenu } from '@/components/ui/CommandMenu';
+import { Button } from '@/components/ui/Button';
+
+export function WithDivider() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
+      <CommandMenu open={open} onClose={() => setOpen(false)} placeholder="What do you need?">
+        <CommandMenu.Group heading="Suggestions">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>Figma Import</CommandMenu.Item>
+        </CommandMenu.Group>
+        <CommandMenu.Separator />
+        <CommandMenu.Group heading="Commands">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>Import Extension</CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>Manage Extensions</CommandMenu.Item>
+        </CommandMenu.Group>
+      </CommandMenu>
+    </>
+  );
+}`;
+
+function WithDividerDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
+      <CommandMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        placeholder="What do you need?"
+      >
+        <CommandMenu.Group heading="Suggestions">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Figma Import
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+        <CommandMenu.Separator />
+        <CommandMenu.Group heading="Commands">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Import Extension
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Manage Extensions
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+      </CommandMenu>
+    </>
+  );
+}
+
+const withSuffixCode = `import { useState } from 'react';
+import { CommandMenu } from '@/components/ui/CommandMenu';
+import { Button } from '@/components/ui/Button';
+
+export function WithSuffix() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
+      <CommandMenu open={open} onClose={() => setOpen(false)} placeholder="What do you need?">
+        <CommandMenu.Group heading="Commands">
+          <CommandMenu.Item shortcut="⌘N" onSelect={() => setOpen(false)}>New Project</CommandMenu.Item>
+          <CommandMenu.Item shortcut="⌘K" onSelect={() => setOpen(false)}>Search Docs</CommandMenu.Item>
+          <CommandMenu.Item shortcut="⌘," onSelect={() => setOpen(false)}>Settings</CommandMenu.Item>
+        </CommandMenu.Group>
+      </CommandMenu>
+    </>
+  );
+}`;
+
+function WithSuffixDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
+      <CommandMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        placeholder="What do you need?"
+      >
+        <CommandMenu.Group heading="Commands">
+          <CommandMenu.Item shortcut="⌘N" onSelect={() => setOpen(false)}>
+            New Project
+          </CommandMenu.Item>
+          <CommandMenu.Item shortcut="⌘K" onSelect={() => setOpen(false)}>
+            Search Docs
+          </CommandMenu.Item>
+          <CommandMenu.Item shortcut="⌘," onSelect={() => setOpen(false)}>
+            Settings
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+      </CommandMenu>
+    </>
+  );
+}
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -563,210 +661,27 @@ export default function CommandMenuComponent() {
         </div>
       </Section>
 
-      {/* Props */}
+      {/* With divider */}
       <Section>
-        <SectionHeader id="props" onCopyLink={showToast}>
-          Props
+        <SectionHeader id="with-divider" onCopyLink={showToast}>
+          With divider
         </SectionHeader>
-
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
-          Available props for the CommandMenu component.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">open</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Whether the command menu is visible
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">onClose</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"() => void"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Called when the command menu should close
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Command groups and items
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">placeholder</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  {`"Search for actions..."`}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Placeholder text for the search input
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">className</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">{`""`}</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Additional CSS classes for the wrapper
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={withDividerCode}>
+            <WithDividerDemo />
+          </CodePreview>
         </div>
+      </Section>
 
-        <p className="text-copy-14 text-textSubtle mt-8 mb-4">
-          CommandMenu.Group props.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">heading</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Optional heading label for the group
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Command items within the group
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p className="text-copy-14 text-textSubtle mt-8 mb-4">
-          CommandMenu.Item props.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Item label content
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">onSelect</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"() => void"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Called when the item is selected
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">disabled</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Whether the item is disabled
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">icon</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Optional icon rendered before the label
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">shortcut</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Optional keyboard shortcut label displayed on the right
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      {/* With suffix */}
+      <Section>
+        <SectionHeader id="with-suffix" onCopyLink={showToast}>
+          With suffix
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={withSuffixCode}>
+            <WithSuffixDemo />
+          </CodePreview>
         </div>
       </Section>
 
