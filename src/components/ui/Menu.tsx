@@ -440,11 +440,13 @@ function MenuDropdown({
           borderRadius: 12,
           boxShadow: "var(--ds-shadow-menu)",
           padding: 8,
-          width: menuWidth || 200,
+          // Geist: min-width 200, width auto — grows with content.
+          width: menuWidth || "auto",
           minWidth: menuWidth || 200,
           zIndex: 2001,
           listStyle: "none",
           fontSize: 14,
+          overflowX: "hidden",
           overflowY: "auto",
           overscrollBehavior: "contain",
           animation: "menu-enter 150ms ease-out",
@@ -670,9 +672,14 @@ export function MenuItem({
     height: 40,
     borderRadius: 6,
     fontSize: 14,
-    color: destructive ? "var(--ds-red-900)" : "hsl(var(--color-textDefault))",
+    // Geist: disabled items go gray-700 + pointer-events-none (no dim).
+    color: isDisabled
+      ? "var(--ds-gray-700)"
+      : destructive
+        ? "var(--ds-red-900)"
+        : "hsl(var(--color-textDefault))",
     cursor: isDisabled ? "default" : "pointer",
-    opacity: isDisabled ? 0.5 : 1,
+    pointerEvents: isDisabled ? "none" : undefined,
     background: "transparent",
     border: "none",
     width: "100%",
