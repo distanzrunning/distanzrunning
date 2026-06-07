@@ -387,7 +387,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseClasses = `
       inline-flex items-center justify-center
       select-none
-      transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
+      transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-in-out
       focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ds-background-100)]
     `;
 
@@ -490,7 +490,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
     const baseClasses = `
       inline-flex items-center justify-center
       select-none
-      transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
+      transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-in-out
       focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ds-background-100)]
       no-underline
     `;
