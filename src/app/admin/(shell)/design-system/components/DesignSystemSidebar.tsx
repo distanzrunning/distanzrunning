@@ -83,6 +83,7 @@ export const navigation: NavSection[] = [
       { id: "consent-banner", label: "Consent Banner", type: "Organism" },
       { id: "context-card", label: "Context Card", type: "Molecule" },
       { id: "context-menu", label: "Context Menu", type: "Organism" },
+      { id: "copy-button", label: "Copy Button", type: "Atom" },
       { id: "description", label: "Description", type: "Molecule" },
       {
         id: "destructive-action-modal",
