@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { type CSSProperties, type ReactNode } from "react";
 import { Menu, MenuButton, MenuItem, MenuSeparator } from "./Menu";
 
 // ============================================================================
@@ -33,13 +33,11 @@ export interface DotsMenuProps {
 // DotsMenu — a tertiary 32px square trigger that opens a Menu dropdown
 // ============================================================================
 
-function DotsGlyph({ px }: { px: number }) {
+function DotsGlyph() {
   return (
     <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center">
       <svg
         viewBox="0 0 16 16"
-        height={px}
-        width={px}
         aria-hidden="true"
         style={{ color: "currentcolor" }}
       >
@@ -72,8 +70,12 @@ export function DotsMenu({
         className={
           disabled ? "shadow-none opacity-50 cursor-not-allowed" : undefined
         }
+        // The glyph sizes via --ds-icon-size (the global `button svg` rule),
+        // so the inline svg width/height alone wouldn't take. small/medium/
+        // large => 10/12/18px.
+        style={{ "--ds-icon-size": `${ICON_PX[size]}px` } as CSSProperties}
       >
-        <DotsGlyph px={ICON_PX[size]} />
+        <DotsGlyph />
       </MenuButton>
       {children}
     </Menu>
