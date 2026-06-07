@@ -289,12 +289,12 @@ export function Combobox({
   );
 
   const handleInputFocus = useCallback(() => {
+    // Focus alone doesn't open the list (Geist) — opening happens on
+    // click, typing, or ArrowDown. This keeps the combobox closed when a
+    // Modal autofocuses it on open. justSelectedRef is reset so a later
+    // click still opens after a selection.
     if (!disabled) {
-      if (justSelectedRef.current) {
-        justSelectedRef.current = false;
-      } else {
-        setIsOpen(true);
-      }
+      justSelectedRef.current = false;
       setIsFocused(true);
     }
   }, [disabled]);
