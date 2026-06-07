@@ -92,9 +92,12 @@ const DESCRIPTION_CSS = `
     border-radius: var(--ds-radius-small);
     background: hsl(var(--color-textDefault));
     color: hsl(var(--color-textInverted));
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 13px;
+    line-height: 1.3;
+    font-weight: 400;
     text-align: center;
+    white-space: pre-line;
+    overflow-wrap: break-word;
     user-select: none;
     will-change: transform, opacity;
     animation-duration: 0.1s;
@@ -114,7 +117,7 @@ const DESCRIPTION_CSS = `
     }
   }
 
-  .ds-description-tooltip-arrow {
+  .ds-description-tooltip-arrow path {
     fill: var(--ds-gray-1000);
   }
 `;
@@ -170,7 +173,17 @@ function DescriptionTitle({ children, tooltip }: DescriptionTitleProps) {
                 sideOffset={8}
               >
                 {tooltip}
-                <Tooltip.Arrow className="ds-description-tooltip-arrow" />
+                <Tooltip.Arrow asChild width={14} height={6}>
+                  <svg
+                    className="ds-description-tooltip-arrow"
+                    viewBox="0 0 14 6"
+                    width="14"
+                    height="6"
+                    aria-hidden="true"
+                  >
+                    <path d="M13.8284 0H0.17157C0.702003 0 1.21071 0.210714 1.58578 0.585787L5.58578 4.58579C6.36683 5.36684 7.63316 5.36683 8.41421 4.58579L12.4142 0.585786C12.7893 0.210714 13.298 0 13.8284 0Z" />
+                  </svg>
+                </Tooltip.Arrow>
               </Tooltip.Content>
             </Tooltip.Portal>
           </Tooltip.Root>
