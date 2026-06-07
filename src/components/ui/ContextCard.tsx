@@ -55,11 +55,19 @@ const CONTEXT_CARD_CSS = `
     line-height: 20px;
     max-width: max-content;
     background: hsl(var(--color-surface));
+    background-clip: padding-box;
     color: var(--ds-gray-1000);
-    box-shadow: var(--ds-shadow-tooltip);
+    /* Geist: the shadow-tooltip hairline + a 1px background ring around it */
+    box-shadow: var(--ds-shadow-tooltip), 0 0 0 1px var(--ds-background-100);
+    /* Geist's dedicated stem outline (not gray-400) */
+    --ds-context-card-tip-stroke: #dbdbdb;
     will-change: transform, opacity;
     animation-duration: 250ms;
     animation-timing-function: cubic-bezier(0.29, -0.31, -0.05, 0.96);
+  }
+
+  .dark .ds-context-card {
+    --ds-context-card-tip-stroke: #252525;
   }
 
   .ds-context-card[data-state="open"][data-side="top"] {
@@ -100,7 +108,7 @@ const CONTEXT_CARD_CSS = `
 
   .ds-context-card-arrow path {
     fill: hsl(var(--color-surface));
-    stroke: var(--ds-gray-400);
+    stroke: var(--ds-context-card-tip-stroke);
     stroke-width: 1px;
     shape-rendering: geometricPrecision;
   }
