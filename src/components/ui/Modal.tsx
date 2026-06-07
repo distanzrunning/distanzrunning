@@ -234,7 +234,8 @@ export function Modal({
   // Split children: Modal.Footer renders outside the scrollable body,
   // everything else stays inside. We also flag whether a sticky header
   // is in play so the body can drop its top padding.
-  const { bodyChildren, footerChild, hasStickyHeader } = React.useMemo(() => {
+  const { bodyChildren, footerChild, hasStickyHeader, lastChildIsInset } =
+    React.useMemo(() => {
     let footer: ReactNode = null;
     let stickyHeader = false;
     const rest: ReactNode[] = [];

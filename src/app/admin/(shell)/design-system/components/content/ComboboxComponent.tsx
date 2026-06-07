@@ -387,7 +387,7 @@ export function CustomWidthListExample() {
         "Short option",
       ]}
       placeholder="Search..."
-      listWidth={350}
+      listWidth={500}
     />
   );
 }`;
@@ -678,7 +678,7 @@ export default function ComboboxComponent() {
       {/* Custom Width Input */}
       <Section>
         <SectionHeader id="custom-width-input" onCopyLink={showToast}>
-          Custom Width Input
+          Custom width input
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={customWidthInputCode}>
@@ -694,7 +694,7 @@ export default function ComboboxComponent() {
       {/* Custom Width List */}
       <Section>
         <SectionHeader id="custom-width-list" onCopyLink={showToast}>
-          Custom Width List
+          Custom width list
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={customWidthListCode}>
@@ -705,7 +705,7 @@ export default function ComboboxComponent() {
                 "Short option",
               ]}
               placeholder="Search..."
-              listWidth={350}
+              listWidth={500}
             />
           </CodePreview>
         </div>
@@ -714,7 +714,7 @@ export default function ComboboxComponent() {
       {/* Custom Empty Message */}
       <Section>
         <SectionHeader id="custom-empty-message" onCopyLink={showToast}>
-          Custom Empty Message
+          Custom empty message
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={customEmptyMessageCode}>
@@ -734,8 +734,8 @@ export default function ComboboxComponent() {
           Clearable
         </SectionHeader>
         <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
-          A clear button appears whenever a value is selected, resetting the
-          combobox when clicked.
+          Set <code className="inline-code">clearable</code> to show a clear
+          button when a value is selected.
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={clearableCode}>
@@ -762,6 +762,7 @@ export default function ComboboxComponent() {
                 icon: <Triangle size={16} />,
               }))}
               placeholder="Search..."
+              width={256}
             />
           </CodePreview>
         </div>
@@ -781,6 +782,7 @@ export default function ComboboxComponent() {
                 suffixIcon: <Triangle size={16} />,
               }))}
               placeholder="Search..."
+              width={256}
             />
           </CodePreview>
         </div>
@@ -789,7 +791,7 @@ export default function ComboboxComponent() {
       {/* With Label */}
       <Section>
         <SectionHeader id="with-label" onCopyLink={showToast}>
-          With Label
+          With label
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={withLabelCode}>
@@ -842,8 +844,12 @@ export default function ComboboxComponent() {
       {/* Used Inside a Modal */}
       <Section>
         <SectionHeader id="used-inside-a-modal" onCopyLink={showToast}>
-          Used Inside a Modal
+          Used inside a Modal
         </SectionHeader>
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
+          It is common to use Combobox inside a Modal. On mobile, the Modal
+          automatically renders a Dialog instead.
+        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={modalCode}>
             <ModalDemo />
