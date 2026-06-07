@@ -193,13 +193,24 @@ function ModalFooter({
   );
 }
 
-function ModalInset({ children }: { children: ReactNode }) {
+function ModalInset({
+  children,
+  __flushFooter,
+}: {
+  children: ReactNode;
+  /** Internal: set by Modal when this inset is the last child before the
+   *  footer, so it drops its bottom border and the footer's top border is
+   *  the single divider (Geist: last-of-type:border-b-0). */
+  __flushFooter?: boolean;
+}) {
   return (
     <div
       style={{
         background: "var(--ds-modal-section-bg)",
         borderTop: "1px solid var(--ds-gray-alpha-400)",
-        borderBottom: "1px solid var(--ds-gray-alpha-400)",
+        borderBottom: __flushFooter
+          ? "none"
+          : "1px solid var(--ds-gray-alpha-400)",
         margin: "0 -24px",
         padding: 24,
       }}
@@ -471,7 +482,19 @@ export function Modal({
               borderTopRightRadius: hasStickyHeader ? 12 : undefined,
             }}
           >
-            {bodyChildren}
+            {lastChildIsInset && footerChild
+              ? bodyChildren.map((child, i) =>
+                  i === bodyChildren.length - 1 &&
+                  React.isValidElement(child)
+                    ? React.cloneElement(
+                        child as React.ReactElement<{
+                          __flushFooter?: boolean;
+                        }>,
+                        { __flushFooter: true },
+                      )
+                    : child,
+                )
+              : bodyChildren}
           </div>
 
           {/* Footer (outside scrollable body) */}
