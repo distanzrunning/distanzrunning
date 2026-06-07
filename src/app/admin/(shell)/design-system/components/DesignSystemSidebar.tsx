@@ -67,6 +67,7 @@ export const navigation: NavSection[] = [
       { id: "avatar", label: "Avatar", type: "Atom" },
       { id: "badge", label: "Badge", type: "Atom" },
       { id: "banner", label: "Banner", type: "Molecule" },
+      { id: "breadcrumbs", label: "Breadcrumbs", type: "Molecule" },
       { id: "browser", label: "Browser", type: "Molecule" },
       { id: "button", label: "Button", type: "Atom" },
       { id: "calendar", label: "Calendar", type: "Molecule" },
