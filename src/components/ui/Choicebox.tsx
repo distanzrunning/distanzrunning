@@ -63,21 +63,24 @@ function RadioIndicator({
         borderRadius: "50%",
         border: `1px solid ${borderColor}`,
         background: "hsl(var(--color-surface))",
-        transition: "border-color 0.2s ease, background 0.2s ease",
+        // Geist: transition-[border-color,background] duration-200 ease-in
+        transition: "border-color 0.2s ease-in, background 0.2s ease-in",
         position: "relative",
         boxShadow: focusRing ? "var(--ds-focus-ring)" : undefined,
       }}
     >
-      {checked && (
-        <span
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: "50%",
-            background: dotColor,
-          }}
-        />
-      )}
+      {/* Dot is always rendered and scales in on select (Geist:
+          after:scale-0 → peer-checked:after:scale-100, 150ms ease-in). */}
+      <span
+        style={{
+          width: 8,
+          height: 8,
+          borderRadius: "50%",
+          background: dotColor,
+          transform: checked ? "scale(1)" : "scale(0)",
+          transition: "transform 0.15s ease-in",
+        }}
+      />
     </span>
   );
 }
@@ -220,8 +223,8 @@ export function Choicebox({
         background: showHover
           ? "var(--ds-gray-100)"
           : "hsl(var(--color-surface))",
-        transition:
-          "background 0.15s ease, border 0.15s ease, box-shadow 0.15s ease",
+        // Geist tile: transition-colors duration-150 ease-in
+        transition: "background 0.15s ease-in, border-color 0.15s ease-in",
       }}
     >
       <input
@@ -250,7 +253,7 @@ export function Choicebox({
                 ? "var(--ds-blue-200)"
                 : "var(--ds-blue-100)"
               : "transparent",
-          transition: "background 0.15s ease, border 0.15s ease",
+          transition: "background 0.15s ease-in, border-color 0.15s ease-in",
         }}
       >
         {/* Icon + text content */}
