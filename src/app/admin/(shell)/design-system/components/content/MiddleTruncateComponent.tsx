@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import { ComponentRef } from "../ComponentRef";
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/useShikiHighlighter";
 import { MiddleTruncate } from "@/components/ui/MiddleTruncate";
 import { Slider } from "@/components/ui/Slider";
+import Toggle from "@/components/ui/Toggle";
 
 // ============================================================================
 // Toast
@@ -334,8 +335,29 @@ const EXAMPLE_ROWS: { label: string; value: string; mono?: boolean }[] = [
   { label: "Fits as-is", value: "sidebar.tsx" },
 ];
 
+const WIDTH_MIN = 80;
+const WIDTH_MAX = 600;
+
 function MiddleTruncateDemo() {
-  const [width, setWidth] = useState(600);
+  const [width, setWidth] = useState(WIDTH_MAX);
+  const [animate, setAnimate] = useState(false);
+
+  // Animate on → oscillate the width between MIN and MAX so the truncation
+  // recomputes live (Geist's "Animate" toggle drives the slider up and down).
+  useEffect(() => {
+    if (!animate) return;
+    const mid = (WIDTH_MIN + WIDTH_MAX) / 2;
+    const amp = (WIDTH_MAX - WIDTH_MIN) / 2;
+    const start = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const phase = ((now - start) / 4000) * 2 * Math.PI; // 4s per cycle
+      setWidth(Math.round(mid - amp * Math.cos(phase)));
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [animate]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -357,14 +379,22 @@ function MiddleTruncateDemo() {
           </div>
         ))}
       </div>
-      <aside className="flex items-center gap-3">
-        <span className="text-copy-13 text-textSubtle">Width</span>
-        <div className="min-w-[180px] max-w-xs grow">
-          <Slider min={80} max={600} value={width} onChange={setWidth} />
+      <aside className="flex flex-wrap items-center gap-x-6 gap-y-3">
+        <div className="flex items-center gap-3">
+          <span className="text-copy-13 text-textSubtle">Width</span>
+          <div className="min-w-[180px] max-w-xs grow">
+            <Slider
+              min={WIDTH_MIN}
+              max={WIDTH_MAX}
+              value={width}
+              onChange={setWidth}
+            />
+          </div>
+          <span className="font-mono text-copy-13 text-textSubtle tabular-nums">
+            {width}px
+          </span>
         </div>
-        <span className="font-mono text-copy-13 text-textSubtle tabular-nums">
-          {width}px
-        </span>
+        <Toggle checked={animate} onChange={setAnimate} label="Animate" />
       </aside>
     </div>
   );
