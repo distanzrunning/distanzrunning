@@ -825,7 +825,7 @@ export function RaceRouteMap({
         <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 z-10">
           <div className="animate-pulse">
             <img
-              src="/images/distanz_icon_black_round.png"
+              src="/brand/icon-badge.png"
               alt="Loading"
               className="w-16 h-16 opacity-60"
               style={{
