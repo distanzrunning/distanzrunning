@@ -320,12 +320,12 @@ function DefaultExample() {
   return (
     <Entity>
       <Entity.Content
-        title="The Art of the Marathon Taper"
-        subtitle="By Sarah Chen · 8 min read"
+        title="Sarah Chen"
+        subtitle="Trail Runner (@schen)"
         thumbnail={
           <Avatar
-            fallback="SC"
             size={32}
+            gradient={{ colors: ['#7CE3F7', '#3B82F6'] }}
           />
         }
       />
@@ -334,7 +334,7 @@ function DefaultExample() {
           className="text-copy-14"
           style={{ color: 'hsl(var(--color-textSubtle))', margin: 0 }}
         >
-          Published 2h ago
+          Connected 1h ago
         </p>
       </Entity.Field>
     </Entity>
@@ -480,13 +480,10 @@ function DefaultDemo() {
   return (
     <Entity>
       <Entity.Content
-        title="The Art of the Marathon Taper"
-        subtitle="By Sarah Chen · 8 min read"
+        title="Sarah Chen"
+        subtitle="Trail Runner (@schen)"
         thumbnail={
-          <Avatar
-            fallback="SC"
-            size={32}
-          />
+          <Avatar size={32} gradient={{ colors: ["#7CE3F7", "#3B82F6"] }} />
         }
       />
       <Entity.Field>
@@ -494,7 +491,7 @@ function DefaultDemo() {
           className="text-copy-14"
           style={{ color: "hsl(var(--color-textSubtle))", margin: 0 }}
         >
-          Published 2h ago
+          Connected 1h ago
         </p>
       </Entity.Field>
     </Entity>
