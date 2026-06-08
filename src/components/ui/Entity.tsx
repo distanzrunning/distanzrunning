@@ -130,7 +130,7 @@ function EntityList({
 function EntitySkeleton({ width = "100%", height = 20 }: SkeletonProps) {
   return (
     <span
-      className="block rounded animate-pulse"
+      className="block rounded-[5px] animate-pulse"
       style={{
         width: typeof width === "number" ? `${width}px` : width,
         minHeight: `${height}px`,
