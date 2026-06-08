@@ -403,7 +403,7 @@ function ListCheckboxExample() {
   });
 
   return (
-    <Entity.List bordered dividers={false}>
+    <Entity.List bordered>
       {categories.map((cat) => (
         <Entity
           key={cat.name}
@@ -551,7 +551,7 @@ function ListCheckboxDemo() {
   });
 
   return (
-    <Entity.List bordered dividers={false}>
+    <Entity.List bordered>
       {categoryItems.map((cat) => (
         <Entity
           key={cat.name}

@@ -117,7 +117,7 @@ function EntityList({
 
   return (
     <ul
-      className={`list-none m-0 p-0 ${dividers ? "divide-y divide-borderDefault" : ""} ${className}`}
+      className={`list-none m-0 p-0 ${dividers ? "divide-y divide-[var(--ds-gray-200)]" : ""} ${className}`}
       style={{ ...borderedStyles, ...style }}
       {...rest}
     >
