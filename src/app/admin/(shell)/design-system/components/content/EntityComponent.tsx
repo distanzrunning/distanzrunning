@@ -325,7 +325,8 @@ function DefaultExample() {
         thumbnail={
           <Avatar
             size={32}
-            gradient={{ colors: ['#7CE3F7', '#3B82F6'] }}
+            src="/images/distanz_icon_black_round.png"
+            alt="Distanz"
           />
         }
       />
@@ -483,7 +484,11 @@ function DefaultDemo() {
         title="Sarah Chen"
         subtitle="Trail Runner (@schen)"
         thumbnail={
-          <Avatar size={32} gradient={{ colors: ["#7CE3F7", "#3B82F6"] }} />
+          <Avatar
+            size={32}
+            src="/images/distanz_icon_black_round.png"
+            alt="Distanz"
+          />
         }
       />
       <Entity.Field>
