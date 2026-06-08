@@ -138,7 +138,8 @@ const EMPTY_STATE_CSS = `
     align-items: center;
     gap: 2px;
     font-size: 14px;
-    color: var(--ds-gray-800);
+    /* Geist's muted "Learn more" link = --accents-5 (our textSubtler/gray-700) */
+    color: var(--ds-gray-700);
     text-decoration: none;
     transition: color 0.1s ease;
   }
