@@ -22,11 +22,15 @@ export interface EntityContentProps {
   subtitle?: string;
   /** Thumbnail element placed before the text (e.g. Avatar) */
   thumbnail?: ReactNode;
+  /** Extra classes on the left-column wrapper */
+  className?: string;
 }
 
 export interface EntityFieldProps {
   /** Content displayed in the right column (actions, status text, etc.) */
   children: ReactNode;
+  /** Extra classes on the right-column wrapper */
+  className?: string;
 }
 
 export interface EntityListProps extends HTMLAttributes<HTMLUListElement> {
@@ -50,9 +54,16 @@ export interface SkeletonProps {
 // ============================================================================
 
 /** Text content block with title + optional subtitle */
-function EntityContent({ title, subtitle, thumbnail }: EntityContentProps) {
+function EntityContent({
+  title,
+  subtitle,
+  thumbnail,
+  className = "",
+}: EntityContentProps) {
   return (
-    <div className="flex flex-1 flex-row items-center gap-4 min-w-0">
+    <div
+      className={`flex flex-1 flex-row items-center gap-4 min-w-0 ${className}`}
+    >
       {thumbnail && <div className="flex-shrink-0">{thumbnail}</div>}
       <div className="flex flex-1 flex-col min-w-0">
         <p
@@ -75,9 +86,11 @@ function EntityContent({ title, subtitle, thumbnail }: EntityContentProps) {
 }
 
 /** Right-side field for actions or metadata */
-function EntityField({ children }: EntityFieldProps) {
+function EntityField({ children, className = "" }: EntityFieldProps) {
   return (
-    <div className="flex flex-shrink-0 flex-row items-center gap-4">
+    <div
+      className={`flex flex-shrink-0 flex-row items-center gap-4 ${className}`}
+    >
       {children}
     </div>
   );
