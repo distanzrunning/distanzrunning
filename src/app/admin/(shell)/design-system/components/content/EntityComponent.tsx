@@ -325,7 +325,7 @@ function DefaultExample() {
         thumbnail={
           <Avatar
             size={32}
-            src="/images/distanz_icon_black_round.png"
+            src="/brand/icon-app.svg"
             alt="Distanz"
           />
         }
@@ -486,7 +486,7 @@ function DefaultDemo() {
         thumbnail={
           <Avatar
             size={32}
-            src="/images/distanz_icon_black_round.png"
+            src="/brand/icon-app.svg"
             alt="Distanz"
           />
         }
