@@ -704,8 +704,8 @@ export default function EmptyStateComponent() {
 
       {/* Design Framework */}
       <Section>
-        <SectionHeader id="design-framework" onCopyLink={showToast}>
-          Design Framework
+        <SectionHeader id="empty-state-design-framework" onCopyLink={showToast}>
+          Empty state Design framework
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-4">
           When designed thoughtfully, empty states become an essential part of a
@@ -764,111 +764,6 @@ export default function EmptyStateComponent() {
           <CodePreview componentCode={informationalCode}>
             <InformationalDemo />
           </CodePreview>
-        </div>
-      </Section>
-
-      {/* Props */}
-      <Section>
-        <SectionHeader id="props" onCopyLink={showToast}>
-          Props
-        </SectionHeader>
-
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
-          EmptyState compound component props.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Component
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">EmptyState</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  children
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Compound component children (Icon, Text, Actions)
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">EmptyState.Icon</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  children
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Icon element (32×32) inside a bordered container
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">EmptyState.Text</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  children
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Wrapper for Title and Description with tighter spacing
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">EmptyState.Title</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  children
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Heading text (16px, medium weight)
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">EmptyState.Description</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  children
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Supporting text (14px, gray-900)
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">EmptyState.Actions</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  children
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Action buttons or links
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </Section>
 
