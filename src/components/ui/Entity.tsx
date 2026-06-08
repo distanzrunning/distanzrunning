@@ -1,6 +1,7 @@
 "use client";
 
 import React, { forwardRef, type ReactNode, type HTMLAttributes } from "react";
+import { Skeleton } from "./Skeleton";
 
 // ============================================================================
 // Types
@@ -126,18 +127,9 @@ function EntityList({
   );
 }
 
-/** Skeleton loading placeholder */
+/** Skeleton loading placeholder — Geist shimmer via the shared Skeleton */
 function EntitySkeleton({ width = "100%", height = 20 }: SkeletonProps) {
-  return (
-    <span
-      className="block rounded-[5px] animate-pulse"
-      style={{
-        width: typeof width === "number" ? `${width}px` : width,
-        minHeight: `${height}px`,
-        backgroundColor: "hsl(var(--color-borderSubtle))",
-      }}
-    />
-  );
+  return <Skeleton width={width} height={height} />;
 }
 
 // ============================================================================
