@@ -161,7 +161,7 @@ const Entity = forwardRef<HTMLElement, EntityProps>(
         <button
           ref={ref as React.Ref<HTMLButtonElement>}
           type="button"
-          className={`flex flex-col items-stretch w-full text-left bg-transparent border-none outline-none transition-colors hover:bg-[var(--ds-gray-100)] ${className}`}
+          className={`flex flex-col items-stretch w-full text-left bg-transparent border-0 outline-none transition-colors hover:bg-[var(--ds-gray-100)] ${className}`}
           style={{ padding: `${padding}px`, cursor: "pointer", ...style }}
           {...(rest as HTMLAttributes<HTMLButtonElement>)}
         >
