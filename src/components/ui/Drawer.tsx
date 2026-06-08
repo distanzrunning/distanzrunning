@@ -60,11 +60,11 @@ const DRAWER_CSS = `
     z-index: 4999;
     background-color: rgba(0, 0, 0, 0.4);
     pointer-events: none;
-    animation: ds-drawer-overlay-fadeIn 400ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    animation: ds-drawer-overlay-fadeIn 300ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
   }
 
   .ds-drawer-overlay[data-state="closed"] {
-    animation: ds-drawer-overlay-fadeOut 400ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    animation: ds-drawer-overlay-fadeOut 300ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
   }
 
   @keyframes ds-drawer-overlay-fadeIn {
@@ -85,14 +85,14 @@ const DRAWER_CSS = `
     z-index: 4999;
     display: flex;
     flex-direction: column;
-    border-top-left-radius: var(--ds-radius-small);
-    border-top-right-radius: var(--ds-radius-small);
-    border: none;
+    /* Geist: rounded-t-[10px], a top hairline (gray-alpha-400), no shadow */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-top: 1px solid var(--ds-gray-alpha-400);
     background-color: hsl(var(--color-surface));
     color: var(--ds-gray-1000);
-    box-shadow: var(--ds-shadow-menu), var(--ds-gray-100) 0px 0px 0px 1px;
     max-width: 100%;
-    max-height: 80vh;
+    max-height: 90dvh;
     min-height: 31px;
     outline: none;
     pointer-events: auto;
@@ -100,7 +100,7 @@ const DRAWER_CSS = `
     will-change: transform;
     touch-action: none;
     overscroll-behavior: none;
-    transition: transform 500ms cubic-bezier(0.32, 0.72, 0, 1);
+    transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1);
   }
 
   .ds-drawer-inner {
