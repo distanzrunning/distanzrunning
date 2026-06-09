@@ -26,12 +26,14 @@ interface SkeletonProps {
   style?: React.CSSProperties;
 }
 
-// Geist-verbatim radii (skeleton-module): default 5px, pill 9999px,
-// rounded 50% (ellipse/circle), squared 0.
+// Geist-verbatim radii (live page): default 5px, pill & rounded both
+// rounded-full (9999px — clamps to half the shorter side, so it stays a
+// constant circle/capsule while the sweep translates; 50% would scale
+// per-dimension and wobble), squared 0.
 const shapeRadiusMap: Record<NonNullable<SkeletonProps["shape"]>, string> = {
   default: "5px",
   pill: "9999px",
-  rounded: "50%",
+  rounded: "9999px",
   squared: "0px",
 };
 
