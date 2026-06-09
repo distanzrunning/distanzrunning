@@ -21,12 +21,12 @@ interface SkeletonProps {
   style?: React.CSSProperties;
 }
 
-// Geist-verbatim radii: default rounded-[5px], pill/avatar full,
-// rounded button/chip 6px, squared image-tile 0.
+// Geist-verbatim radii (skeleton-module): default 5px, pill 9999px,
+// rounded 50% (ellipse/circle), squared 0.
 const shapeRadiusMap: Record<NonNullable<SkeletonProps["shape"]>, string> = {
   default: "5px",
   pill: "9999px",
-  rounded: "6px",
+  rounded: "50%",
   squared: "0px",
 };
 
@@ -84,32 +84,33 @@ export function Skeleton({
         .ds-skeleton::after {
           content: "";
           position: absolute;
-          inset: 0;
-          right: -200%;
+          inset: 0 -200% 0 0;
           border-radius: inherit;
-          background-image: linear-gradient(
-            to right,
-            var(--ds-gray-100),
-            var(--ds-gray-200),
-            var(--ds-gray-100)
-          );
-          background-size: 50% 100%;
-          background-position: 0 0;
+          background: linear-gradient(
+              90deg,
+              var(--ds-gray-100),
+              var(--ds-gray-200),
+              var(--ds-gray-100)
+            )
+            0 0 / 50% 100%;
           visibility: visible;
         }
         .ds-skeleton--hide::after {
           content: none;
         }
-        /* one tile of travel === one full gradient period → seamless loop */
+        /*
+          Geist-verbatim: the ::after is 300% wide (inset right -200%) and the
+          gradient tiles at 50% (one tile === 150% of the box). Translating it
+          by -50% of its own width moves exactly one tile, so the loop is
+          seamless. The reverse keyword makes the band sweep left-to-right;
+          ease-in-out gives Geist's gentle pulse-and-sweep cadence.
+        */
         .ds-skeleton--anim::after {
-          animation: dsLoadingSkeleton 2s linear infinite;
+          animation: 1.5s ease-in-out infinite reverse dsLoadingSkeleton;
         }
         @keyframes dsLoadingSkeleton {
-          from {
-            background-position: 0% 0;
-          }
           to {
-            background-position: 100% 0;
+            transform: translate(-50%);
           }
         }
         @media (prefers-reduced-motion: reduce) {
