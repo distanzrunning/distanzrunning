@@ -474,9 +474,6 @@ export default function ErrorComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          A simple inline error message with an icon.
-        </p>
         <CodePreview componentCode={defaultCode}>
           <DefaultDemo />
         </CodePreview>
@@ -486,9 +483,6 @@ export default function ErrorComponent() {
         <SectionHeader id="custom-label" onCopyLink={showToast}>
           Custom label
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Add a bold label prefix to provide context about the error source.
-        </p>
         <CodePreview componentCode={customLabelCode}>
           <CustomLabelDemo />
         </CodePreview>
@@ -498,9 +492,6 @@ export default function ErrorComponent() {
         <SectionHeader id="no-label" onCopyLink={showToast}>
           No label
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Without a label, the error message is displayed directly.
-        </p>
         <CodePreview componentCode={noLabelCode}>
           <NoLabelDemo />
         </CodePreview>
@@ -510,9 +501,6 @@ export default function ErrorComponent() {
         <SectionHeader id="sizes" onCopyLink={showToast}>
           Sizes
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Three size variants: small, medium (default), and large.
-        </p>
         <CodePreview componentCode={sizesCode}>
           <SizesDemo />
         </CodePreview>
@@ -522,9 +510,6 @@ export default function ErrorComponent() {
         <SectionHeader id="with-an-error-property" onCopyLink={showToast}>
           With an error property
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Error messages can contain interactive elements like links.
-        </p>
         <CodePreview componentCode={withLinkCode}>
           <WithLinkDemo />
         </CodePreview>
