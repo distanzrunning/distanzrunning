@@ -325,19 +325,19 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col items-start gap-2">
         <p className="text-label-14">Without button prop (default):</p>
-        <Skeleton width={120} height={32}>
+        <Skeleton>
           <Button>Loading...</Button>
         </Skeleton>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col items-start gap-2">
         <p className="text-label-14">With button prop (extends animation by 1px):</p>
-        <Skeleton width={120} height={32} button>
+        <Skeleton button>
           <Button>Loading...</Button>
         </Skeleton>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col items-start gap-2">
         <p className="text-label-14">Multiple buttons loading:</p>
         <div className="flex gap-3">
           <Skeleton button>
@@ -476,21 +476,21 @@ function NoAnimationDemo() {
 function ButtonDemo() {
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col items-start gap-2">
         <p className="text-label-14">Without button prop (default):</p>
-        <Skeleton width={120} height={32}>
+        <Skeleton>
           <Button>Loading...</Button>
         </Skeleton>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col items-start gap-2">
         <p className="text-label-14">
           With button prop (extends animation by 1px):
         </p>
-        <Skeleton width={120} height={32} button>
+        <Skeleton button>
           <Button>Loading...</Button>
         </Skeleton>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col items-start gap-2">
         <p className="text-label-14">Multiple buttons loading:</p>
         <div className="flex gap-3">
           <Skeleton button>
