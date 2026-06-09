@@ -416,6 +416,18 @@ export function Component() {
   );
 }`;
 
+const letterCode = `import { Avatar } from '@/components/ui/Avatar';
+
+export function Component() {
+  return (
+    <div className="flex items-center gap-4">
+      <Avatar fallback="Sarah Lee" size={32} />
+      <Avatar fallback="Emma King" size={32} />
+      <Avatar fallback="Chris Kim" size={32} />
+    </div>
+  );
+}`;
+
 export default function AvatarComponent() {
   const { toast, showToast, dismissToast } = useToast();
 
@@ -477,6 +489,27 @@ export default function AvatarComponent() {
               ]}
               size={32}
             />
+          </div>
+        </CodePreview>
+      </Section>
+
+      {/* Size Section */}
+      <Section>
+        <SectionHeader id="size" onCopyLink={showToast}>
+          Size
+        </SectionHeader>
+        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
+          Avatars can be rendered at any size using the{" "}
+          <code className="inline-code">size</code> prop. Common sizes are
+          24, 32, 40, 48, and 64 pixels.
+        </p>
+        <CodePreview componentCode={sizesCode}>
+          <div className="flex items-center gap-4">
+            <Avatar src={avatarImages[0]} alt="User" size={24} />
+            <Avatar src={avatarImages[0]} alt="User" size={32} />
+            <Avatar src={avatarImages[0]} alt="User" size={40} />
+            <Avatar src={avatarImages[0]} alt="User" size={48} />
+            <Avatar src={avatarImages[0]} alt="User" size={64} />
           </div>
         </CodePreview>
       </Section>
@@ -555,6 +588,25 @@ export default function AvatarComponent() {
         </CodePreview>
       </Section>
 
+      {/* Letter Section */}
+      <Section>
+        <SectionHeader id="letter" onCopyLink={showToast}>
+          Letter
+        </SectionHeader>
+        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
+          When no image is available, pass{" "}
+          <code className="inline-code">fallback</code> to render 1–2
+          uppercase initials derived from the name.
+        </p>
+        <CodePreview componentCode={letterCode}>
+          <div className="flex items-center gap-4">
+            <Avatar fallback="Sarah Lee" size={32} />
+            <Avatar fallback="Emma King" size={32} />
+            <Avatar fallback="Chris Kim" size={32} />
+          </div>
+        </CodePreview>
+      </Section>
+
       {/* Placeholder Section */}
       <Section>
         <SectionHeader id="placeholder" onCopyLink={showToast}>
@@ -571,30 +623,6 @@ export default function AvatarComponent() {
           <Avatar placeholder size={90} />
         </CodePreview>
       </Section>
-
-      {/* Sizes Section */}
-      <Section>
-        <SectionHeader id="sizes" onCopyLink={showToast}>
-          Sizes
-        </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Avatars can be rendered at any size using the{" "}
-          <code className="inline-code">
-            size
-          </code>{" "}
-          prop. Common sizes are 24, 32, 40, 48, and 64 pixels.
-        </p>
-        <CodePreview componentCode={sizesCode}>
-          <div className="flex items-center gap-4">
-            <Avatar src={avatarImages[0]} alt="User" size={24} />
-            <Avatar src={avatarImages[0]} alt="User" size={32} />
-            <Avatar src={avatarImages[0]} alt="User" size={40} />
-            <Avatar src={avatarImages[0]} alt="User" size={48} />
-            <Avatar src={avatarImages[0]} alt="User" size={64} />
-          </div>
-        </CodePreview>
-      </Section>
-
 
       {/* Best Practices Section */}
       <Section>

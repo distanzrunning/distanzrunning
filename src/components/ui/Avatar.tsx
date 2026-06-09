@@ -194,9 +194,11 @@ export function Avatar({
       ) : fallback ? (
         <span
           aria-hidden="true"
-          className="font-medium"
-          // Geist initials: white at 50% opacity over the mid-gray fill.
-          style={{ fontSize, color: "#fff", opacity: 0.5 }}
+          // Geist letter avatar tokens: font-medium + text-white + opacity-50
+          // over the mid-gray fill. Font-size scales with the avatar (Geist
+          // leaves it to inherit; we scale so initials read at any size).
+          className="font-medium text-white opacity-50"
+          style={{ fontSize }}
         >
           {initials}
         </span>
