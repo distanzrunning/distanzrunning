@@ -344,7 +344,7 @@ const groupCode = `import { AvatarGroup } from '@/components/ui/Avatar';
 
 export function Component() {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex items-center gap-4">
       <AvatarGroup
         members={[
           { src: '/user1.jpg' },
@@ -453,8 +453,8 @@ export default function AvatarComponent() {
           remaining.
         </p>
         <CodePreview componentCode={groupCode}>
-          <div className="flex flex-col items-stretch justify-start gap-4 flex-initial">
-            {/* First row: 3 avatars, one with placeholder */}
+          <div className="flex items-center gap-4">
+            {/* Two clusters side by side on one row (Geist layout) */}
             <AvatarGroup
               members={[
                 {
@@ -476,7 +476,7 @@ export default function AvatarComponent() {
               ]}
               size={32}
             />
-            {/* Second row: 5 avatars with limit=4, showing +2 */}
+            {/* Second cluster: 6 avatars with limit=4, showing +2 */}
             <AvatarGroup
               limit={4}
               members={[
