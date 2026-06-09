@@ -71,7 +71,9 @@ const variantStyles: Record<BadgeVariant, string> = {
   blue: "bg-[var(--ds-blue-800)] text-[var(--ds-contrast-fg)]",
   purple:
     "bg-[var(--ds-purple-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-purple-500)]",
-  amber: "bg-[var(--ds-amber-700)] text-[#0a0a0a]",
+  // Geist uses text-black (#000) on the bright amber-700 fill — a deliberate
+  // exception to the no-text-black guideline; pure black reads best here.
+  amber: "bg-[var(--ds-amber-700)] text-black",
   red: "bg-[var(--ds-red-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-red-800)]",
   pink: "bg-[var(--ds-pink-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-pink-600)]",
   green:
@@ -133,7 +135,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         title={title}
         aria-label={title}
         className={`
-          inline-flex shrink-0 items-center justify-center rounded-full font-medium whitespace-nowrap tabular-nums capitalize
+          inline-flex shrink-0 items-center justify-center rounded-full py-0.5 font-medium whitespace-nowrap tabular-nums capitalize
           ${variantStyles[variant]}
           ${sizeStyles[size]}
           ${className}
@@ -172,7 +174,7 @@ export const BadgePill = forwardRef<
   // Geist pill: surface fill, gray-1000 text, a gray-alpha-400 INSET ring
   // (not a solid border), hover → gray-200. It's a link, so no underline.
   const pillStyles = `
-    inline-flex shrink-0 items-center justify-center rounded-full font-medium whitespace-nowrap tabular-nums capitalize
+    inline-flex shrink-0 items-center justify-center rounded-full py-0.5 font-medium whitespace-nowrap tabular-nums capitalize
     bg-surface text-textDefault no-underline
     ring-1 ring-inset ring-[var(--ds-gray-alpha-400)]
     hover:bg-[var(--ds-gray-200)]
