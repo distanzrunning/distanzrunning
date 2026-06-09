@@ -287,12 +287,15 @@ export function AvatarGroup({
               bgColor={member.bgColor}
             />
             {showOverflow && (
-              // Geist's +N note: a gray-100 pill with a gray-400 hairline
-              // overlaid on the slot, gray-1000 text at 10px / 600, scaled
-              // 1% to cover the slot edge cleanly.
+              // Geist's +N note is forced to the DARK theme on both light and
+              // dark pages (Geist tags the chip `dark-theme`): a dark gray-100
+              // fill (#1A1A1A) + gray-400 hairline + near-white gray-1000 text
+              // at 10px / 600, scaled 1% to cover the slot edge. We reproduce
+              // that by tagging the chip `dark`, which re-scopes its --ds-gray-*
+              // tokens to their dark values regardless of the page theme.
               <span
                 aria-hidden="true"
-                className="absolute inset-0 flex items-center justify-center rounded-full"
+                className="dark absolute inset-0 flex items-center justify-center rounded-full"
                 style={{
                   background: "var(--ds-gray-100)",
                   border: "1px solid var(--ds-gray-400)",
