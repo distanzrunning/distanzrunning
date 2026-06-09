@@ -67,15 +67,18 @@ function EntityContent({
     >
       {thumbnail && <div className="flex-shrink-0">{thumbnail}</div>}
       <div className="flex flex-1 flex-col min-w-0">
+        {/* text-copy-14 = Geist's 14/20/ls-0; weight 600 is set inline because
+            our @layer order lets text-copy-14's font-weight:400 beat a
+            font-semibold utility (the type token carries no 600 variant here). */}
         <p
-          className="truncate m-0 text-[14px] leading-[20px] font-semibold"
-          style={{ color: "hsl(var(--color-textDefault))" }}
+          className="truncate m-0 text-copy-14"
+          style={{ color: "hsl(var(--color-textDefault))", fontWeight: 600 }}
         >
           {title}
         </p>
         {subtitle && (
           <p
-            className="truncate m-0 text-[14px] leading-[20px]"
+            className="truncate m-0 text-copy-14"
             style={{ color: "hsl(var(--color-textSubtle))" }}
           >
             {subtitle}
