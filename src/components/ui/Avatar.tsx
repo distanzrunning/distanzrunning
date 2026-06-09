@@ -261,56 +261,54 @@ export function AvatarGroup({
 
   return (
     <div role="img" aria-label={groupLabel} className="flex items-center">
-      {visibleMembers.map((member, index) => (
-        <span
-          key={index}
-          aria-hidden="true"
-          className="relative inline-flex rounded-full"
-          style={{
-            marginLeft: index === 0 ? 0 : -overlap,
-            boxShadow: `0 0 0 1px ${member.borderColor || "hsl(var(--color-surface))"}`,
-          }}
-        >
-          <Avatar
-            src={member.src}
-            alt={member.alt || `Avatar ${index + 1}`}
-            size={size}
-            placeholder={member.placeholder}
-            placeholderIcon={member.placeholderIcon}
-            bgColor={member.bgColor}
-          />
-        </span>
-      ))}
-      {remainingCount > 0 && (
-        <span
-          aria-hidden="true"
-          className="relative inline-flex rounded-full"
-          style={{
-            marginLeft: -overlap,
-            boxShadow: "0 0 0 1px hsl(var(--color-surface))",
-          }}
-        >
-          {/* Geist's +N note: a gray-100 pill with a gray-400 hairline over
-              the slot, gray-1000 text at 10px / 600. */}
+      {visibleMembers.map((member, index) => {
+        // Geist overlays the +N note on the LAST visible slot (absolute
+        // inset-0) rather than appending an extra avatar — so a limit-4
+        // group of 6 renders 4 slots (3 avatars + the +2 chip over the
+        // 4th), matching Geist. remainingCount = members - limit.
+        const showOverflow =
+          remainingCount > 0 && index === visibleMembers.length - 1;
+        return (
           <span
-            className="flex items-center justify-center rounded-full"
+            key={index}
+            aria-hidden="true"
+            className="relative inline-flex rounded-full"
             style={{
-              width: size,
-              height: size,
-              background: "var(--ds-gray-100)",
-              border: "1px solid var(--ds-gray-400)",
-              color: "var(--ds-gray-1000)",
-              fontSize: 10,
-              lineHeight: "12px",
-              fontWeight: 600,
-              // Geist scales the note 1% to cover the slot edge cleanly.
-              transform: "scale(1.01)",
+              marginLeft: index === 0 ? 0 : -overlap,
+              boxShadow: `0 0 0 1px ${member.borderColor || "hsl(var(--color-surface))"}`,
             }}
           >
-            +{remainingCount}
+            <Avatar
+              src={member.src}
+              alt={member.alt || `Avatar ${index + 1}`}
+              size={size}
+              placeholder={member.placeholder}
+              placeholderIcon={member.placeholderIcon}
+              bgColor={member.bgColor}
+            />
+            {showOverflow && (
+              // Geist's +N note: a gray-100 pill with a gray-400 hairline
+              // overlaid on the slot, gray-1000 text at 10px / 600, scaled
+              // 1% to cover the slot edge cleanly.
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 flex items-center justify-center rounded-full"
+                style={{
+                  background: "var(--ds-gray-100)",
+                  border: "1px solid var(--ds-gray-400)",
+                  color: "var(--ds-gray-1000)",
+                  fontSize: 10,
+                  lineHeight: "12px",
+                  fontWeight: 600,
+                  transform: "scale(1.01)",
+                }}
+              >
+                +{remainingCount}
+              </span>
+            )}
           </span>
-        </span>
-      )}
+        );
+      })}
     </div>
   );
 }
