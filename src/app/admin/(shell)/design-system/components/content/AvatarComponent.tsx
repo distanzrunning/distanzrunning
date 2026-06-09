@@ -266,7 +266,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-borderDefault rounded-lg overflow-hidden">
+    <div className="mt-4 xl:mt-7 border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
       <div className="p-6" style={{ background: "hsl(var(--color-surface))" }}>
         {children}
@@ -444,14 +444,6 @@ export default function AvatarComponent() {
         <SectionHeader id="group" onCopyLink={showToast}>
           Group
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Multiple avatars can be stacked together in a group. Use the{" "}
-          <code className="inline-code">
-            limit
-          </code>{" "}
-          prop to limit the number of visible avatars and show a count for the
-          remaining.
-        </p>
         <CodePreview componentCode={groupCode}>
           <div className="flex items-center gap-4">
             {/* Two clusters side by side on one row (Geist layout) */}
@@ -505,11 +497,6 @@ export default function AvatarComponent() {
         <SectionHeader id="size" onCopyLink={showToast}>
           Size
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Avatars can be rendered at any size using the{" "}
-          <code className="inline-code">size</code> prop. Common sizes are
-          24, 32, 40, 48, and 64 pixels.
-        </p>
         <CodePreview componentCode={sizesCode}>
           <div className="flex items-center gap-4">
             <Avatar src={avatarImages[0]} alt="User" size={24} />
@@ -526,11 +513,6 @@ export default function AvatarComponent() {
         <SectionHeader id="brand" onCopyLink={showToast}>
           Brand
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Avatars can display a badge indicating a brand affiliation. Supported
-          brands include Nike, Adidas, and New Balance. Each badge uses the
-          brand&apos;s colour.
-        </p>
         <CodePreview componentCode={brandCode}>
           <div className="flex flex-col gap-4">
             <AvatarBrand
@@ -563,11 +545,6 @@ export default function AvatarComponent() {
         <SectionHeader id="custom-icon" onCopyLink={showToast}>
           With custom icon
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Add an icon badge to indicate status, role, or activity. The badge
-          sits in the bottom-left corner on a page-background circle so it
-          reads against any avatar.
-        </p>
         <CodePreview componentCode={customIconCode}>
           <div className="flex items-center gap-4">
             <AvatarWithIcon
@@ -600,11 +577,6 @@ export default function AvatarComponent() {
         <SectionHeader id="letter" onCopyLink={showToast}>
           Letter
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          When no image is available, pass{" "}
-          <code className="inline-code">fallback</code> to render 1–2
-          uppercase initials derived from the name.
-        </p>
         <CodePreview componentCode={letterCode}>
           <div className="flex items-center gap-4">
             <Avatar fallback="Sarah Lee" size={32} />
@@ -619,13 +591,6 @@ export default function AvatarComponent() {
         <SectionHeader id="placeholder" onCopyLink={showToast}>
           Placeholder
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          When no image is provided, use the{" "}
-          <code className="inline-code">
-            placeholder
-          </code>{" "}
-          prop to display a subtle shimmer animation.
-        </p>
         <CodePreview componentCode={placeholderCode}>
           <Avatar placeholder size={90} />
         </CodePreview>
