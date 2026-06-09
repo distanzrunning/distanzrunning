@@ -80,10 +80,11 @@ function ModalTitle({
       id={titleId}
       className={className}
       style={{
+        // Deliberately NOT text-heading-24: Geist's modal title is its own
+        // treatment — weight 500 (token is 600) and ls -0.029375rem (token is
+        // -0.04em / ≈-0.96px). Size/line-height happen to match (24/32).
         color: "var(--ds-gray-1000)",
         fontSize: 24,
-        // Geist modal titles are font-medium (500) — heading-24's 600 is
-        // deliberately overridden via `data-geist-modal-title`.
         fontWeight: 500,
         lineHeight: "32px",
         letterSpacing: "-0.029375rem",
@@ -109,12 +110,9 @@ function ModalP({
   const { inHeader } = useModalContext("Modal.P");
   return (
     <div
-      className={className}
+      className={`text-copy-16 ${className ?? ""}`}
       style={{
         color: "var(--ds-gray-1000)",
-        fontSize: 16,
-        lineHeight: "24px",
-        fontWeight: 400,
         // Inside <Modal.Header>, the header's `gap` owns spacing.
         // Standalone, the paragraph needs its own bottom rhythm so the
         // body content below sits 24px clear.
