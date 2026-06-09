@@ -405,9 +405,9 @@ import { CircleArrowDown, CircleCheck, Clock } from 'lucide-react';
 export function Component() {
   return (
     <div className="flex items-center gap-4">
-      <AvatarWithIcon src="/user.jpg" size={32} badgeSize={18} icon={<CircleArrowDown size={14} />} />
-      <AvatarWithIcon src="/user.jpg" size={32} badgeSize={18} icon={<CircleCheck size={14} />} />
-      <AvatarWithIcon src="/user.jpg" size={32} badgeSize={18} icon={<Clock size={14} />} />
+      <AvatarWithIcon src="/user.jpg" size={32} icon={<CircleArrowDown size={14} />} />
+      <AvatarWithIcon src="/user.jpg" size={32} icon={<CircleCheck size={14} />} />
+      <AvatarWithIcon src="/user.jpg" size={32} icon={<Clock size={14} />} />
     </div>
   );
 }`;
@@ -528,27 +528,9 @@ export default function AvatarComponent() {
         </SectionHeader>
         <CodePreview componentCode={customIconCode}>
           <div className="flex items-center gap-4">
-            <AvatarWithIcon
-              src={avatarImages[0]}
-              alt="User"
-              size={32}
-              badgeSize={18}
-              icon={<CircleArrowDown size={14} />}
-            />
-            <AvatarWithIcon
-              src={avatarImages[1]}
-              alt="User"
-              size={32}
-              badgeSize={18}
-              icon={<CircleCheck size={14} />}
-            />
-            <AvatarWithIcon
-              src={avatarImages[2]}
-              alt="User"
-              size={32}
-              badgeSize={18}
-              icon={<Clock size={14} />}
-            />
+            <AvatarWithIcon src={avatarImages[0]} alt="User" size={32} icon={<CircleArrowDown size={14} />} />
+            <AvatarWithIcon src={avatarImages[1]} alt="User" size={32} icon={<CircleCheck size={14} />} />
+            <AvatarWithIcon src={avatarImages[2]} alt="User" size={32} icon={<Clock size={14} />} />
           </div>
         </CodePreview>
       </Section>

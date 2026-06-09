@@ -90,8 +90,6 @@ export interface AvatarWithIconProps extends Omit<AvatarProps, "shimmer"> {
   iconColor?: string;
   /** Use gradient background instead of image */
   gradient?: { colors: string[]; angle?: number };
-  /** Fixed badge size in pixels (overrides proportional sizing) */
-  badgeSize?: number;
 }
 
 // ============================================================================
@@ -445,10 +443,7 @@ export function AvatarWithIcon({
   iconBgColor = "hsl(var(--color-surface))",
   iconColor = "var(--ds-gray-900)",
   gradient,
-  badgeSize: customBadgeSize,
 }: AvatarWithIconProps) {
-  const badgeSize = customBadgeSize || Math.round(size * 0.55);
-
   return (
     <div className="relative inline-flex" style={{ width: size, height: size }}>
       {gradient ? (
@@ -460,26 +455,23 @@ export function AvatarWithIcon({
       ) : (
         <Avatar src={src} alt={alt} size={size} fallback={fallback} />
       )}
+      {/* Geist's custom-icon badge: a page-bg circle carrying the icon at its
+          natural size. Content-sized (inline-flex, no fixed width) to fit the
+          icon, with a 1px page-bg border that grows outward (content-box) so it
+          punches cleanly over the avatar edge — matching Geist's
+          `w-fit h-fit … border border-white`. */}
       <div
-        className="absolute flex items-center justify-center rounded-full"
+        className="absolute inline-flex items-center justify-center rounded-full overflow-hidden leading-none"
         style={{
-          width: badgeSize,
-          height: badgeSize,
           backgroundColor: iconBgColor,
           color: iconColor,
-          // Geist extends the badge circle 1px in its own bg colour so it
-          // punches cleanly over the avatar edge (the `border: 1px solid #fff`).
-          boxShadow: `0 0 0 1px ${iconBgColor}`,
+          border: `1px solid ${iconBgColor}`,
+          boxSizing: "content-box",
           bottom: -5,
           left: -3,
         }}
       >
-        <span
-          style={{ width: badgeSize * 0.6, height: badgeSize * 0.6 }}
-          className="flex items-center justify-center"
-        >
-          {icon}
-        </span>
+        {icon}
       </div>
     </div>
   );
