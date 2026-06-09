@@ -25,7 +25,7 @@ export interface ErrorProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 // ============================================================================
-// Error Icon (octagon with exclamation mark)
+// Error Icon (Geist diamond/rhombus with exclamation mark)
 // ============================================================================
 
 function ErrorIcon() {
@@ -71,10 +71,11 @@ function Error({
 
   return (
     <div
-      className={`flex flex-row items-stretch ${className}`}
+      className={`flex items-start ${className}`}
       role={live === "assertive" ? "alert" : "status"}
       aria-live={live}
       aria-atomic="true"
+      style={{ color: "var(--ds-red-900)", fontSize, lineHeight }}
       {...rest}
     >
       <div
@@ -84,18 +85,10 @@ function Error({
       >
         <ErrorIcon />
       </div>
-      <div
-        style={{
-          fontSize,
-          lineHeight,
-          color: "var(--ds-red-900)",
-        }}
-      >
-        {label && (
-          <b style={{ fontWeight: 600 }}>
-            {label}:{" "}
-          </b>
-        )}
+      {/* Geist wraps the message in a break-words block; the label is a
+          font-medium (500) bold with an 8px right margin, not a trailing space. */}
+      <div className="break-words">
+        {label && <b style={{ fontWeight: 500, marginRight: 8 }}>{label}:</b>}
         {children}
       </div>
     </div>

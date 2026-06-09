@@ -369,7 +369,7 @@ function WithLinkExample() {
         href="/support"
         target="_blank"
         rel="noopener"
-        className="inline-flex items-center gap-0.5 underline"
+        className="inline-flex items-center gap-0.5 font-medium underline"
         style={{ color: 'inherit' }}
       >
         Contact Us
@@ -451,7 +451,7 @@ function WithLinkDemo() {
         href="/support"
         target="_blank"
         rel="noopener"
-        className="inline-flex items-center gap-0.5 underline"
+        className="inline-flex items-center gap-0.5 font-medium underline"
         style={{ color: "inherit" }}
       >
         Contact Us
