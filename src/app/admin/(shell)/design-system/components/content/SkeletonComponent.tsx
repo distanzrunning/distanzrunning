@@ -327,13 +327,13 @@ export function Component(): JSX.Element {
     <div className="flex flex-col gap-4">
       <div className="flex flex-col items-start gap-2">
         <p className="text-label-14">Without button prop (default):</p>
-        <Skeleton>
+        <Skeleton show={false}>
           <Button>Loading...</Button>
         </Skeleton>
       </div>
       <div className="flex flex-col items-start gap-2">
         <p className="text-label-14">With button prop (extends animation by 1px):</p>
-        <Skeleton button>
+        <Skeleton show={false} button>
           <Button>Loading...</Button>
         </Skeleton>
       </div>
@@ -478,7 +478,7 @@ function ButtonDemo() {
     <div className="flex flex-col gap-4">
       <div className="flex flex-col items-start gap-2">
         <p className="text-label-14">Without button prop (default):</p>
-        <Skeleton>
+        <Skeleton show={false}>
           <Button>Loading...</Button>
         </Skeleton>
       </div>
@@ -486,7 +486,7 @@ function ButtonDemo() {
         <p className="text-label-14">
           With button prop (extends animation by 1px):
         </p>
-        <Skeleton button>
+        <Skeleton show={false} button>
           <Button>Loading...</Button>
         </Skeleton>
       </div>
