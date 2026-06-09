@@ -13,6 +13,11 @@ interface SkeletonProps {
   show?: boolean;
   /** Disable the shimmer animation */
   noAnimation?: boolean;
+  /**
+   * Extend the shimmer 1px past the top/bottom/left edges so it fully
+   * covers a wrapped button's border (Geist's `button` prop).
+   */
+  button?: boolean;
   /** Children to wrap — skeleton hides when present and show is false */
   children?: React.ReactNode;
   /** Additional CSS classes */
@@ -36,6 +41,7 @@ export function Skeleton({
   shape = "default",
   show = true,
   noAnimation = false,
+  button = false,
   children,
   className = "",
   style,
@@ -43,13 +49,20 @@ export function Skeleton({
   const borderRadius = shapeRadiusMap[shape];
 
   const resolvedWidth = typeof width === "number" ? `${width}px` : width;
-  const resolvedHeight = typeof height === "number" ? `${height}px` : height;
+  // Geist defaults the box height to 24px, but only for non-wrapping
+  // skeletons — when wrapping children the size comes from the children.
+  const effectiveHeight =
+    height ?? (children == null ? 24 : undefined);
+  const resolvedHeight =
+    typeof effectiveHeight === "number"
+      ? `${effectiveHeight}px`
+      : effectiveHeight;
 
   return (
     <span
       className={`ds-skeleton ${show ? "ds-skeleton--show" : "ds-skeleton--hide"} ${
         noAnimation ? "" : "ds-skeleton--anim"
-      } ${className}`}
+      } ${button ? "ds-skeleton--button" : ""} ${className}`}
       data-geist-skeleton=""
       style={{
         width: resolvedWidth,
@@ -97,6 +110,12 @@ export function Skeleton({
         }
         .ds-skeleton--hide::after {
           content: none;
+        }
+        /* Geist button prop: cover the wrapped button's 1px border. */
+        .ds-skeleton--button::after {
+          top: -1px;
+          bottom: -1px;
+          left: -1px;
         }
         /*
           Geist-verbatim: the ::after is 300% wide (inset right -200%) and the
