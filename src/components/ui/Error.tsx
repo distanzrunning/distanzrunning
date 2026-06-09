@@ -46,13 +46,14 @@ function ErrorIcon() {
 }
 
 // ============================================================================
-// Size config
+// Size config — Geist's text-[13px] leading-5 / text-sm leading-5 /
+// text-base leading-6, expressed via our typography tokens.
 // ============================================================================
 
-const sizeStyles: Record<ErrorSize, { fontSize: number; lineHeight: string }> = {
-  small: { fontSize: 13, lineHeight: "20px" },
-  medium: { fontSize: 14, lineHeight: "20px" },
-  large: { fontSize: 16, lineHeight: "24px" },
+const sizeClass: Record<ErrorSize, string> = {
+  small: "text-copy-13", // 13px; line-height overridden to 20 below
+  medium: "text-copy-14", // 14 / 20
+  large: "text-copy-16", // 16 / 24
 };
 
 // ============================================================================
@@ -67,28 +68,32 @@ function Error({
   className = "",
   ...rest
 }: ErrorProps) {
-  const { fontSize, lineHeight } = sizeStyles[size];
-
   return (
     <div
-      className={`flex items-start ${className}`}
+      className={`flex items-start ${sizeClass[size]} ${className}`}
       role={live === "assertive" ? "alert" : "status"}
       aria-live={live}
       aria-atomic="true"
-      style={{ color: "var(--ds-red-900)", fontSize, lineHeight }}
+      style={{
+        color: "var(--ds-red-900)",
+        // Geist's small is text-[13px] leading-5 — a deliberate 20px
+        // line-height over 13px text, overriding text-copy-13's bundled 18px.
+        ...(size === "small" ? { lineHeight: "20px" } : null),
+      }}
       {...rest}
     >
       <div
         aria-hidden="true"
-        className="flex items-center flex-shrink-0"
-        style={{ marginRight: 8, marginTop: size === "large" ? 4 : 2 }}
+        className={`flex items-center flex-shrink-0 mr-2 ${
+          size === "large" ? "mt-1" : "mt-0.5"
+        }`}
       >
         <ErrorIcon />
       </div>
       {/* Geist wraps the message in a break-words block; the label is a
-          font-medium (500) bold with an 8px right margin, not a trailing space. */}
+          font-medium (500) bold with an 8px (mr-2) right margin. */}
       <div className="break-words">
-        {label && <b style={{ fontWeight: 500, marginRight: 8 }}>{label}:</b>}
+        {label && <b className="font-medium mr-2">{label}:</b>}
         {children}
       </div>
     </div>
