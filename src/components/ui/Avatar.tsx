@@ -365,10 +365,13 @@ export function AvatarBrand({
           width: badgeSize,
           height: badgeSize,
           backgroundColor: config.color,
-          // Geist's git badge separates from the avatar with a 1px page-bg
-          // ring (border-white / dark:border-black). bg-100 is the surface the
+          // Geist's git badge separates from the avatar with a literal 1px
+          // page-bg border (border-white / dark:border-black) that grows the
+          // badge outward — content-box keeps the coloured fill at badgeSize
+          // (border-box would eat 1px off each side). bg-100 is the surface the
           // avatar sits on, so the badge reads as cut into it.
-          boxShadow: "0 0 0 1px var(--ds-background-100)",
+          border: "1px solid var(--ds-background-100)",
+          boxSizing: "content-box",
           bottom: -5,
           left: -3,
         }}
