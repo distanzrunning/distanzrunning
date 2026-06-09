@@ -462,7 +462,7 @@ function ColumnClassNamesExample() {
       <Entity>
         <Entity.Content
           title="Entity with dashed borders"
-          thumbnail={<Avatar size={50} />}
+          thumbnail={<Avatar placeholder size={50} />}
           className="border border-dashed border-[var(--ds-gray-300)] rounded-md p-2"
         />
         <Entity.Field className="border border-dashed border-[var(--ds-gray-300)] rounded-md p-2">
@@ -613,7 +613,7 @@ function ColumnClassNamesDemo() {
       <Entity>
         <Entity.Content
           title="Entity with dashed borders"
-          thumbnail={<Avatar size={50} />}
+          thumbnail={<Avatar placeholder size={50} />}
           className="border border-dashed border-[var(--ds-gray-300)] rounded-md p-2"
         />
         <Entity.Field className="border border-dashed border-[var(--ds-gray-300)] rounded-md p-2">
