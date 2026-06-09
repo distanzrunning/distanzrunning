@@ -474,45 +474,55 @@ export default function ErrorComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
-        <CodePreview componentCode={defaultCode}>
-          <DefaultDemo />
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={defaultCode}>
+            <DefaultDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       <Section>
         <SectionHeader id="custom-label" onCopyLink={showToast}>
           Custom label
         </SectionHeader>
-        <CodePreview componentCode={customLabelCode}>
-          <CustomLabelDemo />
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={customLabelCode}>
+            <CustomLabelDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       <Section>
         <SectionHeader id="no-label" onCopyLink={showToast}>
           No label
         </SectionHeader>
-        <CodePreview componentCode={noLabelCode}>
-          <NoLabelDemo />
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={noLabelCode}>
+            <NoLabelDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       <Section>
         <SectionHeader id="sizes" onCopyLink={showToast}>
           Sizes
         </SectionHeader>
-        <CodePreview componentCode={sizesCode}>
-          <SizesDemo />
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={sizesCode}>
+            <SizesDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       <Section>
         <SectionHeader id="with-an-error-property" onCopyLink={showToast}>
           With an error property
         </SectionHeader>
-        <CodePreview componentCode={withLinkCode}>
-          <WithLinkDemo />
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={withLinkCode}>
+            <WithLinkDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       {/* Best Practices Section */}
