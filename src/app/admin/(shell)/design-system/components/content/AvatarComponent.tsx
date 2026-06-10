@@ -356,6 +356,12 @@ function DistanzMarkIcon() {
   );
 }
 
+// Blank gradient avatar for the "With custom icon" demo — Geist shows the
+// anonymous Vercel gradient avatar (no user) so the focus is the badge, not a
+// face. Same gradient on all three. Colours approximate Vercel's default —
+// tune to taste.
+const iconAvatarGradient = { colors: ["#007CF0", "#00DFD8"], angle: 135 };
+
 // Code examples
 const groupCode = `import { AvatarGroup } from '@/components/ui/Avatar';
 
@@ -403,11 +409,12 @@ const customIconCode = `import { AvatarWithIcon } from '@/components/ui/Avatar';
 import { CircleArrowDown, CircleCheck, Clock } from 'lucide-react';
 
 export function Component() {
+  const gradient = { colors: ['#007CF0', '#00DFD8'] };
   return (
     <div className="flex items-center gap-4">
-      <AvatarWithIcon src="/user.jpg" size={32} icon={<CircleArrowDown size={14} />} />
-      <AvatarWithIcon src="/user.jpg" size={32} icon={<CircleCheck size={14} />} />
-      <AvatarWithIcon src="/user.jpg" size={32} icon={<Clock size={14} />} />
+      <AvatarWithIcon gradient={gradient} size={32} icon={<CircleArrowDown size={14} />} />
+      <AvatarWithIcon gradient={gradient} size={32} icon={<CircleCheck size={14} />} />
+      <AvatarWithIcon gradient={gradient} size={32} icon={<Clock size={14} />} />
     </div>
   );
 }`;
@@ -528,9 +535,9 @@ export default function AvatarComponent() {
         </SectionHeader>
         <CodePreview componentCode={customIconCode}>
           <div className="flex items-center gap-4">
-            <AvatarWithIcon src={avatarImages[0]} alt="User" size={32} icon={<CircleArrowDown size={14} />} />
-            <AvatarWithIcon src={avatarImages[1]} alt="User" size={32} icon={<CircleCheck size={14} />} />
-            <AvatarWithIcon src={avatarImages[2]} alt="User" size={32} icon={<Clock size={14} />} />
+            <AvatarWithIcon gradient={iconAvatarGradient} size={32} icon={<CircleArrowDown size={14} />} />
+            <AvatarWithIcon gradient={iconAvatarGradient} size={32} icon={<CircleCheck size={14} />} />
+            <AvatarWithIcon gradient={iconAvatarGradient} size={32} icon={<Clock size={14} />} />
           </div>
         </CodePreview>
       </Section>
