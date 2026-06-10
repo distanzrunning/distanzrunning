@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { ChevronDown, CircleArrowDown, CircleCheck, Clock } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import {
   useShikiHighlighter,
@@ -362,6 +362,32 @@ function DistanzMarkIcon() {
 // tune to taste.
 const iconAvatarGradient = { colors: ["#007CF0", "#00DFD8"], angle: 135 };
 
+// Geist's exact custom-icon glyphs (download / filled-check / clock). The
+// check is a *filled* disc with a knocked-out check (fill-rule evenodd), so it
+// renders as a solid gray-900 circle with a white check — that's why Geist's
+// middle badge reads as a dark circle, not a thin outline like lucide's.
+const ICON_DOWNLOAD =
+  "M8.75 5.25V4.5H7.25V5.25V9.43934L5.78033 7.96967L5.25 7.43934L4.18934 8.5L4.71967 9.03033L7.46967 11.7803C7.76256 12.0732 8.23744 12.0732 8.53033 11.7803L11.2803 9.03033L11.8107 8.5L10.75 7.43934L10.2197 7.96967L8.75 9.43934V5.25ZM1.5 8C1.5 4.41015 4.41015 1.5 8 1.5C11.5899 1.5 14.5 4.41015 14.5 8C14.5 11.5899 11.5899 14.5 8 14.5C4.41015 14.5 1.5 11.5899 1.5 8ZM8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0Z";
+const ICON_CHECK =
+  "M16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8ZM11.5303 6.53033L12.0607 6L11 4.93934L10.4697 5.46967L6.5 9.43934L5.53033 8.46967L5 7.93934L3.93934 9L4.46967 9.53033L5.96967 11.0303C6.26256 11.3232 6.73744 11.3232 7.03033 11.0303L11.5303 6.53033Z";
+const ICON_CLOCK =
+  "M5.35066 2.06247C5.96369 1.78847 6.62701 1.60666 7.32351 1.53473L7.16943 0.0426636C6.31208 0.1312 5.49436 0.355227 4.73858 0.693033L5.35066 2.06247ZM8.67651 1.53473C11.9481 1.87258 14.5 4.63876 14.5 8.00001C14.5 11.5899 11.5899 14.5 8.00001 14.5C4.63901 14.5 1.87298 11.9485 1.5348 8.67722L0.0427551 8.83147C0.459163 12.8594 3.86234 16 8.00001 16C12.4183 16 16 12.4183 16 8.00001C16 3.86204 12.8589 0.458666 8.83059 0.0426636L8.67651 1.53473ZM2.73972 4.18084C3.14144 3.62861 3.62803 3.14195 4.18021 2.74018L3.29768 1.52727C2.61875 2.02128 2.02064 2.61945 1.52671 3.29845L2.73972 4.18084ZM1.5348 7.32279C1.60678 6.62656 1.78856 5.96348 2.06247 5.35066L0.693033 4.73858C0.355343 5.4941 0.131354 6.31152 0.0427551 7.16854L1.5348 7.32279ZM8.75001 4.75V4H7.25001V4.75V7.875C7.25001 8.18976 7.3982 8.48615 7.65001 8.675L9.55001 10.1L10.15 10.55L11.05 9.35L10.45 8.9L8.75001 7.625V4.75Z";
+
+function GeistGlyph({ d }: { d: string }) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      aria-hidden="true"
+      style={{ display: "block" }}
+    >
+      <path fillRule="evenodd" clipRule="evenodd" d={d} />
+    </svg>
+  );
+}
+
 // Code examples
 const groupCode = `import { AvatarGroup } from '@/components/ui/Avatar';
 
@@ -535,9 +561,9 @@ export default function AvatarComponent() {
         </SectionHeader>
         <CodePreview componentCode={customIconCode}>
           <div className="flex items-center gap-4">
-            <AvatarWithIcon gradient={iconAvatarGradient} size={32} icon={<CircleArrowDown size={14} />} />
-            <AvatarWithIcon gradient={iconAvatarGradient} size={32} icon={<CircleCheck size={14} />} />
-            <AvatarWithIcon gradient={iconAvatarGradient} size={32} icon={<Clock size={14} />} />
+            <AvatarWithIcon gradient={iconAvatarGradient} size={32} icon={<GeistGlyph d={ICON_DOWNLOAD} />} />
+            <AvatarWithIcon gradient={iconAvatarGradient} size={32} icon={<GeistGlyph d={ICON_CHECK} />} />
+            <AvatarWithIcon gradient={iconAvatarGradient} size={32} icon={<GeistGlyph d={ICON_CLOCK} />} />
           </div>
         </CodePreview>
       </Section>
