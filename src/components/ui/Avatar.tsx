@@ -170,10 +170,10 @@ export function Avatar({
       style={{
         width: size,
         height: size,
-        // Geist letter avatars sit on accents-6 (#444 light / #999 dark) — the
-        // ds-gray with that same asymmetric flip is gray-900 (30% / 63%).
+        // Geist letter avatars sit on accents-6 (#444 light / #999 dark),
+        // carried by --ds-avatar-initials-bg (gray-900 was ~3% too light).
         // Other states keep the lighter gray-300 shell. transition matches Geist.
-        backgroundColor: bgColor || (initials ? "var(--ds-gray-900)" : "var(--ds-gray-300)"),
+        backgroundColor: bgColor || (initials ? "var(--ds-avatar-initials-bg)" : "var(--ds-gray-300)"),
         transition: "background 0.2s",
       }}
     >

@@ -443,6 +443,11 @@
        (badges, etc.). #fff in both themes — Geist's --ds-contrast-fg. */
     --ds-contrast-fg: #fff;
 
+    /* Letter/initials avatar fill — Geist's accents-6 (#444 light / #999 dark),
+       a touch darker than gray-900. The white-50% initials sit on this. Not a
+       step in the gray scale, so it gets its own theme-flipping token. */
+    --ds-avatar-initials-bg: #444;
+
     /* Rounded shadow button - marketing style */
     --ds-shadow-button-rounded:
       0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 2px 0 rgba(0, 0, 0, 0.04),
@@ -884,6 +889,9 @@
     /* Fixed white foreground for solid coloured fills — #fff in both
        themes (Geist's --ds-contrast-fg). */
     --ds-contrast-fg: #fff;
+
+    /* Letter/initials avatar fill — Geist's accents-6, dark variant (#999). */
+    --ds-avatar-initials-bg: #999;
 
     /* Rounded shadow button - marketing style (dark mode) */
     --ds-shadow-button-rounded:
