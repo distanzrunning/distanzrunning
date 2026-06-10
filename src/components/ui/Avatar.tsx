@@ -162,6 +162,32 @@ export function Avatar({
         ? `Avatar with initials: ${initials}`
         : alt || "Avatar";
 
+  // Letter (initials) avatar — Geist renders it as an unresolved placeholder
+  // (the loading shimmer) with the initials overlaid at 50% opacity, where the
+  // accents-6 fill AND the white text are faded *together* (one `opacity-50`
+  // span). So it reads as a ghosted grey over the shimmer, not a solid fill.
+  // Callers that pass an explicit bgColor keep the solid treatment below.
+  if (showFallback && initials && !placeholderIcon && !bgColor) {
+    return (
+      <div
+        role="img"
+        aria-label={ariaLabel}
+        className="relative inline-block rounded-full overflow-hidden flex-shrink-0 align-top"
+        style={{ width: size, height: size, lineHeight: 0 }}
+      >
+        <Skeleton shape="pill" width={size} height={size} />
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 flex items-center justify-center font-medium text-white opacity-50"
+          style={{ backgroundColor: "var(--ds-avatar-initials-bg)", fontSize }}
+        >
+          {initials}
+        </span>
+        <AvatarRing />
+      </div>
+    );
+  }
+
   return (
     <div
       role="img"
