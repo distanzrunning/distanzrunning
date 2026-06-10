@@ -348,8 +348,12 @@ export function AvatarBrand({
   brand,
   badgeSize: customBadgeSize,
 }: AvatarBrandProps) {
-  const badgeSize = customBadgeSize || Math.round(size * 0.55);
-  const iconSize = Math.round(badgeSize * 0.6);
+  // Badge sized to match AvatarWithIcon (and Geist's git badge): a ~14px
+  // coloured fill at avatar-32 → 16px outer with the 1px border. The brand
+  // glyph is scaled to ~0.72 so the brand colour rings it, like Geist scales
+  // the gitlab/bitbucket marks inside the badge.
+  const badgeSize = customBadgeSize || Math.round(size * 0.44);
+  const iconSize = Math.round(badgeSize * 0.72);
 
   const config = brandConfig[brand];
   const BrandIcon = config.icon;
