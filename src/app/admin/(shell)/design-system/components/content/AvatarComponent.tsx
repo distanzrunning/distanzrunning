@@ -356,11 +356,34 @@ function DistanzMarkIcon() {
   );
 }
 
-// Blank gradient avatar for the "With custom icon" demo — Geist shows the
-// anonymous Vercel gradient avatar (no user) so the focus is the badge, not a
-// face. Same gradient on all three. Colours approximate Vercel's default —
-// tune to taste.
-const iconAvatarGradient = { colors: ["#007CF0", "#00DFD8"], angle: 135 };
+// Blank avatar for the "With custom icon" demo — Geist shows Vercel's
+// anonymous avatar (a blue halftone dot-screen sphere) so the focus is the
+// badge, not a face. We approximate it with a blue radial gradient + a white
+// dot screen. Tune colours / dot size to taste.
+function BlankAvatar({ size = 32 }: { size?: number }) {
+  const cell = Math.max(3, Math.round(size / 8));
+  return (
+    <div
+      aria-hidden="true"
+      className="rounded-full overflow-hidden shrink-0"
+      style={{
+        width: size,
+        height: size,
+        background:
+          "radial-gradient(circle at 35% 30%, #6cc1f7 0%, #2a8de8 55%, #1166cf 100%)",
+      }}
+    >
+      <div
+        className="h-full w-full"
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(255,255,255,0.55) 0 28%, transparent 30%)",
+          backgroundSize: `${cell}px ${cell}px`,
+        }}
+      />
+    </div>
+  );
+}
 
 // Geist's exact custom-icon glyphs (download / filled-check / clock). The
 // check is a *filled* disc with a knocked-out check (fill-rule evenodd), so it
@@ -561,9 +584,9 @@ export default function AvatarComponent() {
         </SectionHeader>
         <CodePreview componentCode={customIconCode}>
           <div className="flex items-center gap-4">
-            <AvatarWithIcon gradient={iconAvatarGradient} size={32} icon={<GeistGlyph d={ICON_DOWNLOAD} />} />
-            <AvatarWithIcon gradient={iconAvatarGradient} size={32} icon={<GeistGlyph d={ICON_CHECK} />} />
-            <AvatarWithIcon gradient={iconAvatarGradient} size={32} icon={<GeistGlyph d={ICON_CLOCK} />} />
+            <AvatarWithIcon avatar={<BlankAvatar size={32} />} size={32} icon={<GeistGlyph d={ICON_DOWNLOAD} />} />
+            <AvatarWithIcon avatar={<BlankAvatar size={32} />} size={32} icon={<GeistGlyph d={ICON_CHECK} />} />
+            <AvatarWithIcon avatar={<BlankAvatar size={32} />} size={32} icon={<GeistGlyph d={ICON_CLOCK} />} />
           </div>
         </CodePreview>
       </Section>

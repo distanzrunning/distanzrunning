@@ -90,6 +90,8 @@ export interface AvatarWithIconProps extends Omit<AvatarProps, "shimmer"> {
   iconColor?: string;
   /** Use gradient background instead of image */
   gradient?: { colors: string[]; angle?: number };
+  /** Custom avatar node (overrides src/gradient) — e.g. a textured fill */
+  avatar?: React.ReactNode;
 }
 
 // ============================================================================
@@ -450,10 +452,13 @@ export function AvatarWithIcon({
   iconBgColor = "hsl(var(--color-canvas))",
   iconColor = "var(--ds-gray-900)",
   gradient,
+  avatar,
 }: AvatarWithIconProps) {
   return (
     <div className="relative inline-flex" style={{ width: size, height: size }}>
-      {gradient ? (
+      {avatar ? (
+        avatar
+      ) : gradient ? (
         <AvatarGradient
           size={size}
           colors={gradient.colors}
