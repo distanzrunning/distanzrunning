@@ -362,7 +362,7 @@ export function AvatarBrand({
     <div className="relative inline-flex" style={{ width: size, height: size }}>
       <Avatar src={src} alt={alt} size={size} fallback={fallback} />
       <div
-        className="absolute flex items-center justify-center rounded-full"
+        className="absolute flex items-center justify-center rounded-full overflow-hidden"
         style={{
           width: badgeSize,
           height: badgeSize,
@@ -443,8 +443,11 @@ export function AvatarWithIcon({
   fallback,
   icon,
   // Geist's custom-icon badge (icon `data-background`) is a page-bg circle
-  // (white / #0A0A0A dark) carrying a gray-900 icon — not a coloured fill.
-  iconBgColor = "hsl(var(--color-surface))",
+  // (Geist: white / #000 dark) carrying a gray-900 icon — not a coloured fill.
+  // We use the canvas/page token: #FAFAFA light / #000 dark — the #000 matches
+  // Geist exactly; a single token can't be pure #fff *and* #000, and bg-white/
+  // bg-black are disallowed, so canvas is the closest token-clean match.
+  iconBgColor = "hsl(var(--color-canvas))",
   iconColor = "var(--ds-gray-900)",
   gradient,
 }: AvatarWithIconProps) {
