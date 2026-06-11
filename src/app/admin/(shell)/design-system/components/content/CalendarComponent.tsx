@@ -892,13 +892,6 @@ export default function CalendarComponent() {
         <SectionHeader id="compact" onCopyLink={showToast}>
           Compact
         </SectionHeader>
-        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
-          Use{" "}
-          <code className="inline-code">
-            compact
-          </code>{" "}
-          for a smaller calendar trigger.
-        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={compactCode}>
             <div className="flex justify-center py-12">
@@ -948,13 +941,6 @@ export default function CalendarComponent() {
         <SectionHeader id="stacked" onCopyLink={showToast}>
           Stacked
         </SectionHeader>
-        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
-          Use{" "}
-          <code className="inline-code">
-            stacked
-          </code>{" "}
-          to display the preset dropdown above the calendar trigger button.
-        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={stackedCode}>
             <div className="flex justify-center py-12">
