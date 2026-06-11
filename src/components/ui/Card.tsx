@@ -40,13 +40,12 @@ const FILL: Record<CardVariant, string> = {
 };
 
 const SHADOW: Record<CardVariant, string> = {
-  default: "shadow-[var(--ds-shadow-border)]",
-  hover:
-    "shadow-[var(--ds-shadow-border)] transition-shadow duration-150 ease-in-out hover:shadow-[var(--ds-shadow-border),0_6px_14px_rgba(0,0,0,0.08)]",
+  default: "shadow-card",
+  hover: "shadow-card transition-shadow duration-150 ease-in-out hover:shadow-card-hover",
   border:
-    "shadow-[var(--ds-shadow-border),0_4px_6px_rgba(0,0,0,0.04)] transition-shadow duration-150 ease-in-out hover:shadow-[var(--ds-shadow-border),0_6px_14px_rgba(0,0,0,0.08)]",
+    "shadow-card-raised transition-shadow duration-150 ease-in-out hover:shadow-card-hover",
   secondary:
-    "shadow-[var(--ds-shadow-border),0_4px_6px_rgba(0,0,0,0.04)] transition-shadow duration-150 ease-in-out hover:shadow-[var(--ds-shadow-border),0_6px_14px_rgba(0,0,0,0.08)]",
+    "shadow-card-raised transition-shadow duration-150 ease-in-out hover:shadow-card-hover",
 };
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
