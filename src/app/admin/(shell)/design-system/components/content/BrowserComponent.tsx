@@ -261,7 +261,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-borderDefault rounded-lg overflow-hidden">
+    <div className="mt-4 xl:mt-7 border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
       <div className="p-6" style={{ background: "hsl(var(--color-surface))" }}>
         {children}

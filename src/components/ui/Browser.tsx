@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useState, useCallback } from "react";
-import { ArrowLeft, ArrowRight, RotateCw, Copy, Check } from "lucide-react";
 import { MiddleTruncate } from "./MiddleTruncate";
 
 // ============================================================================
@@ -59,6 +58,42 @@ function variantClass(variant?: BrowserVariant): string {
 const HEADER_SLOT =
   "flex items-center flex-1 justify-center gap-4 min-w-0 first:justify-start md:first:max-w-[140px] max-md:first:flex-none last:justify-end md:last:max-w-[140px]";
 
+// Geist's exact browser-chrome glyphs, inlined so the chrome is pixel-identical
+// (Geist uses its own icon set here, not lucide). All decorative (aria-hidden);
+// fill inherits via currentColor.
+const ICON = {
+  back: "m6.47 13.78.53.53 1.06-1.06-.53-.53-3.97-3.97H15v-1.5H3.56l3.97-3.97.53-.53L7 1.69l-.53.53L1.4 7.29a1 1 0 0 0 0 1.42z",
+  forward:
+    "M9.53 2.22 9 1.69 7.94 2.75l.53.53 3.97 3.97H1v1.5h11.44l-3.97 3.97-.53.53L9 14.31l.53-.53 5.07-5.07a1 1 0 0 0 0-1.42z",
+  refresh:
+    "M8 1a7 7 0 0 0-6.16 3.67l-.36.66 1.32.72.36-.66a5.5 5.5 0 0 1 10.11 1.03h-2.2v1.5h4.18c.41 0 .75-.33.75-.75V3h-1.5v2.39A7 7 0 0 0 8 1m-6.5 9.6V13H0V8.83c0-.42.34-.75.75-.75h4.18v1.5h-2.2a5.5 5.5 0 0 0 10.1 1.06l.36-.66 1.31.72-.36.66a7 7 0 0 1-12.64-.75",
+  copy: "M8.25 2c.14 0 .25.11.25.25V3H10v-.75C10 1.28 9.22.5 8.25.5h-5.5C1.78.5 1 1.28 1 2.25v7.5c0 .97.78 1.75 1.75 1.75H4.5V10H2.75a.25.25 0 0 1-.25-.25v-7.5c0-.14.11-.25.25-.25zm5 4c.14 0 .25.11.25.25v7.5q-.02.23-.25.25h-5.5a.25.25 0 0 1-.25-.25v-7.5c0-.14.11-.25.25-.25zm0 9.5c.97 0 1.75-.78 1.75-1.75v-7.5c0-.97-.78-1.75-1.75-1.75h-5.5C6.78 4.5 6 5.28 6 6.25v7.5c0 .97.78 1.75 1.75 1.75z",
+  check:
+    "m15.56 4-.53.53-8.8 8.8c-.68.68-1.78.68-2.47 0l.53-.54-.53.53-2.79-2.79L.44 10 1.5 8.94l.53.53 2.8 2.8c.1.09.25.09.35 0l8.79-8.8.53-.53z",
+} as const;
+
+function GeistGlyph({
+  d,
+  size = 16,
+  className = "",
+}: {
+  d: string;
+  size?: number;
+  className?: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      width={size}
+      height={size}
+      aria-hidden="true"
+      className={className}
+    >
+      <path fill="currentColor" fillRule="evenodd" d={d} clipRule="evenodd" />
+    </svg>
+  );
+}
+
 // ============================================================================
 // Building blocks (composable — named exports for custom chrome layouts)
 // ============================================================================
@@ -77,10 +112,13 @@ export function BrowserDots() {
 /** Back / forward / refresh nav controls (hidden below md, like Geist). */
 export function BrowserControls() {
   return (
-    <div aria-hidden="true" className="flex items-center gap-4 max-md:hidden">
-      <ArrowLeft size={14} className="text-textSubtle" />
-      <ArrowRight size={14} className="text-textSubtle" />
-      <RotateCw size={14} className="text-textSubtle" />
+    <div
+      aria-hidden="true"
+      className="flex items-center gap-4 max-md:hidden text-textSubtle"
+    >
+      <GeistGlyph d={ICON.back} size={14} />
+      <GeistGlyph d={ICON.forward} size={14} />
+      <GeistGlyph d={ICON.refresh} size={14} />
     </div>
   );
 }
@@ -113,7 +151,9 @@ export function BrowserAddressBar({
           type="button"
           onClick={handleCopy}
           aria-label="Copy URL"
-          className="flex h-6 w-6 items-center justify-center rounded-[4px] text-textDefault hover:bg-[var(--ds-gray-alpha-200)] transition-colors"
+          // [&_svg]:size-3 forces the glyph to 12px (Geist's `[&_svg]:size-3`),
+          // overriding the global `button svg { width: --ds-icon-size, 16px }`.
+          className="flex h-6 w-6 items-center justify-center rounded-[4px] text-textDefault hover:bg-[var(--ds-gray-alpha-200)] transition-colors [&_svg]:size-3"
         >
           <div className="relative w-3 h-3">
             <span
@@ -121,14 +161,14 @@ export function BrowserAddressBar({
                 copied ? "opacity-0 scale-75" : "opacity-100 scale-100"
               }`}
             >
-              <Copy size={12} />
+              <GeistGlyph d={ICON.copy} />
             </span>
             <span
               className={`absolute inset-0 flex items-center justify-center transition-all duration-150 ease-out ${
                 copied ? "opacity-100 scale-100" : "opacity-0 scale-75"
               }`}
             >
-              <Check size={12} />
+              <GeistGlyph d={ICON.check} />
             </span>
           </div>
         </button>
