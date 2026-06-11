@@ -366,8 +366,8 @@ export function Component() {
       <div className="flex gap-1">
         <Badge variant="inverted">Inverted</Badge>
         {/* Gradient badges are styled per-instance via className */}
-        <Badge variant="gray" className="bg-[linear-gradient(135deg,#0070F3,#F81CE5)]">Trial</Badge>
-        <Badge variant="gray" className="bg-[linear-gradient(135deg,#FF1E56,#0096FF)]">Turborepo</Badge>
+        <Badge variant="gray" className="bg-[linear-gradient(135deg,#0070F3,#F81CE5)]">Major</Badge>
+        <Badge variant="gray" className="bg-[linear-gradient(135deg,#FF1E56,#0096FF)]">Big Race</Badge>
       </div>
     </div>
   );
@@ -489,13 +489,13 @@ export default function BadgeComponent() {
                 variant="gray"
                 className="bg-[linear-gradient(135deg,#0070F3,#F81CE5)]"
               >
-                Trial
+                Major
               </Badge>
               <Badge
                 variant="gray"
                 className="bg-[linear-gradient(135deg,#FF1E56,#0096FF)]"
               >
-                Turborepo
+                Big Race
               </Badge>
             </div>
           </div>
