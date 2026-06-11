@@ -262,7 +262,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-borderDefault rounded-lg overflow-hidden">
+    <div className="mt-4 xl:mt-7 border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
       <div className="p-6" style={{ background: "hsl(var(--color-surface))" }}>
         {children}
@@ -447,14 +447,6 @@ export default function BadgeComponent() {
         <SectionHeader id="variants" onCopyLink={showToast}>
           Variants
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Badges come in multiple colour variants, each with a solid and subtle
-          option. Use the{" "}
-          <code className="inline-code">
-            variant
-          </code>{" "}
-          prop to set the style.
-        </p>
         <CodePreview componentCode={variantsCode}>
           <div className="flex flex-col gap-2">
             <div className="flex gap-1">
@@ -515,13 +507,6 @@ export default function BadgeComponent() {
         <SectionHeader id="sizes" onCopyLink={showToast}>
           Sizes
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Badges are available in three sizes: small, medium, and large. Use the{" "}
-          <code className="inline-code">
-            size
-          </code>{" "}
-          prop to adjust.
-        </p>
         <CodePreview componentCode={sizesCode}>
           <div className="flex items-start gap-2">
             <Badge variant="gray" size="sm">
@@ -542,13 +527,6 @@ export default function BadgeComponent() {
         <SectionHeader id="with-icons" onCopyLink={showToast}>
           With icons
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Add an icon before the badge text using the{" "}
-          <code className="inline-code">
-            icon
-          </code>{" "}
-          prop. Icons are sized automatically based on the badge size.
-        </p>
         <CodePreview componentCode={withIconsCode}>
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-1">
@@ -815,9 +793,9 @@ export default function BadgeComponent() {
         <SectionHeader id="pill" onCopyLink={showToast}>
           Pill
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          A special link, not quite as prominent as a button, based on Badge
-          styling.
+        <p className="text-copy-14 text-textSubtle mt-2 xl:mt-4">
+          A special link, not quite as prominent as a button, based on{" "}
+          <code className="inline-code">&lt;Badge /&gt;</code> styling.
         </p>
         <CodePreview componentCode={pillCode}>
           <div className="flex flex-col gap-4">
