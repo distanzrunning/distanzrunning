@@ -399,12 +399,6 @@ export default function BreadcrumbsComponent() {
         <SectionHeader id="active" onCopyLink={showToast}>
           Active
         </SectionHeader>
-        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
-          Mark the current page with{" "}
-          <code className="inline-code">active</code> — the crumb renders in
-          full ink and carries{" "}
-          <code className="inline-code">aria-current</code>.
-        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={activeCode}>
             <Breadcrumbs
@@ -423,10 +417,6 @@ export default function BreadcrumbsComponent() {
         <SectionHeader id="disabled" onCopyLink={showToast}>
           Disabled
         </SectionHeader>
-        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
-          Pass <code className="inline-code">disabled</code> for a
-          non-navigable crumb — muted and not clickable.
-        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={disabledCode}>
             <Breadcrumbs
