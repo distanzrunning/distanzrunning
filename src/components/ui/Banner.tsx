@@ -1,6 +1,5 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
 import { ButtonLink } from "./Button";
 
 export interface BannerProps {
@@ -39,7 +38,18 @@ export function Banner({
   actionLabel = "Read more",
   className = "",
 }: BannerProps) {
-  const arrow = <ChevronRight aria-hidden="true" />;
+  // Geist's exact chevron-right glyph (matches the Geist banner button's icon),
+  // not lucide. The Button sizes it via --ds-icon-size; fill inherits the
+  // button's text colour through currentColor.
+  const arrow = (
+    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="m6.75 3.94.53.53 2.82 2.82a1 1 0 0 1 0 1.42l-2.82 2.82-.53.53L5.69 11l.53-.53L8.69 8 6.22 5.53 5.69 5z"
+      />
+    </svg>
+  );
 
   return (
     <div className={`w-full ${className}`}>
