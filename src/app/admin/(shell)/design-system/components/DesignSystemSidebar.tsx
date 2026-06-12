@@ -96,6 +96,7 @@ export const navigation: NavSection[] = [
       { id: "empty-state", label: "Empty State", type: "Molecule" },
       { id: "entity", label: "Entity", type: "Molecule" },
       { id: "error", label: "Error", type: "Molecule" },
+      { id: "error-card", label: "Error Card", type: "Molecule" },
       { id: "feedback", label: "Feedback", type: "Organism" },
       { id: "fieldset", label: "Fieldset", type: "Molecule" },
       { id: "gauge", label: "Gauge", type: "Atom" },
