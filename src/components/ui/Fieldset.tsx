@@ -36,11 +36,15 @@ export interface FieldsetProps {
   disabled?: boolean;
 }
 
-// Container border override per type (replaces material-base's hairline).
+// Container per type. Default is material-base (bg-100 + shadow-border
+// hairline, 6px). The typed variants swap the hairline for a coloured
+// border — done with explicit border/radius/bg rather than material-base +
+// shadow-none, because material-base (a plugin utility) out-orders Tailwind's
+// shadow-none and would leave the grey hairline under the coloured border.
 const CONTAINER_TYPE: Record<FieldsetType, string> = {
-  default: "",
-  error: "border border-[var(--ds-red-400)] shadow-none",
-  warning: "border border-[var(--ds-amber-400)] shadow-none",
+  default: "material-base",
+  error: "rounded-sm border border-[var(--ds-red-400)] bg-surface",
+  warning: "rounded-sm border border-[var(--ds-amber-400)] bg-surface",
 };
 
 // Footer fill/border/ink per type.
@@ -68,7 +72,7 @@ export function Fieldset({
   return (
     <section
       id={id}
-      className={`material-base relative overflow-hidden ${CONTAINER_TYPE[type]}`}
+      className={`relative overflow-hidden ${CONTAINER_TYPE[type]}`}
       style={{ scrollMarginTop: 64 }}
     >
       <div
