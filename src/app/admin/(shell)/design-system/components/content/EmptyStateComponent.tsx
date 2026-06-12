@@ -735,15 +735,20 @@ export default function EmptyStateComponent() {
           </li>
         </ul>
         <DesignFrameworkDiagram />
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={blankSlateCode}>
+            <BlankSlateDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       {/* Blank Slate */}
       <Section>
         <SectionHeader id="blank-slate" onCopyLink={showToast}>
-          Blank Slate
+          Blank slate
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
-          Use when there is no content to display yet. Encourages the user to take their first action.
+        <p className="text-copy-16 text-textSubtle mt-4 mb-4">
+          The most basic empty state should convey the state of the view.
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={blankSlateCode}>
@@ -757,8 +762,15 @@ export default function EmptyStateComponent() {
         <SectionHeader id="informational" onCopyLink={showToast}>
           Informational
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
-          Use when a search or filter returns no results. Provides guidance on how to resolve the empty state, optionally with a link.
+        <p className="text-copy-16 text-textSubtle mt-4 mb-4">
+          Help users by clearly explaining the benefit and utility of a product
+          or feature, with a call to action and link to more information to help
+          users progress.
+        </p>
+        <p className="text-copy-16 text-textSubtle mb-4">
+          Default to showing rather than telling the value of a feature. Certain
+          entry points to a product may call for a unique empty state and a call
+          to upgrade. Informational empty states will include a call to action.
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={informationalCode}>
