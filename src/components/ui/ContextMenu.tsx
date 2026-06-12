@@ -91,6 +91,15 @@ const CONTEXT_MENU_CSS = `
     text-decoration: none;
   }
 
+  /* Geist: items grow to a 48px touch target and 16px text below the sm
+     breakpoint (h-10 max-sm:h-12, text-sm max-sm:text-base). */
+  @media (max-width: 639px) {
+    .ds-context-menu-item {
+      height: 48px;
+      font-size: 16px;
+    }
+  }
+
   .ds-context-menu-item[data-highlighted] {
     background: var(--ds-gray-alpha-100);
   }
