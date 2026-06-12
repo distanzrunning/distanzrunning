@@ -9,8 +9,8 @@ export async function buildDrawerItem(): Promise<RegistryItem> {
     type: "registry:ui",
     title: "Drawer",
     description:
-      "Slide-out side panel. Used for filters, settings, and other side-of-screen content.",
-    dependencies: ["react", "vaul"],
+      "Swipe-dismissable bottom sheet for small viewports. Used for filters, focused forms, and mobile actions.",
+    dependencies: ["react", "@base-ui/react"],
     registryDependencies: ["tokens"],
     files: [
       {
