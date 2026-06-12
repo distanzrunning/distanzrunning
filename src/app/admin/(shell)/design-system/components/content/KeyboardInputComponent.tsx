@@ -315,7 +315,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+    <div style={{ display: "flex", alignItems: "center" }}>
       <Kbd meta />
       <Kbd shift />
       <Kbd alt />
@@ -348,7 +348,7 @@ export function Component(): JSX.Element {
 
 function ModifiersDemo() {
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+    <div style={{ display: "flex", alignItems: "center" }}>
       <Kbd meta />
       <Kbd shift />
       <Kbd alt />
