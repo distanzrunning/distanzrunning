@@ -113,7 +113,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               rotate-[0.000001deg]
               ${getBoxClasses()}
               ${!disabled && !isActive ? "group-hover/checkbox:bg-[var(--ds-gray-200)] peer-focus-visible:bg-[var(--ds-gray-200)]" : ""}
-              ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]"}
+              ${disabled ? "" : "peer-focus-visible:shadow-[var(--ds-focus-ring)]"}
             `}
             style={{
               transition:
