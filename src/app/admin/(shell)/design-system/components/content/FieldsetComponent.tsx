@@ -555,9 +555,11 @@ export default function FieldsetComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
-        <CodePreview componentCode={defaultCode}>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={defaultCode}>
           <DefaultDemo />
         </CodePreview>
+        </div>
       </Section>
 
       {/* Disabled */}
@@ -565,9 +567,11 @@ export default function FieldsetComponent() {
         <SectionHeader id="disabled" onCopyLink={showToast}>
           Disabled
         </SectionHeader>
-        <CodePreview componentCode={disabledCode}>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={disabledCode}>
           <DisabledDemo />
         </CodePreview>
+        </div>
       </Section>
 
       {/* With Long Content */}
@@ -575,9 +579,11 @@ export default function FieldsetComponent() {
         <SectionHeader id="with-long-content" onCopyLink={showToast}>
           With Long Content
         </SectionHeader>
-        <CodePreview componentCode={longContentCode}>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={longContentCode}>
           <LongContentDemo />
         </CodePreview>
+        </div>
       </Section>
 
       {/* Multiple Fieldsets */}
@@ -585,9 +591,11 @@ export default function FieldsetComponent() {
         <SectionHeader id="multiple-fieldsets" onCopyLink={showToast}>
           Multiple Fieldsets
         </SectionHeader>
-        <CodePreview componentCode={multipleCode}>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={multipleCode}>
           <MultipleDemo />
         </CodePreview>
+        </div>
       </Section>
 
       {/* Without Footer */}
@@ -595,9 +603,11 @@ export default function FieldsetComponent() {
         <SectionHeader id="without-footer" onCopyLink={showToast}>
           Without Footer
         </SectionHeader>
-        <CodePreview componentCode={noFooterCode}>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={noFooterCode}>
           <NoFooterDemo />
         </CodePreview>
+        </div>
       </Section>
 
       {/* Without Title */}
@@ -605,9 +615,11 @@ export default function FieldsetComponent() {
         <SectionHeader id="without-title" onCopyLink={showToast}>
           Without Title
         </SectionHeader>
-        <CodePreview componentCode={noTitleCode}>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={noTitleCode}>
           <NoTitleDemo />
         </CodePreview>
+        </div>
       </Section>
 
       {/* With Error Text */}
@@ -615,9 +627,11 @@ export default function FieldsetComponent() {
         <SectionHeader id="with-error-text" onCopyLink={showToast}>
           With Error Text
         </SectionHeader>
-        <CodePreview componentCode={errorTextCode}>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={errorTextCode}>
           <ErrorTextDemo />
         </CodePreview>
+        </div>
       </Section>
 
       {/* With Warning Text */}
@@ -625,9 +639,11 @@ export default function FieldsetComponent() {
         <SectionHeader id="with-warning-text" onCopyLink={showToast}>
           With Warning Text
         </SectionHeader>
-        <CodePreview componentCode={warningTextCode}>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={warningTextCode}>
           <WarningTextDemo />
         </CodePreview>
+        </div>
       </Section>
 
       {/* With Disabled Wall */}
@@ -635,9 +651,11 @@ export default function FieldsetComponent() {
         <SectionHeader id="with-disabled-wall" onCopyLink={showToast}>
           With Disabled Wall
         </SectionHeader>
-        <CodePreview componentCode={disabledWallCode}>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={disabledWallCode}>
           <DisabledWallDemo />
         </CodePreview>
+        </div>
       </Section>
 
       {/* Error Type */}
@@ -645,9 +663,11 @@ export default function FieldsetComponent() {
         <SectionHeader id="error-type" onCopyLink={showToast}>
           Error Type
         </SectionHeader>
-        <CodePreview componentCode={errorTypeCode}>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={errorTypeCode}>
           <ErrorTypeDemo />
         </CodePreview>
+        </div>
       </Section>
 
       {/* Warning Type */}
@@ -655,9 +675,11 @@ export default function FieldsetComponent() {
         <SectionHeader id="warning-type" onCopyLink={showToast}>
           Warning Type
         </SectionHeader>
-        <CodePreview componentCode={warningTypeCode}>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={warningTypeCode}>
           <WarningTypeDemo />
         </CodePreview>
+        </div>
       </Section>
 
     </>
