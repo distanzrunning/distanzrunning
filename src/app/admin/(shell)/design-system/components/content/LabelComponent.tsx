@@ -388,27 +388,33 @@ export default function LabelComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
-        <CodePreview componentCode={defaultCode}>
-          <DefaultDemo />
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={defaultCode}>
+            <DefaultDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       <Section>
         <SectionHeader id="with-input" onCopyLink={showToast}>
           With Input
         </SectionHeader>
-        <CodePreview componentCode={withInputCode}>
-          <WithInputDemo />
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={withInputCode}>
+            <WithInputDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       <Section>
         <SectionHeader id="bypass-casing" onCopyLink={showToast}>
           Bypass Casing
         </SectionHeader>
-        <CodePreview componentCode={bypassCasingCode}>
-          <BypassCasingDemo />
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={bypassCasingCode}>
+            <BypassCasingDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       <Toast

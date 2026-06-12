@@ -380,7 +380,7 @@ export default function KeyboardInputComponent() {
         <SectionHeader id="modifiers" onCopyLink={showToast}>
           Modifiers
         </SectionHeader>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={modifiersCode}>
             <ModifiersDemo />
           </CodePreview>
@@ -391,7 +391,7 @@ export default function KeyboardInputComponent() {
         <SectionHeader id="combination" onCopyLink={showToast}>
           Combination
         </SectionHeader>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={combinationCode}>
             <CombinationDemo />
           </CodePreview>
@@ -402,7 +402,7 @@ export default function KeyboardInputComponent() {
         <SectionHeader id="small" onCopyLink={showToast}>
           Small
         </SectionHeader>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={smallCode}>
             <SmallDemo />
           </CodePreview>
