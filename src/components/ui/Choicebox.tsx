@@ -7,8 +7,6 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import Checkbox from "./Checkbox";
-
 // ============================================================================
 // Context
 // ============================================================================
@@ -87,6 +85,72 @@ function RadioIndicator({
           transition: "transform 0.15s ease-in",
         }}
       />
+    </span>
+  );
+}
+
+// ============================================================================
+// CheckIndicator (internal)
+// ============================================================================
+
+function CheckIndicator({
+  checked,
+  disabled,
+  hovered,
+  focusRing,
+}: {
+  checked: boolean;
+  disabled: boolean;
+  hovered: boolean;
+  focusRing: boolean;
+}) {
+  // Geist's choicebox checkbox tokens (distinct from the standalone Checkbox):
+  // rest border gray-500, hover (enabled + unchecked) darkens to gray-700,
+  // checked is blue-900 fill+border, disabled-checked gray-600, and
+  // disabled-unchecked is gray-100 fill with a gray-500 border.
+  let background = "hsl(var(--color-surface))";
+  let borderColor = "var(--ds-gray-500)";
+  if (disabled) {
+    background = checked ? "var(--ds-gray-600)" : "var(--ds-gray-100)";
+    borderColor = checked ? "var(--ds-gray-600)" : "var(--ds-gray-500)";
+  } else if (checked) {
+    background = "var(--ds-blue-900)";
+    borderColor = "var(--ds-blue-900)";
+  } else if (hovered) {
+    borderColor = "var(--ds-gray-700)";
+  }
+
+  return (
+    <span
+      aria-hidden="true"
+      className="relative inline-flex items-center justify-center flex-shrink-0 rotate-[0.000001deg]"
+      style={{
+        width: 16,
+        height: 16,
+        borderRadius: 4,
+        border: `1px solid ${borderColor}`,
+        background,
+        transition:
+          "border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
+        boxShadow: focusRing ? "var(--ds-focus-ring)" : undefined,
+      }}
+    >
+      {/* Checkmark — white (geist-background) stroke, visible when checked. */}
+      {checked && (
+        <svg
+          fill="none"
+          viewBox="0 0 20 20"
+          className="absolute inset-0 w-full h-full"
+        >
+          <path
+            d="M14 7L8.5 12.5L6 10"
+            stroke="var(--ds-background-100)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+          />
+        </svg>
+      )}
     </span>
   );
 }
@@ -322,21 +386,12 @@ export function Choicebox({
             focusRing={focusVisible}
           />
         ) : (
-          <span
-            style={{
-              pointerEvents: "none",
-              borderRadius: 4,
-              boxShadow: focusVisible ? "var(--ds-focus-ring)" : undefined,
-            }}
-          >
-            <Checkbox
-              checked={isSelected}
-              disabled={isDisabled}
-              color={
-                isSelected && !isDisabled ? "var(--ds-blue-900)" : undefined
-              }
-            />
-          </span>
+          <CheckIndicator
+            checked={isSelected}
+            disabled={isDisabled}
+            hovered={showHover}
+            focusRing={focusVisible}
+          />
         )}
       </div>
 
