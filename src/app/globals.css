@@ -1903,14 +1903,16 @@
   }
 
   /* Loading dots animation */
+  /* Geist-verbatim "blink": dots dim to 0.2, peak at 20%, never vanish. */
   @keyframes loading-dot {
-    0%,
-    80%,
-    100% {
-      opacity: 0;
+    0% {
+      opacity: 0.2;
     }
-    40% {
+    20% {
       opacity: 1;
+    }
+    100% {
+      opacity: 0.2;
     }
   }
 
