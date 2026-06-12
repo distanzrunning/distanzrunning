@@ -104,6 +104,7 @@ export const navigation: NavSection[] = [
       { id: "input", label: "Input", type: "Atom" },
       { id: "keyboard-input", label: "Keyboard Input", type: "Atom" },
       { id: "label", label: "Label", type: "Atom" },
+      { id: "load-more-button", label: "Load More Button", type: "Molecule" },
       { id: "loading-dots", label: "Loading Dots", type: "Atom" },
       { id: "login", label: "Login", type: "Organism" },
       { id: "material", label: "Material", type: "Atom" },
