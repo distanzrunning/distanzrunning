@@ -339,12 +339,10 @@ function CustomHeightExample() {
       <Drawer.Trigger>
         <Button>Open</Button>
       </Drawer.Trigger>
-      <Drawer.Content height="75vh">
+      <Drawer.Content height="200px">
         <Drawer.Body>
-          <Drawer.Title>Tall Drawer</Drawer.Title>
-          <Drawer.Description>
-            This drawer has a custom height of 75vh.
-          </Drawer.Description>
+          <Drawer.Title>A drawer title</Drawer.Title>
+          <Drawer.Description>Drawer body</Drawer.Description>
         </Drawer.Body>
       </Drawer.Content>
     </Drawer>
@@ -377,12 +375,10 @@ function CustomHeightDemo() {
       <Drawer.Trigger>
         <Button>Open</Button>
       </Drawer.Trigger>
-      <Drawer.Content height="75vh">
+      <Drawer.Content height="200px">
         <Drawer.Body>
-          <Drawer.Title>Tall Drawer</Drawer.Title>
-          <Drawer.Description>
-            This drawer has a custom height of 75vh.
-          </Drawer.Description>
+          <Drawer.Title>A drawer title</Drawer.Title>
+          <Drawer.Description>Drawer body</Drawer.Description>
         </Drawer.Body>
       </Drawer.Content>
     </Drawer>
