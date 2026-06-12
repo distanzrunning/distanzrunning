@@ -1158,10 +1158,6 @@ export default function CodeBlockComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          The default code block includes a filename header with a file icon,
-          line numbers, and a copy button.
-        </p>
         <CodePreview
           previewCode={defaultPreviewCode}
           previewFilename="Table.jsx"
@@ -1174,10 +1170,6 @@ export default function CodeBlockComponent() {
         <SectionHeader id="no-filename" onCopyLink={showToast}>
           No filename
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Code blocks can be rendered without a filename header. The copy button
-          appears on hover.
-        </p>
         <CodePreview
           previewCode={noFilenamePreviewCode}
           previewFilename=""
@@ -1190,14 +1182,6 @@ export default function CodeBlockComponent() {
         <SectionHeader id="highlighted-lines" onCopyLink={showToast}>
           Highlighted lines
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Specific lines can be highlighted to draw attention to important code.
-          Use the{" "}
-          <code className="inline-code">
-            highlightLines
-          </code>{" "}
-          prop with an array of line numbers.
-        </p>
         <CodePreview
           previewCode={highlightedPreviewCode}
           previewFilename="highlighted.jsx"
@@ -1211,17 +1195,6 @@ export default function CodeBlockComponent() {
         <SectionHeader id="added-removed-lines" onCopyLink={showToast}>
           Added & removed lines
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Show diff-style additions and removals using the{" "}
-          <code className="inline-code">
-            addedLines
-          </code>{" "}
-          and{" "}
-          <code className="inline-code">
-            removedLines
-          </code>{" "}
-          props.
-        </p>
         <CodePreview
           previewCode={diffPreviewCode}
           previewFilename="next.config.js"
@@ -1257,11 +1230,6 @@ export default function CodeBlockComponent() {
         <SectionHeader id="language-switcher" onCopyLink={showToast}>
           Language switcher
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Use the switcher prop to add a language dropdown to the header. When
-          the user switches languages, the code, filename, and icon update
-          accordingly.
-        </p>
         <LanguageSwitcherCodePreview />
       </Section>
 
@@ -1283,13 +1251,6 @@ export default function CodeBlockComponent() {
         <SectionHeader id="hidden-line-numbers" onCopyLink={showToast}>
           Hidden line numbers
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Line numbers can be hidden by setting{" "}
-          <code className="inline-code">
-            showLineNumbers={"{false}"}
-          </code>
-          .
-        </p>
         <CodePreview
           previewCode={hiddenLineNumbersPreviewCode}
           previewFilename="hidden-line-numbers.jsx"
