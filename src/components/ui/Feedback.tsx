@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
+import { Textarea } from "@/components/ui/Textarea";
 import {
   submitFeedback,
   type FeedbackEmotion,
@@ -620,39 +621,18 @@ export function FeedbackInline({
                 padding: 8,
               }}
             >
-              <label>
-                <div className="feedback-textarea-wrapper">
-                  <textarea
-                    ref={textareaRef}
-                    id="feedback-textarea"
-                    className="feedback-inline-textarea"
-                    placeholder="Your feedback..."
-                    value={feedbackText}
-                    onChange={(e) => setFeedbackText(e.target.value)}
-                    disabled={isSending}
-                    autoCapitalize="off"
-                    autoComplete="off"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    style={{
-                      display: "flex",
-                      width: "100%",
-                      borderRadius: 6,
-                      border: "none",
-                      padding: "10px 12px",
-                      fontSize: 14,
-                      lineHeight: "normal",
-                      color: "hsl(var(--color-textDefault))",
-                      background: "hsl(var(--color-canvas))",
-                      resize: "none",
-                      outline: "none",
-                      fontFamily: "inherit",
-                      boxSizing: "border-box",
-                      appearance: "none",
-                    }}
-                  />
-                </div>
-              </label>
+              {/* Shared Textarea primitive; the wrapper div carries the
+                  inline grow animation (keyed off --expanded). */}
+              <div className="feedback-textarea-grow">
+                <Textarea
+                  ref={textareaRef}
+                  id="feedback-textarea"
+                  placeholder="Your feedback..."
+                  value={feedbackText}
+                  onChange={(e) => setFeedbackText(e.target.value)}
+                  disabled={isSending}
+                />
+              </div>
 
               <div
                 style={{
@@ -764,14 +744,11 @@ export function FeedbackInline({
           transform: translateZ(0);
           backface-visibility: hidden;
         }
-        .feedback-inline-textarea {
-          height: 100px;
-        }
         /* Input box visibly widens (and grows taller) as the panel
            expands. animation-fill-mode: both keeps the FROM state on
            mount so we don't see a flash of full size before the
            keyframe starts. */
-        .feedback-inline-wrapper--expanded .feedback-textarea-wrapper {
+        .feedback-inline-wrapper--expanded .feedback-textarea-grow {
           transform-origin: center center;
           animation: feedbackInlineInputGrow 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
         }
@@ -1132,37 +1109,12 @@ export function FeedbackWithSelect({
         </div>
       </label>
 
-      <label>
-        <div className="feedback-textarea-wrapper">
-          <textarea
-            id={`${formIdBase}-textarea`}
-            placeholder="Your feedback..."
-            value={feedbackText}
-            onChange={(e) => setFeedbackText(e.target.value)}
-            autoCapitalize="off"
-            autoComplete="off"
-            autoCorrect="off"
-            spellCheck={false}
-            style={{
-              display: "flex",
-              width: "100%",
-              height: 100,
-              borderRadius: 6,
-              border: "none",
-              padding: "10px 12px",
-              fontSize: 14,
-              lineHeight: "normal",
-              color: "hsl(var(--color-textDefault))",
-              background: "hsl(var(--color-canvas))",
-              resize: "none",
-              outline: "none",
-              fontFamily: "inherit",
-              boxSizing: "border-box",
-              appearance: "none",
-            }}
-          />
-        </div>
-      </label>
+      <Textarea
+        id={`${formIdBase}-textarea`}
+        placeholder="Your feedback..."
+        value={feedbackText}
+        onChange={(e) => setFeedbackText(e.target.value)}
+      />
 
       <div
         style={{
@@ -1766,37 +1718,12 @@ export function Feedback({
                 }}
               >
                 {/* Textarea */}
-                <label>
-                  <div className="feedback-textarea-wrapper">
-                    <textarea
-                      autoFocus
-                      placeholder="Your feedback..."
-                      value={feedbackText}
-                      onChange={(e) => setFeedbackText(e.target.value)}
-                      autoCapitalize="off"
-                      autoComplete="off"
-                      autoCorrect="off"
-                      spellCheck={false}
-                      style={{
-                        display: "flex",
-                        width: "100%",
-                        height: 100,
-                        borderRadius: 6,
-                        border: "none",
-                        padding: "10px 12px",
-                        fontSize: 14,
-                        lineHeight: "normal",
-                        color: "hsl(var(--color-textDefault))",
-                        background: "hsl(var(--color-canvas))",
-                        resize: "none",
-                        outline: "none",
-                        fontFamily: "inherit",
-                        boxSizing: "border-box",
-                        appearance: "none",
-                      }}
-                    />
-                  </div>
-                </label>
+                <Textarea
+                  autoFocus
+                  placeholder="Your feedback..."
+                  value={feedbackText}
+                  onChange={(e) => setFeedbackText(e.target.value)}
+                />
 
                 {/* Markdown tip */}
                 <div
