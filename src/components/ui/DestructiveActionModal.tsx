@@ -118,6 +118,7 @@ export function DestructiveActionModal({
       To confirm, type the {verificationLabel}{" "}
       <strong
         className="font-semibold"
+        translate="no"
         style={{
           color: "var(--ds-gray-1000)",
           overflowWrap: "anywhere",
@@ -131,6 +132,7 @@ export function DestructiveActionModal({
       To confirm, type{" "}
       <strong
         className="font-semibold"
+        translate="no"
         style={{
           color: "var(--ds-gray-1000)",
           overflowWrap: "anywhere",
