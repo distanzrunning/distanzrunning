@@ -79,6 +79,10 @@ export interface FeedbackProps {
   metadata?: Record<string, string>;
   /** Add a second step that collects an optional follow-up email */
   collectEmail?: boolean;
+  /** Icon rendered before the trigger label (Geist's button prefix). */
+  prefix?: React.ReactNode;
+  /** Icon rendered after the trigger label (Geist's button suffix). */
+  suffix?: React.ReactNode;
   className?: string;
 }
 
@@ -1516,6 +1520,8 @@ export function Feedback({
   onSubmit,
   metadata,
   collectEmail = false,
+  prefix,
+  suffix,
   className,
 }: FeedbackProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -1648,6 +1654,8 @@ export function Feedback({
         type="button"
         size="small"
         variant="secondary"
+        prefixIcon={prefix}
+        suffixIcon={suffix}
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
