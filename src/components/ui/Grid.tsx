@@ -105,11 +105,13 @@ function parseSpan(v: string | undefined, count: number): [number, number] | nul
 interface ResolvedCell {
   col: string;
   row: string;
+  solid: boolean;
 }
 
 // Compute the set of guide borders to drop at one breakpoint: the interior
-// lines of every cell's span (Geist clips these whether or not the cell is
-// solid), plus everything when a guide axis is hidden.
+// lines covered by each *solid* cell's span (Geist only clips under `solid`
+// cells — non-solid spanning cells let the guides draw through), plus
+// everything when a guide axis is hidden.
 function computeClips(
   cells: ResolvedCell[],
   cols: number,
@@ -130,6 +132,7 @@ function computeClips(
   }
 
   for (const cell of cells) {
+    if (!cell.solid) continue;
     const colSpan = parseSpan(cell.col, cols);
     const rowSpan = parseSpan(cell.row, rows);
     if (!colSpan || !rowSpan) continue;
@@ -216,6 +219,7 @@ const GRID_CSS = `
   .ds-grid-guide {
     position: absolute;
     inset: 0;
+    z-index: 3;
     pointer-events: none;
     border-right: var(--guide-width) var(--ds-grid-guide-style) var(--ds-grid-guide-color);
     border-bottom: var(--guide-width) var(--ds-grid-guide-style) var(--ds-grid-guide-color);
@@ -245,7 +249,7 @@ const GRID_CSS = `
   /* Cross markers — two perpendicular hairlines forming a + centred on a node. */
   .ds-grid-cross {
     position: absolute;
-    z-index: 3;
+    z-index: 4;
     width: 9px;
     height: 9px;
     pointer-events: none;
@@ -338,10 +342,11 @@ export function Grid({
     const props = child.props as GridCellProps;
     const col = resolveResp(props.column, "auto");
     const row = resolveResp(props.row, "auto");
+    const solid = Boolean(props.solid);
     cells.push({
-      sm: { col: col.sm, row: row.sm },
-      md: { col: col.md, row: row.md },
-      lg: { col: col.lg, row: row.lg },
+      sm: { col: col.sm, row: row.sm, solid },
+      md: { col: col.md, row: row.md, solid },
+      lg: { col: col.lg, row: row.lg, solid },
     });
   });
 
