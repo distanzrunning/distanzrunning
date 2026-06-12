@@ -5,9 +5,11 @@ import { forwardRef } from "react";
 // ============================================================================
 // Card — a container that groups related content and actions on a surface.
 //
-// Geist-faithful: the base is `rounded-lg` (12px, = Geist's `rounded-lg`) +
-// `p-4` on a surface, with the hairline supplied by the `--ds-shadow-border`
-// token (no `border` — the ring lives inside the shadow, like our materials).
+// Geist-faithful: the base is `rounded` (8px) + `p-4` on a surface, with the
+// hairline supplied by the `--ds-shadow-border` token (no `border` — the ring
+// lives inside the shadow, like our materials). Geist's card class is
+// `rounded-lg`, which on their Tailwind v4 computes to 8px (= our `rounded`),
+// NOT our 12px `rounded-lg` — verified against Geist's computed styles.
 //
 // `--ds-shadow-border` is the token we share with Geist. The extra resting
 // `0 4px 6px` lift and the `0 6px 14px` hover lift are Geist's literal
@@ -69,7 +71,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     return (
       <div
         ref={ref}
-        className={`flex ${row ? "flex-row" : "flex-col"} rounded-lg p-4 ${FILL[variant]} ${SHADOW[variant]} ${divide} ${className}`}
+        className={`flex ${row ? "flex-row" : "flex-col"} rounded p-4 ${FILL[variant]} ${SHADOW[variant]} ${divide} ${className}`}
         {...rest}
       >
         {children}
