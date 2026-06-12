@@ -9,7 +9,6 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Code } from "@/components/ui/Code";
-import { ComponentRef } from "../ComponentRef";
 
 // Toast notification for copy confirmation
 function Toast({
@@ -329,71 +328,6 @@ export default function CodeComponent() {
             <Code>{snippetExample}</Code>
           </CodePreview>
         </div>
-      </Section>
-
-      {/* Best Practices Section */}
-      <Section>
-        <SectionHeader id="best-practices" onCopyLink={showToast}>
-          Best Practices
-        </SectionHeader>
-
-        <h3
-          id="when-to-use"
-          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
-        >
-          When to use
-        </h3>
-        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-          <li>
-            Use <code className="inline-code">Code</code> to display a
-            read-only, syntax-highlighted snippet inline in docs and content.
-          </li>
-          <li>
-            When the snippet needs a copy button, filename, or line numbers,
-            use <ComponentRef name="Code Block" /> instead.
-          </li>
-          <li>
-            For a single shell command the reader will copy and run, use{" "}
-            <ComponentRef name="Snippet" />.
-          </li>
-        </ul>
-
-        <h3
-          id="content"
-          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
-        >
-          Content
-        </h3>
-        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-          <li>
-            Pass the snippet as a string child and set{" "}
-            <code className="inline-code">language</code> for the right
-            highlighting (defaults to{" "}
-            <code className="inline-code">tsx</code>).
-          </li>
-          <li>
-            Keep snippets short and focused; trim imports and boilerplate that
-            don&rsquo;t serve the example.
-          </li>
-        </ul>
-
-        <h3
-          id="accessibility"
-          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
-        >
-          Accessibility
-        </h3>
-        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-          <li>
-            Syntax colors are decorative; the code text itself carries the
-            meaning, so don&rsquo;t rely on color alone to convey it.
-          </li>
-          <li>
-            The snippet renders as a real{" "}
-            <code className="inline-code">&lt;pre&gt;&lt;code&gt;</code> so it
-            stays selectable and screen-reader friendly.
-          </li>
-        </ul>
       </Section>
     </>
   );
