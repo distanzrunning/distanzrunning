@@ -46,3 +46,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 Screen Recording*.mov
+
+# Local Geist CSS reference dumps (source of truth for token/utility values
+# during DS alignment — local-only, never commit)
+Giest_css_*.css
+giest_css_*.txt
