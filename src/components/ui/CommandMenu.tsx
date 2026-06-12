@@ -441,9 +441,10 @@ function CommandMenuItem({
  * `subPage="<id>"`) pushes the user onto this page; Backspace at an
  * empty input pops back to the previous page.
  */
-function CommandMenuPage(_props: CommandMenuPageProps) {
+function CommandMenuPage(props: CommandMenuPageProps) {
   // Page is a config carrier — its children are rendered by the
   // CommandMenu host once the page is active. Nothing to render here.
+  void props;
   return null;
 }
 
