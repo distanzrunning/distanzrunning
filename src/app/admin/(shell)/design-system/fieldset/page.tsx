@@ -10,7 +10,7 @@ export default function FieldsetPage() {
     <ContentWithTOC
       tocTitle="On this page"
       pageTitle="Fieldset"
-      pageSubtitle="Vercel-style settings card — title + subtitle + content slot + optional footer with status text and an action. Used to stack one-setting-per-card layouts on settings pages."
+      pageSubtitle="Groups related form controls inside a bordered card with optional footer actions."
       mainSectionId="fieldset"
     >
       <FieldsetComponent />
