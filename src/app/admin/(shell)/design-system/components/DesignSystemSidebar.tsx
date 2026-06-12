@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { ChevronDown, Lock } from "lucide-react";
 
 /** Atomic-design classification — surfaced as a badge on each component page
@@ -104,6 +103,7 @@ export const navigation: NavSection[] = [
       { id: "grid", label: "Grid", type: "Molecule" },
       { id: "input", label: "Input", type: "Atom" },
       { id: "keyboard-input", label: "Keyboard Input", type: "Atom" },
+      { id: "label", label: "Label", type: "Atom" },
       { id: "loading-dots", label: "Loading Dots", type: "Atom" },
       { id: "login", label: "Login", type: "Organism" },
       { id: "material", label: "Material", type: "Atom" },
