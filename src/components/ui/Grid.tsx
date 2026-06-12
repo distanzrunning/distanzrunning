@@ -246,12 +246,15 @@ const GRID_CSS = `
     .ds-grid-guide-lg { display: block; }
   }
 
-  /* Cross markers — two perpendicular hairlines forming a + centred on a node. */
+  /* Cross markers — two perpendicular hairlines forming a + centred on a node.
+     Sizes are Geist-verbatim (--cross-size 11px, half-size formula). */
   .ds-grid-cross {
+    --cross-size: 11px;
+    --cross-half-size: calc(var(--cross-size) / 2 + var(--guide-width) - 0.5px);
     position: absolute;
     z-index: 4;
-    width: 9px;
-    height: 9px;
+    width: var(--cross-size);
+    height: var(--cross-size);
     pointer-events: none;
     transform: translate(-50%, -50%);
   }
@@ -264,13 +267,13 @@ const GRID_CSS = `
     border-width: 0;
   }
   .ds-grid-cross-line-v {
-    width: 4.5px;
-    height: 9px;
+    width: var(--cross-half-size);
+    height: var(--cross-size);
     border-right-width: var(--guide-width);
   }
   .ds-grid-cross-line-h {
-    width: 9px;
-    height: 4.5px;
+    width: var(--cross-size);
+    height: var(--cross-half-size);
     border-bottom-width: var(--guide-width);
   }
 `;
