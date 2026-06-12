@@ -38,17 +38,23 @@ function useChoiceboxContext() {
 function RadioIndicator({
   checked,
   disabled,
+  hovered,
   focusRing,
 }: {
   checked: boolean;
   disabled: boolean;
+  hovered: boolean;
   focusRing: boolean;
 }) {
+  // Geist: --radio-color rests at gray-500, darkens to gray-700 on tile hover
+  // (enabled + unchecked), and is blue-900 once selected.
   const borderColor = disabled
     ? "hsl(var(--color-textDisabled))"
     : checked
       ? "var(--ds-blue-900)"
-      : "var(--ds-gray-500)";
+      : hovered
+        ? "var(--ds-gray-700)"
+        : "var(--ds-gray-500)";
 
   const dotColor = disabled
     ? "hsl(var(--color-textDisabled))"
@@ -312,6 +318,7 @@ export function Choicebox({
           <RadioIndicator
             checked={isSelected}
             disabled={isDisabled}
+            hovered={showHover}
             focusRing={focusVisible}
           />
         ) : (

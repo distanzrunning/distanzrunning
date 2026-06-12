@@ -686,8 +686,11 @@ export default function ChoiceboxComponent() {
       {/* Custom Content Section */}
       <Section>
         <SectionHeader id="custom-content" onCopyLink={showToast}>
-          Custom Content
+          Custom content
         </SectionHeader>
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
+          Custom content is displayed when selecting the option.
+        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={customContentCode}>
             <CustomContentDemo />
