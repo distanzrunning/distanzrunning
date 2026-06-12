@@ -1317,8 +1317,8 @@ export default function CodeBlockComponent() {
             Mark added or removed lines with{" "}
             <code className="inline-code">language=&quot;diff&quot;</code>{" "}
             or the dedicated added/removed props. Faking them with{" "}
-            <code className="inline-code">// added</code> comments breaks
-            copy-paste.
+            <code className="inline-code">{"// added"}</code> comments
+            breaks copy-paste.
           </li>
           <li>
             Show the filename header when the snippet has a paste
