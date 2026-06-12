@@ -125,13 +125,20 @@ export function Fieldset({
 
         {errorText && (
           <div className="mt-4">
-            <span style={{ color: "var(--ds-red-900)" }}>{errorText}</span>
+            <span className="text-copy-14" style={{ color: "var(--ds-red-900)" }}>
+              {errorText}
+            </span>
           </div>
         )}
 
         {warningText && (
           <div className="mt-4">
-            <span style={{ color: "var(--ds-amber-900)" }}>{warningText}</span>
+            <span
+              className="text-copy-14"
+              style={{ color: "var(--ds-amber-900)" }}
+            >
+              {warningText}
+            </span>
           </div>
         )}
       </div>
