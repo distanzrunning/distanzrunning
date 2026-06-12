@@ -787,19 +787,32 @@ export function FeedbackInline({
           padding: 0;
           background: transparent;
           color: hsl(var(--color-textSubtle));
-          transition: background 0.2s ease, color 0.2s ease;
+          transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .feedback-inline-wrapper .feedback-emoji svg path {
+          transition: fill 0.2s ease;
         }
         .feedback-inline-wrapper .feedback-emoji:disabled {
           cursor: default;
         }
+        .feedback-inline-wrapper .feedback-emoji:focus-visible {
+          outline: none;
+          box-shadow: var(--ds-focus-ring);
+        }
+        /* Geist: selected/hover tints the whole glyph blue-900 (every path,
+           overriding the per-emoji accent fills) on a blue-300 chip. */
         .feedback-inline-wrapper .feedback-emoji--selected {
           background: var(--ds-blue-300);
-          color: var(--ds-blue-800);
+        }
+        .feedback-inline-wrapper .feedback-emoji--selected svg path {
+          fill: var(--ds-blue-900);
         }
         @media (hover: hover) {
           .feedback-inline-wrapper .feedback-emoji:hover {
             background: var(--ds-blue-300);
-            color: var(--ds-blue-800);
+          }
+          .feedback-inline-wrapper .feedback-emoji:hover svg path {
+            fill: var(--ds-blue-900);
           }
         }
         .feedback-inline-wrapper .feedback-textarea-wrapper {
@@ -1439,14 +1452,25 @@ function FeedbackWithSelectFormStyles() {
         flex-shrink: 0;
         transition: background 0.2s ease, border-color 0.2s ease;
       }
+      .feedback-emoji svg path {
+        transition: fill 0.2s ease;
+      }
+      .feedback-emoji:focus-visible {
+        outline: none;
+        box-shadow: var(--ds-focus-ring);
+      }
       .feedback-emoji--selected {
         background: var(--ds-blue-300);
-        color: var(--ds-blue-800);
+      }
+      .feedback-emoji--selected svg path {
+        fill: var(--ds-blue-900);
       }
       @media (hover: hover) {
         .feedback-emoji:hover {
           background: var(--ds-blue-300);
-          color: var(--ds-blue-800);
+        }
+        .feedback-emoji:hover svg path {
+          fill: var(--ds-blue-900);
         }
       }
       @keyframes feedbackFadeIn {
@@ -1825,14 +1849,25 @@ export function Feedback({
           color: hsl(var(--color-textSubtle));
           transition: background 0.2s ease, border-color 0.2s ease;
         }
+        .feedback-emoji svg path {
+          transition: fill 0.2s ease;
+        }
+        .feedback-emoji:focus-visible {
+          outline: none;
+          box-shadow: var(--ds-focus-ring);
+        }
         .feedback-emoji--selected {
           background: var(--ds-blue-300);
-          color: var(--ds-blue-800);
+        }
+        .feedback-emoji--selected svg path {
+          fill: var(--ds-blue-900);
         }
         @media (hover: hover) {
           .feedback-emoji:hover {
             background: var(--ds-blue-300);
-            color: var(--ds-blue-800);
+          }
+          .feedback-emoji:hover svg path {
+            fill: var(--ds-blue-900);
           }
         }
         @keyframes feedbackFadeIn {
