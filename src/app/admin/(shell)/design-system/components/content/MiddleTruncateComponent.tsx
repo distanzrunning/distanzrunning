@@ -306,7 +306,12 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // Demo
 // ============================================================================
 
-const EXAMPLE_ROWS: { label: string; value: string; mono?: boolean }[] = [
+const EXAMPLE_ROWS: {
+  label: string;
+  value: string;
+  mono?: boolean;
+  noLigatures?: boolean;
+}[] = [
   {
     label: "Branch",
     value: "feature/redesign-dashboard-navigation-with-sidebar-improvements",
@@ -318,6 +323,12 @@ const EXAMPLE_ROWS: { label: string; value: string; mono?: boolean }[] = [
   },
   { label: "Deployment ID", value: "dpl_8gmXTT1yJRP8UbGfXD7A3sp4RKhW" },
   { label: "Env var key", value: "STRIPE_WEBHOOK_SIGNING_SECRET", mono: true },
+  {
+    label: "Monospace no ligatures",
+    value: "STRIPE_WEBHOOK_SIGNING_SECRET",
+    mono: true,
+    noLigatures: true,
+  },
   {
     label: "Commit SHA",
     value: "2b0874e797d7c2a4092d0033ee0c2f0f9aef2869",
@@ -332,6 +343,10 @@ const EXAMPLE_ROWS: { label: string; value: string; mono?: boolean }[] = [
     value: "api.internal.platform-observability.example.com",
   },
   { label: "Model name", value: "google/gemini-3.1-flash-image-preview" },
+  {
+    label: "Tight width",
+    value: "feature/redesign-dashboard-navigation-with-sidebar-improvements",
+  },
   { label: "Fits as-is", value: "sidebar.tsx" },
 ];
 
@@ -374,6 +389,14 @@ function MiddleTruncateDemo() {
               <MiddleTruncate
                 text={row.value}
                 className={`text-label-14 text-textDefault ${row.mono ? "font-mono" : ""}`}
+                style={
+                  row.noLigatures
+                    ? {
+                        fontFeatureSettings: '"liga" 0, "calt" 0',
+                        fontVariantLigatures: "none",
+                      }
+                    : undefined
+                }
               />
             </div>
           </div>
