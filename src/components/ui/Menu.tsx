@@ -677,7 +677,7 @@ export function MenuItem({
       ? "var(--ds-gray-700)"
       : destructive
         ? "var(--ds-red-900)"
-        : "hsl(var(--color-textDefault))",
+        : "var(--ds-gray-1000)",
     cursor: isDisabled ? "default" : "pointer",
     pointerEvents: isDisabled ? "none" : undefined,
     background: "transparent",
@@ -714,12 +714,12 @@ export function MenuItem({
     </>
   );
 
+  // Geist uses one tint for both highlighted and selected — no darker press
+  // state — so active matches hover.
   const hoverBg = destructive
     ? "var(--ds-red-100)"
     : "var(--ds-gray-alpha-100)";
-  const activeBg = destructive
-    ? "var(--ds-red-200)"
-    : "var(--ds-gray-alpha-200)";
+  const activeBg = hoverBg;
 
   const hoverHandlers = isDisabled
     ? {}
