@@ -226,12 +226,19 @@
     box-shadow: var(--ds-focus-border) !important;
   }
   .ds-input-container.ds-input--error {
-    box-shadow: 0 0 0 1px var(--ds-red-900);
+    box-shadow:
+      0 0 0 1px var(--ds-red-900),
+      0 0 0 4px var(--ds-red-300);
+  }
+  .ds-input-container.ds-input--error:has(:not(input[disabled])):hover {
+    box-shadow:
+      0 0 0 1px var(--ds-red-900),
+      0 0 0 4px var(--ds-red-500);
   }
   .ds-input-container.ds-input--error:focus-within {
     box-shadow:
       0 0 0 1px var(--ds-red-900),
-      0 0 0 4px var(--ds-red-200) !important;
+      0 0 0 4px var(--ds-red-300) !important;
   }
   .ds-input-field::placeholder {
     color: var(--ds-gray-700);
