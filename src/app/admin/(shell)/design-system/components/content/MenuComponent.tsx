@@ -502,25 +502,6 @@ function ThreeDotsIcon() {
   );
 }
 
-function EditIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-      <path d="M11.013 1.427a1.75 1.75 0 012.474 0l1.086 1.086a1.75 1.75 0 010 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 01-.927-.928l.929-3.25a1.75 1.75 0 01.445-.758l8.61-8.61zm1.414 1.06a.25.25 0 00-.354 0L3.462 11.098a.25.25 0 00-.064.108l-.631 2.208 2.208-.63a.25.25 0 00.108-.064l8.61-8.61a.25.25 0 000-.355l-1.086-1.086z" />
-    </svg>
-  );
-}
-
-function TrashIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-      <path
-        fillRule="evenodd"
-        d="M6.5 1.75a.25.25 0 01.25-.25h2.5a.25.25 0 01.25.25V3h-3V1.75zm4.5 0V3h2.25a.75.75 0 010 1.5H2.75a.75.75 0 010-1.5H5V1.75C5 .784 5.784 0 6.75 0h2.5C10.216 0 11 .784 11 1.75zM4.496 6.675a.75.75 0 10-1.492.15l.66 6.6A1.75 1.75 0 005.405 15h5.19a1.75 1.75 0 001.741-1.575l.66-6.6a.75.75 0 00-1.492-.15l-.66 6.6a.25.25 0 01-.249.225h-5.19a.25.25 0 01-.249-.225l-.66-6.6z"
-      />
-    </svg>
-  );
-}
-
 // ============================================================================
 // Demo Components
 // ============================================================================
@@ -687,7 +668,7 @@ export default function MenuComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
+        <p className="text-copy-16 text-textSubtle mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5 }}>
           Menu extends the{" "}
           <a
             href="/admin/design-system/button"
@@ -697,7 +678,7 @@ export default function MenuComponent() {
           </a>{" "}
           component.
         </p>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <DefaultDemo />
           </CodePreview>
@@ -708,7 +689,7 @@ export default function MenuComponent() {
         <SectionHeader id="with-chevron" onCopyLink={showToast}>
           With chevron
         </SectionHeader>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={withChevronCode}>
             <WithChevronDemo />
           </CodePreview>
@@ -719,7 +700,7 @@ export default function MenuComponent() {
         <SectionHeader id="disabled-items" onCopyLink={showToast}>
           Disabled items
         </SectionHeader>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={disabledItemsCode}>
             <DisabledItemsDemo />
           </CodePreview>
@@ -733,7 +714,7 @@ export default function MenuComponent() {
         <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
           Use <code>MenuItemLocked</code> to indicate an action that requires additional permissions. The item is rendered as disabled with a lock icon suffix.
         </p>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={lockedItemsCode}>
             <LockedItemsDemo />
           </CodePreview>
@@ -744,7 +725,7 @@ export default function MenuComponent() {
         <SectionHeader id="link-items" onCopyLink={showToast}>
           Link items
         </SectionHeader>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={linkItemsCode}>
             <LinkItemsDemo />
           </CodePreview>
@@ -758,7 +739,7 @@ export default function MenuComponent() {
         <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
           The trigger is still wrapped by an unstyled button.
         </p>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={customTriggerCode}>
             <CustomTriggerDemo />
           </CodePreview>
@@ -772,7 +753,7 @@ export default function MenuComponent() {
         <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
           The trigger is still wrapped by an unstyled button.
         </p>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={prefixSuffixCode}>
             <PrefixSuffixDemo />
           </CodePreview>
@@ -786,7 +767,7 @@ export default function MenuComponent() {
         <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
           The position will automatically adapt based on the window bounds.
         </p>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={menuPositionCode}>
             <MenuPositionDemo />
           </CodePreview>
@@ -794,15 +775,10 @@ export default function MenuComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="menu-section" onCopyLink={showToast}>
-          Menu sections
+        <SectionHeader id="with-section" onCopyLink={showToast}>
+          With section
         </SectionHeader>
-        <p className="text-copy-16 mt-2 leading-6 xl:mt-4" style={{ lineHeight: 1.5, color: "hsl(var(--color-textSubtle))" }}>
-          Group related items under a Title Case header with{" "}
-          <code className="inline-code">&lt;MenuSection title=&quot;&hellip;&quot;&gt;</code>{" "}
-          when the menu starts to crowd past ~10 items.
-        </p>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={menuSectionCode}>
             <MenuSectionDemo />
           </CodePreview>

@@ -784,9 +784,13 @@ export function MenuSeparator() {
     <div
       role="separator"
       style={{
+        // Geist: h-px, my-2, bleeds into the menu's px-2 padding so the
+        // rule touches both edges (w-[calc(100%+16px)] -ml-2).
         height: 1,
         background: "var(--ds-gray-alpha-400)",
-        margin: "4px 0",
+        margin: "8px 0",
+        width: "calc(100% + 16px)",
+        marginLeft: -8,
       }}
     />
   );
@@ -810,14 +814,14 @@ interface MenuSectionProps {
 export function MenuSection({ title, children }: MenuSectionProps) {
   return (
     <div role="group" aria-label={title}>
+      {/* Geist section header: a plain text-xs (12px) gray-900 label with
+          p-2 — no uppercase, weight, or letter-spacing. */}
       <div
         style={{
-          padding: "8px 8px 4px",
-          fontSize: 11,
-          fontWeight: 600,
-          textTransform: "uppercase",
-          letterSpacing: "0.04em",
-          color: "var(--ds-gray-800)",
+          display: "block",
+          padding: 8,
+          fontSize: 12,
+          color: "var(--ds-gray-900)",
         }}
       >
         {title}
