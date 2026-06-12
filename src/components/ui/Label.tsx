@@ -34,7 +34,7 @@ export function Label({
           display: "block",
           fontSize: 13,
           maxWidth: "100%",
-          color: "hsl(var(--color-textSubtle))",
+          color: "var(--ds-gray-900)",
           marginBottom: 8,
           cursor: "text",
           ...(capitalize ? { textTransform: "capitalize" } : {}),

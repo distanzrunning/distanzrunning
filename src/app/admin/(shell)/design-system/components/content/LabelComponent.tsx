@@ -406,10 +406,6 @@ export default function LabelComponent() {
         <SectionHeader id="bypass-casing" onCopyLink={showToast}>
           Bypass Casing
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Pass <code className="inline-code">capitalize=&#123;false&#125;</code> to render the
-          text exactly as written, bypassing the default title-casing.
-        </p>
         <CodePreview componentCode={bypassCasingCode}>
           <BypassCasingDemo />
         </CodePreview>
