@@ -169,7 +169,8 @@ const CMDK_CSS = `
     background: transparent;
     border: none;
     outline: none;
-    font-size: 18px;
+    /* Geist: text-base sm:text-lg — 16px on mobile, 18px at >=640px */
+    font-size: 16px;
     color: var(--ds-gray-1000);
     padding: 0;
     font-family: inherit;
@@ -207,8 +208,8 @@ const CMDK_CSS = `
     display: flex;
     align-items: center;
     gap: 12px;
-    height: 40px;
-    min-height: 40px;
+    /* Geist: min-h-12 sm:min-h-10 — 48px touch target on mobile, 40px at >=640px */
+    min-height: 48px;
     padding: 0 8px;
     border-radius: 6px;
     font-size: 14px;
@@ -231,6 +232,17 @@ const CMDK_CSS = `
   .ds-cmdk-content [cmdk-item].ds-cmdk-item-tall {
     height: 48px;
     min-height: 48px;
+  }
+
+  /* Geist drops the input to text-base and items to min-h-10 below the sm
+     breakpoint; restore the larger desktop sizes at >=640px. */
+  @media (min-width: 640px) {
+    .ds-cmdk-content [cmdk-input] {
+      font-size: 18px;
+    }
+    .ds-cmdk-content [cmdk-item] {
+      min-height: 40px;
+    }
   }
 
   .ds-cmdk-content [cmdk-empty] {
