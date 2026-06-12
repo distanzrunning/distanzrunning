@@ -99,6 +99,7 @@ export const navigation: NavSection[] = [
       { id: "error-card", label: "Error Card", type: "Molecule" },
       { id: "feedback", label: "Feedback", type: "Organism" },
       { id: "fieldset", label: "Fieldset", type: "Molecule" },
+      { id: "file-tree", label: "File Tree", type: "Molecule" },
       { id: "gauge", label: "Gauge", type: "Atom" },
       { id: "grid", label: "Grid", type: "Molecule" },
       { id: "input", label: "Input", type: "Atom" },
