@@ -421,12 +421,6 @@ export default function ClearableInputComponent() {
         <SectionHeader id="with-cmdk" onCopyLink={showToast}>
           With Cmdk
         </SectionHeader>
-        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
-          Shows a <code className="inline-code">⌘K</code> hint while empty
-          (to open the command menu); it swaps to the{" "}
-          <code className="inline-code">Esc</code> clear affordance once
-          there&rsquo;s text.
-        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={withCmdkCode}>
             <ClearableInput
@@ -462,91 +456,11 @@ export default function ClearableInputComponent() {
         <SectionHeader id="with-clear-callback" onCopyLink={showToast}>
           With Clear Callback
         </SectionHeader>
-        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
-          Pass <code className="inline-code">onClear</code> to run side
-          effects each time the value is reset.
-        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={clearCallbackCode}>
             <ClearCallbackDemo />
           </CodePreview>
         </div>
-      </Section>
-
-      {/* Best Practices Section */}
-      <Section>
-        <SectionHeader id="best-practices" onCopyLink={showToast}>
-          Best Practices
-        </SectionHeader>
-
-        <h3
-          id="when-to-use"
-          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
-        >
-          When to use
-        </h3>
-        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-          <li>
-            Use a clearable input for search and filter fields where users
-            frequently reset what they typed — the Esc shortcut is faster than
-            selecting and deleting.
-          </li>
-          <li>
-            Enable <code className="inline-code">cmdk</code> when the field
-            opens a command menu, so the ⌘K hint advertises the shortcut until
-            the user starts typing.
-          </li>
-          <li>
-            For ordinary form fields that aren&rsquo;t reset often, use a plain{" "}
-            <code className="inline-code">Input</code> — the clear affordance
-            is noise there.
-          </li>
-        </ul>
-
-        <h3
-          id="behavior"
-          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
-        >
-          Behavior
-        </h3>
-        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-          <li>
-            Escape clears the value and keeps focus in the field, so the user
-            can immediately type again.
-          </li>
-          <li>
-            The clear affordance only appears once there&rsquo;s text; an empty
-            field shows nothing (or the ⌘K hint in{" "}
-            <code className="inline-code">cmdk</code> mode).
-          </li>
-          <li>
-            Pass <code className="inline-code">onClear</code> for side effects
-            (resetting results, analytics); the value still clears without it.
-          </li>
-        </ul>
-
-        <h3
-          id="accessibility"
-          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
-        >
-          Accessibility
-        </h3>
-        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-          <li>
-            Give every field a <code className="inline-code">label</code> or{" "}
-            <code className="inline-code">aria-label</code> — the clear hint is
-            not a substitute for a name.
-          </li>
-          <li>
-            The clear button is <code className="inline-code">tabIndex=-1</code>
-            ; it&rsquo;s a mouse shortcut for the keyboard Escape action, so it
-            doesn&rsquo;t add an extra tab stop.
-          </li>
-          <li>
-            The Esc / ⌘K hints are keyboard affordances; on touch devices the
-            field still works as a normal input.
-          </li>
-        </ul>
       </Section>
     </>
   );
