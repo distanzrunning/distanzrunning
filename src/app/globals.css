@@ -265,13 +265,17 @@
   .ds-textarea-container.ds-textarea--error {
     box-shadow:
       0 0 0 1px var(--ds-red-900),
-      0 0 0 4px var(--ds-red-200);
+      0 0 0 4px var(--ds-red-300);
   }
   .ds-textarea-container.ds-textarea--error:hover {
-    box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+    box-shadow:
+      0 0 0 1px var(--ds-red-900),
+      0 0 0 4px var(--ds-red-500);
   }
   .ds-textarea-container.ds-textarea--error:focus-within {
-    box-shadow: 0 0 0 1px var(--ds-gray-alpha-600) !important;
+    box-shadow:
+      0 0 0 1px var(--ds-red-900),
+      0 0 0 4px var(--ds-red-300) !important;
   }
   .ds-textarea-field::placeholder {
     color: var(--ds-gray-700);

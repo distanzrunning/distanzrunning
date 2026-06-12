@@ -9,7 +9,7 @@ export default function TextareaPage() {
     <ContentWithTOC
       tocTitle="On this page"
       pageTitle="Textarea"
-      pageSubtitle="Retrieve multi-line text input from a user."
+      pageSubtitle="Retrieve multi-line user input."
       mainSectionId="textarea"
     >
       <TextareaComponent />
