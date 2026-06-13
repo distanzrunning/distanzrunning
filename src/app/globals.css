@@ -540,6 +540,74 @@
     --radio-color: var(--ds-gray-500);
   }
 
+  /* Scroller — Geist's edge-fade overlay: a soft multi-stop 40px gradient
+     fading to the surface (white light / black dark), revealed per edge by
+     shifting background-position with a 0.3s transition. Verbatim from Geist's
+     scroller CSS module. */
+  .ds-scroller-track {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ds-scroller-track::-webkit-scrollbar {
+    display: none;
+  }
+  .ds-scroller-overlay {
+    pointer-events: none;
+    touch-action: none;
+    z-index: 2;
+    --scroller-gradient: #fff 0, #ffffffb3 8px, #ffffff73 14px, #ffffff4d 19px,
+      #ffffff42 21px, #ffffff30 25px, #ffffff1f 29px, #ffffff0f 32px,
+      #ffffff08 34px, #ffffff05 36px, #ffffff02 38px, #ffffff01 39px,
+      #fff0 40px;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    transform: scale(1.01);
+  }
+  .ds-scroller-overlay::before,
+  .ds-scroller-overlay::after {
+    content: "";
+    will-change: background;
+    background-repeat: no-repeat;
+    background-size: 200% 200%;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform: translateZ(0);
+    transition: background-position 0.3s;
+  }
+  .ds-scroller-overlay::before {
+    background:
+      linear-gradient(to bottom, var(--scroller-gradient)),
+      linear-gradient(to right, var(--scroller-gradient));
+    background-position: -40px -40px;
+  }
+  .ds-scroller-overlay::after {
+    background:
+      linear-gradient(to top, var(--scroller-gradient)),
+      linear-gradient(to left, var(--scroller-gradient));
+    background-position: calc(100% + 40px) calc(100% + 40px);
+  }
+  .ds-scroller-overlay.is-top::before {
+    background-position-y: top;
+  }
+  .ds-scroller-overlay.is-left::before {
+    background-position-x: left;
+  }
+  .ds-scroller-overlay.is-right::after {
+    background-position-x: right;
+  }
+  .ds-scroller-overlay.is-bottom::after {
+    background-position-y: bottom;
+  }
+  .dark .ds-scroller-overlay {
+    --scroller-gradient: #000 0, #000000b3 8px, #00000073 14px, #0000004d 19px,
+      #00000042 21px, #00000030 25px, #0000001f 29px, #0000000f 32px,
+      #00000008 34px, #00000005 36px, #00000002 38px, #00000001 39px,
+      #0000 40px;
+  }
+
   /* Button icon sizing - icons inside buttons inherit size from CSS variable */
   button svg,
   a[class*="button"] svg {
