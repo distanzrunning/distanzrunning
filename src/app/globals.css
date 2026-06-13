@@ -445,6 +445,46 @@
     outline: none;
   }
 
+  /* Progress — Geist styles a native <progress>: gray-200 track, a --fg fill
+     coloured per-instance, 6px radius (Geist's --geist-radius), and a 0.1s
+     width/colour transition. The pseudo-element + comma-bearing transition
+     live here to dodge the Tailwind v3 arbitrary-variant miscompile. */
+  .ds-progress {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    display: block;
+    border: 0;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--ds-gray-200);
+  }
+  .ds-progress::-webkit-progress-bar {
+    background: var(--ds-gray-200);
+    border-radius: 6px;
+  }
+  .ds-progress::-webkit-progress-value {
+    background: var(--fg);
+    border-radius: 6px;
+    transition:
+      width 0.1s ease-in,
+      background-color 0.1s ease-in;
+  }
+  .ds-progress::-moz-progress-bar {
+    background: var(--fg);
+    border-radius: 6px;
+    transition:
+      width 0.1s ease-in,
+      background-color 0.1s ease-in;
+  }
+  /* With stops, the fill is square so the notches sit flush against it. */
+  .ds-progress[data-stops]::-webkit-progress-value {
+    border-radius: 0;
+  }
+  .ds-progress[data-stops]::-moz-progress-bar {
+    border-radius: 0;
+  }
+
   /* Button icon sizing - icons inside buttons inherit size from CSS variable */
   button svg,
   a[class*="button"] svg {
