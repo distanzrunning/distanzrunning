@@ -1,7 +1,14 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, createContext, useContext } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
+
+// ============================================================================
+// Context — lets SheetContent know whether the sheet is modal so it can decide
+// to render the scrim and whether outside-click should dismiss.
+// ============================================================================
+
+const SheetContext = createContext<{ modal: boolean }>({ modal: false });
 
 // ============================================================================
 // Types
@@ -12,11 +19,11 @@ interface SheetProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   /**
-   * Render the blocking overlay scrim and trap focus inside the sheet.
-   * Defaults to `true` — matches Geist's live Sheet behavior (overlay
-   * always shown, outside-click dismisses). Flip to `false` only when
-   * the underlying page must stay fully interactive while the sheet is
-   * open.
+   * Render the blocking overlay scrim and let outside-click dismiss.
+   * Defaults to `false` — Geist's Sheet is non-modal: no scrim, the page
+   * stays interactive (toasts and other high-z elements stay reachable),
+   * and clicking outside does *not* close it (Escape and an explicit close
+   * affordance do). Flip to `true` only when the sheet should own the screen.
    */
   modal?: boolean;
 }
@@ -168,15 +175,17 @@ const defaultSizes: Record<string, string> = {
 // Components
 // ============================================================================
 
-function SheetRoot({ children, open, onOpenChange, modal = true }: SheetProps) {
+function SheetRoot({ children, open, onOpenChange, modal = false }: SheetProps) {
   useEffect(() => {
     ensureKeyframes();
   }, []);
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange} modal={modal}>
-      {children}
-    </Dialog.Root>
+    <SheetContext.Provider value={{ modal }}>
+      <Dialog.Root open={open} onOpenChange={onOpenChange} modal={modal}>
+        {children}
+      </Dialog.Root>
+    </SheetContext.Provider>
   );
 }
 
@@ -190,6 +199,7 @@ function SheetContent({
   size,
   className,
 }: SheetContentProps) {
+  const { modal } = useContext(SheetContext);
   const isHorizontal = side === "left" || side === "right";
   const resolvedSize = size || defaultSizes[side];
   const sizeStyle: React.CSSProperties = isHorizontal
@@ -198,21 +208,27 @@ function SheetContent({
 
   return (
     <Dialog.Portal>
-      <Dialog.Overlay
-        className="ds-sheet-overlay"
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 99,
-          backgroundColor: "var(--ds-overlay-backdrop-color)",
-          opacity: "var(--ds-overlay-backdrop-opacity)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-        }}
-      />
+      {/* Scrim only renders when modal — Geist's default Sheet has none. */}
+      {modal && (
+        <Dialog.Overlay
+          className="ds-sheet-overlay"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 99,
+            backgroundColor: "var(--ds-overlay-backdrop-color)",
+            opacity: "var(--ds-overlay-backdrop-opacity)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+          }}
+        />
+      )}
       <Dialog.Content
         data-side={side}
         className={`ds-sheet-content ${className || sideClassNames[side]}`}
+        // Non-modal: keep the sheet open on outside-click (Geist closes only
+        // via Escape or an explicit close button). Modal: let the scrim dismiss.
+        onInteractOutside={modal ? undefined : (e) => e.preventDefault()}
         style={{
           position: "fixed",
           zIndex: 100,
@@ -220,8 +236,10 @@ function SheetContent({
           flexDirection: "column",
           gap: 16,
           background: "hsl(var(--color-surface))",
+          // Geist: border + shadow-lg (not the modal shadow token).
+          border: "1px solid var(--ds-gray-400)",
           boxShadow:
-            "var(--ds-shadow-modal), hsl(var(--color-canvas)) 0px 0px 0px 1px",
+            "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
           outline: "none",
           transition:
             "color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter",
