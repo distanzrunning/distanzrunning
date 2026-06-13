@@ -205,7 +205,9 @@ export function MultiSelect({
       ? placeholder
       : formatSelection
         ? formatSelection(selected, items)
-        : `${selected.length} item${selected.length === 1 ? "" : "s"} selected`;
+        : selected.length === items.length
+          ? "All items selected"
+          : `${selected.length} item${selected.length === 1 ? "" : "s"} selected`;
 
   return (
     <div
