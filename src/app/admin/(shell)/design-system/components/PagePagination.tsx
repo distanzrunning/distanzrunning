@@ -43,7 +43,7 @@ export default function PagePagination() {
         prevPage
           ? {
               title: prevPage.label,
-              href: `/admin/design-system/${prevPage.id}`,
+              href: prevPage.href ?? `/admin/design-system/${prevPage.id}`,
             }
           : undefined
       }
@@ -51,7 +51,7 @@ export default function PagePagination() {
         nextPage
           ? {
               title: nextPage.label,
-              href: `/admin/design-system/${nextPage.id}`,
+              href: nextPage.href ?? `/admin/design-system/${nextPage.id}`,
             }
           : undefined
       }

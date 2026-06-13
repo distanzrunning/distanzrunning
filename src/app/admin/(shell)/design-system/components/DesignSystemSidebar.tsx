@@ -12,6 +12,13 @@ export interface NavItem {
   label: string;
   locked?: boolean;
   type?: ComponentType;
+  /**
+   * Optional explicit destination. When set, this item is an *alias* — a nav
+   * link to an anchor on another page rather than its own route (e.g. Pill →
+   * the Badge page's `#pill` section), mirroring Geist. Consumers route here
+   * via soft navigation instead of deriving `/admin/design-system/{id}`.
+   */
+  href?: string;
 }
 
 export interface NavSection {
@@ -117,6 +124,12 @@ export const navigation: NavSection[] = [
       { id: "pagination", label: "Pagination", type: "Molecule" },
       { id: "panel-card", label: "Panel Card", type: "Molecule" },
       { id: "phone", label: "Phone", type: "Molecule" },
+      {
+        id: "pill",
+        label: "Pill",
+        type: "Atom",
+        href: "/admin/design-system/badge#pill",
+      },
       { id: "progress", label: "Progress", type: "Atom" },
       { id: "project-banner", label: "Project Banner", type: "Organism" },
       { id: "radio", label: "Radio", type: "Atom" },
