@@ -1,6 +1,7 @@
 "use client";
 
 import { forwardRef } from "react";
+import Link from "next/link";
 
 // ============================================================================
 // Icons
@@ -49,11 +50,11 @@ function ChevronRightIcon() {
 // ============================================================================
 
 /**
- * Pagination slot config. Renders a real anchor (`<a href>`) — pagination is
- * URL navigation, so links keep open-in-new-tab, crawlability, and correct
- * semantics. For client-side routing, pass a `next/link`-resolved href. Omit
- * the slot entirely to hide the Previous or Next rail at the start / end of a
- * sequence.
+ * Pagination slot config. Renders a real anchor via `next/link` — pagination
+ * is URL navigation, so links keep open-in-new-tab, crawlability, and correct
+ * semantics, while navigating client-side (soft nav) for an instant content
+ * swap. Omit the slot entirely to hide the Previous or Next rail at the start
+ * / end of a sequence.
  */
 export interface PaginationSlot {
   /** Destination page title — short Title Case noun phrase */
@@ -110,10 +111,13 @@ function PaginationRail({
     </>
   );
 
+  // next/link renders a real <a> but navigates client-side (soft nav), so the
+  // main content swaps instantly instead of a full document reload — and hash
+  // targets like badge#pill still scroll into view.
   return (
-    <a href={slot.href} aria-label={ariaLabel} className={innerClass}>
+    <Link href={slot.href} aria-label={ariaLabel} className={innerClass}>
       {content}
-    </a>
+    </Link>
   );
 }
 
