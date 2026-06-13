@@ -485,6 +485,61 @@
     border-radius: 0;
   }
 
+  /* Radio — Geist styles a native input via an adjacent control span and a
+     single --radio-color that shifts per state (gray-700 idle → gray-900
+     hover → gray-600 active → gray-1000 checked → gray-500 disabled); the dot
+     is a scaled ::after. Written in CSS rather than Tailwind peer/group
+     variants because Geist's are v4-only (peer-not-checked, triple-stacked)
+     and miscompile in our Tailwind v3. */
+  .ds-radio-control {
+    --radio-color: var(--ds-gray-700);
+    position: relative;
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: 9999px;
+    border: 1px solid var(--radio-color);
+    background: var(--ds-background-100);
+    transition:
+      border-color 0.2s ease-in,
+      background 0.2s ease-in;
+  }
+  .ds-radio-control::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: var(--radio-color);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.15s ease-in;
+  }
+  .ds-radio-input:checked + .ds-radio-control {
+    --radio-color: var(--ds-gray-1000);
+  }
+  .ds-radio-input:checked + .ds-radio-control::after {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .ds-radio-box:hover
+    .ds-radio-input:not(:checked):not(:active)
+    + .ds-radio-control {
+    background: var(--ds-gray-200);
+    --radio-color: var(--ds-gray-900);
+  }
+  .ds-radio-input:active + .ds-radio-control {
+    --radio-color: var(--ds-gray-600);
+  }
+  .ds-radio-input:focus-visible + .ds-radio-control {
+    box-shadow: var(--ds-focus-ring);
+  }
+  /* Disabled last so it wins for the disabled+checked case (gray-500 dot). */
+  .ds-radio-input:disabled + .ds-radio-control {
+    --radio-color: var(--ds-gray-500);
+  }
+
   /* Button icon sizing - icons inside buttons inherit size from CSS variable */
   button svg,
   a[class*="button"] svg {

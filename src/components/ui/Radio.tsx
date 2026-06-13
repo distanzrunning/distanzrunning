@@ -87,7 +87,7 @@ function RadioGroupRoot({
         role="radiogroup"
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
-        className={`flex flex-col gap-3 ${className}`}
+        className={`flex flex-col gap-6 ${className}`}
       >
         {children}
       </div>
@@ -121,12 +121,11 @@ function RadioGroupItem({ value, children, disabled: itemDisabled }: RadioGroupI
   return (
     <label
       htmlFor={inputId}
-      className={`
-        group/radio inline-flex items-center gap-3
-        ${isDisabled ? "cursor-not-allowed" : "cursor-pointer"}
-      `}
+      className={`inline-flex items-center text-copy-13 ${
+        isDisabled ? "cursor-not-allowed text-textDisabled" : "cursor-pointer text-textDefault"
+      }`}
     >
-      <span className="relative inline-flex items-center justify-center">
+      <span className="ds-radio-box -m-0.5 flex items-center p-0.5">
         <input
           type="radio"
           id={inputId}
@@ -136,48 +135,11 @@ function RadioGroupItem({ value, children, disabled: itemDisabled }: RadioGroupI
           onChange={() => onChange(value)}
           disabled={isDisabled}
           required={required}
-          className="sr-only peer"
+          className="ds-radio-input sr-only"
         />
-        <span
-          aria-hidden="true"
-          className={`
-            relative flex items-center justify-center
-            w-4 h-4 rounded-full border border-solid
-            ${
-              isDisabled
-                ? isChecked
-                  ? "border-[var(--ds-gray-600)] bg-[var(--ds-gray-100)]"
-                  : "border-[var(--ds-gray-400)] bg-[var(--ds-gray-100)]"
-                : isChecked
-                  ? "border-[var(--ds-gray-1000)] bg-surface"
-                  : "border-borderSubtle bg-surface group-hover/radio:bg-[var(--ds-gray-200)]"
-            }
-            ${!isDisabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
-          `}
-          style={{
-            transition:
-              "border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
-          }}
-        >
-          {isChecked && (
-            <span
-              className="block w-2 h-2 rounded-full"
-              style={{
-                backgroundColor: isDisabled
-                  ? "var(--ds-gray-600)"
-                  : "var(--ds-gray-1000)",
-              }}
-            />
-          )}
-        </span>
+        <span aria-hidden="true" className="ds-radio-control" />
       </span>
-      <span
-        className={`text-copy-13 select-none ${
-          isDisabled ? "text-textDisabled" : "text-textDefault"
-        }`}
-      >
-        {children}
-      </span>
+      <span className="ml-1.5 select-none">{children}</span>
     </label>
   );
 }
@@ -232,7 +194,9 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
 
     return (
       <span
-        className={`relative inline-flex items-center justify-center ${className}`}
+        className={`ds-radio-box -m-0.5 flex items-center p-0.5 ${
+          disabled ? "cursor-not-allowed" : "cursor-pointer"
+        } ${className}`.trim()}
       >
         <input
           ref={ref}
@@ -244,40 +208,9 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
           disabled={disabled}
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledBy}
-          className="sr-only peer"
+          className="ds-radio-input sr-only"
         />
-        <span
-          aria-hidden="true"
-          className={`
-            relative flex items-center justify-center
-            w-4 h-4 rounded-full border border-solid cursor-pointer
-            ${
-              disabled
-                ? isChecked
-                  ? "border-[var(--ds-gray-600)] bg-[var(--ds-gray-100)] cursor-not-allowed"
-                  : "border-[var(--ds-gray-400)] bg-[var(--ds-gray-100)] cursor-not-allowed"
-                : isChecked
-                  ? "border-[var(--ds-gray-1000)] bg-surface"
-                  : "border-borderSubtle bg-surface hover:bg-[var(--ds-gray-200)]"
-            }
-            ${!disabled ? "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-color)]" : ""}
-          `}
-          style={{
-            transition:
-              "border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
-          }}
-        >
-          {isChecked && (
-            <span
-              className="block w-2 h-2 rounded-full"
-              style={{
-                backgroundColor: disabled
-                  ? "var(--ds-gray-600)"
-                  : "var(--ds-gray-1000)",
-              }}
-            />
-          )}
-        </span>
+        <span aria-hidden="true" className="ds-radio-control" />
       </span>
     );
   }
