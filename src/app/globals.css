@@ -411,10 +411,8 @@
     color: var(--ds-background-100);
   }
 
-  /* Note disabled overrides */
-  .ds-note-disabled .ds-note-link {
-    color: var(--ds-gray-600);
-  }
+  /* Note disabled overrides (link colour comes from the container's
+     --note-link, which the component sets to gray-700 when disabled) */
   .ds-note-disabled button {
     background: var(--ds-gray-100) !important;
     color: var(--ds-gray-600) !important;
@@ -425,15 +423,26 @@
     pointer-events: none;
   }
 
-  /* Note inline links */
+  /* Note inline links — colour resolves from the container's per-type
+     --note-link (Geist `.v3-colors a`); plain <a> inside a note works too. */
+  .ds-note a,
   .ds-note-link {
-    color: var(--ds-blue-1000);
+    color: var(--note-link, var(--ds-blue-700));
     font-weight: 500;
     text-decoration: none;
     cursor: pointer;
   }
-  .ds-note-link:hover {
-    text-decoration: underline;
+  @media (hover: hover) {
+    .ds-note a:hover,
+    .ds-note-link:hover {
+      text-decoration: underline;
+    }
+  }
+  .ds-note a:focus-visible,
+  .ds-note-link:focus-visible {
+    box-shadow: var(--ds-focus-ring);
+    border-radius: 2px;
+    outline: none;
   }
 
   /* Button icon sizing - icons inside buttons inherit size from CSS variable */

@@ -206,6 +206,25 @@ const typeConfigs: Record<NoteType, TypeConfig> = {
   },
 };
 
+/**
+ * Inline-link colour per type (Geist `--note-link`). Types without their own
+ * `.v3-colors` override fall back to the base blue-700.
+ */
+const noteLinkColors: Record<NoteType, string> = {
+  default: "var(--ds-blue-700)",
+  success: "var(--ds-blue-1000)",
+  error: "var(--ds-red-1000)",
+  warning: "var(--ds-amber-1000)",
+  secondary: "var(--ds-gray-1000)",
+  violet: "var(--ds-purple-1000)",
+  cyan: "var(--ds-teal-1000)",
+  alert: "var(--ds-red-1000)",
+  tertiary: "var(--ds-blue-700)",
+  lite: "var(--ds-blue-700)",
+  ghost: "var(--ds-blue-700)",
+  "rotate-ccw": "var(--ds-blue-700)",
+};
+
 interface SizeConfig {
   padding: string;
   fontSize: string;
@@ -291,13 +310,16 @@ export const Note = forwardRef<HTMLDivElement, NoteProps>(
       color: textColor,
       wordBreak: "break-word",
       gap: 12,
+      ["--note-link" as string]: disabled
+        ? "var(--ds-gray-700)"
+        : noteLinkColors[type],
       ...(fill && !disabled ? { backgroundColor: typeConfig.fillBg } : {}),
     };
 
     return (
       <div
         ref={ref}
-        className={`${typeConfig.className}${disabled ? " ds-note-disabled" : ""} ${className}`.trim()}
+        className={`ds-note ${typeConfig.className}${disabled ? " ds-note-disabled" : ""} ${className}`.trim()}
         style={containerStyle}
         role="note"
       >
