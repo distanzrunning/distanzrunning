@@ -316,12 +316,32 @@ export function Component(): JSX.Element {
   return <ShowMore />;
 }`;
 
+const expandedCode = `import { ShowMore } from '@/components/ui/ShowMore';
+
+export function Component(): JSX.Element {
+  return <ShowMore defaultExpanded />;
+}`;
+
+const noBorderCode = `import { ShowMore } from '@/components/ui/ShowMore';
+
+export function Component(): JSX.Element {
+  return <ShowMore noBorder />;
+}`;
+
 // ============================================================================
 // Demo Components
 // ============================================================================
 
 function DefaultDemo() {
   return <ShowMore />;
+}
+
+function ExpandedDemo() {
+  return <ShowMore defaultExpanded />;
+}
+
+function NoBorderDemo() {
+  return <ShowMore noBorder />;
 }
 
 // ============================================================================
@@ -340,6 +360,28 @@ export default function ShowMoreComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <DefaultDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="expanded" onCopyLink={showToast}>
+          Expanded
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={expandedCode}>
+            <ExpandedDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="no-border" onCopyLink={showToast}>
+          No border
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={noBorderCode}>
+            <NoBorderDemo />
           </CodePreview>
         </div>
       </Section>
