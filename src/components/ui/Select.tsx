@@ -27,7 +27,8 @@ export interface SelectProps
 // font sizes are written as explicit px arbitraries to land on Geist's
 // 12 / 14 / 16. Heights map to --geist-space-{small,medium,large} (32/40/48);
 // xsmall is a fixed 24. Radius: xsmall 4, small/medium --geist-radius (6),
-// large rounded-lg (8). max-sm bumps the font to 16px to stop iOS zoom.
+// large 8 — written as explicit px because our Tailwind remaps rounded-lg to
+// 12px (Geist's rounded-lg is 8). max-sm bumps the font to 16px (iOS zoom).
 // ============================================================================
 
 interface SizeConfig {
@@ -69,8 +70,8 @@ const sizeConfigs: Record<NonNullable<SelectProps["size"]>, SizeConfig> = {
     suffixRight: "right-3",
   },
   large: {
-    field: "h-12 text-[16px] leading-[24px] px-3 pr-9 rounded-lg",
-    prefixField: "h-12 text-[16px] leading-[24px] pl-[36px] pr-9 rounded-lg",
+    field: "h-12 text-[16px] leading-[24px] px-3 pr-9 rounded-[8px]",
+    prefixField: "h-12 text-[16px] leading-[24px] pl-[36px] pr-9 rounded-[8px]",
     glyph: "h-4 w-4",
     prefixLeft: "left-3",
     suffixRight: "right-3",
