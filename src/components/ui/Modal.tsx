@@ -78,21 +78,15 @@ function ModalTitle({
   return (
     <h3
       id={titleId}
-      className={className}
+      // Geist's modal title is literally the text-heading-24 token
+      // (24/32/-0.96px/600) — match it exactly rather than hand-rolling.
+      className={`text-heading-24 ${className ?? ""}`}
       style={{
-        // Deliberately NOT text-heading-24: Geist's modal title is its own
-        // treatment — weight 500 (token is 600) and ls -0.029375rem (token is
-        // -0.04em / ≈-0.96px). Size/line-height happen to match (24/32).
         color: "var(--ds-gray-1000)",
-        fontSize: 24,
-        fontWeight: 500,
-        lineHeight: "32px",
-        letterSpacing: "-0.029375rem",
-        // Title sits flush against the next element so it groups
-        // tightly with a following Modal.P. The bottom rhythm to the
-        // body is owned by Modal.P (or Modal.Header's gap when
-        // wrapped).
+        // Geist title carries pb-1 (4px) to the subtitle; the body rhythm
+        // below is owned by Modal.P / Modal.Header's gap.
         margin: 0,
+        paddingBottom: 4,
       }}
     >
       {children}
@@ -159,9 +153,8 @@ function ModalHeader({
             : {
                 display: "flex",
                 flexDirection: "column",
-                // Geist: title carries `pb-1` (4px) to the subtitle, then the
-                // header `mb-6` (24px) to the body.
-                gap: 4,
+                // Geist: the title's own `pb-1` (4px) owns the gap to the
+                // subtitle; the header just adds `mb-6` (24px) to the body.
                 marginBottom: 24,
                 zIndex: 10,
               }
