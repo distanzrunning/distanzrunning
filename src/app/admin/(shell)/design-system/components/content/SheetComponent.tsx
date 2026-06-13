@@ -535,10 +535,10 @@ export default function SheetComponent() {
             <ComponentRef name="Drawer" />.
           </li>
           <li>
-            Don&apos;t use Sheet to confirm destructive actions. The
-            default <code className="inline-code">modal=false</code>{" "}
-            keeps the page interactive, which weakens severity for a
-            delete or revoke.
+            Don&apos;t use Sheet to confirm destructive actions — a
+            side panel reads as lightweight context, not a decision
+            gate. Reach for <ComponentRef name="Modal" /> on a delete
+            or revoke.
           </li>
         </ul>
 
@@ -551,9 +551,12 @@ export default function SheetComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             Sheet defaults to{" "}
-            <code className="inline-code">modal=false</code> so toasts
-            and other high-z elements stay reachable. Keep that default
-            unless the sheet owns the screen.
+            <code className="inline-code">modal=true</code> — the
+            overlay scrim renders, focus is trapped inside the sheet,
+            and the page underneath is inert. Flip to{" "}
+            <code className="inline-code">modal=false</code> only when
+            the page must stay fully interactive (e.g. a context
+            inspector that pairs with toasts).
           </li>
           <li>
             Pick <code className="inline-code">side</code> from the
@@ -563,8 +566,10 @@ export default function SheetComponent() {
             change sides mid-session.
           </li>
           <li>
-            Outside-click does not auto-close, so always render an
-            explicit close affordance and honor Escape.
+            Clicking the overlay dismisses the sheet, but still always
+            render an explicit close affordance and honor Escape so
+            keyboard and screen-reader users have a path that
+            doesn&apos;t depend on the overlay.
           </li>
         </ul>
 
@@ -611,7 +616,8 @@ export default function SheetComponent() {
             <code className="inline-code">
               aria-label=&quot;Close&quot;
             </code>
-            ) since clicking outside doesn&apos;t dismiss.
+            ) so keyboard and screen-reader users have a path that
+            doesn&apos;t depend on clicking the overlay.
           </li>
           <li>
             Announce the sheet with{" "}

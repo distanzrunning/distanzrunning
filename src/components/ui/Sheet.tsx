@@ -20,10 +20,11 @@ interface SheetProps {
   onOpenChange?: (open: boolean) => void;
   /**
    * Render the blocking overlay scrim and let outside-click dismiss.
-   * Defaults to `false` — Geist's Sheet is non-modal: no scrim, the page
-   * stays interactive (toasts and other high-z elements stay reachable),
-   * and clicking outside does *not* close it (Escape and an explicit close
-   * affordance do). Flip to `true` only when the sheet should own the screen.
+   * Defaults to `true` — matches Geist's live Sheet: the scrim renders, focus
+   * is trapped, and clicking outside (or Escape) closes it. (Geist's written
+   * BP claims a non-modal default, but the shipped component is modal — we
+   * follow the live behavior.) Flip to `false` for a non-modal sheet that
+   * leaves the page interactive.
    */
   modal?: boolean;
 }
@@ -175,7 +176,7 @@ const defaultSizes: Record<string, string> = {
 // Components
 // ============================================================================
 
-function SheetRoot({ children, open, onOpenChange, modal = false }: SheetProps) {
+function SheetRoot({ children, open, onOpenChange, modal = true }: SheetProps) {
   useEffect(() => {
     ensureKeyframes();
   }, []);
@@ -208,7 +209,8 @@ function SheetContent({
 
   return (
     <Dialog.Portal>
-      {/* Scrim only renders when modal — Geist's default Sheet has none. */}
+      {/* Scrim renders only when modal. Geist's overlay is a flat bg + opacity
+          fade — no backdrop blur. */}
       {modal && (
         <Dialog.Overlay
           className="ds-sheet-overlay"
@@ -218,17 +220,12 @@ function SheetContent({
             zIndex: 99,
             backgroundColor: "var(--ds-overlay-backdrop-color)",
             opacity: "var(--ds-overlay-backdrop-opacity)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
           }}
         />
       )}
       <Dialog.Content
         data-side={side}
         className={`ds-sheet-content ${className || sideClassNames[side]}`}
-        // Non-modal: keep the sheet open on outside-click (Geist closes only
-        // via Escape or an explicit close button). Modal: let the scrim dismiss.
-        onInteractOutside={modal ? undefined : (e) => e.preventDefault()}
         style={{
           position: "fixed",
           zIndex: 100,
