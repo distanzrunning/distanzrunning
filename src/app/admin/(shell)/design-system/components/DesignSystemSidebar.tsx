@@ -142,6 +142,7 @@ export const navigation: NavSection[] = [
       { id: "search", label: "Search", type: "Molecule" },
       { id: "search-input", label: "Search Input", type: "Molecule" },
       { id: "select", label: "Select", type: "Molecule" },
+      { id: "separator", label: "Separator", type: "Atom" },
       { id: "sheet", label: "Sheet", type: "Organism" },
       { id: "show-more", label: "Show More", type: "Atom" },
       { id: "skeleton", label: "Skeleton", type: "Atom" },
