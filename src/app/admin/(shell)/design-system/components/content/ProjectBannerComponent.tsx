@@ -333,6 +333,23 @@ function ShieldCheckIcon() {
   );
 }
 
+function ShieldIcon() {
+  return (
+    <svg
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fill="currentColor"
+        d="M8.75 0q.01.69.37 1.06.36.42 1.1.74.73.3 1.6.53c.55.14 1.16.29 1.67.46l.51.17v6.57a5.3 5.3 0 0 1-2.81 4.65l-2.84 1.48-.35.19-.35-.19-2.84-1.48A5.3 5.3 0 0 1 2 9.53V2.96l.51-.17c.5-.17 1.12-.32 1.67-.46q.87-.23 1.6-.53.74-.32 1.1-.74.36-.38.37-1.06zM8 2.06a4.5 4.5 0 0 1-1.61 1.11c-.6.26-1.24.45-1.82.6l-1.07.29v5.47c0 1.4.77 2.67 2.01 3.32L8 14.15l2.49-1.3a3.8 3.8 0 0 0 2.01-3.32V4.06q-.48-.14-1.07-.29a13 13 0 0 1-1.82-.6A4.5 4.5 0 0 1 8 2.06M11.06 7l-3.53 3.53c-.3.3-.77.3-1.06 0L4.94 9 6 7.94l1 1 3-3z"
+      />
+    </svg>
+  );
+}
+
 function RollbackIcon() {
   return (
     <svg
@@ -374,6 +391,24 @@ function WarningTriangleIcon() {
 // ============================================================================
 // Code Examples
 // ============================================================================
+
+const defaultCode = `import { ProjectBanner, ProjectBannerAction } from '@/components/ui/ProjectBanner';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <ProjectBanner
+      icon={<ShieldIcon />}
+      action={
+        <ProjectBannerAction href="/">
+          Disable
+        </ProjectBannerAction>
+      }
+    >
+      Attack Challenge Mode is enabled for this project
+    </ProjectBanner>
+  );
+}`;
 
 const successCode = `import { ProjectBanner, ProjectBannerAction } from '@/components/ui/ProjectBanner';
 import type { JSX } from 'react';
@@ -429,11 +464,12 @@ export function Component(): JSX.Element {
       icon={<WarningTriangleIcon />}
       action={
         <ProjectBannerAction variant="error" href="/">
-          Pay Invoices
+          Add Credit Card
         </ProjectBannerAction>
       }
     >
-      Payment failed, pay any open invoices before your account is shut down
+      Payment failed, update credit card information before your account is shut
+      down
     </ProjectBanner>
   );
 }`;
@@ -441,6 +477,21 @@ export function Component(): JSX.Element {
 // ============================================================================
 // Demo Components
 // ============================================================================
+
+function DefaultDemo() {
+  return (
+    <ProjectBanner
+      icon={<ShieldIcon />}
+      action={
+        <ProjectBannerAction href="/">
+          Disable
+        </ProjectBannerAction>
+      }
+    >
+      Attack Challenge Mode is enabled for this project
+    </ProjectBanner>
+  );
+}
 
 function SuccessDemo() {
   return (
@@ -507,11 +558,12 @@ function ErrorDemo() {
       icon={<WarningTriangleIcon />}
       action={
         <ProjectBannerAction variant="error" href="/">
-          Pay Invoices
+          Add Credit Card
         </ProjectBannerAction>
       }
     >
-      Payment failed, pay any open invoices before your account is shut down
+      Payment failed, update credit card information before your account is shut
+      down
     </ProjectBanner>
   );
 }
@@ -525,6 +577,17 @@ export default function ProjectBannerComponent() {
 
   return (
     <>
+      <Section>
+        <SectionHeader id="default" onCopyLink={showToast}>
+          Default
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={defaultCode}>
+            <DefaultDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
       <Section>
         <SectionHeader id="success" onCopyLink={showToast}>
           Success
