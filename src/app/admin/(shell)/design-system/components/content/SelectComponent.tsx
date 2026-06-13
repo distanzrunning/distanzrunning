@@ -380,7 +380,7 @@ function UploadIcon() {
 
 export function Component(): JSX.Element {
   return (
-    <div className="flex flex-col md:flex-row gap-4">
+    <div className="flex flex-col md:flex-row gap-4 [&>*]:flex-1 items-start">
       <Select size="small" prefix={<UploadIcon />} suffix={<UploadIcon />}>
         <option disabled selected>Small</option>
       </Select>
@@ -453,6 +453,44 @@ export function Component(): JSX.Element {
   )
 }`;
 
+const withOptionsCode = `import type { JSX } from 'react'
+import { Select } from '@/components/ui/Select'
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col md:flex-row gap-4 items-start">
+      <Select aria-label="Fruit" className="w-auto">
+        <option disabled selected>Select a fruit</option>
+        <option value="apple">Apple</option>
+        <option value="orange">Orange</option>
+        <option value="banana">Banana</option>
+        <option value="grape">Grape</option>
+      </Select>
+      <Select aria-label="Fruit with default value" defaultValue="banana" className="w-auto">
+        <option disabled>With default value</option>
+        <option value="apple">Apple</option>
+        <option value="orange">Orange</option>
+        <option value="banana">Banana</option>
+        <option value="grape">Grape</option>
+      </Select>
+    </div>
+  )
+}`;
+
+const requiredCode = `import type { JSX } from 'react'
+import { Select } from '@/components/ui/Select'
+
+export function Component(): JSX.Element {
+  return (
+    <Select label="Required field" required>
+      <option disabled selected>Please select an option</option>
+      <option value="option1">Option 1</option>
+      <option value="option2">Option 2</option>
+      <option value="option3">Option 3</option>
+    </Select>
+  )
+}`;
+
 // ============================================================================
 // Demo Components
 // ============================================================================
@@ -490,14 +528,14 @@ function SizesDemo() {
 
 function PrefixSuffixDemo() {
   return (
-    <div className="flex flex-col md:flex-row md:justify-around gap-4 items-start">
-      <Select size="small" prefix={<UploadIcon />} suffix={<UploadIcon />} className="w-auto">
+    <div className="flex flex-col md:flex-row gap-4 [&>*]:flex-1 items-start">
+      <Select size="small" prefix={<UploadIcon />} suffix={<UploadIcon />}>
         <option disabled selected>Small</option>
       </Select>
-      <Select size="medium" prefix={<UploadIcon />} suffix={<UploadIcon />} className="w-auto">
+      <Select size="medium" prefix={<UploadIcon />} suffix={<UploadIcon />}>
         <option disabled selected>Default</option>
       </Select>
-      <Select size="large" prefix={<UploadIcon />} suffix={<UploadIcon />} className="w-auto">
+      <Select size="large" prefix={<UploadIcon />} suffix={<UploadIcon />}>
         <option disabled selected>Large</option>
       </Select>
     </div>
@@ -550,6 +588,38 @@ function LabelDemo() {
       <option>Option 1</option>
       <option>Option 2</option>
       <option>Option 3</option>
+    </Select>
+  );
+}
+
+function WithOptionsDemo() {
+  return (
+    <div className="flex flex-col md:flex-row gap-4 items-start">
+      <Select aria-label="Fruit" className="w-auto">
+        <option disabled selected>Select a fruit</option>
+        <option value="apple">Apple</option>
+        <option value="orange">Orange</option>
+        <option value="banana">Banana</option>
+        <option value="grape">Grape</option>
+      </Select>
+      <Select aria-label="Fruit with default value" defaultValue="banana" className="w-auto">
+        <option disabled>With default value</option>
+        <option value="apple">Apple</option>
+        <option value="orange">Orange</option>
+        <option value="banana">Banana</option>
+        <option value="grape">Grape</option>
+      </Select>
+    </div>
+  );
+}
+
+function RequiredDemo() {
+  return (
+    <Select label="Required field" required>
+      <option disabled selected>Please select an option</option>
+      <option value="option1">Option 1</option>
+      <option value="option2">Option 2</option>
+      <option value="option3">Option 3</option>
     </Select>
   );
 }
@@ -618,6 +688,28 @@ export default function SelectComponent() {
         </div>
       </Section>
 
+      <Section>
+        <SectionHeader id="with-options" onCopyLink={showToast}>
+          With options
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={withOptionsCode}>
+            <WithOptionsDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="required" onCopyLink={showToast}>
+          Required
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={requiredCode}>
+            <RequiredDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* Best Practices Section */}
       <Section>
         <SectionHeader id="best-practices" onCopyLink={showToast}>
@@ -661,13 +753,7 @@ export default function SelectComponent() {
             <code className="inline-code">Select a framework</code>),
             never <code className="inline-code">Choose one…</code>,{" "}
             <code className="inline-code">Pick</code>, or the label
-            restated. Render it as a{" "}
-            <code className="inline-code">
-              &lt;option disabled selected&gt;
-            </code>{" "}
-            since native{" "}
-            <code className="inline-code">&lt;select&gt;</code> has no{" "}
-            <code className="inline-code">placeholder</code> attribute.
+            restated.
           </li>
           <li>
             Validate on blur and pass a message via{" "}

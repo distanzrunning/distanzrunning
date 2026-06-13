@@ -23,95 +23,98 @@ export interface SelectProps
 }
 
 // ============================================================================
-// Size configs
+// Size configs — Geist-verbatim. Our Tailwind remaps text-xs/sm/base, so the
+// font sizes are written as explicit px arbitraries to land on Geist's
+// 12 / 14 / 16. Heights map to --geist-space-{small,medium,large} (32/40/48);
+// xsmall is a fixed 24. Radius: xsmall 4, small/medium --geist-radius (6),
+// large rounded-lg (8). max-sm bumps the font to 16px to stop iOS zoom.
 // ============================================================================
 
 interface SizeConfig {
-  height: string;
-  fontSize: string;
-  paddingX: string;
-  paddingRight: string;
-  prefixPaddingLeft: string;
-  borderRadius: string;
+  /** classes on the <select> */
+  field: string;
+  /** padding-left when a prefix is present */
+  prefixField: string;
+  /** chevron / suffix glyph box size */
+  glyph: string;
+  /** absolute position of the prefix span */
+  prefixLeft: string;
+  /** absolute position of the suffix span */
+  suffixRight: string;
 }
 
 const sizeConfigs: Record<NonNullable<SelectProps["size"]>, SizeConfig> = {
   xsmall: {
-    height: "h-6",
-    fontSize: "text-xs",
-    paddingX: "px-1.5",
-    paddingRight: "pr-[22px]",
-    prefixPaddingLeft: "pl-7",
-    borderRadius: "rounded-[4px]",
+    field:
+      "h-6 text-[12px] leading-none pl-[6px] pr-7 rounded-[4px] max-sm:text-[12px]",
+    prefixField: "h-6 text-[12px] leading-none pl-[26px] pr-7 rounded-[4px]",
+    glyph: "h-3 w-3",
+    prefixLeft: "left-[7px]",
+    suffixRight: "right-[5px]",
   },
   small: {
-    height: "h-8",
-    fontSize: "text-sm",
-    paddingX: "px-3",
-    paddingRight: "pr-9",
-    prefixPaddingLeft: "pl-9",
-    borderRadius: "rounded-[6px]",
+    field: "h-8 text-[14px] px-3 pr-9 rounded-[6px] max-sm:text-[16px]",
+    prefixField: "h-8 text-[14px] pl-[36px] pr-9 rounded-[6px] max-sm:text-[16px]",
+    glyph: "h-4 w-4",
+    prefixLeft: "left-3",
+    suffixRight: "right-3",
   },
   medium: {
-    height: "h-10",
-    fontSize: "text-sm",
-    paddingX: "px-3",
-    paddingRight: "pr-9",
-    prefixPaddingLeft: "pl-9",
-    borderRadius: "rounded-[6px]",
+    field:
+      "h-10 text-[14px] leading-[20px] px-3 pr-9 rounded-[6px] max-sm:text-[16px]",
+    prefixField:
+      "h-10 text-[14px] leading-[20px] pl-[36px] pr-9 rounded-[6px] max-sm:text-[16px]",
+    glyph: "h-4 w-4",
+    prefixLeft: "left-3",
+    suffixRight: "right-3",
   },
   large: {
-    height: "h-12",
-    fontSize: "text-base",
-    paddingX: "px-3.5",
-    paddingRight: "pr-10",
-    prefixPaddingLeft: "pl-10",
-    borderRadius: "rounded-[6px]",
+    field: "h-12 text-[16px] leading-[24px] px-3 pr-9 rounded-lg",
+    prefixField: "h-12 text-[16px] leading-[24px] pl-[36px] pr-9 rounded-lg",
+    glyph: "h-4 w-4",
+    prefixLeft: "left-3",
+    suffixRight: "right-3",
   },
 };
 
 // ============================================================================
-// Error Icon (Geist octagon with exclamation)
+// Error Icon (Geist's rounded-octagon "alert" glyph)
 // ============================================================================
 
 function ErrorIcon() {
   return (
     <svg
-      height="16"
-      strokeLinejoin="round"
       viewBox="0 0 16 16"
+      height="16"
       width="16"
       style={{ color: "var(--ds-red-900)", flexShrink: 0 }}
     >
       <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M5.30761 1.5L1.5 5.30761L1.5 10.6924L5.30761 14.5H10.6924L14.5 10.6924V5.30761L10.6924 1.5H5.30761ZM5.10051 0C4.83529 0 4.58094 0.105357 4.3934 0.292893L0.292893 4.3934C0.105357 4.58094 0 4.83529 0 5.10051V10.8995C0 11.1647 0.105357 11.4191 0.292894 11.6066L4.3934 15.7071C4.58094 15.8946 4.83529 16 5.10051 16H10.8995C11.1647 16 11.4191 15.8946 11.6066 15.7071L15.7071 11.6066C15.8946 11.4191 16 11.1647 16 10.8995V5.10051C16 4.83529 15.8946 4.58093 15.7071 4.3934L11.6066 0.292893C11.4191 0.105357 11.1647 0 10.8995 0H5.10051ZM8.75 3.75V4.5V8L8.75 8.75H7.25V8V4.5V3.75H8.75ZM8 12C8.55229 12 9 11.5523 9 11C9 10.4477 8.55229 10 8 10C7.44772 10 7 10.4477 7 11C7 11.5523 7.44772 12 8 12Z"
         fill="currentColor"
+        d="M10.9 0a1 1 0 0 1 .7.3l4.1 4.1.07.07a1 1 0 0 1 .23.63v5.8a1 1 0 0 1-.3.7l-4.1 4.1a1 1 0 0 1-.7.3H5a1 1 0 0 1-.53-.23l-.08-.06-4.1-4.1A1 1 0 0 1 0 10.9V5.1a1 1 0 0 1 .3-.7L4.4.3A1 1 0 0 1 5 0h5.9M1.5 5.3v5.4l3.8 3.8h5.4l3.8-3.8V5.3l-3.8-3.8H5.3zM8 10a1 1 0 1 1 0 2 1 1 0 0 1 0-2m.75-1.25h-1.5v-5h1.5z"
       />
     </svg>
   );
 }
 
 // ============================================================================
-// Chevron Down Icon
+// Chevron Down Icon (Geist v4 compact glyph)
 // ============================================================================
 
 function ChevronDownIcon({ className }: { className?: string }) {
   return (
     <svg
-      height="16"
-      strokeLinejoin="round"
       viewBox="0 0 16 16"
+      height="16"
       width="16"
       className={className}
       style={{ color: "currentcolor" }}
     >
       <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M14.0607 5.49999L13.5303 6.03032L8.7071 10.8535C8.31658 11.2441 7.68341 11.2441 7.29289 10.8535L2.46966 6.03032L1.93933 5.49999L2.99999 4.43933L3.53032 4.96966L7.99999 9.43933L12.4697 4.96966L13 4.43933L14.0607 5.49999Z"
         fill="currentColor"
+        fillRule="evenodd"
+        d="m14.06 5.5-.53.53-4.82 4.82a1 1 0 0 1-1.42 0L2.47 6.03l-.53-.53L3 4.44l.53.53L8 9.44l4.47-4.47.53-.53z"
+        clipRule="evenodd"
       />
     </svg>
   );
@@ -142,33 +145,34 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const selectId = idProp || generatedId;
     const config = sizeConfigs[size];
     const hasPrefix = prefix !== undefined;
+    const errorId = `${selectId}-error`;
+    const isLarge = size === "large";
 
     return (
-      <label htmlFor={selectId} className={className || "w-full"} style={{ display: "block" }}>
-        {/* Label */}
+      <label
+        htmlFor={selectId}
+        className={className || "w-full"}
+        style={{ display: "block" }}
+      >
+        {/* Label — Geist: 13px, gray-900, capitalize, mb-2, cursor-text */}
         {label && (
-          <div
-            className="text-[13px] capitalize mb-2 max-w-full"
-            style={{ color: "hsl(var(--color-textSubtler))" }}
-          >
+          <div className="mb-2 block max-w-full cursor-text text-[13px] capitalize text-[color:var(--ds-gray-900)]">
             {label}
           </div>
         )}
 
-        {/* Select container */}
+        {/* Select container (group drives the prefix/suffix hover colour) */}
         <div
-          className={`relative flex items-center ${
-            disabled ? "cursor-not-allowed" : ""
+          className={`group relative flex items-center ${
+            disabled
+              ? "cursor-not-allowed rounded-[6px] bg-[var(--ds-gray-100)] text-[var(--ds-gray-700)]"
+              : ""
           }`}
         >
           {/* Prefix */}
           {hasPrefix && (
             <span
-              className="absolute left-0 flex items-center justify-center pointer-events-none z-10"
-              style={{
-                left: size === "xsmall" ? "8px" : size === "small" ? "10px" : size === "large" ? "14px" : "12px",
-                color: "hsl(var(--color-textSubtle))",
-              }}
+              className={`pointer-events-none absolute z-10 inline-flex items-center text-[var(--ds-gray-900)] transition-colors duration-150 ease-in group-hover:text-[var(--ds-gray-1000)] ${config.prefixLeft}`}
             >
               {prefix}
             </span>
@@ -179,69 +183,49 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={selectId}
             disabled={disabled}
+            aria-invalid={error || undefined}
+            aria-describedby={error && errorMessage ? errorId : undefined}
             className={[
-              `ds-select appearance-none w-full outline-none border-none ${config.borderRadius}`,
-              error ? "ds-select-error" : "",
-              config.height,
-              config.fontSize,
-              hasPrefix ? config.prefixPaddingLeft : config.paddingX,
-              config.paddingRight,
+              "ds-select peer w-full cursor-pointer appearance-none truncate border-none",
+              "bg-surface text-[var(--ds-gray-1000)]",
+              "transition-[box-shadow,color] duration-200",
+              hasPrefix ? config.prefixField : config.field,
               disabled ? "cursor-not-allowed" : "cursor-pointer",
             ]
               .filter(Boolean)
               .join(" ")}
-            style={{
-              color: disabled ? "var(--ds-gray-600)" : "hsl(var(--color-textDefault))",
-              background: disabled ? "var(--ds-gray-200)" : "hsl(var(--color-surface))",
-            }}
             {...props}
           >
             {children}
           </select>
 
-          {/* Suffix */}
+          {/* Suffix (chevron) */}
           <span
-            className="absolute right-0 flex items-center justify-center pointer-events-none"
-            style={{
-              right: size === "xsmall" ? "8px" : size === "small" ? "10px" : size === "large" ? "14px" : "12px",
-              color: disabled ? "var(--ds-gray-600)" : "hsl(var(--color-textSubtle))",
-            }}
+            className={`pointer-events-none absolute inline-flex items-center text-[var(--ds-gray-900)] transition-colors duration-150 ease-in group-hover:text-[var(--ds-gray-1000)] ${config.suffixRight}`}
           >
-            {suffix || <ChevronDownIcon />}
+            {suffix || <ChevronDownIcon className={config.glyph} />}
           </span>
         </div>
 
-        {/* Error message */}
+        {/* Error message — Geist: red-900, items-start, 13px (16px for large) */}
         {error && errorMessage && (
           <div
-            className="flex items-center gap-1.5 mt-2"
-            style={{ color: "var(--ds-red-900)" }}
+            id={errorId}
+            role="alert"
+            aria-atomic="true"
+            className={`mt-2 flex items-start text-[var(--ds-red-900)] ${
+              isLarge ? "text-[16px] leading-6" : "text-[13px] leading-5"
+            }`}
           >
-            <ErrorIcon />
-            <span className="text-[13px] leading-[20px]">{errorMessage}</span>
+            <span
+              aria-hidden="true"
+              className={`mr-2 flex items-center ${isLarge ? "mt-1" : "mt-0.5"}`}
+            >
+              <ErrorIcon />
+            </span>
+            <span className="break-words">{errorMessage}</span>
           </div>
         )}
-
-        <style>{`
-          .ds-select {
-            box-shadow: 0 0 0 1px hsla(var(--ds-gray-1000-value), 0.1);
-            transition: box-shadow 0.2s ease, color 0.2s ease;
-          }
-          .ds-select:hover:not(:disabled) {
-            box-shadow: 0 0 0 1px var(--ds-gray-alpha-600);
-          }
-          .ds-select:focus-visible:not(:disabled) {
-            /* Grey input-focus (Geist forms) — shared token, theme-aware
-               halo (0.16 light / 0.24 dark). Was a hand-rolled 0.16 both. */
-            box-shadow: var(--ds-focus-border);
-          }
-          .ds-select-error {
-            box-shadow: 0 0 0 1px var(--ds-red-700) !important;
-          }
-          .ds-select-error:focus-visible:not(:disabled) {
-            box-shadow: 0 0 0 1px var(--ds-red-700), 0 0 0 4px var(--ds-red-200) !important;
-          }
-        `}</style>
       </label>
     );
   },

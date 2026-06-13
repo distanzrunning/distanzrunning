@@ -260,6 +260,46 @@
     display: none;
   }
 
+  /* Select component styles (Geist-verbatim box-shadow state machine).
+     Lives here rather than inline so there's a single definition, and because
+     the focus/aria-invalid shadows carry commas that don't compile reliably as
+     Tailwind arbitrary-value classes. */
+  .ds-select {
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+  }
+  .ds-select:not(:disabled):not([aria-invalid="true"]):hover {
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
+  }
+  /* Mouse focus → grey input-focus border; keyboard focus → blue focus ring
+     (focus-visible !important wins the cascade, matching Geist). */
+  .ds-select:focus {
+    outline: none;
+    box-shadow: var(--ds-focus-border);
+  }
+  .ds-select:focus-visible {
+    box-shadow: var(--ds-focus-ring) !important;
+  }
+  .ds-select:disabled {
+    opacity: 1;
+    background: var(--ds-gray-100);
+    color: var(--ds-gray-700);
+    box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
+    -webkit-text-fill-color: var(--ds-gray-700);
+    cursor: not-allowed;
+  }
+  .ds-select[aria-invalid="true"] {
+    outline: none;
+    box-shadow:
+      0 0 0 1px var(--ds-red-900),
+      0 0 0 4px hsla(var(--ds-red-900-value), 0.16);
+  }
+  .ds-select > option {
+    color: var(--ds-gray-1000);
+  }
+  .ds-select > option:disabled {
+    color: var(--ds-gray-800);
+  }
+
   /* Sticky modal title — Geist shrinks the title inside a sticky header to
      text-base (16px) on mobile and sm:text-xl (20px) on desktop, leading-6.
      Our text-base/text-xl are remapped, so the px are explicit here. */
