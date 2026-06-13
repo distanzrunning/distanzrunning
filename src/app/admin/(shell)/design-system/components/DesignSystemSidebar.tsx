@@ -140,6 +140,7 @@ export const navigation: NavSection[] = [
       },
       { id: "scroller", label: "Scroller", type: "Molecule" },
       { id: "search", label: "Search", type: "Molecule" },
+      { id: "search-input", label: "Search Input", type: "Molecule" },
       { id: "select", label: "Select", type: "Molecule" },
       { id: "sheet", label: "Sheet", type: "Organism" },
       { id: "show-more", label: "Show More", type: "Atom" },
