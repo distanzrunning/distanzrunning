@@ -10,6 +10,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { Slider } from "@/components/ui/Slider";
+import { Input } from "@/components/ui/Input";
 
 // ============================================================================
 // Toast Component
@@ -317,31 +318,57 @@ export function Component(): JSX.Element {
   return <Slider defaultValue={50} />;
 }`;
 
-const rangeCode = `import { Slider } from '@/components/ui/Slider';
+const rangeWithInputsCode = `import { useState } from 'react';
+import { Slider } from '@/components/ui/Slider';
+import { Input } from '@/components/ui/Input';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  return <Slider range defaultValue={[20, 80]} />;
+  const [range, setRange] = useState<[number, number]>([50, 75]);
+  return (
+    <form>
+      <div className="flex gap-3 items-center">
+        <Input
+          aria-label="Starting range value"
+          size="small"
+          className="w-12"
+          value={String(range[0])}
+          onChange={(e) => {
+            const v = Number(e.target.value);
+            if (!Number.isNaN(v)) setRange([v, range[1]]);
+          }}
+        />
+        <Slider range min={0} max={100} value={range} onChange={setRange} />
+        <Input
+          aria-label="Ending range value"
+          size="small"
+          type="number"
+          className="w-12"
+          value={String(range[1])}
+          onChange={(e) => {
+            const v = Number(e.target.value);
+            if (!Number.isNaN(v)) setRange([range[0], v]);
+          }}
+        />
+      </div>
+    </form>
+  );
 }`;
 
-const customColorCode = `import { Slider } from '@/components/ui/Slider';
+const disabledRangeWithInputsCode = `import { Slider } from '@/components/ui/Slider';
+import { Input } from '@/components/ui/Input';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <div className="flex flex-col gap-6">
-      <Slider defaultValue={60} color="hsl(var(--color-textDefault))" />
-      <Slider defaultValue={40} color="var(--ds-pink-700)" />
-      <Slider range defaultValue={[25, 75]} color="var(--ds-pink-700)" />
-    </div>
+    <form>
+      <div className="flex gap-3 items-center">
+        <Input aria-label="Starting range value" size="small" className="w-12" value="50" disabled />
+        <Slider range min={0} max={100} value={[50, 75]} disabled />
+        <Input aria-label="Ending range value" size="small" type="number" className="w-12" value="75" disabled />
+      </div>
+    </form>
   );
-}`;
-
-const customWidthCode = `import { Slider } from '@/components/ui/Slider';
-import type { JSX } from 'react';
-
-export function Component(): JSX.Element {
-  return <Slider defaultValue={50} width={400} />;
 }`;
 
 // ============================================================================
@@ -352,22 +379,63 @@ function DefaultDemo() {
   return <Slider defaultValue={50} />;
 }
 
-function RangeDemo() {
-  return <Slider range defaultValue={[20, 80]} />;
-}
-
-function CustomColorDemo() {
+function RangeWithInputsDemo() {
+  const [range, setRange] = useState<[number, number]>([50, 75]);
   return (
-    <div className="flex flex-col gap-6">
-      <Slider defaultValue={60} color="hsl(var(--color-textDefault))" />
-      <Slider defaultValue={40} color="var(--ds-pink-700)" />
-      <Slider range defaultValue={[25, 75]} color="var(--ds-pink-700)" />
-    </div>
+    <form>
+      <div className="flex gap-3 items-center">
+        <Input
+          aria-label="Starting range value"
+          size="small"
+          className="w-12"
+          value={String(range[0])}
+          onChange={(e) => {
+            const v = Number(e.target.value);
+            if (!Number.isNaN(v)) setRange([v, range[1]]);
+          }}
+        />
+        <Slider range min={0} max={100} value={range} onChange={setRange} />
+        <Input
+          aria-label="Ending range value"
+          size="small"
+          type="number"
+          className="w-12"
+          value={String(range[1])}
+          onChange={(e) => {
+            const v = Number(e.target.value);
+            if (!Number.isNaN(v)) setRange([range[0], v]);
+          }}
+        />
+      </div>
+    </form>
   );
 }
 
-function CustomWidthDemo() {
-  return <Slider defaultValue={50} width={400} />;
+function DisabledRangeWithInputsDemo() {
+  return (
+    <form>
+      <div className="flex gap-3 items-center">
+        <Input
+          aria-label="Starting range value"
+          size="small"
+          className="w-12"
+          value="50"
+          disabled
+          readOnly
+        />
+        <Slider range min={0} max={100} value={[50, 75]} disabled />
+        <Input
+          aria-label="Ending range value"
+          size="small"
+          type="number"
+          className="w-12"
+          value="75"
+          disabled
+          readOnly
+        />
+      </div>
+    </form>
+  );
 }
 
 // ============================================================================
@@ -391,41 +459,23 @@ export default function SliderComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="range" onCopyLink={showToast}>
-          Range
+        <SectionHeader id="range-with-inputs" onCopyLink={showToast}>
+          Range with inputs
         </SectionHeader>
-        <p
-          className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "hsl(var(--color-textSubtle))" }}
-        >
-          Dual-thumb slider for selecting a range. Thumbs can cross over each
-          other and values auto-swap.
-        </p>
         <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={rangeCode}>
-            <RangeDemo />
+          <CodePreview componentCode={rangeWithInputsCode}>
+            <RangeWithInputsDemo />
           </CodePreview>
         </div>
       </Section>
 
       <Section>
-        <SectionHeader id="custom-colors" onCopyLink={showToast}>
-          Custom colors
+        <SectionHeader id="disabled-range-with-inputs" onCopyLink={showToast}>
+          Disabled range with inputs
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={customColorCode}>
-            <CustomColorDemo />
-          </CodePreview>
-        </div>
-      </Section>
-
-      <Section>
-        <SectionHeader id="custom-width" onCopyLink={showToast}>
-          Custom width
-        </SectionHeader>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={customWidthCode}>
-            <CustomWidthDemo />
+          <CodePreview componentCode={disabledRangeWithInputsCode}>
+            <DisabledRangeWithInputsDemo />
           </CodePreview>
         </div>
       </Section>
@@ -471,14 +521,10 @@ export default function SliderComponent() {
           </li>
           <li>
             Give the slider an accessible name through a sibling{" "}
-            <code className="inline-code">
-              &lt;label htmlFor&gt;
-            </code>{" "}
-            +{" "}
-            <code className="inline-code">aria-labelledby</code> or an{" "}
-            <code className="inline-code">aria-label</code> prop. Arrow
-            keys, Page Up/Down, and Home/End all move the thumb — let
-            them do the keyboard work and don&apos;t intercept them.
+            <code className="inline-code">&lt;label htmlFor&gt;</code> or{" "}
+            <code className="inline-code">aria-label</code>, and let the
+            native arrow-key, Page Up/Down, Home/End behavior do the
+            keyboard work. Don&apos;t intercept those keys.
           </li>
         </ul>
       </Section>

@@ -69,9 +69,26 @@ function ensureThumbStyles() {
   if (document.getElementById(THUMB_STYLE_ID)) return;
   const style = document.createElement("style");
   style.id = THUMB_STYLE_ID;
+  // Geist-verbatim thumb chrome: white 6×14 chip, rounded-[1px], a hairline
+  // shadow (solid-black ring in dark mode), transition-all 200ms, and a 200%
+  // invisible ::after hit area so the tiny thumb is easy to grab. Shadow lives
+  // here (not inline) so the dark-mode override can win the cascade.
   style.textContent = `
     .ds-slider-thumb {
-      transition: box-shadow 0.15s ease, background 0.15s ease, transform 0.15s ease;
+      position: relative;
+      border-radius: 1px;
+      background: #fff;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.21), 0px 1px 2px rgba(0, 0, 0, 0.04);
+      transition: all 0.2s ease;
+    }
+    .ds-slider-thumb::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 200%;
+      width: 200%;
     }
     .ds-slider-thumb:hover:not([aria-disabled="true"]),
     .ds-slider-thumb:focus-visible:not([aria-disabled="true"]) {
@@ -79,6 +96,9 @@ function ensureThumbStyles() {
     }
     .ds-slider-thumb:focus-visible {
       outline: none;
+    }
+    .dark .ds-slider-thumb {
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 1), 0px 1px 2px rgba(0, 0, 0, 0.04);
     }
   `;
   document.head.appendChild(style);
@@ -219,7 +239,7 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
               flexGrow: 1,
               height: 8,
               borderRadius: 5,
-              background: "hsl(var(--color-borderDefault))",
+              background: "var(--ds-gray-200)",
               position: "relative",
               overflow: "hidden",
             }}
@@ -232,7 +252,7 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
                 height: "100%",
                 left: 0,
                 width: `${percent}%`,
-                background: color,
+                background: disabled ? "var(--ds-gray-500)" : color,
                 borderRadius: "9999px 0 0 9999px",
               }}
             />
@@ -261,12 +281,7 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
                 display: "block",
                 width: 6,
                 height: 14,
-                borderRadius: 1,
-                background: "#FFFFFF",
-                boxShadow:
-                  "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
                 cursor: disabled ? "not-allowed" : "pointer",
-                position: "relative",
               }}
               onKeyDown={(e) => {
                 if (disabled) return;
@@ -309,7 +324,6 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
       className = "",
       name,
       width = 216,
-      allowCrossover = true,
       "aria-label": ariaLabel,
       "aria-labelledby": ariaLabelledBy,
     },
@@ -434,7 +448,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
               flexGrow: 1,
               height: 8,
               borderRadius: 5,
-              background: "hsl(var(--color-borderDefault))",
+              background: "var(--ds-gray-200)",
               position: "relative",
             }}
           >
@@ -446,7 +460,8 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
                 height: "100%",
                 left: `${lowPercent}%`,
                 right: `${100 - highPercent}%`,
-                background: color,
+                background: disabled ? "var(--ds-gray-500)" : color,
+                borderRadius: "9999px 0 0 9999px",
               }}
             />
           </span>
@@ -475,12 +490,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
                 display: "block",
                 width: 6,
                 height: 14,
-                borderRadius: 1,
-                background: "#FFFFFF",
-                boxShadow:
-                  "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
                 cursor: disabled ? "not-allowed" : "pointer",
-                position: "relative",
               }}
               onKeyDown={(e) => handleThumbKeyDown(0, e)}
             />
@@ -510,12 +520,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
                 display: "block",
                 width: 6,
                 height: 14,
-                borderRadius: 1,
-                background: "#FFFFFF",
-                boxShadow:
-                  "rgba(0, 0, 0, 0.21) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px",
                 cursor: disabled ? "not-allowed" : "pointer",
-                position: "relative",
               }}
               onKeyDown={(e) => handleThumbKeyDown(1, e)}
             />
