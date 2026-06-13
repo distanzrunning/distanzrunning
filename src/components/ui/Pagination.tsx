@@ -49,17 +49,17 @@ function ChevronRightIcon() {
 // ============================================================================
 
 /**
- * Pagination slot config — provide either `href` (renders an anchor) or
- * `onClick` (renders a button). Omit the slot entirely to hide the
- * Previous or Next rail at the start / end of a sequence.
+ * Pagination slot config. Renders a real anchor (`<a href>`) — pagination is
+ * URL navigation, so links keep open-in-new-tab, crawlability, and correct
+ * semantics. For client-side routing, pass a `next/link`-resolved href. Omit
+ * the slot entirely to hide the Previous or Next rail at the start / end of a
+ * sequence.
  */
 export interface PaginationSlot {
   /** Destination page title — short Title Case noun phrase */
   title: string;
-  /** Anchor href; mutually exclusive with onClick */
-  href?: string;
-  /** Click handler for SPA navigation; mutually exclusive with href */
-  onClick?: () => void;
+  /** Destination href */
+  href: string;
 }
 
 export interface PaginationProps {
@@ -110,22 +110,10 @@ function PaginationRail({
     </>
   );
 
-  if (slot.href) {
-    return (
-      <a href={slot.href} aria-label={ariaLabel} className={innerClass}>
-        {content}
-      </a>
-    );
-  }
   return (
-    <button
-      type="button"
-      onClick={slot.onClick}
-      aria-label={ariaLabel}
-      className={innerClass}
-    >
+    <a href={slot.href} aria-label={ariaLabel} className={innerClass}>
       {content}
-    </button>
+    </a>
   );
 }
 
