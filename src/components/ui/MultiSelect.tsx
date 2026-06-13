@@ -72,25 +72,41 @@ export function MultiSelect({
     [selected, updateSelected],
   );
 
-  // Smart action for button click — Geist semantics: a checked row's button
-  // "Check All" (selects every item); an unchecked row's button "Only"
-  // (selects just this one). The checkbox handles toggling on/off.
+  // Smart action for the name/button zone. Geist: "Check All" on a checked
+  // row that isn't already fully selected (selects every item); otherwise
+  // "Only" (selects just this one — for unchecked rows, or when all are
+  // already selected). The checkbox zone handles plain toggling.
   const smartAction = useCallback(
     (value: string) => {
       const isSelected = selected.includes(value);
-      if (isSelected) {
-        updateSelected(items.map((item) => item.value));
-      } else {
+      const allSelected = items.every((item) => selected.includes(item.value));
+
+      if (allSelected || !isSelected) {
         updateSelected([value]);
+      } else {
+        updateSelected(items.map((item) => item.value));
       }
     },
     [selected, items, updateSelected],
   );
 
-  // Get the row's single action label (Geist: "Check All" / "Only").
+  // Label shown when hovering/focusing the name/button zone (Geist:
+  // "Only" / "Check All").
   const getButtonActionLabel = useCallback(
+    (value: string): string => {
+      const isSelected = selected.includes(value);
+      const allSelected = items.every((item) => selected.includes(item.value));
+      if (allSelected || !isSelected) return "Only";
+      return "Check All";
+    },
+    [selected, items],
+  );
+
+  // Label shown when hovering/focusing the checkbox zone (Geist:
+  // "Check" / "Uncheck").
+  const getCheckboxActionLabel = useCallback(
     (value: string): string =>
-      selected.includes(value) ? "Check All" : "Only",
+      selected.includes(value) ? "Uncheck" : "Check",
     [selected],
   );
 
@@ -255,6 +271,7 @@ export function MultiSelect({
             onToggleItem={toggleItem}
             onSmartAction={smartAction}
             getButtonActionLabel={getButtonActionLabel}
+            getCheckboxActionLabel={getCheckboxActionLabel}
             onKeyDown={handleKeyDown}
             setActiveRow={setActiveRow}
           />,
@@ -278,6 +295,7 @@ function MultiSelectDropdown({
   onToggleItem,
   onSmartAction,
   getButtonActionLabel,
+  getCheckboxActionLabel,
   onKeyDown,
   setActiveRow,
 }: {
@@ -290,6 +308,7 @@ function MultiSelectDropdown({
   onToggleItem: (value: string) => void;
   onSmartAction: (value: string) => void;
   getButtonActionLabel: (value: string) => string;
+  getCheckboxActionLabel: (value: string) => string;
   onKeyDown: (e: React.KeyboardEvent) => void;
   setActiveRow: (index: number) => void;
 }) {
@@ -347,6 +366,7 @@ function MultiSelectDropdown({
             isActive={activeRow === index}
             activeFocus={activeFocus}
             buttonActionLabel={getButtonActionLabel(item.value)}
+            checkboxActionLabel={getCheckboxActionLabel(item.value)}
             onToggle={() => onToggleItem(item.value)}
             onAction={() => onSmartAction(item.value)}
             onMouseEnter={() => setActiveRow(index)}
@@ -373,6 +393,7 @@ function MultiSelectRow({
   isActive,
   activeFocus,
   buttonActionLabel,
+  checkboxActionLabel,
   onToggle,
   onAction,
   onMouseEnter,
@@ -382,6 +403,7 @@ function MultiSelectRow({
   isActive: boolean;
   activeFocus: "checkbox" | "button";
   buttonActionLabel: string;
+  checkboxActionLabel: string;
   onToggle: () => void;
   onAction: () => void;
   onMouseEnter: () => void;
@@ -389,6 +411,11 @@ function MultiSelectRow({
   const [hoverArea, setHoverArea] = useState<"checkbox" | "button" | null>(
     null,
   );
+  // The action label reflects the hovered (or keyboard-focused) zone: the
+  // checkbox zone shows "Check"/"Uncheck", the name zone "Only"/"Check All".
+  const activeArea = hoverArea ?? (isActive ? activeFocus : null);
+  const displayLabel =
+    activeArea === "checkbox" ? checkboxActionLabel : buttonActionLabel;
 
   return (
     <div
@@ -418,7 +445,7 @@ function MultiSelectRow({
         <label
           role="checkbox"
           aria-checked={isSelected}
-          aria-label={`Select ${item.label}`}
+          aria-label={`${checkboxActionLabel} ${item.label}`}
           onClick={(e) => {
             e.preventDefault();
             onToggle();
@@ -553,7 +580,7 @@ function MultiSelectRow({
               transition: "opacity 150ms ease",
             }}
           >
-            {buttonActionLabel}
+            {displayLabel}
           </span>
         </div>
       </button>
