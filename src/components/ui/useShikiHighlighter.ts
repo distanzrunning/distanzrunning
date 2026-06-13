@@ -61,12 +61,19 @@ export function useShikiHighlighter(
   code: string,
   language?: string,
   filename?: string,
+  /**
+   * Gate tokenization. Pass the code panel's open state so collapsed blocks
+   * (the default on every page) skip the Shiki load + tokenize entirely —
+   * highlighting only runs the first time a panel is expanded.
+   */
+  enabled: boolean = true,
 ): DualThemeToken[][] | null {
   const [tokenizedLines, setTokenizedLines] = useState<
     DualThemeToken[][] | null
   >(null);
 
   useEffect(() => {
+    if (!enabled) return;
     let cancelled = false;
     const lang = getShikiLanguage(language, filename);
 
@@ -106,7 +113,7 @@ export function useShikiHighlighter(
     return () => {
       cancelled = true;
     };
-  }, [code, language, filename]);
+  }, [code, language, filename, enabled]);
 
   return tokenizedLines;
 }

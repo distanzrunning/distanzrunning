@@ -240,7 +240,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [copied, setCopied] = useState(false);
 
   // Use Shiki for syntax highlighting
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(

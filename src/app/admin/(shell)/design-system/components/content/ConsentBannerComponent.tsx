@@ -130,7 +130,7 @@ function CopyIconButton({ copied }: { copied: boolean }) {
 function CodePreview({ children, componentCode, minHeight = 220 }: { children: React.ReactNode; componentCode: string; minHeight?: number }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map((line) => [{ content: line, color: "hsl(var(--color-textDefault))", darkColor: "hsl(var(--color-textDefault))" }] as DualThemeToken[]);
