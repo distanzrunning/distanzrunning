@@ -402,7 +402,7 @@ function DesignSystemNav({ pathname }: { pathname: string }) {
                       </button>
                     ) : (
                       <Link
-                        href={`/admin/design-system/${item.id}`}
+                        href={item.href ?? `/admin/design-system/${item.id}`}
                         aria-current={isActive ? "page" : undefined}
                         className={`${baseClasses} ${stateClasses}`}
                         style={rowStyle}
