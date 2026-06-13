@@ -264,19 +264,23 @@
      Lives here rather than inline so there's a single definition, and because
      the focus/aria-invalid shadows carry commas that don't compile reliably as
      Tailwind arbitrary-value classes. */
-  /* States are kept at a single specificity level and ordered exactly as Geist
-     stacks the equivalent utilities (rest → hover → focus → disabled →
-     aria-invalid → focus-visible!), so plain source order resolves every
-     overlap: focus beats hover (so a mouse-focused select still shows the halo,
-     not just the hover hairline), disabled beats both, aria-invalid beats those,
-     and the keyboard focus ring (!important) wins outright. */
+  /* States are kept at a single specificity level and ordered so plain source
+     order resolves every overlap: focus beats hover (so a focused select shows
+     the grey halo, not just the hover hairline), disabled beats both, and
+     aria-invalid beats those.
+
+     Focus is the grey --ds-focus-border on any :focus — matching our Input and
+     Textarea, which never show the blue --ds-focus-ring. Geist's <select>
+     markup additionally carries a keyboard-only blue ring via :focus-visible,
+     but <select> matches :focus-visible on *mouse* click in Chromium/Firefox,
+     so that ring also fired on click — inconsistent with the rest of our form
+     controls. Grey-on-any-focus keeps every field uniform. */
   .ds-select {
     box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
   }
   .ds-select:hover {
     box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
   }
-  /* Mouse focus → grey input-focus border. */
   .ds-select:focus {
     outline: none;
     box-shadow: var(--ds-focus-border);
@@ -294,10 +298,6 @@
     box-shadow:
       0 0 0 1px var(--ds-red-900),
       0 0 0 4px hsla(var(--ds-red-900-value), 0.16);
-  }
-  /* Keyboard focus → blue focus ring (wins via !important, matching Geist). */
-  .ds-select:focus-visible {
-    box-shadow: var(--ds-focus-ring) !important;
   }
   .ds-select > option {
     color: var(--ds-gray-1000);
