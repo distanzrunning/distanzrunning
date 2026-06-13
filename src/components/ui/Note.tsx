@@ -51,7 +51,7 @@ export interface NoteProps {
 function InfoIcon({ color }: { color: string }) {
   return (
     <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color }}>
-      <path fillRule="evenodd" clipRule="evenodd" d="M8 14.5C11.5899 14.5 14.5 11.5899 14.5 8C14.5 4.41015 11.5899 1.5 8 1.5C4.41015 1.5 1.5 4.41015 1.5 8C1.5 11.5899 4.41015 14.5 8 14.5ZM8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM6.25 7H7H7.74999C8.30227 7 8.74999 7.44772 8.74999 8V11.5V12.25H7.24999V11.5V8.5H7H6.25V7ZM8 6C8.55229 6 9 5.55228 9 5C9 4.44772 8.55229 4 8 4C7.44772 4 7 4.44772 7 5C7 5.55228 7.44772 6 8 6Z" fill="currentColor" />
+      <path fill="currentColor" fillRule="evenodd" clipRule="evenodd" d="M8 14.5a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M6.25 7h1.5a1 1 0 0 1 1 1v4.25h-1.5V8.5h-1zM8 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
     </svg>
   );
 }
@@ -59,7 +59,7 @@ function InfoIcon({ color }: { color: string }) {
 function SuccessIcon({ color }: { color: string }) {
   return (
     <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color }}>
-      <path fillRule="evenodd" clipRule="evenodd" d="M14.5 8C14.5 11.5899 11.5899 14.5 8 14.5C4.41015 14.5 1.5 11.5899 1.5 8C1.5 4.41015 4.41015 1.5 8 1.5C11.5899 1.5 14.5 4.41015 14.5 8ZM16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8ZM11.5303 6.53033L12.0607 6L11 4.93934L10.4697 5.46967L6.5 9.43934L5.53033 8.46967L5 7.93934L3.93934 9L4.46967 9.53033L5.96967 11.0303C6.26256 11.3232 6.73744 11.3232 7.03033 11.0303L11.5303 6.53033Z" fill="currentColor" />
+      <path fill="currentColor" fillRule="evenodd" clipRule="evenodd" d="M14.5 8a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.47-1.47.53-.53L11 4.94l-.53.53L6.5 9.44l-.97-.97L5 7.94 3.94 9l.53.53 1.5 1.5c.3.3.77.3 1.06 0z" />
     </svg>
   );
 }
@@ -76,7 +76,7 @@ function ErrorIcon({ color }: { color: string }) {
 function WarningIcon({ color }: { color: string }) {
   return (
     <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16" style={{ color }}>
-      <path fillRule="evenodd" clipRule="evenodd" d="M8.55846 2H7.44148L1.88975 13.5H14.1102L8.55846 2ZM9.90929 1.34788C9.65902 0.829456 9.13413 0.5 8.55846 0.5H7.44148C6.86581 0.5 6.34092 0.829454 6.09065 1.34787L0.192608 13.5653C-0.127943 14.2293 0.355835 15 1.09316 15H14.9068C15.6441 15 16.1279 14.2293 15.8073 13.5653L9.90929 1.34788ZM8.74997 4.75V5.5V8V8.75H7.24997V8V5.5V4.75H8.74997ZM7.99997 12C8.55226 12 8.99997 11.5523 8.99997 11C8.99997 10.4477 8.55226 10 7.99997 10C7.44769 10 6.99997 10.4477 6.99997 11C6.99997 11.5523 7.44769 12 7.99997 12Z" fill="currentColor" />
+      <path fill="currentColor" d="M8.56.5c.57 0 1.1.33 1.35.85l5.9 12.22a1 1 0 0 1-.9 1.43H1.09a1 1 0 0 1-.9-1.43L6.1 1.35A1.5 1.5 0 0 1 7.44.5zm-6.67 13h12.22L8.56 2H7.44zM8 10a1 1 0 1 1 0 2 1 1 0 0 1 0-2m.75-1.25h-1.5v-4h1.5z" />
     </svg>
   );
 }
@@ -99,7 +99,7 @@ const typeConfigs: Record<NoteType, TypeConfig> = {
   default: {
     borderColor: "var(--ds-gray-400)",
     fillBorderColor: "var(--ds-gray-400)",
-    textColor: "var(--ds-gray-800)",
+    textColor: "var(--ds-gray-900)",
     iconColor: "currentColor",
     fillBg: "transparent",
     className: "",
@@ -135,9 +135,9 @@ const typeConfigs: Record<NoteType, TypeConfig> = {
   secondary: {
     borderColor: "var(--ds-gray-alpha-400)",
     fillBorderColor: "transparent",
-    textColor: "rgba(0, 0, 0, 0.7)",
+    textColor: "var(--ds-gray-alpha-900)",
     iconColor: "currentColor",
-    fillBg: "var(--ds-gray-alpha-400)",
+    fillBg: "var(--ds-gray-alpha-200)",
     className: "geist-secondary",
     icon: (color) => <InfoIcon color={color} />,
   },
@@ -162,7 +162,7 @@ const typeConfigs: Record<NoteType, TypeConfig> = {
   tertiary: {
     borderColor: "var(--ds-gray-400)",
     fillBorderColor: "var(--ds-gray-400)",
-    textColor: "var(--ds-gray-800)",
+    textColor: "var(--ds-gray-900)",
     iconColor: "currentColor",
     fillBg: "transparent",
     className: "geist-tertiary",
@@ -180,7 +180,7 @@ const typeConfigs: Record<NoteType, TypeConfig> = {
   lite: {
     borderColor: "var(--ds-gray-400)",
     fillBorderColor: "var(--ds-gray-400)",
-    textColor: "var(--ds-gray-800)",
+    textColor: "var(--ds-gray-900)",
     iconColor: "currentColor",
     fillBg: "transparent",
     className: "geist-lite",
@@ -189,7 +189,7 @@ const typeConfigs: Record<NoteType, TypeConfig> = {
   ghost: {
     borderColor: "var(--ds-gray-400)",
     fillBorderColor: "var(--ds-gray-400)",
-    textColor: "var(--ds-gray-800)",
+    textColor: "var(--ds-gray-900)",
     iconColor: "currentColor",
     fillBg: "transparent",
     className: "geist-ghost",
@@ -198,7 +198,7 @@ const typeConfigs: Record<NoteType, TypeConfig> = {
   "rotate-ccw": {
     borderColor: "var(--ds-gray-400)",
     fillBorderColor: "var(--ds-gray-400)",
-    textColor: "var(--ds-gray-800)",
+    textColor: "var(--ds-gray-900)",
     iconColor: "currentColor",
     fillBg: "transparent",
     className: "geist-rotate-ccw",
@@ -211,6 +211,7 @@ interface SizeConfig {
   fontSize: string;
   gap: string;
   lineHeightPx: number;
+  minHeight: number;
 }
 
 const sizeConfigs: Record<NoteSize, SizeConfig> = {
@@ -219,18 +220,21 @@ const sizeConfigs: Record<NoteSize, SizeConfig> = {
     fontSize: "13px",
     gap: "8px",
     lineHeightPx: 20,
+    minHeight: 34,
   },
   default: {
     padding: "8px 12px",
     fontSize: "14px",
     gap: "12px",
     lineHeightPx: 21,
+    minHeight: 40,
   },
   large: {
     padding: "11px 12px",
     fontSize: "16px",
     gap: "12px",
     lineHeightPx: 24,
+    minHeight: 48,
   },
 };
 
@@ -267,9 +271,9 @@ export const Note = forwardRef<HTMLDivElement, NoteProps>(
     const contentGap = showLabel ? "4px" : sizeConfig.gap;
 
     const borderColor = disabled
-      ? "var(--ds-gray-alpha-400)"
+      ? "var(--ds-gray-alpha-200)"
       : fill ? typeConfig.fillBorderColor : typeConfig.borderColor;
-    const textColor = disabled ? "var(--ds-gray-600)" : typeConfig.textColor;
+    const textColor = disabled ? "var(--ds-gray-700)" : typeConfig.textColor;
     const paddingRight = action ? "8px" : undefined;
 
     const containerStyle: React.CSSProperties = {
@@ -281,6 +285,7 @@ export const Note = forwardRef<HTMLDivElement, NoteProps>(
       borderRadius: action ? 10 : 6,
       padding: sizeConfig.padding,
       ...(paddingRight ? { paddingRight } : {}),
+      minHeight: sizeConfig.minHeight,
       fontSize: sizeConfig.fontSize,
       lineHeight: 1.5,
       color: textColor,
@@ -299,14 +304,14 @@ export const Note = forwardRef<HTMLDivElement, NoteProps>(
             <div
             style={{
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-start",
               gap: contentGap,
               margin: 0,
             }}
           >
             {showIcon && (
               <span style={{ display: "flex", height: sizeConfig.lineHeightPx, alignItems: "center" }}>
-                {typeConfig.icon(disabled ? "var(--ds-gray-600)" : typeConfig.iconColor)}
+                {typeConfig.icon(disabled ? "var(--ds-gray-700)" : typeConfig.iconColor)}
               </span>
             )}
             {showLabel && (
