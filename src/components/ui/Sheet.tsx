@@ -158,18 +158,13 @@ const sidePositionStyles: Record<string, React.CSSProperties> = {
   bottom: { bottom: 0, left: 0, right: 0 },
 };
 
+// Geist's per-side defaults: right/left are 75% wide capped at sm (384px) and
+// full height; top/bottom span the width and size to their content.
 const sideClassNames: Record<string, string> = {
-  right: "h-full p-6",
-  left: "h-full p-6",
+  right: "h-full w-3/4 sm:max-w-[384px] p-6",
+  left: "h-full w-3/4 sm:max-w-[384px] p-6",
   top: "w-full p-6",
   bottom: "w-full p-6",
-};
-
-const defaultSizes: Record<string, string> = {
-  right: "384px",
-  left: "384px",
-  top: "auto",
-  bottom: "auto",
 };
 
 // ============================================================================
@@ -202,10 +197,13 @@ function SheetContent({
 }: SheetContentProps) {
   const { modal } = useContext(SheetContext);
   const isHorizontal = side === "left" || side === "right";
-  const resolvedSize = size || defaultSizes[side];
-  const sizeStyle: React.CSSProperties = isHorizontal
-    ? { width: resolvedSize }
-    : { height: resolvedSize };
+  // Apply an inline size only when explicitly given; otherwise the per-side
+  // classes carry Geist's defaults (right/left w-3/4 sm:max-w-sm, top/bottom auto).
+  const sizeStyle: React.CSSProperties = size
+    ? isHorizontal
+      ? { width: size }
+      : { height: size }
+    : {};
 
   return (
     <Dialog.Portal>
@@ -279,7 +277,7 @@ function SheetDescription({ children }: SheetDescriptionProps) {
       style={{
         fontSize: 14,
         lineHeight: "20px",
-        color: "hsl(var(--color-textSubtler))",
+        color: "hsl(var(--color-textSubtle))",
       }}
     >
       {children}
@@ -294,7 +292,7 @@ function SheetBody({ children }: { children: React.ReactNode }) {
       style={{
         fontSize: 14,
         lineHeight: "20px",
-        color: "hsl(var(--color-textDefault))",
+        color: "hsl(var(--color-textSubtle))",
       }}
     >
       {children}

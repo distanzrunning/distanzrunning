@@ -362,10 +362,7 @@ export function Component(): JSX.Element {
           <Sheet.Trigger>
             <Button>Open {side}</Button>
           </Sheet.Trigger>
-          <Sheet.Content
-            side={side}
-            size={side === 'left' || side === 'right' ? '75%' : undefined}
-          >
+          <Sheet.Content side={side}>
             <Sheet.Header>
               <Sheet.Title>Sheet from {side}</Sheet.Title>
               <Sheet.Description>
@@ -418,14 +415,14 @@ function DefaultDemo() {
 
 function SideSheetContent({ side }: { side: string }) {
   return (
-    <div className="flex flex-col text-center">
+    <div className="flex flex-col text-center sm:text-left">
       <h2
         className="font-semibold"
         style={{ fontSize: 18, lineHeight: "28px", color: "hsl(var(--color-textDefault))" }}
       >
         Sheet from {side}
       </h2>
-      <p style={{ fontSize: 14, lineHeight: "20px", color: "hsl(var(--color-textSubtler))" }}>
+      <p style={{ fontSize: 14, lineHeight: "20px", color: "hsl(var(--color-textSubtle))" }}>
         This sheet slides in from the {side}.
       </p>
     </div>
@@ -452,10 +449,7 @@ function WithSideDemo() {
             if (!open) setOpenSide(null);
           }}
         >
-          <Sheet.Content
-            side={side}
-            size={side === "left" || side === "right" ? "75%" : undefined}
-          >
+          <Sheet.Content side={side}>
             <SideSheetContent side={side} />
           </Sheet.Content>
         </Sheet>
