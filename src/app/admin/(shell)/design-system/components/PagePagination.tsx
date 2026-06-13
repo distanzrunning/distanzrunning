@@ -38,6 +38,7 @@ export default function PagePagination() {
 
   return (
     <Pagination
+      className="pt-8"
       previous={
         prevPage
           ? {
