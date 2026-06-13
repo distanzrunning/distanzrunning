@@ -217,7 +217,11 @@
   .ds-input-container {
     box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
   }
-  .ds-input-container:has(:not(input[disabled])):not(.ds-input--error):hover {
+  /* Brighten the ring on hover only when the input is enabled. Gating with
+     :not(:has(input:disabled)) (not :has(:not(input[disabled]))) is the fix:
+     the prefix/suffix labels always satisfy the latter, so a disabled input
+     would wrongly brighten. Geist keeps disabled at the gray-alpha-400 ring. */
+  .ds-input-container:not(:has(input:disabled)):not(.ds-input--error):hover {
     box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
   }
   .ds-input-container:focus-within:not(.ds-input--error) {
@@ -230,7 +234,7 @@
       0 0 0 1px var(--ds-red-900),
       0 0 0 4px var(--ds-red-300);
   }
-  .ds-input-container.ds-input--error:has(:not(input[disabled])):hover {
+  .ds-input-container.ds-input--error:not(:has(input:disabled)):hover {
     box-shadow:
       0 0 0 1px var(--ds-red-900),
       0 0 0 4px var(--ds-red-500);
@@ -273,7 +277,7 @@
   .ds-textarea-container {
     box-shadow: 0 0 0 1px var(--ds-gray-alpha-400);
   }
-  .ds-textarea-container:has(:not(textarea[disabled])):not(
+  .ds-textarea-container:not(:has(textarea:disabled)):not(
       .ds-textarea--error
     ):hover {
     box-shadow: 0 0 0 1px var(--ds-gray-alpha-500);
