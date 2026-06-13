@@ -28,6 +28,9 @@ interface ModalContextValue {
    * it here and let the Header own the spacing.
    */
   inHeader: boolean;
+  /** True when rendering inside a sticky <Modal.Header> — Geist shrinks the
+   *  title to 16px (mobile) / 20px (desktop) in that band. */
+  stickyHeader: boolean;
 }
 
 const ModalContext = createContext<ModalContextValue | null>(null);
@@ -74,19 +77,21 @@ function ModalTitle({
   children: ReactNode;
   className?: string;
 }) {
-  const { titleId } = useModalContext("Modal.Title");
+  const { titleId, stickyHeader } = useModalContext("Modal.Title");
   return (
     <h3
       id={titleId}
-      // Geist's modal title is literally the text-heading-24 token
-      // (24/32/-0.96px/600) — match it exactly rather than hand-rolling.
-      className={`text-heading-24 ${className ?? ""}`}
+      // Non-sticky: the title is literally Geist's text-heading-24 token
+      // (24/32/-0.96px/600). Inside a sticky header Geist shrinks it to
+      // text-base (16) / sm:text-xl (20) with leading-6 and pb-0 — our
+      // text-base/text-xl are remapped, so the sticky size is explicit.
+      className={`${stickyHeader ? "ds-modal-title-sticky" : "text-heading-24"} ${className ?? ""}`}
       style={{
         color: "var(--ds-gray-1000)",
-        // Geist title carries pb-1 (4px) to the subtitle; the body rhythm
-        // below is owned by Modal.P / Modal.Header's gap.
         margin: 0,
-        paddingBottom: 4,
+        ...(stickyHeader
+          ? { fontWeight: 600, letterSpacing: "-0.04em", paddingBottom: 0 }
+          : { paddingBottom: 4 }),
       }}
     >
       {children}
@@ -133,7 +138,7 @@ function ModalHeader({
 }) {
   const parent = useModalContext("Modal.Header");
   return (
-    <ModalContext.Provider value={{ ...parent, inHeader: true }}>
+    <ModalContext.Provider value={{ ...parent, inHeader: true, stickyHeader: sticky }}>
       <header
         className={className}
         style={
@@ -397,7 +402,7 @@ export function Modal({
   if (!mounted || typeof document === "undefined") return null;
 
   return createPortal(
-    <ModalContext.Provider value={{ titleId, inHeader: false }}>
+    <ModalContext.Provider value={{ titleId, inHeader: false, stickyHeader: false }}>
       {/* Backdrop. backdrop-filter: blur frosts the page behind
           the modal so even when the colour-contrast is subtle
           (notably dark mode, where a pure-black scrim on a
@@ -469,8 +474,9 @@ export function Modal({
             transition: `opacity ${effectiveDuration}ms ${TIMING}, transform ${effectiveDuration}ms ${TIMING}`,
           }}
         >
-          {/* Modal body */}
+          {/* Modal body — Geist sets text-copy-16 as the body's base size. */}
           <div
+            className="text-copy-16"
             style={{
               padding: `${
                 hasStickyHeader ? "0" : "var(--modal-padding)"
