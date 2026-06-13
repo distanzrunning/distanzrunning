@@ -151,8 +151,8 @@ function ModalHeader({
                 display: "flex",
                 flexDirection: "column",
                 gap: 10,
-                margin: "0 -24px 24px",
-                padding: "20px 24px",
+                margin: "0 calc(-1 * var(--modal-padding)) var(--modal-padding)",
+                padding: "20px var(--modal-padding)",
                 background: "var(--ds-modal-section-bg)",
                 borderBottom: "1px solid var(--ds-gray-alpha-400)",
               }
@@ -213,8 +213,8 @@ function ModalInset({
         borderBottom: __flushFooter
           ? "none"
           : "1px solid var(--ds-gray-alpha-400)",
-        margin: "0 -24px",
-        padding: 24,
+        margin: "0 calc(-1 * var(--modal-padding))",
+        padding: "var(--modal-padding)",
       }}
     >
       {children}
@@ -456,11 +456,16 @@ export function Modal({
           tabIndex={-1}
           className={`relative w-full mx-4 ${className}`}
           style={{
+            // Geist single-sources the modal geometry: --modal-padding feeds
+            // the body padding AND the negative-margin bleeds (inset, sticky
+            // header) so they can never drift; --modal-radius the corners.
+            ["--modal-padding" as string]: "24px",
+            ["--modal-radius" as string]: "12px",
             display: "flex",
             flexDirection: "column",
             maxWidth,
             maxHeight: "min(800px, 80vh)",
-            borderRadius: 12,
+            borderRadius: "var(--modal-radius)",
             background: "var(--ds-modal-panel-bg)",
             boxShadow: "var(--ds-shadow-modal)",
             color: "var(--ds-gray-1000)",
@@ -474,14 +479,20 @@ export function Modal({
           {/* Modal body */}
           <div
             style={{
-              padding: `${hasStickyHeader ? 0 : 24}px 24px ${
-                lastChildIsInset && footerChild ? 0 : 24
-              }px`,
+              padding: `${
+                hasStickyHeader ? "0" : "var(--modal-padding)"
+              } var(--modal-padding) ${
+                lastChildIsInset && footerChild ? "0" : "var(--modal-padding)"
+              }`,
               overflowX: "hidden",
               overflowY: "auto",
               position: "relative",
-              borderTopLeftRadius: hasStickyHeader ? 12 : undefined,
-              borderTopRightRadius: hasStickyHeader ? 12 : undefined,
+              borderTopLeftRadius: hasStickyHeader
+                ? "var(--modal-radius)"
+                : undefined,
+              borderTopRightRadius: hasStickyHeader
+                ? "var(--modal-radius)"
+                : undefined,
             }}
           >
             {lastChildIsInset && footerChild

@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/useShikiHighlighter";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
 
 // ============================================================================
 // Toast Component
@@ -769,6 +771,164 @@ function InitialFocusDemo() {
   );
 }
 
+const focusInputCode = `import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
+import { useRef, useState } from 'react';
+
+export function Component() {
+  const [open, setOpen] = useState(false);
+  const nameRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <>
+      <Button size="small" onClick={() => setOpen(true)}>Open Modal</Button>
+      <Modal open={open} onClose={() => setOpen(false)} initialFocusRef={nameRef}>
+        <Modal.Title>Invite Member</Modal.Title>
+        <Modal.P>
+          The Name field receives focus when the Modal opens so the user can
+          start typing immediately.
+        </Modal.P>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <Label htmlFor="invite-name">Name</Label>
+          <Input id="invite-name" ref={nameRef} placeholder="Jane Doe" />
+        </div>
+        <Modal.Footer>
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: 16 }}>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpen(false)}>Send Invite</Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}`;
+
+const mobileSheetCode = `import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
+import { useState } from 'react';
+
+export function Component() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button size="small" onClick={() => setOpen(true)}>Open Modal</Button>
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Invite Member</Modal.Title>
+        <Modal.P>
+          On a mobile viewport this opens as a bottom sheet. Both inputs
+          receive focus and accept keyboard input.
+        </Modal.P>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div>
+            <Label htmlFor="ms-name">Name</Label>
+            <Input id="ms-name" placeholder="Jane Doe" />
+          </div>
+          <div>
+            <Label htmlFor="ms-email">Email</Label>
+            <Input id="ms-email" placeholder="jane@example.com" />
+          </div>
+        </div>
+        <Modal.Footer>
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: 16 }}>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpen(false)}>Send Invite</Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}`;
+
+function FocusInputDemo() {
+  const [open, setOpen] = useState(false);
+  const nameRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <>
+      <Button size="small" onClick={() => setOpen(true)}>
+        Open Modal
+      </Button>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        initialFocusRef={nameRef}
+      >
+        <Modal.Title>Invite Member</Modal.Title>
+        <Modal.P>
+          The Name field receives focus when the Modal opens so the user can
+          start typing immediately.
+        </Modal.P>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <Label htmlFor="invite-name">Name</Label>
+          <Input id="invite-name" ref={nameRef} placeholder="Jane Doe" />
+        </div>
+        <Modal.Footer>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 16,
+            }}
+          >
+            <Button variant="secondary" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setOpen(false)}>Send Invite</Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+
+function MobileSheetDemo() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button size="small" onClick={() => setOpen(true)}>
+        Open Modal
+      </Button>
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Title>Invite Member</Modal.Title>
+        <Modal.P>
+          On a mobile viewport this opens as a bottom sheet. Both inputs
+          receive focus and accept keyboard input.
+        </Modal.P>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div>
+            <Label htmlFor="ms-name">Name</Label>
+            <Input id="ms-name" placeholder="Jane Doe" />
+          </div>
+          <div>
+            <Label htmlFor="ms-email">Email</Label>
+            <Input id="ms-email" placeholder="jane@example.com" />
+          </div>
+        </div>
+        <Modal.Footer>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: 16,
+            }}
+          >
+            <Button variant="secondary" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setOpen(false)}>Send Invite</Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -852,6 +1012,30 @@ export default function ModalComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={initialFocusCode}>
             <InitialFocusDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Focus an input on open */}
+      <Section>
+        <SectionHeader id="focus-an-input-on-open" onCopyLink={showToast}>
+          Focus an input on open
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={focusInputCode}>
+            <FocusInputDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Mobile sheet with inputs */}
+      <Section>
+        <SectionHeader id="mobile-sheet-with-inputs" onCopyLink={showToast}>
+          Mobile sheet with inputs
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={mobileSheetCode}>
+            <MobileSheetDemo />
           </CodePreview>
         </div>
       </Section>
