@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Button } from "@/components/ui/Button";
 
 // ============================================================================
 // Types
@@ -57,7 +56,7 @@ function CopyIcon() {
       <path
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M2.75 0.5C1.7835 0.5 1 1.2835 1 2.25V9.75C1 10.7165 1.7835 11.5 2.75 11.5H3.75H4.5V10H3.75H2.75C2.61193 10 2.5 9.88807 2.5 9.75V2.25C2.5 2.11193 2.61193 2 2.75 2H8.25C8.38807 2 8.5 2.11193 8.5 2.25V3H10V2.25C10 1.2835 9.2165 0.5 8.25 0.5H2.75ZM7.75 4.5C6.7835 4.5 6 5.2835 6 6.25V13.75C6 14.7165 6.7835 15.5 7.75 15.5H13.25C14.2165 15.5 15 14.7165 15 13.75V6.25C15 5.2835 14.2165 4.5 13.25 4.5H7.75ZM7.5 6.25C7.5 6.11193 7.61193 6 7.75 6H13.25C13.3881 6 13.5 6.11193 13.5 6.25V13.75C13.5 13.8881 13.3881 14 13.25 14H7.75C7.61193 14 7.5 13.8881 7.5 13.75V6.25Z"
+        d="M8.25 2c.14 0 .25.11.25.25V3H10v-.75C10 1.28 9.22.5 8.25.5h-5.5C1.78.5 1 1.28 1 2.25v7.5c0 .97.78 1.75 1.75 1.75H4.5V10H2.75a.25.25 0 0 1-.25-.25v-7.5c0-.14.11-.25.25-.25zm5 4c.14 0 .25.11.25.25v7.5q-.02.23-.25.25h-5.5a.25.25 0 0 1-.25-.25v-7.5c0-.14.11-.25.25-.25zm0 9.5c.97 0 1.75-.78 1.75-1.75v-7.5c0-.97-.78-1.75-1.75-1.75h-5.5C6.78 4.5 6 5.28 6 6.25v7.5c0 .97.78 1.75 1.75 1.75z"
         fill="currentColor"
       />
     </svg>
@@ -76,7 +75,7 @@ function CheckIcon() {
       <path
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M15.5607 3.99999L15.0303 4.53032L6.23744 13.3232C5.55403 14.0066 4.44599 14.0066 3.76257 13.3232L4.2929 12.7929L3.76257 13.3232L0.969676 10.5303L0.439346 9.99999L1.50001 8.93933L2.03034 9.46966L4.82323 12.2626C4.92086 12.3602 5.07915 12.3602 5.17678 12.2626L13.9697 3.46966L14.5 2.93933L15.5607 3.99999Z"
+        d="m15.56 4-.53.53-8.8 8.8c-.68.68-1.78.68-2.47 0l.53-.54-.53.53-2.79-2.79L.44 10 1.5 8.94l.53.53 2.8 2.8c.1.09.25.09.35 0l8.79-8.8.53-.53z"
         fill="currentColor"
       />
     </svg>
@@ -87,10 +86,26 @@ function CheckIcon() {
 // Snippet Component
 // ============================================================================
 
-const variantStyles: Record<string, { bg: string; color: string }> = {
-  success: { bg: "var(--ds-blue-100)", color: "var(--ds-blue-900)" },
-  error: { bg: "var(--ds-red-100)", color: "var(--ds-red-900)" },
-  warning: { bg: "var(--ds-amber-100)", color: "var(--ds-amber-900)" },
+// Geist's geist-new-themed.* tokens: each variant sets fg + bg + border.
+const variantStyles: Record<
+  string,
+  { bg: string; color: string; border: string }
+> = {
+  success: {
+    bg: "var(--ds-blue-100)",
+    color: "var(--ds-blue-900)",
+    border: "var(--ds-blue-400)",
+  },
+  error: {
+    bg: "var(--ds-red-100)",
+    color: "var(--ds-red-900)",
+    border: "var(--ds-red-400)",
+  },
+  warning: {
+    bg: "var(--ds-amber-100)",
+    color: "var(--ds-amber-900)",
+    border: "var(--ds-amber-400)",
+  },
 };
 
 function resolveClipboardText(
@@ -174,9 +189,18 @@ export function Snippet({
         height: "auto",
         borderRadius: 6,
         padding: "10px 48px 10px 12px",
-        border: "1px solid var(--ds-gray-alpha-400)",
-        background: vs ? vs.bg : "hsl(var(--color-surface))",
-        color: vs ? vs.color : "hsl(var(--color-textDefault))",
+        // Inverted (dark) keeps the gray-alpha-400 border; variants recolour it.
+        border: `1px solid ${vs ? vs.border : "var(--ds-gray-alpha-400)"}`,
+        background: vs
+          ? vs.bg
+          : dark
+            ? "var(--ds-gray-1000)"
+            : "hsl(var(--color-surface))",
+        color: vs
+          ? vs.color
+          : dark
+            ? "var(--ds-gray-100)"
+            : "hsl(var(--color-textDefault))",
         position: "relative",
       }}
     >
@@ -294,15 +318,15 @@ export function Snippet({
       >
         <div style={{ position: "relative", height: 16, width: 16 }}>
           <span
-            className={`absolute inset-0 transition-all duration-150 ease-out ${
-              isCopied ? "opacity-100 scale-100" : "opacity-0 scale-75"
+            className={`absolute inset-0 transition-all duration-200 ease-in-out ${
+              isCopied ? "opacity-100 scale-100" : "opacity-0 scale-50"
             }`}
           >
             <CheckIcon />
           </span>
           <span
-            className={`absolute inset-0 transition-all duration-150 ease-out ${
-              isCopied ? "opacity-0 scale-75" : "opacity-100 scale-100"
+            className={`absolute inset-0 transition-all duration-200 ease-in-out ${
+              isCopied ? "opacity-0 scale-50" : "opacity-100 scale-100"
             }`}
           >
             <CopyIcon />

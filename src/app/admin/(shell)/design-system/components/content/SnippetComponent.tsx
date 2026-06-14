@@ -359,17 +359,6 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const placeholderCode = `import { Snippet } from '@/components/ui/Snippet';
-
-export function Component(): JSX.Element {
-  return (
-    <Snippet
-      text=""
-      placeholder="Run vercel link to fetch env vars"
-      width={300}
-    />
-  );
-}`;
 
 const controlledCopiedCode = `import { Snippet } from '@/components/ui/Snippet';
 
@@ -428,16 +417,6 @@ function VariantsDemo() {
       <Snippet text="npm init next-app" width={300} variant="error" />
       <Snippet text="npm init next-app" width={300} variant="warning" />
     </div>
-  );
-}
-
-function PlaceholderDemo() {
-  return (
-    <Snippet
-      text=""
-      placeholder="Run vercel link to fetch env vars"
-      width={300}
-    />
   );
 }
 
@@ -554,28 +533,6 @@ export default function SnippetComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={variantsCode}>
             <VariantsDemo />
-          </CodePreview>
-        </div>
-      </Section>
-
-      <Section>
-        <SectionHeader id="placeholder" onCopyLink={showToast}>
-          Placeholder
-        </SectionHeader>
-        <p
-          className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "hsl(var(--color-textSubtle))" }}
-        >
-          Pair{" "}
-          <code className="inline-code">placeholder</code> with{" "}
-          <code className="inline-code">text=&quot;&quot;</code> for
-          an empty state. The placeholder is informational only — the
-          copy button stays disabled and the clipboard receives
-          nothing.
-        </p>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={placeholderCode}>
-            <PlaceholderDemo />
           </CodePreview>
         </div>
       </Section>
