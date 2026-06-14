@@ -333,6 +333,26 @@
     color: var(--ds-gray-800);
   }
 
+  /* Status Dot: in-flight states (QUEUED / BUILDING) pulse; static once terminal.
+     Defined here rather than runtime-injected (which served stale CSS). */
+  @keyframes ds-status-dot-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.45;
+    }
+  }
+  .ds-status-dot--pulse {
+    animation: ds-status-dot-pulse 1.4s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-status-dot--pulse {
+      animation: none;
+    }
+  }
+
   /* Split Button: blue focus ring on either half (Geist focus:shadow-focus-ring
      focus:z-[2]); !important to beat the inline box-shadow:none. The divider is
      a hairline whose colour is theme-aware for the filled default and gray-300

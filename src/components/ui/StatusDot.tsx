@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 
 // ============================================================================
 // Types
@@ -66,36 +66,10 @@ function sentenceCaseState(state: State): string {
 }
 
 // ============================================================================
-// Pulse keyframes (injected once)
-// ============================================================================
-
-const PULSE_STYLE_ID = "ds-status-dot-style";
-
-function ensurePulseStyles() {
-  if (typeof document === "undefined") return;
-  if (document.getElementById(PULSE_STYLE_ID)) return;
-  const style = document.createElement("style");
-  style.id = PULSE_STYLE_ID;
-  style.textContent = `
-    @keyframes ds-status-dot-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.45; }
-    }
-    .ds-status-dot--pulse {
-      animation: ds-status-dot-pulse 1.4s ease-in-out infinite;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .ds-status-dot--pulse {
-        animation: none;
-      }
-    }
-  `;
-  document.head.appendChild(style);
-}
-
-// ============================================================================
 // Component
 // ============================================================================
+// Pulse keyframes (`ds-status-dot-pulse` / `.ds-status-dot--pulse`) live in
+// globals.css — not injected at runtime, which served stale CSS after edits.
 
 export function StatusDot({
   state,
@@ -104,10 +78,6 @@ export function StatusDot({
   "aria-hidden": ariaHidden,
   className,
 }: StatusDotProps) {
-  useEffect(() => {
-    ensurePulseStyles();
-  }, []);
-
   const color = stateColors[state];
   const message = stateMessages[state];
   const ariaLabel = ariaHidden ? undefined : `${titlePrefix} ${message}.`;
