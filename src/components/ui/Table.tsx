@@ -150,7 +150,10 @@ const TableCell = forwardRef<
   <td
     ref={ref}
     className={cn(
-      "px-2 py-2.5 align-middle whitespace-nowrap last:text-right [&:has([data-cell-link=true])]:p-0 [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      // No blanket whitespace-nowrap here (Geist has it): real consumers rely on
+      // wrapping inside max-w-capped cells, and the local cn can't reliably
+      // override it. Callers opt into nowrap per-cell where they need it.
+      "px-2 py-2.5 align-middle last:text-right [&:has([data-cell-link=true])]:p-0 [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
       className,
     )}
     {...props}
