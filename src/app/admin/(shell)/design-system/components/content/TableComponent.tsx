@@ -574,7 +574,7 @@ const COLLAPSED_ROWS = 9;
 export function Component({ data }: { data: string[][] }): JSX.Element {
   const [expanded, setExpanded] = useState(false);
   const rows = expanded ? data : data.slice(0, COLLAPSED_ROWS);
-  const remaining = data.length - rows.length;
+  const collapsible = data.length > COLLAPSED_ROWS;
 
   return (
     <div className="relative">
@@ -603,19 +603,24 @@ export function Component({ data }: { data: string[][] }): JSX.Element {
         </TableBody>
       </Table>
 
-      {remaining > 0 && (
+      {collapsible && (expanded ? (
+        <div className="mt-3 flex justify-center">
+          <Button variant="secondary" size="small" className="!rounded-full" onClick={() => setExpanded(false)}>
+            Show Less
+            <ChevronDown className="ml-1 h-4 w-4 rotate-180" />
+          </Button>
+        </div>
+      ) : (
         <>
           <div className="pointer-events-none absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-[hsl(var(--color-surface))] to-transparent" />
-          <div className="absolute bottom-4 left-5 right-5 flex items-center gap-3">
-            <div className="h-px grow bg-[var(--ds-gray-alpha-400)]" />
-            <Button variant="secondary" size="small" className="shrink-0 rounded-full" onClick={() => setExpanded(true)}>
+          <div className="absolute inset-x-0 bottom-4 flex justify-center">
+            <Button variant="secondary" size="small" className="!rounded-full" onClick={() => setExpanded(true)}>
               Show More
               <ChevronDown className="ml-1 h-4 w-4" />
             </Button>
-            <div className="h-px grow bg-[var(--ds-gray-alpha-400)]" />
           </div>
         </>
-      )}
+      ))}
     </div>
   );
 }`;
@@ -836,7 +841,7 @@ const COLLAPSED_ROWS = 9;
 function VirtualizedDemo() {
   const [expanded, setExpanded] = useState(false);
   const rows = expanded ? VIRTUAL_DATA : VIRTUAL_DATA.slice(0, COLLAPSED_ROWS);
-  const remaining = VIRTUAL_DATA.length - rows.length;
+  const collapsible = VIRTUAL_DATA.length > COLLAPSED_ROWS;
 
   return (
     <div className="relative">
@@ -866,25 +871,37 @@ function VirtualizedDemo() {
         </TableBody>
       </Table>
 
-      {remaining > 0 && (
-        <>
-          {/* Fade the last rows into the surface, then the centred control. */}
-          <div className="pointer-events-none absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-[hsl(var(--color-surface))] to-transparent" />
-          <div className="absolute bottom-4 left-5 right-5 flex items-center gap-3">
-            <div className="h-px grow bg-[var(--ds-gray-alpha-400)]" />
+      {collapsible &&
+        (expanded ? (
+          // Expanded: no fade, the control toggles back to the preview.
+          <div className="mt-3 flex justify-center">
             <Button
               variant="secondary"
               size="small"
-              className="shrink-0 !rounded-full"
-              onClick={() => setExpanded(true)}
+              className="!rounded-full"
+              onClick={() => setExpanded(false)}
             >
-              Show More
-              <ChevronDown className="ml-1 h-4 w-4" />
+              Show Less
+              <ChevronDown className="ml-1 h-4 w-4 rotate-180" />
             </Button>
-            <div className="h-px grow bg-[var(--ds-gray-alpha-400)]" />
           </div>
-        </>
-      )}
+        ) : (
+          // Collapsed: fade the last rows into the surface; control floats over it.
+          <>
+            <div className="pointer-events-none absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-[hsl(var(--color-surface))] to-transparent" />
+            <div className="absolute inset-x-0 bottom-4 flex justify-center">
+              <Button
+                variant="secondary"
+                size="small"
+                className="!rounded-full"
+                onClick={() => setExpanded(true)}
+              >
+                Show More
+                <ChevronDown className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
+          </>
+        ))}
     </div>
   );
 }
