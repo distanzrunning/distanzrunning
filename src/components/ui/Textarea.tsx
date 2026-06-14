@@ -14,7 +14,9 @@ const SIZE_CONFIG: Record<
   TextareaSize,
   { fontSize: number; paddingX: number; borderRadius: number }
 > = {
-  xSmall: { fontSize: 12, paddingX: 8, borderRadius: 6 },
+  // Geist textareas keep a constant px-3 (12px) horizontal pad across sizes
+  // (only Input narrows to px-2 at xSmall); font-size and radius vary.
+  xSmall: { fontSize: 12, paddingX: 12, borderRadius: 6 },
   small: { fontSize: 14, paddingX: 12, borderRadius: 6 },
   default: { fontSize: 14, paddingX: 12, borderRadius: 6 },
   large: { fontSize: 16, paddingX: 12, borderRadius: 8 },
@@ -131,7 +133,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             background: "hsl(var(--color-surface))",
             transition: "box-shadow 0.15s ease",
             overflow: "hidden",
-            ...(disabled ? { cursor: "not-allowed", opacity: 0.5 } : {}),
+            // Geist disabled stays full-opacity (gray-100 fill + gray-700 text);
+            // a container opacity here would fade the field the globals can't undo.
+            ...(disabled ? { cursor: "not-allowed" } : {}),
           }}
         >
           <textarea
@@ -168,18 +172,20 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           />
         </div>
 
-        {/* Error message — replaces helper text on failure */}
+        {/* Error message — replaces helper text on failure. Geist sizes the
+            message with the field: large is 16/24, the rest 13/20. Items align
+            to the top so the icon sits with the first line. */}
         {error && errorMessage && (
           <div
             id={errorId}
             className="ds-textarea-error"
             style={{
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-start",
               gap: 8,
               marginTop: 8,
-              fontSize: 13,
-              lineHeight: "20px",
+              fontSize: size === "large" ? 16 : 13,
+              lineHeight: size === "large" ? "24px" : "20px",
               color: "var(--ds-red-900)",
             }}
           >

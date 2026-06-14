@@ -339,26 +339,15 @@ export function Component(): JSX.Element {
 const errorCode = `import { Textarea } from '@/components/ui/Textarea';
 import type { JSX } from 'react';
 
-export function Component(): JSX.Element {
-  return (
-    <Textarea
-      error
-      errorMessage="There has been an error."
-      value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    />
-  );
-}`;
-
-const labelHelperCode = `import { Textarea } from '@/components/ui/Textarea';
-import type { JSX } from 'react';
+const sizes = ['xSmall', 'small', 'default', 'large'] as const;
 
 export function Component(): JSX.Element {
   return (
-    <Textarea
-      label="Release Notes"
-      placeholder="What changed in this release?"
-      helperText="Markdown is supported and rendered on the release page."
-    />
+    <div className="flex flex-col gap-8">
+      {sizes.map((size) => (
+        <Textarea key={size} size={size} error errorMessage="There has been an error." defaultValue="…" />
+      ))}
+    </div>
   );
 }`;
 
@@ -404,21 +393,18 @@ function DisabledDemo() {
 
 function ErrorDemo() {
   return (
-    <Textarea
-      error
-      errorMessage="There has been an error."
-      defaultValue={LOREM}
-    />
-  );
-}
-
-function LabelHelperDemo() {
-  return (
-    <Textarea
-      label="Release Notes"
-      placeholder="What changed in this release?"
-      helperText="Markdown is supported and rendered on the release page."
-    />
+    <div className="flex flex-col items-stretch justify-start gap-8">
+      {(["xSmall", "small", "default", "large"] as const).map((size) => (
+        <Textarea
+          key={size}
+          size={size}
+          error
+          errorMessage="There has been an error."
+          defaultValue={LOREM}
+          aria-label={`With error (${size})`}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -518,27 +504,6 @@ export default function TextareaComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={rowsCode}>
             <RowsDemo />
-          </CodePreview>
-        </div>
-      </Section>
-
-      <Section>
-        <SectionHeader id="label-and-helper-text" onCopyLink={showToast}>
-          Label and helper text
-        </SectionHeader>
-        <p
-          className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "hsl(var(--color-textSubtle))" }}
-        >
-          Pass <code className="inline-code">label</code> for a Title
-          Case noun and <code className="inline-code">helperText</code>{" "}
-          for guidance. The component wires{" "}
-          <code className="inline-code">aria-describedby</code> and
-          hides the helper text when an error message is shown.
-        </p>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={labelHelperCode}>
-            <LabelHelperDemo />
           </CodePreview>
         </div>
       </Section>
