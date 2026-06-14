@@ -333,6 +333,35 @@
     color: var(--ds-gray-800);
   }
 
+  /* Tabs: scroll the row but reveal the focus ring when a tab is keyboard-focused
+     (Geist has-[:focus-visible]:overflow-visible); hide the scrollbar. Focus ring
+     + not-disabled hover live here rather than runtime-injected (stale-CSS fix). */
+  .ds-tabs-list {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .ds-tabs-list::-webkit-scrollbar {
+    display: none;
+  }
+  .ds-tabs-list:has(:focus-visible) {
+    overflow: visible;
+  }
+  .ds-tabs-tab {
+    outline: none;
+  }
+  /* No border-radius here: the ring follows each tab's own radius — square for
+     primary, rounded for the secondary pill. */
+  .ds-tabs-tab:focus-visible {
+    box-shadow: var(--ds-focus-ring);
+  }
+  /* Default-variant hover darkens non-selected, non-disabled tabs to gray-1000
+     (Geist not-disabled:hover). !important beats the inline color. */
+  @media (hover: hover) {
+    .ds-tabs-tab[data-variant="default"]:not([aria-selected="true"]):not(:disabled):hover {
+      color: var(--ds-gray-1000) !important;
+    }
+  }
+
   /* Status Dot: in-flight states (QUEUED / BUILDING) pulse; static once terminal.
      Defined here rather than runtime-injected (which served stale CSS). */
   @keyframes ds-status-dot-pulse {
