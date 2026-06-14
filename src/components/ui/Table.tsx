@@ -32,7 +32,7 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
   ({ className, striped, bordered, interactive, children, ...props }, ref) => {
     return (
       <TableContext.Provider value={{ striped, bordered, interactive }}>
-        <div className="relative w-full overflow-auto">
+        <div className="relative w-full overflow-x-auto">
           <table
             ref={ref}
             className={cn(
@@ -61,7 +61,7 @@ const TableHeader = forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={cn("[&_th]:border-b", className)}
+    className={cn("[&_tr]:border-borderDefault [&_tr]:border-b", className)}
     {...props}
   />
 ));
@@ -78,20 +78,27 @@ const TableBody = forwardRef<
   const { striped, bordered, interactive } = useContext(TableContext);
 
   return (
-    <tbody
-      ref={ref}
-      className={cn(
-        "[&_td:first-child]:rounded-l [&_td:last-child]:rounded-r",
-        striped &&
-          "[&_tr:where(:nth-child(odd))]:bg-surface",
-        bordered && "[&_tr:not(:last-child)]:border-b",
-        interactive && "[&_tr:hover]:bg-[var(--ds-gray-100)]",
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </tbody>
+    <>
+      {/* Geist inserts a block spacer tbody so a 12px gap sits between the
+          header underline and the first data row. */}
+      <tbody aria-hidden="true" className="h-3 block" />
+      <tbody
+        ref={ref}
+        className={cn(
+          "[&_td:first-child]:rounded-l-sm [&_td:last-child]:rounded-r-sm",
+          // Zebra rows use the recessed canvas tone (bg-200) so they read
+          // against the bg-100 table — NOT bg-surface, which is the same tone.
+          striped && "[&_tr:where(:nth-child(odd))]:bg-canvas",
+          bordered &&
+            "[&_tr:not(:last-child)]:border-b [&_tr:not(:last-child)]:border-borderDefault",
+          interactive && "[&_tr:hover]:bg-[var(--ds-gray-100)]",
+          className,
+        )}
+        {...props}
+      >
+        {children}
+      </tbody>
+    </>
   );
 });
 TableBody.displayName = "TableBody";
@@ -123,7 +130,7 @@ const TableHead = forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-10 px-2 text-left align-middle font-medium last:text-right border-borderDefault",
+      "h-10 px-2 text-left align-middle font-medium whitespace-nowrap last:text-right border-borderDefault [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
       className,
     )}
     style={{ color: "hsl(var(--color-textSubtle))" }}
@@ -142,7 +149,10 @@ const TableCell = forwardRef<
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn("px-2 py-2.5 align-middle last:text-right", className)}
+    className={cn(
+      "px-2 py-2.5 align-middle whitespace-nowrap last:text-right [&:has([data-cell-link=true])]:p-0 [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      className,
+    )}
     {...props}
   />
 ));
@@ -158,7 +168,10 @@ const TableFooter = forwardRef<
 >(({ className, ...props }, ref) => (
   <tfoot
     ref={ref}
-    className={cn("font-medium [&_td]:border-t", className)}
+    className={cn(
+      "border-borderDefault font-medium border-t [&>tr]:last:border-b-0",
+      className,
+    )}
     {...props}
   />
 ));

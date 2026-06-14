@@ -550,8 +550,10 @@ export function Component(): JSX.Element {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={3}>Subtotal</TableCell>
-          <TableCell>$24,000.00</TableCell>
+          <TableCell colSpan={3} className="text-gray-1000">
+            Subtotal
+          </TableCell>
+          <TableCell className="text-gray-1000">$24,000.00</TableCell>
         </TableRow>
       </TableFooter>
     </Table>
@@ -743,8 +745,10 @@ function FullFeaturedDemo() {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={3}>Subtotal</TableCell>
-          <TableCell>$24,000.00</TableCell>
+          <TableCell colSpan={3} className="text-gray-1000">
+            Subtotal
+          </TableCell>
+          <TableCell className="text-gray-1000">$24,000.00</TableCell>
         </TableRow>
       </TableFooter>
     </Table>
@@ -761,8 +765,8 @@ export default function TableComponent() {
   return (
     <>
       <Section>
-        <SectionHeader id="basic" onCopyLink={showToast}>
-          Basic
+        <SectionHeader id="basic-table" onCopyLink={showToast}>
+          Basic table
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={basicCode}>
@@ -772,8 +776,8 @@ export default function TableComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="striped" onCopyLink={showToast}>
-          Striped
+        <SectionHeader id="striped-table" onCopyLink={showToast}>
+          Striped table
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={stripedCode}>
@@ -783,8 +787,8 @@ export default function TableComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="bordered" onCopyLink={showToast}>
-          Bordered
+        <SectionHeader id="bordered-table" onCopyLink={showToast}>
+          Bordered table
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={borderedCode}>
@@ -794,8 +798,8 @@ export default function TableComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="interactive" onCopyLink={showToast}>
-          Interactive
+        <SectionHeader id="interactive-table" onCopyLink={showToast}>
+          Interactive table
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={interactiveCode}>
@@ -805,8 +809,8 @@ export default function TableComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="full-featured" onCopyLink={showToast}>
-          Full Featured
+        <SectionHeader id="full-featured-table" onCopyLink={showToast}>
+          Full featured table
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={fullFeaturedCode}>
