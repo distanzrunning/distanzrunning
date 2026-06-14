@@ -316,6 +316,46 @@
     color: var(--ds-gray-800);
   }
 
+  /* Slider thumb (Geist-verbatim): white 6×14 chip, hairline shadow (solid
+     black ring in dark), transition-all 200ms, a 200% invisible hit area, and
+     a hover/focus scale that a disabled thumb never gets. Lives here (not
+     injected at runtime) so it always ships fresh with the build. */
+  .ds-slider-thumb {
+    position: relative;
+    border-radius: 1px;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.21),
+      0px 1px 2px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+  }
+  .ds-slider-thumb::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 200%;
+    width: 200%;
+  }
+  .ds-slider-thumb:hover:not(.ds-slider-thumb--disabled),
+  .ds-slider-thumb:focus-visible:not(.ds-slider-thumb--disabled) {
+    transform: scale(1.2);
+  }
+  .ds-slider-thumb:focus-visible {
+    outline: none;
+  }
+  .ds-slider-thumb--disabled,
+  .ds-slider-thumb--disabled:hover,
+  .ds-slider-thumb--disabled:focus-visible {
+    transform: none !important;
+  }
+  .dark .ds-slider-thumb {
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 1),
+      0px 1px 2px rgba(0, 0, 0, 0.04);
+  }
+
   /* Sticky modal title — Geist shrinks the title inside a sticky header to
      text-base (16px) on mobile and sm:text-xl (20px) on desktop, leading-6.
      Our text-base/text-xl are remapped, so the px are explicit here. */

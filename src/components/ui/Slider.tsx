@@ -58,58 +58,8 @@ function getPercentFromEvent(
   return clamp((e.clientX - rect.left) / rect.width, 0, 1);
 }
 
-// ============================================================================
-// Thumb hover/focus styles (injected once)
-// ============================================================================
-
-const THUMB_STYLE_ID = "ds-slider-thumb-style";
-
-function ensureThumbStyles() {
-  if (typeof document === "undefined") return;
-  if (document.getElementById(THUMB_STYLE_ID)) return;
-  const style = document.createElement("style");
-  style.id = THUMB_STYLE_ID;
-  // Geist-verbatim thumb chrome: white 6×14 chip, rounded-[1px], a hairline
-  // shadow (solid-black ring in dark mode), transition-all 200ms, and a 200%
-  // invisible ::after hit area so the tiny thumb is easy to grab. Shadow lives
-  // here (not inline) so the dark-mode override can win the cascade.
-  style.textContent = `
-    .ds-slider-thumb {
-      position: relative;
-      border-radius: 1px;
-      background: #fff;
-      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.21), 0px 1px 2px rgba(0, 0, 0, 0.04);
-      transition: all 0.2s ease;
-    }
-    .ds-slider-thumb::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      height: 200%;
-      width: 200%;
-    }
-    .ds-slider-thumb:hover:not(.ds-slider-thumb--disabled),
-    .ds-slider-thumb:focus-visible:not(.ds-slider-thumb--disabled) {
-      transform: scale(1.2);
-    }
-    /* Belt-and-suspenders: a disabled thumb never scales, even if some other
-       transform tries to apply. */
-    .ds-slider-thumb--disabled,
-    .ds-slider-thumb--disabled:hover,
-    .ds-slider-thumb--disabled:focus-visible {
-      transform: none !important;
-    }
-    .ds-slider-thumb:focus-visible {
-      outline: none;
-    }
-    .dark .ds-slider-thumb {
-      box-shadow: 0 0 0 1px rgba(0, 0, 0, 1), 0px 1px 2px rgba(0, 0, 0, 0.04);
-    }
-  `;
-  document.head.appendChild(style);
-}
+// Thumb chrome (incl. hover scale + disabled lock) lives in globals.css under
+// `.ds-slider-thumb` so it ships with the build — no runtime style injection.
 
 /**
  * Standard ARIA slider keyboard pattern. Returns the new value for
@@ -171,10 +121,6 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
     const currentValue = isControlled ? controlledValue : internalValue;
     const trackRef = useRef<HTMLSpanElement>(null);
     const dragging = useRef(false);
-
-    useEffect(() => {
-      ensureThumbStyles();
-    }, []);
 
     useEffect(() => {
       if (isControlled) setInternalValue(controlledValue);
@@ -344,10 +290,6 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
     const currentValue = isControlled ? controlledValue : internalValue;
     const trackRef = useRef<HTMLSpanElement>(null);
     const activeThumb = useRef<0 | 1 | null>(null);
-
-    useEffect(() => {
-      ensureThumbStyles();
-    }, []);
 
     useEffect(() => {
       if (isControlled) setInternalValue(controlledValue);
