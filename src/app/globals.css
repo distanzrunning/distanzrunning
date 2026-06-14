@@ -338,17 +338,14 @@
     height: 200%;
     width: 200%;
   }
-  .ds-slider-thumb:hover:not(.ds-slider-thumb--disabled),
-  .ds-slider-thumb:focus-visible:not(.ds-slider-thumb--disabled) {
+  /* Hover/focus scale applies to every thumb, disabled included — Geist's
+     disabled thumb keeps hover:scale-[120%]. */
+  .ds-slider-thumb:hover,
+  .ds-slider-thumb:focus-visible {
     transform: scale(1.2);
   }
   .ds-slider-thumb:focus-visible {
     outline: none;
-  }
-  .ds-slider-thumb--disabled,
-  .ds-slider-thumb--disabled:hover,
-  .ds-slider-thumb--disabled:focus-visible {
-    transform: none !important;
   }
   .dark .ds-slider-thumb {
     box-shadow:
