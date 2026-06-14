@@ -604,8 +604,8 @@ export function Component({ data }: { data: string[][] }): JSX.Element {
       </Table>
 
       {collapsible && (expanded ? (
-        <div className="mt-3 flex justify-center">
-          <Button variant="secondary" size="small" className="!rounded-full" onClick={() => setExpanded(false)}>
+        <div className="sticky bottom-4 mt-3 flex justify-center">
+          <Button variant="secondary" size="small" className="!rounded-full whitespace-nowrap" onClick={() => setExpanded(false)}>
             Show Less
             <ChevronDown className="ml-1 h-4 w-4 rotate-180" />
           </Button>
@@ -614,7 +614,7 @@ export function Component({ data }: { data: string[][] }): JSX.Element {
         <>
           <div className="pointer-events-none absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-[hsl(var(--color-surface))] to-transparent" />
           <div className="absolute inset-x-0 bottom-4 flex justify-center">
-            <Button variant="secondary" size="small" className="!rounded-full" onClick={() => setExpanded(true)}>
+            <Button variant="secondary" size="small" className="!rounded-full whitespace-nowrap" onClick={() => setExpanded(true)}>
               Show More
               <ChevronDown className="ml-1 h-4 w-4" />
             </Button>
@@ -873,12 +873,13 @@ function VirtualizedDemo() {
 
       {collapsible &&
         (expanded ? (
-          // Expanded: no fade, the control toggles back to the preview.
-          <div className="mt-3 flex justify-center">
+          // Expanded: no fade; the control sticks to the bottom of the viewport
+          // while the long table scrolls past.
+          <div className="sticky bottom-4 mt-3 flex justify-center">
             <Button
               variant="secondary"
               size="small"
-              className="!rounded-full"
+              className="!rounded-full whitespace-nowrap"
               onClick={() => setExpanded(false)}
             >
               Show Less
@@ -893,7 +894,7 @@ function VirtualizedDemo() {
               <Button
                 variant="secondary"
                 size="small"
-                className="!rounded-full"
+                className="!rounded-full whitespace-nowrap"
                 onClick={() => setExpanded(true)}
               >
                 Show More
