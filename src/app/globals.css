@@ -526,6 +526,13 @@
     outline: none;
   }
 
+  /* ThemeSwitcher: keyboard focus ring on the focused option (Geist
+     peer-focus-visible:shadow-focus-ring); follows the option's own radius. */
+  .ds-theme-option:focus-visible {
+    box-shadow: var(--ds-focus-ring);
+    outline: none;
+  }
+
   /* Switch & ThemeSwitcher hover states */
   @media (hover: hover) {
     .ds-switch-control:not([data-disabled]):not([data-selected]):hover {

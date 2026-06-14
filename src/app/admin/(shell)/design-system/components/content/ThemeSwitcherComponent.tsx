@@ -325,21 +325,6 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const lightDarkCode = `import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher';
-import { useState, type JSX } from 'react';
-
-export function Component(): JSX.Element {
-  const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('light');
-
-  return (
-    <ThemeSwitcher
-      showSystem={false}
-      value={theme}
-      onChange={(t) => setTheme(t)}
-    />
-  );
-}`;
-
 const disabledCode = `import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher';
 import { useState, type JSX } from 'react';
 
@@ -355,19 +340,14 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const sizesCode = `import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher';
+const smallCode = `import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher';
 import { useContext, type JSX } from 'react';
 import { DarkModeContext } from '@/components/DarkModeProvider';
 
 export function Component(): JSX.Element {
   const { theme, setTheme } = useContext(DarkModeContext);
 
-  return (
-    <div className="flex flex-row items-center gap-6">
-      <ThemeSwitcher size="small" value={theme} onChange={setTheme} />
-      <ThemeSwitcher size="default" value={theme} onChange={setTheme} />
-    </div>
-  );
+  return <ThemeSwitcher size="small" value={theme} onChange={setTheme} />;
 }`;
 
 // ============================================================================
@@ -379,24 +359,14 @@ function DefaultDemo() {
   return <ThemeSwitcher value={theme} onChange={setTheme} />;
 }
 
-function LightDarkDemo() {
+function SmallDemo() {
   const { theme, setTheme } = useContext(DarkModeContext);
-  return <ThemeSwitcher showSystem={false} value={theme === "system" ? "light" : theme} onChange={setTheme} />;
+  return <ThemeSwitcher size="small" value={theme} onChange={setTheme} />;
 }
 
 function DisabledDemo() {
   const { theme } = useContext(DarkModeContext);
   return <ThemeSwitcher disabled value={theme} />;
-}
-
-function SizesDemo() {
-  const { theme, setTheme } = useContext(DarkModeContext);
-  return (
-    <div className="flex flex-row items-center gap-6">
-      <ThemeSwitcher size="small" value={theme} onChange={setTheme} />
-      <ThemeSwitcher size="default" value={theme} onChange={setTheme} />
-    </div>
-  );
 }
 
 // ============================================================================
@@ -420,12 +390,12 @@ export default function ThemeSwitcherComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="light-dark" onCopyLink={showToast}>
-          Light &amp; Dark only
+        <SectionHeader id="small" onCopyLink={showToast}>
+          Small
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={lightDarkCode}>
-            <LightDarkDemo />
+          <CodePreview componentCode={smallCode}>
+            <SmallDemo />
           </CodePreview>
         </div>
       </Section>
@@ -437,25 +407,6 @@ export default function ThemeSwitcherComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={disabledCode}>
             <DisabledDemo />
-          </CodePreview>
-        </div>
-      </Section>
-
-      <Section>
-        <SectionHeader id="sizes" onCopyLink={showToast}>
-          Sizes
-        </SectionHeader>
-        <p
-          className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "hsl(var(--color-textSubtle))" }}
-        >
-          Pass <code className="inline-code">size=&quot;small&quot;</code>{" "}
-          for dense chrome (footers, dropdowns); the default size
-          works for settings pages.
-        </p>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={sizesCode}>
-            <SizesDemo />
           </CodePreview>
         </div>
       </Section>

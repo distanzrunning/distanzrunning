@@ -129,7 +129,7 @@ export function ThemeSwitcher({
                 : "transparent",
               boxShadow: "none",
               color: disabled
-                ? "var(--ds-gray-600)"
+                ? "var(--ds-gray-500)"
                 : isSelected
                   ? "hsl(var(--color-textDefault))"
                   : "var(--ds-gray-700)",
