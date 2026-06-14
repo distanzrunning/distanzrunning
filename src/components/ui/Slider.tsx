@@ -90,9 +90,16 @@ function ensureThumbStyles() {
       height: 200%;
       width: 200%;
     }
-    .ds-slider-thumb:hover:not([aria-disabled="true"]),
-    .ds-slider-thumb:focus-visible:not([aria-disabled="true"]) {
+    .ds-slider-thumb:hover:not(.ds-slider-thumb--disabled),
+    .ds-slider-thumb:focus-visible:not(.ds-slider-thumb--disabled) {
       transform: scale(1.2);
+    }
+    /* Belt-and-suspenders: a disabled thumb never scales, even if some other
+       transform tries to apply. */
+    .ds-slider-thumb--disabled,
+    .ds-slider-thumb--disabled:hover,
+    .ds-slider-thumb--disabled:focus-visible {
+      transform: none !important;
     }
     .ds-slider-thumb:focus-visible {
       outline: none;
@@ -267,7 +274,7 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
             }}
           >
             <span
-              className="ds-slider-thumb"
+              className={`ds-slider-thumb${disabled ? " ds-slider-thumb--disabled" : ""}`}
               role="slider"
               tabIndex={disabled ? -1 : 0}
               aria-valuemin={min}
@@ -479,7 +486,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
             }}
           >
             <span
-              className="ds-slider-thumb"
+              className={`ds-slider-thumb${disabled ? " ds-slider-thumb--disabled" : ""}`}
               role="slider"
               tabIndex={disabled ? -1 : 0}
               aria-valuemin={min}
@@ -512,7 +519,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
             }}
           >
             <span
-              className="ds-slider-thumb"
+              className={`ds-slider-thumb${disabled ? " ds-slider-thumb--disabled" : ""}`}
               role="slider"
               tabIndex={disabled ? -1 : 0}
               aria-valuemin={min}
