@@ -372,6 +372,23 @@ export function Component(): JSX.Element {
   );
 }`;
 
+const titleWithIconCode = `import { SplitButton } from '@/components/ui/SplitButton';
+import type { JSX } from 'react';
+
+const menuItems = [
+  { label: 'Save', description: 'Save changes', icon: <CopyIcon />, onClick: () => {} },
+  { label: 'Save + Redeploy', description: 'Save changes and create a new production deployment', icon: <LinkIcon />, onClick: () => {} },
+];
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-8">
+      <SplitButton menuItems={menuItems}>Save</SplitButton>
+      <SplitButton variant="secondary" menuItems={menuItems}>Save</SplitButton>
+    </div>
+  );
+}`;
+
 // ============================================================================
 // Demo Components
 // ============================================================================
@@ -454,6 +471,45 @@ function IconDemo() {
   );
 }
 
+const titleWithIconMenuItems = [
+  { label: "Save", description: "Save changes", icon: <MenuCopyIcon />, onClick: () => {} },
+  {
+    label: "Save + Redeploy",
+    description: "Save changes and create a new production deployment",
+    icon: <MenuLinkIcon />,
+    onClick: () => {},
+  },
+];
+
+function TitleWithIconDemo() {
+  return (
+    <div className="flex flex-col justify-between gap-8">
+      <div className="flex flex-row gap-1">
+        <SplitButton size="small" menuItems={titleWithIconMenuItems}>
+          Save
+        </SplitButton>
+        <SplitButton size="medium" menuItems={titleWithIconMenuItems}>
+          Save
+        </SplitButton>
+        <SplitButton size="large" menuItems={titleWithIconMenuItems}>
+          Save
+        </SplitButton>
+      </div>
+      <div className="flex flex-row gap-1">
+        <SplitButton variant="secondary" size="small" menuItems={titleWithIconMenuItems}>
+          Save
+        </SplitButton>
+        <SplitButton variant="secondary" size="medium" menuItems={titleWithIconMenuItems}>
+          Save
+        </SplitButton>
+        <SplitButton variant="secondary" size="large" menuItems={titleWithIconMenuItems}>
+          Save
+        </SplitButton>
+      </div>
+    </div>
+  );
+}
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -495,6 +551,17 @@ export default function SplitButtonComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={iconCode}>
             <IconDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="title-with-icon" onCopyLink={showToast}>
+          Title with Icon
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={titleWithIconCode}>
+            <TitleWithIconDemo />
           </CodePreview>
         </div>
       </Section>

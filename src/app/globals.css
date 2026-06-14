@@ -333,6 +333,29 @@
     color: var(--ds-gray-800);
   }
 
+  /* Split Button: blue focus ring on either half (Geist focus:shadow-focus-ring
+     focus:z-[2]); !important to beat the inline box-shadow:none. The divider is
+     a hairline whose colour is theme-aware for the filled default and gray-300
+     for secondary (Geist's ::before #404040/#cdcdcd vs --divider-color). */
+  .ds-splitbtn-btn:focus {
+    box-shadow: var(--ds-focus-ring) !important;
+    z-index: 2;
+    outline: none;
+  }
+  .ds-splitbtn-divider {
+    width: 1px;
+    align-self: stretch;
+  }
+  .ds-splitbtn-divider--default {
+    background: #404040;
+  }
+  .dark .ds-splitbtn-divider--default {
+    background: #cdcdcd;
+  }
+  .ds-splitbtn-divider--secondary {
+    background: var(--ds-gray-300);
+  }
+
   /* Slider thumb (Geist-verbatim): white 6×14 chip, hairline shadow (solid
      black ring in dark), transition-all 200ms, a 200% invisible hit area, and
      a hover/focus scale that a disabled thumb never gets. Lives here (not
