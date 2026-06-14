@@ -333,6 +333,25 @@
     color: var(--ds-gray-800);
   }
 
+  /* Text With Copy Button: muted label (gray-900) + dimmer icon (gray-700) that
+     both go to ink (gray-1000) on hover — Geist's accents-7/accents-5 → fg. In
+     globals to dodge the stacked hover:[&_svg] miscompile in our Tailwind v3. */
+  .ds-text-copy-button {
+    color: var(--ds-gray-900);
+  }
+  .ds-text-copy-button svg {
+    color: var(--ds-gray-700);
+    transition: color 0.1s ease-in-out;
+  }
+  @media (hover: hover) {
+    .ds-text-copy-button:hover {
+      color: var(--ds-gray-1000);
+    }
+    .ds-text-copy-button:hover svg {
+      color: var(--ds-gray-1000);
+    }
+  }
+
   /* Tabs: scroll the row but reveal the focus ring when a tab is keyboard-focused
      (Geist has-[:focus-visible]:overflow-visible); hide the scrollbar. Focus ring
      + not-disabled hover live here rather than runtime-injected (stale-CSS fix). */

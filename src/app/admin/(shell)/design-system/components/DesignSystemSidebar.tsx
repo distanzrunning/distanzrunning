@@ -155,6 +155,7 @@ export const navigation: NavSection[] = [
       { id: "switch", label: "Switch", type: "Atom" },
       { id: "table", label: "Table", type: "Organism" },
       { id: "tabs", label: "Tabs", type: "Molecule" },
+      { id: "text-with-copy-button", label: "Text With Copy Button", type: "Molecule" },
       { id: "textarea", label: "Textarea", type: "Atom" },
       { id: "theme-switcher", label: "Theme Switcher", type: "Molecule" },
       { id: "toast", label: "Toast", type: "Organism" },
