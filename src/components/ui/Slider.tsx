@@ -282,6 +282,9 @@ const SingleSlider = forwardRef<HTMLDivElement, SingleSliderProps>(
                 width: 6,
                 height: 14,
                 cursor: disabled ? "not-allowed" : "pointer",
+                // Non-interactive when disabled so :hover (and its scale) can't
+                // fire; the cursor falls through to the root's not-allowed.
+                pointerEvents: disabled ? "none" : undefined,
               }}
               onKeyDown={(e) => {
                 if (disabled) return;
@@ -491,6 +494,9 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
                 width: 6,
                 height: 14,
                 cursor: disabled ? "not-allowed" : "pointer",
+                // Non-interactive when disabled so :hover (and its scale) can't
+                // fire; the cursor falls through to the root's not-allowed.
+                pointerEvents: disabled ? "none" : undefined,
               }}
               onKeyDown={(e) => handleThumbKeyDown(0, e)}
             />
@@ -521,6 +527,9 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
                 width: 6,
                 height: 14,
                 cursor: disabled ? "not-allowed" : "pointer",
+                // Non-interactive when disabled so :hover (and its scale) can't
+                // fire; the cursor falls through to the root's not-allowed.
+                pointerEvents: disabled ? "none" : undefined,
               }}
               onKeyDown={(e) => handleThumbKeyDown(1, e)}
             />
