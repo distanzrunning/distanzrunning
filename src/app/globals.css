@@ -469,6 +469,15 @@
     -webkit-text-fill-color: var(--ds-gray-700);
   }
 
+  /* Switch: keyboard focus ring on the control while its radio is focus-visible
+     (Geist peer-focus-visible:shadow-focus-ring). The radio is sr-only, so the
+     ring renders on the adjacent control; the selected pill is a background, not
+     a shadow, so the two coexist. */
+  .ds-switch-input:focus-visible + .ds-switch-control {
+    box-shadow: var(--ds-focus-ring);
+    outline: none;
+  }
+
   /* Switch & ThemeSwitcher hover states */
   @media (hover: hover) {
     .ds-switch-control:not([data-disabled]):not([data-selected]):hover {

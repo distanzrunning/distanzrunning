@@ -68,10 +68,11 @@ const sizeConfig: Record<
   }
 > = {
   small: {
+    // Geist small: text-[14px] / p-[0_12px] (same type as default, shorter).
     height: 32,
-    fontSize: 12,
-    lineHeight: "16px",
-    paddingX: 8,
+    fontSize: 14,
+    lineHeight: "20px",
+    paddingX: 12,
     containerPadding: 4,
     borderRadius: 6,
     innerRadius: 2,
@@ -88,12 +89,14 @@ const sizeConfig: Record<
     borderRadius: 6,
     innerRadius: 2,
     iconSize: 16,
-    iconPaddingX: 12,
+    // Geist default icon control: p-[8px_8px] (square, not the 12px text pad).
+    iconPaddingX: 8,
     iconPaddingY: 8,
   },
   large: {
+    // Geist large: text-[16px] / p-[0_16px], checked pill rounded-[4px].
     height: 48,
-    fontSize: 14,
+    fontSize: 16,
     lineHeight: "20px",
     paddingX: 16,
     containerPadding: 4,
@@ -180,6 +183,7 @@ export function Switch({
           >
             <input
               type="radio"
+              className="ds-switch-input"
               name={groupName}
               value={option.value}
               checked={isSelected}
