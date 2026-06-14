@@ -107,6 +107,23 @@
   animation: shimmer 5s ease-in-out infinite;
 }
 
+/* Spinner (Geist): each bar fades 1 → 0.15 over its duration; the staggered
+   per-bar delays produce the comet trail. */
+@keyframes ds-spinner-opacity {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.15;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-spinner-bar {
+    animation: none !important;
+    opacity: 0.5;
+  }
+}
+
 @layer base {
   /* Reserve the scrollbar gutter on <html> so the page width
      stays constant whether the scrollbar is showing or not.
