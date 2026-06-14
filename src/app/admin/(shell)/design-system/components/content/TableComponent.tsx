@@ -605,18 +605,16 @@ export function Component({ data }: { data: string[][] }): JSX.Element {
 
       {collapsible && (expanded ? (
         <div className="sticky bottom-4 mt-3 flex justify-center">
-          <Button variant="secondary" size="small" className="!rounded-full whitespace-nowrap" onClick={() => setExpanded(false)}>
+          <Button variant="secondary" size="small" className="!rounded-full whitespace-nowrap" suffixIcon={<ChevronDown className="h-4 w-4 rotate-180" />} onClick={() => setExpanded(false)}>
             Show Less
-            <ChevronDown className="ml-1 h-4 w-4 rotate-180" />
           </Button>
         </div>
       ) : (
         <>
           <div className="pointer-events-none absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-[hsl(var(--color-surface))] to-transparent" />
           <div className="absolute inset-x-0 bottom-4 flex justify-center">
-            <Button variant="secondary" size="small" className="!rounded-full whitespace-nowrap" onClick={() => setExpanded(true)}>
+            <Button variant="secondary" size="small" className="!rounded-full whitespace-nowrap" suffixIcon={<ChevronDown className="h-4 w-4" />} onClick={() => setExpanded(true)}>
               Show More
-              <ChevronDown className="ml-1 h-4 w-4" />
             </Button>
           </div>
         </>
@@ -880,10 +878,10 @@ function VirtualizedDemo() {
               variant="secondary"
               size="small"
               className="!rounded-full whitespace-nowrap"
+              suffixIcon={<ChevronDown className="h-4 w-4 rotate-180" />}
               onClick={() => setExpanded(false)}
             >
               Show Less
-              <ChevronDown className="ml-1 h-4 w-4 rotate-180" />
             </Button>
           </div>
         ) : (
@@ -895,10 +893,10 @@ function VirtualizedDemo() {
                 variant="secondary"
                 size="small"
                 className="!rounded-full whitespace-nowrap"
+                suffixIcon={<ChevronDown className="h-4 w-4" />}
                 onClick={() => setExpanded(true)}
               >
                 Show More
-                <ChevronDown className="ml-1 h-4 w-4" />
               </Button>
             </div>
           </>
