@@ -259,6 +259,16 @@
     -webkit-appearance: none;
     display: none;
   }
+  /* Strip the native number spinners (Geist's inputs never show them). */
+  .ds-input-field[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .ds-input-field[type="number"]::-webkit-inner-spin-button,
+  .ds-input-field[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 
   /* Select component styles (Geist-verbatim box-shadow state machine).
      Lives here rather than inline so there's a single definition, and because
