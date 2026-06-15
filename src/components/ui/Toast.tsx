@@ -254,17 +254,19 @@ function ToastCard({
                 : item.variant === "error"
                   ? "var(--ds-red-800)"
                   : "hsl(var(--color-surface))",
-          boxShadow:
-            item.variant === "default" ? "var(--ds-shadow-menu)" : "none",
+          // Geist keeps the menu shadow on every variant — the token carries the
+          // hairline ring, so colored toasts read as bordered + floating too.
+          boxShadow: "var(--ds-shadow-menu)",
           borderRadius: 12,
           padding: 16,
-          lineHeight: "20px",
+          lineHeight: "21px",
+          // Geist text: amber (warning) keeps dark ink (gray-1000); blue/red
+          // (success/error) use the contrast fg — fixed white in BOTH themes,
+          // not textInverted (which flips to dark ink in dark mode).
           color:
-            item.variant === "warning"
-              ? "hsl(var(--color-textDefault))"
-              : item.variant !== "default"
-                ? "hsl(var(--color-textInverted))"
-                : "hsl(var(--color-textDefault))",
+            item.variant === "success" || item.variant === "error"
+              ? "#fff"
+              : "hsl(var(--color-textDefault))",
           zIndex,
           overflow: "hidden",
           pointerEvents:
