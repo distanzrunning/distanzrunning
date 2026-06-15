@@ -234,7 +234,9 @@ function ToastCard({
   return (
     <div
       ref={cardRef}
-      role="status"
+      // Geist: action toasts (a decision the user must act on) are alertdialogs;
+      // passive notifications stay status.
+      role={item.action ? "alertdialog" : "status"}
       aria-atomic="true"
       data-exiting={item.exiting || undefined}
       style={
@@ -310,6 +312,11 @@ function ToastCard({
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              {/* Geist prefixes success/error toasts with an SR-only label so
+                  the variant is announced; warning/default get none. */}
+              {(item.variant === "success" || item.variant === "error") && (
+                <span className="sr-only">{item.variant}: </span>
+              )}
               {item.jsx ? (
                 <span style={{ display: "block", lineHeight: "20px" }}>
                   {item.jsx}
