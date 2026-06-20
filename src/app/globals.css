@@ -333,6 +333,24 @@
     color: var(--ds-gray-800);
   }
 
+  /* Video: control bar hides until the stage is hovered or a control is keyboard
+     focused; on small screens (≤992px, matching Geist) it stays visible since
+     there's no hover. */
+  .ds-video-controls {
+    opacity: 0;
+  }
+  @media (hover: hover) {
+    .ds-video-stage:hover .ds-video-controls,
+    .ds-video-stage:focus-within .ds-video-controls {
+      opacity: 1;
+    }
+  }
+  @media (max-width: 992px) {
+    .ds-video-controls {
+      opacity: 1;
+    }
+  }
+
   /* Text With Copy Button: muted label (gray-900) + dimmer icon (gray-700) that
      both go to ink (gray-1000) on hover — Geist's accents-7/accents-5 → fg. In
      globals to dodge the stacked hover:[&_svg] miscompile in our Tailwind v3. */

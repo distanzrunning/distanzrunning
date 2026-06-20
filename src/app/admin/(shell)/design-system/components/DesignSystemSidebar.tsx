@@ -162,6 +162,7 @@ export const navigation: NavSection[] = [
       { id: "toggle", label: "Toggle", type: "Atom" },
       { id: "tooltip", label: "Tooltip", type: "Molecule" },
       { id: "trend-chart", label: "Trend Chart", type: "Molecule" },
+      { id: "video", label: "Video", type: "Molecule" },
     ],
   },
 ];
