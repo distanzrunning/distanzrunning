@@ -10,11 +10,11 @@ import {
 } from "@/components/ui/useShikiHighlighter";
 import { Video } from "@/components/ui/Video";
 
-// Placeholder sample (3:2, matches the default aspect). Swap for a self-hosted
-// CC0 clip at /public/videos/sample.mp4 so the DS doesn't depend on a third-party
-// CDN. Coverr / Pexels / Pixabay / Mixkit have license-clean, loopable clips.
-const SAMPLE_VIDEO =
-  "https://assets.vercel.com/video/upload/v1709838074/samples/cld-sample-video.mp4";
+// Self-hosted sample (960×540, 16:9) — no third-party CDN dependency.
+// Re-encoded from the source .mov to H.264, faststart, audio stripped (it's a
+// muted autoplay loop), ~0.7 MB. Demos pass width/height so the 16:9 aspect box
+// shows the full frame rather than cropping the default 3:2 ratio.
+const SAMPLE_VIDEO = "/videos/sample.mp4";
 
 // ============================================================================
 // Toast Component
@@ -318,21 +318,21 @@ const defaultCode = `import { Video } from '@/components/ui/Video';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  return <Video src="/videos/sample.mp4" />;
+  return <Video src="/videos/sample.mp4" width={960} height={540} />;
 }`;
 
 const noLoopCode = `import { Video } from '@/components/ui/Video';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  return <Video src="/videos/sample.mp4" loop={false} />;
+  return <Video src="/videos/sample.mp4" width={960} height={540} loop={false} />;
 }`;
 
 const noControlsCode = `import { Video } from '@/components/ui/Video';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  return <Video src="/videos/sample.mp4" controls={false} />;
+  return <Video src="/videos/sample.mp4" width={960} height={540} controls={false} />;
 }`;
 
 // ============================================================================
@@ -340,15 +340,15 @@ export function Component(): JSX.Element {
 // ============================================================================
 
 function DefaultDemo() {
-  return <Video src={SAMPLE_VIDEO} />;
+  return <Video src={SAMPLE_VIDEO} width={960} height={540} />;
 }
 
 function NoLoopDemo() {
-  return <Video src={SAMPLE_VIDEO} loop={false} />;
+  return <Video src={SAMPLE_VIDEO} width={960} height={540} loop={false} />;
 }
 
 function NoControlsDemo() {
-  return <Video src={SAMPLE_VIDEO} controls={false} />;
+  return <Video src={SAMPLE_VIDEO} width={960} height={540} controls={false} />;
 }
 
 // ============================================================================
