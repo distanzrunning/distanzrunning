@@ -428,7 +428,9 @@
      focus:z-[2]); !important to beat the inline box-shadow:none. The divider is
      a hairline whose colour is theme-aware for the filled default and gray-300
      for secondary (Geist's ::before #404040/#cdcdcd vs --divider-color). */
-  .ds-splitbtn-btn:focus {
+  /* Keyboard focus only — Geist applies the blue ring exclusively via
+     :focus-visible (never plain :focus, which would fire on mouse click). */
+  .ds-splitbtn-btn:focus-visible {
     box-shadow: var(--ds-focus-ring) !important;
     z-index: 2;
     outline: none;
@@ -2360,9 +2362,11 @@
 }
 
 @layer utilities {
-  /* MenuButton (variant="secondary") — two-layer focus ring on
-     click + while the menu is open, matching the Input and the
-     calendar trigger. Targets the data-menu-trigger attribute that
+  /* MenuButton (variant="secondary") — a select-style trigger, so it follows
+     Geist's form-control focus split: the GREY --ds-focus-border on mouse
+     :focus and while open (matching the Input and the calendar trigger), and
+     the BLUE --ds-focus-ring only on keyboard :focus-visible. Targets the
+     data-menu-trigger attribute that
      MenuButton renders, so any consumer using variant="secondary"
      picks this up automatically with no per-page CSS.
      `!important` needed: MenuButton's own `hover:shadow-…` and
@@ -2375,18 +2379,27 @@
        state (z-index has no effect on position: static elements). */
     position: relative;
   }
+  /* Mouse / open state → the GREY focus-border (Geist's form-control focus,
+     matching Input + the calendar trigger). The blue ring is keyboard-only —
+     see the :focus-visible rule below. */
   [data-menu-trigger="secondary"]:focus,
   [data-menu-trigger="secondary"]:focus:hover,
-  [data-menu-trigger="secondary"]:focus-visible,
-  [data-menu-trigger="secondary"]:focus-visible:hover,
   [data-menu-trigger="secondary"][aria-expanded="true"],
   [data-menu-trigger="secondary"][aria-expanded="true"]:hover {
     outline: none !important;
-    box-shadow:
-      0 0 0 1px var(--ds-gray-alpha-600),
-      0 0 0 4px var(--ds-focus-color) !important;
+    box-shadow: var(--ds-focus-border) !important;
     /* Lift the trigger above adjacent siblings so the 4px outer
        ring isn't clipped (matches the calendar trigger). */
+    z-index: 2;
+  }
+  /* Keyboard focus only → the BLUE focus-ring. Geist applies --ds-focus-ring
+     exclusively via :focus-visible. Listed AFTER the :focus rule (with the
+     matching :hover variant so specificity ties) so it wins by source order
+     when a keyboard-focused trigger matches both :focus and :focus-visible. */
+  [data-menu-trigger="secondary"]:focus-visible,
+  [data-menu-trigger="secondary"]:focus-visible:hover {
+    outline: none !important;
+    box-shadow: var(--ds-focus-ring) !important;
     z-index: 2;
   }
 
