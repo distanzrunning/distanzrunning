@@ -17,9 +17,15 @@
    Rule of thumb: colours/spacing/shadows/radii/focus/motion come from the
    token layer (--ds-*); never hardcode a hex/rgba when a token exists.
    =========================================================================== */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+/* Design tokens — single source lives in the registry. Hoisted here (out of
+   @layer base) because v4/Lightning CSS requires @import to precede other
+   rules; layer(base) preserves the original cascade placement. */
+@import "../registry/styles/distanz-tokens.css" layer(base);
+/* Keep the existing JS config (custom colours, remapped scales, the
+   text-heading and material utility plugins). Token unification into @theme
+   is a deliberate follow-up, not part of this toolchain swap. */
+@config "../../tailwind.config.js";
 
 /* Text selection styles */
 ::selection {
@@ -156,9 +162,8 @@
      when an ancestor carries .dark. Pairs with the existing .dark
      selector below to support force-themed sections (e.g. an
      inverted-color newsletter band on a dark page). */
-  /* Design tokens — single source lives in the registry. The block
-     between :root/.light and .dark is inlined by PostCSS at build time. */
-  @import "../registry/styles/distanz-tokens.css";
+  /* Design tokens are imported at the top of this file (see @import above);
+     v4/Lightning CSS requires @import to precede other rules. */
 
   /* Distanz reset (Distanz design system) */
   *,

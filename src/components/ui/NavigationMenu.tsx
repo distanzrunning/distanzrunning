@@ -5,7 +5,7 @@
 // ============================================================================
 //
 // Shadcn-pattern primitive over @radix-ui/react-navigation-menu, styled
-// against our DS tokens (ds-gray-*, ds-background-*, ds-focus-ring,
+// against our DS tokens (ds-gray, ds-background, ds-focus-ring,
 // radius-small) instead of shadcn's default (accent, popover, etc).
 // Source transcribed from shadcn's navigation-menu.tsx (new-york-v4)
 // and adapted — structure and data-slot attrs kept identical so v0
