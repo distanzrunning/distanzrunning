@@ -170,10 +170,10 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
     return (
       <div className="px-1 py-0.5 flex items-start justify-between gap-1">
         <div className="flex-1 min-w-0">
-          <div className="font-medium text-neutral-900 dark:text-white text-xs truncate">
+          <div className="font-medium text-textDefault text-xs truncate">
             {eventInfo.event.title}
           </div>
-          <div className="text-[10px] text-neutral-500 dark:text-neutral-400">
+          <div className="text-[10px] text-textSubtle">
             {timeStr}
           </div>
         </div>
@@ -319,12 +319,12 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 }
               />
             ))}
-            <div className="bg-white dark:bg-neutral-900 flex-1 flex flex-col calendar-wrapper overflow-auto">
+            <div className="bg-surface flex-1 flex flex-col calendar-wrapper overflow-auto">
               {/* Custom Toolbar */}
-              <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex-shrink-0">
+              <div className="px-6 py-4 border-b border-borderSubtle flex-shrink-0">
                 <div className="flex items-center justify-between">
                   {/* Left: Title */}
-                  <h1 className="text-heading-24 text-neutral-900 dark:text-white">
+                  <h1 className="text-heading-24 text-textDefault">
                     Race Calendar
                   </h1>
 
@@ -332,19 +332,19 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                   <div className="flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2">
                     <button
                       onClick={handlePrevMonth}
-                      className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
+                      className="p-2 rounded-lg hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle"
                       aria-label="Previous month"
                     >
                       <ChevronLeft className="h-5 w-5" />
                     </button>
 
-                    <span className="text-lg font-semibold text-neutral-900 dark:text-white min-w-[140px] text-center">
+                    <span className="text-lg font-semibold text-textDefault min-w-[140px] text-center">
                       {months[currentMonth]}
                     </span>
 
                     <button
                       onClick={handleNextMonth}
-                      className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-700 dark:text-neutral-300"
+                      className="p-2 rounded-lg hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle"
                       aria-label="Next month"
                     >
                       <ChevronRight className="h-5 w-5" />
@@ -360,7 +360,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                           onClick={() =>
                             setShowMinimizedList(!showMinimizedList)
                           }
-                          className="px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium cursor-pointer hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors flex items-center gap-2"
+                          className="px-3 py-2 rounded-lg border border-borderDefault bg-surface text-textDefault text-sm font-medium cursor-pointer hover:border-borderDefaultHover transition-colors flex items-center gap-2"
                           aria-label={`${minimizedWindows.length} minimized window${minimizedWindows.length > 1 ? "s" : ""}`}
                         >
                           <span className="font-mono">
@@ -369,18 +369,18 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                         </button>
                         {/* Minimized Windows Dropdown */}
                         {showMinimizedList && (
-                          <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+                          <div className="absolute right-0 top-full mt-2 w-64 bg-surface border border-borderSubtle rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
                             {minimizedWindows.map((window) => (
                               <button
                                 key={window.race._id}
                                 onClick={() => handleRestore(window.race._id)}
-                                className="w-full px-4 py-3 text-left hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border-b border-neutral-200 dark:border-neutral-700 last:border-b-0"
+                                className="w-full px-4 py-3 text-left hover:bg-[var(--ds-gray-100)] transition-colors border-b border-borderSubtle last:border-b-0"
                               >
-                                <div className="font-medium text-sm text-neutral-900 dark:text-white truncate">
+                                <div className="font-medium text-sm text-textDefault truncate">
                                   {window.race.title}
                                 </div>
                                 {window.race.city && (
-                                  <div className="text-xs text-neutral-600 dark:text-neutral-400 mt-1">
+                                  <div className="text-xs text-textSubtle mt-1">
                                     {window.race.city}, {window.race.country}
                                   </div>
                                 )}
@@ -397,7 +397,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                         onClick={() =>
                           setIsMonthDropdownOpen(!isMonthDropdownOpen)
                         }
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium w-[140px] justify-between"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-borderDefault bg-surface text-textDefault hover:border-borderDefaultHover transition-colors text-sm font-medium w-[140px] justify-between"
                       >
                         <span className="truncate">{months[currentMonth]}</span>
                         <svg
@@ -416,7 +416,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       </button>
 
                       {isMonthDropdownOpen && (
-                        <div className="absolute top-full mt-2 right-0 z-40 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-2 w-[160px] max-h-[300px] overflow-y-auto">
+                        <div className="absolute top-full mt-2 right-0 z-40 bg-surface rounded-lg shadow-xl border border-borderSubtle p-2 w-[160px] max-h-[300px] overflow-y-auto">
                           {availableMonths.map((month) => (
                             <button
                               key={month.name}
@@ -426,8 +426,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                                 currentMonth === month.index
                                   ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium"
                                   : month.isAvailable
-                                    ? "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                                    : "text-neutral-400 dark:text-neutral-600 cursor-not-allowed opacity-50"
+                                    ? "text-textSubtle hover:bg-[var(--ds-gray-100)]"
+                                    : "text-textSubtler cursor-not-allowed opacity-50"
                               }`}
                             >
                               {month.name}
@@ -443,7 +443,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                         onClick={() =>
                           setIsYearDropdownOpen(!isYearDropdownOpen)
                         }
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors text-sm font-medium whitespace-nowrap"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-borderDefault bg-surface text-textDefault hover:border-borderDefaultHover transition-colors text-sm font-medium whitespace-nowrap"
                       >
                         {currentYear}
                         <svg
@@ -462,7 +462,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                       </button>
 
                       {isYearDropdownOpen && (
-                        <div className="absolute top-full mt-2 right-0 z-40 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-2 min-w-[120px] max-h-[300px] overflow-y-auto">
+                        <div className="absolute top-full mt-2 right-0 z-40 bg-surface rounded-lg shadow-xl border border-borderSubtle p-2 min-w-[120px] max-h-[300px] overflow-y-auto">
                           {years.map((year) => (
                             <button
                               key={year}
@@ -470,7 +470,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                               className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
                                 currentYear === year
                                   ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium"
-                                  : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                  : "text-textSubtle hover:bg-[var(--ds-gray-100)]"
                               }`}
                             >
                               {year}
@@ -482,7 +482,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
                     <button
                       onClick={handleToday}
-                      className="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm font-medium hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                      className="px-4 py-2 rounded-lg border border-borderDefault bg-surface text-textDefault text-sm font-medium hover:bg-[var(--ds-gray-100)] transition-colors"
                     >
                       Today
                     </button>
@@ -516,7 +516,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                 onClick={() => setShowLegend(!showLegend)}
                 onMouseEnter={() => setShowLegend(true)}
                 onMouseLeave={() => setShowLegend(false)}
-                className="p-2 rounded-lg bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 shadow-lg hover:shadow-xl transition-all text-neutral-700 dark:text-neutral-300"
+                className="p-2 rounded-lg bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border border-borderSubtle shadow-lg hover:shadow-xl transition-all text-textSubtle"
                 aria-label="Show legend"
               >
                 <Info className="h-5 w-5" />
@@ -525,11 +525,11 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
               {/* Legend Popover */}
               {showLegend && (
                 <div
-                  className="absolute bottom-full right-0 mb-2 w-64 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl p-4"
+                  className="absolute bottom-full right-0 mb-2 w-64 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border border-borderSubtle rounded-lg shadow-xl p-4"
                   onMouseEnter={() => setShowLegend(true)}
                   onMouseLeave={() => setShowLegend(false)}
                 >
-                  <h3 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">
+                  <h3 className="text-sm font-semibold text-textDefault mb-3">
                     Legend
                   </h3>
 
@@ -537,7 +537,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                   <div className="mb-3">
                     <div className="flex items-center gap-2">
                       <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 flex-shrink-0" />
-                      <span className="text-xs text-neutral-900 dark:text-white">
+                      <span className="text-xs text-textDefault">
                         Abbott World Marathon Major
                       </span>
                     </div>
@@ -545,7 +545,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
                   {/* Color Legend */}
                   <div>
-                    <h4 className="text-xs font-medium text-neutral-900 dark:text-white mb-2">
+                    <h4 className="text-xs font-medium text-textDefault mb-2">
                       World Athletics Labels
                     </h4>
                     <div className="space-y-1.5">
@@ -556,7 +556,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                             backgroundColor: "rgba(204, 204, 204, 0.3)",
                           }}
                         ></div>
-                        <span className="text-xs text-neutral-700 dark:text-neutral-300">
+                        <span className="text-xs text-textSubtle">
                           Platinum Label
                         </span>
                       </div>
@@ -565,7 +565,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                           className="w-3.5 h-3.5 rounded flex-shrink-0"
                           style={{ backgroundColor: "rgba(255, 217, 0, 0.25)" }}
                         ></div>
-                        <span className="text-xs text-neutral-700 dark:text-neutral-300">
+                        <span className="text-xs text-textSubtle">
                           Gold Label
                         </span>
                       </div>
@@ -576,7 +576,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                             backgroundColor: "rgba(158, 140, 196, 0.25)",
                           }}
                         ></div>
-                        <span className="text-xs text-neutral-700 dark:text-neutral-300">
+                        <span className="text-xs text-textSubtle">
                           Elite Label
                         </span>
                       </div>
@@ -587,7 +587,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                             backgroundColor: "rgba(166, 251, 101, 0.25)",
                           }}
                         ></div>
-                        <span className="text-xs text-neutral-700 dark:text-neutral-300">
+                        <span className="text-xs text-textSubtle">
                           Label
                         </span>
                       </div>
@@ -600,8 +600,8 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
         </div>
 
         {/* Minimal Footer */}
-        <div className="fixed bottom-0 left-0 right-0 bg-neutral-100 dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 py-2 px-4 z-30">
-          <div className="flex items-center justify-center text-xs text-neutral-600 dark:text-neutral-400">
+        <div className="fixed bottom-0 left-0 right-0 bg-canvas border-t border-borderSubtle py-2 px-4 z-30">
+          <div className="flex items-center justify-center text-xs text-textSubtle">
             <span>© {new Date().getFullYear()} Distanz Running</span>
           </div>
         </div>

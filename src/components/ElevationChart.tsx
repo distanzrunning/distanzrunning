@@ -290,20 +290,20 @@ export function ElevationChart({
 
       return (
         <div
-          className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-md shadow-lg p-2"
+          className="bg-surface border border-borderSubtle rounded-md shadow-lg p-2"
           style={{ backdropFilter: 'blur(10px)' }}
         >
           <div className="flex items-baseline gap-1.5 mb-0.5">
-            <span className="text-xs text-neutral-600 dark:text-neutral-300">Distance:</span>
-            <span className="text-xs font-mono text-neutral-900 dark:text-white">{dataPoint.distance.toFixed(2)} {distanceUnit}</span>
+            <span className="text-xs text-textSubtle">Distance:</span>
+            <span className="text-xs font-mono text-textDefault">{dataPoint.distance.toFixed(2)} {distanceUnit}</span>
           </div>
           <div className="flex items-baseline gap-1.5 mb-0.5">
-            <span className="text-xs text-neutral-600 dark:text-neutral-300">Elevation:</span>
-            <span className="text-xs font-mono text-neutral-900 dark:text-white">{Math.round(payload[0].value)} {elevationUnit}</span>
+            <span className="text-xs text-textSubtle">Elevation:</span>
+            <span className="text-xs font-mono text-textDefault">{Math.round(payload[0].value)} {elevationUnit}</span>
           </div>
           <div className="flex items-baseline gap-1.5">
-            <span className="text-xs text-neutral-600 dark:text-neutral-300">Grade:</span>
-            <span className="text-xs font-mono text-neutral-900 dark:text-white">{grade >= 0 ? '+' : ''}{grade.toFixed(1)}%</span>
+            <span className="text-xs text-textSubtle">Grade:</span>
+            <span className="text-xs font-mono text-textDefault">{grade >= 0 ? '+' : ''}{grade.toFixed(1)}%</span>
           </div>
         </div>
       )
@@ -313,8 +313,8 @@ export function ElevationChart({
 
   if (chartData.length === 0) {
     return (
-      <div className="w-full bg-white dark:bg-neutral-900 rounded-xl border border-neutral-100 dark:border-neutral-800 p-6 flex items-center justify-center">
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">No elevation data available</p>
+      <div className="w-full bg-surface rounded-xl border border-borderSubtle p-6 flex items-center justify-center">
+        <p className="text-sm text-textSubtle">No elevation data available</p>
       </div>
     )
   }
@@ -359,11 +359,11 @@ export function ElevationChart({
   }, [hoverDistance, distanceDomain])
 
   return (
-    <div className="w-full bg-white dark:bg-neutral-900 rounded-xl border border-neutral-100 dark:border-neutral-800 overflow-hidden shadow-sm flex-shrink-0">
+    <div className="w-full bg-surface rounded-xl border border-borderSubtle overflow-hidden shadow-sm flex-shrink-0">
       {/* Header */}
       <div className="px-6 py-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">
+          <h3 className="text-sm font-semibold text-textDefault">
             Elevation Profile
           </h3>
 
@@ -371,7 +371,7 @@ export function ElevationChart({
           <div className="relative group">
             <button
               onClick={() => onUseMetricChange?.(!useMetric)}
-              className="flex items-center justify-center w-7 h-7 rounded-lg transition-colors bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+              className="flex items-center justify-center w-7 h-7 rounded-lg transition-colors bg-canvas text-textSubtle hover:bg-[var(--ds-gray-100)]"
               aria-label="Toggle units"
             >
               <Settings2 className="w-4 h-4" />
@@ -493,18 +493,18 @@ export function ElevationChart({
               zIndex: 10
             }}
           >
-            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-md shadow-lg p-2 whitespace-nowrap">
+            <div className="bg-surface border border-borderSubtle rounded-md shadow-lg p-2 whitespace-nowrap">
               <div className="flex items-baseline gap-1.5 mb-0.5">
-                <span className="text-xs text-neutral-600 dark:text-neutral-300">Distance:</span>
-                <span className="text-xs font-mono text-neutral-900 dark:text-white">{hoverDistance?.toFixed(2)} {distanceUnit}</span>
+                <span className="text-xs text-textSubtle">Distance:</span>
+                <span className="text-xs font-mono text-textDefault">{hoverDistance?.toFixed(2)} {distanceUnit}</span>
               </div>
               <div className="flex items-baseline gap-1.5 mb-0.5">
-                <span className="text-xs text-neutral-600 dark:text-neutral-300">Elevation:</span>
-                <span className="text-xs font-mono text-neutral-900 dark:text-white">{Math.round(hoverElevation)} {elevationUnit}</span>
+                <span className="text-xs text-textSubtle">Elevation:</span>
+                <span className="text-xs font-mono text-textDefault">{Math.round(hoverElevation)} {elevationUnit}</span>
               </div>
               <div className="flex items-baseline gap-1.5">
-                <span className="text-xs text-neutral-600 dark:text-neutral-300">Grade:</span>
-                <span className="text-xs font-mono text-neutral-900 dark:text-white">{hoverGrade >= 0 ? '+' : ''}{hoverGrade.toFixed(1)}%</span>
+                <span className="text-xs text-textSubtle">Grade:</span>
+                <span className="text-xs font-mono text-textDefault">{hoverGrade >= 0 ? '+' : ''}{hoverGrade.toFixed(1)}%</span>
               </div>
             </div>
           </div>

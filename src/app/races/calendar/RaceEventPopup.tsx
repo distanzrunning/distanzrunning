@@ -171,7 +171,7 @@ export function RaceEventPopup({
           setShowSettingsDropdown(!showSettingsDropdown)
         }}
         onMouseDown={(e) => e.stopPropagation()}
-        className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors active:scale-95"
+        className="h-8 w-8 rounded-md flex items-center justify-center text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)] transition-colors active:scale-95"
         aria-label="Settings"
       >
         <Settings className="w-4 h-4" />
@@ -181,28 +181,28 @@ export function RaceEventPopup({
       {showSettingsDropdown && settingsButtonRef.current && (
         <div
           ref={settingsDropdownRef}
-          className="absolute left-0 top-10 w-80 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-[0_10px_38px_-10px_rgba(0,0,0,0.35),0_10px_20px_-15px_rgba(0,0,0,0.2)] p-2 z-[9999]"
+          className="absolute left-0 top-10 w-80 bg-surface border border-borderSubtle rounded-lg shadow-[0_10px_38px_-10px_rgba(0,0,0,0.35),0_10px_20px_-15px_rgba(0,0,0,0.2)] p-2 z-[9999]"
           onClick={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
         >
           <div className="flex flex-col gap-2.5">
-            <label className="pt-1.5 text-[15px] block mb-1 text-neutral-900 dark:text-white">
+            <label className="pt-1.5 text-[15px] block mb-1 text-textDefault">
               Content width
             </label>
 
             {/* Tab buttons for Fixed/Full */}
             <div
               role="group"
-              className="flex space-x-px rounded p-1 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700"
+              className="flex space-x-px rounded p-1 bg-canvas border border-borderSubtle"
             >
               <button
                 type="button"
                 onClick={() => setWidthMode('fixed')}
                 className={`flex-1 flex border p-1 items-center justify-center leading-4 text-sm font-medium rounded transition-colors ${
                   widthMode === 'fixed'
-                    ? 'bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600'
-                    : 'bg-transparent border-transparent hover:bg-neutral-50 dark:hover:bg-neutral-800'
-                } text-neutral-900 dark:text-white`}
+                    ? 'bg-surface border-borderDefault'
+                    : 'bg-transparent border-transparent hover:bg-[var(--ds-gray-100)]'
+                } text-textDefault`}
                 aria-label="Fixed"
               >
                 <svg className="size-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -216,9 +216,9 @@ export function RaceEventPopup({
                 onClick={() => setWidthMode('full')}
                 className={`flex-1 flex border p-1 items-center justify-center leading-4 text-sm font-medium rounded transition-colors ${
                   widthMode === 'full'
-                    ? 'bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600'
-                    : 'bg-transparent border-transparent hover:bg-neutral-50 dark:hover:bg-neutral-800'
-                } text-neutral-900 dark:text-white`}
+                    ? 'bg-surface border-borderDefault'
+                    : 'bg-transparent border-transparent hover:bg-[var(--ds-gray-100)]'
+                } text-textDefault`}
                 aria-label="Full"
               >
                 <svg className="size-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -287,7 +287,7 @@ export function RaceEventPopup({
                 </div>
                 <button
                   onClick={() => setCustomWidth(DEFAULT_WIDTH)}
-                  className="inline-flex items-center justify-center px-2 py-1.5 text-[15px] rounded-md border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 transition-colors bg-transparent active:bg-neutral-100 dark:active:bg-neutral-700 text-neutral-900 dark:text-white"
+                  className="inline-flex items-center justify-center px-2 py-1.5 text-[15px] rounded-md border border-transparent hover:border-borderDefault transition-colors bg-transparent active:bg-[var(--ds-gray-100)] text-textDefault"
                   aria-label="Reset width"
                 >
                   <svg className="size-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -314,7 +314,7 @@ export function RaceEventPopup({
       leftControls={settingsControl}
     >
       {/* Main container with flex column */}
-      <div className="h-full flex flex-col bg-neutral-50 dark:bg-neutral-950">
+      <div className="h-full flex flex-col bg-canvas">
         {/* Scrollable Content Area */}
         <div className="overflow-y-auto flex-1 flex justify-center race-popup-scroll p-4 pb-0">
           <div
@@ -323,7 +323,7 @@ export function RaceEventPopup({
             style={{ maxWidth: effectiveMaxWidth }}
           >
             {/* Image Card */}
-            <div className="relative w-full bg-white dark:bg-neutral-900 rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0">
+            <div className="relative w-full bg-surface rounded-xl overflow-hidden shadow-sm border border-borderSubtle flex-shrink-0">
               <div className="relative flex-shrink-0" style={{ aspectRatio: '8 / 5' }}>
               {imageUrl && (
                 <img
@@ -337,7 +337,7 @@ export function RaceEventPopup({
             {race.raceCategoryName && (
               <div className="absolute top-3 right-3">
                 <div className="px-3 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full shadow-sm">
-                  <p className="font-sans text-xs font-medium text-neutral-900 dark:text-white">
+                  <p className="font-sans text-xs font-medium text-textDefault">
                     {race.raceCategoryName}
                   </p>
                 </div>
@@ -346,18 +346,18 @@ export function RaceEventPopup({
           </div>
 
           {/* Title and Date Card */}
-          <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-800 p-5 flex-shrink-0">
+          <div className="bg-surface rounded-xl shadow-sm border border-borderSubtle p-5 flex-shrink-0">
             <div className="flex items-center gap-4">
               {/* Date - Left Side */}
-              <div className="flex flex-col items-center justify-center flex-shrink-0 bg-neutral-100 dark:bg-neutral-800 rounded-xl w-16 h-16">
+              <div className="flex flex-col items-center justify-center flex-shrink-0 bg-canvas rounded-xl w-16 h-16">
                 <p
-                  className="font-sans text-xs font-medium uppercase text-neutral-600 dark:text-neutral-400"
+                  className="font-sans text-xs font-medium uppercase text-textSubtle"
                   suppressHydrationWarning
                 >
                   {format(new Date(race.eventDate), 'MMM')}
                 </p>
                 <p
-                  className="font-sans text-2xl font-bold leading-tight text-neutral-900 dark:text-white"
+                  className="font-sans text-2xl font-bold leading-tight text-textDefault"
                   suppressHydrationWarning
                 >
                   {format(new Date(race.eventDate), 'dd')}
@@ -366,11 +366,11 @@ export function RaceEventPopup({
 
               {/* Title and Location - Center */}
               <div className="flex-1">
-                <h3 className="font-sans text-xl font-semibold leading-tight text-neutral-900 dark:text-white mb-1">
+                <h3 className="font-sans text-xl font-semibold leading-tight text-textDefault mb-1">
                   {race.title}
                 </h3>
                 {(race.city || race.stateRegion || race.country) && (
-                  <p className="font-sans text-sm text-neutral-600 dark:text-neutral-400">
+                  <p className="font-sans text-sm text-textSubtle">
                     {formatLocation(race.city, race.stateRegion, race.country)}
                   </p>
                 )}
@@ -393,15 +393,15 @@ export function RaceEventPopup({
           </div>
 
           {/* Key Details Card */}
-          <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-800 p-5 flex-shrink-0">
+          <div className="bg-surface rounded-xl shadow-sm border border-borderSubtle p-5 flex-shrink-0">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="font-sans text-sm font-semibold text-neutral-700 dark:text-neutral-300">Key Details</h4>
+              <h4 className="font-sans text-sm font-semibold text-textDefault">Key Details</h4>
 
               {/* Unit Toggle */}
               <div className="relative group">
                 <button
                   onClick={() => onMapUseMetricChange(!mapUseMetric)}
-                  className="flex items-center justify-center w-8 h-8 rounded-lg transition-all bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:scale-105 active:scale-95"
+                  className="flex items-center justify-center w-8 h-8 rounded-lg transition-all bg-neutral-100 dark:bg-neutral-800 text-textSubtle hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:scale-105 active:scale-95"
                   aria-label="Toggle units"
                 >
                   <Settings2 className="w-4 h-4" />
@@ -416,23 +416,23 @@ export function RaceEventPopup({
             <div className="space-y-3">
               <div className="grid grid-cols-3 gap-3">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <Route className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
+                  <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
+                    <Route className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Surface</p>
-                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-textSubtle mb-0.5">Surface</p>
+                    <p className="font-sans text-sm font-medium text-textDefault truncate">
                       {race.surface || 'N/A'}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <Wallet className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
+                  <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
+                    <Wallet className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Entry Price</p>
-                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-textSubtle mb-0.5">Entry Price</p>
+                    <p className="font-sans text-sm font-medium text-textDefault truncate">
                       {race.price !== undefined && race.price !== null
                         ? showLocalCurrency
                           ? formatPrice(race.price, race.currency!)
@@ -442,12 +442,12 @@ export function RaceEventPopup({
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <Users className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
+                  <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
+                    <Users className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Field size</p>
-                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-textSubtle mb-0.5">Field size</p>
+                    <p className="font-sans text-sm font-medium text-textDefault truncate">
                       {race.fieldSize ? race.fieldSize.toLocaleString() : 'N/A'}
                     </p>
                   </div>
@@ -456,12 +456,12 @@ export function RaceEventPopup({
 
               <div className="grid grid-cols-3 gap-3">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <ArrowUpRight className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
+                  <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
+                    <ArrowUpRight className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Gain</p>
-                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-textSubtle mb-0.5">Elev. Gain</p>
+                    <p className="font-sans text-sm font-medium text-textDefault truncate">
                       {race.elevationGain !== undefined && race.elevationGain !== null
                         ? mapUseMetric
                           ? `${Math.round(race.elevationGain).toLocaleString()}m`
@@ -471,12 +471,12 @@ export function RaceEventPopup({
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <ArrowDownRight className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
+                  <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
+                    <ArrowDownRight className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Elev. Loss</p>
-                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-textSubtle mb-0.5">Elev. Loss</p>
+                    <p className="font-sans text-sm font-medium text-textDefault truncate">
                       {race.elevationLoss !== undefined && race.elevationLoss !== null
                         ? mapUseMetric
                           ? `${Math.round(race.elevationLoss).toLocaleString()}m`
@@ -486,12 +486,12 @@ export function RaceEventPopup({
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <Mountain className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
+                  <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
+                    <Mountain className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Profile</p>
-                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-textSubtle mb-0.5">Profile</p>
+                    <p className="font-sans text-sm font-medium text-textDefault truncate">
                       {race.profile ? race.profile.charAt(0).toUpperCase() + race.profile.slice(1) : 'N/A'}
                     </p>
                   </div>
@@ -500,12 +500,12 @@ export function RaceEventPopup({
 
               <div className="grid grid-cols-3 gap-3">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 hover:bg-white dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
-                  <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <ThermometerSun className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-textSubtle transition-colors" />
+                  <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
+                    <ThermometerSun className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Avg. Temp</p>
-                    <p className="font-sans text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-textSubtle mb-0.5">Avg. Temp</p>
+                    <p className="font-sans text-sm font-medium text-textDefault truncate">
                       {race.averageTemperature !== undefined && race.averageTemperature !== null
                         ? mapUseMetric
                           ? `${Math.round(race.averageTemperature)}°C`
@@ -518,12 +518,12 @@ export function RaceEventPopup({
                   onMouseEnter={() => setShowMensTooltip(true)}
                   onMouseLeave={() => setShowMensTooltip(false)}
                 >
-                  <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-[#FFD700] transition-colors" />
+                  <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
+                    <Medal className="w-4 h-4 text-textSubtle group-hover:text-[#FFD700] transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Men's CR</p>
-                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-textSubtle mb-0.5">Men's CR</p>
+                    <p className="font-mono text-sm font-medium text-textDefault truncate">
                       {race.mensCourseRecord || 'N/A'}
                     </p>
                   </div>
@@ -545,12 +545,12 @@ export function RaceEventPopup({
                   onMouseEnter={() => setShowWomensTooltip(true)}
                   onMouseLeave={() => setShowWomensTooltip(false)}
                 >
-                  <div className="flex items-center justify-center flex-shrink-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg w-10 h-10">
-                    <Medal className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-[#FFD700] transition-colors" />
+                  <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
+                    <Medal className="w-4 h-4 text-textSubtle group-hover:text-[#FFD700] transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-sans text-xs text-neutral-500 dark:text-neutral-500 mb-0.5">Women's CR</p>
-                    <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white truncate">
+                    <p className="font-sans text-xs text-textSubtle mb-0.5">Women's CR</p>
+                    <p className="font-mono text-sm font-medium text-textDefault truncate">
                       {race.womensCourseRecord || 'N/A'}
                     </p>
                   </div>
@@ -594,7 +594,7 @@ export function RaceEventPopup({
         </div>
 
         {/* Fixed Action Buttons at Bottom - No Border */}
-        <div className="flex-shrink-0 bg-neutral-50 dark:bg-neutral-950 p-4 pt-3">
+        <div className="flex-shrink-0 bg-canvas p-4 pt-3">
           <div
             className="w-full mx-auto transition-all duration-300"
             style={{ maxWidth: effectiveMaxWidth }}
@@ -615,7 +615,7 @@ export function RaceEventPopup({
                   href={race.officialWebsite}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="col-span-1 inline-flex items-center justify-center px-4 py-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white rounded-xl font-medium text-sm transition-all hover:bg-neutral-50 dark:hover:bg-neutral-800 shadow-sm"
+                  className="col-span-1 inline-flex items-center justify-center px-4 py-3 bg-surface border border-borderSubtle text-textDefault rounded-xl font-medium text-sm transition-all hover:bg-[var(--ds-gray-100)] shadow-sm"
                 >
                   Official Site
                 </a>

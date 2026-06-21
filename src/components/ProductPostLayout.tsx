@@ -63,7 +63,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
 
   return (
     <div>
-      <div className="bg-white distanz-font-features">
+      <div className="bg-surface distanz-font-features">
         <div className="distanz-article-container distanz-text-spacing">
           <div className="distanz-full-col grid grid-cols-1">
             {post.mainImage != null && (

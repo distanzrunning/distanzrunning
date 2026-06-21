@@ -123,7 +123,7 @@ const TableOfContentsWidget: React.FC<TableOfContentsWidgetProps> = ({ body }) =
       {/* Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed left-8 top-1/2 transform -translate-y-1/2 z-50 bg-white border border-gray-200 rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-gray-50"
+        className="fixed left-8 top-1/2 transform -translate-y-1/2 z-50 bg-surface border border-gray-200 rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-gray-50"
         aria-label="Toggle table of contents"
       >
         <svg
@@ -153,7 +153,7 @@ const TableOfContentsWidget: React.FC<TableOfContentsWidgetProps> = ({ body }) =
         }`}
         style={{ width: '320px', maxHeight: '80vh' }}
       >
-        <nav className="bg-white border border-gray-200 rounded-lg shadow-xl flex flex-col overflow-hidden">
+        <nav className="bg-surface border border-gray-200 rounded-lg shadow-xl flex flex-col overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
             <h3 className="text-sm font-semibold text-gray-900 tracking-wide uppercase">

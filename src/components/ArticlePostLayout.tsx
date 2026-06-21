@@ -255,7 +255,7 @@ export default function ArticlePostLayout({
   return (
     <div className="relative">
       <TableOfContentsWidget body={post.body as never} />
-      <div className="distanz-font-features bg-white">
+      <div className="distanz-font-features bg-surface">
         <div className="distanz-article-container distanz-text-spacing">
           <div className="distanz-full-col grid grid-cols-1">
             {post.mainImage != null && (

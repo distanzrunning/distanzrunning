@@ -447,7 +447,7 @@ export function DraggableWindow({
 
       <motion.div
         ref={windowRef}
-        className="pointer-events-auto absolute flex flex-col overflow-hidden bg-white dark:bg-neutral-900 shadow-xl border border-neutral-200 dark:border-neutral-700"
+        className="pointer-events-auto absolute flex flex-col overflow-hidden bg-surface shadow-xl border border-borderSubtle"
         style={{ zIndex: 50 }}
         initial={false}
         animate={{
@@ -470,7 +470,7 @@ export function DraggableWindow({
       >
         {/* Titlebar */}
         <div
-          className="flex items-center justify-between px-6 py-4 cursor-move select-none border-b border-neutral-200 dark:border-neutral-700"
+          className="flex items-center justify-between px-6 py-4 cursor-move select-none border-b border-borderSubtle"
           onMouseDown={handleMouseDown}
           onDoubleClick={handleMaximize}
         >
@@ -482,7 +482,7 @@ export function DraggableWindow({
           )}
 
           {/* Title - centered */}
-          <h3 className="text-base font-semibold text-neutral-900 dark:text-white truncate flex-1 text-center px-8">
+          <h3 className="text-base font-semibold text-textDefault truncate flex-1 text-center px-8">
             {title}
           </h3>
 
@@ -492,7 +492,7 @@ export function DraggableWindow({
               <button
                 onClick={handleMinimizeClick}
                 onMouseDown={(e) => e.stopPropagation()}
-                className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors active:scale-95"
+                className="h-8 w-8 rounded-md flex items-center justify-center text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)] transition-colors active:scale-95"
                 aria-label="Minimize"
               >
                 <svg
@@ -517,7 +517,7 @@ export function DraggableWindow({
               onContextMenu={handleMaximizeContextMenu}
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
-              className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors active:scale-95 group"
+              className="h-8 w-8 rounded-md flex items-center justify-center text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)] transition-colors active:scale-95 group"
               aria-label={isMaximized || isSnappedLeft || isSnappedRight ? 'Restore' : 'Maximize'}
             >
               {isMaximized || isSnappedLeft || isSnappedRight ? (
@@ -535,7 +535,7 @@ export function DraggableWindow({
             <button
               onClick={handleCloseClick}
               onMouseDown={(e) => e.stopPropagation()}
-              className="h-8 w-8 rounded-md flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors active:scale-95"
+              className="h-8 w-8 rounded-md flex items-center justify-center text-textSubtle hover:text-textDefault hover:bg-[var(--ds-gray-100)] transition-colors active:scale-95"
               aria-label="Close"
             >
               <X className="w-4 h-4" />
@@ -544,7 +544,7 @@ export function DraggableWindow({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-hidden bg-neutral-50 dark:bg-neutral-800">
+        <div className="flex-1 overflow-hidden bg-canvas">
           {children}
         </div>
 
@@ -679,44 +679,44 @@ export function DraggableWindow({
       {showSnapMenu && maximizeButtonRef.current && typeof document !== 'undefined' && createPortal(
         <div
           ref={snapMenuRef}
-          className="fixed w-44 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg py-1 pointer-events-auto z-[9999]"
+          className="fixed w-44 bg-surface border border-borderSubtle rounded-lg shadow-lg py-1 pointer-events-auto z-[9999]"
           style={{
             top: `${maximizeButtonRef.current.getBoundingClientRect().bottom + 5}px`,
             left: `${maximizeButtonRef.current.getBoundingClientRect().right - 176}px`
           }}
         >
-          <div className="px-3 py-2 text-xs font-medium text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-700">
+          <div className="px-3 py-2 text-xs font-medium text-textSubtle border-b border-borderSubtle">
             Snap to...
           </div>
           <button
             onClick={handleSnapLeft}
-            className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
+            className="w-full px-3 py-2 text-left text-sm text-textDefault hover:bg-[var(--ds-gray-100)] flex items-center justify-between transition-colors"
           >
             <span>Left half</span>
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded">Shift</kbd>
-              <kbd className="px-1.5 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded">←</kbd>
+              <kbd className="px-1.5 py-0.5 text-xs font-medium text-textSubtle bg-[var(--ds-gray-100)] border border-borderDefault rounded">Shift</kbd>
+              <kbd className="px-1.5 py-0.5 text-xs font-medium text-textSubtle bg-[var(--ds-gray-100)] border border-borderDefault rounded">←</kbd>
             </span>
           </button>
           <button
             onClick={handleSnapRight}
-            className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
+            className="w-full px-3 py-2 text-left text-sm text-textDefault hover:bg-[var(--ds-gray-100)] flex items-center justify-between transition-colors"
           >
             <span>Right half</span>
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded">Shift</kbd>
-              <kbd className="px-1.5 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded">→</kbd>
+              <kbd className="px-1.5 py-0.5 text-xs font-medium text-textSubtle bg-[var(--ds-gray-100)] border border-borderDefault rounded">Shift</kbd>
+              <kbd className="px-1.5 py-0.5 text-xs font-medium text-textSubtle bg-[var(--ds-gray-100)] border border-borderDefault rounded">→</kbd>
             </span>
           </button>
-          <div className="border-t border-neutral-200 dark:border-neutral-700 mt-1 pt-1">
+          <div className="border-t border-borderSubtle mt-1 pt-1">
             <button
               onClick={handleMaximize}
-              className="w-full px-3 py-2 text-left text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 flex items-center justify-between transition-colors"
+              className="w-full px-3 py-2 text-left text-sm text-textDefault hover:bg-[var(--ds-gray-100)] flex items-center justify-between transition-colors"
             >
               <span>Maximize</span>
               <span className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded">Shift</kbd>
-                <kbd className="px-1.5 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded">↑</kbd>
+                <kbd className="px-1.5 py-0.5 text-xs font-medium text-textSubtle bg-[var(--ds-gray-100)] border border-borderDefault rounded">Shift</kbd>
+                <kbd className="px-1.5 py-0.5 text-xs font-medium text-textSubtle bg-[var(--ds-gray-100)] border border-borderDefault rounded">↑</kbd>
               </span>
             </button>
           </div>

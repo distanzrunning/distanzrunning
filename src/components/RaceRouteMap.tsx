@@ -810,7 +810,7 @@ export function RaceRouteMap({
 
   if (error) {
     return (
-      <div className="w-full h-64 bg-neutral-100 dark:bg-neutral-800 rounded-xl flex items-center justify-center text-neutral-500 dark:text-neutral-400 text-sm">
+      <div className="w-full h-64 bg-canvas rounded-xl flex items-center justify-center text-textSubtle text-sm">
         Unable to load race route map
       </div>
     )
@@ -818,11 +818,11 @@ export function RaceRouteMap({
 
   return (
     <div
-      className="relative w-full rounded-xl overflow-hidden shadow-sm border border-neutral-100 dark:border-neutral-800 flex-shrink-0 transition-all duration-300"
+      className="relative w-full rounded-xl overflow-hidden shadow-sm border border-borderSubtle flex-shrink-0 transition-all duration-300"
       style={{ height: height ? `${height}px` : '320px' }}
     >
       {(isLoading || forceLoading) && (
-        <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 z-10">
+        <div className="absolute inset-0 flex items-center justify-center bg-canvas z-10">
           <div className="animate-pulse">
             <img
               src="/brand/icon-badge.png"

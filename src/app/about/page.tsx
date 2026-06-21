@@ -15,14 +15,14 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white dark:bg-neutral-900 transition-colors duration-300">
+    <div className="min-h-screen bg-surface transition-colors duration-300">
       {/* Hero Section */}
       <div className="bg-gradient-to-b from-neutral-50 to-white dark:from-neutral-800 dark:to-neutral-900 py-20 md:py-32">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-heading-32 md:text-heading-56 text-neutral-900 dark:text-white mb-6">
+          <h1 className="text-heading-32 md:text-heading-56 text-textDefault mb-6">
             Your Hub for Running Stories, Gear & Races
           </h1>
-          <p className="text-copy-20 md:text-copy-24 text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto">
+          <p className="text-copy-20 md:text-copy-24 text-textSubtle max-w-3xl mx-auto">
             We're creating a comprehensive hub for runners with in-depth stories and analysis from the world of running, gear reviews, and race guides.
           </p>
         </div>
@@ -32,14 +32,14 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         {/* Mission Section */}
         <section className="mb-16">
-          <h2 className="text-heading-24 md:text-heading-32 text-neutral-900 dark:text-white mb-6">
+          <h2 className="text-heading-24 md:text-heading-32 text-textDefault mb-6">
             Our Mission
           </h2>
           <div className="prose prose-lg dark:prose-invert max-w-none">
-            <p className="text-copy-18 text-neutral-700 dark:text-neutral-300 mb-4">
+            <p className="text-copy-18 text-textSubtle mb-4">
               At Distanz Running, we believe every runner deserves access to reliable, in-depth information that helps them make better decisions and achieve their goals.
             </p>
-            <p className="text-copy-18 text-neutral-700 dark:text-neutral-300">
+            <p className="text-copy-18 text-textSubtle">
               Whether you're hunting for the perfect carbon-plated race shoe, planning your first marathon major, or seeking inspiration from the latest running stories, we're here to guide you every step of the way.
             </p>
           </div>
@@ -53,14 +53,14 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         {/* Our Approach Section */}
         <section className="mb-16">
-          <h2 className="text-heading-24 md:text-heading-32 text-neutral-900 dark:text-white mb-6">
+          <h2 className="text-heading-24 md:text-heading-32 text-textDefault mb-6">
             Our Approach
           </h2>
           <div className="prose prose-lg dark:prose-invert max-w-none">
-            <p className="text-copy-18 text-neutral-700 dark:text-neutral-300 mb-4">
+            <p className="text-copy-18 text-textSubtle mb-4">
               We're not just another running blog. Every piece of content we publish is thoroughly researched, tested, and crafted to provide genuine value to the running community.
             </p>
-            <ul className="space-y-3 text-neutral-700 dark:text-neutral-300">
+            <ul className="space-y-3 text-textSubtle">
               <li className="flex items-start gap-3">
                 <span className="text-textSubtle mt-1">✓</span>
                 <span><strong>Expert Testing:</strong> Our gear reviews are based on real-world testing, not just manufacturer specs.</span>

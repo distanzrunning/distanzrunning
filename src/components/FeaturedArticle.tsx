@@ -33,7 +33,7 @@ const FeaturedArticle = React.memo(function FeaturedArticle({ post }: FeaturedAr
         <h3 className="text-2xl font-bold mb-3">{post.title}</h3>
         <p className="text-gray-600 mb-4">{post.excerpt}</p>
         <Link href={`/blog/${post.slug.current}`}>
-          <div className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+          <div className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-surface hover:bg-gray-50">
             Read Article
           </div>
         </Link>

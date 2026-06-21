@@ -18,18 +18,18 @@ export function PreviewDarkModeToggle() {
     >
       <button
         onClick={toggleDarkMode}
-        className="w-12 h-6 rounded-full bg-neutral-200 dark:bg-neutral-700 transition-colors duration-300 shadow-lg hover:shadow-xl cursor-pointer relative"
+        className="w-12 h-6 rounded-full bg-canvas transition-colors duration-300 shadow-lg hover:shadow-xl cursor-pointer relative"
         aria-label="Toggle dark mode"
         type="button"
       >
         {/* Toggle Knob */}
         <div
-          className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 flex items-center justify-center ${
+          className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-surface shadow-md transition-all duration-300 flex items-center justify-center ${
             isDark ? 'translate-x-6' : 'translate-x-0'
           }`}
         >
           {isDark ? (
-            <Moon className="w-3 h-3 text-neutral-700" />
+            <Moon className="w-3 h-3 text-textSubtle" />
           ) : (
             <Sun className="w-3 h-3 text-yellow-500" />
           )}
