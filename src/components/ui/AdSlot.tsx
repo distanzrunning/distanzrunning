@@ -562,10 +562,9 @@ export function AdSlot({
     </fieldset>
   );
 
-  // Sticky: a full-bleed bar fixed to the bottom (the 404 ad-fixed__wrapper),
-  // with the SAME contained framed ad centred inside it. The bar carries the
-  // full-width background; a soft top shadow (not a full-width line) lifts it
-  // off the content, and the disclaimer rule stays contained to the ad.
+  // Sticky footer (404's ad-fixed): a full-bleed bar fixed to the bottom. The
+  // disclaimer is a centred rule across the content width (text breaking a
+  // horizontal line), and the ad sits plain underneath, centred — no box.
   if (sticky) {
     if (hideWhenUnfilled && showFallback) return null;
     return (
@@ -576,8 +575,35 @@ export function AdSlot({
           transform: shown ? "translateY(0)" : "translateY(100%)",
           boxShadow: "0 -2px 16px hsla(var(--ds-gray-1000-value), 0.08)",
         }}
+        role="region"
+        aria-label={ariaLabel}
       >
-        <div className="flex justify-center px-4 py-3">{frame}</div>
+        <div className="mx-auto w-full max-w-[1280px] px-6 py-3">
+          {showDisclaimer && (
+            <div className="mb-2 flex items-center gap-3">
+              <span className="h-px flex-1 bg-[hsl(var(--color-borderSubtle))]" />
+              <AdDisclaimer
+                showUpsell={showUpsell}
+                upsellHref={upsellHref}
+                dismissible
+                onDismiss={handleDismissSticky}
+                size={disclaimerSize}
+                stacked={false}
+              />
+              <span className="h-px flex-1 bg-[hsl(var(--color-borderSubtle))]" />
+            </div>
+          )}
+          <div
+            className="relative mx-auto"
+            style={{
+              width: dimensions.width,
+              height: dimensions.height,
+              maxWidth: "100%",
+            }}
+          >
+            {creative}
+          </div>
+        </div>
       </div>
     );
   }
