@@ -731,15 +731,12 @@ module.exports = {
         23: "5.75rem",
       },
       boxShadow: {
-        // Card materials (Geist-verbatim). `--ds-shadow-border` is the shared
-        // hairline token; `card-raised` adds Geist's literal 0 4px 6px resting
-        // lift and `card-hover` its 0 6px 14px hover lift (raw rgba one-offs in
-        // Geist too). Named here so hover:shadow-* compiles cleanly — a stacked
-        // arbitrary `hover:shadow-[var(...),0_6px_14px_rgba(...)]` mis-compiles
-        // in our Tailwind v3.
-        card: "var(--ds-shadow-border)",
-        "card-raised": "var(--ds-shadow-border), 0 4px 6px rgba(0, 0, 0, 0.04)",
-        "card-hover": "var(--ds-shadow-border), 0 6px 14px rgba(0, 0, 0, 0.08)",
+        // Card materials (shadow-card / -raised / -hover) live as @utility in
+        // globals.css, NOT here: Tailwind v4 colour-injects themed boxShadow
+        // entries and follows the token's var() into its composite value,
+        // tripping Lightning CSS on the var()+rgba mix (the card-hover build
+        // warning). A plain @utility with a direct box-shadow sidesteps the
+        // colour-injection and still supports hover:shadow-card-hover.
         "elevation-flyout":
           "0 4px 24px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.1)",
         // Elevated surface shadows - use CSS variables for light/dark mode

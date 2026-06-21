@@ -27,6 +27,21 @@
    is a deliberate follow-up, not part of this toolchain swap. */
 @config "../../tailwind.config.js";
 
+/* Card material shadows as @utility — a direct box-shadow, so Tailwind v4
+   doesn't colour-inject the composite var()+rgba value (which trips Lightning
+   CSS during minification — the old card-hover build warning). Defined here
+   rather than as themed boxShadow entries; hover:shadow-card-hover still works
+   because v4 applies variants to @utility. */
+@utility shadow-card {
+  box-shadow: var(--ds-shadow-card);
+}
+@utility shadow-card-raised {
+  box-shadow: var(--ds-shadow-card-raised);
+}
+@utility shadow-card-hover {
+  box-shadow: var(--ds-shadow-card-hover);
+}
+
 /* Text selection styles */
 ::selection {
   background: #000;

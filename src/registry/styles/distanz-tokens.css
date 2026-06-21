@@ -363,6 +363,18 @@
     --ds-shadow-border-inset: inset 0 0 0 1px #00000014;
     --ds-shadow-border:
       var(--ds-shadow-border-base), var(--ds-shadow-background-border);
+    /* Card materials — the shared border ring plus Geist's literal resting
+       (0 4px 6px) and hover (0 6px 14px) lifts. Defined as tokens (not inline
+       in tailwind.config) so each Tailwind shadow value is a SINGLE var(): v4
+       then can't split a composite var()+rgba into colour layers, which is what
+       tripped Lightning CSS during minification (the card-hover build warning).
+       The var(--ds-shadow-border) reference resolves per-theme at use time, so
+       one definition covers both light and dark. */
+    --ds-shadow-card: var(--ds-shadow-border);
+    --ds-shadow-card-raised:
+      var(--ds-shadow-border), 0 4px 6px rgba(0, 0, 0, 0.04);
+    --ds-shadow-card-hover:
+      var(--ds-shadow-border), 0 6px 14px rgba(0, 0, 0, 0.08);
     /* Geist `shadow-border-small` — a softly raised hairline: border ring +
        a small drop + the page-coloured ring. Used by the Banner pill. The
        formula references the theme-flipping sub-tokens, so one definition
