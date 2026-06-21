@@ -508,59 +508,19 @@ export function AdSlot({
     />
   );
 
-  // Full-bleed fixed footer (404's ad-fixed). No frame border — the bar has its
-  // own top rule; the disclaimer sits above the centred creative with Hide.
-  if (sticky) {
-    if (hideWhenUnfilled && showFallback) return null;
-    return (
-      <div
-        ref={stickyRef}
-        className={[
-          "ds-ad-sticky fixed inset-x-0 bottom-0 z-50 border-t border-borderSubtle bg-surface transition-transform duration-300 ease-out",
-          className,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-        style={{ transform: shown ? "translateY(0)" : "translateY(100%)" }}
-        role="region"
-        aria-label={ariaLabel}
-      >
-        <div className="mx-auto flex flex-col items-center px-4 py-2.5">
-          {showDisclaimer && (
-            <div className="mb-1.5">
-              <AdDisclaimer
-                showUpsell={showUpsell}
-                upsellHref={upsellHref}
-                dismissible
-                onDismiss={handleDismissSticky}
-                size={disclaimerSize}
-                stacked={false}
-              />
-            </div>
-          )}
-          <div
-            className="relative"
-            style={{
-              width: dimensions.width,
-              height: dimensions.height,
-              maxWidth: "100%",
-            }}
-          >
-            {creative}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
+  // The framed unit — identical whether inline or pinned as a sticky footer.
+  // Sticky only fixes its position; the frame, border, and disclaimer-on-the-
+  // top-rule are the same as every other size (NOT a full-bleed bar).
+  const frame = (
     <fieldset
-      ref={frameRef}
+      ref={sticky ? undefined : frameRef}
       aria-label={ariaLabel}
       className={[
         "ds-ad mx-auto",
         framed ? "rounded-lg border border-borderSubtle px-4 pb-4 pt-2.5" : "",
-        breathingRoom ? "my-8" : "",
+        // Opaque surface when floating so scrolling content can't show through.
+        sticky ? "bg-surface" : "",
+        !sticky && breathingRoom ? "my-8" : "",
         className,
       ]
         .filter(Boolean)
@@ -580,8 +540,8 @@ export function AdSlot({
           <AdDisclaimer
             showUpsell={showUpsell}
             upsellHref={upsellHref}
-            dismissible={dismissible}
-            onDismiss={handleDismiss}
+            dismissible={sticky ? true : dismissible}
+            onDismiss={sticky ? handleDismissSticky : handleDismiss}
             size={disclaimerSize}
             stacked={stacked}
           />
@@ -603,6 +563,24 @@ export function AdSlot({
       </div>
     </fieldset>
   );
+
+  // Sticky: pin that same contained frame to the bottom centre and slide it up.
+  // The wrapper is transparent (no full-width bar) and lets clicks fall through
+  // its empty sides to the content behind.
+  if (sticky) {
+    if (hideWhenUnfilled && showFallback) return null;
+    return (
+      <div
+        ref={stickyRef}
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-3 pb-3 transition-transform duration-300 ease-out"
+        style={{ transform: shown ? "translateY(0)" : "translateY(130%)" }}
+      >
+        <div className="pointer-events-auto">{frame}</div>
+      </div>
+    );
+  }
+
+  return frame;
 }
 
 export default AdSlot;
