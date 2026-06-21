@@ -7,7 +7,6 @@ import { buildBrowserItem } from "./items/browser";
 import { buildButtonItem } from "./items/button";
 import { buildCalendarItem } from "./items/calendar";
 import { buildCardImageItem } from "./items/card-image";
-import { buildChartItem } from "./items/chart";
 import { buildCheckboxItem } from "./items/checkbox";
 import { buildChoiceboxItem } from "./items/choicebox";
 import { buildCodeBlockItem } from "./items/code-block";
@@ -125,7 +124,6 @@ const BUILDERS: Record<string, Builder> = {
   "article-card": buildArticleCardItem,
   browser: buildBrowserItem,
   calendar: buildCalendarItem,
-  chart: buildChartItem,
   choicebox: buildChoiceboxItem,
   "code-block": buildCodeBlockItem,
   collapse: buildCollapseItem,
