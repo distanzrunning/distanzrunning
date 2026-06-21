@@ -269,13 +269,19 @@ import { NewsletterSignup } from '@/components/ui/NewsletterSignup';
 
 const disclaimerCode = `import { AdSlot } from '@/components/ui/AdSlot';
 
-// Every filled unit carries the disclaimer row:
-//   Advertisement · Go ad free
+// Every filled unit carries the disclaimer row on the frame:
+//   ADVERTISEMENT · GO AD FREE
 <AdSlot slot="1234567890" size="leaderboard" />
 
-// Point the upsell at your ad-free / membership route, or hide it:
-<AdSlot slot="..." size="leaderboard" upsellHref="/membership" />
+// Point the upsell at your signup route, or hide it:
+<AdSlot slot="..." size="leaderboard" upsellHref="/signup" />
 <AdSlot slot="..." size="leaderboard" showUpsell={false} />`;
+
+const houseFallbackCode = `import { AdSlot } from '@/components/ui/AdSlot';
+
+// When no ad fills, the slot falls back to the Shakeout newsletter
+// house ad automatically — no extra props needed.
+<AdSlot slot="1234567890" size="mpu" />`;
 
 const dismissibleCode = `import { AdSlot } from '@/components/ui/AdSlot';
 
@@ -317,7 +323,7 @@ export default function AdSlotComponent() {
           &mdash; with an optional{" "}
           <code className="inline-code">Hide</code> control for dismissible
           placements (modelled on 404 Media), generous breathing room from the
-          surrounding content, and a Distanz house card when the ad
+          surrounding content, and the Shakeout newsletter house ad when the ad
           doesn&apos;t fill.
         </p>
 
@@ -491,14 +497,33 @@ export default function AdSlotComponent() {
         </div>
       </Section>
 
+      {/* House fallback — Shakeout */}
+      <Section>
+        <SectionHeader id="house-fallback" onCopyLink={showToast}>
+          House fallback &mdash; Shakeout
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          When AdSense returns no fill, the slot doesn&apos;t collapse or sit
+          empty &mdash; it shows the{" "}
+          <strong className="font-medium text-textDefault">Shakeout</strong>{" "}
+          newsletter house ad, adapted to the slot&apos;s shape. No disclaimer
+          row (it isn&apos;t a paid ad), and the reserved space stays fixed so
+          the layout never shifts.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={houseFallbackCode} minHeight={340}>
+            <AdSlot slot="preview-house" size="mpu" preview />
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* Custom fallback */}
       <Section>
         <SectionHeader id="custom-fallback" onCopyLink={showToast}>
           Custom fallback
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
-          When no ad fills, the slot defaults to a Distanz &ldquo;advertise
-          with us&rdquo; card. To show something else instead &mdash; a
+          To override the default Shakeout house ad &mdash; a different
           newsletter CTA, a related race, an affiliate product &mdash; pass
           any React node to{" "}
           <code className="inline-code">

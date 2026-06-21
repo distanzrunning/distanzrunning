@@ -228,6 +228,25 @@
 }
 
 @layer components {
+  /* AdSlot frame (404 Media-style) — a <fieldset> border with the disclaimer
+     <legend> sitting on the top rule. The legend natively cuts the border, so
+     no background hack is needed. Two resets: drop the fieldset's intrinsic
+     min-inline-size so it can shrink to the creative, and centre the legend on
+     the rule with a small gap. */
+  fieldset.ds-ad {
+    /* Strip the UA fieldset chrome (groove border + intrinsic padding/margin
+       + min-content width); the framed/breathingRoom Tailwind utilities, which
+       sit in a later layer, add back the border, padding, and margins. */
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  fieldset.ds-ad > legend.ds-ad__disclaimer {
+    margin-inline: auto;
+    padding-inline: 0.5rem;
+  }
+
   /* Inline code chip — the canonical small `monospaced` token used in
      body copy across the Admin shell + Design System docs. Sized to
      sit alongside text-copy-14 / text-copy-16 body copy: 14px / 24px
