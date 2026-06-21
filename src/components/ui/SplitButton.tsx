@@ -312,7 +312,10 @@ export function SplitButton({
                 setOpen(false);
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.05)";
+                // Theme-aware hover overlay: black 5% in light, white 5% in
+                // dark (the raw rgba(0,0,0,0.05) stayed black in dark mode).
+                e.currentTarget.style.backgroundColor =
+                  "hsla(var(--ds-gray-1000-value), 0.05)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "transparent";
