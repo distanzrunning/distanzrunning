@@ -233,7 +233,7 @@ The following live in `src/components/` (some in `src/components/ui/`). When int
 
 ## DS docs page convention (when adding a new component page)
 
-Every component page under `src/app/admin/(shell)/design-system/<slug>/page.tsx` follows the same shape. Use **`ModalComponent.tsx`** or **`AccordionComponent.tsx`** as the reference when copying.
+Every component page under `src/app/admin/(shell)/design-system/<slug>/page.tsx` follows the same shape. Use **`ModalComponent.tsx`** as the reference when copying.
 
 **Page wrapper (`<slug>/page.tsx`):**
 ```tsx
@@ -250,7 +250,7 @@ Every component page under `src/app/admin/(shell)/design-system/<slug>/page.tsx`
 
 **Content (`components/content/<Name>Component.tsx`):**
 
-1. **Page chrome** — inline these helpers at the top of the file: `Toast`, `LinkIcon`, `SectionHeader`, `CopyIconButton`, `RenderShikiToken`, `CodePreview`. Copy verbatim from `AccordionComponent.tsx` — they're identical across pages. *(TODO: extract into a shared module once we touch more than one of these in a single PR.)*
+1. **Page chrome** — inline these helpers at the top of the file: `Toast`, `LinkIcon`, `SectionHeader`, `CopyIconButton`, `RenderShikiToken`, `CodePreview`. Copy verbatim from `ModalComponent.tsx` — they're identical across pages. *(TODO: extract into a shared module once we touch more than one of these in a single PR.)*
 
 2. **Each example** lives inside a `<CodePreview componentCode={…}>` card so the reader gets a Show-code toggle plus a Shiki-highlighted snippet with line numbers + copy button. Pair every demo component with a code string constant — the string is what the user sees in the panel.
 

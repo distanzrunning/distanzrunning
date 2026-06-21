@@ -1,4 +1,3 @@
-import { buildAccordionItem } from "./items/accordion";
 import { buildAdSlotItem } from "./items/ad-slot";
 import { buildArticleCardItem } from "./items/article-card";
 import { buildAvatarItem } from "./items/avatar";
@@ -119,7 +118,6 @@ const BUILDERS: Record<string, Builder> = {
   wordmark: buildWordmarkItem,
 
   // Molecules — documented
-  accordion: buildAccordionItem,
   "ad-slot": buildAdSlotItem,
   "article-card": buildArticleCardItem,
   browser: buildBrowserItem,

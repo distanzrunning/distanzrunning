@@ -15,7 +15,7 @@ import { ComponentRef } from "../ComponentRef";
 import { Section } from "../ContentWithTOC";
 
 // ============================================================================
-// Page chrome — copied verbatim from AccordionComponent.tsx per the DS
+// Page chrome — copied verbatim from ModalComponent.tsx per the DS
 // convention (TODO: extract into a shared module once we touch more than
 // one of these in a single PR).
 // ============================================================================
