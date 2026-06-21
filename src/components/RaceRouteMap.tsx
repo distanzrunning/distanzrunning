@@ -1203,7 +1203,7 @@ function createCustomControls(
       width: 20px;
       height: 20px;
       box-shadow: ${isDark
-        ? '0 2px 12px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(228, 60, 129, 0.3)'
+        ? '0 2px 12px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 112, 243, 0.3)'
         : '0 2px 8px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.06)'};
       cursor: pointer;
       display: flex;

@@ -815,7 +815,7 @@ export const RaceMapComponent: React.FC<RaceMapComponentProps> = ({
             label: `Elevation (${unitElevation})`,
             data: elevationData,
             borderColor: '#0070F3',
-            backgroundColor: 'rgba(228, 60, 129, 0.08)',
+            backgroundColor: 'rgba(0, 112, 243, 0.08)',
             fill: true,
             tension: 0.3,
             borderWidth: 2,

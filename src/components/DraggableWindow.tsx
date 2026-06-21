@@ -438,8 +438,8 @@ export function DraggableWindow({
             bottom: 0,
             left: snapPreview === 'left' ? 0 : '50%',
             width: '50%',
-            background: 'repeating-linear-gradient(45deg, rgba(228, 60, 129, 0.03), rgba(228, 60, 129, 0.03) 10px, rgba(228, 60, 129, 0.05) 10px, rgba(228, 60, 129, 0.05) 20px)',
-            border: '2px solid rgba(228, 60, 129, 0.4)',
+            background: 'repeating-linear-gradient(45deg, rgba(0, 112, 243, 0.03), rgba(0, 112, 243, 0.03) 10px, rgba(0, 112, 243, 0.05) 10px, rgba(0, 112, 243, 0.05) 20px)',
+            border: '2px solid rgba(0, 112, 243, 0.4)',
             zIndex: 10,
           }}
         />

@@ -90,8 +90,8 @@ export const colors = {
       textForceShade: "rgb(17, 24, 39)",
       textInverted: "rgb(249, 250, 250)",
       textDisabled: "rgb(172, 176, 184)",
-      textAccent: "rgb(228, 60, 129)",
-      textAccentSubtle: "rgb(238, 182, 205)",
+      textAccent: "rgb(0, 112, 243)",
+      textAccentSubtle: "rgb(153, 197, 255)",
 
       borderNeutral: "rgb(229, 229, 229)",
       borderNeutralHover: "rgb(204, 204, 204)",
@@ -109,7 +109,7 @@ export const colors = {
       textSubtle: "rgb(172, 176, 184)",
       textSubtler: "rgb(107, 114, 128)",
       textInverted: "rgb(17, 24, 39)",
-      textAccent: "rgb(228, 60, 129)",
+      textAccent: "rgb(0, 112, 243)",
 
       borderNeutral: "rgb(45, 45, 45)",
       borderNeutralHover: "rgb(64, 64, 64)",
