@@ -1048,11 +1048,15 @@ module.exports = {
       };
       addUtilities(geistTypography);
     },
-    function ({ addComponents, theme }) {
+    function ({ addComponents }) {
       addComponents({
         // Distanz container system (Economist-inspired grid)
         // 4 columns (< 600px) → 6 columns (≥ 600px) → 12 columns (≥ 960px)
         // Gap: 12px (small/medium), 16px (large), Max-width: 1585px
+        // NOTE: responsive overrides are nested INSIDE each class (not as
+        // top-level `@media` sibling keys) so the config loads under Tailwind
+        // v4's engine, which requires every addComponents key to be a single
+        // class selector. Behaviour is identical to the old sibling form.
         ".distanz-container": {
           display: "grid",
           gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
@@ -1063,14 +1067,10 @@ module.exports = {
           columnGap: "0.75rem", // 12px
           paddingLeft: "1.5rem", // 24px
           paddingRight: "1.5rem",
-        },
-        "@media (min-width: 600px)": {
-          ".distanz-container": {
+          "@media (min-width: 600px)": {
             gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
           },
-        },
-        "@media (min-width: 960px)": {
-          ".distanz-container": {
+          "@media (min-width: 960px)": {
             gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
             columnGap: "1rem", // 16px
             paddingLeft: "2rem", // 32px
@@ -1090,14 +1090,10 @@ module.exports = {
           paddingLeft: "1.5rem", // 24px
           paddingRight: "1.5rem",
           paddingTop: "80px",
-        },
-        "@media (min-width: 600px)": {
-          ".distanz-article-container": {
+          "@media (min-width: 600px)": {
             gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
           },
-        },
-        "@media (min-width: 960px)": {
-          ".distanz-article-container": {
+          "@media (min-width: 960px)": {
             gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
             columnGap: "1rem", // 16px
             paddingLeft: "2rem", // 32px
@@ -1112,9 +1108,7 @@ module.exports = {
         // Centered content column (cols 3-10 of 12)
         ".distanz-article-col": {
           gridColumn: "1 / -1",
-        },
-        "@media (min-width: 768px)": {
-          ".distanz-article-col": {
+          "@media (min-width: 768px)": {
             gridColumnStart: "3",
             gridColumnEnd: "11",
           },
@@ -1135,9 +1129,7 @@ module.exports = {
           margin: "0 auto",
           minHeight: "100vh",
           overflow: "visible",
-        },
-        "@media (min-width: 768px)": {
-          ".main-wrapper": {
+          "@media (min-width: 768px)": {
             width: "100%",
             maxWidth: "1585px",
           },
@@ -1148,9 +1140,7 @@ module.exports = {
           position: "relative",
           width: "100%",
           overflow: "visible",
-        },
-        "@media (min-width: 768px)": {
-          ".main-bordered": {
+          "@media (min-width: 768px)": {
             borderLeft: "1px solid hsl(var(--color-borderNeutral))",
             borderRight: "1px solid hsl(var(--color-borderNeutral))",
           },
@@ -1160,9 +1150,7 @@ module.exports = {
         ".v-sep": {
           borderLeft: "1px solid hsl(var(--color-borderNeutral))",
           borderRight: "1px solid hsl(var(--color-borderNeutral))",
-        },
-        "@media (max-width: 767px)": {
-          ".v-sep": {
+          "@media (max-width: 767px)": {
             borderLeft: "none",
             borderRight: "none",
           },
