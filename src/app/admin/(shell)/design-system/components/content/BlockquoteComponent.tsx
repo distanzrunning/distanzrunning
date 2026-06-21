@@ -64,7 +64,7 @@ function VariantShowcase({ title, id, initialText }: VariantShowcaseProps) {
     <div className="mb-8">
       <h3
         id={id}
-        className="text-heading-20 font-serif mb-3 scroll-mt-32"
+        className="text-heading-20 mb-3 scroll-mt-32"
       >
         {title}
       </h3>
@@ -103,7 +103,7 @@ export default function BlockquoteComponent() {
         <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Content</p>
         <h1
           id="blockquote"
-          className="text-heading-40 font-serif mb-0"
+          className="text-heading-40 mb-0"
         >
           Blockquote
         </h1>
@@ -119,7 +119,7 @@ export default function BlockquoteComponent() {
       <section>
         <h2
           id="variants"
-          className="sr-only text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="sr-only text-heading-24 mb-2 scroll-mt-32"
         >
           Variants
         </h2>
@@ -138,7 +138,7 @@ export default function BlockquoteComponent() {
       <section>
         <h2
           id="props"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Props
         </h2>
@@ -182,7 +182,7 @@ export default function BlockquoteComponent() {
       <section>
         <h2
           id="anatomy"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Anatomy
         </h2>
@@ -256,7 +256,7 @@ export default function BlockquoteComponent() {
       <section>
         <h2
           id="colours"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Colour reference
         </h2>

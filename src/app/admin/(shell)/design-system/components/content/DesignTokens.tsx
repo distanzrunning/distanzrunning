@@ -8,7 +8,7 @@ export default function DesignTokens() {
         <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Principles
         </p>
-        <h1 className="text-heading-40 font-serif mb-0">
+        <h1 className="text-heading-40 mb-0">
           Design tokens
         </h1>
       </div>
@@ -25,7 +25,7 @@ export default function DesignTokens() {
       <section>
         <h2
           id="what-are-tokens"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           What are design tokens?
         </h2>
@@ -78,7 +78,7 @@ export default function DesignTokens() {
       <section>
         <h2
           id="token-types"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Token types
         </h2>
@@ -93,7 +93,7 @@ export default function DesignTokens() {
         {/* Global tokens */}
         <h3
           id="global-tokens"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Global tokens
         </h3>
@@ -146,7 +146,7 @@ export default function DesignTokens() {
         {/* Semantic tokens */}
         <h3
           id="semantic-tokens"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Semantic tokens
         </h3>
@@ -199,7 +199,7 @@ export default function DesignTokens() {
         {/* Component tokens */}
         <h3
           id="component-tokens"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Component tokens
         </h3>
@@ -244,7 +244,7 @@ export default function DesignTokens() {
       <section>
         <h2
           id="token-inheritance"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Token inheritance
         </h2>
@@ -292,7 +292,7 @@ export default function DesignTokens() {
       <section>
         <h2
           id="token-categories"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Token categories
         </h2>
@@ -383,7 +383,7 @@ export default function DesignTokens() {
       <section>
         <h2
           id="usage-guidelines"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Usage guidelines
         </h2>
@@ -392,7 +392,7 @@ export default function DesignTokens() {
 
         <h3
           id="prefer-semantic"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Prefer semantic tokens
         </h3>
@@ -423,7 +423,7 @@ export default function DesignTokens() {
 
         <h3
           id="use-global-sparingly"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Use global tokens sparingly
         </h3>
@@ -454,7 +454,7 @@ export default function DesignTokens() {
 
         <h3
           id="never-hardcode"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Never hard-code values
         </h3>
@@ -471,7 +471,7 @@ export default function DesignTokens() {
       <section>
         <h2
           id="implementation"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Implementation
         </h2>
@@ -488,7 +488,7 @@ export default function DesignTokens() {
 
         <h3
           id="css-variables"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           CSS custom properties
         </h3>
@@ -509,7 +509,7 @@ export default function DesignTokens() {
 
         <h3
           id="tailwind-classes"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Tailwind classes
         </h3>

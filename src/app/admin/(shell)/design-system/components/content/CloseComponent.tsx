@@ -11,7 +11,7 @@ export default function CloseComponent() {
     <article className="space-y-10">
       {/* Header */}
       <header>
-        <h1 className="font-serif text-3xl md:text-4xl font-medium text-textDefault mb-4">
+        <h1 className="text-3xl md:text-4xl font-medium text-textDefault mb-4">
           Close
         </h1>
         <p className="text-lg text-textSubtle max-w-2xl">
@@ -22,7 +22,7 @@ export default function CloseComponent() {
 
       {/* Interactive Preview */}
       <section>
-        <h2 className="font-serif text-xl font-medium text-textDefault mb-4">
+        <h2 className="text-xl font-medium text-textDefault mb-4">
           Preview
         </h2>
 
@@ -72,7 +72,7 @@ export default function CloseComponent() {
 
       {/* Usage */}
       <section>
-        <h2 className="font-serif text-xl font-medium text-textDefault mb-4">
+        <h2 className="text-xl font-medium text-textDefault mb-4">
           Usage
         </h2>
         <div className="bg-gray-200 dark:bg-gray-1000 rounded-lg overflow-hidden">
@@ -100,7 +100,7 @@ import IconButton from "@/components/ui/IconButton";
 
       {/* Props */}
       <section>
-        <h2 className="font-serif text-xl font-medium text-textDefault mb-4">
+        <h2 className="text-xl font-medium text-textDefault mb-4">
           Props
         </h2>
         <div className="overflow-x-auto">
@@ -157,7 +157,7 @@ import IconButton from "@/components/ui/IconButton";
 
       {/* Guidelines */}
       <section>
-        <h2 className="font-serif text-xl font-medium text-textDefault mb-4">
+        <h2 className="text-xl font-medium text-textDefault mb-4">
           Guidelines
         </h2>
         <div className="space-y-4 text-textSubtle">
@@ -189,7 +189,7 @@ import IconButton from "@/components/ui/IconButton";
 
       {/* Examples */}
       <section>
-        <h2 className="font-serif text-xl font-medium text-textDefault mb-4">
+        <h2 className="text-xl font-medium text-textDefault mb-4">
           Common Patterns
         </h2>
 

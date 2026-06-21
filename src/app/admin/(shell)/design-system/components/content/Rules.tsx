@@ -7,7 +7,7 @@ export default function Rules() {
           Foundations
         </p>
         <h1
-          className="text-heading-40 font-serif mb-0"
+          className="text-heading-40 mb-0"
           id="rules"
         >
           Rules
@@ -26,7 +26,7 @@ export default function Rules() {
       <section>
         <h2
           id="styles"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Styles
         </h2>
@@ -36,7 +36,7 @@ export default function Rules() {
         {/* Rule - Default */}
         <h3
           id="styles-rule"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Rule
         </h3>
@@ -72,7 +72,7 @@ export default function Rules() {
         {/* Rule - Emphasised */}
         <h3
           id="styles-rule-emphasised"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Rule (emphasised)
         </h3>
@@ -108,7 +108,7 @@ export default function Rules() {
         {/* Rule - Heavy */}
         <h3
           id="styles-rule-heavy"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Rule (heavy)
         </h3>
@@ -147,7 +147,7 @@ export default function Rules() {
       <section>
         <h2
           id="dark-mode"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Dark mode
         </h2>
@@ -178,7 +178,7 @@ export default function Rules() {
       <section>
         <h2
           id="reference"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Reference
         </h2>
@@ -245,7 +245,7 @@ export default function Rules() {
       <section>
         <h2
           id="usage"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Usage
         </h2>

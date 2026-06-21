@@ -35,7 +35,7 @@ export default function GridSpacing() {
       <div>
         <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Grid</p>
         <h1
-          className="text-heading-40 font-serif mb-0"
+          className="text-heading-40 mb-0"
           id="grid-spacing"
         >
           Grid spacing
@@ -48,7 +48,7 @@ export default function GridSpacing() {
       <section>
         <h2
           id="spacing-scale"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Spacing scale
         </h2>
@@ -140,7 +140,7 @@ export default function GridSpacing() {
       <section>
         <h2
           id="gap-and-gutter"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Gap and gutter
         </h2>
@@ -150,7 +150,7 @@ export default function GridSpacing() {
         {/* Grid Gap Subsection */}
         <h3
           id="gap-and-gutter-grid-gap"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Grid gap
         </h3>
@@ -224,7 +224,7 @@ export default function GridSpacing() {
         {/* Grid Gutter Subsection */}
         <h3
           id="gap-and-gutter-grid-gutter"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Grid gutter
         </h3>

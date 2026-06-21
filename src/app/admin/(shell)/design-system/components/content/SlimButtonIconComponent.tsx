@@ -87,7 +87,7 @@ function VariantShowcase({
     <div className="mb-8">
       <h3
         id={id}
-        className="text-heading-20 font-serif mb-3 scroll-mt-32"
+        className="text-heading-20 mb-3 scroll-mt-32"
       >
         {title}
       </h3>
@@ -189,7 +189,7 @@ export default function SlimButtonIconComponent() {
         <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Buttons</p>
         <h1
           id="slim-button-icon"
-          className="text-heading-40 font-serif mb-0"
+          className="text-heading-40 mb-0"
         >
           Slim button + icon
         </h1>
@@ -206,7 +206,7 @@ export default function SlimButtonIconComponent() {
       <section>
         <h2
           id="variants"
-          className="sr-only text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="sr-only text-heading-24 mb-2 scroll-mt-32"
         >
           Variants
         </h2>
@@ -277,7 +277,7 @@ export default function SlimButtonIconComponent() {
       <section>
         <h2
           id="guidelines"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Guidelines
         </h2>
@@ -286,7 +286,7 @@ export default function SlimButtonIconComponent() {
 
         <h3
           id="guidelines-how-to-use"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           How to use
         </h3>
@@ -306,7 +306,7 @@ export default function SlimButtonIconComponent() {
       <section>
         <h2
           id="props"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Props
         </h2>

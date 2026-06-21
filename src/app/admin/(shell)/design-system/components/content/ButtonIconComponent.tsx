@@ -93,7 +93,7 @@ function VariantShowcase({
     <div className="mb-8">
       <h3
         id={id}
-        className="text-heading-20 font-serif mb-3 scroll-mt-32"
+        className="text-heading-20 mb-3 scroll-mt-32"
       >
         {title}
       </h3>
@@ -198,7 +198,7 @@ export default function ButtonIconComponent() {
         <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Buttons</p>
         <h1
           id="button-icon"
-          className="text-heading-40 font-serif mb-0"
+          className="text-heading-40 mb-0"
         >
           Button + icon
         </h1>
@@ -214,7 +214,7 @@ export default function ButtonIconComponent() {
       <section>
         <h2
           id="variants"
-          className="sr-only text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="sr-only text-heading-24 mb-2 scroll-mt-32"
         >
           Variants
         </h2>
@@ -289,7 +289,7 @@ export default function ButtonIconComponent() {
       <section>
         <h2
           id="guidelines"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Guidelines
         </h2>
@@ -298,7 +298,7 @@ export default function ButtonIconComponent() {
 
         <h3
           id="guidelines-how-to-use"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           How to use
         </h3>
@@ -322,7 +322,7 @@ export default function ButtonIconComponent() {
 
         <h3
           id="guidelines-best-practices"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Best practices
         </h3>
@@ -351,7 +351,7 @@ export default function ButtonIconComponent() {
       <section>
         <h2
           id="anatomy"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Anatomy
         </h2>
@@ -410,7 +410,7 @@ export default function ButtonIconComponent() {
       <section>
         <h2
           id="props"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Props
         </h2>
@@ -496,7 +496,7 @@ export default function ButtonIconComponent() {
       <section>
         <h2
           id="colours"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Colour reference
         </h2>
@@ -505,7 +505,7 @@ export default function ButtonIconComponent() {
 
         <h3
           id="colours-primary"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Primary icon button
         </h3>
@@ -552,7 +552,7 @@ export default function ButtonIconComponent() {
 
         <h3
           id="colours-secondary"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Secondary icon button
         </h3>
@@ -606,7 +606,7 @@ export default function ButtonIconComponent() {
 
         <h3
           id="colours-tertiary"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Tertiary icon button
         </h3>

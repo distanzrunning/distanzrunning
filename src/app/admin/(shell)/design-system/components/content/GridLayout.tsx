@@ -7,7 +7,7 @@ export default function GridLayout() {
       <div>
         <p className="text-copy-14 tracking-wide text-textSubtle mb-2">Grid</p>
         <h1
-          className="text-heading-40 font-serif mb-0"
+          className="text-heading-40 mb-0"
           id="grid-layout"
         >
           Grid layout
@@ -20,7 +20,7 @@ export default function GridLayout() {
       <section>
         <h2
           id="column-grid"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Column grid
         </h2>
@@ -165,7 +165,7 @@ export default function GridLayout() {
       <section>
         <h2
           id="main-wrapper"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Main wrapper
         </h2>
@@ -199,7 +199,7 @@ export default function GridLayout() {
         {/* CSS Classes Table */}
         <h3
           id="main-wrapper-classes"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           CSS classes
         </h3>
@@ -246,7 +246,7 @@ export default function GridLayout() {
         {/* Responsive Behavior Table */}
         <h3
           id="main-wrapper-responsive"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Responsive behavior
         </h3>
@@ -291,7 +291,7 @@ export default function GridLayout() {
         {/* Usage Example */}
         <h3
           id="main-wrapper-usage"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Usage
         </h3>
@@ -315,7 +315,7 @@ export default function GridLayout() {
       <section>
         <h2
           id="resources"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Resources
         </h2>
@@ -324,7 +324,7 @@ export default function GridLayout() {
 
         <h3
           id="resources-figma-files"
-          className="text-heading-20 font-serif mb-3 scroll-mt-32"
+          className="text-heading-20 mb-3 scroll-mt-32"
         >
           Figma artboards
         </h3>

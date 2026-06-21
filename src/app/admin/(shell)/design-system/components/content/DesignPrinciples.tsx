@@ -6,7 +6,7 @@ export default function DesignPrinciples() {
         <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Principles
         </p>
-        <h1 className="text-heading-40 font-serif mb-0">
+        <h1 className="text-heading-40 mb-0">
           Design principles
         </h1>
       </div>
@@ -23,7 +23,7 @@ export default function DesignPrinciples() {
         {/* Principle 1 */}
         <h2
           id="less-is-more"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Less is more
         </h2>
@@ -37,7 +37,7 @@ export default function DesignPrinciples() {
         {/* Principle 2 */}
         <h2
           id="deliberate-typography"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Deliberate typography
         </h2>
@@ -52,7 +52,7 @@ export default function DesignPrinciples() {
         {/* Principle 3 */}
         <h2
           id="visual-harmony"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Visual harmony
         </h2>
@@ -67,7 +67,7 @@ export default function DesignPrinciples() {
         {/* Principle 4 */}
         <h2
           id="clear-wayfinding"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Clear wayfinding
         </h2>
@@ -82,7 +82,7 @@ export default function DesignPrinciples() {
         {/* Principle 5 */}
         <h2
           id="performance-and-precision"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Performance and precision
         </h2>
@@ -98,7 +98,7 @@ export default function DesignPrinciples() {
         {/* Principle 6 */}
         <h2
           id="recognisable-consistency"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Recognisable consistency
         </h2>

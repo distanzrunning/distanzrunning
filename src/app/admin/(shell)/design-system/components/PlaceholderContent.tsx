@@ -7,7 +7,7 @@ export default function PlaceholderContent({ title, subsection }: PlaceholderCon
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-serif text-[40px] leading-[1.15] font-medium mb-4">
+        <h1 className="text-[40px] leading-[1.15] font-medium mb-4">
           {title}
         </h1>
         {subsection && (

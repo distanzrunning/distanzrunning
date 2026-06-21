@@ -6,7 +6,7 @@ export default function UXPrinciples() {
         <p className="text-copy-14 tracking-wide text-textSubtle mb-2">
           Principles
         </p>
-        <h1 className="text-heading-40 font-serif mb-0">
+        <h1 className="text-heading-40 mb-0">
           UX principles
         </h1>
       </div>
@@ -23,7 +23,7 @@ export default function UXPrinciples() {
         {/* Principle 1 */}
         <h2
           id="user-centred-design"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           User-centred design
         </h2>
@@ -38,7 +38,7 @@ export default function UXPrinciples() {
         {/* Principle 2 */}
         <h2
           id="accessible-to-all"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Accessible to all
         </h2>
@@ -53,7 +53,7 @@ export default function UXPrinciples() {
         {/* Principle 3 */}
         <h2
           id="progressive-disclosure"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Progressive disclosure
         </h2>
@@ -68,7 +68,7 @@ export default function UXPrinciples() {
         {/* Principle 4 */}
         <h2
           id="feedback-and-response"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Feedback and response
         </h2>
@@ -82,7 +82,7 @@ export default function UXPrinciples() {
         {/* Principle 5 */}
         <h2
           id="consistency-and-familiarity"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Consistency and familiarity
         </h2>
@@ -96,7 +96,7 @@ export default function UXPrinciples() {
         {/* Principle 6 */}
         <h2
           id="respect-time-and-attention"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Respect time and attention
         </h2>

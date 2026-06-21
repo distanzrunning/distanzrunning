@@ -169,7 +169,7 @@ export default function Iconography() {
           Foundations
         </p>
         <h1
-          className="text-heading-40 font-serif mb-0"
+          className="text-heading-40 mb-0"
           id="iconography"
         >
           Iconography
@@ -189,7 +189,7 @@ export default function Iconography() {
       <section>
         <h2
           id="sizing"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Sizing
         </h2>
@@ -265,7 +265,7 @@ export default function Iconography() {
       <section>
         <h2
           id="stroke-weight"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Stroke weight
         </h2>
@@ -318,7 +318,7 @@ export default function Iconography() {
       <section>
         <h2
           id="colour"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Colour
         </h2>
@@ -363,7 +363,7 @@ export default function Iconography() {
       <section>
         <h2
           id="navigation"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Navigation
         </h2>
@@ -379,7 +379,7 @@ export default function Iconography() {
       <section>
         <h2
           id="theme"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Theme
         </h2>
@@ -395,7 +395,7 @@ export default function Iconography() {
       <section>
         <h2
           id="categories"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Categories
         </h2>
@@ -416,7 +416,7 @@ export default function Iconography() {
       <section>
         <h2
           id="data"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Data &amp; metrics
         </h2>
@@ -437,7 +437,7 @@ export default function Iconography() {
       <section>
         <h2
           id="design-system"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Design system
         </h2>
@@ -458,7 +458,7 @@ export default function Iconography() {
       <section>
         <h2
           id="usage"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Usage guidelines
         </h2>
@@ -467,7 +467,7 @@ export default function Iconography() {
 
         <div className="space-y-4">
           <div>
-            <h3 className="text-heading-20 font-serif mb-2">
+            <h3 className="text-heading-20 mb-2">
               Import
             </h3>
             <div className="bg-surfaceSubtle p-4 font-mono text-sm">
@@ -480,7 +480,7 @@ export default function Iconography() {
           <hr className="border-t border-borderSubtle" />
 
           <div>
-            <h3 className="text-heading-20 font-serif mb-2">
+            <h3 className="text-heading-20 mb-2">
               Basic usage
             </h3>
             <div className="bg-surfaceSubtle p-4 font-mono text-sm">
@@ -493,7 +493,7 @@ export default function Iconography() {
           <hr className="border-t border-borderSubtle" />
 
           <div>
-            <h3 className="text-heading-20 font-serif mb-2">
+            <h3 className="text-heading-20 mb-2">
               With custom stroke
             </h3>
             <div className="bg-surfaceSubtle p-4 font-mono text-sm">
@@ -506,7 +506,7 @@ export default function Iconography() {
           <hr className="border-t border-borderSubtle" />
 
           <div>
-            <h3 className="text-heading-20 font-serif mb-2">
+            <h3 className="text-heading-20 mb-2">
               Accessibility
             </h3>
             <p className="text-copy-16 text-textSubtle mb-4">
@@ -529,7 +529,7 @@ export default function Iconography() {
       <section>
         <h2
           id="reference"
-          className="text-heading-24 font-serif mb-2 scroll-mt-32"
+          className="text-heading-24 mb-2 scroll-mt-32"
         >
           Reference
         </h2>
