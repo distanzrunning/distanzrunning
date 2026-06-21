@@ -518,8 +518,6 @@ export function AdSlot({
       className={[
         "ds-ad mx-auto",
         framed ? "rounded-lg border border-borderSubtle px-4 pb-4 pt-2.5" : "",
-        // Opaque surface when floating so scrolling content can't show through.
-        sticky ? "bg-surface" : "",
         !sticky && breathingRoom ? "my-8" : "",
         className,
       ]
@@ -564,18 +562,22 @@ export function AdSlot({
     </fieldset>
   );
 
-  // Sticky: pin that same contained frame to the bottom centre and slide it up.
-  // The wrapper is transparent (no full-width bar) and lets clicks fall through
-  // its empty sides to the content behind.
+  // Sticky: a full-bleed bar fixed to the bottom (the 404 ad-fixed__wrapper),
+  // with the SAME contained framed ad centred inside it. The bar carries the
+  // full-width background; a soft top shadow (not a full-width line) lifts it
+  // off the content, and the disclaimer rule stays contained to the ad.
   if (sticky) {
     if (hideWhenUnfilled && showFallback) return null;
     return (
       <div
         ref={stickyRef}
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-3 pb-3 transition-transform duration-300 ease-out"
-        style={{ transform: shown ? "translateY(0)" : "translateY(130%)" }}
+        className="fixed inset-x-0 bottom-0 z-50 bg-surface transition-transform duration-300 ease-out"
+        style={{
+          transform: shown ? "translateY(0)" : "translateY(100%)",
+          boxShadow: "0 -2px 16px hsla(var(--ds-gray-1000-value), 0.08)",
+        }}
       >
-        <div className="pointer-events-auto">{frame}</div>
+        <div className="flex justify-center px-4 py-3">{frame}</div>
       </div>
     );
   }
