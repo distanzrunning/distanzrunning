@@ -191,7 +191,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
 
     if (isToday) {
       return (
-        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium">
+        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-textDefault text-textInverted font-medium">
           {arg.dayNumberText}
         </span>
       );
@@ -424,7 +424,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                               disabled={!month.isAvailable}
                               className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
                                 currentMonth === month.index
-                                  ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium"
+                                  ? "bg-textDefault text-textInverted font-medium"
                                   : month.isAvailable
                                     ? "text-textSubtle hover:bg-[var(--ds-gray-100)]"
                                     : "text-textSubtler cursor-not-allowed opacity-50"
@@ -469,7 +469,7 @@ export function RaceCalendarClient({ races }: { races: RaceGuide[] }) {
                               onClick={() => handleYearClick(year)}
                               className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
                                 currentYear === year
-                                  ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium"
+                                  ? "bg-textDefault text-textInverted font-medium"
                                   : "text-textSubtle hover:bg-[var(--ds-gray-100)]"
                               }`}
                             >

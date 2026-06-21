@@ -377,9 +377,9 @@ export function ElevationChart({
               <Settings2 className="w-4 h-4" />
             </button>
             {/* Tooltip */}
-            <div className="absolute right-0 top-full mt-2 px-3 py-2 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-xs font-medium rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none">
+            <div className="absolute right-0 top-full mt-2 px-3 py-2 bg-textDefault text-textInverted text-xs font-medium rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none">
               {useMetric ? 'Change to Imperial (mi/ft)' : 'Change to Metric (km/m)'}
-              <div className="absolute bottom-full right-4 w-2 h-2 bg-neutral-900 dark:bg-neutral-100 transform rotate-45 translate-y-1"></div>
+              <div className="absolute bottom-full right-4 w-2 h-2 bg-textDefault transform rotate-45 translate-y-1"></div>
             </div>
           </div>
         </div>
