@@ -366,7 +366,10 @@ export default function AdSlotComponent() {
           dot-separated), and dismissible placements add a{" "}
           <code className="inline-code">Hide</code> control. Hide the upsell
           with <code className="inline-code">showUpsell=&#123;false&#125;</code>{" "}
-          or repoint it with <code className="inline-code">upsellHref</code>.
+          or repoint it with <code className="inline-code">upsellHref</code>. On
+          small units, lower{" "}
+          <code className="inline-code">disclaimerSize</code> so the row stays
+          narrower than the creative and the frame margins stay even.
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={disclaimerCode} minHeight={200}>
@@ -539,28 +542,25 @@ export default function AdSlotComponent() {
               size="mpu"
               preview
               fallback={
-                <div
-                  className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border p-6 text-center"
-                  style={{
-                    borderColor: "hsl(var(--color-borderDefault))",
-                    background: "hsl(var(--color-canvas))",
-                  }}
-                >
+                <div className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-md bg-canvas p-6 text-center">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-link">
+                    Race guide
+                  </span>
                   <h4 className="text-heading-16 text-textDefault">
-                    Get the Shakeout
+                    London Marathon 2025
                   </h4>
                   <p className="text-copy-13 leading-snug text-textSubtle">
-                    Weekly running stories, gear, and race news.
+                    Route, times, and the full elevation profile.
                   </p>
                   <a
-                    href="/newsletter"
+                    href="#"
                     className="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-md font-sans text-copy-13 font-semibold no-underline"
                     style={{
                       background: "hsl(var(--color-textDefault))",
-                      color: "var(--ds-background-100)",
+                      color: "hsl(var(--color-textInverted))",
                     }}
                   >
-                    Subscribe
+                    View guide
                   </a>
                 </div>
               }

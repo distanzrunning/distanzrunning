@@ -49,6 +49,12 @@ export interface AdSlotProps {
   /** Destination for "Go ad free". Default `/signup`. */
   upsellHref?: string;
   /**
+   * Disclaimer text size in px. Default 11. Drop it on small units so the
+   * "ADVERTISEMENT · GO AD FREE" row stays narrower than the creative and the
+   * frame margins stay even all round.
+   */
+  disclaimerSize?: number;
+  /**
    * Show a "Hide" control in the disclaimer that dismisses the unit. Pair with
    * `dismissKey` to remember the dismissal across visits (localStorage).
    */
@@ -96,11 +102,13 @@ function AdDisclaimer({
   upsellHref,
   dismissible,
   onDismiss,
+  size,
 }: {
   showUpsell: boolean;
   upsellHref: string;
   dismissible: boolean;
   onDismiss: () => void;
+  size: number;
 }) {
   const Dot = () => (
     <span aria-hidden className="text-textSubtler">
@@ -108,7 +116,10 @@ function AdDisclaimer({
     </span>
   );
   return (
-    <span className="flex items-center justify-center gap-2 text-[11px] font-medium uppercase leading-none tracking-[0.08em]">
+    <span
+      className="flex items-center justify-center gap-2 font-medium uppercase leading-none tracking-[0.08em]"
+      style={{ fontSize: size }}
+    >
       <span className="text-textSubtler">Advertisement</span>
       {showUpsell && (
         <>
@@ -269,6 +280,7 @@ export function AdSlot({
   label = true,
   showUpsell = true,
   upsellHref = SIGNUP_HREF,
+  disclaimerSize = 11,
   dismissible = false,
   dismissKey,
   framed = true,
@@ -374,8 +386,10 @@ export function AdSlot({
 
   if (dismissed) return null;
 
-  // Disclaimer shows over a real (or mock) ad, never over the house fallback.
-  const showDisclaimer = label && (mockAd || filled === true);
+  // The disclaimer is part of the slot's frame chrome — show it whenever the
+  // unit is labelled, regardless of what fills it (loading / ad / house
+  // fallback), so every state reads the same.
+  const showDisclaimer = label;
   const showFallback = !mockAd && filled === false;
 
   const creative = mockAd ? (
@@ -422,6 +436,7 @@ export function AdSlot({
             upsellHref={upsellHref}
             dismissible={dismissible}
             onDismiss={handleDismiss}
+            size={disclaimerSize}
           />
         </legend>
       )}
