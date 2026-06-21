@@ -298,6 +298,17 @@ const halfPageCode = `import { AdSlot } from '@/components/ui/AdSlot';
 
 <AdSlot slot="1234567890" size="half-page" />`;
 
+const stickyCode = `import { AdSlot } from '@/components/ui/AdSlot';
+
+// Full-bleed bar pinned to the bottom of the viewport (404's ad-fixed).
+// Always dismissible; dismissKey persists the Hide across visits.
+<AdSlot
+  slot="1234567890"
+  size="leaderboard"
+  sticky
+  dismissKey="footer"
+/>`;
+
 // ============================================================================
 // Main component
 // ============================================================================
@@ -400,6 +411,32 @@ export default function AdSlotComponent() {
               mockAd
               dismissible
             />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Sticky footer */}
+      <Section>
+        <SectionHeader id="sticky-footer" onCopyLink={showToast}>
+          Sticky footer
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          The <code className="inline-code">sticky</code> variant renders a
+          full-bleed bar fixed to the bottom of the viewport (404 Media&apos;s{" "}
+          <code className="inline-code">ad-fixed</code>): a top rule, the centred
+          ad, and the disclaimer with{" "}
+          <code className="inline-code">Hide</code>. It&apos;s always dismissible
+          &mdash; pair with <code className="inline-code">dismissKey</code> to
+          keep it hidden across visits. It can&apos;t preview inline (it pins to
+          the page bottom), so here&apos;s the usage:
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={stickyCode} minHeight={120}>
+            <div className="text-center text-copy-13 text-textSubtle">
+              Renders as a fixed bottom bar &mdash; add{" "}
+              <code className="inline-code">sticky</code> on a real page to try
+              it.
+            </div>
           </CodePreview>
         </div>
       </Section>

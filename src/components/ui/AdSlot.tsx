@@ -55,12 +55,23 @@ export interface AdSlotProps {
    */
   disclaimerSize?: number;
   /**
+   * Stack the disclaimer parts vertically instead of the dot-separated row.
+   * Default auto: stacked when the creative is narrower than ~260px (e.g.
+   * skyscraper) so the row never forces the frame wider than the ad.
+   */
+  disclaimerStacked?: boolean;
+  /**
    * Show a "Hide" control in the disclaimer that dismisses the unit. Pair with
    * `dismissKey` to remember the dismissal across visits (localStorage).
    */
   dismissible?: boolean;
   /** localStorage key under which a dismissal is remembered. */
   dismissKey?: string;
+  /**
+   * Render as a full-bleed bar fixed to the bottom of the viewport (404 Media's
+   * `ad-fixed`). Always dismissible; pair with `dismissKey` to keep it hidden.
+   */
+  sticky?: boolean;
   /**
    * Wrap the unit in the bordered frame with the disclaimer on the top rule
    * (404-style). Default true. Turn off when the placement provides its own
@@ -103,13 +114,50 @@ function AdDisclaimer({
   dismissible,
   onDismiss,
   size,
+  stacked,
 }: {
   showUpsell: boolean;
   upsellHref: string;
   dismissible: boolean;
   onDismiss: () => void;
   size: number;
+  /** Stack the parts vertically (narrow units) instead of a dot-separated row. */
+  stacked: boolean;
 }) {
+  const label = <span className="text-textSubtler">Advertisement</span>;
+  const upsell = showUpsell ? (
+    <a
+      href={upsellHref}
+      className="text-link transition-colors hover:text-textDefault"
+    >
+      Go ad free
+    </a>
+  ) : null;
+  const hide = dismissible ? (
+    <button
+      type="button"
+      onClick={onDismiss}
+      className="text-textSubtler transition-colors hover:text-textDefault"
+    >
+      Hide
+    </button>
+  ) : null;
+  const base = "font-medium uppercase leading-none tracking-[0.08em]";
+
+  if (stacked) {
+    // Vertical, no dots — fits within a narrow creative without widening it.
+    return (
+      <span
+        className={`flex flex-col items-center gap-1 ${base}`}
+        style={{ fontSize: size }}
+      >
+        {label}
+        {upsell}
+        {hide}
+      </span>
+    );
+  }
+
   const Dot = () => (
     <span aria-hidden className="text-textSubtler">
       &middot;
@@ -117,31 +165,20 @@ function AdDisclaimer({
   );
   return (
     <span
-      className="flex items-center justify-center gap-2 font-medium uppercase leading-none tracking-[0.08em]"
+      className={`flex items-center justify-center gap-2 ${base}`}
       style={{ fontSize: size }}
     >
-      <span className="text-textSubtler">Advertisement</span>
-      {showUpsell && (
+      {label}
+      {upsell && (
         <>
           <Dot />
-          <a
-            href={upsellHref}
-            className="text-link transition-colors hover:text-textDefault"
-          >
-            Go ad free
-          </a>
+          {upsell}
         </>
       )}
-      {dismissible && (
+      {hide && (
         <>
           <Dot />
-          <button
-            type="button"
-            onClick={onDismiss}
-            className="text-textSubtler uppercase transition-colors hover:text-textDefault"
-          >
-            Hide
-          </button>
+          {hide}
         </>
       )}
     </span>
@@ -281,8 +318,10 @@ export function AdSlot({
   showUpsell = true,
   upsellHref = SIGNUP_HREF,
   disclaimerSize = 11,
+  disclaimerStacked,
   dismissible = false,
   dismissKey,
+  sticky = false,
   framed = true,
   breathingRoom = true,
   fallback,
@@ -295,11 +334,17 @@ export function AdSlot({
   const dimensions: Dimensions =
     typeof size === "string" ? SIZE_PRESETS[size] : size;
 
+  // Stack the disclaimer on narrow units so it never exceeds the creative.
+  const stacked = disclaimerStacked ?? dimensions.width < 260;
+  // Framed width = creative + px-4 padding (16) + 1px border, both sides.
+  const FRAME_X = 34;
+
   const frameRef = useRef<HTMLFieldSetElement | null>(null);
   const insRef = useRef<HTMLModElement | null>(null);
 
   const inert = preview || mockAd;
-  const [inView, setInView] = useState(!lazy);
+  // A fixed footer is always on-screen, so never lazy-gate it.
+  const [inView, setInView] = useState(!lazy || sticky);
   const [filled, setFilled] = useState<boolean | null>(inert ? false : null);
 
   // Remembered dismissal.
@@ -328,7 +373,7 @@ export function AdSlot({
 
   // 1. IntersectionObserver for lazy loading.
   useEffect(() => {
-    if (inert) return;
+    if (inert || sticky) return;
     if (!lazy || inView) return;
     const node = frameRef.current;
     if (!node) return;
@@ -348,7 +393,7 @@ export function AdSlot({
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [lazy, inView, inert]);
+  }, [lazy, inView, inert, sticky]);
 
   // 2. Push the slot to adsbygoogle once in view.
   useEffect(() => {
@@ -410,6 +455,48 @@ export function AdSlot({
     />
   );
 
+  // Full-bleed fixed footer (404's ad-fixed). No frame border — the bar has its
+  // own top rule; the disclaimer sits above the centred creative with Hide.
+  if (sticky) {
+    return (
+      <div
+        className={[
+          "ds-ad-sticky fixed inset-x-0 bottom-0 z-50 border-t border-borderSubtle bg-surface",
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        role="region"
+        aria-label={ariaLabel}
+      >
+        <div className="mx-auto flex flex-col items-center px-4 py-2.5">
+          {showDisclaimer && (
+            <div className="mb-1.5">
+              <AdDisclaimer
+                showUpsell={showUpsell}
+                upsellHref={upsellHref}
+                dismissible
+                onDismiss={handleDismiss}
+                size={disclaimerSize}
+                stacked={false}
+              />
+            </div>
+          )}
+          <div
+            className="relative"
+            style={{
+              width: dimensions.width,
+              height: dimensions.height,
+              maxWidth: "100%",
+            }}
+          >
+            {creative}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <fieldset
       ref={frameRef}
@@ -424,8 +511,11 @@ export function AdSlot({
         .join(" ")}
       style={{
         minWidth: 0,
-        // Framed: shrink to the creative + padding. Unframed: cap at the size.
-        width: framed ? "fit-content" : "100%",
+        boxSizing: "border-box",
+        // Framed: pin to the creative + frame chrome so the margins stay even
+        // regardless of the disclaimer width (a wide disclaimer used to stretch
+        // a fit-content frame). Unframed: cap at the creative size.
+        width: framed ? dimensions.width + FRAME_X : "100%",
         maxWidth: framed ? "100%" : dimensions.width,
       }}
     >
@@ -437,6 +527,7 @@ export function AdSlot({
             dismissible={dismissible}
             onDismiss={handleDismiss}
             size={disclaimerSize}
+            stacked={stacked}
           />
         </legend>
       )}
