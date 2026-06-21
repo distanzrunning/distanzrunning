@@ -571,10 +571,7 @@ export function AdSlot({
       <div
         ref={stickyRef}
         className="fixed inset-x-0 bottom-0 z-50 bg-surface transition-transform duration-300 ease-out"
-        style={{
-          transform: shown ? "translateY(0)" : "translateY(100%)",
-          boxShadow: "0 -2px 16px hsla(var(--ds-gray-1000-value), 0.08)",
-        }}
+        style={{ transform: shown ? "translateY(0)" : "translateY(100%)" }}
         role="region"
         aria-label={ariaLabel}
       >
