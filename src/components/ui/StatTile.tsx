@@ -111,9 +111,9 @@ function ChangeChip({ change }: { change: StatTileChange }) {
             }
           : undefined
       }
-      // Vercel uses :focus (mouse + keyboard) so clicking shows the
-      // ring too — :focus-visible would skip the mouse case.
-      className="font-semibold text-center outline-none focus:[--chip-alpha:0.5] focus:shadow-[0_0_0_1px_var(--ds-gray-1000)]"
+      // Keyboard-only focus affordance (:focus-visible) — consistent with the
+      // rest of the DS, where the focus ring never fires on mouse click.
+      className="font-semibold text-center outline-none focus-visible:[--chip-alpha:0.5] focus-visible:shadow-[0_0_0_1px_var(--ds-gray-1000)]"
       style={{
         minWidth: 46,
         padding: 6,
