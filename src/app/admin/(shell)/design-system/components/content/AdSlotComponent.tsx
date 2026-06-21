@@ -267,6 +267,31 @@ import { NewsletterSignup } from '@/components/ui/NewsletterSignup';
   fallback={<NewsletterSignup variant="compact" />}
 />`;
 
+const disclaimerCode = `import { AdSlot } from '@/components/ui/AdSlot';
+
+// Every filled unit carries the disclaimer row:
+//   Advertisement · Go ad free
+<AdSlot slot="1234567890" size="leaderboard" />
+
+// Point the upsell at your ad-free / membership route, or hide it:
+<AdSlot slot="..." size="leaderboard" upsellHref="/membership" />
+<AdSlot slot="..." size="leaderboard" showUpsell={false} />`;
+
+const dismissibleCode = `import { AdSlot } from '@/components/ui/AdSlot';
+
+// Sticky footer unit the reader can dismiss. dismissKey persists the
+// "Hide" choice in localStorage so it stays hidden across visits.
+<AdSlot
+  slot="1234567890"
+  size="leaderboard"
+  dismissible
+  dismissKey="footer"
+/>`;
+
+const halfPageCode = `import { AdSlot } from '@/components/ui/AdSlot';
+
+<AdSlot slot="1234567890" size="half-page" />`;
+
 // ============================================================================
 // Main component
 // ============================================================================
@@ -282,16 +307,18 @@ export default function AdSlotComponent() {
           Intro
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 xl:mt-7 mb-6">
-          The ad slot is how Distanz Running embeds advertising into the
-          product without breaking the layout or the design language. It
-          renders a Google AdSense unit at a standard IAB size, reserves the
-          exact pixel space before any network call, lazy-loads the ad only
-          when the slot enters the viewport, labels the space as{" "}
-          <code className="inline-code">
-            Advertisement
-          </code>{" "}
-          per IAB guidelines, and falls back to a Distanz-branded card if
-          the ad doesn&apos;t fill.
+          The ad slot is how Distanz Running embeds advertising without
+          breaking the layout or the design language. It renders a Google
+          AdSense unit at a standard IAB size, reserves the exact pixel space
+          before any network call (no layout shift), and lazy-loads only when
+          the slot enters the viewport. Every filled unit carries a labelled
+          disclaimer row &mdash;{" "}
+          <code className="inline-code">Advertisement &middot; Go ad free</code>{" "}
+          &mdash; with an optional{" "}
+          <code className="inline-code">Hide</code> control for dismissible
+          placements (modelled on 404 Media), generous breathing room from the
+          surrounding content, and a Distanz house card when the ad
+          doesn&apos;t fill.
         </p>
 
         <Note type="default" label={false}>
@@ -320,6 +347,54 @@ export default function AdSlotComponent() {
         </Note>
       </Section>
 
+      {/* Disclaimer & controls */}
+      <Section>
+        <SectionHeader id="disclaimer" onCopyLink={showToast}>
+          Disclaimer &amp; controls
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          Above every filled unit sits a small disclaimer row:{" "}
+          <code className="inline-code">Advertisement</code> labels the space,{" "}
+          <code className="inline-code">Go ad free</code> is the membership
+          upsell (the <code className="inline-code">link</code> token,
+          dot-separated), and dismissible placements add a{" "}
+          <code className="inline-code">Hide</code> control. Hide the upsell
+          with <code className="inline-code">showUpsell=&#123;false&#125;</code>{" "}
+          or repoint it with <code className="inline-code">upsellHref</code>.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={disclaimerCode} minHeight={200}>
+            <AdSlot slot="preview-disclaimer" size="leaderboard" mockAd />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Dismissible */}
+      <Section>
+        <SectionHeader id="dismissible" onCopyLink={showToast}>
+          Dismissible
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          Sticky placements (a fixed footer, an interstitial) add{" "}
+          <code className="inline-code">dismissible</code> so the reader can{" "}
+          <code className="inline-code">Hide</code> them; pair with{" "}
+          <code className="inline-code">dismissKey</code> to remember the choice
+          across visits. Try the{" "}
+          <strong className="font-medium text-textDefault">Hide</strong> link
+          below &mdash; the unit removes itself.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={dismissibleCode} minHeight={200}>
+            <AdSlot
+              slot="preview-dismissible"
+              size="leaderboard"
+              mockAd
+              dismissible
+            />
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* MPU */}
       <Section>
         <SectionHeader id="mpu" onCopyLink={showToast}>
@@ -331,7 +406,7 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={mpuCode} minHeight={340}>
-            <AdSlot slot="preview-mpu" size="mpu" preview />
+            <AdSlot slot="preview-mpu" size="mpu" mockAd />
           </CodePreview>
         </div>
       </Section>
@@ -347,7 +422,7 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={leaderboardCode} minHeight={200}>
-            <AdSlot slot="preview-leaderboard" size="leaderboard" preview />
+            <AdSlot slot="preview-leaderboard" size="leaderboard" mockAd />
           </CodePreview>
         </div>
       </Section>
@@ -363,7 +438,7 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={billboardCode} minHeight={340}>
-            <AdSlot slot="preview-billboard" size="billboard" preview />
+            <AdSlot slot="preview-billboard" size="billboard" mockAd />
           </CodePreview>
         </div>
       </Section>
@@ -379,7 +454,23 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={skyscraperCode} minHeight={680}>
-            <AdSlot slot="preview-skyscraper" size="skyscraper" preview />
+            <AdSlot slot="preview-skyscraper" size="skyscraper" mockAd />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Half-page */}
+      <Section>
+        <SectionHeader id="half-page" onCopyLink={showToast}>
+          Half-page &mdash; 300&times;600
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          The wider sidebar rail unit (404 Media&apos;s sidebar size). More
+          presence than the skyscraper for long-form article and race pages.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={halfPageCode} minHeight={680}>
+            <AdSlot slot="preview-half-page" size="half-page" mockAd />
           </CodePreview>
         </div>
       </Section>
@@ -395,7 +486,7 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={mobileBannerCode} minHeight={140}>
-            <AdSlot slot="preview-mobile" size="mobile-banner" preview />
+            <AdSlot slot="preview-mobile" size="mobile-banner" mockAd />
           </CodePreview>
         </div>
       </Section>

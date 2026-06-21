@@ -12,6 +12,7 @@ export type AdSize =
   | "leaderboard"
   | "billboard"
   | "skyscraper"
+  | "half-page"
   | "mobile-banner"
   | "square";
 
@@ -25,6 +26,7 @@ const SIZE_PRESETS: Record<AdSize, Dimensions> = {
   leaderboard: { width: 728, height: 90 },
   billboard: { width: 970, height: 250 },
   skyscraper: { width: 160, height: 600 },
+  "half-page": { width: 300, height: 600 }, // 404-style sidebar unit
   "mobile-banner": { width: 320, height: 50 },
   square: { width: 300, height: 300 },
 };
@@ -34,37 +36,124 @@ export interface AdSlotProps {
   slot: string;
   /** Size preset or explicit dimensions. */
   size: AdSize | Dimensions;
-  /** Show the "Advertisement" label above the slot when an ad renders. */
+  /**
+   * Show the "Advertisement" disclaimer row above a filled ad. Default true.
+   * (No disclaimer is shown over the house fallback — that isn't an ad.)
+   */
   label?: boolean;
+  /** Show the "Go ad free" upsell link in the disclaimer row. Default true. */
+  showUpsell?: boolean;
+  /** Destination for "Go ad free". Default "/membership" (route TBD). */
+  upsellHref?: string;
+  /**
+   * Show a "Hide" control in the disclaimer that dismisses the unit. Pair with
+   * `dismissKey` to remember the dismissal across visits (localStorage).
+   */
+  dismissible?: boolean;
+  /** localStorage key under which a dismissal is remembered. */
+  dismissKey?: string;
+  /** Vertical breathing room (margin) around the whole unit. Default true. */
+  breathingRoom?: boolean;
   /**
    * Custom React content shown in place of the ad if AdSense returns no fill
    * (or the slot hasn't rendered within 1.5s). Defaults to the Distanz
-   * "Write for us / advertise" card.
+   * "advertise with us" card.
    */
   fallback?: ReactNode;
   /** Lazy-load the ad script until the slot scrolls into view (default true). */
   lazy?: boolean;
   /**
    * Skip the AdSense call entirely and render the fallback immediately.
-   * Useful for design-system previews, placeholder pages, and Storybook
-   * where the slot ID isn't a real AdSense ad unit.
+   * For placeholder pages where the slot ID isn't a real AdSense unit.
    */
   preview?: boolean;
+  /**
+   * Design-system demo only: render the full disclaimer chrome over a neutral
+   * placeholder creative (no AdSense, no house fallback). Documents the unit;
+   * real pages use `preview` or live AdSense.
+   */
+  mockAd?: boolean;
   /** Additional classes on the outer wrapper. */
   className?: string;
+  "aria-label"?: string;
 }
 
 // ============================================================================
-// Default fallback — Distanz "Write for us / advertise" card.
-// Adapts to the slot's dimensions.
+// Disclaimer row — "Advertisement • Go ad free • Hide" (404media-style)
+// ============================================================================
+
+function AdDisclaimer({
+  showUpsell,
+  upsellHref,
+  dismissible,
+  onDismiss,
+}: {
+  showUpsell: boolean;
+  upsellHref: string;
+  dismissible: boolean;
+  onDismiss: () => void;
+}) {
+  const Dot = () => (
+    <span aria-hidden className="text-textSubtler">
+      &middot;
+    </span>
+  );
+  return (
+    <div className="ds-ad__disclaimer mb-2 flex items-center justify-center gap-2 text-[11px] leading-none">
+      <span className="font-medium uppercase tracking-[0.06em] text-textSubtler">
+        Advertisement
+      </span>
+      {showUpsell && (
+        <>
+          <Dot />
+          <a
+            href={upsellHref}
+            className="text-link underline decoration-1 underline-offset-2 hover:opacity-80"
+          >
+            Go ad free
+          </a>
+        </>
+      )}
+      {dismissible && (
+        <>
+          <Dot />
+          <button
+            type="button"
+            onClick={onDismiss}
+            className="text-textSubtle underline decoration-1 underline-offset-2 transition-colors hover:text-textDefault"
+          >
+            Hide
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
+// Mock creative — neutral placeholder for DS demos (mockAd).
+// ============================================================================
+
+function MockCreative({ width, height }: Dimensions) {
+  return (
+    <div
+      className="flex h-full w-full items-center justify-center rounded-lg border border-dashed bg-canvas"
+      style={{ borderColor: "hsl(var(--color-borderDefault))" }}
+    >
+      <span className="text-[12px] font-medium tabular-nums text-textSubtle">
+        {width} &times; {height}
+      </span>
+    </div>
+  );
+}
+
+// ============================================================================
+// Default fallback — Distanz "advertise with us" card. Adapts to dimensions.
 // ============================================================================
 
 function DefaultFallback({ width, height }: Dimensions) {
   const frameStyle: React.CSSProperties = {
     borderColor: "hsl(var(--color-borderDefault))",
-    // bg-100 (white in light, elevated dark in dark) so the
-    // fallback reads as a card raised above the PageFrame
-    // surface — bg-200 blended with the surface in light mode.
     background: "hsl(var(--color-surface))",
   };
   const ctaStyle: React.CSSProperties = {
@@ -83,7 +172,7 @@ function DefaultFallback({ width, height }: Dimensions) {
           href="mailto:brand@distanzrunning.com?subject=Advertising%20on%20Distanz%20Running"
           className="text-[12px] font-semibold text-textDefault no-underline hover:underline"
         >
-          Advertise with us →
+          Advertise with us &rarr;
         </a>
       </div>
     );
@@ -110,8 +199,8 @@ function DefaultFallback({ width, height }: Dimensions) {
     );
   }
 
-  // Tall + narrow (skyscraper 160×600) — compact stacked layout
-  if (width < 240 && height > 400) {
+  // Tall + narrow (skyscraper / half-page) — compact stacked layout
+  if (width < 320 && height > 400) {
     return (
       <div
         className="flex h-full w-full flex-col items-center justify-between rounded-lg border p-4 text-center"
@@ -130,7 +219,7 @@ function DefaultFallback({ width, height }: Dimensions) {
         </div>
         <a
           href="mailto:brand@distanzrunning.com?subject=Advertising%20on%20Distanz%20Running"
-          className="inline-flex w-full items-center justify-center gap-1 h-9 rounded-md font-sans text-[12px] font-semibold no-underline"
+          className="inline-flex h-9 w-full items-center justify-center gap-1 rounded-md font-sans text-[12px] font-semibold no-underline"
           style={ctaStyle}
         >
           Get in touch
@@ -146,15 +235,13 @@ function DefaultFallback({ width, height }: Dimensions) {
       className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border p-6 text-center"
       style={frameStyle}
     >
-      <h4 className="text-heading-16 text-textDefault">
-        Want to reach runners?
-      </h4>
-      <p className="text-[13px] leading-snug text-textSubtle max-w-[80%]">
+      <h4 className="text-heading-16 text-textDefault">Want to reach runners?</h4>
+      <p className="max-w-[80%] text-[13px] leading-snug text-textSubtle">
         Feature your brand, product, or story here.
       </p>
       <a
         href="mailto:brand@distanzrunning.com?subject=Advertising%20on%20Distanz%20Running"
-        className="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-md font-sans text-[13px] font-semibold no-underline transition-colors"
+        className="inline-flex h-9 items-center gap-1.5 rounded-md px-3.5 font-sans text-[13px] font-semibold no-underline transition-colors"
         style={ctaStyle}
       >
         Get in touch
@@ -181,28 +268,57 @@ export function AdSlot({
   slot,
   size,
   label = true,
+  showUpsell = true,
+  upsellHref = "/membership",
+  dismissible = false,
+  dismissKey,
+  breathingRoom = true,
   fallback,
   lazy = true,
   preview = false,
+  mockAd = false,
   className = "",
+  "aria-label": ariaLabel = "Advertisement",
 }: AdSlotProps) {
   const dimensions: Dimensions =
     typeof size === "string" ? SIZE_PRESETS[size] : size;
 
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
   const insRef = useRef<HTMLModElement | null>(null);
 
-  // `inView` gates script injection when lazy.
+  // Skip all AdSense work in preview/mock modes.
+  const inert = preview || mockAd;
+
   const [inView, setInView] = useState(!lazy);
-  // `filled` flips true when we detect AdSense rendered content.
-  // null = undecided, true = filled (show label), false = empty (show fallback).
-  // In preview mode we force this to false on mount so the fallback renders
-  // immediately without contacting AdSense.
-  const [filled, setFilled] = useState<boolean | null>(preview ? false : null);
+  const [filled, setFilled] = useState<boolean | null>(inert ? false : null);
+
+  // Remembered dismissal.
+  const [dismissed, setDismissed] = useState(false);
+  useEffect(() => {
+    if (!dismissible || !dismissKey || typeof window === "undefined") return;
+    try {
+      if (window.localStorage.getItem(`ds-ad-dismissed:${dismissKey}`) === "1") {
+        setDismissed(true);
+      }
+    } catch {
+      // localStorage unavailable — just don't persist.
+    }
+  }, [dismissible, dismissKey]);
+
+  const handleDismiss = () => {
+    setDismissed(true);
+    if (dismissKey && typeof window !== "undefined") {
+      try {
+        window.localStorage.setItem(`ds-ad-dismissed:${dismissKey}`, "1");
+      } catch {
+        // ignore
+      }
+    }
+  };
 
   // 1. IntersectionObserver for lazy loading.
   useEffect(() => {
-    if (preview) return;
+    if (inert) return;
     if (!lazy || inView) return;
     const node = containerRef.current;
     if (!node) return;
@@ -222,11 +338,11 @@ export function AdSlot({
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [lazy, inView, preview]);
+  }, [lazy, inView, inert]);
 
   // 2. Push the slot to adsbygoogle once in view.
   useEffect(() => {
-    if (preview) return;
+    if (inert) return;
     if (!inView) return;
     if (typeof window === "undefined") return;
     try {
@@ -234,11 +350,11 @@ export function AdSlot({
     } catch {
       // Blocker, offline, or script not yet loaded — fallback check handles it.
     }
-  }, [inView, preview]);
+  }, [inView, inert]);
 
   // 3. After a short delay, inspect the ins element for fill state.
   useEffect(() => {
-    if (preview) return;
+    if (inert) return;
     if (!inView) return;
 
     const timer = setTimeout(() => {
@@ -248,8 +364,6 @@ export function AdSlot({
         return;
       }
       const status = ins.getAttribute("data-ad-status");
-      // AdSense sets data-ad-status="filled" or "unfilled" once resolved.
-      // If it's still null (blocked, offline, script failed), treat as unfilled.
       if (status === "filled" && ins.offsetHeight > 0) {
         setFilled(true);
       } else {
@@ -258,34 +372,37 @@ export function AdSlot({
     }, FILL_CHECK_DELAY_MS);
 
     return () => clearTimeout(timer);
-  }, [inView]);
+  }, [inView, inert]);
 
-  const wrapperStyle: React.CSSProperties = {
-    width: "100%",
-    maxWidth: dimensions.width,
-    // Reserve the exact slot size up front so the layout never shifts.
-    minHeight: dimensions.height,
-  };
+  if (dismissed) return null;
 
-  // While the ad is resolving we don't label or show fallback — just the
-  // reserved empty frame. This matches AdSense's own behaviour (their script
-  // renders directly into the <ins>).
-  const showLabel = label && filled === true;
-  const showFallback = filled === false;
+  // Disclaimer shows over a real (or mock) ad, never over the house fallback.
+  const showDisclaimer = label && (mockAd || filled === true);
+  const showFallback = !mockAd && filled === false;
 
   return (
-    <div ref={containerRef} className={className} style={wrapperStyle}>
-      {showLabel && (
-        <div
-          className="mb-1 text-center text-[10px] font-semibold uppercase tracking-[0.08em]"
-          style={{ color: "hsl(var(--color-textSubtler))" }}
-        >
-          Advertisement
-        </div>
+    <figure
+      ref={containerRef as React.RefObject<HTMLElement>}
+      aria-label={ariaLabel}
+      className={`ds-ad mx-auto ${breathingRoom ? "my-8" : ""} ${className}`}
+      style={{
+        width: "100%",
+        maxWidth: dimensions.width,
+        // Reserve the slot height up front so the layout never shifts.
+        minHeight: dimensions.height,
+      }}
+    >
+      {showDisclaimer && (
+        <AdDisclaimer
+          showUpsell={showUpsell}
+          upsellHref={upsellHref}
+          dismissible={dismissible}
+          onDismiss={handleDismiss}
+        />
       )}
 
-      {/* Reserved frame — same box whether the ad fills, is loading, or
-          we swap in a fallback. */}
+      {/* Reserved frame — same box whether the ad fills, is loading, mock, or
+          we swap in the house fallback. */}
       <div
         style={{
           width: dimensions.width,
@@ -295,7 +412,9 @@ export function AdSlot({
           position: "relative",
         }}
       >
-        {showFallback ? (
+        {mockAd ? (
+          <MockCreative {...dimensions} />
+        ) : showFallback ? (
           (fallback ?? <DefaultFallback {...dimensions} />)
         ) : (
           <ins
@@ -311,7 +430,7 @@ export function AdSlot({
           />
         )}
       </div>
-    </div>
+    </figure>
   );
 }
 
