@@ -239,13 +239,13 @@ export default function Typography() {
           <code className="inline-code">
             font-serif
           </code>{" "}
-          (EB Garamond) for editorial contexts like featured article headlines,
-          article page titles, and pull quotes. Use{" "}
+          (EB Garamond) for exactly two editorial slots — article page titles
+          and pull quotes. Use{" "}
           <code className="inline-code">
             font-sans
           </code>{" "}
-          (Geist Sans) for UI contexts like section titles, card headings, and
-          navigation.
+          (Geist Sans) for everything else: section titles, card headings,
+          navigation, and body.
         </p>
 
         <p className="text-copy-16 text-textSubtle mb-6">
@@ -278,13 +278,7 @@ export default function Typography() {
               </tr>
             </thead>
             <tbody className="text-copy-14">
-              {/* Editorial headings - EB Garamond */}
-              <TypographyRow
-                example={<p className="text-heading-48 font-serif">Heading</p>}
-                className="text-heading-48 font-serif"
-                usage="Featured article headlines"
-                onCopy={handleCopy}
-              />
+              {/* Editorial headings — EB Garamond, the only two serif slots */}
               <TypographyRow
                 example={<p className="text-heading-40 font-serif">Heading</p>}
                 className="text-heading-40 font-serif"
@@ -298,17 +292,7 @@ export default function Typography() {
                   </p>
                 }
                 className="text-heading-32 font-serif"
-                usage="Large article titles, pull quotes"
-                onCopy={handleCopy}
-              />
-              <TypographyRow
-                example={
-                  <p className="text-heading-24 font-serif">
-                    Heading <strong>Subtle</strong>
-                  </p>
-                }
-                className="text-heading-24 font-serif"
-                usage="Article subheadings, blockquotes"
+                usage="Pull quotes"
                 onCopy={handleCopy}
               />
               {/* UI headings - Geist Sans */}
