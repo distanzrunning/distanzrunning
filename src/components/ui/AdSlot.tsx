@@ -70,8 +70,18 @@ export interface AdSlotProps {
   /**
    * Render as a full-bleed bar fixed to the bottom of the viewport (404 Media's
    * `ad-fixed`). Always dismissible; pair with `dismissKey` to keep it hidden.
+   * Slides up on appear and reserves body space so it never covers content.
    */
   sticky?: boolean;
+  /**
+   * For `sticky`: reveal the bar only once the viewport has scrolled this many
+   * px (404 reveals its footer on scroll). Default 0 = slide in on mount.
+   */
+  appearAfter?: number;
+  /** For `sticky`: render nothing if the ad doesn't fill (skip the house ad). */
+  hideWhenUnfilled?: boolean;
+  /** Called when the unit is dismissed via "Hide". */
+  onDismiss?: () => void;
   /**
    * Wrap the unit in the bordered frame with the disclaimer on the top rule
    * (404-style). Default true. Turn off when the placement provides its own
@@ -322,6 +332,9 @@ export function AdSlot({
   dismissible = false,
   dismissKey,
   sticky = false,
+  appearAfter = 0,
+  hideWhenUnfilled = false,
+  onDismiss,
   framed = true,
   breathingRoom = true,
   fallback,
@@ -341,6 +354,7 @@ export function AdSlot({
 
   const frameRef = useRef<HTMLFieldSetElement | null>(null);
   const insRef = useRef<HTMLModElement | null>(null);
+  const stickyRef = useRef<HTMLDivElement | null>(null);
 
   const inert = preview || mockAd;
   // A fixed footer is always on-screen, so never lazy-gate it.
@@ -349,6 +363,9 @@ export function AdSlot({
 
   // Remembered dismissal.
   const [dismissed, setDismissed] = useState(false);
+  // Sticky slide-in state (translateY 100% -> 0).
+  const [shown, setShown] = useState(false);
+
   useEffect(() => {
     if (!dismissible || !dismissKey || typeof window === "undefined") return;
     try {
@@ -360,6 +377,35 @@ export function AdSlot({
     }
   }, [dismissible, dismissKey]);
 
+  // Sticky: reveal on mount (appearAfter 0) or after scrolling past appearAfter.
+  useEffect(() => {
+    if (!sticky || typeof window === "undefined") return;
+    if (appearAfter <= 0) {
+      const id = window.requestAnimationFrame(() => setShown(true));
+      return () => window.cancelAnimationFrame(id);
+    }
+    const onScroll = () => {
+      if (window.scrollY >= appearAfter) {
+        setShown(true);
+        window.removeEventListener("scroll", onScroll);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [sticky, appearAfter]);
+
+  // Sticky: reserve body space while visible so the bar never covers content.
+  useEffect(() => {
+    if (!sticky || !shown || typeof document === "undefined") return;
+    const h = stickyRef.current?.offsetHeight ?? 0;
+    const prev = document.body.style.paddingBottom;
+    document.body.style.paddingBottom = `${h}px`;
+    return () => {
+      document.body.style.paddingBottom = prev;
+    };
+  }, [sticky, shown]);
+
   const handleDismiss = () => {
     setDismissed(true);
     if (dismissKey && typeof window !== "undefined") {
@@ -369,6 +415,13 @@ export function AdSlot({
         // ignore
       }
     }
+    onDismiss?.();
+  };
+
+  // Sticky Hide: slide the bar down first, then unmount.
+  const handleDismissSticky = () => {
+    setShown(false);
+    window.setTimeout(handleDismiss, 300);
   };
 
   // 1. IntersectionObserver for lazy loading.
@@ -458,14 +511,17 @@ export function AdSlot({
   // Full-bleed fixed footer (404's ad-fixed). No frame border — the bar has its
   // own top rule; the disclaimer sits above the centred creative with Hide.
   if (sticky) {
+    if (hideWhenUnfilled && showFallback) return null;
     return (
       <div
+        ref={stickyRef}
         className={[
-          "ds-ad-sticky fixed inset-x-0 bottom-0 z-50 border-t border-borderSubtle bg-surface",
+          "ds-ad-sticky fixed inset-x-0 bottom-0 z-50 border-t border-borderSubtle bg-surface transition-transform duration-300 ease-out",
           className,
         ]
           .filter(Boolean)
           .join(" ")}
+        style={{ transform: shown ? "translateY(0)" : "translateY(100%)" }}
         role="region"
         aria-label={ariaLabel}
       >
@@ -476,7 +532,7 @@ export function AdSlot({
                 showUpsell={showUpsell}
                 upsellHref={upsellHref}
                 dismissible
-                onDismiss={handleDismiss}
+                onDismiss={handleDismissSticky}
                 size={disclaimerSize}
                 stacked={false}
               />

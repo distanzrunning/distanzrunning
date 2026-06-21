@@ -12,6 +12,7 @@ import {
 import { useToast } from "@/components/ui/Toast";
 import { Note } from "@/components/ui/Note";
 import { AdSlot } from "@/components/ui/AdSlot";
+import { Button } from "@/components/ui/Button";
 
 // ============================================================================
 // Section header + copy-link (matches other DS pages)
@@ -315,6 +316,7 @@ const stickyCode = `import { AdSlot } from '@/components/ui/AdSlot';
 
 export default function AdSlotComponent() {
   const { showToast } = useToast();
+  const [showSticky, setShowSticky] = useState(false);
 
   return (
     <div>
@@ -425,18 +427,24 @@ export default function AdSlotComponent() {
           full-bleed bar fixed to the bottom of the viewport (404 Media&apos;s{" "}
           <code className="inline-code">ad-fixed</code>): a top rule, the centred
           ad, and the disclaimer with{" "}
-          <code className="inline-code">Hide</code>. It&apos;s always dismissible
-          &mdash; pair with <code className="inline-code">dismissKey</code> to
-          keep it hidden across visits. It can&apos;t preview inline (it pins to
-          the page bottom), so here&apos;s the usage:
+          <code className="inline-code">Hide</code>. It slides up on appear,
+          reserves body space so it never covers content, and is always
+          dismissible (pair with{" "}
+          <code className="inline-code">dismissKey</code> to persist). On a real
+          page, set <code className="inline-code">appearAfter</code> to reveal it
+          after a scroll distance, and{" "}
+          <code className="inline-code">hideWhenUnfilled</code> to drop it when no
+          ad fills. Trigger the live bar:
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={stickyCode} minHeight={120}>
-            <div className="text-center text-copy-13 text-textSubtle">
-              Renders as a fixed bottom bar &mdash; add{" "}
-              <code className="inline-code">sticky</code> on a real page to try
-              it.
-            </div>
+            <Button
+              variant="secondary"
+              size="small"
+              onClick={() => setShowSticky(true)}
+            >
+              Show sticky footer
+            </Button>
           </CodePreview>
         </div>
       </Section>
@@ -605,6 +613,18 @@ export default function AdSlotComponent() {
           </CodePreview>
         </div>
       </Section>
+
+      {/* Live sticky footer, triggered from the Sticky footer section. mockAd
+          shows a placeholder creative; Hide (or the slide-out) resets it. */}
+      {showSticky && (
+        <AdSlot
+          slot="preview-sticky"
+          size="leaderboard"
+          sticky
+          mockAd
+          onDismiss={() => setShowSticky(false)}
+        />
+      )}
     </div>
   );
 }
