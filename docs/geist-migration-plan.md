@@ -74,7 +74,8 @@ Walk the sidebar. Each component: verbatim diff → fix → drop Props → CSS�
 - Serif: confirm `font-serif` only on article titles + pull quotes.
 - Hardcoded values: grep for stray hex/rgba/`bg-white`/`neutral-*`; replace with tokens.
   **Known debt (measured 2026-06-07):** ~88 `bg-white`/`bg-black` + ~270
-  `bg-neutral-*`/`text-neutral-*` + a few raw `bg-[var(--ds-background-*)]` fills,
+  `bg-neutral-*`/`text-neutral-*` + a few raw background-token fills written as
+  arbitrary values,
   almost all in *feature* components (ElevationChart, RaceMap, DraggableWindow,
   article/product layouts) built pre-token-system — some still reference the
   retired brand pink (`ring-pink-500`). Sweep area-by-area, not one regex
