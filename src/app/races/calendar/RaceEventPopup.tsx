@@ -401,7 +401,7 @@ export function RaceEventPopup({
               <div className="relative group">
                 <button
                   onClick={() => onMapUseMetricChange(!mapUseMetric)}
-                  className="flex items-center justify-center w-8 h-8 rounded-lg transition-all bg-neutral-100 dark:bg-neutral-800 text-textSubtle hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:scale-105 active:scale-95"
+                  className="flex items-center justify-center w-8 h-8 rounded-lg transition-all bg-[var(--ds-gray-100)] text-textSubtle hover:bg-[var(--ds-gray-200)] hover:scale-105 active:scale-95"
                   aria-label="Toggle units"
                 >
                   <Settings2 className="w-4 h-4" />
@@ -415,7 +415,7 @@ export function RaceEventPopup({
             </div>
             <div className="space-y-3">
               <div className="grid grid-cols-3 gap-3">
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-borderDefault transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
                     <Route className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
@@ -426,7 +426,7 @@ export function RaceEventPopup({
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-borderDefault transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
                     <Wallet className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
@@ -441,7 +441,7 @@ export function RaceEventPopup({
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-borderDefault transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
                     <Users className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
@@ -455,7 +455,7 @@ export function RaceEventPopup({
               </div>
 
               <div className="grid grid-cols-3 gap-3">
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-borderDefault transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
                     <ArrowUpRight className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
@@ -470,7 +470,7 @@ export function RaceEventPopup({
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-borderDefault transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
                     <ArrowDownRight className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
@@ -485,7 +485,7 @@ export function RaceEventPopup({
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-borderDefault transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
                     <Mountain className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
@@ -499,7 +499,7 @@ export function RaceEventPopup({
               </div>
 
               <div className="grid grid-cols-3 gap-3">
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-default group">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-borderDefault transition-all cursor-default group">
                   <div className="flex items-center justify-center flex-shrink-0 bg-surface border border-borderSubtle rounded-lg w-10 h-10">
                     <ThermometerSun className="w-4 h-4 text-textSubtle group-hover:text-textSubtle transition-colors" />
                   </div>
@@ -514,7 +514,7 @@ export function RaceEventPopup({
                     </p>
                   </div>
                 </div>
-                <div className="relative flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-help group"
+                <div className="relative flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-borderDefault transition-all cursor-help group"
                   onMouseEnter={() => setShowMensTooltip(true)}
                   onMouseLeave={() => setShowMensTooltip(false)}
                 >
@@ -541,7 +541,7 @@ export function RaceEventPopup({
                     </div>
                   )}
                 </div>
-                <div className="relative flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-help group"
+                <div className="relative flex items-center gap-3 p-3 rounded-lg bg-canvas border border-borderSubtle hover:bg-surface hover:border-borderDefault transition-all cursor-help group"
                   onMouseEnter={() => setShowWomensTooltip(true)}
                   onMouseLeave={() => setShowWomensTooltip(false)}
                 >
