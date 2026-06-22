@@ -305,7 +305,7 @@ const stickyCode = `import { AdSlot } from '@/components/ui/AdSlot';
 // Always dismissible; dismissKey persists the Hide across visits.
 <AdSlot
   slot="1234567890"
-  size="leaderboard"
+  size="super-leaderboard"
   sticky
   dismissKey="footer"
 />`;
@@ -619,7 +619,7 @@ export default function AdSlotComponent() {
       {showSticky && (
         <AdSlot
           slot="preview-sticky"
-          size="leaderboard"
+          size="super-leaderboard"
           sticky
           mockAd
           onDismiss={() => setShowSticky(false)}

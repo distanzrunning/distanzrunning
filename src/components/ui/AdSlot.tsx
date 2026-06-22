@@ -10,6 +10,7 @@ import { ChevronRight } from "lucide-react";
 export type AdSize =
   | "mpu"
   | "leaderboard"
+  | "super-leaderboard"
   | "billboard"
   | "skyscraper"
   | "half-page"
@@ -24,6 +25,7 @@ interface Dimensions {
 const SIZE_PRESETS: Record<AdSize, Dimensions> = {
   mpu: { width: 300, height: 250 },
   leaderboard: { width: 728, height: 90 },
+  "super-leaderboard": { width: 970, height: 90 }, // 404's fixed-footer size
   billboard: { width: 970, height: 250 },
   skyscraper: { width: 160, height: 600 },
   "half-page": { width: 300, height: 600 }, // 404-style sidebar unit
