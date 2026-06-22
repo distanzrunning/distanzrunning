@@ -147,7 +147,7 @@ function AdDisclaimer({
     <button
       type="button"
       onClick={onDismiss}
-      className="text-textSubtler transition-colors hover:text-textDefault"
+      className="uppercase text-link transition-colors hover:text-textDefault"
     >
       Hide
     </button>
