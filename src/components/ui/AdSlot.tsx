@@ -564,43 +564,55 @@ export function AdSlot({
     </fieldset>
   );
 
-  // Sticky footer (404's ad-fixed): a full-bleed bar fixed to the bottom. The
-  // disclaimer is a centred rule across the content width (text breaking a
-  // horizontal line), and the ad sits plain underneath, centred — no box.
+  // Sticky footer — 404's ad-fixed, to spec. Full-bleed bg-surface bar with only
+  // padding-top (no shadow/border); a centred max-w-1280 container; then the ad
+  // block whose TOP border is the rule, with the disclaimer absolutely
+  // positioned on it (its bg cuts the line). Ad sits plain underneath. Values
+  // taken from 404's computed CSS: wrapper pt 14, container px 16.8, ad-block
+  // padding 17.64, disclaimer on top -8.5 with px 10.6.
   if (sticky) {
     if (hideWhenUnfilled && showFallback) return null;
     return (
       <div
         ref={stickyRef}
         className="fixed inset-x-0 bottom-0 z-50 bg-surface transition-transform duration-300 ease-out"
-        style={{ transform: shown ? "translateY(0)" : "translateY(100%)" }}
+        style={{ transform: shown ? "translateY(0)" : "translateY(100%)", paddingTop: 14 }}
         role="region"
         aria-label={ariaLabel}
       >
-        <div className="mx-auto w-full max-w-[1280px] px-6 py-3">
-          {showDisclaimer && (
-            <div className="mb-2 flex items-center gap-3">
-              <span className="h-px flex-1 bg-[hsl(var(--color-borderSubtle))]" />
-              <AdDisclaimer
-                showUpsell={showUpsell}
-                upsellHref={upsellHref}
-                dismissible
-                onDismiss={handleDismissSticky}
-                size={disclaimerSize}
-                stacked={false}
-              />
-              <span className="h-px flex-1 bg-[hsl(var(--color-borderSubtle))]" />
-            </div>
-          )}
+        <div
+          className="mx-auto w-full max-w-[1280px]"
+          style={{ paddingLeft: 16.8, paddingRight: 16.8 }}
+        >
           <div
-            className="relative mx-auto"
-            style={{
-              width: dimensions.width,
-              height: dimensions.height,
-              maxWidth: "100%",
-            }}
+            className="relative flex flex-col items-center rounded-t-[3px] border-t border-borderSubtle"
+            style={{ padding: 17.64 }}
           >
-            {creative}
+            {showDisclaimer && (
+              <div
+                className="absolute left-1/2 -translate-x-1/2 bg-surface"
+                style={{ top: -8.5, paddingLeft: 10.6, paddingRight: 10.6 }}
+              >
+                <AdDisclaimer
+                  showUpsell={showUpsell}
+                  upsellHref={upsellHref}
+                  dismissible
+                  onDismiss={handleDismissSticky}
+                  size={disclaimerSize}
+                  stacked={false}
+                />
+              </div>
+            )}
+            <div
+              className="relative mx-auto"
+              style={{
+                width: dimensions.width,
+                height: dimensions.height,
+                maxWidth: "100%",
+              }}
+            >
+              {creative}
+            </div>
           </div>
         </div>
       </div>
