@@ -603,15 +603,23 @@ export function AdSlot({
                 />
               </div>
             )}
+            {/* Ad zone — 404 reserves 127px here (min-height), taller than the
+                ad itself, so the bar height stays stable across footer
+                creatives; the ad sits at the top. */}
             <div
-              className="relative mx-auto"
-              style={{
-                width: dimensions.width,
-                height: dimensions.height,
-                maxWidth: "100%",
-              }}
+              className="mx-auto"
+              style={{ width: dimensions.width, minHeight: 127, maxWidth: "100%" }}
             >
-              {creative}
+              <div
+                className="relative"
+                style={{
+                  width: dimensions.width,
+                  height: dimensions.height,
+                  maxWidth: "100%",
+                }}
+              >
+                {creative}
+              </div>
             </div>
           </div>
         </div>
