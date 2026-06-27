@@ -1,23 +1,24 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown, Copy } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import Toggle from "@/components/ui/Toggle";
 import {
-  useConsent,
-  type ConsentCategory,
-  type ConsentPreferences,
-} from "@/contexts/ConsentContext";
+  useConsentManager,
+  useHeadlessConsentUI,
+} from "@c15t/nextjs/headless";
+import type { AllConsentNames } from "c15t";
 
 // ============================================================================
-// Category definitions — single source of truth for UI copy
+// Category definitions — single source of truth for UI copy.
+// Keys are c15t consent categories; labels stay user-facing.
 // ============================================================================
 
 interface CategoryDef {
-  key: ConsentCategory;
+  key: AllConsentNames;
   label: string;
   description: string;
   required?: boolean;
@@ -25,7 +26,7 @@ interface CategoryDef {
 
 export const CONSENT_CATEGORIES: CategoryDef[] = [
   {
-    key: "essential",
+    key: "necessary",
     label: "Essential",
     description:
       "Essential cookies and services are used to enable core website features, such as ensuring the security of the website.",
@@ -38,13 +39,13 @@ export const CONSENT_CATEGORIES: CategoryDef[] = [
       "Marketing cookies and services are used to deliver personalised advertisements, promotions, and offers. These technologies enable targeted advertising and marketing campaigns by collecting information about users' interests, preferences, and online activities.",
   },
   {
-    key: "analytics",
+    key: "measurement",
     label: "Analytics",
     description:
       "Analytics cookies and services are used for collecting statistical information about how visitors interact with a website. These technologies provide insights into website usage, visitor behaviour, and site performance to understand and improve the site and enhance user experience.",
   },
   {
-    key: "functional",
+    key: "functionality",
     label: "Functional",
     description:
       "Functional cookies and services are used to offer enhanced and personalised functionalities. These technologies provide additional features and improved user experiences, such as remembering your language preferences, font sizes, region selections, and customised layouts. Opting out of these cookies may render certain services or functionality of the website unavailable.",
@@ -63,13 +64,15 @@ export const CONSENT_COPY = {
   dataRequestEmail: "info@distanzrunning.com",
 } as const;
 
-const BANNER_TITLE = CONSENT_COPY.bannerTitle;
-const BANNER_DESCRIPTION = CONSENT_COPY.bannerDescription;
-const MODAL_TITLE = CONSENT_COPY.modalTitle;
-const MODAL_DESCRIPTION = CONSENT_COPY.modalDescription;
-const COOKIE_POLICY_HREF = CONSENT_COPY.cookiePolicyHref;
-const PRIVACY_HREF = CONSENT_COPY.privacyHref;
-const DATA_REQUEST_EMAIL = CONSENT_COPY.dataRequestEmail;
+const {
+  bannerTitle: BANNER_TITLE,
+  bannerDescription: BANNER_DESCRIPTION,
+  modalTitle: MODAL_TITLE,
+  modalDescription: MODAL_DESCRIPTION,
+  cookiePolicyHref: COOKIE_POLICY_HREF,
+  privacyHref: PRIVACY_HREF,
+  dataRequestEmail: DATA_REQUEST_EMAIL,
+} = CONSENT_COPY;
 
 // ============================================================================
 // Category row — name + description with a toggle on the right
@@ -88,38 +91,25 @@ export function ConsentCategoryRow({
 }) {
   const [open, setOpen] = useState(false);
   const contentId = `consent-cat-${category.key}`;
+  // Divider sits below the trigger whenever another element follows it — the
+  // next row's title, or this row's own description when open.
+  const triggerBorder = !isLast || open ? "border-b border-borderDefault" : "";
 
   return (
     <div>
-      <div
-        className="flex items-center justify-between"
-        style={{
-          // Divider sits below the trigger row whenever another element
-          // follows it — either the next row's title, or this row's own
-          // description when it's open.
-          borderBottom:
-            !isLast || open ? "1px solid hsl(var(--color-borderDefault))" : "none",
-        }}
-      >
+      <div className={`flex items-center justify-between ${triggerBorder}`}>
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls={contentId}
-          className="flex flex-1 items-center justify-between gap-3 outline-none"
-          style={{
-            padding: "12px 16px",
-            textAlign: "left",
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className="flex flex-1 cursor-pointer items-center justify-between gap-3 border-none bg-transparent px-4 py-3 text-left outline-none"
         >
           <span className="flex items-center gap-2">
             <ChevronDown
-              className={`w-3.5 h-3.5 text-textSubtle transition-transform ${open ? "rotate-0" : "-rotate-90"}`}
+              className={`h-3.5 w-3.5 text-textSubtle transition-transform ${open ? "rotate-0" : "-rotate-90"}`}
             />
-            <span className="text-[14px] font-medium text-textDefault">
+            <span className="text-copy-14 font-medium text-textDefault">
               {category.label}
             </span>
           </span>
@@ -139,11 +129,7 @@ export function ConsentCategoryRow({
       <div
         id={contentId}
         hidden={!open}
-        className="text-[13px] leading-[1.55] text-textSubtle"
-        style={{
-          padding: "12px 16px 16px",
-          borderBottom: isLast ? "none" : "1px solid hsl(var(--color-borderDefault))",
-        }}
+        className={`px-4 pb-4 pt-3 text-copy-13 text-textSubtle ${isLast ? "" : "border-b border-borderDefault"}`}
       >
         {category.description}
       </div>
@@ -152,17 +138,21 @@ export function ConsentCategoryRow({
 }
 
 // ============================================================================
-// Anonymous ID section — lets users copy their ID for data requests
+// Subject ID section — lets users copy their c15t subject ID for data requests
 // ============================================================================
 
-export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
+export function ConsentSubjectIdSection({
+  subjectId,
+}: {
+  subjectId: string | null;
+}) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    if (!anonId) return;
+    if (!subjectId) return;
     try {
-      await navigator.clipboard.writeText(anonId);
+      await navigator.clipboard.writeText(subjectId);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {
@@ -170,110 +160,54 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
     }
   };
 
-  const mailtoHref = anonId
+  const mailtoHref = subjectId
     ? `mailto:${DATA_REQUEST_EMAIL}?subject=${encodeURIComponent(
         "Consent data request",
       )}&body=${encodeURIComponent(
-        `Hi,\n\nPlease action a data request for my consent ID:\n\n${anonId}\n\n`,
+        `Hi,\n\nPlease action a data request for my consent ID:\n\n${subjectId}\n\n`,
       )}`
     : `mailto:${DATA_REQUEST_EMAIL}`;
 
   return (
-    <div
-      className="overflow-hidden"
-      style={{
-        marginTop: 16,
-        border: "1px solid hsl(var(--color-borderDefault))",
-        borderRadius: 6,
-        background: "hsl(var(--color-surface))",
-      }}
-    >
+    <div className="mt-4 overflow-hidden rounded-md border border-borderDefault bg-surface">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        aria-controls="consent-anon-id-body"
-        className="flex w-full items-center justify-between outline-none"
-        style={{
-          padding: "12px 16px",
-          background: "transparent",
-          border: "none",
-          cursor: "pointer",
-          textAlign: "left",
-        }}
+        aria-controls="consent-subject-id-body"
+        className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent px-4 py-3 text-left outline-none"
       >
-        <span className="text-[14px] font-medium text-textDefault">
+        <span className="text-copy-14 font-medium text-textDefault">
           ID to request consent data
         </span>
         <ChevronDown
-          className={`w-3.5 h-3.5 text-textSubtle transition-transform ${open ? "rotate-0" : "-rotate-90"}`}
+          className={`h-3.5 w-3.5 text-textSubtle transition-transform ${open ? "rotate-0" : "-rotate-90"}`}
         />
       </button>
       <div
-        id="consent-anon-id-body"
+        id="consent-subject-id-body"
         hidden={!open}
-        style={{
-          padding: "0 16px 16px",
-          borderTop: "1px solid hsl(var(--color-borderDefault))",
-          display: "flex",
-          flexDirection: "column",
-          gap: 12,
-        }}
+        className="flex flex-col gap-3 border-t border-borderDefault px-4 pb-4"
       >
-        <div
-          style={{
-            marginTop: 12,
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "10px 12px",
-            borderRadius: 6,
-            background: "hsl(var(--color-canvas))",
-            border: "1px solid hsl(var(--color-borderDefault))",
-          }}
-        >
-          <span
-            className="text-[13px] text-textDefault"
-            style={{
-              flex: 1,
-              minWidth: 0,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              fontFamily: "var(--font-mono)",
-            }}
-          >
-            {anonId ?? "—"}
+        <div className="mt-3 flex items-center gap-2 rounded-md border border-borderDefault bg-canvas px-3 py-2.5">
+          <span className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-copy-13 text-textDefault">
+            {subjectId ?? "—"}
           </span>
           <button
             type="button"
             onClick={handleCopy}
-            disabled={!anonId}
+            disabled={!subjectId}
             aria-label={copied ? "Copied" : "Copy ID"}
-            className="flex items-center justify-center outline-none"
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 6,
-              border: "1px solid hsl(var(--color-borderDefault))",
-              background: "hsl(var(--color-surface))",
-              color: "hsl(var(--color-textSubtle))",
-              cursor: anonId ? "pointer" : "not-allowed",
-              opacity: anonId ? 1 : 0.5,
-              flexShrink: 0,
-            }}
+            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md border border-borderDefault bg-surface text-textSubtle outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             {copied ? (
-              <Check className="w-3.5 h-3.5" />
+              <Check className="h-3.5 w-3.5" />
             ) : (
-              <Copy className="w-3.5 h-3.5" />
+              <Copy className="h-3.5 w-3.5" />
             )}
           </button>
         </div>
-        <p
-          className="text-[12px] leading-[1.55]"
-          style={{ color: "hsl(var(--color-textSubtler))", margin: 0 }}
-        >
+        <p className="text-copy-13 text-textSubtler">
           Email{" "}
           <a
             href={mailtoHref}
@@ -289,93 +223,68 @@ export function ConsentAnonIdSection({ anonId }: { anonId: string | null }) {
 }
 
 // ============================================================================
-// Consent Settings Modal
+// Consent Settings dialog (Stride Modal, driven by c15t hooks)
 // ============================================================================
 
-function ConsentSettingsModal() {
+export function ConsentSettingsModal() {
   const {
-    preferences,
-    anonId,
-    settingsOpen,
-    closeSettings,
-    save,
-    acceptAll,
-    rejectAll,
-  } = useConsent();
+    activeUI,
+    setActiveUI,
+    consentInfo,
+    selectedConsents,
+    setSelectedConsent,
+    saveConsents,
+  } = useConsentManager();
 
-  // Local draft of the toggles while the modal is open.
-  const [draft, setDraft] = useState<ConsentPreferences>({
-    essential: true,
-    marketing: preferences?.marketing ?? false,
-    analytics: preferences?.analytics ?? false,
-    functional: preferences?.functional ?? false,
-  });
+  const open = activeUI === "dialog";
+  const close = () => setActiveUI("none");
 
-  // Re-sync the draft every time the modal opens so it reflects the latest
-  // saved preferences.
-  useEffect(() => {
-    if (settingsOpen) {
-      setDraft({
-        essential: true,
-        marketing: preferences?.marketing ?? false,
-        analytics: preferences?.analytics ?? false,
-        functional: preferences?.functional ?? false,
-      });
-    }
-  }, [settingsOpen, preferences]);
-
-  const handleSave = () => {
-    save({
-      marketing: draft.marketing,
-      analytics: draft.analytics,
-      functional: draft.functional,
-    });
+  const handleSave = async () => {
+    await saveConsents("custom", { uiSource: "dialog" });
+    close();
+  };
+  const handleDeny = async () => {
+    await saveConsents("necessary", { uiSource: "dialog" });
+    close();
+  };
+  const handleAcceptAll = async () => {
+    await saveConsents("all", { uiSource: "dialog" });
+    close();
   };
 
   return (
-    <Modal open={settingsOpen} onClose={closeSettings}>
+    <Modal open={open} onClose={close}>
       <Modal.Title>{MODAL_TITLE}</Modal.Title>
       <Modal.P>{MODAL_DESCRIPTION}</Modal.P>
-      <div
-        className="overflow-hidden"
-        style={{
-          border: "1px solid hsl(var(--color-borderDefault))",
-          borderRadius: 6,
-          background: "hsl(var(--color-surface))",
-          marginTop: 24,
-        }}
-      >
+      <div className="mt-6 overflow-hidden rounded-md border border-borderDefault bg-surface">
         {CONSENT_CATEGORIES.map((cat, i) => (
           <ConsentCategoryRow
             key={cat.key}
             category={cat}
-            value={draft[cat.key]}
+            value={cat.required ? true : (selectedConsents[cat.key] ?? false)}
             onChange={(next) => {
               if (cat.required) return;
-              setDraft((d) => ({ ...d, [cat.key]: next }));
+              setSelectedConsent(cat.key, next);
             }}
             isLast={i === CONSENT_CATEGORIES.length - 1}
           />
         ))}
       </div>
-      <ConsentAnonIdSection anonId={anonId} />
+      <ConsentSubjectIdSection subjectId={consentInfo?.subjectId ?? null} />
       <Modal.Footer>
-        <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+        <div className="flex flex-col gap-4 p-6">
           <div className="flex flex-wrap items-center gap-3">
-            <Button variant="secondary" onClick={rejectAll}>
+            <Button variant="secondary" onClick={handleDeny}>
               Deny
             </Button>
-            <Button variant="secondary" onClick={acceptAll}>
+            <Button variant="secondary" onClick={handleAcceptAll}>
               Accept all
             </Button>
             <Button onClick={handleSave} className="ml-auto">
               Save
             </Button>
           </div>
-          <p
-            className="text-[12px] leading-[1.6]"
-          style={{ color: "hsl(var(--color-textSubtler))", margin: 0 }}
-          >
+          <p className="text-copy-13 text-textSubtler">
             For more information, see our{" "}
             <a
               href={COOKIE_POLICY_HREF}
@@ -399,41 +308,32 @@ function ConsentSettingsModal() {
 }
 
 // ============================================================================
-// Bottom banner
+// Bottom banner (Stride card, driven by c15t headless UI state)
 // ============================================================================
 
 function BottomBanner() {
-  const { isDecided, settingsOpen, acceptAll, rejectAll, openSettings } =
-    useConsent();
+  const { banner, openDialog, performBannerAction } = useHeadlessConsentUI();
   const [mounted, setMounted] = useState(false);
 
+  // Portal only after mount so SSR and first client paint match (no flash).
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (isDecided || settingsOpen || !mounted) return null;
+  if (!mounted || !banner.isVisible) return null;
 
   return createPortal(
     <>
       <style>{`
         @keyframes distanz-consent-in {
-          from {
-            opacity: 0;
-            transform: translateY(calc(100% + 24px));
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(calc(100% + 24px)); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
       <div
         role="alertdialog"
         aria-labelledby="consent-banner-title"
         aria-modal="false"
-        // Mobile: full-width bottom-aligned (left-4 + right-4).
-        // Desktop (sm+): pin to the bottom-right by releasing the
-        // left edge with sm:left-auto.
         className="fixed bottom-4 left-4 right-4 z-[10000] sm:left-auto sm:max-w-[400px]"
         style={{
           animation:
@@ -441,25 +341,20 @@ function BottomBanner() {
           willChange: "transform, opacity",
         }}
       >
+        {/* No explicit border — --ds-shadow-menu opens with a hairline ring, so
+            an extra border would double-paint (material double-border lesson). */}
         <div
-          // No explicit border — --ds-shadow-menu already opens with
-          // a 0 0 0 1px rgba(0,0,0,0.08) hairline ring, so an
-          // additional border layer would double-paint the outline
-          // (per the feedback-material-class-double-border lesson).
-          className="flex flex-col gap-4 rounded-xl p-5"
-          style={{
-            background: "hsl(var(--color-surface))",
-            boxShadow: "var(--ds-shadow-menu)",
-          }}
+          className="flex flex-col gap-4 rounded-xl bg-surface p-5"
+          style={{ boxShadow: "var(--ds-shadow-menu)" }}
         >
           <div>
             <h2
               id="consent-banner-title"
-              className="text-heading-16 text-textDefault leading-tight"
+              className="text-heading-16 leading-tight text-textDefault"
             >
               {BANNER_TITLE}
             </h2>
-            <p className="mt-2 text-[13px] leading-[1.55] text-textSubtle">
+            <p className="mt-2 text-copy-13 text-textSubtle">
               {BANNER_DESCRIPTION}{" "}
               <a
                 href={COOKIE_POLICY_HREF}
@@ -483,7 +378,7 @@ function BottomBanner() {
               variant="secondary"
               shape="rounded"
               size="small"
-              onClick={rejectAll}
+              onClick={() => performBannerAction("reject")}
             >
               Deny
             </Button>
@@ -491,14 +386,14 @@ function BottomBanner() {
               variant="secondary"
               shape="rounded"
               size="small"
-              onClick={acceptAll}
+              onClick={() => performBannerAction("accept")}
             >
               Accept all
             </Button>
             <Button
               shape="rounded"
               size="small"
-              onClick={openSettings}
+              onClick={openDialog}
               className="ml-auto"
             >
               Customise
@@ -512,7 +407,7 @@ function BottomBanner() {
 }
 
 // ============================================================================
-// Single export — mount this once in the app root
+// Single export — mount this once in the app root (inside ConsentManagerClient)
 // ============================================================================
 
 export function ConsentBanner() {

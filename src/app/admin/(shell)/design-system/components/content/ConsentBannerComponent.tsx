@@ -16,10 +16,9 @@ import { Modal } from "@/components/ui/Modal";
 import {
   CONSENT_CATEGORIES,
   CONSENT_COPY,
-  ConsentAnonIdSection,
+  ConsentSubjectIdSection,
   ConsentCategoryRow,
 } from "@/components/ui/ConsentBanner";
-import type { ConsentPreferences } from "@/contexts/ConsentContext";
 
 // ============================================================================
 // Section header + copy link
@@ -301,11 +300,13 @@ function DemoSettingsModal({
   open: boolean;
   onClose: () => void;
 }) {
-  const [draft, setDraft] = useState<ConsentPreferences>({
-    essential: true,
+  // Local demo state keyed by c15t categories — decoupled from the real
+  // consent manager (this page just documents the visual component).
+  const [draft, setDraft] = useState<Record<string, boolean>>({
+    necessary: true,
     marketing: false,
-    analytics: false,
-    functional: false,
+    measurement: false,
+    functionality: false,
   });
 
   return (
@@ -325,7 +326,7 @@ function DemoSettingsModal({
           <ConsentCategoryRow
             key={cat.key}
             category={cat}
-            value={draft[cat.key]}
+            value={draft[cat.key] ?? false}
             onChange={(next) => {
               if (cat.required) return;
               setDraft((d) => ({ ...d, [cat.key]: next }));
@@ -334,7 +335,7 @@ function DemoSettingsModal({
           />
         ))}
       </div>
-      <ConsentAnonIdSection anonId="demo-0000-0000-0000-000000000000" />
+      <ConsentSubjectIdSection subjectId="sub_demo00000000000000000" />
       <Modal.Footer>
         <div
           style={{
@@ -423,33 +424,33 @@ export default function Demo() {
 }`;
 
 const providerSetupCode = `// src/app/layout.tsx
-import { ConsentProvider } from "@/contexts/ConsentContext";
+import { ConsentManagerClient } from "@/components/consent/ConsentManagerClient";
 import { ConsentBanner } from "@/components/ui/ConsentBanner";
 
 export default function RootLayout({ children }) {
   return (
     <html>
       <body>
-        <ConsentProvider>
+        <ConsentManagerClient>
           {children}
           <ConsentBanner />
-        </ConsentProvider>
+        </ConsentManagerClient>
       </body>
     </html>
   );
 }`;
 
-const useConsentCode = `// Read consent state from any component
-import { useConsent, useConsentCategory } from "@/contexts/ConsentContext";
+const useConsentCode = `// Read consent state from any component (c15t headless hook)
+import { useConsentManager } from "@c15t/nextjs/headless";
 
 function MyComponent() {
-  const { preferences, openSettings } = useConsent();
-  const canShowMarketing = useConsentCategory("marketing");
+  const { has, setActiveUI } = useConsentManager();
+  const canShowMarketing = has("marketing");
 
   return (
     <>
       {canShowMarketing && <AdSlot slot="..." size="mpu" />}
-      <button onClick={openSettings}>Cookie preferences</button>
+      <button onClick={() => setActiveUI("dialog")}>Cookie preferences</button>
     </>
   );
 }`;
@@ -474,7 +475,7 @@ export default function ConsentBannerComponent() {
           categories (Essential, Marketing, Analytics, Functional) and exposes
           the state via the{" "}
           <code className="inline-code">
-            useConsent()
+            useConsentManager()
           </code>{" "}
           hook so any component can gate itself on the user&apos;s preferences.
         </p>
@@ -517,18 +518,18 @@ export default function ConsentBannerComponent() {
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Wrap the app in{" "}
           <code className="inline-code">
-            ConsentProvider
+            ConsentManagerClient
           </code>{" "}
           and render{" "}
           <code className="inline-code">
             ConsentBanner
           </code>{" "}
           once at the root. The banner self-hides once a decision has been
-          made and re-opens when{" "}
+          made and the settings dialog re-opens via{" "}
           <code className="inline-code">
-            reset()
-          </code>{" "}
-          is called.
+            setActiveUI(&quot;dialog&quot;)
+          </code>
+          .
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={providerSetupCode} minHeight={280}>
@@ -547,12 +548,12 @@ export default function ConsentBannerComponent() {
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Use{" "}
           <code className="inline-code">
-            useConsent()
+            useConsentManager()
           </code>{" "}
           to read the full preferences object or trigger the settings modal,
           and{" "}
           <code className="inline-code">
-            useConsentCategory(name)
+            has(name)
           </code>{" "}
           when you just need a boolean for a single category. Before the
           user decides, every optional category defaults to{" "}

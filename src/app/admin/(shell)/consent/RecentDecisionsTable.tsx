@@ -47,7 +47,7 @@ function decisionBadge(d: Decision): { label: string; variant: BadgeVariant } {
 }
 
 export interface RecentRow {
-  id: number;
+  id: string;
   anon_id: string;
   marketing: boolean;
   analytics: boolean;
@@ -127,7 +127,7 @@ export default function RecentDecisionsTable({
               <TableHead>Analytics</TableHead>
               <TableHead>Functional</TableHead>
               <TableHead>Country</TableHead>
-              <TableHead>Anon ID</TableHead>
+              <TableHead>Subject ID</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

@@ -11,7 +11,6 @@ import {
   windowDays,
   type DateWindow,
 } from "@/components/admin/datePresets";
-import type { EnvFilter } from "@/components/admin/env";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -37,7 +36,6 @@ import RecentDecisionsTable from "./RecentDecisionsTable";
 interface BuildHrefContext {
   tz: string;
   earliestDate: Date | null;
-  env: EnvFilter;
 }
 
 type Decision = "accept_all" | "reject_all" | "custom";
@@ -56,7 +54,7 @@ function buildHref(
   window: DateWindow,
   filter: Decision | null,
   metric: Metric,
-  { tz, earliestDate, env }: BuildHrefContext,
+  { tz, earliestDate }: BuildHrefContext,
 ): string {
   const usp = new URLSearchParams();
   const preset = matchPreset(window, tz, earliestDate);
@@ -79,9 +77,6 @@ function buildHref(
       usp.set("metric", "decisions");
     }
   }
-  // env is preserved on every tile/picker link — default "all" stays
-  // off the URL for clean links.
-  if (env !== "all") usp.set("env", env);
   const qs = usp.toString();
   return qs ? `${BASE_PATH}?${qs}` : BASE_PATH;
 }
@@ -293,7 +288,6 @@ export async function ConsentDashboardContent({
   windowEnd,
   tz,
   earliestDate,
-  env,
 }: {
   filter?: DecisionFilter | null;
   metric: Metric;
@@ -301,20 +295,11 @@ export async function ConsentDashboardContent({
   windowEnd: Date;
   tz: string;
   earliestDate: Date | null;
-  env: EnvFilter;
 }) {
-  // No rows at all for the active env filter — short-circuit before
-  // building windows / fetching anything else. Renders a hero in
-  // place of the tile row, chart, category bars, and recent table;
-  // the filter row above stays mounted so the user can switch envs
-  // (e.g. production empty → staging has data).
+  // No rows at all — short-circuit before building windows / fetching anything
+  // else. Renders a hero in place of the tile row, chart, category bars, and
+  // recent table; the filter row above stays mounted.
   if (!earliestDate) {
-    const envLabel: Record<EnvFilter, string> = {
-      all: "any environment",
-      production: "production",
-      staging: "staging",
-      development: "development",
-    };
     return (
       <EmptyState live>
         <EmptyStateIcon>
@@ -323,7 +308,8 @@ export async function ConsentDashboardContent({
         <EmptyStateText>
           <EmptyStateTitle>No decisions yet</EmptyStateTitle>
           <EmptyStateDescription>
-            {`No consent decisions recorded in ${envLabel[env]} yet. Decisions appear here when visitors interact with the consent banner on the public site.`}
+            No consent decisions recorded yet. Decisions appear here when
+            visitors interact with the consent banner on the public site.
           </EmptyStateDescription>
         </EmptyStateText>
       </EmptyState>
@@ -345,7 +331,7 @@ export async function ConsentDashboardContent({
       currentWindow,
       filter === target ? null : target,
       "decisions",
-      { tz, earliestDate, env },
+      { tz, earliestDate },
     );
 
   // Single DB hit covering the union of the previous + current
@@ -356,7 +342,6 @@ export async function ConsentDashboardContent({
   const rows = await getConsentRowsInRange(
     previous.start.toISOString(),
     currentWindow.end.toISOString(),
-    env,
   );
 
   // Slice the fetched rows into "current window" and the same-
@@ -490,7 +475,7 @@ export async function ConsentDashboardContent({
               label="Unique visitors"
               value={<NumberTicker value={currentUnique} />}
               change={changeFrom(currentUnique, previousUnique, previousLabel)}
-              href={buildHref(currentWindow, null, "visitors", { tz, earliestDate, env })}
+              href={buildHref(currentWindow, null, "visitors", { tz, earliestDate })}
               active={metric === "visitors"}
             />
           </div>
@@ -499,7 +484,7 @@ export async function ConsentDashboardContent({
               label="Decisions"
               value={<NumberTicker value={currentCount} />}
               change={changeFrom(currentCount, previousCount, previousLabel)}
-              href={buildHref(currentWindow, null, "decisions", { tz, earliestDate, env })}
+              href={buildHref(currentWindow, null, "decisions", { tz, earliestDate })}
               active={metric === "decisions" && !filter}
             />
           </div>
