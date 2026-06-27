@@ -9,12 +9,12 @@ import SiteHeaderWrapper from "@/components/SiteHeaderWrapper";
 import Footer from "@/components/Footer";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
 import ReCaptchaProvider from "@/components/ReCaptchaProvider";
-import { ConsentProvider } from "@/contexts/ConsentContext";
+import { ConsentManagerClient } from "@/components/consent/ConsentManagerClient";
 import { UnitsProvider } from "@/contexts/UnitsContext";
 import { SearchProvider } from "@/contexts/SearchContext";
 import { ConsentBanner } from "@/components/ui/ConsentBanner";
-import ConsentSync from "@/components/ConsentSync";
-import { gcmDefaultsScript } from "@/lib/consent-gcm";
+import { ConsentModeSync } from "@/components/consent/ConsentModeSync";
+import { gcmDefaultsScript } from "@/lib/c15t/gcm";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -116,62 +116,23 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* Google Consent Mode v2 — must run before any tracking script so
-            every Google product (Analytics, Ads, AdSense, GTM) and any
-            custom GTM tags pick up the denied baseline. ConsentSync (in
-            <body>) calls gtag('consent','update',…) once the user decides. */}
+        {/* Google Consent Mode v2 — must run before AdSense so it picks up the
+            denied baseline. ConsentModeSync (in <body>) fires
+            gtag('consent','update',…) once the user decides. PostHog is no
+            longer inlined here — c15t loads it after `measurement` consent
+            (see ConsentManagerClient). */}
         <script
           id="gcm-defaults"
           dangerouslySetInnerHTML={{ __html: gcmDefaultsScript() }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-
-              // List of blocked IPs (your personal IPs to exclude from tracking)
-              var blockedIPs = ['91.180.214.205'];
-
-              // PostHog defaults to OPT-OUT for every visitor; ConsentSync
-              // flips this to opt-in once the user accepts the Analytics
-              // category. Localhost stays opted out unconditionally.
-              posthog.init('${process.env.NEXT_PUBLIC_POSTHOG_KEY}', {
-                api_host:'${process.env.NEXT_PUBLIC_POSTHOG_HOST}',
-                defaults:'2025-05-24',
-                opt_out_capturing_by_default: true,
-                loaded: function(posthog) {
-                  // Localhost / dev — keep opted out regardless of consent.
-                  if (window.location.host.includes('127.0.0.1') ||
-                      window.location.host.includes('localhost')) {
-                    posthog.opt_out_capturing();
-                    return;
-                  }
-
-                  // Check user's IP and force opt-out if blocked
-                  fetch('https://api.ipify.org?format=json')
-                    .then(function(response) { return response.json(); })
-                    .then(function(data) {
-                      if (blockedIPs.indexOf(data.ip) !== -1) {
-                        posthog.opt_out_capturing();
-                        console.log('[PostHog] Tracking disabled for blocked IP:', data.ip);
-                      }
-                    })
-                    .catch(function(err) {
-                      console.log('[PostHog] Could not check IP:', err);
-                    });
-                }
-              });
-            `,
-          }}
         />
       </head>
       <body className="font-sans antialiased bg-canvas text-textDefault min-h-screen flex flex-col distanz-font-features">
         <ReCaptchaProvider>
           <DarkModeProvider>
             <UnitsProvider>
-            <ConsentProvider>
+            <ConsentManagerClient>
               <SearchProvider>
-                <ConsentSync />
+                <ConsentModeSync />
                 <LayoutContent
                   header={<SiteHeaderWrapper newsletterSource="homepage" />}
                   footer={<Footer />}
@@ -183,7 +144,7 @@ export default function RootLayout({
                 <Analytics />
                 <SpeedInsights />
               </SearchProvider>
-            </ConsentProvider>
+            </ConsentManagerClient>
             </UnitsProvider>
           </DarkModeProvider>
         </ReCaptchaProvider>

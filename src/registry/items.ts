@@ -14,7 +14,6 @@ import { buildCollapsibleInputItem } from "./items/collapsible-input";
 import { buildComboboxItem } from "./items/combobox";
 import { buildCommandMenuItem } from "./items/command-menu";
 import { buildConsentBannerItem } from "./items/consent-banner";
-import { buildConsentContextItem } from "./items/consent-context";
 import { buildContextCardItem } from "./items/context-card";
 import { buildContextMenuItem } from "./items/context-menu";
 import { buildDarkModeProviderItem } from "./items/dark-mode-provider";
@@ -109,7 +108,6 @@ const BUILDERS: Record<string, Builder> = {
 
   // Atoms — utility (not in DS sidebar but required by other items)
   "card-image": buildCardImageItem,
-  "consent-context": buildConsentContextItem,
   "dark-mode-provider": buildDarkModeProviderItem,
   "icon-button": buildIconButtonItem,
   logo: buildLogoItem,

@@ -4,8 +4,6 @@ import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 
 import AdminDateRangePicker from "@/components/admin/AdminDateRangePicker";
-import AdminEnvFilter from "@/components/admin/AdminEnvFilter";
-import type { EnvFilter } from "@/components/admin/env";
 import { Input } from "@/components/ui/Input";
 import { useConsentFilter } from "./ConsentFilterShell";
 
@@ -17,11 +15,9 @@ import { useConsentFilter } from "./ConsentFilterShell";
 export default function ConsentFilterRow({
   tz,
   earliestDate,
-  env,
 }: {
   tz: string;
   earliestDate: Date | null;
-  env: EnvFilter;
 }) {
   const router = useRouter();
   const { filterText, setFilterText } = useConsentFilter();
@@ -47,13 +43,12 @@ export default function ConsentFilterRow({
               router.push(`/admin/consent?q=${encodeURIComponent(q)}`);
             }
           }}
-          placeholder="Filter Anon IDs"
+          placeholder="Filter subject IDs"
           spellCheck={false}
           autoComplete="off"
           prefix={<Search className="w-4 h-4" />}
         />
       </div>
-      <AdminEnvFilter current={env} />
       <AdminDateRangePicker tz={tz} earliestDate={earliestDate} />
     </div>
   );
