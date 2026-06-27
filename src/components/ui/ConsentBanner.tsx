@@ -270,7 +270,12 @@ export function ConsentSettingsModal() {
           />
         ))}
       </div>
-      <ConsentSubjectIdSection subjectId={consentInfo?.subjectId ?? null} />
+      {/* Only shown once a decision exists — before that there's no subject
+          id (and no consent record to request/delete), so the section would
+          just read "—". */}
+      {consentInfo?.subjectId && (
+        <ConsentSubjectIdSection subjectId={consentInfo.subjectId} />
+      )}
       <Modal.Footer>
         <div className="flex flex-col gap-4 p-6">
           <div className="flex flex-wrap items-center gap-3">
