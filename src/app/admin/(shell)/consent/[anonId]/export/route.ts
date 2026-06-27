@@ -57,18 +57,38 @@ export async function GET(
   }
 
   const supabase = getSupabaseAdmin();
-  const { data, error } = await supabase
-    .from("c15t_consent")
-    .select(COLUMNS.join(", "))
-    .eq("subjectId", trimmed)
-    .order("givenAt", { ascending: false });
+  const [{ data, error }, purposeRes] = await Promise.all([
+    supabase
+      .from("c15t_consent")
+      .select(COLUMNS.join(", "))
+      .eq("subjectId", trimmed)
+      .order("givenAt", { ascending: false }),
+    supabase.from("c15t_consentPurpose").select("id, code"),
+  ]);
 
   if (error) {
     console.error("[consent] export failed", error.message);
     return NextResponse.json({ error: "Export failed" }, { status: 500 });
   }
 
-  const rows = (data ?? []) as unknown as Record<Column, unknown>[];
+  // Resolve purpose ids → readable category codes so the CSV shows
+  // "necessary;measurement;…" instead of the raw {json:[...]} id blob.
+  const purposeCode: Record<string, string> = {};
+  for (const p of (purposeRes.data ?? []) as { id: string; code: string }[]) {
+    purposeCode[p.id] = p.code;
+  }
+  const resolvePurposes = (raw: unknown): string => {
+    const ids = Array.isArray(raw)
+      ? (raw as string[])
+      : raw && typeof raw === "object" && Array.isArray((raw as { json?: string[] }).json)
+        ? (raw as { json: string[] }).json
+        : [];
+    return ids.map((id) => purposeCode[id] ?? id).join(";");
+  };
+
+  const rows = ((data ?? []) as unknown as Record<Column, unknown>[]).map(
+    (row) => ({ ...row, purposeIds: resolvePurposes(row.purposeIds) }),
+  );
 
   const header = COLUMNS.join(",");
   const body = rows

@@ -40,8 +40,8 @@ export default function HowItWorksPage() {
             className="text-copy-16"
             style={{ marginTop: 6, marginBottom: 0, color: "hsl(var(--color-textSubtler))" }}
           >
-            Internals of Distanz Running&apos;s self-built consent
-            management platform.
+            Internals of Distanz Running&apos;s self-hosted c15t consent
+            platform.
           </p>
         </header>
 
@@ -52,62 +52,64 @@ export default function HowItWorksPage() {
             gap: 16,
           }}
         >
+          <DocSection title="Architecture">
+            Consent runs on <strong>self-hosted c15t v2</strong>. The
+            backend (<DocCode>c15tInstance</DocCode> + a Postgres adapter)
+            is mounted at <DocCode>/api/c15t</DocCode> and writes to{" "}
+            <strong>our own Supabase</strong> — no third-party CMP, no data
+            handover. The UI is <strong>headless</strong>: our Stride banner
+            and settings dialog drive c15t through its hooks, so the look
+            stays on the design system.
+          </DocSection>
+
           <DocSection title="Categories">
-            Four consent buckets: <strong>Essential</strong> (always on),{" "}
-            <strong>Marketing</strong>, <strong>Analytics</strong>, and{" "}
-            <strong>Functional</strong>. The user chooses Accept all,
-            Reject all, or a custom mix from the banner or settings modal.
+            Four consent buckets: <strong>Essential</strong> (always on,{" "}
+            <DocCode>necessary</DocCode>), <strong>Marketing</strong>,{" "}
+            <strong>Analytics</strong> (<DocCode>measurement</DocCode>), and{" "}
+            <strong>Functional</strong> (<DocCode>functionality</DocCode>).
+            The user chooses Accept all, Deny, or a custom mix from the
+            banner or settings dialog.
           </DocSection>
 
           <DocSection title="Storage">
-            Preferences persist in <DocCode>localStorage</DocCode> under
-            the key <DocCode>distanz-consent</DocCode>, alongside a
-            version field that lets us re-prompt if the category list ever
-            changes. Each decision is also written to Supabase (
-            <DocCode>consent_records</DocCode>) for audit and for the
-            Dashboard view.
+            Client preferences + the subject id live in the{" "}
+            <DocCode>c15t</DocCode> cookie. The source of truth is an{" "}
+            <strong>append-only</strong> audit trail in Supabase:{" "}
+            <DocCode>c15t_consent</DocCode> rows (granted purposes, action,
+            timestamp, jurisdiction, masked IP) linked to a{" "}
+            <DocCode>c15t_subject</DocCode>, with a{" "}
+            <DocCode>c15t_auditLog</DocCode>. Tables are{" "}
+            <DocCode>c15t_</DocCode>-prefixed and RLS-locked.
           </DocSection>
 
-          <DocSection title="Events">
-            A <DocCode>distanz-consent-change</DocCode> window event fires
-            on every update, so non-React scripts (e.g. anything mounted
-            in <DocCode>layout.tsx</DocCode>) can react without
-            subscribing to a React context.
+          <DocSection title="Initialization">
+            <DocCode>&lt;C15tPrefetch&gt;</DocCode> in{" "}
+            <DocCode>&lt;head&gt;</DocCode> starts the{" "}
+            <DocCode>/init</DocCode> call before hydration (static-safe —
+            no banner flash, no SSG deopt). The backend resolves the{" "}
+            <strong>jurisdiction</strong> (GDPR, UK_GDPR, CCPA, …) and the
+            policy from the visitor&apos;s geo headers, so the banner only
+            shows where the law requires it.
           </DocSection>
 
           <DocSection title="Integrations">
-            <strong>PostHog</strong> defaults to opt-out for every visitor;
-            it&apos;s opted in only after the user accepts the Analytics
-            category.{" "}
-            <strong>Vercel Analytics</strong> and{" "}
+            <strong>PostHog</strong> is registered with c15t&apos;s script
+            loader and only loads <DocCode>after-consent</DocCode> for the
+            Analytics category. <strong>Vercel Analytics</strong> +{" "}
             <strong>Speed Insights</strong> run cookieless and are not
             gated. <strong>Google AdSense</strong> reads Consent Mode v2
             and serves non-personalised ads until consent is granted.
           </DocSection>
 
           <DocSection title="Google Consent Mode v2">
-            A defaults script in <DocCode>&lt;head&gt;</DocCode> primes the
-            seven GCM signals to <DocCode>denied</DocCode> (security_storage
-            stays granted) before any tracker loads. On every consent
-            change <DocCode>ConsentSync</DocCode> calls{" "}
+            <DocCode>gcmDefaultsScript()</DocCode> in{" "}
+            <DocCode>&lt;head&gt;</DocCode> primes the seven GCM signals to{" "}
+            <DocCode>denied</DocCode> (security_storage stays granted) with{" "}
+            <DocCode>wait_for_update</DocCode> before AdSense loads. On a
+            decision, <DocCode>ConsentModeSync</DocCode> fires{" "}
             <DocCode>gtag(&apos;consent&apos;,&apos;update&apos;,…)</DocCode>{" "}
-            with the user&apos;s preferences, mapped via{" "}
-            <DocCode>consentToGcm()</DocCode> in{" "}
-            <DocCode>src/lib/consent-gcm.ts</DocCode>.
-          </DocSection>
-
-          <DocSection title="GTM data layer">
-            Every consent change also pushes{" "}
-            <DocCode>{"{ event: 'consent_update', consent_decided, …7 GCM signals }"}</DocCode>
-            to <DocCode>window.dataLayer</DocCode>, ready for any GTM
-            container (client or server-side) to fire custom triggers on.
-          </DocSection>
-
-          <DocSection title="Updating preferences">
-            Users can re-open the settings modal at any time via a trigger
-            on the Cookie Policy page (planned). Internally any component
-            can call <DocCode>openSettings()</DocCode> from the{" "}
-            <DocCode>useConsent()</DocCode> hook.
+            mapped via <DocCode>consentToGcm()</DocCode> in{" "}
+            <DocCode>src/lib/c15t/gcm.ts</DocCode>.
           </DocSection>
 
           <DocSection title="Category → GCM signal map">
@@ -124,12 +126,25 @@ export default function HowItWorksPage() {
             <DocCode>security_storage</DocCode>.
           </DocSection>
 
-          <DocSection title="Future direction">
-            If Distanz ever runs heavy advertising or needs IAB TCF 2.2
-            compliance, we can swap in a headless third-party CMP (Didomi,
-            Usercentrics headless, CookieScript) behind the existing{" "}
-            <DocCode>useConsent()</DocCode> API — our banner, modal and
-            sync layer stay the same.
+          <DocSection title="Updating preferences">
+            The footer <strong>Cookies</strong> link and the Privacy page
+            re-open the settings dialog. Internally any component calls{" "}
+            <DocCode>openSettings()</DocCode> from{" "}
+            <DocCode>useConsentSettings()</DocCode>, which maps to c15t&apos;s{" "}
+            <DocCode>setActiveUI(&apos;dialog&apos;)</DocCode>.
+          </DocSection>
+
+          <DocSection title="Data requests (DSAR)">
+            Every visitor gets a <DocCode>sub_…</DocCode> subject id,
+            copyable from the settings dialog. For an access or erasure
+            request, look the id up in the{" "}
+            <a href="/admin/consent" className="text-textDefault underline hover:opacity-80">
+              Consent dashboard
+            </a>{" "}
+            — it shows the full history with CSV export (Article 15) and a
+            delete that erases the subject across{" "}
+            <DocCode>c15t_consent</DocCode>, <DocCode>c15t_auditLog</DocCode>,
+            and <DocCode>c15t_subject</DocCode> (Article 17).
           </DocSection>
         </div>
       </div>

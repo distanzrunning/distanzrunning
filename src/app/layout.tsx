@@ -9,6 +9,7 @@ import SiteHeaderWrapper from "@/components/SiteHeaderWrapper";
 import Footer from "@/components/Footer";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
 import ReCaptchaProvider from "@/components/ReCaptchaProvider";
+import { C15tPrefetch } from "@c15t/nextjs";
 import { ConsentManagerClient } from "@/components/consent/ConsentManagerClient";
 import { UnitsProvider } from "@/contexts/UnitsContext";
 import { SearchProvider } from "@/contexts/SearchContext";
@@ -125,6 +126,13 @@ export default function RootLayout({
           id="gcm-defaults"
           dangerouslySetInnerHTML={{ __html: gcmDefaultsScript() }}
         />
+        {/* Start the c15t /init prefetch before hydration (jurisdiction +
+            policy). Static-safe: an inline script, not next/headers, so it
+            doesn't deopt SSG pages. The provider auto-consumes the matched
+            prefetch (same backendURL), killing the banner flash + the lazy
+            client /init waterfall. c15t's recommended init flow for static
+            routes. */}
+        <C15tPrefetch backendURL="/api/c15t" />
       </head>
       <body className="font-sans antialiased bg-canvas text-textDefault min-h-screen flex flex-col distanz-font-features">
         <ReCaptchaProvider>
