@@ -39,7 +39,10 @@ export function DocPage({
     <div className="flex min-h-[calc(100vh-56px)]">
       {/* Main content column */}
       <div className="min-w-0 flex-1 px-6 py-8 lg:px-10">
-        <article className="max-w-[760px]">
+        {/* Capped at a readable measure (~760px) and centred in the reading
+            area so prose lines stay short and the column reads balanced next
+            to the TOC rather than left-shifted. */}
+        <article className="mx-auto max-w-[760px]">
           <p className="text-copy-18 mb-10 text-balance text-textSubtle">
             {lede}
           </p>
