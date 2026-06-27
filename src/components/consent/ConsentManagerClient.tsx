@@ -26,8 +26,15 @@ function buildScripts(): Script[] {
     scripts.push(
       posthog({
         id: posthogKey,
+        // Privacy-first GDPR default per c15t docs: EU region + after-consent.
+        // region keeps the API/UI/bootstrap hosts aligned; apiHost still wins
+        // if a custom/proxied host is set in env.
+        region: "eu",
         ...(posthogHost ? { apiHost: posthogHost } : {}),
         loadMode: "after-consent",
+        // `defaults` is intentionally pinned (PostHog versions its default
+        // bundle by date so behaviour doesn't shift unexpectedly). The helper
+        // now defaults to '2026-01-30'; bump deliberately when ready.
         initOptions: { defaults: "2025-05-24" },
       }),
     );
