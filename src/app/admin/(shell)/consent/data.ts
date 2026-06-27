@@ -78,16 +78,27 @@ const getPurposeCodeMap = unstable_cache(
 interface C15tConsentRow {
   id: string;
   subjectId: string;
-  purposeIds: string[] | null;
+  // fumadb stores json array columns wrapped as `{ json: [...] }`, so accept
+  // both that envelope and a bare array.
+  purposeIds: string[] | { json?: string[] } | null;
   consentAction: string | null;
   givenAt: string;
+}
+
+/** Unwrap fumadb's `{ json: [...] }` envelope (or accept a bare array). */
+function extractPurposeIds(raw: C15tConsentRow["purposeIds"]): string[] {
+  if (Array.isArray(raw)) return raw;
+  if (raw && typeof raw === "object" && Array.isArray(raw.json)) {
+    return raw.json;
+  }
+  return [];
 }
 
 function projectRow(
   row: C15tConsentRow,
   purposeCode: Record<string, string>,
 ): ConsentRowRaw {
-  const ids = Array.isArray(row.purposeIds) ? row.purposeIds : [];
+  const ids = extractPurposeIds(row.purposeIds);
   const codes = new Set(ids.map((id) => purposeCode[id]).filter(Boolean));
   return {
     id: String(row.id),
