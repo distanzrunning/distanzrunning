@@ -1,153 +1,211 @@
-import { PanelCard } from "@/components/ui/PanelCard";
+import {
+  DocCode,
+  DocPage,
+  DocSection,
+  DocTable,
+} from "@/components/admin/Doc";
 
 export const metadata = {
   title: "How our CMP works — Stride Admin",
   robots: { index: false, follow: false },
 };
 
-function DocCode({ children }: { children: React.ReactNode }) {
-  return <code className="inline-code">{children}</code>;
-}
-
-function DocSection({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <PanelCard title={title}>
-      <div className="text-copy-14 text-textSubtle">
-        {children}
-      </div>
-    </PanelCard>
-  );
-}
+const TOC = [
+  { id: "architecture", label: "Architecture" },
+  { id: "categories", label: "Consent categories" },
+  { id: "storage", label: "Storage & audit" },
+  { id: "initialization", label: "Initialization" },
+  { id: "integrations", label: "Integrations" },
+  { id: "gcm", label: "Google Consent Mode" },
+  { id: "preferences", label: "Updating preferences" },
+  { id: "dsar", label: "Data requests" },
+];
 
 export default function HowItWorksPage() {
   return (
-    <div style={{ padding: "32px 24px" }}>
-      <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-        <header style={{ marginBottom: 24 }}>
-          <h1
-            className="text-heading-32"
-            style={{ margin: 0, color: "hsl(var(--color-textDefault))" }}
-          >
-            How our CMP works
-          </h1>
-          <p
-            className="text-copy-16"
-            style={{ marginTop: 6, marginBottom: 0, color: "hsl(var(--color-textSubtler))" }}
-          >
-            Internals of Distanz Running&apos;s self-hosted c15t consent
-            platform.
-          </p>
-        </header>
+    <DocPage
+      toc={TOC}
+      lede={
+        <>
+          Distanz runs a <strong>self-hosted c15t v2</strong> consent platform.
+          The banner, storage, audit trail, and tracker gating all live on our
+          own infrastructure — no third-party CMP and no data handover. This page
+          documents how the pieces fit together.
+        </>
+      }
+    >
+      <DocSection id="architecture" title="Architecture">
+        <p>
+          The consent backend (<DocCode>c15tInstance</DocCode> + a Postgres
+          adapter) is mounted at <DocCode>/api/c15t</DocCode> and persists to{" "}
+          <strong>our own Supabase</strong>. The UI is <strong>headless</strong>:
+          our Stride banner and settings dialog are rendered from the design
+          system and driven by c15t&apos;s hooks (
+          <DocCode>useHeadlessConsentUI</DocCode>,{" "}
+          <DocCode>useConsentManager</DocCode>), so consent looks like the rest of
+          the product while c15t handles policy, jurisdiction, and storage.
+        </p>
+      </DocSection>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: 16,
-          }}
-        >
-          <DocSection title="Architecture">
-            Consent runs on <strong>self-hosted c15t v2</strong>. The
-            backend (<DocCode>c15tInstance</DocCode> + a Postgres adapter)
-            is mounted at <DocCode>/api/c15t</DocCode> and writes to{" "}
-            <strong>our own Supabase</strong> — no third-party CMP, no data
-            handover. The UI is <strong>headless</strong>: our Stride banner
-            and settings dialog drive c15t through its hooks, so the look
-            stays on the design system.
-          </DocSection>
+      <DocSection id="categories" title="Consent categories">
+        <p>
+          Four buckets. <strong>Essential</strong> is always on; the visitor
+          chooses Accept all, Deny, or a custom mix from the banner or settings
+          dialog.
+        </p>
+        <DocTable
+          columns={["Label", "c15t code", "Covers"]}
+          rows={[
+            [
+              <strong key="e">Essential</strong>,
+              <DocCode key="c">necessary</DocCode>,
+              "Security and core site function. Cannot be disabled.",
+            ],
+            [
+              <strong key="m">Marketing</strong>,
+              <DocCode key="c">marketing</DocCode>,
+              "Advertising and personalised promotions.",
+            ],
+            [
+              <strong key="a">Analytics</strong>,
+              <DocCode key="c">measurement</DocCode>,
+              "Usage statistics and performance (PostHog).",
+            ],
+            [
+              <strong key="f">Functional</strong>,
+              <DocCode key="c">functionality</DocCode>,
+              "Enhanced features and preferences.",
+            ],
+          ]}
+        />
+      </DocSection>
 
-          <DocSection title="Categories">
-            Four consent buckets: <strong>Essential</strong> (always on,{" "}
-            <DocCode>necessary</DocCode>), <strong>Marketing</strong>,{" "}
-            <strong>Analytics</strong> (<DocCode>measurement</DocCode>), and{" "}
-            <strong>Functional</strong> (<DocCode>functionality</DocCode>).
-            The user chooses Accept all, Deny, or a custom mix from the
-            banner or settings dialog.
-          </DocSection>
+      <DocSection id="storage" title="Storage & audit">
+        <p>
+          The visitor&apos;s preferences and subject id live in the{" "}
+          <DocCode>c15t</DocCode> cookie. The source of truth is an{" "}
+          <strong>append-only</strong> audit trail in Supabase — every decision
+          inserts a new row, never mutating the last. Tables are{" "}
+          <DocCode>c15t_</DocCode>-prefixed and RLS-locked (only the server role
+          reads/writes); IP addresses are masked at write time.
+        </p>
+        <DocTable
+          columns={["Table", "Holds"]}
+          rows={[
+            [
+              <DocCode key="t">c15t_subject</DocCode>,
+              "One per browser (sub_… id), anonymous unless identified.",
+            ],
+            [
+              <DocCode key="t">c15t_consent</DocCode>,
+              "Each decision: granted purposes, action, timestamp, jurisdiction, masked IP, UI source.",
+            ],
+            [
+              <DocCode key="t">c15t_consentPurpose</DocCode>,
+              "The category codes a consent row references.",
+            ],
+            [
+              <DocCode key="t">c15t_auditLog</DocCode>,
+              "Immutable record of consent-related actions.",
+            ],
+          ]}
+        />
+      </DocSection>
 
-          <DocSection title="Storage">
-            Client preferences + the subject id live in the{" "}
-            <DocCode>c15t</DocCode> cookie. The source of truth is an{" "}
-            <strong>append-only</strong> audit trail in Supabase:{" "}
-            <DocCode>c15t_consent</DocCode> rows (granted purposes, action,
-            timestamp, jurisdiction, masked IP) linked to a{" "}
-            <DocCode>c15t_subject</DocCode>, with a{" "}
-            <DocCode>c15t_auditLog</DocCode>. Tables are{" "}
-            <DocCode>c15t_</DocCode>-prefixed and RLS-locked.
-          </DocSection>
+      <DocSection id="initialization" title="Initialization & jurisdiction">
+        <p>
+          <DocCode>&lt;C15tPrefetch&gt;</DocCode> in the document head starts the{" "}
+          <DocCode>/init</DocCode> request before hydration. It&apos;s
+          static-safe (an inline script, not <DocCode>next/headers</DocCode>), so
+          it doesn&apos;t deopt our prerendered pages, and the provider consumes
+          the prefetched result — no banner flash and no lazy client waterfall.
+        </p>
+        <p>
+          <DocCode>/init</DocCode> resolves the visitor&apos;s{" "}
+          <strong>jurisdiction</strong> (GDPR, UK_GDPR, CCPA, …) and the matching
+          policy from their geo headers, so the banner only appears where the law
+          requires opt-in — that&apos;s why a US visitor may not see it while a
+          UK one does.
+        </p>
+      </DocSection>
 
-          <DocSection title="Initialization">
-            <DocCode>&lt;C15tPrefetch&gt;</DocCode> in{" "}
-            <DocCode>&lt;head&gt;</DocCode> starts the{" "}
-            <DocCode>/init</DocCode> call before hydration (static-safe —
-            no banner flash, no SSG deopt). The backend resolves the{" "}
-            <strong>jurisdiction</strong> (GDPR, UK_GDPR, CCPA, …) and the
-            policy from the visitor&apos;s geo headers, so the banner only
-            shows where the law requires it.
-          </DocSection>
+      <DocSection id="integrations" title="Integrations">
+        <p>
+          <strong>PostHog</strong> is registered with c15t&apos;s script loader
+          and only loads <DocCode>after-consent</DocCode> for the Analytics
+          category — it makes no network request until then. Internal-traffic
+          exclusion (our own IP, localhost) lives in PostHog&apos;s project
+          settings, not app code.
+        </p>
+        <p>
+          <strong>Vercel Analytics</strong> and <strong>Speed Insights</strong>{" "}
+          run cookieless and are not gated. <strong>Google AdSense</strong> reads
+          Consent Mode v2 (below) and serves non-personalised ads until consent
+          is granted.
+        </p>
+      </DocSection>
 
-          <DocSection title="Integrations">
-            <strong>PostHog</strong> is registered with c15t&apos;s script
-            loader and only loads <DocCode>after-consent</DocCode> for the
-            Analytics category. <strong>Vercel Analytics</strong> +{" "}
-            <strong>Speed Insights</strong> run cookieless and are not
-            gated. <strong>Google AdSense</strong> reads Consent Mode v2
-            and serves non-personalised ads until consent is granted.
-          </DocSection>
+      <DocSection id="gcm" title="Google Consent Mode v2">
+        <p>
+          <DocCode>gcmDefaultsScript()</DocCode> in the head primes the seven GCM
+          signals to <DocCode>denied</DocCode> (security stays granted) with{" "}
+          <DocCode>wait_for_update</DocCode> before AdSense loads. On a decision,{" "}
+          <DocCode>ConsentModeSync</DocCode> fires{" "}
+          <DocCode>gtag(&apos;consent&apos;,&apos;update&apos;,…)</DocCode> mapped
+          via <DocCode>consentToGcm()</DocCode> in{" "}
+          <DocCode>src/lib/c15t/gcm.ts</DocCode>.
+        </p>
+        <DocTable
+          columns={["Category", "Google signals"]}
+          rows={[
+            [
+              <strong key="m">Marketing</strong>,
+              <>
+                <DocCode>ad_storage</DocCode>, <DocCode>ad_user_data</DocCode>,{" "}
+                <DocCode>ad_personalization</DocCode>
+              </>,
+            ],
+            [
+              <strong key="a">Analytics</strong>,
+              <DocCode key="s">analytics_storage</DocCode>,
+            ],
+            [
+              <strong key="f">Functional</strong>,
+              <>
+                <DocCode>functionality_storage</DocCode>,{" "}
+                <DocCode>personalization_storage</DocCode>
+              </>,
+            ],
+            [
+              <strong key="e">Essential</strong>,
+              <DocCode key="s">security_storage</DocCode>,
+            ],
+          ]}
+        />
+      </DocSection>
 
-          <DocSection title="Google Consent Mode v2">
-            <DocCode>gcmDefaultsScript()</DocCode> in{" "}
-            <DocCode>&lt;head&gt;</DocCode> primes the seven GCM signals to{" "}
-            <DocCode>denied</DocCode> (security_storage stays granted) with{" "}
-            <DocCode>wait_for_update</DocCode> before AdSense loads. On a
-            decision, <DocCode>ConsentModeSync</DocCode> fires{" "}
-            <DocCode>gtag(&apos;consent&apos;,&apos;update&apos;,…)</DocCode>{" "}
-            mapped via <DocCode>consentToGcm()</DocCode> in{" "}
-            <DocCode>src/lib/c15t/gcm.ts</DocCode>.
-          </DocSection>
+      <DocSection id="preferences" title="Updating preferences">
+        <p>
+          The footer <strong>Cookies</strong> link and the Privacy page re-open
+          the settings dialog. Internally any component calls{" "}
+          <DocCode>openSettings()</DocCode> from{" "}
+          <DocCode>useConsentSettings()</DocCode>, which maps to c15t&apos;s{" "}
+          <DocCode>setActiveUI(&apos;dialog&apos;)</DocCode>.
+        </p>
+      </DocSection>
 
-          <DocSection title="Category → GCM signal map">
-            <strong>Marketing</strong> →{" "}
-            <DocCode>ad_storage</DocCode>,{" "}
-            <DocCode>ad_user_data</DocCode>,{" "}
-            <DocCode>ad_personalization</DocCode>.{" "}
-            <strong>Analytics</strong> →{" "}
-            <DocCode>analytics_storage</DocCode>.{" "}
-            <strong>Functional</strong> →{" "}
-            <DocCode>functionality_storage</DocCode>,{" "}
-            <DocCode>personalization_storage</DocCode>.{" "}
-            <strong>Essential</strong> always grants{" "}
-            <DocCode>security_storage</DocCode>.
-          </DocSection>
-
-          <DocSection title="Updating preferences">
-            The footer <strong>Cookies</strong> link and the Privacy page
-            re-open the settings dialog. Internally any component calls{" "}
-            <DocCode>openSettings()</DocCode> from{" "}
-            <DocCode>useConsentSettings()</DocCode>, which maps to c15t&apos;s{" "}
-            <DocCode>setActiveUI(&apos;dialog&apos;)</DocCode>.
-          </DocSection>
-
-          <DocSection title="Data requests (DSAR)">
-            Every visitor gets a <DocCode>sub_…</DocCode> subject id,
-            copyable from the settings dialog. For an access or erasure
-            request, look the id up in the{" "}
-            <a href="/admin/consent" className="text-textDefault underline hover:opacity-80">
-              Consent dashboard
-            </a>{" "}
-            — it shows the full history with CSV export (Article 15) and a
-            delete that erases the subject across{" "}
-            <DocCode>c15t_consent</DocCode>, <DocCode>c15t_auditLog</DocCode>,
-            and <DocCode>c15t_subject</DocCode> (Article 17).
-          </DocSection>
-        </div>
-      </div>
-    </div>
+      <DocSection id="dsar" title="Data requests (DSAR)">
+        <p>
+          Every visitor gets a <DocCode>sub_…</DocCode> subject id, copyable from
+          the settings dialog once they&apos;ve decided. For an access or erasure
+          request, look the id up in the{" "}
+          <a href="/admin/consent">Consent dashboard</a> — it shows the full
+          history with CSV export (GDPR Article 15) and a delete that erases the
+          subject across <DocCode>c15t_consent</DocCode>,{" "}
+          <DocCode>c15t_auditLog</DocCode>, and <DocCode>c15t_subject</DocCode>{" "}
+          (Article 17).
+        </p>
+      </DocSection>
+    </DocPage>
   );
 }
