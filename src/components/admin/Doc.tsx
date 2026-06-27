@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
+import { DocToc } from "./DocToc";
 
 // ============================================================================
 // Admin documentation primitives — a light, server-renderable doc layout for
@@ -35,38 +36,27 @@ export function DocPage({
   children: ReactNode;
 }) {
   return (
-    <div className="px-6 py-8">
-      <div className="mx-auto flex max-w-[1040px] gap-12">
-        <article className="min-w-0 max-w-[720px] flex-1">
+    <div className="flex min-h-[calc(100vh-56px)]">
+      {/* Main content column */}
+      <div className="min-w-0 flex-1 px-6 py-8 lg:px-10">
+        <article className="max-w-[760px]">
           <p className="text-copy-18 mb-10 text-balance text-textSubtle">
             {lede}
           </p>
           <div className="space-y-12">{children}</div>
         </article>
-
-        <nav
-          aria-label="On this page"
-          className="hidden w-[180px] shrink-0 lg:block"
-        >
-          <div className="sticky top-[88px]">
-            <p className="text-label-12 mb-3 uppercase tracking-wide text-textSubtler">
-              On this page
-            </p>
-            <ul className="space-y-px border-l border-borderSubtle">
-              {toc.map((item) => (
-                <li key={item.id}>
-                  <a
-                    href={`#${item.id}`}
-                    className="text-copy-13 -ml-px block border-l border-transparent py-1 pl-3 text-textSubtle transition-colors hover:border-textDefault hover:text-textDefault"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </nav>
       </div>
+
+      {/* Right TOC rail — mirrors the design-system docs pages. */}
+      <aside
+        aria-label="On this page"
+        className="hidden w-[252px] shrink-0 border-l border-borderSubtle xl:block"
+      >
+        <div className="sticky top-[56px] max-h-[calc(100vh-56px)] overflow-y-auto px-6 py-8">
+          <h4 className="text-heading-14 mb-3 text-textDefault">On this page</h4>
+          <DocToc items={toc} />
+        </div>
+      </aside>
     </div>
   );
 }
