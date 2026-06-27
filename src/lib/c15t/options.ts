@@ -1,3 +1,4 @@
+import { policyPackPresets } from "@c15t/backend";
 import type { C15TOptions } from "@c15t/backend";
 
 // ============================================================================
@@ -39,7 +40,13 @@ const trustedOrigins: string[] = [
  */
 const policySnapshot: C15TOptions["policySnapshot"] = process.env
   .POLICY_SNAPSHOT_KEY
-  ? { signingKey: process.env.POLICY_SNAPSHOT_KEY }
+  ? {
+      signingKey: process.env.POLICY_SNAPSHOT_KEY,
+      // Re-resolve the policy at write time instead of 409-ing if a token is
+      // expired/missing (e.g. a banner left open past the 30-min TTL), so a
+      // late "Accept" still records the consent rather than being dropped.
+      onValidationFailure: "resolve_current",
+    }
   : undefined;
 
 // `logger` is omitted so this base also satisfies `C15TConfig` (the CLI config
@@ -57,5 +64,16 @@ export const baseC15tOptions: Omit<C15TOptions, "adapter" | "logger"> = {
   // zeroed). This replaces our old salted-SHA-256 approach with c15t's standard
   // masking — still de-identified, no salt to manage.
   ipAddress: { tracking: true, masking: true },
+  // Regional policy packs — c15t's MAINTAINED mappings (not hand-rolled lists).
+  // Omitting policyPacks is deprecated and removed in 2.0 GA. Presets:
+  //   europeOptIn      → EEA(30)+UK, opt-in banner, fallback when geo fails
+  //   californiaOptOut → US-CA, opt-out model + GPC respected
+  //   worldNoBanner    → rest-of-world default: auto-grant, no banner
+  // Scope is permissive (no category allowlist), so our 4 categories all pass.
+  policyPacks: [
+    policyPackPresets.europeOptIn(),
+    policyPackPresets.californiaOptOut(),
+    policyPackPresets.worldNoBanner(),
+  ],
   ...(policySnapshot ? { policySnapshot } : {}),
 };
