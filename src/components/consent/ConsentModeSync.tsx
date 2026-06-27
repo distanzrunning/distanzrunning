@@ -22,14 +22,21 @@ declare global {
 }
 
 export function ConsentModeSync() {
-  const { consents, hasConsented } = useConsentManager();
+  const { consents } = useConsentManager();
 
   useEffect(() => {
-    if (typeof window === "undefined" || !hasConsented()) return;
+    if (typeof window === "undefined") return;
     const gtag = window.gtag;
     if (typeof gtag !== "function") return;
+    // Push the RESOLVED consent state to Google Consent Mode whenever it
+    // changes — not just after an explicit decision. c15t auto-grants in
+    // opt-out / none jurisdictions (outside the EEA), where `hasConsented()`
+    // stays false; gating on it would strand those visitors on the denied
+    // default and AdSense would never personalise outside the EEA. Pushing the
+    // current `consents` is safe pre-decision in the EEA too — it mirrors the
+    // denied default already set in <head>.
     gtag("consent", "update", consentToGcm(consents));
-  }, [consents, hasConsented]);
+  }, [consents]);
 
   return null;
 }
