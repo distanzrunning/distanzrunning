@@ -15,6 +15,7 @@ import { UnitsProvider } from "@/contexts/UnitsContext";
 import { SearchProvider } from "@/contexts/SearchContext";
 import { ConsentBanner } from "@/components/ui/ConsentBanner";
 import { ConsentModeSync } from "@/components/consent/ConsentModeSync";
+import { PostHogConsentSync } from "@/components/consent/PostHogConsentSync";
 import { gcmDefaultsScript } from "@/lib/c15t/gcm";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -141,6 +142,7 @@ export default function RootLayout({
             <ConsentManagerClient>
               <SearchProvider>
                 <ConsentModeSync />
+                <PostHogConsentSync />
                 <LayoutContent
                   header={<SiteHeaderWrapper newsletterSource="homepage" />}
                   footer={<Footer />}
