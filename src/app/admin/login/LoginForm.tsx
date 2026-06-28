@@ -15,7 +15,7 @@ export default function LoginForm() {
           id: "password",
           type: "password",
           label: "Password",
-          placeholder: "password",
+          placeholder: "Password",
           autoComplete: "current-password",
           required: true,
           autoFocus: true,
