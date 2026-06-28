@@ -860,13 +860,34 @@
     transform: translateZ(0);
     transition: background-position 0.3s;
   }
-  .ds-scroller-overlay::before {
+  /* ::before carries the start-edge fades (top for vertical, left for
+     horizontal); ::after the end-edge fades (bottom / right). Each axis emits
+     ONLY the gradient layer it can actually overflow, so a vertical scroller
+     never paints a left/right fade — and a horizontal one never paints a
+     top/bottom fade. (data-axis mirrors the track's data-overflow.) */
+  .ds-scroller-overlay[data-axis="y"]::before {
+    background: linear-gradient(to bottom, var(--scroller-gradient));
+    background-position: 0 -40px;
+  }
+  .ds-scroller-overlay[data-axis="y"]::after {
+    background: linear-gradient(to top, var(--scroller-gradient));
+    background-position: 0 calc(100% + 40px);
+  }
+  .ds-scroller-overlay[data-axis="x"]::before {
+    background: linear-gradient(to right, var(--scroller-gradient));
+    background-position: -40px 0;
+  }
+  .ds-scroller-overlay[data-axis="x"]::after {
+    background: linear-gradient(to left, var(--scroller-gradient));
+    background-position: calc(100% + 40px) 0;
+  }
+  .ds-scroller-overlay[data-axis="both"]::before {
     background:
       linear-gradient(to bottom, var(--scroller-gradient)),
       linear-gradient(to right, var(--scroller-gradient));
     background-position: -40px -40px;
   }
-  .ds-scroller-overlay::after {
+  .ds-scroller-overlay[data-axis="both"]::after {
     background:
       linear-gradient(to top, var(--scroller-gradient)),
       linear-gradient(to left, var(--scroller-gradient));
