@@ -17,7 +17,7 @@ import { ConsentBanner } from "@/components/ui/ConsentBanner";
 import { ConsentModeSync } from "@/components/consent/ConsentModeSync";
 import { PostHogConsentSync } from "@/components/consent/PostHogConsentSync";
 import { gcmDefaultsScript } from "@/lib/c15t/gcm";
-import { Analytics } from "@vercel/analytics/react";
+import { ConsentedAnalytics } from "@/components/consent/ConsentedAnalytics";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // Distanz Typography System — all fonts self-hosted
@@ -151,7 +151,7 @@ export default function RootLayout({
                 </LayoutContent>
                 <ConsentBanner />
 
-                <Analytics />
+                <ConsentedAnalytics />
                 <SpeedInsights />
               </SearchProvider>
             </ConsentManagerClient>
