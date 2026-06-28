@@ -67,7 +67,12 @@ export function ThemeSwitcher({
         gap: 2,
         padding: containerPadding,
         borderRadius: containerRadius,
-        background: "hsl(var(--color-canvas))",
+        // Track sits one grey step BELOW the selected thumb (gray-100 via
+        // surfaceSubtle: #F2F2F2 light / #1A1A1A dark), so the container
+        // reads on the page and the thumb can be defined by fill alone.
+        // No ring/border — our switcher intentionally diverges from Geist
+        // here (their bg-100/bg-200 are too close to differentiate by fill).
+        background: "hsl(var(--color-surfaceSubtle))",
         border: "none",
         margin: 0,
         ...styleProp,
@@ -116,17 +121,18 @@ export function ThemeSwitcher({
               border: "none",
               borderRadius: optionRadius,
               cursor: disabled ? "not-allowed" : "pointer",
+              // Selected thumb is defined by BACKGROUND ALONE — one grey
+              // step above the track: white in light, gray-300 (#292929) in
+              // dark (via surfaceElevated2). No ring or shadow.
               background: isSelected
-                ? "hsl(var(--color-surface))"
+                ? "hsl(var(--color-surfaceElevated2))"
                 : "transparent",
-              boxShadow: isSelected
-                ? "rgba(0,0,0,0.06) 0px 2px 4px, hsla(var(--ds-gray-1000-value), 0.14) 0px 0px 0px 1px"
-                : "none",
+              boxShadow: "none",
               color: disabled
-                ? "var(--ds-gray-600)"
+                ? "var(--ds-gray-500)"
                 : isSelected
                   ? "hsl(var(--color-textDefault))"
-                  : "var(--ds-gray-800)",
+                  : "var(--ds-gray-700)",
               transition:
                 "background 0.15s ease, box-shadow 0.15s ease, color 0.15s ease",
             }}

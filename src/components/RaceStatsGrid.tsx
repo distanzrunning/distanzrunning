@@ -61,7 +61,7 @@ export const RaceStatsGrid: React.FC<RaceStatsGridProps> = ({
           return (
             <div 
               key={index}
-              className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow" 
+              className="bg-surface p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
               title={stat.tooltip}
             >
               <span className="text-sm text-gray-600 mb-2 block font-medium">

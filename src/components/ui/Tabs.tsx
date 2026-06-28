@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 export interface TabItem {
@@ -41,40 +41,8 @@ export interface TabsProps {
   className?: string;
 }
 
-// ============================================================================
-// Focus ring styles (injected once)
-// ============================================================================
-
-const TAB_STYLE_ID = "ds-tabs-style";
-
-function ensureTabStyles() {
-  if (typeof document === "undefined") return;
-  if (document.getElementById(TAB_STYLE_ID)) return;
-  const style = document.createElement("style");
-  style.id = TAB_STYLE_ID;
-  style.textContent = `
-    .ds-tabs-tab {
-      outline: none;
-    }
-    .ds-tabs-tab:focus-visible {
-      box-shadow: 0 0 0 2px var(--ds-background-100),
-        0 0 0 4px var(--ds-focus-ring);
-      border-radius: 6px;
-    }
-    /* Default-variant hover: non-selected tabs (including disabled)
-       darken to gray-1000. Disabled tabs look identical to enabled,
-       differing only by the not-allowed cursor and click being
-       blocked. Uses !important to override the inline color (which
-       has higher specificity than a class rule). Scoped to
-       hover-capable input devices so touch screens don't stick. */
-    @media (hover: hover) {
-      .ds-tabs-tab[data-variant="default"]:not([aria-selected="true"]):hover {
-        color: var(--ds-gray-1000) !important;
-      }
-    }
-  `;
-  document.head.appendChild(style);
-}
+// Tab focus ring, hover, and the scroll/scrollbar behaviour live in globals.css
+// (.ds-tabs-list / .ds-tabs-tab) — not runtime-injected, which served stale CSS.
 
 export function Tabs({
   tabs,
@@ -91,10 +59,6 @@ export function Tabs({
     defaultValue || tabs[0]?.value || "",
   );
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
-
-  useEffect(() => {
-    ensureTabStyles();
-  }, []);
 
   const selectedValue = value !== undefined ? value : internalValue;
 
@@ -151,14 +115,15 @@ export function Tabs({
   const containerStyle: React.CSSProperties = {
     display: "flex",
     flexWrap: "nowrap",
-    alignItems: "baseline",
-    overflowX: "auto",
+    // Geist: items-center (not baseline) so icons + labels align.
+    alignItems: "center",
     columnGap: isSecondary ? 8 : 24,
     height: isSecondary ? 24 : 48,
     paddingBottom: 1,
-    scrollbarWidth: "none",
+    // Primary track is the faint accents-2 baseline (our gray-200), with the
+    // selected tab's gray-1000 underline riding over it; secondary has none.
     ...(!isSecondary
-      ? { boxShadow: "var(--ds-gray-400) 0px -1px 0px 0px inset" }
+      ? { boxShadow: "var(--ds-gray-200) 0px -1px 0px 0px inset" }
       : { boxShadow: "none" }),
   };
 
@@ -169,7 +134,7 @@ export function Tabs({
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
       style={containerStyle}
-      className={className}
+      className={["ds-tabs-list", className].filter(Boolean).join(" ")}
     >
       {tabs.map((tab, idx) => {
         const isSelected = selectedValue === tab.value;
@@ -189,8 +154,9 @@ export function Tabs({
               marginBottom: -1,
               whiteSpace: "nowrap",
               cursor: isDisabled ? "not-allowed" : "pointer",
+              // Geist secondary disabled = gray-900 (not the gray-500 disabled tone).
               color: isDisabled
-                ? "hsl(var(--color-textDisabled))"
+                ? "var(--ds-gray-900)"
                 : isSelected
                   ? "hsl(var(--color-textInverted))"
                   : "hsl(var(--color-textDefault))",

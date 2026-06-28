@@ -1,7 +1,14 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, createContext, useContext } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
+
+// ============================================================================
+// Context — lets SheetContent know whether the sheet is modal so it can decide
+// to render the scrim and whether outside-click should dismiss.
+// ============================================================================
+
+const SheetContext = createContext<{ modal: boolean }>({ modal: false });
 
 // ============================================================================
 // Types
@@ -12,11 +19,12 @@ interface SheetProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   /**
-   * Render the blocking overlay scrim and trap focus inside the sheet.
-   * Defaults to `true` — matches Geist's live Sheet behavior (overlay
-   * always shown, outside-click dismisses). Flip to `false` only when
-   * the underlying page must stay fully interactive while the sheet is
-   * open.
+   * Render the blocking overlay scrim and let outside-click dismiss.
+   * Defaults to `true` — matches Geist's live Sheet: the scrim renders, focus
+   * is trapped, and clicking outside (or Escape) closes it. (Geist's written
+   * BP claims a non-modal default, but the shipped component is modal — we
+   * follow the live behavior.) Flip to `false` for a non-modal sheet that
+   * leaves the page interactive.
    */
   modal?: boolean;
 }
@@ -150,18 +158,13 @@ const sidePositionStyles: Record<string, React.CSSProperties> = {
   bottom: { bottom: 0, left: 0, right: 0 },
 };
 
+// Geist's per-side defaults: right/left are 75% wide capped at sm (384px) and
+// full height; top/bottom span the width and size to their content.
 const sideClassNames: Record<string, string> = {
-  right: "h-full p-6",
-  left: "h-full p-6",
+  right: "h-full w-3/4 sm:max-w-[384px] p-6",
+  left: "h-full w-3/4 sm:max-w-[384px] p-6",
   top: "w-full p-6",
   bottom: "w-full p-6",
-};
-
-const defaultSizes: Record<string, string> = {
-  right: "384px",
-  left: "384px",
-  top: "auto",
-  bottom: "auto",
 };
 
 // ============================================================================
@@ -174,9 +177,11 @@ function SheetRoot({ children, open, onOpenChange, modal = true }: SheetProps) {
   }, []);
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange} modal={modal}>
-      {children}
-    </Dialog.Root>
+    <SheetContext.Provider value={{ modal }}>
+      <Dialog.Root open={open} onOpenChange={onOpenChange} modal={modal}>
+        {children}
+      </Dialog.Root>
+    </SheetContext.Provider>
   );
 }
 
@@ -190,26 +195,32 @@ function SheetContent({
   size,
   className,
 }: SheetContentProps) {
+  const { modal } = useContext(SheetContext);
   const isHorizontal = side === "left" || side === "right";
-  const resolvedSize = size || defaultSizes[side];
-  const sizeStyle: React.CSSProperties = isHorizontal
-    ? { width: resolvedSize }
-    : { height: resolvedSize };
+  // Apply an inline size only when explicitly given; otherwise the per-side
+  // classes carry Geist's defaults (right/left w-3/4 sm:max-w-sm, top/bottom auto).
+  const sizeStyle: React.CSSProperties = size
+    ? isHorizontal
+      ? { width: size }
+      : { height: size }
+    : {};
 
   return (
     <Dialog.Portal>
-      <Dialog.Overlay
-        className="ds-sheet-overlay"
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 99,
-          backgroundColor: "var(--ds-overlay-backdrop-color)",
-          opacity: "var(--ds-overlay-backdrop-opacity)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-        }}
-      />
+      {/* Scrim renders only when modal. Geist's overlay is a flat bg + opacity
+          fade — no backdrop blur. */}
+      {modal && (
+        <Dialog.Overlay
+          className="ds-sheet-overlay"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 99,
+            backgroundColor: "var(--ds-overlay-backdrop-color)",
+            opacity: "var(--ds-overlay-backdrop-opacity)",
+          }}
+        />
+      )}
       <Dialog.Content
         data-side={side}
         className={`ds-sheet-content ${className || sideClassNames[side]}`}
@@ -220,8 +231,10 @@ function SheetContent({
           flexDirection: "column",
           gap: 16,
           background: "hsl(var(--color-surface))",
+          // Geist: border + shadow-lg (not the modal shadow token).
+          border: "1px solid var(--ds-gray-400)",
           boxShadow:
-            "var(--ds-shadow-modal), hsl(var(--color-canvas)) 0px 0px 0px 1px",
+            "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
           outline: "none",
           transition:
             "color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter",
@@ -264,7 +277,7 @@ function SheetDescription({ children }: SheetDescriptionProps) {
       style={{
         fontSize: 14,
         lineHeight: "20px",
-        color: "hsl(var(--color-textSubtler))",
+        color: "hsl(var(--color-textSubtle))",
       }}
     >
       {children}
@@ -279,7 +292,7 @@ function SheetBody({ children }: { children: React.ReactNode }) {
       style={{
         fontSize: 14,
         lineHeight: "20px",
-        color: "hsl(var(--color-textDefault))",
+        color: "hsl(var(--color-textSubtle))",
       }}
     >
       {children}

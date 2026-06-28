@@ -223,7 +223,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -306,12 +306,12 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 const defaultCode = `import { Pagination } from '@/components/ui/Pagination';
 
 const previous = {
-  title: 'Button',
+  title: 'Home',
   href: '#',
 };
 
 const next = {
-  title: 'Code Block',
+  title: 'Introduction',
   href: '#',
 };
 
@@ -339,15 +339,11 @@ export default function PaginationComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
-        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
-          The pagination component displays previous and next navigation links
-          at the bottom of content pages.
-        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <Pagination
-              previous={{ title: "Button", href: "#" }}
-              next={{ title: "Code Block", href: "#" }}
+              previous={{ title: "Home", href: "#" }}
+              next={{ title: "Introduction", href: "#" }}
             />
           </CodePreview>
         </div>

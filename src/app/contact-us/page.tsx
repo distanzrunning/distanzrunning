@@ -20,7 +20,7 @@ export default function ContactUsPage() {
             <div className="relative pt-8 md:pt-12 pb-8 md:pr-16">
               <div className="relative">
                 <div className="flex flex-col gap-6 text-left pb-8">
-                  <h1 className="text-heading-32 md:text-heading-56 font-serif text-textDefault">
+                  <h1 className="text-heading-32 md:text-heading-56 text-textDefault">
                     Contact us
                   </h1>
                 </div>

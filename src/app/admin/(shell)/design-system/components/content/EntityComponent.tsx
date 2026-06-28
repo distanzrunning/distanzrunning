@@ -227,7 +227,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -320,12 +320,13 @@ function DefaultExample() {
   return (
     <Entity>
       <Entity.Content
-        title="The Art of the Marathon Taper"
-        subtitle="By Sarah Chen · 8 min read"
+        title="Sarah Chen"
+        subtitle="Trail Runner (@schen)"
         thumbnail={
           <Avatar
-            fallback="SC"
             size={32}
+            src="/brand/icon-app.svg"
+            alt="Distanz"
           />
         }
       />
@@ -334,7 +335,7 @@ function DefaultExample() {
           className="text-copy-14"
           style={{ color: 'hsl(var(--color-textSubtle))', margin: 0 }}
         >
-          Published 2h ago
+          Connected 1h ago
         </p>
       </Entity.Field>
     </Entity>
@@ -403,7 +404,7 @@ function ListCheckboxExample() {
   });
 
   return (
-    <Entity.List bordered dividers={false}>
+    <Entity.List bordered>
       {categories.map((cat) => (
         <Entity
           key={cat.name}
@@ -435,6 +436,43 @@ function ListCheckboxExample() {
   );
 }`;
 
+const fillCode = `import { Entity } from '@/components/ui/Entity';
+
+function FillExample() {
+  return (
+    <Entity.List bordered>
+      <Entity>
+        <div className="flex flex-1 min-w-0">
+          <p className="text-copy-14 truncate text-gray-900">This is a simple description</p>
+        </div>
+        <div className="flex flex-initial min-w-0">
+          <p className="text-copy-14 truncate text-gray-900">This is a simple description</p>
+        </div>
+      </Entity>
+    </Entity.List>
+  );
+}`;
+
+const columnClassNamesCode = `import { Entity } from '@/components/ui/Entity';
+import { Avatar } from '@/components/ui/Avatar';
+
+function ColumnClassNamesExample() {
+  return (
+    <Entity.List bordered>
+      <Entity>
+        <Entity.Content
+          title="Entity with dashed borders"
+          thumbnail={<Avatar placeholder size={50} />}
+          className="border border-dashed border-[var(--ds-gray-300)] rounded-md p-2"
+        />
+        <Entity.Field className="border border-dashed border-[var(--ds-gray-300)] rounded-md p-2">
+          <span className="text-copy-14 text-gray-900">[some action]</span>
+        </Entity.Field>
+      </Entity>
+    </Entity.List>
+  );
+}`;
+
 // ============================================================================
 // Demo Components
 // ============================================================================
@@ -443,12 +481,13 @@ function DefaultDemo() {
   return (
     <Entity>
       <Entity.Content
-        title="The Art of the Marathon Taper"
-        subtitle="By Sarah Chen · 8 min read"
+        title="Sarah Chen"
+        subtitle="Trail Runner (@schen)"
         thumbnail={
           <Avatar
-            fallback="SC"
             size={32}
+            src="/brand/icon-app.svg"
+            alt="Distanz"
           />
         }
       />
@@ -457,7 +496,7 @@ function DefaultDemo() {
           className="text-copy-14"
           style={{ color: "hsl(var(--color-textSubtle))", margin: 0 }}
         >
-          Published 2h ago
+          Connected 1h ago
         </p>
       </Entity.Field>
     </Entity>
@@ -514,7 +553,7 @@ function ListCheckboxDemo() {
   });
 
   return (
-    <Entity.List bordered dividers={false}>
+    <Entity.List bordered>
       {categoryItems.map((cat) => (
         <Entity
           key={cat.name}
@@ -539,6 +578,53 @@ function ListCheckboxDemo() {
           <Entity.Content title={cat.name} subtitle={cat.desc} />
         </Entity>
       ))}
+    </Entity.List>
+  );
+}
+
+function FillDemo() {
+  return (
+    <Entity.List bordered>
+      <Entity>
+        <div className="flex flex-1 min-w-0">
+          <p
+            className="text-copy-14 truncate m-0"
+            style={{ color: "hsl(var(--color-textSubtle))" }}
+          >
+            This is a simple description
+          </p>
+        </div>
+        <div className="flex flex-initial min-w-0">
+          <p
+            className="text-copy-14 truncate m-0"
+            style={{ color: "hsl(var(--color-textSubtle))" }}
+          >
+            This is a simple description
+          </p>
+        </div>
+      </Entity>
+    </Entity.List>
+  );
+}
+
+function ColumnClassNamesDemo() {
+  return (
+    <Entity.List bordered>
+      <Entity>
+        <Entity.Content
+          title="Entity with dashed borders"
+          thumbnail={<Avatar placeholder size={50} />}
+          className="border border-dashed border-[var(--ds-gray-300)] rounded-md p-2"
+        />
+        <Entity.Field className="border border-dashed border-[var(--ds-gray-300)] rounded-md p-2">
+          <span
+            className="text-copy-14 m-0"
+            style={{ color: "hsl(var(--color-textSubtle))" }}
+          >
+            [some action]
+          </span>
+        </Entity.Field>
+      </Entity>
     </Entity.List>
   );
 }
@@ -601,6 +687,31 @@ export default function EntityComponent() {
         </CodePreview>
       </Section>
 
+      <Section>
+        <SectionHeader id="entity-with-fill" onCopyLink={showToast}>
+          Entity with Fill
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={fillCode}>
+            <FillDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader
+          id="entity-with-column-class-names"
+          onCopyLink={showToast}
+        >
+          Entity with Column ClassNames
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={columnClassNamesCode}>
+            <ColumnClassNamesDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* Best Practices Section */}
       <Section>
         <SectionHeader id="best-practices" onCopyLink={showToast}>
@@ -639,7 +750,7 @@ export default function EntityComponent() {
           <li>
             The right column holds at most one or two controls. If the
             row needs more, move secondary actions into a{" "}
-            <ComponentRef name="Menu" />.
+            <ComponentRef name="Dots Menu" slug="dots-menu" />.
           </li>
           <li>
             For multi-select rows, the leading{" "}

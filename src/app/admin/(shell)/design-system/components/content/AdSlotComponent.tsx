@@ -12,6 +12,7 @@ import {
 import { useToast } from "@/components/ui/Toast";
 import { Note } from "@/components/ui/Note";
 import { AdSlot } from "@/components/ui/AdSlot";
+import { Button } from "@/components/ui/Button";
 
 // ============================================================================
 // Section header + copy-link (matches other DS pages)
@@ -155,7 +156,7 @@ function CodePreview({ children, componentCode, minHeight = 200 }: CodePreviewPr
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -267,12 +268,55 @@ import { NewsletterSignup } from '@/components/ui/NewsletterSignup';
   fallback={<NewsletterSignup variant="compact" />}
 />`;
 
+const disclaimerCode = `import { AdSlot } from '@/components/ui/AdSlot';
+
+// Every filled unit carries the disclaimer row on the frame:
+//   ADVERTISEMENT · GO AD FREE
+<AdSlot slot="1234567890" size="leaderboard" />
+
+// Point the upsell at your signup route, or hide it:
+<AdSlot slot="..." size="leaderboard" upsellHref="/signup" />
+<AdSlot slot="..." size="leaderboard" showUpsell={false} />`;
+
+const houseFallbackCode = `import { AdSlot } from '@/components/ui/AdSlot';
+
+// When no ad fills, the slot falls back to the Shakeout newsletter
+// house ad automatically — no extra props needed.
+<AdSlot slot="1234567890" size="mpu" />`;
+
+const dismissibleCode = `import { AdSlot } from '@/components/ui/AdSlot';
+
+// Sticky footer unit the reader can dismiss. dismissKey persists the
+// "Hide" choice in localStorage so it stays hidden across visits.
+<AdSlot
+  slot="1234567890"
+  size="leaderboard"
+  dismissible
+  dismissKey="footer"
+/>`;
+
+const halfPageCode = `import { AdSlot } from '@/components/ui/AdSlot';
+
+<AdSlot slot="1234567890" size="half-page" />`;
+
+const stickyCode = `import { AdSlot } from '@/components/ui/AdSlot';
+
+// Full-bleed bar pinned to the bottom of the viewport (404's ad-fixed).
+// Always dismissible; dismissKey persists the Hide across visits.
+<AdSlot
+  slot="1234567890"
+  size="super-leaderboard"
+  sticky
+  dismissKey="footer"
+/>`;
+
 // ============================================================================
 // Main component
 // ============================================================================
 
 export default function AdSlotComponent() {
   const { showToast } = useToast();
+  const [showSticky, setShowSticky] = useState(false);
 
   return (
     <div>
@@ -282,16 +326,18 @@ export default function AdSlotComponent() {
           Intro
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 xl:mt-7 mb-6">
-          The ad slot is how Distanz Running embeds advertising into the
-          product without breaking the layout or the design language. It
-          renders a Google AdSense unit at a standard IAB size, reserves the
-          exact pixel space before any network call, lazy-loads the ad only
-          when the slot enters the viewport, labels the space as{" "}
-          <code className="inline-code">
-            Advertisement
-          </code>{" "}
-          per IAB guidelines, and falls back to a Distanz-branded card if
-          the ad doesn&apos;t fill.
+          The ad slot is how Distanz Running embeds advertising without
+          breaking the layout or the design language. It renders a Google
+          AdSense unit at a standard IAB size, reserves the exact pixel space
+          before any network call (no layout shift), and lazy-loads only when
+          the slot enters the viewport. Every filled unit carries a labelled
+          disclaimer row &mdash;{" "}
+          <code className="inline-code">Advertisement &middot; Go ad free</code>{" "}
+          &mdash; with an optional{" "}
+          <code className="inline-code">Hide</code> control for dismissible
+          placements (modelled on 404 Media), generous breathing room from the
+          surrounding content, and the Shakeout newsletter house ad when the ad
+          doesn&apos;t fill.
         </p>
 
         <Note type="default" label={false}>
@@ -320,6 +366,89 @@ export default function AdSlotComponent() {
         </Note>
       </Section>
 
+      {/* Disclaimer & controls */}
+      <Section>
+        <SectionHeader id="disclaimer" onCopyLink={showToast}>
+          Disclaimer &amp; controls
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          Above every filled unit sits a small disclaimer row:{" "}
+          <code className="inline-code">Advertisement</code> labels the space,{" "}
+          <code className="inline-code">Go ad free</code> is the membership
+          upsell (the <code className="inline-code">link</code> token,
+          dot-separated), and dismissible placements add a{" "}
+          <code className="inline-code">Hide</code> control. Hide the upsell
+          with <code className="inline-code">showUpsell=&#123;false&#125;</code>{" "}
+          or repoint it with <code className="inline-code">upsellHref</code>. On
+          small units, lower{" "}
+          <code className="inline-code">disclaimerSize</code> so the row stays
+          narrower than the creative and the frame margins stay even.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={disclaimerCode} minHeight={200}>
+            <AdSlot slot="preview-disclaimer" size="leaderboard" mockAd />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Dismissible */}
+      <Section>
+        <SectionHeader id="dismissible" onCopyLink={showToast}>
+          Dismissible
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          Sticky placements (a fixed footer, an interstitial) add{" "}
+          <code className="inline-code">dismissible</code> so the reader can{" "}
+          <code className="inline-code">Hide</code> them; pair with{" "}
+          <code className="inline-code">dismissKey</code> to remember the choice
+          across visits. Try the{" "}
+          <strong className="font-medium text-textDefault">Hide</strong> link
+          below &mdash; the unit removes itself.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={dismissibleCode} minHeight={200}>
+            <AdSlot
+              slot="preview-dismissible"
+              size="leaderboard"
+              mockAd
+              dismissible
+            />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Sticky footer */}
+      <Section>
+        <SectionHeader id="sticky-footer" onCopyLink={showToast}>
+          Sticky footer
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          The <code className="inline-code">sticky</code> variant renders a
+          full-bleed bar fixed to the bottom of the viewport (404 Media&apos;s{" "}
+          <code className="inline-code">ad-fixed</code>): a top rule, the centred
+          ad, and the disclaimer with{" "}
+          <code className="inline-code">Hide</code>. It slides up on appear,
+          reserves body space so it never covers content, and is always
+          dismissible (pair with{" "}
+          <code className="inline-code">dismissKey</code> to persist). On a real
+          page, set <code className="inline-code">appearAfter</code> to reveal it
+          after a scroll distance, and{" "}
+          <code className="inline-code">hideWhenUnfilled</code> to drop it when no
+          ad fills. Trigger the live bar:
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={stickyCode} minHeight={120}>
+            <Button
+              variant="secondary"
+              size="small"
+              onClick={() => setShowSticky(true)}
+            >
+              Show sticky footer
+            </Button>
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* MPU */}
       <Section>
         <SectionHeader id="mpu" onCopyLink={showToast}>
@@ -331,7 +460,7 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={mpuCode} minHeight={340}>
-            <AdSlot slot="preview-mpu" size="mpu" preview />
+            <AdSlot slot="preview-mpu" size="mpu" mockAd />
           </CodePreview>
         </div>
       </Section>
@@ -347,7 +476,7 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={leaderboardCode} minHeight={200}>
-            <AdSlot slot="preview-leaderboard" size="leaderboard" preview />
+            <AdSlot slot="preview-leaderboard" size="leaderboard" mockAd />
           </CodePreview>
         </div>
       </Section>
@@ -363,7 +492,7 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={billboardCode} minHeight={340}>
-            <AdSlot slot="preview-billboard" size="billboard" preview />
+            <AdSlot slot="preview-billboard" size="billboard" mockAd />
           </CodePreview>
         </div>
       </Section>
@@ -379,7 +508,23 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={skyscraperCode} minHeight={680}>
-            <AdSlot slot="preview-skyscraper" size="skyscraper" preview />
+            <AdSlot slot="preview-skyscraper" size="skyscraper" mockAd />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* Half-page */}
+      <Section>
+        <SectionHeader id="half-page" onCopyLink={showToast}>
+          Half-page &mdash; 300&times;600
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          The wider sidebar rail unit (404 Media&apos;s sidebar size). More
+          presence than the skyscraper for long-form article and race pages.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={halfPageCode} minHeight={680}>
+            <AdSlot slot="preview-half-page" size="half-page" mockAd />
           </CodePreview>
         </div>
       </Section>
@@ -395,7 +540,27 @@ export default function AdSlotComponent() {
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={mobileBannerCode} minHeight={140}>
-            <AdSlot slot="preview-mobile" size="mobile-banner" preview />
+            <AdSlot slot="preview-mobile" size="mobile-banner" mockAd />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* House fallback — Shakeout */}
+      <Section>
+        <SectionHeader id="house-fallback" onCopyLink={showToast}>
+          House fallback &mdash; Shakeout
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          When AdSense returns no fill, the slot doesn&apos;t collapse or sit
+          empty &mdash; it shows the{" "}
+          <strong className="font-medium text-textDefault">Shakeout</strong>{" "}
+          newsletter house ad, adapted to the slot&apos;s shape. No disclaimer
+          row (it isn&apos;t a paid ad), and the reserved space stays fixed so
+          the layout never shifts.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={houseFallbackCode} minHeight={340}>
+            <AdSlot slot="preview-house" size="mpu" preview />
           </CodePreview>
         </div>
       </Section>
@@ -406,8 +571,7 @@ export default function AdSlotComponent() {
           Custom fallback
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
-          When no ad fills, the slot defaults to a Distanz &ldquo;advertise
-          with us&rdquo; card. To show something else instead &mdash; a
+          To override the default Shakeout house ad &mdash; a different
           newsletter CTA, a related race, an affiliate product &mdash; pass
           any React node to{" "}
           <code className="inline-code">
@@ -423,28 +587,25 @@ export default function AdSlotComponent() {
               size="mpu"
               preview
               fallback={
-                <div
-                  className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border p-6 text-center"
-                  style={{
-                    borderColor: "hsl(var(--color-borderDefault))",
-                    background: "hsl(var(--color-canvas))",
-                  }}
-                >
+                <div className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-md bg-canvas p-6 text-center">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-link">
+                    Race guide
+                  </span>
                   <h4 className="text-heading-16 text-textDefault">
-                    Get the Shakeout
+                    London Marathon 2025
                   </h4>
                   <p className="text-copy-13 leading-snug text-textSubtle">
-                    Weekly running stories, gear, and race news.
+                    Route, times, and the full elevation profile.
                   </p>
                   <a
-                    href="/newsletter"
+                    href="#"
                     className="inline-flex items-center gap-1.5 px-3.5 h-9 rounded-md font-sans text-copy-13 font-semibold no-underline"
                     style={{
                       background: "hsl(var(--color-textDefault))",
-                      color: "var(--ds-background-100)",
+                      color: "hsl(var(--color-textInverted))",
                     }}
                   >
-                    Subscribe
+                    View guide
                   </a>
                 </div>
               }
@@ -452,6 +613,18 @@ export default function AdSlotComponent() {
           </CodePreview>
         </div>
       </Section>
+
+      {/* Live sticky footer, triggered from the Sticky footer section. mockAd
+          shows a placeholder creative; Hide (or the slide-out) resets it. */}
+      {showSticky && (
+        <AdSlot
+          slot="preview-sticky"
+          size="super-leaderboard"
+          sticky
+          mockAd
+          onDismiss={() => setShowSticky(false)}
+        />
+      )}
     </div>
   );
 }

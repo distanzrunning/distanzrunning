@@ -31,7 +31,7 @@ export default function ProductCategoryLayout({
     <div>
       <div className="mx-auto px-10 lg:px-32 pt-32 lg:pt-32 py-16">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <h1 className="text-heading-64 font-serif text-dark mb-4">
+          <h1 className="text-heading-64 text-dark mb-4">
             {category.title}
           </h1>
           <p className="text-[24px] font-[450] leading-[31px] text-dark">

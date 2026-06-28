@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { ChevronDown, Check, Star, Medal } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import {
   useShikiHighlighter,
@@ -245,7 +245,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [copied, setCopied] = useState(false);
 
   // Use Shiki for syntax highlighting
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -266,7 +266,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-borderDefault rounded-lg overflow-hidden">
+    <div className="mt-4 xl:mt-7 border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
       <div className="p-6" style={{ background: "hsl(var(--color-surface))" }}>
         {children}
@@ -339,12 +339,84 @@ const avatarImages = [
   "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
 ];
 
+// Distanz icon mark, inlined as SVG so it paints with the avatar shell (no
+// network fetch / pop-in). Shared by the Group and Size demos.
+function DistanzMarkIcon() {
+  return (
+    <svg
+      viewBox="0 0 1000 1000"
+      fill="#fff"
+      aria-hidden="true"
+      style={{ width: "100%", height: "100%", display: "block" }}
+    >
+      <path d="M865.86,333.86c34.04-97.61-25.3-213.89-124.87-243.87-48.18-15.81-96.19-11.82-146.12-12.43-38.2.61-88.06.07-109.84,36.42-16.6,29.75-.78,65.48,29.79,78.2,19.57,8.73,43.8,9.91,65.71,10.47,26.62.51,53.37-.55,78.13.84,34.22,1.23,65.95,10.59,79.73,42.69,12.51,28.42,1.65,60.79-22.85,80.61-23.35,19.87-53.47,32.04-81.34,44.72-50.64,22.67-108.55,48.17-155.48,69.75-33.93,15.71-67.88,31.46-103.93,46.85-103.31,44.48-200.83,72.49-233.86,161.7-21.78,49.7-22.75,109.34,2.02,158.24,26.43,55.64,81.14,97.31,141.28,108.65,36.26,7.64,72.07,5.21,110.2,5.78,43.71-.45,106.62,3.51,124.31-45.92,4.55-13.97,3.18-29.92-4.65-42.48-38.15-56.61-143.95-27.27-201.5-41.24-33-7.21-59.53-37.39-55.81-72.1,6.68-56.06,82.48-78.95,126.83-100.28,47.26-21.14,95.63-42.44,141.58-63.63l.16-.07c64.95-31.07,137.35-60.67,203.38-88.51,61.76-25.92,114.62-69.66,137.12-134.4Z" />
+      <path d="M810,620c-104.93,0-190,85.07-190,190s85.07,190,190,190,190-85.07,190-190-85.07-190-190-190ZM810,870c-33.14,0-60-26.86-60-60s26.86-60,60-60,60,26.86,60,60-26.86,60-60,60Z" />
+      <path d="M380,190C380,85.07,294.93,0,190,0S0,85.07,0,190s85.07,190,190,190,190-85.07,190-190ZM130,190c0-33.14,26.86-60,60-60s60,26.86,60,60-26.86,60-60,60-60-26.86-60-60Z" />
+    </svg>
+  );
+}
+
+// Blank avatar for the "With custom icon" demo — Geist shows Vercel's
+// anonymous avatar (a blue halftone dot-screen sphere) so the focus is the
+// badge, not a face. We approximate it with a blue radial gradient + a white
+// dot screen. Tune colours / dot size to taste.
+function BlankAvatar({ size = 32 }: { size?: number }) {
+  const cell = Math.max(3, Math.round(size / 8));
+  return (
+    <div
+      aria-hidden="true"
+      className="rounded-full overflow-hidden shrink-0"
+      style={{
+        width: size,
+        height: size,
+        background:
+          "radial-gradient(circle at 35% 30%, #6cc1f7 0%, #2a8de8 55%, #1166cf 100%)",
+      }}
+    >
+      <div
+        className="h-full w-full"
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(255,255,255,0.55) 0 28%, transparent 30%)",
+          backgroundSize: `${cell}px ${cell}px`,
+        }}
+      />
+    </div>
+  );
+}
+
+// Geist's exact custom-icon glyphs (download / filled-check / clock). The
+// check is a *filled* disc with a knocked-out check (fill-rule evenodd), so it
+// renders as a solid gray-900 circle with a white check — that's why Geist's
+// middle badge reads as a dark circle, not a thin outline like lucide's.
+const ICON_DOWNLOAD =
+  "M8.75 5.25V4.5H7.25V5.25V9.43934L5.78033 7.96967L5.25 7.43934L4.18934 8.5L4.71967 9.03033L7.46967 11.7803C7.76256 12.0732 8.23744 12.0732 8.53033 11.7803L11.2803 9.03033L11.8107 8.5L10.75 7.43934L10.2197 7.96967L8.75 9.43934V5.25ZM1.5 8C1.5 4.41015 4.41015 1.5 8 1.5C11.5899 1.5 14.5 4.41015 14.5 8C14.5 11.5899 11.5899 14.5 8 14.5C4.41015 14.5 1.5 11.5899 1.5 8ZM8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0Z";
+const ICON_CHECK =
+  "M16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8ZM11.5303 6.53033L12.0607 6L11 4.93934L10.4697 5.46967L6.5 9.43934L5.53033 8.46967L5 7.93934L3.93934 9L4.46967 9.53033L5.96967 11.0303C6.26256 11.3232 6.73744 11.3232 7.03033 11.0303L11.5303 6.53033Z";
+const ICON_CLOCK =
+  "M5.35066 2.06247C5.96369 1.78847 6.62701 1.60666 7.32351 1.53473L7.16943 0.0426636C6.31208 0.1312 5.49436 0.355227 4.73858 0.693033L5.35066 2.06247ZM8.67651 1.53473C11.9481 1.87258 14.5 4.63876 14.5 8.00001C14.5 11.5899 11.5899 14.5 8.00001 14.5C4.63901 14.5 1.87298 11.9485 1.5348 8.67722L0.0427551 8.83147C0.459163 12.8594 3.86234 16 8.00001 16C12.4183 16 16 12.4183 16 8.00001C16 3.86204 12.8589 0.458666 8.83059 0.0426636L8.67651 1.53473ZM2.73972 4.18084C3.14144 3.62861 3.62803 3.14195 4.18021 2.74018L3.29768 1.52727C2.61875 2.02128 2.02064 2.61945 1.52671 3.29845L2.73972 4.18084ZM1.5348 7.32279C1.60678 6.62656 1.78856 5.96348 2.06247 5.35066L0.693033 4.73858C0.355343 5.4941 0.131354 6.31152 0.0427551 7.16854L1.5348 7.32279ZM8.75001 4.75V4H7.25001V4.75V7.875C7.25001 8.18976 7.3982 8.48615 7.65001 8.675L9.55001 10.1L10.15 10.55L11.05 9.35L10.45 8.9L8.75001 7.625V4.75Z";
+
+function GeistGlyph({ d }: { d: string }) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      aria-hidden="true"
+      style={{ display: "block" }}
+    >
+      <path fillRule="evenodd" clipRule="evenodd" d={d} />
+    </svg>
+  );
+}
+
 // Code examples
 const groupCode = `import { AvatarGroup } from '@/components/ui/Avatar';
 
 export function Component() {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex items-center gap-4">
       <AvatarGroup
         members={[
           { src: '/user1.jpg' },
@@ -374,43 +446,24 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <div className="flex flex-col gap-4">
-      <AvatarBrand src="/user.jpg" brand="nike" size={64} badgeSize={26} />
-      <AvatarBrand src="/user.jpg" brand="adidas" size={64} badgeSize={26} />
-      <AvatarBrand src="/user.jpg" brand="newbalance" size={64} badgeSize={26} />
+    <div className="flex items-center gap-4">
+      <AvatarBrand src="/user.jpg" brand="nike" size={32} />
+      <AvatarBrand src="/user.jpg" brand="adidas" size={32} />
+      <AvatarBrand src="/user.jpg" brand="newbalance" size={32} />
     </div>
   );
 }`;
 
 const customIconCode = `import { AvatarWithIcon } from '@/components/ui/Avatar';
-import { Check, Medal, Star } from 'lucide-react';
+import { CircleArrowDown, CircleCheck, Clock } from 'lucide-react';
 
 export function Component() {
+  const gradient = { colors: ['#007CF0', '#00DFD8'] };
   return (
-    <div className="flex flex-col gap-4">
-      <AvatarWithIcon
-        gradient={{ colors: ['#ff6b6b', '#feca57', '#48dbfb'], angle: 135 }}
-        icon={<Check size={14} />}
-        iconBgColor="hsl(var(--color-textSubtle))"
-        size={64}
-        badgeSize={26}
-      />
-      <AvatarWithIcon
-        gradient={{ colors: ['#a29bfe', '#74b9ff', '#81ecec'], angle: 45 }}
-        icon={<Medal size={14} />}
-        iconBgColor="var(--ds-gray-200)"
-        iconColor="hsl(var(--color-textSubtle))"
-        size={64}
-        badgeSize={26}
-      />
-      <AvatarWithIcon
-        gradient={{ colors: ['#fd79a8', '#e84393', '#6c5ce7'], angle: 180 }}
-        icon={<Star size={14} />}
-        iconBgColor="var(--ds-gray-100)"
-        iconColor="var(--ds-gray-800)"
-        size={64}
-        badgeSize={26}
-      />
+    <div className="flex items-center gap-4">
+      <AvatarWithIcon gradient={gradient} size={32} icon={<CircleArrowDown size={14} />} />
+      <AvatarWithIcon gradient={gradient} size={32} icon={<CircleCheck size={14} />} />
+      <AvatarWithIcon gradient={gradient} size={32} icon={<Clock size={14} />} />
     </div>
   );
 }`;
@@ -429,9 +482,19 @@ export function Component() {
     <div className="flex items-center gap-4">
       <Avatar src="/user.jpg" size={24} />
       <Avatar src="/user.jpg" size={32} />
-      <Avatar src="/user.jpg" size={40} />
       <Avatar src="/user.jpg" size={48} />
-      <Avatar src="/user.jpg" size={64} />
+    </div>
+  );
+}`;
+
+const letterCode = `import { Avatar } from '@/components/ui/Avatar';
+
+export function Component() {
+  return (
+    <div className="flex items-center gap-4">
+      <Avatar fallback="Sarah Lee" size={32} />
+      <Avatar fallback="Emma King" size={32} />
+      <Avatar fallback="Chris Kim" size={32} />
     </div>
   );
 }`;
@@ -452,30 +515,15 @@ export default function AvatarComponent() {
         <SectionHeader id="group" onCopyLink={showToast}>
           Group
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Multiple avatars can be stacked together in a group. Use the{" "}
-          <code className="inline-code">
-            limit
-          </code>{" "}
-          prop to limit the number of visible avatars and show a count for the
-          remaining.
-        </p>
         <CodePreview componentCode={groupCode}>
-          <div className="flex flex-col items-stretch justify-start gap-4 flex-initial">
-            {/* First row: 3 avatars, one with placeholder */}
+          <div className="flex items-center gap-4">
+            {/* Two clusters side by side on one row (Geist layout) */}
             <AvatarGroup
               members={[
                 {
                   alt: "Distanz",
                   placeholder: true,
-                  placeholderIcon: (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src="/brand/icon-white.svg"
-                      alt=""
-                      style={{ width: "100%", height: "100%", objectFit: "contain" }}
-                    />
-                  ),
+                  placeholderIcon: <DistanzMarkIcon />,
                   bgColor: "#000",
                   borderColor: "hsl(var(--color-borderDefault))",
                 },
@@ -484,7 +532,7 @@ export default function AvatarComponent() {
               ]}
               size={32}
             />
-            {/* Second row: 5 avatars with limit=4, showing +2 */}
+            {/* Second cluster: 6 avatars with limit=4, showing +2 */}
             <AvatarGroup
               limit={4}
               members={[
@@ -501,39 +549,30 @@ export default function AvatarComponent() {
         </CodePreview>
       </Section>
 
+      {/* Size Section */}
+      <Section>
+        <SectionHeader id="size" onCopyLink={showToast}>
+          Size
+        </SectionHeader>
+        <CodePreview componentCode={sizesCode}>
+          <div className="flex items-center gap-4">
+            <Avatar placeholder placeholderIcon={<DistanzMarkIcon />} bgColor="#000" alt="Distanz" size={24} />
+            <Avatar placeholder placeholderIcon={<DistanzMarkIcon />} bgColor="#000" alt="Distanz" size={32} />
+            <Avatar placeholder placeholderIcon={<DistanzMarkIcon />} bgColor="#000" alt="Distanz" size={48} />
+          </div>
+        </CodePreview>
+      </Section>
+
       {/* Brand Section */}
       <Section>
         <SectionHeader id="brand" onCopyLink={showToast}>
           Brand
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Avatars can display a badge indicating a brand affiliation. Supported
-          brands include Nike, Adidas, and New Balance. Each badge uses the
-          brand&apos;s colour.
-        </p>
         <CodePreview componentCode={brandCode}>
-          <div className="flex flex-col gap-4">
-            <AvatarBrand
-              src={avatarImages[0]}
-              alt="Nike athlete"
-              size={64}
-              brand="nike"
-              badgeSize={26}
-            />
-            <AvatarBrand
-              src={avatarImages[1]}
-              alt="Adidas athlete"
-              size={64}
-              brand="adidas"
-              badgeSize={26}
-            />
-            <AvatarBrand
-              src={avatarImages[2]}
-              alt="New Balance athlete"
-              size={64}
-              brand="newbalance"
-              badgeSize={26}
-            />
+          <div className="flex items-center gap-4">
+            <AvatarBrand src={avatarImages[0]} alt="Nike athlete" size={32} brand="nike" />
+            <AvatarBrand src={avatarImages[1]} alt="Adidas athlete" size={32} brand="adidas" />
+            <AvatarBrand src={avatarImages[2]} alt="New Balance athlete" size={32} brand="newbalance" />
           </div>
         </CodePreview>
       </Section>
@@ -543,49 +582,25 @@ export default function AvatarComponent() {
         <SectionHeader id="custom-icon" onCopyLink={showToast}>
           With custom icon
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Add a custom icon badge to indicate status, role, or any other
-          attribute. Customize the background colour using the{" "}
-          <code className="inline-code">
-            iconBgColor
-          </code>{" "}
-          prop. The avatar can also use a gradient background instead of an
-          image.
-        </p>
         <CodePreview componentCode={customIconCode}>
-          <div className="flex flex-col gap-4">
-            <AvatarWithIcon
-              gradient={{
-                colors: ["#ff6b6b", "#feca57", "#48dbfb"],
-                angle: 135,
-              }}
-              size={64}
-              badgeSize={26}
-              icon={<Check size={14} />}
-              iconBgColor="hsl(var(--color-textSubtle))"
-            />
-            <AvatarWithIcon
-              gradient={{
-                colors: ["#a29bfe", "#74b9ff", "#81ecec"],
-                angle: 45,
-              }}
-              size={64}
-              badgeSize={26}
-              icon={<Medal size={14} />}
-              iconBgColor="var(--ds-gray-200)"
-              iconColor="hsl(var(--color-textSubtle))"
-            />
-            <AvatarWithIcon
-              gradient={{
-                colors: ["#fd79a8", "#e84393", "#6c5ce7"],
-                angle: 180,
-              }}
-              size={64}
-              badgeSize={26}
-              icon={<Star size={14} />}
-              iconBgColor="var(--ds-gray-100)"
-              iconColor="var(--ds-gray-800)"
-            />
+          <div className="flex items-center gap-4">
+            <AvatarWithIcon avatar={<BlankAvatar size={32} />} size={32} icon={<GeistGlyph d={ICON_DOWNLOAD} />} />
+            <AvatarWithIcon avatar={<BlankAvatar size={32} />} size={32} icon={<GeistGlyph d={ICON_CHECK} />} />
+            <AvatarWithIcon avatar={<BlankAvatar size={32} />} size={32} icon={<GeistGlyph d={ICON_CLOCK} />} />
+          </div>
+        </CodePreview>
+      </Section>
+
+      {/* Letter Section */}
+      <Section>
+        <SectionHeader id="letter" onCopyLink={showToast}>
+          Letter
+        </SectionHeader>
+        <CodePreview componentCode={letterCode}>
+          <div className="flex items-center gap-4">
+            <Avatar fallback="Sarah Lee" size={32} />
+            <Avatar fallback="Emma King" size={32} />
+            <Avatar fallback="Chris Kim" size={32} />
           </div>
         </CodePreview>
       </Section>
@@ -595,305 +610,9 @@ export default function AvatarComponent() {
         <SectionHeader id="placeholder" onCopyLink={showToast}>
           Placeholder
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          When no image is provided, use the{" "}
-          <code className="inline-code">
-            placeholder
-          </code>{" "}
-          prop to display a subtle shimmer animation.
-        </p>
         <CodePreview componentCode={placeholderCode}>
           <Avatar placeholder size={90} />
         </CodePreview>
-      </Section>
-
-      {/* Sizes Section */}
-      <Section>
-        <SectionHeader id="sizes" onCopyLink={showToast}>
-          Sizes
-        </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Avatars can be rendered at any size using the{" "}
-          <code className="inline-code">
-            size
-          </code>{" "}
-          prop. Common sizes are 24, 32, 40, 48, and 64 pixels.
-        </p>
-        <CodePreview componentCode={sizesCode}>
-          <div className="flex items-center gap-4">
-            <Avatar src={avatarImages[0]} alt="User" size={24} />
-            <Avatar src={avatarImages[0]} alt="User" size={32} />
-            <Avatar src={avatarImages[0]} alt="User" size={40} />
-            <Avatar src={avatarImages[0]} alt="User" size={48} />
-            <Avatar src={avatarImages[0]} alt="User" size={64} />
-          </div>
-        </CodePreview>
-      </Section>
-
-      {/* Props Section */}
-      <Section>
-        <SectionHeader id="props" onCopyLink={showToast}>
-          Props
-        </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Available props for the Avatar components.
-        </p>
-
-        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
-          Avatar
-        </h3>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">src</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Image URL for the avatar
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">alt</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">&quot;&quot;</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Alt text for the avatar image
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">size</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">number</td>
-                <td className="py-3 px-4 text-textSubtle">32</td>
-                <td className="py-3 px-4 text-textSubtle">Size in pixels</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">fallback</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Text to generate initials from
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">placeholder</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">boolean</td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Show placeholder with shimmer animation
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">placeholderIcon</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Custom icon for placeholder (disables shimmer)
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
-          AvatarGroup
-        </h3>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">members</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  AvatarGroupMember[]
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Array of avatar members to display
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">limit</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">number</td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Maximum visible avatars before showing +N
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">size</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">number</td>
-                <td className="py-3 px-4 text-textSubtle">32</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Size in pixels for all avatars
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
-          AvatarBrand
-        </h3>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">brand</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  &quot;nike&quot; | &quot;adidas&quot; | &quot;newbalance&quot;
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Brand for the badge
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">badgeSize</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">number</td>
-                <td className="py-3 px-4 text-textSubtle">size * 0.55</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Fixed badge size in pixels
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">...AvatarProps</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  All Avatar props are supported
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
-          AvatarWithIcon
-        </h3>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">icon</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Icon to display in the badge
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">iconBgColor</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  var(--ds-blue-600)
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Background colour for the badge
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">iconColor</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">white</td>
-                <td className="py-3 px-4 text-textSubtle">Icon colour</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">gradient</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"{"}colors: string[], angle?: number{"}"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Use gradient background instead of image
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">badgeSize</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">number</td>
-                <td className="py-3 px-4 text-textSubtle">size * 0.55</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Fixed badge size in pixels
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">...AvatarProps</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  All Avatar props are supported
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </Section>
 
       {/* Best Practices Section */}

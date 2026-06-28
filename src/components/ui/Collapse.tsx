@@ -209,6 +209,7 @@ export function Collapse({
           className={`
             flex w-full justify-between items-center text-left
             bg-transparent border-none outline-none p-0
+            focus:rounded focus-visible:ring-2 focus-visible:ring-[var(--ds-blue-700)]
             ${disabled ? "cursor-default" : "cursor-pointer"}
           `}
           style={{ color: "inherit", font: "inherit" }}
@@ -222,7 +223,7 @@ export function Collapse({
           <span
             style={{
               display: "inline-flex",
-              transition: "transform 200ms ease",
+              transition: "transform 200ms ease-in-out",
               transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
             }}
           >
@@ -239,7 +240,7 @@ export function Collapse({
         style={{
           height: isExpanded ? measuredHeight : 0,
           overflowY: "hidden",
-          transition: "height 200ms ease",
+          transition: "height 200ms ease-in-out",
           willChange: "height",
         }}
       >

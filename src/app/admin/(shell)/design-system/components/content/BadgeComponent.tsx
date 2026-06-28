@@ -241,7 +241,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [copied, setCopied] = useState(false);
 
   // Use Shiki for syntax highlighting
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -262,7 +262,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-borderDefault rounded-lg overflow-hidden">
+    <div className="mt-4 xl:mt-7 border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
       <div className="p-6" style={{ background: "hsl(var(--color-surface))" }}>
         {children}
@@ -363,8 +363,11 @@ export function Component() {
         <Badge variant="teal">Teal</Badge>
         <Badge variant="teal-subtle">Teal Subtle</Badge>
       </div>
-      <div>
+      <div className="flex gap-1">
         <Badge variant="inverted">Inverted</Badge>
+        {/* Gradient badges are styled per-instance via className */}
+        <Badge variant="gray" className="bg-[linear-gradient(135deg,#0070F3,#F81CE5)]">Major</Badge>
+        <Badge variant="gray" className="bg-[linear-gradient(135deg,#FF1E56,#0096FF)]">Big Race</Badge>
       </div>
     </div>
   );
@@ -444,14 +447,6 @@ export default function BadgeComponent() {
         <SectionHeader id="variants" onCopyLink={showToast}>
           Variants
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Badges come in multiple colour variants, each with a solid and subtle
-          option. Use the{" "}
-          <code className="inline-code">
-            variant
-          </code>{" "}
-          prop to set the style.
-        </p>
         <CodePreview componentCode={variantsCode}>
           <div className="flex flex-col gap-2">
             <div className="flex gap-1">
@@ -486,8 +481,22 @@ export default function BadgeComponent() {
               <Badge variant="teal">Teal</Badge>
               <Badge variant="teal-subtle">Teal Subtle</Badge>
             </div>
-            <div>
+            <div className="flex gap-1">
               <Badge variant="inverted">Inverted</Badge>
+              {/* Gradient badges — Geist styles these per-instance via
+                  className (a gradient background-image over a solid base). */}
+              <Badge
+                variant="gray"
+                className="bg-[linear-gradient(135deg,#0070F3,#F81CE5)]"
+              >
+                Major
+              </Badge>
+              <Badge
+                variant="gray"
+                className="bg-[linear-gradient(135deg,#FF1E56,#0096FF)]"
+              >
+                Big Race
+              </Badge>
             </div>
           </div>
         </CodePreview>
@@ -498,13 +507,6 @@ export default function BadgeComponent() {
         <SectionHeader id="sizes" onCopyLink={showToast}>
           Sizes
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Badges are available in three sizes: small, medium, and large. Use the{" "}
-          <code className="inline-code">
-            size
-          </code>{" "}
-          prop to adjust.
-        </p>
         <CodePreview componentCode={sizesCode}>
           <div className="flex items-start gap-2">
             <Badge variant="gray" size="sm">
@@ -525,13 +527,6 @@ export default function BadgeComponent() {
         <SectionHeader id="with-icons" onCopyLink={showToast}>
           With icons
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Add an icon before the badge text using the{" "}
-          <code className="inline-code">
-            icon
-          </code>{" "}
-          prop. Icons are sized automatically based on the badge size.
-        </p>
         <CodePreview componentCode={withIconsCode}>
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-1">
@@ -798,9 +793,9 @@ export default function BadgeComponent() {
         <SectionHeader id="pill" onCopyLink={showToast}>
           Pill
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          A special link, not quite as prominent as a button, based on Badge
-          styling.
+        <p className="text-copy-14 text-textSubtle mt-2 xl:mt-4">
+          A special link, not quite as prominent as a button, based on{" "}
+          <code className="inline-code">&lt;Badge /&gt;</code> styling.
         </p>
         <CodePreview componentCode={pillCode}>
           <div className="flex flex-col gap-4">
@@ -830,153 +825,6 @@ export default function BadgeComponent() {
         </CodePreview>
       </Section>
 
-      {/* Props Section */}
-      <Section>
-        <SectionHeader id="props" onCopyLink={showToast}>
-          Props
-        </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Available props for the Badge components.
-        </p>
-
-        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
-          Badge
-        </h3>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">Badge content</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">variant</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  BadgeVariant
-                </td>
-                <td className="py-3 px-4 text-textSubtle">&quot;gray&quot;</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Visual style of the badge
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">size</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot;
-                </td>
-                <td className="py-3 px-4 text-textSubtle">&quot;md&quot;</td>
-                <td className="py-3 px-4 text-textSubtle">Size of the badge</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">icon</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Icon to display before content
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">className</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Additional CSS classes
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
-          BadgePill
-        </h3>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">Pill content</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">size</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot;
-                </td>
-                <td className="py-3 px-4 text-textSubtle">&quot;md&quot;</td>
-                <td className="py-3 px-4 text-textSubtle">Size of the pill</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">icon</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Icon to display before content
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">href</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">URL for the link</td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">onClick</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  () =&gt; void
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Click handler (alternative to href)
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </Section>
 
       {/* Best Practices Section */}
       <Section>

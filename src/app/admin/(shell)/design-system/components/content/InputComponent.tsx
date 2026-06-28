@@ -225,7 +225,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -324,44 +324,6 @@ function SearchIcon({ size = 16 }: { size?: number }) {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M1.5 6.5C1.5 3.73858 3.73858 1.5 6.5 1.5C9.26142 1.5 11.5 3.73858 11.5 6.5C11.5 9.26142 9.26142 11.5 6.5 11.5C3.73858 11.5 1.5 9.26142 1.5 6.5ZM6.5 0C2.91015 0 0 2.91015 0 6.5C0 10.0899 2.91015 13 6.5 13C8.05503 13 9.47429 12.4489 10.5924 11.5283L14.2803 15.2803L14.8107 15.8107L15.8713 14.75L15.341 14.2197L11.6531 10.4676C12.4919 9.3731 13 8.00016 13 6.5C13 2.91015 10.0899 0 6.5 0Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-function UserIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg
-      height={size}
-      strokeLinejoin="round"
-      viewBox="0 0 16 16"
-      width={size}
-      style={{ color: "currentcolor" }}
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M7.75 0C5.95507 0 4.5 1.45507 4.5 3.25C4.5 5.04493 5.95507 6.5 7.75 6.5C9.54493 6.5 11 5.04493 11 3.25C11 1.45507 9.54493 0 7.75 0ZM6 3.25C6 2.2835 6.7835 1.5 7.75 1.5C8.7165 1.5 9.5 2.2835 9.5 3.25C9.5 4.2165 8.7165 5 7.75 5C6.7835 5 6 4.2165 6 3.25ZM2.5 14.5V13.1709C3.37565 10.8126 5.40929 9.5 7.75 9.5C10.0907 9.5 12.1243 10.8126 13 13.1709V14.5H2.5ZM7.75 8C4.82977 8 2.23401 9.67994 1.06796 12.4646L1 12.6263V16H14.5V12.6263L14.432 12.4646C13.266 9.67994 10.6702 8 7.75 8Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-function GlobeIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg
-      height={size}
-      strokeLinejoin="round"
-      viewBox="0 0 16 16"
-      width={size}
-      style={{ color: "currentcolor" }}
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8ZM8 1.5C7.53718 1.5 6.92338 1.92238 6.34075 3.18416C6.10335 3.69858 5.9019 4.30078 5.74863 4.97487H10.2514C10.0981 4.30078 9.89665 3.69858 9.65925 3.18416C9.07662 1.92238 8.46282 1.5 8 1.5ZM11.1853 6.47487C11.058 5.60313 10.8263 4.80337 10.5107 4.11842C10.3584 3.78817 10.186 3.47784 9.99319 3.19379C11.9665 4.01974 13.4188 5.81855 13.8298 7.98639L11.1853 6.47487ZM13.9779 9.21985L11.2197 7.96233C11.033 9.03498 10.6645 10.0073 10.1729 10.8009C9.95439 11.1538 9.71357 11.4771 9.45247 11.7637C11.7068 11.0269 13.458 9.35684 13.9779 9.21985ZM7.75503 14.4904C7.27684 14.4171 6.71675 13.9646 6.18988 12.8271C5.87608 12.1495 5.62154 11.3179 5.45394 10.3859L2.80797 9.18186C3.28167 11.5763 5.28014 13.4529 7.75503 14.4904ZM4.43475 8.00698L1.57361 6.70668C1.52418 7.1282 1.5 7.5602 1.5 8C1.5 8.24773 1.51233 8.49263 1.53642 8.73419L4.43475 8.00698ZM4.41494 6.50476L1.7973 5.3177C2.65721 3.38504 4.25852 1.8555 6.24042 1.09508C5.98202 1.36499 5.74241 1.67107 5.52313 2.01199C4.99024 2.84033 4.60071 3.84927 4.36906 4.96249L4.41494 6.50476ZM5.92907 7.19261L5.88233 5.61842L10.3833 5.9755C10.4547 6.44354 10.5 6.93462 10.5148 7.44439L5.92907 7.19261ZM5.97408 8.69276L10.4842 8.94106C10.3871 9.66498 10.2168 10.3393 9.98635 10.9403C9.52397 9.74163 8.33512 8.88447 6.94614 8.75662L5.97408 8.69276Z"
         fill="currentColor"
       />
     </svg>
@@ -508,6 +470,31 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <Input label="Email Address" placeholder="you@example.com" />
+  );
+}`;
+
+const roundedCode = `import { Input } from '@/components/ui/Input';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <Input rounded prefix="www." suffix=".com" placeholder="Label example" />
+  );
+}`;
+
+const roundedNoStyleCode = `import { Input } from '@/components/ui/Input';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <Input
+      rounded
+      prefix="www."
+      suffix=".com"
+      prefixStyling={false}
+      suffixStyling={false}
+      placeholder="Label example"
+    />
   );
 }`;
 
@@ -739,6 +726,25 @@ function LabelDemo() {
   );
 }
 
+function RoundedDemo() {
+  return (
+    <Input rounded prefix="www." suffix=".com" placeholder="Label example" />
+  );
+}
+
+function RoundedNoStyleDemo() {
+  return (
+    <Input
+      rounded
+      prefix="www."
+      suffix=".com"
+      prefixStyling={false}
+      suffixStyling={false}
+      placeholder="Label example"
+    />
+  );
+}
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -797,7 +803,7 @@ export default function InputComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="command-k" onCopyLink={showToast}>
+        <SectionHeader id="k" onCopyLink={showToast}>
           {"\u2318"}K
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3" style={{ lineHeight: 1.5 }}>
@@ -832,6 +838,33 @@ export default function InputComponent() {
         </p>
         <CodePreview componentCode={labelCode}>
           <LabelDemo />
+        </CodePreview>
+      </Section>
+
+      <Section>
+        <SectionHeader id="rounded-prefix-and-suffix" onCopyLink={showToast}>
+          Rounded prefix and suffix
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
+          A pill-shaped input (<code className="inline-code">rounded</code>) with bordered prefix and suffix segments.
+        </p>
+        <CodePreview componentCode={roundedCode}>
+          <RoundedDemo />
+        </CodePreview>
+      </Section>
+
+      <Section>
+        <SectionHeader
+          id="rounded-prefix-and-suffix-without-styling"
+          onCopyLink={showToast}
+        >
+          Rounded prefix and suffix without styling
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
+          The same pill shape with <code className="inline-code">prefixStyling=&#123;false&#125;</code> and <code className="inline-code">suffixStyling=&#123;false&#125;</code>, so the affixes sit flush inside the field with no border or fill.
+        </p>
+        <CodePreview componentCode={roundedNoStyleCode}>
+          <RoundedNoStyleDemo />
         </CodePreview>
       </Section>
 

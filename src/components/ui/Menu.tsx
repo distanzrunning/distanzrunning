@@ -440,11 +440,13 @@ function MenuDropdown({
           borderRadius: 12,
           boxShadow: "var(--ds-shadow-menu)",
           padding: 8,
-          width: menuWidth || 200,
+          // Geist: min-width 200, width auto — grows with content.
+          width: menuWidth || "auto",
           minWidth: menuWidth || 200,
           zIndex: 2001,
           listStyle: "none",
           fontSize: 14,
+          overflowX: "hidden",
           overflowY: "auto",
           overscrollBehavior: "contain",
           animation: "menu-enter 150ms ease-out",
@@ -468,7 +470,7 @@ function MenuDropdown({
 
 interface MenuButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "tertiary";
   size?: "small" | "default";
   shape?: "square";
   chevron?: boolean;
@@ -493,7 +495,7 @@ export function MenuButton({
       <button
         ref={triggerRef}
         type="button"
-        className={`inline-flex items-center justify-center cursor-pointer bg-transparent border-none p-0 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2 rounded-full ${className}`}
+        className={`inline-flex items-center justify-center cursor-pointer bg-transparent border-none p-0 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ds-background-100)] rounded-full ${className}`}
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-haspopup="menu"
@@ -507,7 +509,7 @@ export function MenuButton({
   const baseStyles = `
     inline-flex items-center justify-center select-none cursor-pointer border-none
     transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
-    focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2
+    focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ds-background-100)]
     rounded-[var(--ds-radius-small)]
   `;
 
@@ -530,7 +532,15 @@ export function MenuButton({
         hover:bg-[var(--ds-gray-100)] hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
         dark:hover:bg-[var(--ds-gray-200)] dark:hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
       `
-      : `
+      : variant === "tertiary"
+        ? // Geist tertiary: transparent, gray-1000 ink, gray-alpha-200 hover,
+          // gray-alpha-100 while open (aria-expanded). Used by DotsMenu.
+          `
+        bg-transparent text-[var(--ds-gray-1000)]
+        hover:bg-[var(--ds-gray-alpha-200)]
+        aria-expanded:bg-[var(--ds-gray-alpha-100)]
+      `
+        : `
         bg-[var(--ds-gray-1000)] text-textInverted
         hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),white_15%)]
         dark:hover:bg-[color-mix(in_srgb,var(--ds-gray-1000),black_15%)]
@@ -662,9 +672,14 @@ export function MenuItem({
     height: 40,
     borderRadius: 6,
     fontSize: 14,
-    color: destructive ? "var(--ds-red-900)" : "hsl(var(--color-textDefault))",
+    // Geist: disabled items go gray-700 + pointer-events-none (no dim).
+    color: isDisabled
+      ? "var(--ds-gray-700)"
+      : destructive
+        ? "var(--ds-red-900)"
+        : "var(--ds-gray-1000)",
     cursor: isDisabled ? "default" : "pointer",
-    opacity: isDisabled ? 0.5 : 1,
+    pointerEvents: isDisabled ? "none" : undefined,
     background: "transparent",
     border: "none",
     width: "100%",
@@ -699,12 +714,12 @@ export function MenuItem({
     </>
   );
 
+  // Geist uses one tint for both highlighted and selected — no darker press
+  // state — so active matches hover.
   const hoverBg = destructive
     ? "var(--ds-red-100)"
     : "var(--ds-gray-alpha-100)";
-  const activeBg = destructive
-    ? "var(--ds-red-200)"
-    : "var(--ds-gray-alpha-200)";
+  const activeBg = hoverBg;
 
   const hoverHandlers = isDisabled
     ? {}
@@ -769,9 +784,13 @@ export function MenuSeparator() {
     <div
       role="separator"
       style={{
+        // Geist: h-px, my-2, bleeds into the menu's px-2 padding so the
+        // rule touches both edges (w-[calc(100%+16px)] -ml-2).
         height: 1,
         background: "var(--ds-gray-alpha-400)",
-        margin: "4px 0",
+        margin: "8px 0",
+        width: "calc(100% + 16px)",
+        marginLeft: -8,
       }}
     />
   );
@@ -795,14 +814,14 @@ interface MenuSectionProps {
 export function MenuSection({ title, children }: MenuSectionProps) {
   return (
     <div role="group" aria-label={title}>
+      {/* Geist section header: a plain text-xs (12px) gray-900 label with
+          p-2 — no uppercase, weight, or letter-spacing. */}
       <div
         style={{
-          padding: "8px 8px 4px",
-          fontSize: 11,
-          fontWeight: 600,
-          textTransform: "uppercase",
-          letterSpacing: "0.04em",
-          color: "var(--ds-gray-800)",
+          display: "block",
+          padding: 8,
+          fontSize: 12,
+          color: "var(--ds-gray-900)",
         }}
       >
         {title}

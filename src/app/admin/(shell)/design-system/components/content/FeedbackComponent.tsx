@@ -3,7 +3,6 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "../ContentWithTOC";
-import { ComponentRef } from "../ComponentRef";
 import {
   useShikiHighlighter,
   getTokenStyle,
@@ -224,7 +223,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -408,12 +407,70 @@ function FeedbackWithSelectExample() {
 // Demo Components
 // ============================================================================
 
+// Geist's flag glyph, used to demo the trigger prefix/suffix slots.
+function FlagIcon() {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      height="16"
+      width="16"
+      aria-hidden="true"
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fill="currentColor"
+        fillRule="evenodd"
+        d="M1.75 0h.75c2.62 0 4.79 1.31 6.65 2.5l.33.2q1.23.81 2.35 1.38c.85.42 1.64.67 2.42.67l.42 1.37-.42-.62.42.62-.02.01-.04.03-.64.38q-.66.39-1.8.9A15 15 0 0 1 6.5 8.75c-1.88 0-2.86.47-3.37.93-.5.46-.63 1-.63 1.32v5H1V0zm.75 1.5v6.77c.88-.62 2.17-1.02 4-1.02a13 13 0 0 0 5.59-1.42 10 10 0 0 1-.92-.4 27 27 0 0 1-2.82-1.67C6.46 2.56 4.63 1.5 2.5 1.5"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}
+
+const withPrefixCode = `import { Feedback } from '@/components/ui/Feedback';
+
+function PrefixExample() {
+  return (
+    <Feedback
+      prefix={<FlagIcon />}
+      onSubmit={(data) => console.log(data)}
+    />
+  );
+}`;
+
+const withSuffixCode = `import { Feedback } from '@/components/ui/Feedback';
+
+function SuffixExample() {
+  return (
+    <Feedback
+      suffix={<FlagIcon />}
+      onSubmit={(data) => console.log(data)}
+    />
+  );
+}`;
+
 function DefaultDemo() {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Feedback
         onSubmit={(data) => console.log(data)}
       />
+    </div>
+  );
+}
+
+function WithPrefixDemo() {
+  return (
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <Feedback prefix={<FlagIcon />} onSubmit={(data) => console.log(data)} />
+    </div>
+  );
+}
+
+function WithSuffixDemo() {
+  return (
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <Feedback suffix={<FlagIcon />} onSubmit={(data) => console.log(data)} />
     </div>
   );
 }
@@ -451,7 +508,7 @@ function CenteredDemo() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="h-8 px-3 rounded-md border border-borderDefault bg-[var(--ds-background-100)] text-[14px] text-textDefault hover:bg-[var(--ds-gray-100)]"
+        className="h-8 px-3 rounded-md border border-borderDefault bg-surface text-[14px] text-textDefault hover:bg-[var(--ds-gray-100)]"
       >
         Open centered feedback
       </button>
@@ -594,6 +651,30 @@ export default function FeedbackComponent() {
         </p>
         <CodePreview componentCode={withMetadataCode}>
           <WithMetadataDemo />
+        </CodePreview>
+      </Section>
+
+      <Section>
+        <SectionHeader id="feedback-with-prefix" onCopyLink={showToast}>
+          Feedback with prefix
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
+          Pass <code>prefix</code> to render an icon before the trigger label.
+        </p>
+        <CodePreview componentCode={withPrefixCode}>
+          <WithPrefixDemo />
+        </CodePreview>
+      </Section>
+
+      <Section>
+        <SectionHeader id="feedback-with-suffix" onCopyLink={showToast}>
+          Feedback with suffix
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
+          Pass <code>suffix</code> to render an icon after the trigger label.
+        </p>
+        <CodePreview componentCode={withSuffixCode}>
+          <WithSuffixDemo />
         </CodePreview>
       </Section>
 

@@ -224,7 +224,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -430,7 +430,7 @@ function ControlledStateDemo() {
   const linkStyle: React.CSSProperties = {
     background: "none",
     border: "none",
-    color: "var(--ds-pink-700)",
+    color: "hsl(var(--color-link))",
     textDecoration: "none",
     cursor: "pointer",
     padding: 0,
@@ -450,7 +450,7 @@ function ControlledStateDemo() {
         formatSelection={formatSelection}
       />
       <div style={{ display: "flex", flexDirection: "column", gap: 8, flexWrap: "wrap" }}>
-        <p className="text-copy-14" style={{ color: "var(--ds-pink-700)", lineHeight: "20px" }}>
+        <p className="text-copy-14" style={{ color: "hsl(var(--color-link))", lineHeight: "20px" }}>
           <button type="button" onClick={() => setSelected([])} style={linkStyle} role="link">
             Clear All
           </button>
@@ -510,7 +510,7 @@ export default function MultiSelectComponent() {
             Appear on hover/focus to show available actions
           </li>
         </ul>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={selectActionsCode}>
             <SelectActionsDemo />
           </CodePreview>
@@ -548,7 +548,7 @@ export default function MultiSelectComponent() {
             actions based on current focus
           </li>
         </ul>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={keyboardNavCode}>
             <KeyboardNavDemo />
           </CodePreview>
@@ -565,7 +565,7 @@ export default function MultiSelectComponent() {
         >
           Use controlled state to manage selections programmatically.
         </p>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={controlledStateCode}>
             <ControlledStateDemo />
           </CodePreview>

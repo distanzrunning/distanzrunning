@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import {
   SiReact,
   SiTypescript,
@@ -15,66 +15,7 @@ import {
   getTokenStyle,
   type DualThemeToken,
 } from "./useShikiHighlighter";
-
-// Copy icon
-function CopyIcon() {
-  return (
-    <svg
-      height="16"
-      strokeLinejoin="round"
-      viewBox="0 0 16 16"
-      width="16"
-      style={{ color: "currentcolor" }}
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M2.75 0.5C1.7835 0.5 1 1.2835 1 2.25V9.75C1 10.7165 1.7835 11.5 2.75 11.5H3.75H4.5V10H3.75H2.75C2.61193 10 2.5 9.88807 2.5 9.75V2.25C2.5 2.11193 2.61193 2 2.75 2H8.25C8.38807 2 8.5 2.11193 8.5 2.25V3H10V2.25C10 1.2835 9.2165 0.5 8.25 0.5H2.75ZM7.75 4.5C6.7835 4.5 6 5.2835 6 6.25V13.75C6 14.7165 6.7835 15.5 7.75 15.5H13.25C14.2165 15.5 15 14.7165 15 13.75V6.25C15 5.2835 14.2165 4.5 13.25 4.5H7.75ZM7.5 6.25C7.5 6.11193 7.61193 6 7.75 6H13.25C13.3881 6 13.5 6.11193 13.5 6.25V13.75C13.5 13.8881 13.3881 14 13.25 14H7.75C7.61193 14 7.5 13.8881 7.5 13.75V6.25Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-// Check icon for copy confirmation
-function CheckIcon() {
-  return (
-    <svg
-      height="16"
-      strokeLinejoin="round"
-      viewBox="0 0 16 16"
-      width="16"
-      style={{ color: "currentcolor" }}
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M15.5607 3.99999L15.0303 4.53032L6.23744 13.3232C5.55403 14.0066 4.44599 14.0066 3.76257 13.3232L4.2929 12.7929L3.76257 13.3232L0.969676 10.5303L0.439346 9.99999L1.50001 8.93933L2.03034 9.46966L4.82323 12.2626C4.92086 12.3602 5.07915 12.3602 5.17678 12.2626L13.9697 3.46966L14.5 2.93933L15.5607 3.99999Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-// Copy/check icon - CSS crossfade transition
-function AnimatedCopyIcon({ copied }: { copied: boolean }) {
-  return (
-    <div className="relative w-4 h-4">
-      <span
-        className="absolute inset-0 transition-opacity duration-150"
-        style={{ opacity: copied ? 0 : 1 }}
-      >
-        <CopyIcon />
-      </span>
-      <span
-        className="absolute inset-0 transition-opacity duration-150"
-        style={{ opacity: copied ? 1 : 0 }}
-      >
-        <CheckIcon />
-      </span>
-    </div>
-  );
-}
+import { CopyButton } from "./CopyButton";
 
 // Get file icon based on language/filename
 function getFileIcon(filename?: string, language?: string) {
@@ -108,6 +49,11 @@ export interface SwitcherProps {
   options: SwitcherOption[];
   value: string;
   onChange: (value: string) => void;
+  /**
+   * Render the switcher as a secondary tab bar above the header instead of
+   * the default select dropdown in the header.
+   */
+  tabs?: boolean;
 }
 
 export interface CodeBlockProps {
@@ -160,18 +106,11 @@ export function CodeBlock({
   "aria-label": ariaLabel,
   switcher,
 }: CodeBlockProps) {
-  const [copied, setCopied] = useState(false);
   const [selectedLines, setSelectedLines] = useState<number[]>([]);
   const codeContent = code || children || "";
 
   // Use Shiki for syntax highlighting
   const tokenizedLines = useShikiHighlighter(codeContent, language, filename);
-
-  const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(codeContent);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }, [codeContent]);
 
   const handleLineClick = (lineNumber: number) => {
     if (referencedLines.includes(lineNumber)) {
@@ -197,17 +136,53 @@ export function CodeBlock({
 
   return (
     <div
-      className="relative border border-borderDefault rounded overflow-hidden group"
+      className="relative border border-borderDefault rounded-md overflow-hidden group"
       data-code-block
       aria-label={ariaLabel}
     >
+      {/* Language switcher as a secondary tab bar (Geist `tabs`) */}
+      {switcher?.tabs && (
+        <div
+          className="flex items-center bg-canvas pt-3 pl-4 overflow-x-auto"
+          style={{ scrollbarWidth: "none" }}
+        >
+          <div
+            role="tablist"
+            aria-orientation="horizontal"
+            className="flex flex-nowrap items-center gap-2 pb-px"
+          >
+            {switcher.options.map((option) => {
+              const selected = option.value === switcher.value;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  role="tab"
+                  aria-selected={selected}
+                  tabIndex={selected ? 0 : -1}
+                  onClick={() => switcher.onChange(option.value)}
+                  className={`flex h-6 cursor-pointer items-center rounded-md px-1.5 text-[13px] outline-none transition-colors focus-visible:shadow-[var(--ds-focus-ring)] ${
+                    selected
+                      ? "bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]"
+                      : "bg-[var(--ds-gray-alpha-200)] text-textDefault"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Header with filename */}
       {filename && (
         <div
           className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-borderDefault"
           style={{
-            background: "hsl(var(--color-surface))",
-            borderRadius: "4px 4px 0 0",
+            // Geist: recessed header on bg-200 over the bg-100 code body.
+            background: "hsl(var(--color-canvas))",
+            borderRadius: "6px 6px 0 0",
           }}
         >
           <div className="flex items-center gap-2">
@@ -216,7 +191,7 @@ export function CodeBlock({
           </div>
           <div className="flex items-center gap-1">
             {/* Language Switcher - Geist style with visible label overlay */}
-            {switcher && (
+            {switcher && !switcher.tabs && (
               <div className="relative rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors">
                 <div
                   aria-hidden="true"
@@ -256,29 +231,31 @@ export function CodeBlock({
                 </select>
               </div>
             )}
-            {/* Copy Button */}
-            <button
-              onClick={handleCopy}
-              className="p-2 rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors text-textSubtle hover:text-textDefault"
+            {/* Copy button — ghost, sits in the recessed header bar */}
+            <CopyButton
+              value={codeContent}
+              variant="ghost"
+              size="small"
               aria-label="Copy code"
-            >
-              <AnimatedCopyIcon copied={copied} />
-            </button>
+            />
           </div>
         </div>
       )}
 
-      {/* Copy button for no-header variant */}
+      {/* Copy button for no-header variant — a bordered chip floating top-right */}
       {!filename && (
-        <button
-          onClick={handleCopy}
-          className={`absolute right-3 p-2 rounded border border-transparent opacity-0 group-hover:opacity-100 transition-all z-10 text-textSubtle hover:text-textDefault hover:bg-surface hover:border-borderDefault ${
+        <div
+          className={`absolute right-4 z-10 opacity-0 transition-opacity group-hover:opacity-100 ${
             lines.length === 1 ? "top-1/2 -translate-y-1/2" : "top-3"
           }`}
-          aria-label="Copy code"
         >
-          <AnimatedCopyIcon copied={copied} />
-        </button>
+          <CopyButton
+            value={codeContent}
+            variant="secondary"
+            size="small"
+            aria-label="Copy code"
+          />
+        </div>
       )}
 
       {/* Code content */}

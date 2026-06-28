@@ -147,7 +147,9 @@ const floatingMaterials: MaterialDefinition[] = [
   },
 ];
 
-// Material table component
+// Material table component (Geist-verbatim: borderless body rows with a
+// rounded hover fill, a spacer tbody under the header, auto layout). Rows are
+// click-to-copy the class name (Geist's interactive table rows).
 function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
   const { showToast } = useToast();
 
@@ -158,22 +160,22 @@ function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full caption-bottom text-sm text-textDefault table-fixed">
-        <thead>
-          <tr className="transition-colors">
-            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral w-[340px]">
+      <table className="w-full caption-bottom text-copy-14 text-textSubtle">
+        <thead className="[&_tr]:border-borderDefault [&_tr]:border-b">
+          <tr>
+            <th className="h-10 px-2 font-medium text-left align-middle whitespace-nowrap">
               <div className="inline-flex gap-1.5 items-center">
                 <ExampleIcon />
                 Example
               </div>
             </th>
-            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral">
+            <th className="h-10 px-2 font-medium text-left align-middle whitespace-nowrap">
               <div className="inline-flex gap-1.5 items-center">
                 <SiTailwindcss size={16} className="text-[#38bdf8]" />
                 Class name
               </div>
             </th>
-            <th className="h-10 px-2 text-left align-middle font-medium border-b border-borderNeutral">
+            <th className="h-10 px-2 font-medium text-left align-middle whitespace-nowrap">
               <div className="inline-flex gap-1.5 items-center">
                 <HelpCircle size={16} />
                 Usage
@@ -181,23 +183,24 @@ function MaterialTable({ materials }: { materials: MaterialDefinition[] }) {
             </th>
           </tr>
         </thead>
-        <tbody>
+        {/* 12px spacer between header and rows (Geist) */}
+        <tbody aria-hidden="true" className="h-3 block" />
+        <tbody className="[&_td:first-child]:rounded-l-[4px] [&_td:last-child]:rounded-r-[4px] [&_tr:hover]:bg-[var(--ds-gray-100)]">
           {materials.map((material) => (
             <tr
               key={material.className}
-              className="transition-colors hover:bg-[var(--ds-gray-100)] cursor-copy border-b border-borderDefault"
+              className="transition-colors cursor-copy"
               onClick={() => handleCopyClassName(material.className)}
-              style={{ height: 120 }}
             >
-              <td className="px-2 py-2.5 align-middle">
+              <td className="px-2 py-2.5 align-middle whitespace-nowrap">
                 <div
                   className={`${material.className} max-w-[240px] h-[100px]`}
                 />
               </td>
-              <td className="px-2 py-2.5 align-middle text-left font-mono text-copy-13">
+              <td className="px-2 py-2.5 align-middle whitespace-nowrap text-left text-label-13-mono">
                 {material.className}
               </td>
-              <td className="px-2 py-2.5 align-middle text-left text-textSubtle">
+              <td className="px-2 py-2.5 align-middle text-left text-label-14 text-textSubtle max-w-[160px] text-pretty whitespace-normal">
                 {material.usage}
               </td>
             </tr>
@@ -234,11 +237,90 @@ function FloatingSection() {
   );
 }
 
+// Best Practices section (Geist Materials: When to use / Behavior /
+// Accessibility — no "Content" subsection on this page).
+function BestPracticesSection() {
+  return (
+    <Section>
+      <SectionHeader id="best-practices">Best Practices</SectionHeader>
+
+      <div className="mt-4">
+        <div className="mb-6 last:mb-0">
+          <h4 className="text-label-16 text-textDefault mb-2">When to use</h4>
+          <ul className="text-copy-14 text-textSubtle list-disc pl-5 space-y-1.5">
+            <li>
+              Use Material instead of hand-rolling radii, fills, strokes, and
+              shadows on a surface; the type encodes the elevation role.
+            </li>
+            <li>
+              Pick the type from where the element sits in the layered hierarchy:{" "}
+              <code className="inline-code">base</code> for resting cards,{" "}
+              <code className="inline-code">small</code>–
+              <code className="inline-code">large</code> for raised content,{" "}
+              <code className="inline-code">tooltip</code> and{" "}
+              <code className="inline-code">menu</code> for floating popovers,{" "}
+              <code className="inline-code">modal</code> for dialogs,{" "}
+              <code className="inline-code">fullscreen</code> for takeovers.
+            </li>
+            <li>
+              Don&apos;t stack two Materials on the same element; if a child needs
+              more elevation, lift it into its own Material with a higher type.
+            </li>
+          </ul>
+        </div>
+
+        <div className="mb-6 last:mb-0">
+          <h4 className="text-label-16 text-textDefault mb-2">Behavior</h4>
+          <ul className="text-copy-14 text-textSubtle list-disc pl-5 space-y-1.5">
+            <li>
+              Align the elevation choice with the element&apos;s{" "}
+              <code className="inline-code">z-index</code> band so a{" "}
+              <code className="inline-code">tooltip</code>-typed surface
+              doesn&apos;t sit visually below a{" "}
+              <code className="inline-code">base</code> card.
+            </li>
+            <li>
+              Favor the lowest elevation that still reads as elevated against its
+              background; over-elevating is a common source of visual noise.
+            </li>
+            <li>
+              Let the type drive chrome and use layout spacing for layout instead
+              of overriding shadows on the same element.
+            </li>
+          </ul>
+        </div>
+
+        <div className="mb-6 last:mb-0">
+          <h4 className="text-label-16 text-textDefault mb-2">Accessibility</h4>
+          <ul className="text-copy-14 text-textSubtle list-disc pl-5 space-y-1.5">
+            <li>
+              Material is decorative chrome; semantics live on the role-bearing
+              wrapper (<code className="inline-code">role=&quot;dialog&quot;</code>{" "}
+              on a modal,{" "}
+              <code className="inline-code">role=&quot;tooltip&quot;</code> on a
+              tooltip, etc.).
+            </li>
+            <li>
+              Don&apos;t rely on shadow alone to communicate elevation; pair with
+              the matching focus-visible ring on focusable children inside.
+            </li>
+            <li>
+              Test materials in both themes: shadow contrast on dark backgrounds
+              is weaker than on light, so confirm separation still reads.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
 export default function Materials() {
   return (
     <div>
       <SurfaceSection />
       <FloatingSection />
+      <BestPracticesSection />
     </div>
   );
 }

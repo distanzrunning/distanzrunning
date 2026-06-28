@@ -118,6 +118,7 @@ export function DestructiveActionModal({
       To confirm, type the {verificationLabel}{" "}
       <strong
         className="font-semibold"
+        translate="no"
         style={{
           color: "var(--ds-gray-1000)",
           overflowWrap: "anywhere",
@@ -131,6 +132,7 @@ export function DestructiveActionModal({
       To confirm, type{" "}
       <strong
         className="font-semibold"
+        translate="no"
         style={{
           color: "var(--ds-gray-1000)",
           overflowWrap: "anywhere",
@@ -188,11 +190,9 @@ export function DestructiveActionModal({
             translate="no"
           />
           {errMsg && (
-            <div style={{ marginTop: 4 }}>
-              <Error size="small" live="assertive">
-                {errMsg}
-              </Error>
-            </div>
+            <Error size="small" live="assertive">
+              {errMsg}
+            </Error>
           )}
         </div>
       </div>

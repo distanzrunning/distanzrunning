@@ -223,7 +223,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -686,183 +686,15 @@ export default function ChoiceboxComponent() {
       {/* Custom Content Section */}
       <Section>
         <SectionHeader id="custom-content" onCopyLink={showToast}>
-          Custom Content
+          Custom content
         </SectionHeader>
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
+          Custom content is displayed when selecting the option.
+        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={customContentCode}>
             <CustomContentDemo />
           </CodePreview>
-        </div>
-      </Section>
-
-      {/* Props Section */}
-      <Section>
-        <SectionHeader id="props" onCopyLink={showToast}>
-          Props
-        </SectionHeader>
-
-        {/* ChoiceboxGroup Props */}
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
-          Available props for the ChoiceboxGroup component.
-        </p>
-        <div className="overflow-x-auto mb-8">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">type</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {'"single" | "multi"'}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Radio (single) or checkbox (multi) behavior
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">name</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Form name for the input group
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">value</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"string | string[]"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Currently selected value(s)
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">onChange</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"(value: string | string[]) => void"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Callback when selection changes
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">disabled</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Disable all items in the group
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">label</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Accessible label for the group
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* Choicebox Props */}
-        <p className="text-copy-14 text-textSubtle mb-6">
-          Available props for the Choicebox component.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">value</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  The value this option represents
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">title</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Bold title text
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">description</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Secondary description text
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">disabled</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Disable this specific item
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Custom content shown when selected
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </Section>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useRef } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Triangle } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import { ComponentRef } from "../ComponentRef";
 import {
@@ -227,7 +227,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -387,7 +387,7 @@ export function CustomWidthListExample() {
         "Short option",
       ]}
       placeholder="Search..."
-      listWidth={350}
+      listWidth={500}
     />
   );
 }`;
@@ -403,6 +403,42 @@ export function CustomEmptyMessageExample() {
       emptyMessage="Nothing to see here.."
     />
   );
+}`;
+
+const clearableCode = `import { Combobox } from '@/components/ui/Combobox';
+
+export function Clearable() {
+  return (
+    <Combobox
+      options={['One', 'Two', 'Three']}
+      defaultValue="Two"
+      placeholder="Search..."
+    />
+  );
+}`;
+
+const withPrefixIconsCode = `import { Combobox } from '@/components/ui/Combobox';
+import { Triangle } from 'lucide-react';
+
+export function WithPrefixIcons() {
+  const options = ['One', 'Two', 'Three'].map((label) => ({
+    value: label,
+    label,
+    icon: <Triangle size={16} />,
+  }));
+  return <Combobox options={options} placeholder="Search..." />;
+}`;
+
+const withSuffixIconsCode = `import { Combobox } from '@/components/ui/Combobox';
+import { Triangle } from 'lucide-react';
+
+export function WithSuffixIcons() {
+  const options = ['One', 'Two', 'Three'].map((label) => ({
+    value: label,
+    label,
+    suffixIcon: <Triangle size={16} />,
+  }));
+  return <Combobox options={options} placeholder="Search..." />;
 }`;
 
 const withLabelCode = `import { Combobox } from '@/components/ui/Combobox';
@@ -642,7 +678,7 @@ export default function ComboboxComponent() {
       {/* Custom Width Input */}
       <Section>
         <SectionHeader id="custom-width-input" onCopyLink={showToast}>
-          Custom Width Input
+          Custom width input
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={customWidthInputCode}>
@@ -658,7 +694,7 @@ export default function ComboboxComponent() {
       {/* Custom Width List */}
       <Section>
         <SectionHeader id="custom-width-list" onCopyLink={showToast}>
-          Custom Width List
+          Custom width list
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={customWidthListCode}>
@@ -669,7 +705,7 @@ export default function ComboboxComponent() {
                 "Short option",
               ]}
               placeholder="Search..."
-              listWidth={350}
+              listWidth={500}
             />
           </CodePreview>
         </div>
@@ -678,7 +714,7 @@ export default function ComboboxComponent() {
       {/* Custom Empty Message */}
       <Section>
         <SectionHeader id="custom-empty-message" onCopyLink={showToast}>
-          Custom Empty Message
+          Custom empty message
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={customEmptyMessageCode}>
@@ -692,10 +728,70 @@ export default function ComboboxComponent() {
         </div>
       </Section>
 
+      {/* Clearable */}
+      <Section>
+        <SectionHeader id="clearable" onCopyLink={showToast}>
+          Clearable
+        </SectionHeader>
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
+          Set <code className="inline-code">clearable</code> to show a clear
+          button when a value is selected.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={clearableCode}>
+            <Combobox
+              options={["One", "Two", "Three"]}
+              defaultValue="Two"
+              placeholder="Search..."
+            />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* With Prefix Icons */}
+      <Section>
+        <SectionHeader id="with-prefix-icons" onCopyLink={showToast}>
+          With prefix icons
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={withPrefixIconsCode}>
+            <Combobox
+              options={["One", "Two", "Three"].map((label) => ({
+                value: label,
+                label,
+                icon: <Triangle size={16} />,
+              }))}
+              placeholder="Search..."
+              width={256}
+            />
+          </CodePreview>
+        </div>
+      </Section>
+
+      {/* With Suffix Icons */}
+      <Section>
+        <SectionHeader id="with-suffix-icons" onCopyLink={showToast}>
+          With suffix icons
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={withSuffixIconsCode}>
+            <Combobox
+              options={["One", "Two", "Three"].map((label) => ({
+                value: label,
+                label,
+                suffixIcon: <Triangle size={16} />,
+              }))}
+              placeholder="Search..."
+              width={256}
+            />
+          </CodePreview>
+        </div>
+      </Section>
+
       {/* With Label */}
       <Section>
         <SectionHeader id="with-label" onCopyLink={showToast}>
-          With Label
+          With label
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={withLabelCode}>
@@ -748,201 +844,16 @@ export default function ComboboxComponent() {
       {/* Used Inside a Modal */}
       <Section>
         <SectionHeader id="used-inside-a-modal" onCopyLink={showToast}>
-          Used Inside a Modal
+          Used inside a Modal
         </SectionHeader>
+        <p className="mt-2 leading-6 text-textSubtle xl:mt-4">
+          It is common to use Combobox inside a Modal. On mobile, the Modal
+          automatically renders a Dialog instead.
+        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={modalCode}>
             <ModalDemo />
           </CodePreview>
-        </div>
-      </Section>
-
-      {/* Props */}
-      <Section>
-        <SectionHeader id="props" onCopyLink={showToast}>
-          Props
-        </SectionHeader>
-
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
-          Available props for the Combobox component.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">options</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"ComboboxOption[] | string[]"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Options to display in the dropdown
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">value</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Controlled selected value
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">defaultValue</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">{`""`}</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Default value for uncontrolled mode
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">onChange</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"(value: string) => void"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Called when the selected value changes
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">onInputChange</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"(value: string) => void"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Called when the input text changes
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">placeholder</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  {`"Search..."`}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Input placeholder text
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">disabled</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Disables the entire combobox
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">error</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Shows error state with red border and aria-invalid
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">size</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {'"small" | "default" | "large"'}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  {`"default"`}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Size variant (32px, 40px, 48px)
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">width</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"number | string"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Custom width for the combobox container
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">listWidth</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"number | string"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Custom width for the dropdown list only
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">emptyMessage</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  {`"No results found"`}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Message shown when no options match
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">label</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  External label rendered above the combobox
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">id</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  ID for label/input association
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">className</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">{`""`}</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Additional CSS class for the outermost wrapper
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </Section>
 

@@ -63,21 +63,25 @@ export interface BadgePillProps extends Omit<BadgeProps, "variant"> {
 // ============================================================================
 
 const variantStyles: Record<BadgeVariant, string> = {
-  // Solid variants - pair each theme-aware fill with a theme-aware foreground.
-  gray: "bg-[var(--ds-gray-1000)] text-textInverted",
-  blue: "bg-[var(--ds-blue-800)] text-textInverted dark:bg-[var(--ds-blue-900)] dark:text-[var(--ds-blue-100)]",
+  // Solid variants — Geist's exact mapping: a coloured fill + fixed white
+  // text (--ds-contrast-fg). The -900 (and gray-900) fills flip light in
+  // dark mode, so dark overrides drop to a mid shade that keeps white text
+  // legible. blue needs no dark override; amber pairs with black text.
+  gray: "bg-[var(--ds-gray-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-gray-500)]",
+  blue: "bg-[var(--ds-blue-800)] text-[var(--ds-contrast-fg)]",
   purple:
-    "bg-[var(--ds-purple-900)] text-textInverted dark:text-[var(--ds-purple-100)]",
-  amber:
-    "bg-[var(--ds-amber-700)] text-[var(--ds-gray-1000)] dark:bg-[var(--ds-amber-900)] dark:text-[var(--ds-amber-100)]",
-  red: "bg-[var(--ds-red-900)] text-textInverted dark:text-[var(--ds-red-100)]",
-  pink: "bg-[var(--ds-pink-900)] text-textInverted dark:text-[var(--ds-pink-100)]",
+    "bg-[var(--ds-purple-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-purple-500)]",
+  // Geist uses text-black (#000) on the bright amber-700 fill — a deliberate
+  // exception to the no-text-black guideline; pure black reads best here.
+  amber: "bg-[var(--ds-amber-700)] text-black",
+  red: "bg-[var(--ds-red-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-red-800)]",
+  pink: "bg-[var(--ds-pink-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-pink-600)]",
   green:
-    "bg-[var(--ds-green-900)] text-textInverted dark:text-[var(--ds-green-100)]",
-  teal: "bg-[var(--ds-teal-900)] text-textInverted dark:text-[var(--ds-teal-100)]",
-  inverted: "bg-[var(--ds-gray-1000)] text-textInverted",
+    "bg-[var(--ds-green-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-green-600)]",
+  teal: "bg-[var(--ds-teal-900)] text-[var(--ds-contrast-fg)] dark:bg-[var(--ds-teal-600)]",
+  inverted: "bg-[var(--ds-gray-1000)] text-[var(--ds-gray-100)]",
 
-  // Subtle variants - light tinted backgrounds with dark text
+  // Subtle variants - light tinted backgrounds with dark text (Geist-exact)
   "gray-subtle": "bg-[var(--ds-gray-200)] text-[var(--ds-gray-1000)]",
   "blue-subtle": "bg-[var(--ds-blue-200)] text-[var(--ds-blue-900)]",
   "purple-subtle": "bg-[var(--ds-purple-200)] text-[var(--ds-purple-900)]",
@@ -88,21 +92,24 @@ const variantStyles: Record<BadgeVariant, string> = {
   "teal-subtle": "bg-[var(--ds-teal-300)] text-[var(--ds-teal-900)]",
 };
 
+// Geist sizing: sm 11/h-5/px-1.5/gap-1/0.2px, md 12/h-6/px-3/gap-1, lg
+// 14/h-8/px-3/gap-1.5. Icons: sm 12px, md 14px (tucked -ml-0.5), lg 16px.
 const sizeStyles: Record<BadgeSize, string> = {
   sm: "h-5 px-1.5 text-[11px] tracking-[0.2px] gap-1",
-  md: "h-6 px-2.5 text-xs gap-1.5",
-  lg: "h-8 px-3 text-sm gap-1.5",
+  md: "h-6 px-3 text-[12px] gap-1",
+  lg: "h-8 px-3 text-[14px] gap-1.5",
 };
 
+// Geist's pill uses the same padding as the badge (not tighter).
 const pillSizeStyles: Record<BadgeSize, string> = {
   sm: "h-5 px-1.5 text-[11px] tracking-[0.2px] gap-1",
-  md: "h-6 px-2.5 text-xs gap-1.5",
-  lg: "h-8 px-3 text-sm gap-1.5",
+  md: "h-6 px-3 text-[12px] gap-1",
+  lg: "h-8 px-3 text-[14px] gap-1.5",
 };
 
 const iconSizeStyles: Record<BadgeSize, string> = {
   sm: "w-3 h-3 [&>svg]:w-full [&>svg]:h-full",
-  md: "w-3.5 h-3.5 [&>svg]:w-full [&>svg]:h-full",
+  md: "w-3.5 h-3.5 -ml-0.5 [&>svg]:w-full [&>svg]:h-full",
   lg: "w-4 h-4 [&>svg]:w-full [&>svg]:h-full",
 };
 
@@ -128,7 +135,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         title={title}
         aria-label={title}
         className={`
-          inline-flex items-center justify-center rounded-full font-medium whitespace-nowrap
+          inline-flex shrink-0 items-center justify-center rounded-full py-0.5 font-medium whitespace-nowrap tabular-nums capitalize
           ${variantStyles[variant]}
           ${sizeStyles[size]}
           ${className}
@@ -141,7 +148,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
             {icon}
           </span>
         )}
-        <span className="leading-none">{children}</span>
+        <span>{children}</span>
       </span>
     );
   },
@@ -164,11 +171,13 @@ export const BadgePill = forwardRef<
   HTMLAnchorElement | HTMLButtonElement,
   BadgePillProps
 >(({ children, size = "md", icon, href, onClick, className = "" }, ref) => {
+  // Geist pill: surface fill, gray-1000 text, a gray-alpha-400 INSET ring
+  // (not a solid border), hover → gray-200. It's a link, so no underline.
   const pillStyles = `
-    inline-flex items-center justify-center rounded-full font-medium whitespace-nowrap
-    bg-surface text-textDefault
-    border border-borderDefault
-    hover:bg-[var(--ds-gray-200)] hover:border-borderDefaultHover
+    inline-flex shrink-0 items-center justify-center rounded-full py-0.5 font-medium whitespace-nowrap tabular-nums capitalize
+    bg-surface text-textDefault no-underline
+    ring-1 ring-inset ring-[var(--ds-gray-alpha-400)]
+    hover:bg-[var(--ds-gray-200)]
     transition-colors cursor-pointer
     ${pillSizeStyles[size]}
     ${className}

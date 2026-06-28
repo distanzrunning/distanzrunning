@@ -166,7 +166,7 @@ export default function FiltersShell({
         // p-1 (4 px) gives box-shadow rings room to render
         // without overflow-x-auto clipping them. 4 px is the
         // largest ring on the strip — the search input's
-        // focus-within ring is `0 0 0 4px var(--ds-focus-ring)`
+        // focus-within ring is `0 0 0 4px var(--ds-focus-color)`
         // (see globals.css .ds-input-container:focus-within).
         // Anything smaller clipped the focus ring on the search
         // when expanded. Scrollbar hidden across browsers;

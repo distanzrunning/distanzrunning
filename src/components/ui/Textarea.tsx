@@ -6,8 +6,26 @@ import React, { forwardRef, useId } from "react";
 // Types
 // ============================================================================
 
+export type TextareaSize = "xSmall" | "small" | "default" | "large";
+
+// Geist's form sizes (shared with Input): font-size + horizontal padding +
+// radius. Vertical padding is a constant 10px (py-2.5) across sizes.
+const SIZE_CONFIG: Record<
+  TextareaSize,
+  { fontSize: number; paddingX: number; borderRadius: number }
+> = {
+  // Geist textareas keep a constant px-3 (12px) horizontal pad across sizes
+  // (only Input narrows to px-2 at xSmall); font-size and radius vary.
+  xSmall: { fontSize: 12, paddingX: 12, borderRadius: 6 },
+  small: { fontSize: 14, paddingX: 12, borderRadius: 6 },
+  default: { fontSize: 14, paddingX: 12, borderRadius: 6 },
+  large: { fontSize: 16, paddingX: 12, borderRadius: 8 },
+};
+
 export interface TextareaProps
   extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "className"> {
+  /** Form size — controls font-size and radius (Geist xs/sm/md/lg). */
+  size?: TextareaSize;
   /**
    * Visible label rendered above the field. Short Title Case noun
    * (`Description`, `Release Notes`).
@@ -30,7 +48,7 @@ export interface TextareaProps
 }
 
 // ============================================================================
-// Error Icon (Geist octagon warning)
+// Error Icon — Geist's warning diamond (shared with Error / Note)
 // ============================================================================
 
 function ErrorIcon() {
@@ -41,12 +59,11 @@ function ErrorIcon() {
       viewBox="0 0 16 16"
       width="16"
       style={{ color: "var(--ds-red-900)", flexShrink: 0 }}
+      aria-hidden="true"
     >
       <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M5.30761 1.5L1.5 5.30761V10.6924L5.30761 14.5H10.6924L14.5 10.6924V5.30761L10.6924 1.5H5.30761ZM4.60051 0L0 4.60051V11.3995L4.60051 16H11.3995L16 11.3995V4.60051L11.3995 0H4.60051ZM8.75 3.75V4.5V8V8.75H7.25V8V4.5V3.75H8.75ZM8 12C8.55228 12 9 11.5523 9 11C9 10.4477 8.55228 10 8 10C7.44772 10 7 10.4477 7 11C7 11.5523 7.44772 12 8 12Z"
         fill="currentColor"
+        d="M10.9 0a1 1 0 0 1 .7.3l4.1 4.1.07.07a1 1 0 0 1 .23.63v5.8a1 1 0 0 1-.3.7l-4.1 4.1a1 1 0 0 1-.7.3H5a1 1 0 0 1-.53-.23l-.08-.06-4.1-4.1A1 1 0 0 1 0 10.9V5.1a1 1 0 0 1 .3-.7L4.4.3A1 1 0 0 1 5 0h5.9M1.5 5.3v5.4l3.8 3.8h5.4l3.8-3.8V5.3l-3.8-3.8H5.3zM8 10a1 1 0 1 1 0 2 1 1 0 0 1 0-2m.75-1.25h-1.5v-5h1.5z"
       />
     </svg>
   );
@@ -64,6 +81,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       error = false,
       errorMessage,
       minHeight = 100,
+      size = "default",
       disabled,
       className,
       placeholder,
@@ -73,6 +91,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     ref,
   ) {
     const uid = useId();
+    const sizing = SIZE_CONFIG[size];
     const helperId = helperText ? `${uid}-helper` : undefined;
     const errorId = error && errorMessage ? `${uid}-error` : undefined;
 
@@ -110,11 +129,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         <div
           className={`ds-textarea-container${error ? " ds-textarea--error" : ""}${disabled ? " ds-textarea--disabled" : ""}`}
           style={{
-            borderRadius: 6,
+            borderRadius: sizing.borderRadius,
             background: "hsl(var(--color-surface))",
             transition: "box-shadow 0.15s ease",
             overflow: "hidden",
-            ...(disabled ? { cursor: "not-allowed", opacity: 0.5 } : {}),
+            // Geist disabled stays full-opacity (gray-100 fill + gray-700 text);
+            // a container opacity here would fade the field the globals can't undo.
+            ...(disabled ? { cursor: "not-allowed" } : {}),
           }}
         >
           <textarea
@@ -137,12 +158,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               background: disabled
                 ? "var(--ds-gray-100)"
                 : "hsl(var(--color-surface))",
-              fontSize: 14,
+              fontSize: sizing.fontSize,
               lineHeight: "20px",
               color: disabled ? "hsl(var(--color-textSubtler))" : "hsl(var(--color-textDefault))",
               fontFamily: "inherit",
-              padding: 12,
-              resize: "vertical",
+              // Geist: py-2.5 (10px) constant, px = size horizontal padding.
+              padding: `10px ${sizing.paddingX}px`,
+              resize: "none",
               borderRadius: 0,
               ...(disabled ? { cursor: "not-allowed" } : {}),
             }}
@@ -150,18 +172,20 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           />
         </div>
 
-        {/* Error message — replaces helper text on failure */}
+        {/* Error message — replaces helper text on failure. Geist sizes the
+            message with the field: large is 16/24, the rest 13/20. Items align
+            to the top so the icon sits with the first line. */}
         {error && errorMessage && (
           <div
             id={errorId}
             className="ds-textarea-error"
             style={{
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-start",
               gap: 8,
               marginTop: 8,
-              fontSize: 13,
-              lineHeight: "20px",
+              fontSize: size === "large" ? 16 : 13,
+              lineHeight: size === "large" ? "24px" : "20px",
               color: "var(--ds-red-900)",
             }}
           >

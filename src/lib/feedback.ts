@@ -2,8 +2,6 @@
 // components in @/components/ui/Feedback default to calling this when no
 // custom onSubmit is provided.
 
-const ANON_ID_KEY = "distanz-consent-anon-id";
-
 export type FeedbackEmotion = "hate" | "not-great" | "okay" | "love";
 
 export interface FeedbackPayload {
@@ -17,13 +15,22 @@ export interface FeedbackPayload {
   email?: string;
   /** Path of the page where feedback was submitted. */
   pagePath?: string;
-  /** Browser-scoped anonymous id. Defaults to the shared consent anon id. */
+  /** Browser-scoped anonymous id. Defaults to the c15t consent subject id. */
   anonId?: string;
 }
 
+/**
+ * Read the c15t subject id (sub_…) from the `c15t` consent cookie so feedback
+ * links to the same subject as the user's consent record. Returns undefined if
+ * the visitor hasn't interacted with consent yet (no subject exists).
+ */
 function readAnonId(): string | undefined {
-  if (typeof window === "undefined") return undefined;
-  return window.localStorage.getItem(ANON_ID_KEY) ?? undefined;
+  if (typeof document === "undefined") return undefined;
+  const match = document.cookie.match(/(?:^|;\s*)c15t=([^;]+)/);
+  if (!match) return undefined;
+  // Cookie value packs the subject id as `…,i.sid:sub_xxx,…`.
+  const sid = decodeURIComponent(match[1]).match(/i\.sid:(sub_[A-Za-z0-9]+)/);
+  return sid?.[1];
 }
 
 function readPagePath(): string | undefined {

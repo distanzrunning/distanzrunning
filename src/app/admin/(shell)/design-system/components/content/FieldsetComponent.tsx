@@ -5,19 +5,16 @@ import { ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { Fieldset } from "@/components/ui/Fieldset";
-import { Input } from "@/components/ui/Input";
-import { Select } from "@/components/ui/Select";
 import {
   useShikiHighlighter,
   getTokenStyle,
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 
-import { ComponentRef } from "../ComponentRef";
 import { Section } from "../ContentWithTOC";
 
 // ============================================================================
-// Page chrome — copied verbatim from AccordionComponent.tsx per the DS
+// Page chrome — copied verbatim from ModalComponent.tsx per the DS
 // convention (TODO: extract into a shared module once we touch more than
 // one of these in a single PR).
 // ============================================================================
@@ -162,7 +159,7 @@ function CodePreview({
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -248,66 +245,186 @@ function CodePreview({
 // Demos
 // ============================================================================
 
+const LONG_TEXT =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam volutpat, nunc vel ultrices sollicitudin, dolor eros volutpat ex, et sagittis sem enim in eros. Curabitur eu consequat neque, non finibus odio. Donec vitae tellus eu mauris feugiat efficitur.";
+
 function DefaultDemo() {
-  const [name, setName] = useState("distanzrunning");
   return (
     <Fieldset
-      id="project-name"
-      title="Project name"
-      subtitle="Used to identify your project on the dashboard and in deployment URLs."
+      title="Account Settings"
+      subtitle="Manage your account preferences and settings"
       status={
         <span>
-          Slug auto-derived from name. <em>distanz-runnings-projects/</em>
-          {name}
+          Need help?{" "}
+          <a href="#" className="text-link underline">
+            View documentation
+          </a>
         </span>
       }
+      action={<Button size="small">Save Changes</Button>}
+    />
+  );
+}
+
+function DisabledDemo() {
+  return (
+    <Fieldset
+      disabled
+      title="Transfer Project"
+      subtitle="Move this project to another team or account"
+      status="You need additional permissions to transfer projects."
+    />
+  );
+}
+
+function LongContentDemo() {
+  return (
+    <Fieldset
+      title="Privacy Policy"
+      subtitle={LONG_TEXT}
+      status="Last updated: March 10, 2025"
       action={
-        <Button type="button" size="small" variant="default">
-          Save
-        </Button>
+        <>
+          <Button size="small" variant="secondary">
+            Decline
+          </Button>
+          <Button size="small">Accept</Button>
+        </>
       }
-    >
-      <Input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Project name"
+    />
+  );
+}
+
+function MultipleDemo() {
+  return (
+    <div className="flex flex-col gap-6">
+      <Fieldset
+        title="Personal Information"
+        subtitle="Update your name and contact details"
+        status="This information will be publicly visible"
+        action={<Button size="small">Update</Button>}
       />
-    </Fieldset>
+      <Fieldset
+        title="Security"
+        subtitle="Manage your password and authentication methods"
+        status="Last password change: 30 days ago"
+        action={<Button size="small">Change Password</Button>}
+      />
+      <Fieldset
+        disabled
+        title="API Access"
+        subtitle="Generate and manage API tokens for programmatic access"
+        status="You need a Pro account to access API features."
+      />
+    </div>
   );
 }
 
 function NoFooterDemo() {
   return (
     <Fieldset
-      id="project-id"
-      title="Project ID"
-      subtitle="Used when interacting with the API. Read-only."
+      title="Account Information"
+      subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nisl nisl aliquam nisl."
+    />
+  );
+}
+
+function NoTitleDemo() {
+  return (
+    <Fieldset
+      subtitle="This fieldset contains only a subtitle with no title. It can be used for informational sections or supplementary content."
+      status="Information only"
+    />
+  );
+}
+
+function ErrorTextDemo() {
+  return (
+    <Fieldset
+      title="API Configuration"
+      subtitle="Configure your API endpoint and authentication"
+      errorText="API key validation failed. Please check your credentials and try again."
+      status="Last checked: 5 minutes ago"
+      action={<Button size="small">Verify API Connection</Button>}
+    />
+  );
+}
+
+function WarningTextDemo() {
+  return (
+    <Fieldset
+      title="Database Settings"
+      subtitle="Configure your database connection parameters"
+      warningText="Changing these settings will require a restart of your application. Make sure to save any pending work."
+      status="Current status: Connected"
+      action={
+        <>
+          <Button size="small" variant="secondary">
+            Cancel
+          </Button>
+          <Button size="small">Apply Changes</Button>
+        </>
+      }
+    />
+  );
+}
+
+function DisabledWallDemo() {
+  return (
+    <Fieldset
+      disabled
+      title="Advanced Features"
+      subtitle="Access premium capabilities and tools"
+      status="Upgrade to a Pro plan to access these features."
     >
-      <Input value="prj_GM5xUaOGIzReGFyGbArrLBEQ1SEm" readOnly />
+      <div className="rounded border border-borderDefault p-4">
+        <p>
+          This content is behind a disabled wall and not accessible to free
+          users.
+        </p>
+        <p className="mt-2">
+          It contains advanced configuration options and premium features.
+        </p>
+      </div>
     </Fieldset>
   );
 }
 
-function ErrorVariantDemo() {
+function ErrorTypeDemo() {
   return (
     <Fieldset
-      id="delete-project"
-      variant="error"
-      title="Delete project"
-      subtitle="Permanently delete this project and all of its data. This action cannot be undone."
+      type="error"
+      title="Payment Failed"
+      subtitle="Your payment method was declined. Please update your billing information to continue using the service."
+      status="Payment failed on February 10, 2026"
       action={
-        <Button type="button" size="small" variant="error">
-          Delete project
-        </Button>
+        <>
+          <Button size="small" variant="secondary">
+            Contact Support
+          </Button>
+          <Button size="small">Update Payment Method</Button>
+        </>
       }
-    >
-      <Select
-        defaultValue="confirm"
-        aria-label="Confirm deletion target"
-      >
-        <option value="confirm">Type the project name to confirm…</option>
-      </Select>
-    </Fieldset>
+    />
+  );
+}
+
+function WarningTypeDemo() {
+  return (
+    <Fieldset
+      type="warning"
+      title="Trial Ending Soon"
+      subtitle="Your trial period will end in 3 days. Add a payment method to continue accessing premium features without interruption."
+      status="Trial expires: February 13, 2026"
+      action={
+        <>
+          <Button size="small" variant="secondary">
+            Remind Me Later
+          </Button>
+          <Button size="small">Add Payment Method</Button>
+        </>
+      }
+    />
   );
 }
 
@@ -315,55 +432,107 @@ function ErrorVariantDemo() {
 // Code strings
 // ============================================================================
 
-const defaultCode = `import { Fieldset } from '@/components/ui/Fieldset';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+const defaultCode = `<Fieldset
+  title="Account Settings"
+  subtitle="Manage your account preferences and settings"
+  status={<span>Need help? <a href="#">View documentation</a></span>}
+  action={<Button size="small">Save Changes</Button>}
+/>`;
 
-export function Example() {
-  return (
-    <Fieldset
-      id="project-name"
-      title="Project name"
-      subtitle="Used to identify your project on the dashboard and in deployment URLs."
-      status={<span>Slug auto-derived from name.</span>}
-      action={<Button size="small">Save</Button>}
-    >
-      <Input placeholder="Project name" />
-    </Fieldset>
-  );
-}`;
+const disabledCode = `<Fieldset
+  disabled
+  title="Transfer Project"
+  subtitle="Move this project to another team or account"
+  status="You need additional permissions to transfer projects."
+/>`;
 
-const noFooterCode = `import { Fieldset } from '@/components/ui/Fieldset';
-import { Input } from '@/components/ui/Input';
+const longContentCode = `<Fieldset
+  title="Privacy Policy"
+  subtitle="Lorem ipsum dolor sit amet…"
+  status="Last updated: March 10, 2025"
+  action={
+    <>
+      <Button size="small" variant="secondary">Decline</Button>
+      <Button size="small">Accept</Button>
+    </>
+  }
+/>`;
 
-export function Example() {
-  return (
-    <Fieldset
-      id="project-id"
-      title="Project ID"
-      subtitle="Used when interacting with the API. Read-only."
-    >
-      <Input value="prj_..." readOnly />
-    </Fieldset>
-  );
-}`;
+const multipleCode = `<div className="flex flex-col gap-6">
+  <Fieldset title="Personal Information" subtitle="…" status="…"
+    action={<Button size="small">Update</Button>} />
+  <Fieldset title="Security" subtitle="…" status="…"
+    action={<Button size="small">Change Password</Button>} />
+  <Fieldset disabled title="API Access" subtitle="…" status="…" />
+</div>`;
 
-const errorVariantCode = `import { Fieldset } from '@/components/ui/Fieldset';
-import { Button } from '@/components/ui/Button';
+const noFooterCode = `<Fieldset
+  title="Account Information"
+  subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+/>`;
 
-export function Example() {
-  return (
-    <Fieldset
-      id="delete-project"
-      variant="error"
-      title="Delete project"
-      subtitle="Permanently delete this project and all of its data."
-      action={<Button size="small" variant="error">Delete project</Button>}
-    >
-      {/* destructive content goes here */}
-    </Fieldset>
-  );
-}`;
+const noTitleCode = `<Fieldset
+  subtitle="This fieldset contains only a subtitle with no title."
+  status="Information only"
+/>`;
+
+const errorTextCode = `<Fieldset
+  title="API Configuration"
+  subtitle="Configure your API endpoint and authentication"
+  errorText="API key validation failed. Please check your credentials and try again."
+  status="Last checked: 5 minutes ago"
+  action={<Button size="small">Verify API Connection</Button>}
+/>`;
+
+const warningTextCode = `<Fieldset
+  title="Database Settings"
+  subtitle="Configure your database connection parameters"
+  warningText="Changing these settings will require a restart of your application."
+  status="Current status: Connected"
+  action={
+    <>
+      <Button size="small" variant="secondary">Cancel</Button>
+      <Button size="small">Apply Changes</Button>
+    </>
+  }
+/>`;
+
+const disabledWallCode = `<Fieldset
+  disabled
+  title="Advanced Features"
+  subtitle="Access premium capabilities and tools"
+  status="Upgrade to a Pro plan to access these features."
+>
+  <div className="rounded border border-borderDefault p-4">
+    <p>This content is behind a disabled wall.</p>
+  </div>
+</Fieldset>`;
+
+const errorTypeCode = `<Fieldset
+  type="error"
+  title="Payment Failed"
+  subtitle="Your payment method was declined."
+  status="Payment failed on February 10, 2026"
+  action={
+    <>
+      <Button size="small" variant="secondary">Contact Support</Button>
+      <Button size="small">Update Payment Method</Button>
+    </>
+  }
+/>`;
+
+const warningTypeCode = `<Fieldset
+  type="warning"
+  title="Trial Ending Soon"
+  subtitle="Your trial period will end in 3 days."
+  status="Trial expires: February 13, 2026"
+  action={
+    <>
+      <Button size="small" variant="secondary">Remind Me Later</Button>
+      <Button size="small">Add Payment Method</Button>
+    </>
+  }
+/>`;
 
 // ============================================================================
 // Page
@@ -386,179 +555,133 @@ export default function FieldsetComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-4 xl:mb-6">
-          Title + subtitle + content slot + footer with status text on
-          the left and an action on the right. The standard Vercel
-          settings-card pattern. When an{" "}
-          <code className="inline-code">id</code> is set, the title wraps
-          in an anchor link for deep-linking.
-        </p>
-        <CodePreview componentCode={defaultCode}>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={defaultCode}>
           <DefaultDemo />
         </CodePreview>
+        </div>
       </Section>
 
-      {/* No footer */}
+      {/* Disabled */}
       <Section>
-        <SectionHeader id="no-footer" onCopyLink={showToast}>
-          Without footer
+        <SectionHeader id="disabled" onCopyLink={showToast}>
+          Disabled
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-4 xl:mb-6">
-          Omit <code className="inline-code">status</code> and{" "}
-          <code className="inline-code">action</code> for read-only or
-          informational cards. The footer row collapses entirely — no
-          extra padding to manage.
-        </p>
-        <CodePreview componentCode={noFooterCode}>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={disabledCode}>
+          <DisabledDemo />
+        </CodePreview>
+        </div>
+      </Section>
+
+      {/* With Long Content */}
+      <Section>
+        <SectionHeader id="with-long-content" onCopyLink={showToast}>
+          With Long Content
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={longContentCode}>
+          <LongContentDemo />
+        </CodePreview>
+        </div>
+      </Section>
+
+      {/* Multiple Fieldsets */}
+      <Section>
+        <SectionHeader id="multiple-fieldsets" onCopyLink={showToast}>
+          Multiple Fieldsets
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={multipleCode}>
+          <MultipleDemo />
+        </CodePreview>
+        </div>
+      </Section>
+
+      {/* Without Footer */}
+      <Section>
+        <SectionHeader id="without-footer" onCopyLink={showToast}>
+          Without Footer
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={noFooterCode}>
           <NoFooterDemo />
         </CodePreview>
+        </div>
       </Section>
 
-      {/* Error variant */}
+      {/* Without Title */}
       <Section>
-        <SectionHeader id="error-variant" onCopyLink={showToast}>
-          Error variant
+        <SectionHeader id="without-title" onCopyLink={showToast}>
+          Without Title
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-4 xl:mb-6">
-          Pass <code className="inline-code">variant=&quot;error&quot;</code>
-          {" "}for destructive sections — flips both the outer border and
-          the footer divider to <code className="inline-code">--ds-red-700</code>{" "}
-          so the danger zone reads immediately. Pair with a Button{" "}
-          <code className="inline-code">variant=&quot;error&quot;</code> in the
-          action slot.
-        </p>
-        <CodePreview componentCode={errorVariantCode}>
-          <ErrorVariantDemo />
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={noTitleCode}>
+          <NoTitleDemo />
         </CodePreview>
+        </div>
       </Section>
 
-      {/* Best Practices */}
+      {/* With Error Text */}
       <Section>
-        <SectionHeader id="best-practices" onCopyLink={showToast}>
-          Best Practices
+        <SectionHeader id="with-error-text" onCopyLink={showToast}>
+          With Error Text
         </SectionHeader>
-
-        <h3
-          id="when-to-use"
-          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
-        >
-          When to use
-        </h3>
-        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-          <li>
-            One Fieldset per setting on settings pages — stack vertically
-            with <code className="inline-code">gap-6</code> /{" "}
-            <code className="inline-code">gap-8</code>. The deep-link
-            anchor on each title makes URLs like{" "}
-            <em>/admin/settings#timezone</em> work out of the box.
-          </li>
-          <li>
-            Reach for <ComponentRef name="Panel Card" /> instead when the
-            card is showing data rather than holding an editable setting
-            — Fieldset&apos;s footer / save-button affordance is wasted
-            on read-only displays.
-          </li>
-          <li>
-            Use the <code className="inline-code">error</code> variant
-            sparingly — reserve it for sections whose action is truly
-            destructive (delete, transfer ownership). Don&apos;t use it
-            to flag validation errors on the field itself; the Input&apos;s{" "}
-            <code className="inline-code">error</code> prop is for that.
-          </li>
-        </ul>
-
-        <h3
-          id="behavior"
-          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
-        >
-          Behavior
-        </h3>
-        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-          <li>
-            Footer renders only when{" "}
-            <code className="inline-code">status</code> or{" "}
-            <code className="inline-code">action</code> (or both) is
-            passed. With neither, the card has no footer row.
-          </li>
-          <li>
-            Title becomes a deep-linkable anchor when{" "}
-            <code className="inline-code">id</code> is set. The anchor
-            icon appears on hover / focus-within and copies the section
-            URL to the clipboard. Without{" "}
-            <code className="inline-code">id</code>, the title renders as
-            a plain span.
-          </li>
-          <li>
-            Background is <code className="inline-code">--ds-background-100</code>{" "}
-            on the body and{" "}
-            <code className="inline-code">--ds-background-200</code> on
-            the footer — same two-surface treatment the consent
-            dashboard&apos;s tile row uses, so settings pages and
-            dashboards visually compose in one app.
-          </li>
-        </ul>
-
-        <h3
-          id="content"
-          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
-        >
-          Content
-        </h3>
-        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-          <li>
-            <code className="inline-code">title</code> is a short noun
-            phrase — <em>Project name</em>, <em>Website timezone</em>,{" "}
-            <em>Delete project</em>. Sentence case, no trailing
-            punctuation.
-          </li>
-          <li>
-            <code className="inline-code">subtitle</code> explains what
-            the setting controls in one sentence. Don&apos;t restate the
-            title; if the subtitle is just <em>Set the project name</em>,
-            drop it.
-          </li>
-          <li>
-            <code className="inline-code">status</code> is for ancillary
-            text — &quot;Learn more&quot; links, currently-active value,
-            or pricing prompts. Avoid putting validation errors here;
-            those belong on the field.
-          </li>
-          <li>
-            <code className="inline-code">action</code> is typically one
-            Button. Don&apos;t put two-or-more actions side by side here
-            — the row becomes visually noisy. If a setting needs
-            multiple actions, split into two Fieldsets.
-          </li>
-        </ul>
-
-        <h3
-          id="accessibility"
-          className="text-heading-20 text-textDefault mt-8 scroll-mt-32"
-        >
-          Accessibility
-        </h3>
-        <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-          <li>
-            The title renders as <code className="inline-code">&lt;h2&gt;</code>,
-            so the page&apos;s heading hierarchy starts at h2 inside each
-            card. Use the surrounding page&apos;s shell header (e.g.{" "}
-            <em>AdminPageHeader</em>) as the implicit h1.
-          </li>
-          <li>
-            Anchor icon on the title is{" "}
-            <code className="inline-code">aria-hidden</code> — purely
-            decorative. The full anchor element is keyboard-focusable
-            because the title link is itself a focusable element.
-          </li>
-          <li>
-            <code className="inline-code">variant=&quot;error&quot;</code>{" "}
-            is visual only. Communicate the destructive nature in the
-            copy too (<em>&quot;This action cannot be undone&quot;</em>)
-            — colour alone isn&apos;t enough for SR users or anyone with
-            colour-vision differences.
-          </li>
-        </ul>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={errorTextCode}>
+          <ErrorTextDemo />
+        </CodePreview>
+        </div>
       </Section>
+
+      {/* With Warning Text */}
+      <Section>
+        <SectionHeader id="with-warning-text" onCopyLink={showToast}>
+          With Warning Text
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={warningTextCode}>
+          <WarningTextDemo />
+        </CodePreview>
+        </div>
+      </Section>
+
+      {/* With Disabled Wall */}
+      <Section>
+        <SectionHeader id="with-disabled-wall" onCopyLink={showToast}>
+          With Disabled Wall
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={disabledWallCode}>
+          <DisabledWallDemo />
+        </CodePreview>
+        </div>
+      </Section>
+
+      {/* Error Type */}
+      <Section>
+        <SectionHeader id="error-type" onCopyLink={showToast}>
+          Error Type
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={errorTypeCode}>
+          <ErrorTypeDemo />
+        </CodePreview>
+        </div>
+      </Section>
+
+      {/* Warning Type */}
+      <Section>
+        <SectionHeader id="warning-type" onCopyLink={showToast}>
+          Warning Type
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={warningTypeCode}>
+          <WarningTypeDemo />
+        </CodePreview>
+        </div>
+      </Section>
+
     </>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { forwardRef, type ReactNode, type HTMLAttributes } from "react";
+import { Skeleton } from "./Skeleton";
 
 // ============================================================================
 // Types
@@ -22,11 +23,15 @@ export interface EntityContentProps {
   subtitle?: string;
   /** Thumbnail element placed before the text (e.g. Avatar) */
   thumbnail?: ReactNode;
+  /** Extra classes on the left-column wrapper */
+  className?: string;
 }
 
 export interface EntityFieldProps {
   /** Content displayed in the right column (actions, status text, etc.) */
   children: ReactNode;
+  /** Extra classes on the right-column wrapper */
+  className?: string;
 }
 
 export interface EntityListProps extends HTMLAttributes<HTMLUListElement> {
@@ -50,20 +55,30 @@ export interface SkeletonProps {
 // ============================================================================
 
 /** Text content block with title + optional subtitle */
-function EntityContent({ title, subtitle, thumbnail }: EntityContentProps) {
+function EntityContent({
+  title,
+  subtitle,
+  thumbnail,
+  className = "",
+}: EntityContentProps) {
   return (
-    <div className="flex flex-1 flex-row items-center gap-4 min-w-0">
+    <div
+      className={`flex flex-1 flex-row items-center gap-4 min-w-0 ${className}`}
+    >
       {thumbnail && <div className="flex-shrink-0">{thumbnail}</div>}
       <div className="flex flex-1 flex-col min-w-0">
+        {/* text-copy-14 = Geist's 14/20/ls-0; weight 600 is set inline because
+            our @layer order lets text-copy-14's font-weight:400 beat a
+            font-semibold utility (the type token carries no 600 variant here). */}
         <p
-          className="truncate m-0 text-[14px] leading-[20px] font-semibold"
-          style={{ color: "hsl(var(--color-textDefault))" }}
+          className="truncate m-0 text-copy-14"
+          style={{ color: "hsl(var(--color-textDefault))", fontWeight: 600 }}
         >
           {title}
         </p>
         {subtitle && (
           <p
-            className="truncate m-0 text-[14px] leading-[20px]"
+            className="truncate m-0 text-copy-14"
             style={{ color: "hsl(var(--color-textSubtle))" }}
           >
             {subtitle}
@@ -75,9 +90,11 @@ function EntityContent({ title, subtitle, thumbnail }: EntityContentProps) {
 }
 
 /** Right-side field for actions or metadata */
-function EntityField({ children }: EntityFieldProps) {
+function EntityField({ children, className = "" }: EntityFieldProps) {
   return (
-    <div className="flex flex-shrink-0 flex-row items-center gap-4">
+    <div
+      className={`flex flex-shrink-0 flex-row items-center gap-4 ${className}`}
+    >
       {children}
     </div>
   );
@@ -104,7 +121,7 @@ function EntityList({
 
   return (
     <ul
-      className={`list-none m-0 p-0 ${dividers ? "divide-y divide-borderDefault" : ""} ${className}`}
+      className={`list-none m-0 p-0 ${dividers ? "divide-y divide-[var(--ds-gray-200)]" : ""} ${className}`}
       style={{ ...borderedStyles, ...style }}
       {...rest}
     >
@@ -113,18 +130,9 @@ function EntityList({
   );
 }
 
-/** Skeleton loading placeholder */
+/** Skeleton loading placeholder — Geist shimmer via the shared Skeleton */
 function EntitySkeleton({ width = "100%", height = 20 }: SkeletonProps) {
-  return (
-    <span
-      className="block rounded animate-pulse"
-      style={{
-        width: typeof width === "number" ? `${width}px` : width,
-        minHeight: `${height}px`,
-        backgroundColor: "hsl(var(--color-borderSubtle))",
-      }}
-    />
-  );
+  return <Skeleton width={width} height={height} />;
 }
 
 // ============================================================================
@@ -148,7 +156,7 @@ const Entity = forwardRef<HTMLElement, EntityProps>(
         <button
           ref={ref as React.Ref<HTMLButtonElement>}
           type="button"
-          className={`flex flex-col items-stretch w-full text-left bg-transparent border-none outline-none transition-colors hover:bg-[var(--ds-gray-100)] ${className}`}
+          className={`flex flex-col items-stretch w-full text-left bg-transparent border-0 outline-none transition-colors hover:bg-[var(--ds-gray-100)] ${className}`}
           style={{ padding: `${padding}px`, cursor: "pointer", ...style }}
           {...(rest as HTMLAttributes<HTMLButtonElement>)}
         >

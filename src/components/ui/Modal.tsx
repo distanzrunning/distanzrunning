@@ -28,6 +28,9 @@ interface ModalContextValue {
    * it here and let the Header own the spacing.
    */
   inHeader: boolean;
+  /** True when rendering inside a sticky <Modal.Header> — Geist shrinks the
+   *  title to 16px (mobile) / 20px (desktop) in that band. */
+  stickyHeader: boolean;
 }
 
 const ModalContext = createContext<ModalContextValue | null>(null);
@@ -74,22 +77,21 @@ function ModalTitle({
   children: ReactNode;
   className?: string;
 }) {
-  const { titleId } = useModalContext("Modal.Title");
+  const { titleId, stickyHeader } = useModalContext("Modal.Title");
   return (
     <h3
       id={titleId}
-      className={className}
+      // Non-sticky: the title is literally Geist's text-heading-24 token
+      // (24/32/-0.96px/600). Inside a sticky header Geist shrinks it to
+      // text-base (16) / sm:text-xl (20) with leading-6 and pb-0 — our
+      // text-base/text-xl are remapped, so the sticky size is explicit.
+      className={`${stickyHeader ? "ds-modal-title-sticky" : "text-heading-24"} ${className ?? ""}`}
       style={{
         color: "var(--ds-gray-1000)",
-        fontSize: 24,
-        fontWeight: 600,
-        lineHeight: "32px",
-        letterSpacing: "-0.029375rem",
-        // Title sits flush against the next element so it groups
-        // tightly with a following Modal.P. The bottom rhythm to the
-        // body is owned by Modal.P (or Modal.Header's gap when
-        // wrapped).
         margin: 0,
+        ...(stickyHeader
+          ? { fontWeight: 600, letterSpacing: "-0.04em", paddingBottom: 0 }
+          : { paddingBottom: 4 }),
       }}
     >
       {children}
@@ -107,12 +109,9 @@ function ModalP({
   const { inHeader } = useModalContext("Modal.P");
   return (
     <div
-      className={className}
+      className={`text-copy-16 ${className ?? ""}`}
       style={{
         color: "var(--ds-gray-1000)",
-        fontSize: 16,
-        lineHeight: "24px",
-        fontWeight: 400,
         // Inside <Modal.Header>, the header's `gap` owns spacing.
         // Standalone, the paragraph needs its own bottom rhythm so the
         // body content below sits 24px clear.
@@ -139,7 +138,7 @@ function ModalHeader({
 }) {
   const parent = useModalContext("Modal.Header");
   return (
-    <ModalContext.Provider value={{ ...parent, inHeader: true }}>
+    <ModalContext.Provider value={{ ...parent, inHeader: true, stickyHeader: sticky }}>
       <header
         className={className}
         style={
@@ -151,15 +150,16 @@ function ModalHeader({
                 display: "flex",
                 flexDirection: "column",
                 gap: 10,
-                margin: "0 -24px 24px",
-                padding: "20px 24px",
+                margin: "0 calc(-1 * var(--modal-padding)) var(--modal-padding)",
+                padding: "20px var(--modal-padding)",
                 background: "var(--ds-modal-section-bg)",
                 borderBottom: "1px solid var(--ds-gray-alpha-400)",
               }
             : {
                 display: "flex",
                 flexDirection: "column",
-                gap: 12,
+                // Geist: the title's own `pb-1` (4px) owns the gap to the
+                // subtitle; the header just adds `mb-6` (24px) to the body.
                 marginBottom: 24,
                 zIndex: 10,
               }
@@ -193,15 +193,26 @@ function ModalFooter({
   );
 }
 
-function ModalInset({ children }: { children: ReactNode }) {
+function ModalInset({
+  children,
+  __flushFooter,
+}: {
+  children: ReactNode;
+  /** Internal: set by Modal when this inset is the last child before the
+   *  footer, so it drops its bottom border and the footer's top border is
+   *  the single divider (Geist: last-of-type:border-b-0). */
+  __flushFooter?: boolean;
+}) {
   return (
     <div
       style={{
         background: "var(--ds-modal-section-bg)",
         borderTop: "1px solid var(--ds-gray-alpha-400)",
-        borderBottom: "1px solid var(--ds-gray-alpha-400)",
-        margin: "0 -24px",
-        padding: 24,
+        borderBottom: __flushFooter
+          ? "none"
+          : "1px solid var(--ds-gray-alpha-400)",
+        margin: "0 calc(-1 * var(--modal-padding))",
+        padding: "var(--modal-padding)",
       }}
     >
       {children}
@@ -234,7 +245,8 @@ export function Modal({
   // Split children: Modal.Footer renders outside the scrollable body,
   // everything else stays inside. We also flag whether a sticky header
   // is in play so the body can drop its top padding.
-  const { bodyChildren, footerChild, hasStickyHeader } = React.useMemo(() => {
+  const { bodyChildren, footerChild, hasStickyHeader, lastChildIsInset } =
+    React.useMemo(() => {
     let footer: ReactNode = null;
     let stickyHeader = false;
     const rest: ReactNode[] = [];
@@ -251,7 +263,18 @@ export function Modal({
       }
       rest.push(child);
     });
-    return { bodyChildren: rest, footerChild: footer, hasStickyHeader: stickyHeader };
+    // When the last body child is a full-bleed Inset, the body's bottom
+    // padding would leave a gap before the footer; flag it so we can drop
+    // that padding and let the inset meet the footer (Geist).
+    const lastChild = rest[rest.length - 1];
+    const lastChildIsInset =
+      React.isValidElement(lastChild) && lastChild.type === ModalInset;
+    return {
+      bodyChildren: rest,
+      footerChild: footer,
+      hasStickyHeader: stickyHeader,
+      lastChildIsInset,
+    };
   }, [children]);
 
   // Respect the user's OS-level "reduce motion" preference. When true we
@@ -379,7 +402,7 @@ export function Modal({
   if (!mounted || typeof document === "undefined") return null;
 
   return createPortal(
-    <ModalContext.Provider value={{ titleId, inHeader: false }}>
+    <ModalContext.Provider value={{ titleId, inHeader: false, stickyHeader: false }}>
       {/* Backdrop. backdrop-filter: blur frosts the page behind
           the modal so even when the colour-contrast is subtle
           (notably dark mode, where a pure-black scrim on a
@@ -431,11 +454,16 @@ export function Modal({
           tabIndex={-1}
           className={`relative w-full mx-4 ${className}`}
           style={{
+            // Geist single-sources the modal geometry: --modal-padding feeds
+            // the body padding AND the negative-margin bleeds (inset, sticky
+            // header) so they can never drift; --modal-radius the corners.
+            ["--modal-padding" as string]: "24px",
+            ["--modal-radius" as string]: "12px",
             display: "flex",
             flexDirection: "column",
             maxWidth,
             maxHeight: "min(800px, 80vh)",
-            borderRadius: 12,
+            borderRadius: "var(--modal-radius)",
             background: "var(--ds-modal-panel-bg)",
             boxShadow: "var(--ds-shadow-modal)",
             color: "var(--ds-gray-1000)",
@@ -446,18 +474,39 @@ export function Modal({
             transition: `opacity ${effectiveDuration}ms ${TIMING}, transform ${effectiveDuration}ms ${TIMING}`,
           }}
         >
-          {/* Modal body */}
+          {/* Modal body — Geist sets text-copy-16 as the body's base size. */}
           <div
+            className="text-copy-16"
             style={{
-              padding: hasStickyHeader ? "0 24px 24px" : 24,
+              padding: `${
+                hasStickyHeader ? "0" : "var(--modal-padding)"
+              } var(--modal-padding) ${
+                lastChildIsInset && footerChild ? "0" : "var(--modal-padding)"
+              }`,
               overflowX: "hidden",
               overflowY: "auto",
               position: "relative",
-              borderTopLeftRadius: hasStickyHeader ? 12 : undefined,
-              borderTopRightRadius: hasStickyHeader ? 12 : undefined,
+              borderTopLeftRadius: hasStickyHeader
+                ? "var(--modal-radius)"
+                : undefined,
+              borderTopRightRadius: hasStickyHeader
+                ? "var(--modal-radius)"
+                : undefined,
             }}
           >
-            {bodyChildren}
+            {lastChildIsInset && footerChild
+              ? bodyChildren.map((child, i) =>
+                  i === bodyChildren.length - 1 &&
+                  React.isValidElement(child)
+                    ? React.cloneElement(
+                        child as React.ReactElement<{
+                          __flushFooter?: boolean;
+                        }>,
+                        { __flushFooter: true },
+                      )
+                    : child,
+                )
+              : bodyChildren}
           </div>
 
           {/* Footer (outside scrollable body) */}

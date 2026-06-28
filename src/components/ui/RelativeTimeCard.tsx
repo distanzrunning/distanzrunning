@@ -145,8 +145,8 @@ function TimezoneBadge({ label }: { label: string }) {
       style={{ background: "var(--ds-gray-200)" }}
     >
       <span
-        className="font-mono text-xs leading-none"
-        style={{ color: "var(--ds-gray-900)", fontSize: 12 }}
+        className="text-[12px] font-mono"
+        style={{ color: "var(--ds-gray-900)" }}
       >
         {label}
       </span>
@@ -178,7 +178,7 @@ function RelativeTimeCardContent({ date }: { date: Date }) {
       {/* Relative time */}
       <div className="flex flex-col gap-3">
         <span
-          className="tabular-nums text-[13px] leading-5"
+          className="tabular-nums text-[13px]"
           style={{ color: "var(--ds-gray-900)" }}
         >
           {relativeTime}
@@ -191,11 +191,11 @@ function RelativeTimeCardContent({ date }: { date: Date }) {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-1.5">
             <TimezoneBadge label="UTC" />
-            <span className="text-[13px] leading-5">{utcDate}</span>
+            <span className="text-[13px]">{utcDate}</span>
           </div>
           <span
-            className="tabular-nums font-mono text-xs"
-            style={{ color: "var(--ds-gray-900)", fontSize: 12 }}
+            className="tabular-nums text-[12px] font-mono"
+            style={{ color: "var(--ds-gray-900)" }}
           >
             {utcTime}
           </span>
@@ -205,11 +205,11 @@ function RelativeTimeCardContent({ date }: { date: Date }) {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-1.5">
             <TimezoneBadge label={tzLabel} />
-            <span className="text-[13px] leading-5">{localDate}</span>
+            <span className="text-[13px]">{localDate}</span>
           </div>
           <span
-            className="tabular-nums font-mono text-xs"
-            style={{ color: "var(--ds-gray-900)", fontSize: 12 }}
+            className="tabular-nums text-[12px] font-mono"
+            style={{ color: "var(--ds-gray-900)" }}
           >
             {localTime}
           </span>

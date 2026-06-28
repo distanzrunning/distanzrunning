@@ -40,17 +40,21 @@ export interface KbdProps {
 // ============================================================================
 
 const sizeStyles: Record<KbdSize, React.CSSProperties> = {
+  // Geist default: min-h-6, min-w-[geist-gap] (24), px-1.5, ml-1, rounded-sm.
   default: {
-    minHeight: 26,
-    minWidth: 26,
+    minHeight: 24,
+    minWidth: 24,
     padding: "0 6px",
-    borderRadius: 6,
+    marginLeft: 4,
+    borderRadius: 4,
     fontSize: 14,
   },
+  // Geist small: h-5 / min-w-5 / min-h-5 (20), px-1, ml-0.5, rounded-sm.
   small: {
     minHeight: 20,
     minWidth: 20,
     padding: "0 4px",
+    marginLeft: 2,
     borderRadius: 4,
     fontSize: 12,
   },
@@ -146,11 +150,11 @@ export const Kbd = forwardRef<HTMLElement, KbdProps>(
       justifyContent: "center",
       alignItems: "center",
       boxShadow: "0 0 0 1px var(--ds-gray-alpha-400)",
-      fontWeight: 500,
-      color: "hsl(var(--color-textSubtle))",
+      fontWeight: 400,
+      color: "var(--ds-gray-1000)",
       fontFamily: "inherit",
       background: "hsl(var(--color-surface))",
-      lineHeight: "normal",
+      lineHeight: "1.7em",
       ...sizeStyle,
       ...style,
     };

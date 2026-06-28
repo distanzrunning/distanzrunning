@@ -38,7 +38,7 @@ export interface ToggleProps {
   thumbIcon?: React.ReactNode;
   /** Override the checked-state track color (defaults to `--ds-blue-700`). */
   checkedColor?: string;
-  /** Override the unchecked-state track color (defaults to `--ds-gray-300`). */
+  /** Override the unchecked-state track color (defaults to `--ds-gray-400`). */
   uncheckedColor?: string;
   /** Accessible name override when no visible label is present */
   "aria-label"?: string;
@@ -71,6 +71,7 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     const [internalChecked, setInternalChecked] = useState(defaultChecked);
     const isControlled = controlledChecked !== undefined;
     const isChecked = isControlled ? controlledChecked : internalChecked;
+    const [focusVisible, setFocusVisible] = useState(false);
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,8 +108,9 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     let thumbShadow: string;
 
     if (disabled) {
-      trackBg = isChecked ? "hsl(var(--color-textDisabled))" : "hsl(var(--color-borderSubtle))";
-      trackBorder = isChecked ? "hsl(var(--color-textDisabled))" : "hsl(var(--color-borderSubtle))";
+      // Geist disabled: unchecked track gray-200, checked track gray-500.
+      trackBg = isChecked ? "var(--ds-gray-500)" : "var(--ds-gray-200)";
+      trackBorder = isChecked ? "var(--ds-gray-500)" : "var(--ds-gray-200)";
       // Knob stays light in both themes (like the Slider thumb) so it
       // always reads as the raised element above the track — disabled is
       // conveyed by the muted track, not by darkening the knob.
@@ -117,8 +119,8 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     } else {
       trackBg = isChecked
         ? checkedColor || "var(--ds-blue-700)"
-        : uncheckedColor || "hsl(var(--color-borderSubtle))";
-      trackBorder = "var(--ds-gray-alpha-200)";
+        : uncheckedColor || "var(--ds-gray-400)";
+      trackBorder = "var(--ds-gray-alpha-300)";
       thumbBg = "#FFFFFF"; // white knob in both themes — pops above any track
       thumbShadow =
         "rgba(0, 0, 0, 0.12) 0px 0px 4px 0px, rgba(0, 0, 0, 0.1) 0px 1px 1px 0px";
@@ -149,6 +151,8 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       boxSizing: "border-box",
       transition:
         "background 0.15s cubic-bezier(0, 0, 0.2, 1), border-color 0.15s cubic-bezier(0, 0, 0.2, 1)",
+      // Geist focus: a focus-visible ring on the track (--ds-focus-ring halo).
+      boxShadow: focusVisible ? "var(--ds-focus-ring)" : undefined,
       cursor: disabled ? "not-allowed" : "pointer",
       flexShrink: 0,
     };
@@ -167,8 +171,7 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       transform: isChecked
         ? `translateX(${thumbTranslate}px) translateY(-${thumbTop}px)`
         : `translateX(0px) translateY(-${thumbTop}px)`,
-      transition:
-        "transform 0.15s cubic-bezier(0, 0, 0.2, 1), background 0.15s cubic-bezier(0, 0, 0.2, 1)",
+      transition: "transform 0.15s ease-in-out, background 0.15s ease-in-out",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -186,9 +189,10 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     };
 
     const labelTextStyle: React.CSSProperties = {
-      fontSize: 14,
-      lineHeight: "20px",
-      color: "hsl(var(--color-textDefault))",
+      fontSize: 12,
+      lineHeight: "16px",
+      fontWeight: 500,
+      color: "hsl(var(--color-textSubtle))",
       textTransform: labelCasing === "title" ? "capitalize" : "none",
     };
 
@@ -257,6 +261,8 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
           checked={isChecked}
           onChange={handleChange}
           disabled={disabled}
+          onFocus={(e) => setFocusVisible(e.target.matches(":focus-visible"))}
+          onBlur={() => setFocusVisible(false)}
           style={srOnlyStyle}
         />
         {content}

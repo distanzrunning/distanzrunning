@@ -224,7 +224,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -316,14 +316,43 @@ function DefaultSizeExample() {
   return <Spinner />;
 }`;
 
-const customSizesCode = `import { Spinner } from '@/components/ui/Spinner';
+const sizesCode = `import { Spinner } from '@/components/ui/Spinner';
 
-function CustomSizesExample() {
+function SizesExample() {
   return (
-    <div className="flex flex-row items-center gap-8">
+    <div className="flex items-end gap-4">
       <Spinner size={12} />
+      <Spinner size={16} />
+      <Spinner size={20} />
+      <Spinner size={24} />
       <Spinner size={32} />
       <Spinner size={40} />
+      <Spinner size={56} />
+    </div>
+  );
+}`;
+
+const colorsCode = `import { Spinner } from '@/components/ui/Spinner';
+
+function ColorsExample() {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-4">
+        <span className="w-24">Default:</span>
+        <Spinner />
+      </div>
+      <div className="flex items-center gap-4">
+        <span className="w-24">Red:</span>
+        <Spinner className="text-red-700" />
+      </div>
+      <div className="flex items-center gap-4">
+        <span className="w-24">Green:</span>
+        <Spinner className="text-green-700" />
+      </div>
+      <div className="flex items-center gap-4">
+        <span className="w-24">Blue:</span>
+        <Spinner className="text-blue-700" />
+      </div>
     </div>
   );
 }`;
@@ -336,12 +365,39 @@ function DefaultSizeDemo() {
   return <Spinner />;
 }
 
-function CustomSizesDemo() {
+function SizesDemo() {
   return (
-    <div className="flex flex-row items-center gap-8">
+    <div className="flex items-end gap-4">
       <Spinner size={12} />
+      <Spinner size={16} />
+      <Spinner size={20} />
+      <Spinner size={24} />
       <Spinner size={32} />
       <Spinner size={40} />
+      <Spinner size={56} />
+    </div>
+  );
+}
+
+function ColorsDemo() {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-4">
+        <span className="w-24">Default:</span>
+        <Spinner />
+      </div>
+      <div className="flex items-center gap-4">
+        <span className="w-24">Red:</span>
+        <Spinner className="text-red-700" />
+      </div>
+      <div className="flex items-center gap-4">
+        <span className="w-24">Green:</span>
+        <Spinner className="text-green-700" />
+      </div>
+      <div className="flex items-center gap-4">
+        <span className="w-24">Blue:</span>
+        <Spinner className="text-blue-700" />
+      </div>
     </div>
   );
 }
@@ -367,12 +423,23 @@ export default function SpinnerComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="custom-sizes" onCopyLink={showToast}>
-          Custom sizes
+        <SectionHeader id="sizes" onCopyLink={showToast}>
+          Sizes
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={customSizesCode}>
-            <CustomSizesDemo />
+          <CodePreview componentCode={sizesCode}>
+            <SizesDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="colors" onCopyLink={showToast}>
+          Colors
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={colorsCode}>
+            <ColorsDemo />
           </CodePreview>
         </div>
       </Section>

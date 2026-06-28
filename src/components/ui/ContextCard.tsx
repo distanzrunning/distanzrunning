@@ -10,7 +10,7 @@ import { createContext, useContext, useId, type ReactNode } from "react";
 export interface ContextCardProps {
   /** Wrap triggers so they share the same delay defaults */
   children: ReactNode;
-  /** Delay in ms before the card opens on hover. Defaults to 200. */
+  /** Delay in ms before the card opens on hover. Defaults to 150. */
   delayDuration?: number;
   /** Delay in ms before the card closes on cursor exit. Defaults to 150. */
   closeDelay?: number;
@@ -23,6 +23,8 @@ interface ContextCardTriggerProps {
   content: ReactNode;
   /** Which side of the trigger the card appears on */
   side?: "top" | "bottom" | "left" | "right";
+  /** Alignment of the card against the trigger */
+  align?: "start" | "center" | "end";
   /** Distance in px between trigger and card */
   sideOffset?: number;
   /** Override the open delay for this trigger */
@@ -38,7 +40,7 @@ interface ContextCardTriggerProps {
 const ContextCardDelaysContext = createContext<{
   openDelay: number;
   closeDelay: number;
-}>({ openDelay: 200, closeDelay: 150 });
+}>({ openDelay: 150, closeDelay: 150 });
 
 // ============================================================================
 // Styles
@@ -53,79 +55,49 @@ const CONTEXT_CARD_CSS = `
     line-height: 20px;
     max-width: max-content;
     background: hsl(var(--color-surface));
+    background-clip: padding-box;
     color: var(--ds-gray-1000);
-    box-shadow: var(--ds-shadow-tooltip);
-    will-change: transform, opacity;
-    animation-duration: 250ms;
-    animation-timing-function: cubic-bezier(0.29, -0.31, -0.05, 0.96);
+    /* Geist: the shadow-tooltip hairline + a 1px background ring around it */
+    box-shadow: var(--ds-shadow-tooltip), 0 0 0 1px var(--ds-background-100);
+    /* Geist's dedicated stem outline (not gray-400) */
+    --ds-context-card-tip-stroke: #dbdbdb;
+    will-change: opacity;
+    /* Geist: a pure 150ms opacity fade, no directional slide */
+    animation-duration: 150ms;
+    animation-timing-function: cubic-bezier(0.3, 0.57, 0.07, 0.95);
   }
 
-  .ds-context-card[data-state="open"][data-side="top"] {
-    animation-name: ds-context-card-slide-down-fade;
-  }
-  .ds-context-card[data-state="open"][data-side="bottom"] {
-    animation-name: ds-context-card-slide-up-fade;
-  }
-  .ds-context-card[data-state="open"][data-side="left"] {
-    animation-name: ds-context-card-slide-right-fade;
-  }
-  .ds-context-card[data-state="open"][data-side="right"] {
-    animation-name: ds-context-card-slide-left-fade;
+  .dark .ds-context-card {
+    --ds-context-card-tip-stroke: #252525;
   }
 
-  @keyframes ds-context-card-slide-up-fade {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
+  .ds-context-card[data-state="open"] {
+    animation-name: ds-context-card-fade-in;
   }
-  @keyframes ds-context-card-slide-down-fade {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes ds-context-card-slide-left-fade {
-    from { opacity: 0; transform: translateX(4px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-  @keyframes ds-context-card-slide-right-fade {
-    from { opacity: 0; transform: translateX(-4px); }
-    to { opacity: 1; transform: translateX(0); }
+  .ds-context-card[data-state="closed"] {
+    animation-name: ds-context-card-fade-out;
   }
 
+  @keyframes ds-context-card-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes ds-context-card-fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  /* Radix positions + rotates the stem so it always points at the trigger,
+     for every side and align value. We only style the glyph here. */
   .ds-context-card-arrow {
-    position: absolute;
-    width: 14px;
-    height: 7px;
     pointer-events: none;
   }
 
   .ds-context-card-arrow path {
     fill: hsl(var(--color-surface));
-    stroke: var(--ds-gray-400);
+    stroke: var(--ds-context-card-tip-stroke);
     stroke-width: 1px;
     shape-rendering: geometricPrecision;
-  }
-
-  /* Always center the arrow on the card edge, regardless of trigger position */
-  .ds-context-card[data-side="top"] .ds-context-card-arrow {
-    bottom: -7px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .ds-context-card[data-side="bottom"] .ds-context-card-arrow {
-    top: -7px;
-    left: 50%;
-    transform: translateX(-50%) rotate(180deg);
-  }
-  .ds-context-card[data-side="left"] .ds-context-card-arrow {
-    right: -10.5px;
-    top: 50%;
-    transform: translateY(-50%) rotate(-90deg);
-    transform-origin: center;
-  }
-  .ds-context-card[data-side="right"] .ds-context-card-arrow {
-    left: -10.5px;
-    top: 50%;
-    transform: translateY(-50%) rotate(90deg);
-    transform-origin: center;
   }
 `;
 
@@ -161,6 +133,7 @@ function ContextCardTrigger({
   children,
   content,
   side = "top",
+  align = "center",
   sideOffset = 8,
   openDelay,
   closeDelay,
@@ -187,10 +160,12 @@ function ContextCardTrigger({
           className="ds-context-card"
           side={side}
           sideOffset={sideOffset}
-          align="center"
+          align={align}
         >
           {content}
-          <GeistArrow />
+          <HoverCard.Arrow asChild width={14} height={7}>
+            <GeistArrow />
+          </HoverCard.Arrow>
         </HoverCard.Content>
       </HoverCard.Portal>
     </HoverCard.Root>
@@ -203,7 +178,7 @@ function ContextCardTrigger({
 
 export function ContextCard({
   children,
-  delayDuration = 200,
+  delayDuration = 150,
   closeDelay = 150,
 }: ContextCardProps) {
   return (

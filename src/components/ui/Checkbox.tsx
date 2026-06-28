@@ -65,7 +65,8 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 
     const getBoxClasses = () => {
       if (disabled && checked) {
-        return "bg-textDisabled border-textDisabled";
+        // Geist disabled+checked fill is gray-600 (not the gray-500 disabled tone)
+        return "bg-[var(--ds-gray-600)] border-[var(--ds-gray-600)]";
       }
       if (disabled) {
         return "bg-[var(--ds-gray-100)] border-textDisabled";
@@ -84,12 +85,15 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         htmlFor={checkboxId}
         className={`
           group/checkbox
-          inline-flex items-center gap-3
-          ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
+          inline-flex items-start
+          text-copy-13 select-none
+          ${disabled ? "cursor-not-allowed text-textDisabled" : "cursor-pointer text-textDefault"}
           ${className}
         `}
       >
-        <span className="relative inline-flex items-center justify-center">
+        {/* p-0.5 -m-0.5 pads the box to the text line-height so it top-aligns
+            cleanly with multi-line labels (Geist's items-start structure). */}
+        <span className="relative flex items-center justify-center p-0.5 -m-0.5">
           <input
             ref={innerRef}
             type="checkbox"
@@ -106,9 +110,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               checkbox-icon
               relative flex items-center justify-center
               w-4 h-4 rounded-[4px] border border-solid
+              rotate-[0.000001deg]
               ${getBoxClasses()}
-              ${!disabled && !isActive ? "group-hover/checkbox:bg-[var(--ds-gray-200)]" : ""}
-              ${disabled ? "" : "peer-focus-visible:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-ring)]"}
+              ${!disabled && !isActive ? "group-hover/checkbox:bg-[var(--ds-gray-200)] peer-focus-visible:bg-[var(--ds-gray-200)]" : ""}
+              ${disabled ? "" : "peer-focus-visible:shadow-[var(--ds-focus-ring)]"}
             `}
             style={{
               transition:
@@ -118,13 +123,13 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           >
             <svg
               fill="none"
-              viewBox="0 0 16 16"
+              viewBox="0 0 20 20"
               className="absolute inset-0 w-full h-full"
             >
               {/* Checkmark - visible when checked and not indeterminate */}
               {checked && !indeterminate && (
                 <path
-                  d="M11.5 5.5L6.875 10.5L4.5 8"
+                  d="M14 7L8.5 12.5L6 10"
                   stroke="var(--ds-background-100)"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -134,10 +139,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               {/* Indeterminate dash - visible only when indeterminate */}
               {indeterminate && (
                 <line
-                  x1="4"
-                  x2="12"
-                  y1="8"
-                  y2="8"
+                  x1="5"
+                  x2="15"
+                  y1="10"
+                  y2="10"
                   stroke={
                     isDisabledIndeterminate
                       ? "hsl(var(--color-textDisabled))"
@@ -151,13 +156,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             </svg>
           </span>
         </span>
-        {label && (
-          <span
-            className={`text-copy-14 select-none ${disabled ? "text-textDisabled" : "text-textDefault"}`}
-          >
-            {label}
-          </span>
-        )}
+        {label && <span className="ml-2">{label}</span>}
       </label>
     );
   },

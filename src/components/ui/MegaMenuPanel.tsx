@@ -103,7 +103,7 @@ export default function MegaMenuPanel({
         <p className="text-heading-14 text-textSubtle">
           {eyebrow}
         </p>
-        <h3 className="mt-3 text-heading-32 font-serif text-balance text-textDefault">
+        <h3 className="mt-3 text-heading-32 text-balance text-textDefault">
           {heading}
         </h3>
         <p className="mt-3 text-copy-14 text-textSubtle">
@@ -171,7 +171,7 @@ export default function MegaMenuPanel({
           <NavigationMenuPrimitive.Link asChild>
             <Link
               href={featured.href}
-              className="mt-3 block rounded-[8px] bg-textDefault px-2 pt-2 pb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--ds-focus-ring)]"
+              className="mt-3 block rounded-[8px] bg-textDefault px-2 pt-2 pb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--ds-focus-color)]"
             >
               <FeaturedImage
                 image={featured.image}

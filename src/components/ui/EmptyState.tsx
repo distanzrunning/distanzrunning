@@ -44,10 +44,12 @@ const EMPTY_STATE_CSS = `
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
     gap: var(--ds-space-6x);
     padding: 48px 70px;
-    border: 1px solid hsl(var(--color-borderDefault));
-    border-radius: var(--ds-radius-small);
+    /* Geist: gray-200 hairline, rounded-lg (8px) */
+    border: 1px solid var(--ds-gray-200);
+    border-radius: 8px;
     background-color: hsl(var(--color-surface));
     text-align: center;
   }
@@ -56,17 +58,12 @@ const EMPTY_STATE_CSS = `
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 62px;
-    height: 60px;
-    padding: 14px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    /* Geist: p-[10px] around a 32px glyph (auto 52x52), gray-alpha-400 ring */
+    padding: 10px;
+    border: 1px solid var(--ds-gray-alpha-400);
     border-radius: 8px;
     background-color: hsl(var(--color-surface));
     color: hsl(var(--color-textSubtle));
-  }
-
-  :is(.dark, [data-theme="dark"]) .ds-empty-state-icon {
-    border-color: rgba(255, 255, 255, 0.14);
   }
 
   .ds-empty-state-icon svg {
@@ -141,7 +138,8 @@ const EMPTY_STATE_CSS = `
     align-items: center;
     gap: 2px;
     font-size: 14px;
-    color: var(--ds-gray-800);
+    /* Geist's muted "Learn more" link = --accents-5 (our textSubtler/gray-700) */
+    color: var(--ds-gray-700);
     text-decoration: none;
     transition: color 0.1s ease;
   }

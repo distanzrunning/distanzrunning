@@ -10,10 +10,15 @@ import {
   Star,
   Bell,
   CircleCheck,
+  Info,
+  TriangleAlert,
 } from "lucide-react";
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import { Section } from "../ContentWithTOC";
 import { useToast } from "@/components/ui/Toast";
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { Gauge } from "@/components/ui/Gauge";
 
 // Link icon for section headers (matches Geist)
 function LinkIcon() {
@@ -91,20 +96,60 @@ function SectionHeader({
   );
 }
 
-// Normalise a resolved CSS color (from getComputedStyle) for display/copy.
-// Opaque rgb() → hex; translucent rgba() and any modern color function
-// (oklch(), color(srgb …)) pass through verbatim. Keeps the displayed
-// value honest to what the browser actually rendered.
-function formatColor(value: string): string {
+// Parse a getComputedStyle colour into channels. Handles rgb()/rgba()
+// (what browsers resolve hsl()/var() to); returns null for modern colour
+// functions (oklch(), color(srgb …)) so callers can pass those through.
+function parseRgb(
+  value: string,
+): { r: number; g: number; b: number; a: number } | null {
   const m = value.match(/^rgba?\(([^)]+)\)$/);
-  if (m) {
-    const parts = m[1].split(/[\s,/]+/).filter(Boolean).map(Number);
-    const [r, g, b, a] = parts;
-    if (a !== undefined && a < 1) return `rgba(${r}, ${g}, ${b}, ${a})`;
-    const hex = (n: number) => Math.round(n).toString(16).padStart(2, "0");
-    return `#${hex(r)}${hex(g)}${hex(b)}`.toUpperCase();
+  if (!m) return null;
+  const [r, g, b, a = 1] = m[1].split(/[\s,/]+/).filter(Boolean).map(Number);
+  return { r, g, b, a };
+}
+
+// Normalise a resolved CSS color for display/copy. Opaque → #RRGGBB,
+// translucent → #RRGGBBAA (8-digit hex), any non-rgb function passes
+// through verbatim. Honest to what the browser actually rendered.
+function formatColor(value: string): string {
+  const c = parseRgb(value);
+  if (!c) return value;
+  const hex = (n: number) => Math.round(n).toString(16).padStart(2, "0");
+  const base = `#${hex(c.r)}${hex(c.g)}${hex(c.b)}`;
+  return (c.a < 1 ? `${base}${hex(c.a * 255)}` : base).toUpperCase();
+}
+
+// Same colour as an HSLA() string (matches Vercel's colour menu), e.g.
+// HSLA(0, 0%, 4%, 1). Hue/sat/light rounded to integers; alpha kept as-is.
+function formatColorHsla(value: string): string {
+  const c = parseRgb(value);
+  if (!c) return value;
+  const r = c.r / 255,
+    g = c.g / 255,
+    b = c.b / 255;
+  const max = Math.max(r, g, b),
+    min = Math.min(r, g, b);
+  let h = 0,
+    s = 0;
+  const l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      default:
+        h = (r - g) / d + 4;
+    }
+    h /= 6;
   }
-  return value;
+  return `HSLA(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(
+    l * 100,
+  )}%, ${c.a})`;
 }
 
 // Color swatch with context menu (matches Geist).
@@ -121,12 +166,15 @@ function ColorSwatch({
 }) {
   const { showToast } = useToast();
   const [showTick, setShowTick] = useState(false);
-  const [resolved, setResolved] = useState("");
+  const [hex, setHex] = useState("");
+  const [hsla, setHsla] = useState("");
   const ref = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (ref.current) {
-      setResolved(formatColor(getComputedStyle(ref.current).backgroundColor));
+      const bg = getComputedStyle(ref.current).backgroundColor;
+      setHex(formatColor(bg));
+      setHsla(formatColorHsla(bg));
     }
   }, [cssVar, themeKey]);
 
@@ -141,19 +189,30 @@ function ColorSwatch({
     flash();
   }, [cssVar, showToast, flash]);
 
-  const handleCopyValue = useCallback(() => {
-    navigator.clipboard.writeText(resolved);
-    showToast(`Copied ${resolved}`);
+  const handleCopyHex = useCallback(() => {
+    navigator.clipboard.writeText(hex);
+    showToast(`Copied ${hex}`);
     flash();
-  }, [resolved, showToast, flash]);
+  }, [hex, showToast, flash]);
+
+  const handleCopyHsla = useCallback(() => {
+    navigator.clipboard.writeText(hsla);
+    showToast(`Copied ${hsla}`);
+    flash();
+  }, [hsla, showToast, flash]);
 
   return (
     <ContextMenu.Root modal={false}>
       <ContextMenu.Trigger asChild>
         <button
           ref={ref}
-          className="relative w-full aspect-square md:h-10 md:aspect-auto rounded-sm cursor-copy shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
-          style={{ backgroundColor: `var(${cssVar})` }}
+          className="relative w-full aspect-square md:h-10 md:aspect-auto rounded-sm cursor-copy"
+          // boxShadow via inline style: Tailwind mis-reads a bare var() in
+          // shadow-[…] as a shadow *colour*, producing no shadow.
+          style={{
+            backgroundColor: `var(${cssVar})`,
+            boxShadow: "var(--ds-shadow-border-inset)",
+          }}
           onClick={handleCopyToken}
         >
           <span
@@ -170,13 +229,30 @@ function ColorSwatch({
         </button>
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
-        <ContextMenu.Content className="material-menu min-w-[240px] p-1.5 z-50">
+        <ContextMenu.Content
+          className="min-w-[260px] p-1.5 z-50"
+          // Shadow-only (matches Geist + our DS ContextMenu): --ds-shadow-menu
+          // already opens with a 0 0 0 1px hairline ring, so adding the
+          // material-menu border on top would double it (thicker than Geist).
+          style={{
+            background: "hsl(var(--color-surface))",
+            borderRadius: "var(--ds-radius-large)",
+            boxShadow: "var(--ds-shadow-menu)",
+          }}
+        >
           <ContextMenu.Item
             className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-[var(--ds-gray-100)] rounded-md cursor-pointer outline-none"
-            onSelect={handleCopyValue}
+            onSelect={handleCopyHex}
           >
-            Copy value
-            <span className="text-copy-13 text-textSubtle">{resolved}</span>
+            Copy HEX
+            <span className="text-copy-13 text-textSubtle">{hex}</span>
+          </ContextMenu.Item>
+          <ContextMenu.Item
+            className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-[var(--ds-gray-100)] rounded-md cursor-pointer outline-none"
+            onSelect={handleCopyHsla}
+          >
+            Copy HSLA
+            <span className="text-copy-13 text-textSubtle">{hsla}</span>
           </ContextMenu.Item>
           <ContextMenu.Item
             className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-textDefault hover:bg-[var(--ds-gray-100)] rounded-md cursor-pointer outline-none"
@@ -264,28 +340,26 @@ function ColorScaleRow({
   scale: ColorScale;
   isDark: boolean;
 }) {
-  const fullSteps = 10;
-  const emptySlots = fullSteps - scale.steps.length;
-
   return (
     <div className="flex flex-col items-start gap-2 md:flex-row md:items-center">
       <div className="w-[100px] flex-shrink-0">
+        {/* Geist scale labels are 14/20 font-medium (500) — lighter than
+            text-heading-14 (600). No DS slot is 14/20/500, so match Geist
+            verbatim. */}
         <p
-          className="text-heading-14 text-textDefault"
+          className="text-[14px] leading-[20px] font-medium text-textDefault"
           id={scale.name}
         >
           {scale.name}
         </p>
       </div>
+      {/* No empty padding slots — like Geist, short scales (Backgrounds)
+          just render their swatches; w-full max-w-[68px] caps each so they
+          sit left-aligned with the rest. */}
       <ul aria-describedby={scale.name} className="flex w-full gap-1 md:gap-2">
         {scale.steps.map((step) => (
           <li key={step.step} className="w-full max-w-[68px]">
             <ColorSwatch cssVar={step.cssVar} themeKey={isDark} />
-          </li>
-        ))}
-        {Array.from({ length: emptySlots }).map((_, i) => (
-          <li key={`empty-${i}`} className="w-full max-w-[68px]">
-            <div className="w-full aspect-square md:h-10 md:aspect-auto" />
           </li>
         ))}
       </ul>
@@ -299,7 +373,8 @@ function ScalesSection({ isDark }: { isDark: boolean }) {
     <Section>
       <SectionHeader id="scales">Scales</SectionHeader>
       <p className="text-copy-16 text-textSubtle mt-4">
-        There are 10 color scales in the system. Right click to copy raw values.
+        There are 10 color scales in the system. P3 colors are used on
+        supported browsers and displays.
       </p>
       <div className="mt-10 space-y-6">
         {allScales.map((scale) => (
@@ -327,13 +402,19 @@ function ColorRowItem({
       className={`flex h-10 items-center gap-3 ${showBorder ? "border-b border-borderNeutral" : ""}`}
     >
       <div
-        className="h-4 w-4 rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"
-        style={{ background: `var(${cssVar})` }}
+        className="h-4 w-4 rounded-full"
+        // boxShadow via inline style: Tailwind mis-reads a bare var() in
+        // shadow-[…] as a shadow *colour*, producing no shadow.
+        style={{
+          background: `var(${cssVar})`,
+          boxShadow: "var(--ds-shadow-border-inset)",
+        }}
       />
-      <p className="text-heading-14 text-textDefault w-[120px]">
+      {/* Geist's row label is 14/20 font-medium (500), not heading-14 (600). */}
+      <p className="text-[14px] leading-[20px] font-medium text-textDefault w-[120px]">
         {label}
       </p>
-      <p className="text-label-14 text-textSubtle">
+      <p className="text-copy-14 text-textSubtle">
         {description}
       </p>
     </div>
@@ -452,102 +533,54 @@ function ComponentBackgroundsSection() {
         background. On smaller UI elements like badges, you can use Color 2 or
         Color 3 as the background.
       </p>
-      {/* Visual demo */}
+      {/* Visual demo — left: hand-rolled activity-log rows (no DS component
+          for this pattern; Geist hand-rolls it too). One row is highlighted
+          with amber-100 to show a component bg in use. Right: DS Badge. */}
       <div
         className="mt-10 flex w-full flex-col border border-borderNeutral md:flex-row"
         style={{ background: "hsl(var(--color-surface))" }}
       >
         <div className="border-borderNeutral p-2 md:p-12">
           <ul>
-            <li className="flex h-10 w-full items-center gap-3 rounded-sm px-3 md:w-[420px]">
-              <span className="text-textSubtle">○</span>
-              <p className="text-xs font-mono text-textSubtle">
-                APR 26 15:54:21.12
-              </p>
-              <div className="h-5 w-px bg-borderNeutral" />
-              <p className="text-xs font-mono text-textSubtle">
-                <span className="hidden md:inline-block">/dashboard</span>
-                /overview
-              </p>
-            </li>
-            <li
-              className="flex h-10 w-full items-center gap-3 rounded-sm px-3 md:w-[420px]"
-              style={{ background: "var(--ds-amber-100)" }}
-            >
-              <span style={{ color: "var(--ds-amber-900)" }}>⚠</span>
-              <p
-                className="text-xs font-mono"
-                style={{ color: "var(--ds-amber-900)" }}
-              >
-                APR 26 15:54:21.12
-              </p>
-              <div
-                className="h-5 w-px"
-                style={{ background: "var(--ds-amber-400)" }}
-              />
-              <p
-                className="text-xs font-mono"
-                style={{ color: "var(--ds-amber-900)" }}
-              >
-                <span className="hidden md:inline-block">/dashboard</span>
-                /overview
-              </p>
-            </li>
-            <li className="flex h-10 w-full items-center gap-3 rounded-sm px-3 md:w-[420px]">
-              <span className="text-textSubtle">○</span>
-              <p className="text-xs font-mono text-textSubtle whitespace-nowrap">
-                APR 26 15:54:21.12
-              </p>
-              <div className="h-5 w-px bg-borderNeutral" />
-              <p className="text-xs font-mono text-textSubtle">
-                <span className="hidden md:inline-block">/dashboard</span>
-                /overview
-              </p>
-            </li>
-            <li className="flex h-10 w-full items-center gap-3 rounded-sm px-3 md:w-[420px]">
-              <span className="text-textSubtle">○</span>
-              <p className="text-xs font-mono text-textSubtle">
-                APR 26 15:54:21.12
-              </p>
-              <div className="h-5 w-px bg-borderNeutral" />
-              <p className="text-xs font-mono text-textSubtle">
-                <span className="hidden md:inline-block">/dashboard</span>
-                /overview
-              </p>
-            </li>
+            <LogRow />
+            <LogRow alert />
+            <LogRow />
+            <LogRow />
           </ul>
         </div>
-        <div className="flex h-[120px] grow items-center justify-center gap-2 border-t md:h-auto md:border-l md:border-t-0">
-          <span
-            className="px-2 py-1 text-xs font-medium rounded capitalize"
-            style={{
-              background: "var(--ds-gray-200)",
-              color: "hsl(var(--color-textSubtle))",
-            }}
-          >
-            Hobby
-          </span>
-          <span
-            className="px-2 py-1 text-xs font-medium rounded capitalize"
-            style={{
-              background: "var(--ds-blue-100)",
-              color: "var(--ds-blue-900)",
-            }}
-          >
-            Pro
-          </span>
-          <span
-            className="px-2 py-1 text-xs font-medium rounded capitalize"
-            style={{
-              background: "var(--ds-purple-100)",
-              color: "var(--ds-purple-900)",
-            }}
-          >
-            Enterprise
-          </span>
+        <div className="flex h-[120px] grow items-center justify-center gap-2 border-t border-borderNeutral md:h-auto md:border-l md:border-t-0">
+          <Badge variant="gray">Hobby</Badge>
+          <Badge variant="blue-subtle">Pro</Badge>
+          <Badge variant="purple-subtle">Enterprise</Badge>
         </div>
       </div>
     </Section>
+  );
+}
+
+// One activity-log row for the Colors 1-3 demo. `alert` swaps to the
+// amber-highlighted treatment (amber-100 bg + amber-900 text/icon),
+// matching Geist's highlighted row.
+function LogRow({ alert = false }: { alert?: boolean }) {
+  const Icon = alert ? TriangleAlert : Info;
+  const fg = alert ? "var(--ds-amber-900)" : "hsl(var(--color-textSubtle))";
+  return (
+    <li
+      className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-sm px-3 md:w-[420px]"
+      style={alert ? { background: "var(--ds-amber-100)" } : undefined}
+    >
+      <Icon className="h-4 w-4 shrink-0" strokeWidth={1.5} style={{ color: fg }} />
+      <p className="text-copy-13-mono" style={{ color: fg }}>
+        APR 26 15:54:21.12
+      </p>
+      <div
+        className={`h-5 w-px ${alert ? "" : "bg-borderNeutral"}`}
+        style={alert ? { background: "var(--ds-amber-400)" } : undefined}
+      />
+      <p className="text-copy-13-mono" style={{ color: fg }}>
+        <span className="hidden md:inline-block">/dashboard</span>/overview
+      </p>
+    </li>
   );
 }
 
@@ -577,31 +610,16 @@ function BordersSection() {
           showBorder={false}
         />
       </div>
-      {/* Visual demo */}
+      {/* Visual demo — the DS Button (secondary) in a bordered frame, like
+          Geist's `button secondary`. The frame's border is gray-400
+          (Color 4); the button's hairline border demonstrates the same. */}
       <div
         className="mt-10 flex h-[136px] w-full items-center justify-center border border-borderNeutral"
         style={{ background: "hsl(var(--color-surface))" }}
       >
-        <button
-          className="inline-flex items-center justify-center font-sans font-medium text-sm transition-all duration-150 ease focus:outline-none active:scale-[0.98] active:duration-100"
-          style={{
-            height: "40px",
-            minWidth: "160px",
-            padding: "0 12px",
-            borderRadius: "6px",
-            background: "hsl(var(--color-surface))",
-            boxShadow: "0 0 0 1px hsl(var(--color-borderDefault))",
-            color: "hsl(var(--color-textDefault))",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "var(--ds-gray-alpha-200)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "var(--ds-background-100)";
-          }}
-        >
+        <Button variant="secondary" className="min-w-[160px] max-w-[160px]">
           New Project
-        </button>
+        </Button>
       </div>
     </Section>
   );
@@ -637,106 +655,32 @@ function HighContrastBackgroundsSection() {
         style={{ background: "hsl(var(--color-surface))" }}
       >
         <div className="flex h-[65%] w-full items-center justify-center gap-5 border-borderNeutral md:h-full md:w-[50%] md:border-r">
-          {/* Gauges */}
-          <div className="relative w-8 h-8">
-            <svg viewBox="0 0 36 36" className="w-full h-full">
-              <circle
-                cx="18"
-                cy="18"
-                r="15"
-                fill="none"
-                stroke="var(--ds-gray-alpha-400)"
-                strokeWidth="3"
-              />
-              <circle
-                cx="18"
-                cy="18"
-                r="15"
-                fill="none"
-                stroke="var(--ds-green-700)"
-                strokeWidth="3"
-                strokeDasharray="85 100"
-                strokeLinecap="round"
-                transform="rotate(-90 18 18)"
-              />
-            </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-medium">
-              90
-            </span>
-          </div>
-          <div className="relative w-8 h-8">
-            <svg viewBox="0 0 36 36" className="w-full h-full">
-              <circle
-                cx="18"
-                cy="18"
-                r="15"
-                fill="none"
-                stroke="var(--ds-gray-alpha-400)"
-                strokeWidth="3"
-              />
-              <circle
-                cx="18"
-                cy="18"
-                r="15"
-                fill="none"
-                stroke="var(--ds-amber-700)"
-                strokeWidth="3"
-                strokeDasharray="55 100"
-                strokeLinecap="round"
-                transform="rotate(-90 18 18)"
-              />
-            </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-medium">
-              55
-            </span>
-          </div>
-          <div className="relative w-8 h-8">
-            <svg viewBox="0 0 36 36" className="w-full h-full">
-              <circle
-                cx="18"
-                cy="18"
-                r="15"
-                fill="none"
-                stroke="var(--ds-gray-alpha-400)"
-                strokeWidth="3"
-              />
-              <circle
-                cx="18"
-                cy="18"
-                r="15"
-                fill="none"
-                stroke="var(--ds-red-800)"
-                strokeWidth="3"
-                strokeDasharray="20 100"
-                strokeLinecap="round"
-                transform="rotate(-90 18 18)"
-              />
-            </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[10px] font-medium">
-              20
-            </span>
-          </div>
+          {/* Three Gauges, each pinned to its Geist demo colour so the value
+              and hue stay paired (auto-colour would tint 55 green). */}
+          <Gauge value={90} size={32} color="var(--ds-green-700)" showLabel />
+          <Gauge value={55} size={32} color="var(--ds-amber-700)" showLabel />
+          <Gauge value={20} size={32} color="var(--ds-red-800)" showLabel />
         </div>
-        <div className="flex w-full justify-center md:w-[50%] py-6 md:py-0">
-          <button
-            className="inline-flex items-center justify-center font-sans font-medium text-sm transition-all duration-150 ease focus:outline-none active:scale-[0.98] active:duration-100"
-            style={{
-              height: "40px",
-              minWidth: "160px",
-              padding: "0 12px",
-              borderRadius: "6px",
-              background: "var(--ds-blue-700)",
-              color: "white",
+        <div className="flex w-full justify-center py-6 md:w-[50%] md:py-0">
+          {/* The DS Button with a bespoke palette — Geist's `--button-custom-*`
+              "Upgrade to Pro" CTA: blue-700 fill, white text, hover lifts to
+              #0B7BFE, active returns to blue-700. */}
+          <Button
+            customColors={{
+              fg: "#fff",
+              bg: "var(--ds-blue-700)",
+              border: "var(--ds-blue-700)",
+              fgHover: "#fff",
+              bgHover: "#0B7BFE",
+              borderHover: "var(--ds-blue-700)",
+              fgActive: "#fff",
+              bgActive: "var(--ds-blue-700)",
+              borderActive: "var(--ds-blue-700)",
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#0B7BFE";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "var(--ds-blue-700)";
-            }}
+            className="min-w-[160px] max-w-[160px]"
           >
             Upgrade to Pro
-          </button>
+          </Button>
         </div>
       </div>
     </Section>
@@ -779,13 +723,16 @@ function TextAndIconsSection() {
             >
               The Frontend Cloud
             </p>
-            <p className="text-[14px]" style={{ color: "hsl(var(--color-textSubtle))" }}>
+            <p className="text-copy-14 text-textSubtle">
               Build, scale, and secure a faster, personalized web with Distanz.
             </p>
+            {/* "Learn More" CTA — Geist uses blue-900 (a text-grade accent that
+                fits this section's 900 text shades), with the arrow as the
+                non-colour affordance, so no underline. */}
             <a
-              className="mt-2 flex items-center gap-0.5 text-sm no-underline"
+              className="mt-2 flex items-center gap-0.5 text-copy-14 no-underline"
               href="#"
-              style={{ color: "var(--ds-pink-900)" }}
+              style={{ color: "var(--ds-blue-900)" }}
             >
               Learn More
               <svg
@@ -805,7 +752,7 @@ function TextAndIconsSection() {
             </a>
           </div>
         </div>
-        <div className="flex h-[35%] w-full items-center justify-center gap-7 border-t md:h-full md:w-[50%] md:gap-5 md:border-l md:border-t-0">
+        <div className="flex h-[35%] w-full items-center justify-center gap-7 border-t border-borderNeutral md:h-full md:w-[50%] md:gap-5 md:border-l md:border-t-0">
           <CircleDollarSign
             size={16}
             style={{ color: "var(--ds-green-900)" }}

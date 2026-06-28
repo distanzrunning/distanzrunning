@@ -11,7 +11,7 @@ export async function buildFooterItem(): Promise<RegistryItem> {
     description:
       "Site-wide footer — links, social, theme switcher, consent management entry.",
     dependencies: ["react", "next", "react-icons"],
-    registryDependencies: ["tokens", "logo", "theme-switcher", "dark-mode-provider", "consent-context"],
+    registryDependencies: ["tokens", "logo", "theme-switcher", "dark-mode-provider"],
     files: [
       {
         path: "components/Footer.tsx",

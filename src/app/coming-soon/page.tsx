@@ -21,7 +21,7 @@ export default function ComingSoonPage() {
         <span className="text-xs font-semibold uppercase tracking-[0.18em] text-textSubtle">
           Coming soon
         </span>
-        <h1 className="text-balance font-serif text-heading-32 md:text-heading-40 lg:text-heading-48">
+        <h1 className="text-balance text-heading-32 md:text-heading-40 lg:text-heading-48">
           A new home for running stories, gear reviews, and race guides.
         </h1>
       </div>

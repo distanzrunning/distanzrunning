@@ -10,6 +10,10 @@ import { type ReactNode } from "react";
 export interface DescriptionProps {
   /** Root wrapper — contains Title and Content */
   children: ReactNode;
+  /** Text alignment of the list. Defaults to `left`. */
+  align?: "left" | "right";
+  /** Truncate the title and content to a single line with an ellipsis. */
+  ellipsis?: boolean;
 }
 
 interface DescriptionTitleProps {
@@ -32,32 +36,53 @@ const DESCRIPTION_CSS = `
   .ds-description {
     margin: 0;
     padding: 0;
-    font-size: 14px;
-    line-height: 20px;
   }
 
+  .ds-description--right {
+    text-align: right;
+  }
+
+  .ds-description--ellipsis {
+    width: 100%;
+  }
+  .ds-description--ellipsis > dt {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ds-description--ellipsis > dd {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Geist: the title is the muted label (gray-900, normal weight) */
   .ds-description-title {
-    display: flex;
-    align-items: center;
-    gap: var(--ds-space);
-    font-weight: 500;
+    margin: 0 0 var(--ds-space-2x);
     font-size: 14px;
-    line-height: 20px;
-    color: var(--ds-gray-1000);
+    line-height: 14px;
+    min-height: 14px;
+    font-weight: 400;
+    text-transform: capitalize;
+    white-space: nowrap;
+    color: var(--ds-gray-900);
   }
 
   .ds-description-icon {
     display: inline-flex;
     align-items: center;
+    vertical-align: -2px;
+    margin-left: var(--ds-space);
     cursor: pointer;
-    color: var(--ds-gray-700);
+    color: currentColor;
   }
 
+  /* Geist: the content is the prominent value (gray-1000, medium) */
   .ds-description-content {
     margin: 0;
     font-size: 14px;
-    line-height: 20px;
-    color: var(--ds-gray-900);
+    line-height: 16px;
+    font-weight: 500;
+    color: var(--ds-gray-1000);
   }
 
   .ds-description-tooltip {
@@ -67,9 +92,12 @@ const DESCRIPTION_CSS = `
     border-radius: var(--ds-radius-small);
     background: hsl(var(--color-textDefault));
     color: hsl(var(--color-textInverted));
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 13px;
+    line-height: 1.3;
+    font-weight: 400;
     text-align: center;
+    white-space: pre-line;
+    overflow-wrap: break-word;
     user-select: none;
     will-change: transform, opacity;
     animation-duration: 0.1s;
@@ -89,7 +117,7 @@ const DESCRIPTION_CSS = `
     }
   }
 
-  .ds-description-tooltip-arrow {
+  .ds-description-tooltip-arrow path {
     fill: var(--ds-gray-1000);
   }
 `;
@@ -101,22 +129,22 @@ const DESCRIPTION_CSS = `
 function InfoIcon() {
   return (
     <svg
-      height="16"
-      strokeLinejoin="round"
       viewBox="0 0 16 16"
-      width="16"
-      style={{ width: 14, height: 14, color: "currentcolor" }}
+      height="14"
+      width="14"
+      style={{ color: "currentcolor" }}
+      aria-hidden="true"
     >
       <path
-        d="M14 8C14 11.3137 11.3137 14 8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2C11.3137 2 14 4.68629 14 8Z"
         fill="currentColor"
-        fillOpacity="0.08"
+        fillOpacity=".08"
+        d="M14 8A6 6 0 1 1 2 8a6 6 0 0 1 12 0"
       />
       <path
+        fill="currentColor"
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M8 6C8.55228 6 9 5.55228 9 5C9 4.44772 8.55228 4 8 4C7.44771 4 7 4.44772 7 5C7 5.55228 7.44771 6 8 6ZM7 7H6.25V8.5H7H7.24999V10.5V11.25H8.74999V10.5V8C8.74999 7.44772 8.30227 7 7.74999 7H7Z"
-        fill="currentColor"
+        d="M8 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2M7 7h-.75v1.5h1v2.75h1.5V8a1 1 0 0 0-1-1z"
       />
     </svg>
   );
@@ -145,7 +173,17 @@ function DescriptionTitle({ children, tooltip }: DescriptionTitleProps) {
                 sideOffset={8}
               >
                 {tooltip}
-                <Tooltip.Arrow className="ds-description-tooltip-arrow" />
+                <Tooltip.Arrow asChild width={14} height={6}>
+                  <svg
+                    className="ds-description-tooltip-arrow"
+                    viewBox="0 0 14 6"
+                    width="14"
+                    height="6"
+                    aria-hidden="true"
+                  >
+                    <path d="M13.8284 0H0.17157C0.702003 0 1.21071 0.210714 1.58578 0.585787L5.58578 4.58579C6.36683 5.36684 7.63316 5.36683 8.41421 4.58579L12.4142 0.585786C12.7893 0.210714 13.298 0 13.8284 0Z" />
+                  </svg>
+                </Tooltip.Arrow>
               </Tooltip.Content>
             </Tooltip.Portal>
           </Tooltip.Root>
@@ -163,11 +201,23 @@ function DescriptionContent({ children }: DescriptionContentProps) {
 // Description
 // ============================================================================
 
-export function Description({ children }: DescriptionProps) {
+export function Description({
+  children,
+  align = "left",
+  ellipsis = false,
+}: DescriptionProps) {
+  const className = [
+    "ds-description",
+    align === "right" && "ds-description--right",
+    ellipsis && "ds-description--ellipsis",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <>
       <style>{DESCRIPTION_CSS}</style>
-      <dl className="ds-description">{children}</dl>
+      <dl className={className}>{children}</dl>
     </>
   );
 }

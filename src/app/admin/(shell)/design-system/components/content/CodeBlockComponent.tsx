@@ -867,16 +867,19 @@ function getLanguageIcon(language: string) {
 }
 
 // Language Switcher Code Preview with accordion
-function LanguageSwitcherCodePreview() {
+function LanguageSwitcherCodePreview({ tabs = false }: { tabs?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const tokenizedLines = useShikiHighlighter(
-    languageSwitcherComponentCode,
-    "tsx",
-  );
+  const codeStr = tabs
+    ? languageSwitcherComponentCode.replace(
+        "onChange: setLanguage,",
+        "onChange: setLanguage,\n        tabs: true,",
+      )
+    : languageSwitcherComponentCode;
+  const tokenizedLines = useShikiHighlighter(codeStr, "tsx");
   const componentCodeLines: DualThemeToken[][] =
     tokenizedLines ||
-    languageSwitcherComponentCode.split("\n").map(
+    codeStr.split("\n").map(
       (line) =>
         [
           {
@@ -888,10 +891,10 @@ function LanguageSwitcherCodePreview() {
     );
 
   const handleCopyComponentCode = useCallback(() => {
-    navigator.clipboard.writeText(languageSwitcherComponentCode);
+    navigator.clipboard.writeText(codeStr);
     setCopied(true);
     setTimeout(() => setCopied(false), 1000);
-  }, []);
+  }, [codeStr]);
 
   return (
     <div className="border border-borderDefault rounded-lg overflow-hidden">
@@ -900,7 +903,7 @@ function LanguageSwitcherCodePreview() {
         className="p-6 group"
         style={{ background: "hsl(var(--color-surface))" }}
       >
-        <LanguageSwitcherPreview />
+        <LanguageSwitcherPreview tabs={tabs} />
       </div>
 
       {/* Accordion trigger */}
@@ -960,7 +963,7 @@ function LanguageSwitcherCodePreview() {
 }
 
 // Interactive Language Switcher Preview
-function LanguageSwitcherPreview() {
+function LanguageSwitcherPreview({ tabs = false }: { tabs?: boolean }) {
   const [language, setLanguage] = useState("js");
   const [copied, setCopied] = useState(false);
 
@@ -1011,15 +1014,50 @@ function LanguageSwitcherPreview() {
 
   return (
     <div
-      className="relative border border-borderDefault rounded overflow-hidden"
+      className="relative border border-borderDefault rounded-md overflow-hidden"
       data-code-block
     >
+      {/* Language switcher as a secondary tab bar */}
+      {tabs && (
+        <div
+          className="flex items-center bg-canvas pt-3 pl-4 overflow-x-auto"
+          style={{ scrollbarWidth: "none" }}
+        >
+          <div
+            role="tablist"
+            aria-orientation="horizontal"
+            className="flex flex-nowrap items-center gap-2 pb-px"
+          >
+            {languageOptions.map((option) => {
+              const selected = option.value === language;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  role="tab"
+                  aria-selected={selected}
+                  tabIndex={selected ? 0 : -1}
+                  onClick={() => setLanguage(option.value)}
+                  className={`flex h-6 cursor-pointer items-center rounded-md px-1.5 text-[13px] outline-none transition-colors focus-visible:shadow-[var(--ds-focus-ring)] ${
+                    selected
+                      ? "bg-[var(--ds-gray-1000)] text-[var(--ds-background-100)]"
+                      : "bg-[var(--ds-gray-alpha-200)] text-textDefault"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Header with filename and switcher */}
       <div
         className="flex items-center justify-between h-12 pl-4 pr-3 border-b border-borderDefault"
         style={{
           background: "hsl(var(--color-canvas))",
-          borderRadius: "4px 4px 0 0",
+          borderRadius: tabs ? "0" : "6px 6px 0 0",
         }}
       >
         <div className="flex items-center gap-2">
@@ -1028,6 +1066,7 @@ function LanguageSwitcherPreview() {
         </div>
         <div className="flex items-center gap-1">
           {/* Language Switcher - Geist style with visible label overlay */}
+          {!tabs && (
           <div className="relative rounded hover:bg-[var(--ds-gray-200)] dark:hover:bg-[var(--ds-gray-100)] transition-colors">
             <div
               aria-hidden="true"
@@ -1063,6 +1102,7 @@ function LanguageSwitcherPreview() {
               ))}
             </select>
           </div>
+          )}
           {/* Copy Button */}
           <button
             onClick={handleCopy}
@@ -1118,10 +1158,6 @@ export default function CodeBlockComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          The default code block includes a filename header with a file icon,
-          line numbers, and a copy button.
-        </p>
         <CodePreview
           previewCode={defaultPreviewCode}
           previewFilename="Table.jsx"
@@ -1134,10 +1170,6 @@ export default function CodeBlockComponent() {
         <SectionHeader id="no-filename" onCopyLink={showToast}>
           No filename
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Code blocks can be rendered without a filename header. The copy button
-          appears on hover.
-        </p>
         <CodePreview
           previewCode={noFilenamePreviewCode}
           previewFilename=""
@@ -1150,14 +1182,6 @@ export default function CodeBlockComponent() {
         <SectionHeader id="highlighted-lines" onCopyLink={showToast}>
           Highlighted lines
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Specific lines can be highlighted to draw attention to important code.
-          Use the{" "}
-          <code className="inline-code">
-            highlightLines
-          </code>{" "}
-          prop with an array of line numbers.
-        </p>
         <CodePreview
           previewCode={highlightedPreviewCode}
           previewFilename="highlighted.jsx"
@@ -1171,17 +1195,6 @@ export default function CodeBlockComponent() {
         <SectionHeader id="added-removed-lines" onCopyLink={showToast}>
           Added & removed lines
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Show diff-style additions and removals using the{" "}
-          <code className="inline-code">
-            addedLines
-          </code>{" "}
-          and{" "}
-          <code className="inline-code">
-            removedLines
-          </code>{" "}
-          props.
-        </p>
         <CodePreview
           previewCode={diffPreviewCode}
           previewFilename="next.config.js"
@@ -1217,12 +1230,20 @@ export default function CodeBlockComponent() {
         <SectionHeader id="language-switcher" onCopyLink={showToast}>
           Language switcher
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Use the switcher prop to add a language dropdown to the header. When
-          the user switches languages, the code, filename, and icon update
-          accordingly.
-        </p>
         <LanguageSwitcherCodePreview />
+      </Section>
+
+      {/* Language Switcher With Tabs Section */}
+      <Section>
+        <SectionHeader id="language-switcher-with-tabs" onCopyLink={showToast}>
+          Language switcher with tabs
+        </SectionHeader>
+        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
+          Set <code className="inline-code">tabs</code> on the switcher for a
+          tabbed language switcher above the header instead of the default
+          select.
+        </p>
+        <LanguageSwitcherCodePreview tabs />
       </Section>
 
       {/* Hidden Line Numbers Section */}
@@ -1230,230 +1251,12 @@ export default function CodeBlockComponent() {
         <SectionHeader id="hidden-line-numbers" onCopyLink={showToast}>
           Hidden line numbers
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Line numbers can be hidden by setting{" "}
-          <code className="inline-code">
-            showLineNumbers={"{false}"}
-          </code>
-          .
-        </p>
         <CodePreview
           previewCode={hiddenLineNumbersPreviewCode}
           previewFilename="hidden-line-numbers.jsx"
           componentCode={hiddenLineNumbersComponentCode}
           showLineNumbers={false}
         />
-      </Section>
-
-      {/* Props Section */}
-      <Section>
-        <SectionHeader id="props" onCopyLink={showToast}>
-          Props
-        </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          Available props for the CodeBlock component.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">code</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  The code content to display
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">filename</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">string</td>
-                <td className="py-3 px-4 text-textSubtle">undefined</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Filename to display in the header
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">showLineNumbers</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">boolean</td>
-                <td className="py-3 px-4 text-textSubtle">true</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Whether to show line numbers
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">highlightLines</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  number[]
-                </td>
-                <td className="py-3 px-4 text-textSubtle">[]</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Line numbers to highlight
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">addedLines</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  number[]
-                </td>
-                <td className="py-3 px-4 text-textSubtle">[]</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Line numbers to mark as added (green)
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">removedLines</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  number[]
-                </td>
-                <td className="py-3 px-4 text-textSubtle">[]</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Line numbers to mark as removed (red)
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">referencedLines</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  number[]
-                </td>
-                <td className="py-3 px-4 text-textSubtle">[]</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Line numbers to make clickable
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </Section>
-
-      {/* Syntax Highlighting Section */}
-      <Section>
-        <SectionHeader id="syntax-highlighting" onCopyLink={showToast}>
-          Syntax highlighting
-        </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          The CodeBlock component uses{" "}
-          <a
-            href="https://shiki.style"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-textDefault underline hover:no-underline"
-          >
-            Shiki
-          </a>{" "}
-          for syntax highlighting, the same engine used by VS Code. It provides
-          accurate, theme-aware highlighting for all major programming
-          languages.
-        </p>
-
-        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
-          Theme
-        </h3>
-        <p className="text-copy-14 text-textSubtle mb-4">
-          We use the{" "}
-          <span className="font-semibold text-textDefault">One Light</span> and{" "}
-          <span className="font-semibold text-textDefault">One Dark Pro</span>{" "}
-          themes, which automatically switch based on the current color mode.
-          These themes provide vibrant, readable syntax highlighting inspired by
-          Atom&apos;s classic editor theme.
-        </p>
-
-        <h3 className="text-heading-16 text-textDefault mt-8 mb-4">
-          Diff highlighting
-        </h3>
-        <p className="text-copy-14 text-textSubtle mb-4">
-          When using{" "}
-          <code className="inline-code">
-            addedLines
-          </code>{" "}
-          or{" "}
-          <code className="inline-code">
-            removedLines
-          </code>
-          , syntax highlighting changes to emphasise what is being modified.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Token type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Color
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Token
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Examples
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Identifiers & property names</td>
-                <td className="py-3 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[var(--ds-red-900)]"></span>
-                    <span className="text-textSubtle">Red</span>
-                  </span>
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  --ds-red-900
-                </td>
-                <td className="py-3 px-4 font-mono text-[var(--ds-red-900)]">
-                  experimental, appDir, config
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Value keywords</td>
-                <td className="py-3 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[var(--ds-green-900)]"></span>
-                    <span className="text-textSubtle">Green</span>
-                  </span>
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  --ds-green-900
-                </td>
-                <td className="py-3 px-4 font-mono text-[var(--ds-green-900)]">
-                  true, false, null
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4">Everything else</td>
-                <td className="py-3 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-textDefault"></span>
-                    <span className="text-textSubtle">Gray</span>
-                  </span>
-                </td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  --ds-gray-1000
-                </td>
-                <td className="py-3 px-4 font-mono text-textDefault">
-                  {"{ } : , ="}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </Section>
 
       {/* Best Practices Section */}
@@ -1514,8 +1317,8 @@ export default function CodeBlockComponent() {
             Mark added or removed lines with{" "}
             <code className="inline-code">language=&quot;diff&quot;</code>{" "}
             or the dedicated added/removed props. Faking them with{" "}
-            <code className="inline-code">// added</code> comments breaks
-            copy-paste.
+            <code className="inline-code">{"// added"}</code> comments
+            breaks copy-paste.
           </li>
           <li>
             Show the filename header when the snippet has a paste

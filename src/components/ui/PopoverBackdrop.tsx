@@ -52,10 +52,13 @@ export default function PopoverBackdrop({
       className="fixed inset-x-0 bottom-0 top-[50px] transition-opacity duration-150"
       style={{
         zIndex,
+        // Shared scrim, matching Modal/Sheet/CommandMenu/Mega-menu: the
+        // --ds-overlay-backdrop-* token (rgb(0,0,0) @ 0.2) + blur(8px).
+        // Was a hand-rolled opacity:0.5 / blur(12px).
         backgroundColor: "var(--ds-overlay-backdrop-color)",
-        opacity: 0.5,
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
+        opacity: "var(--ds-overlay-backdrop-opacity)",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
         pointerEvents: "none",
       }}
     />,

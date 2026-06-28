@@ -1,11 +1,13 @@
 "use client";
 
-import { type ReactNode } from "react";
-import { Drawer as VaulDrawer } from "vaul";
+import { type ReactElement, type ReactNode } from "react";
+import { Drawer as BaseDrawer } from "@base-ui/react/drawer";
 
 // ============================================================================
 // Types
 // ============================================================================
+
+type SwipeDir = "up" | "down" | "left" | "right";
 
 export interface DrawerProps {
   children: ReactNode;
@@ -13,20 +15,26 @@ export interface DrawerProps {
   open?: boolean;
   /** Called when open state changes */
   onOpenChange?: (open: boolean) => void;
-  /** Whether to scale background when drawer opens */
-  shouldScaleBackground?: boolean;
-  /** Direction from which the drawer slides in */
+  /** Uncontrolled initial open state */
+  defaultOpen?: boolean;
+  /**
+   * Direction the drawer is swiped to dismiss. Geist's Drawer is a bottom
+   * sheet, so this defaults to `bottom` (→ Base UI `swipeDirection="down"`).
+   */
   direction?: "top" | "right" | "bottom" | "left";
+  /** Trap focus within the drawer while open. Defaults to `true`. */
+  modal?: boolean;
 }
 
 interface DrawerTriggerProps {
   children: ReactNode;
+  /** Render the child element as the trigger (default) vs. a wrapping button. */
   asChild?: boolean;
 }
 
 interface DrawerContentProps {
   children: ReactNode;
-  /** Custom height for the drawer. Defaults to auto. */
+  /** Custom height for the drawer. Defaults to auto (hugs content). */
   height?: string | number;
 }
 
@@ -46,72 +54,79 @@ interface DrawerDescriptionProps {
   children: ReactNode;
 }
 
+// Map our (vaul-era) `direction` names to Base UI's swipe directions.
+const SWIPE_DIRECTION: Record<NonNullable<DrawerProps["direction"]>, SwipeDir> =
+  {
+    top: "up",
+    bottom: "down",
+    left: "left",
+    right: "right",
+  };
+
 // ============================================================================
-// Styles — Geist computed values, scoped to .ds-drawer-*
+// Styles — Geist computed values on Base UI's data-attr / swipe-var model
 // ============================================================================
 
 const DRAWER_CSS = `
+  /* Backdrop — Geist: bg-black/40, fades on open/close only (constant during
+     swipe), 300ms cubic-bezier(0.32,0.72,0,1). */
   .ds-drawer-overlay {
     position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    inset: 0;
     z-index: 4999;
     background-color: rgba(0, 0, 0, 0.4);
-    pointer-events: none;
-    animation: ds-drawer-overlay-fadeIn 400ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    transition: opacity 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .ds-drawer-overlay[data-starting-style],
+  .ds-drawer-overlay[data-ending-style] {
+    opacity: 0;
+  }
+  .ds-drawer-overlay[data-swiping] {
+    transition-duration: 0s;
   }
 
-  .ds-drawer-overlay[data-state="closed"] {
-    animation: ds-drawer-overlay-fadeOut 400ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
-  }
-
-  @keyframes ds-drawer-overlay-fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  @keyframes ds-drawer-overlay-fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
-  }
-
-  .ds-drawer-content {
+  /* Viewport — positions the popup at the bottom; empty area lets outside
+     clicks fall through to the backdrop beneath (Geist parity). */
+  .ds-drawer-viewport {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    inset: 0;
     z-index: 4999;
     display: flex;
-    flex-direction: column;
-    border-top-left-radius: var(--ds-radius-small);
-    border-top-right-radius: var(--ds-radius-small);
-    border: none;
-    background-color: hsl(var(--color-surface));
-    color: var(--ds-gray-1000);
-    box-shadow: var(--ds-shadow-menu), var(--ds-gray-100) 0px 0px 0px 1px;
-    max-width: 100%;
-    max-height: 80vh;
-    min-height: 31px;
-    outline: none;
-    pointer-events: auto;
-    user-select: none;
-    will-change: transform;
-    touch-action: none;
-    overscroll-behavior: none;
-    transition: transform 500ms cubic-bezier(0.32, 0.72, 0, 1);
+    align-items: flex-end;
+    justify-content: center;
+    pointer-events: none;
   }
 
-  .ds-drawer-inner {
-    background-color: hsl(var(--color-surface));
+  /* Popup — Geist: rounded-t-[10px], top hairline (gray-alpha-400), no shadow,
+     max-h 90dvh, slides via --drawer-swipe-movement-y, 400ms cubic-bezier. */
+  .ds-drawer-content {
+    width: 100%;
+    max-height: 90dvh;
+    outline: none;
+    pointer-events: auto;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    border-top: 1px solid var(--ds-gray-alpha-400);
+    background-color: hsl(var(--color-surface));
+    color: var(--ds-gray-1000);
     overflow-y: auto;
     overscroll-behavior: none;
+    will-change: transform;
+    transform: translateY(var(--drawer-swipe-movement-y, 0px));
+    transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .ds-drawer-content[data-starting-style],
+  .ds-drawer-content[data-ending-style] {
+    transform: translateY(100%);
+  }
+  .ds-drawer-content[data-swiping] {
+    transition-duration: 0s;
     user-select: none;
-    pointer-events: auto;
-    z-index: 1;
+  }
+
+  /* Content — Base UI's text-selectable region (selection doesn't start a
+     swipe). Carries no box styling; the popup owns the frame. */
+  .ds-drawer-inner {
     outline: none;
   }
 
@@ -122,7 +137,7 @@ const DRAWER_CSS = `
     justify-content: flex-start;
     gap: var(--ds-space-2x);
     flex: 0 1 auto;
-    padding: var(--ds-space-12x);
+    padding: var(--ds-space-large);
   }
 
   .ds-drawer-title {
@@ -154,22 +169,30 @@ const DRAWER_CSS = `
 // ============================================================================
 
 function DrawerTrigger({ children, asChild = true }: DrawerTriggerProps) {
-  return <VaulDrawer.Trigger asChild={asChild}>{children}</VaulDrawer.Trigger>;
+  // asChild → adopt the supplied element (e.g. <Button>) as the trigger via
+  // Base UI's `render` prop. Otherwise Base UI renders its own <button>.
+  return asChild ? (
+    <BaseDrawer.Trigger render={children as ReactElement} />
+  ) : (
+    <BaseDrawer.Trigger>{children}</BaseDrawer.Trigger>
+  );
 }
 
 function DrawerContent({ children, height }: DrawerContentProps) {
   return (
-    <VaulDrawer.Portal>
-      <VaulDrawer.Overlay className="ds-drawer-overlay" />
-      <VaulDrawer.Content
-        className="ds-drawer-content"
-        style={height ? { height } : undefined}
-      >
-        <div className="ds-drawer-inner">
-          {children}
-        </div>
-      </VaulDrawer.Content>
-    </VaulDrawer.Portal>
+    <BaseDrawer.Portal>
+      <BaseDrawer.Backdrop className="ds-drawer-overlay" />
+      <BaseDrawer.Viewport className="ds-drawer-viewport">
+        <BaseDrawer.Popup
+          className="ds-drawer-content"
+          style={height ? { height } : undefined}
+        >
+          <BaseDrawer.Content className="ds-drawer-inner">
+            {children}
+          </BaseDrawer.Content>
+        </BaseDrawer.Popup>
+      </BaseDrawer.Viewport>
+    </BaseDrawer.Portal>
   );
 }
 
@@ -183,15 +206,15 @@ function DrawerFooter({ children }: DrawerFooterProps) {
 
 function DrawerTitle({ children }: DrawerTitleProps) {
   return (
-    <VaulDrawer.Title className="ds-drawer-title">{children}</VaulDrawer.Title>
+    <BaseDrawer.Title className="ds-drawer-title">{children}</BaseDrawer.Title>
   );
 }
 
 function DrawerDescription({ children }: DrawerDescriptionProps) {
   return (
-    <VaulDrawer.Description className="ds-drawer-description">
+    <BaseDrawer.Description className="ds-drawer-description">
       {children}
-    </VaulDrawer.Description>
+    </BaseDrawer.Description>
   );
 }
 
@@ -203,20 +226,22 @@ export function Drawer({
   children,
   open,
   onOpenChange,
-  shouldScaleBackground,
-  direction,
+  defaultOpen,
+  direction = "bottom",
+  modal,
 }: DrawerProps) {
   return (
     <>
       <style>{DRAWER_CSS}</style>
-      <VaulDrawer.Root
+      <BaseDrawer.Root
         open={open}
         onOpenChange={onOpenChange}
-        shouldScaleBackground={shouldScaleBackground}
-        direction={direction}
+        defaultOpen={defaultOpen}
+        swipeDirection={SWIPE_DIRECTION[direction]}
+        modal={modal}
       >
         {children}
-      </VaulDrawer.Root>
+      </BaseDrawer.Root>
     </>
   );
 }

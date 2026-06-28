@@ -1,13 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { ChevronDown, Lock } from "lucide-react";
+
+/** Atomic-design classification — surfaced as a badge on each component page
+ *  now that the sidebar is a single flat, alphabetical Components list. */
+export type ComponentType = "Atom" | "Molecule" | "Organism";
 
 export interface NavItem {
   id: string;
   label: string;
   locked?: boolean;
+  type?: ComponentType;
+  /**
+   * Optional explicit destination. When set, this item is an *alias* — a nav
+   * link to an anchor on another page rather than its own route (e.g. Pill →
+   * the Badge page's `#pill` section), mirroring Geist. Consumers route here
+   * via soft navigation instead of deriving `/admin/design-system/{id}`.
+   */
+  href?: string;
 }
 
 export interface NavSection {
@@ -30,11 +41,17 @@ export const navigation: NavSection[] = [
     label: "Foundations",
     items: [
       { id: "introduction", label: "Introduction" },
-      { id: "registry-mcp", label: "Registry & MCP" },
       { id: "colours", label: "Colours" },
       { id: "icons", label: "Icons" },
       { id: "typography", label: "Typography" },
       { id: "materials", label: "Materials" },
+    ],
+  },
+  {
+    id: "resources",
+    label: "Resources",
+    items: [
+      { id: "registry-mcp", label: "Registry & MCP" },
     ],
   },
   {
@@ -45,102 +62,117 @@ export const navigation: NavSection[] = [
     ],
   },
   {
-    id: "atoms",
-    label: "Atoms",
+    // One flat, alphabetical Components list (atoms/molecules/organisms merged).
+    // The atomic classification is surfaced per-page via a type badge, not by
+    // sidebar grouping. Keep this sorted by label.
+    id: "components",
+    label: "Components",
     items: [
-      { id: "avatar", label: "Avatar" },
-      { id: "badge", label: "Badge" },
-      { id: "button", label: "Button" },
-      { id: "checkbox", label: "Checkbox" },
-      { id: "gauge", label: "Gauge" },
-      { id: "input", label: "Input" },
-      { id: "keyboard-input", label: "Keyboard Input" },
-      { id: "loading-dots", label: "Loading Dots" },
-      { id: "material", label: "Material" },
-      { id: "number-ticker", label: "Number Ticker" },
-      { id: "progress", label: "Progress" },
-      { id: "radio", label: "Radio" },
-      { id: "show-more", label: "Show More" },
-      { id: "skeleton", label: "Skeleton" },
-      { id: "spinner", label: "Spinner" },
-      { id: "status-dot", label: "Status Dot" },
-      { id: "switch", label: "Switch" },
-      { id: "textarea", label: "Textarea" },
-      { id: "toggle", label: "Toggle" },
-    ],
-  },
-  {
-    id: "molecules",
-    label: "Molecules",
-    items: [
-      { id: "accordion", label: "Accordion" },
-      { id: "ad-slot", label: "Ad Slot" },
-      { id: "article-card", label: "Article Card" },
-      { id: "browser", label: "Browser" },
-      { id: "calendar", label: "Calendar" },
-      { id: "choicebox", label: "Choicebox" },
-      { id: "code-block", label: "Code Block" },
-      { id: "collapse", label: "Collapse" },
-      { id: "collapsible-input", label: "Collapsible Input" },
-      { id: "combobox", label: "Combobox" },
-      { id: "context-card", label: "Context Card" },
-      { id: "description", label: "Description" },
-      { id: "empty-state", label: "Empty State" },
-      { id: "entity", label: "Entity" },
-      { id: "error", label: "Error" },
-      { id: "fieldset", label: "Fieldset" },
-      { id: "grid", label: "Grid" },
-      { id: "multi-select", label: "Multi Select" },
-      { id: "note", label: "Note" },
-      { id: "pagination", label: "Pagination" },
-      { id: "panel-card", label: "Panel Card" },
-      { id: "phone", label: "Phone" },
-      { id: "race-card", label: "Race Card" },
-      { id: "relative-time-card", label: "Relative Time Card" },
-      { id: "scroller", label: "Scroller" },
-      { id: "search", label: "Search" },
-      { id: "select", label: "Select" },
-      { id: "slider", label: "Slider" },
-      { id: "snippet", label: "Snippet" },
-      { id: "split-button", label: "Split Button" },
-      { id: "stat-tile", label: "Stat Tile" },
-      { id: "tabs", label: "Tabs" },
-      { id: "theme-switcher", label: "Theme Switcher" },
-      { id: "tooltip", label: "Tooltip" },
-      { id: "trend-chart", label: "Trend Chart" },
-    ],
-  },
-  {
-    id: "organisms",
-    label: "Organisms",
-    items: [
-      { id: "command-menu", label: "Command Menu" },
-      { id: "consent-banner", label: "Consent Banner" },
-      { id: "context-menu", label: "Context Menu" },
-      { id: "destructive-action-modal", label: "Destructive Action Modal" },
-      { id: "drawer", label: "Drawer" },
-      { id: "feedback", label: "Feedback" },
-      { id: "footer", label: "Footer" },
-      { id: "login", label: "Login" },
-      { id: "menu", label: "Menu" },
-      { id: "modal", label: "Modal" },
-      { id: "newsletter-modal", label: "Newsletter Modal" },
-      { id: "newsletter-signup", label: "Newsletter Signup" },
-      { id: "project-banner", label: "Project Banner" },
-      { id: "sheet", label: "Sheet" },
-      { id: "site-header", label: "Site Header" },
-      { id: "table", label: "Table" },
-      { id: "toast", label: "Toast" },
-    ],
-  },
-  {
-    id: "templates",
-    label: "Templates",
-    items: [
-      { id: "page-frame", label: "Page Frame" },
+      { id: "ad-slot", label: "Ad Slot", type: "Molecule" },
+      { id: "avatar", label: "Avatar", type: "Atom" },
+      { id: "badge", label: "Badge", type: "Atom" },
+      { id: "banner", label: "Banner", type: "Molecule" },
+      { id: "breadcrumbs", label: "Breadcrumbs", type: "Molecule" },
+      { id: "browser", label: "Browser", type: "Molecule" },
+      { id: "button", label: "Button", type: "Atom" },
+      { id: "calendar", label: "Calendar", type: "Molecule" },
+      { id: "card", label: "Card", type: "Atom" },
+      { id: "checkbox", label: "Checkbox", type: "Atom" },
+      { id: "choicebox", label: "Choicebox", type: "Molecule" },
+      { id: "clearable-input", label: "Clearable Input", type: "Molecule" },
+      { id: "code", label: "Code", type: "Atom" },
+      { id: "code-block", label: "Code Block", type: "Molecule" },
+      { id: "collapse", label: "Collapse", type: "Molecule" },
+      { id: "collapsible-input", label: "Collapsible Input", type: "Molecule" },
+      { id: "combobox", label: "Combobox", type: "Molecule" },
+      { id: "command-menu", label: "Command Menu", type: "Organism" },
+      { id: "consent-banner", label: "Consent Banner", type: "Organism" },
+      { id: "context-card", label: "Context Card", type: "Molecule" },
+      { id: "context-menu", label: "Context Menu", type: "Organism" },
+      { id: "copy-button", label: "Copy Button", type: "Atom" },
+      { id: "description", label: "Description", type: "Molecule" },
+      {
+        id: "destructive-action-modal",
+        label: "Destructive Action Modal",
+        type: "Organism",
+      },
+      { id: "dots-menu", label: "Dots Menu", type: "Molecule" },
+      { id: "drawer", label: "Drawer", type: "Organism" },
+      { id: "empty-state", label: "Empty State", type: "Molecule" },
+      { id: "entity", label: "Entity", type: "Molecule" },
+      { id: "error", label: "Error", type: "Molecule" },
+      { id: "error-card", label: "Error Card", type: "Molecule" },
+      { id: "feedback", label: "Feedback", type: "Organism" },
+      { id: "fieldset", label: "Fieldset", type: "Molecule" },
+      { id: "file-tree", label: "File Tree", type: "Molecule" },
+      { id: "gauge", label: "Gauge", type: "Atom" },
+      { id: "grid", label: "Grid", type: "Molecule" },
+      { id: "input", label: "Input", type: "Atom" },
+      { id: "keyboard-input", label: "Keyboard Input", type: "Atom" },
+      { id: "label", label: "Label", type: "Atom" },
+      { id: "load-more-button", label: "Load More Button", type: "Molecule" },
+      { id: "loading-dots", label: "Loading Dots", type: "Atom" },
+      { id: "login", label: "Login", type: "Organism" },
+      { id: "material", label: "Material", type: "Atom" },
+      { id: "menu", label: "Menu", type: "Organism" },
+      { id: "middle-truncate", label: "Middle Truncate", type: "Atom" },
+      { id: "modal", label: "Modal", type: "Organism" },
+      { id: "multi-select", label: "Multi Select", type: "Molecule" },
+      { id: "note", label: "Note", type: "Molecule" },
+      { id: "number-ticker", label: "Number Ticker", type: "Atom" },
+      { id: "pagination", label: "Pagination", type: "Molecule" },
+      { id: "panel-card", label: "Panel Card", type: "Molecule" },
+      { id: "phone", label: "Phone", type: "Molecule" },
+      {
+        id: "pill",
+        label: "Pill",
+        type: "Atom",
+        href: "/admin/design-system/badge#pill",
+      },
+      { id: "progress", label: "Progress", type: "Atom" },
+      { id: "project-banner", label: "Project Banner", type: "Organism" },
+      { id: "radio", label: "Radio", type: "Atom" },
+      {
+        id: "relative-time-card",
+        label: "Relative Time Card",
+        type: "Molecule",
+      },
+      { id: "scroller", label: "Scroller", type: "Molecule" },
+      { id: "search", label: "Search", type: "Molecule" },
+      { id: "search-input", label: "Search Input", type: "Molecule" },
+      { id: "select", label: "Select", type: "Molecule" },
+      { id: "separator", label: "Separator", type: "Atom" },
+      { id: "sheet", label: "Sheet", type: "Organism" },
+      { id: "show-more", label: "Show More", type: "Atom" },
+      { id: "skeleton", label: "Skeleton", type: "Atom" },
+      { id: "slider", label: "Slider", type: "Molecule" },
+      { id: "snippet", label: "Snippet", type: "Molecule" },
+      { id: "spinner", label: "Spinner", type: "Atom" },
+      { id: "split-button", label: "Split Button", type: "Molecule" },
+      { id: "stat-tile", label: "Stat Tile", type: "Molecule" },
+      { id: "status-dot", label: "Status Dot", type: "Atom" },
+      { id: "switch", label: "Switch", type: "Atom" },
+      { id: "table", label: "Table", type: "Organism" },
+      { id: "tabs", label: "Tabs", type: "Molecule" },
+      { id: "text-with-copy-button", label: "Text With Copy Button", type: "Molecule" },
+      { id: "textarea", label: "Textarea", type: "Atom" },
+      { id: "theme-switcher", label: "Theme Switcher", type: "Molecule" },
+      { id: "toast", label: "Toast", type: "Organism" },
+      { id: "toggle", label: "Toggle", type: "Atom" },
+      { id: "tooltip", label: "Tooltip", type: "Molecule" },
+      { id: "trend-chart", label: "Trend Chart", type: "Molecule" },
+      { id: "video", label: "Video", type: "Molecule" },
     ],
   },
 ];
+
+/** slug → atomic type, for the per-page Component badge. */
+export const componentTypeBySlug: Record<string, ComponentType> =
+  Object.fromEntries(
+    (navigation.find((s) => s.id === "components")?.items ?? [])
+      .filter((i) => i.type)
+      .map((i) => [i.id, i.type as ComponentType]),
+  );
 
 export default function DesignSystemSidebar({
   activeSlug,

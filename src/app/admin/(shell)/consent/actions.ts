@@ -6,20 +6,24 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { CONSENT_CACHE_TAG } from "./data";
 
+// DSAR erasure for a c15t subject. The form field is still named `anonId` for
+// compatibility with DeleteIdButton; its value is the c15t subject id (sub_xxx).
 export async function deleteConsentRecordsByAnonId(formData: FormData) {
   if (!(await isAdminAuthenticated())) {
     redirect("/admin/login");
   }
-  const anonId = String(formData.get("anonId") ?? "").trim();
-  if (!anonId) return;
+  const subjectId = String(formData.get("anonId") ?? "").trim();
+  if (!subjectId) return;
 
   const supabase = getSupabaseAdmin();
-  // `.select("id")` makes the delete RETURNING — atomic count of
-  // exactly what was removed, no race with a separate count query.
+
+  // Delete consent rows first (RETURNING gives an atomic count of exactly what
+  // was removed). The FKs are ON DELETE RESTRICT, so child rows (consent +
+  // audit log) MUST go before the subject row.
   const { data: deleted, error } = await supabase
-    .from("consent_records")
+    .from("c15t_consent")
     .delete()
-    .eq("anon_id", anonId)
+    .eq("subjectId", subjectId)
     .select("id");
 
   if (error) {
@@ -27,18 +31,27 @@ export async function deleteConsentRecordsByAnonId(formData: FormData) {
     throw new Error(error.message);
   }
 
-  // Audit the deletion. Best-effort write — if the log insert fails
-  // we still consider the user-facing delete successful, but log the
-  // discrepancy so it shows up in runtime logs for investigation.
+  const { error: auditError } = await supabase
+    .from("c15t_auditLog")
+    .delete()
+    .eq("subjectId", subjectId);
+  if (auditError) {
+    console.error("[consent] audit-log delete failed", auditError);
+  }
+
+  const { error: subjectError } = await supabase
+    .from("c15t_subject")
+    .delete()
+    .eq("id", subjectId);
+  if (subjectError) {
+    console.error("[consent] subject delete failed", subjectError);
+  }
+
+  // Audit the deletion. Best-effort — the user-facing delete is already done.
   const deletedCount = deleted?.length ?? 0;
   const { error: logError } = await supabase
     .from("consent_deletion_log")
-    .insert({
-      anon_id: anonId,
-      deleted_count: deletedCount,
-      // deleted_by stays null for now — single-admin auth doesn't
-      // identify individuals. Populate once multi-user auth lands.
-    });
+    .insert({ anon_id: subjectId, deleted_count: deletedCount });
   if (logError) {
     console.error(
       "[consent] deletion log insert failed (delete still applied)",
@@ -46,8 +59,6 @@ export async function deleteConsentRecordsByAnonId(formData: FormData) {
     );
   }
 
-  // Invalidate every cached consent-data entry (rows + earliest)
-  // so the dashboard reflects the deletion on the next render.
   revalidateTag(CONSENT_CACHE_TAG);
   revalidatePath("/admin/consent");
   redirect("/admin/consent");

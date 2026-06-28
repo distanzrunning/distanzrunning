@@ -1,4 +1,3 @@
-import { buildAccordionItem } from "./items/accordion";
 import { buildAdSlotItem } from "./items/ad-slot";
 import { buildArticleCardItem } from "./items/article-card";
 import { buildAvatarItem } from "./items/avatar";
@@ -7,7 +6,6 @@ import { buildBrowserItem } from "./items/browser";
 import { buildButtonItem } from "./items/button";
 import { buildCalendarItem } from "./items/calendar";
 import { buildCardImageItem } from "./items/card-image";
-import { buildChartItem } from "./items/chart";
 import { buildCheckboxItem } from "./items/checkbox";
 import { buildChoiceboxItem } from "./items/choicebox";
 import { buildCodeBlockItem } from "./items/code-block";
@@ -16,7 +14,6 @@ import { buildCollapsibleInputItem } from "./items/collapsible-input";
 import { buildComboboxItem } from "./items/combobox";
 import { buildCommandMenuItem } from "./items/command-menu";
 import { buildConsentBannerItem } from "./items/consent-banner";
-import { buildConsentContextItem } from "./items/consent-context";
 import { buildContextCardItem } from "./items/context-card";
 import { buildContextMenuItem } from "./items/context-menu";
 import { buildDarkModeProviderItem } from "./items/dark-mode-provider";
@@ -111,7 +108,6 @@ const BUILDERS: Record<string, Builder> = {
 
   // Atoms — utility (not in DS sidebar but required by other items)
   "card-image": buildCardImageItem,
-  "consent-context": buildConsentContextItem,
   "dark-mode-provider": buildDarkModeProviderItem,
   "icon-button": buildIconButtonItem,
   logo: buildLogoItem,
@@ -120,12 +116,10 @@ const BUILDERS: Record<string, Builder> = {
   wordmark: buildWordmarkItem,
 
   // Molecules — documented
-  accordion: buildAccordionItem,
   "ad-slot": buildAdSlotItem,
   "article-card": buildArticleCardItem,
   browser: buildBrowserItem,
   calendar: buildCalendarItem,
-  chart: buildChartItem,
   choicebox: buildChoiceboxItem,
   "code-block": buildCodeBlockItem,
   collapse: buildCollapseItem,

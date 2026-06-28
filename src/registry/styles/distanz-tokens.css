@@ -161,75 +161,75 @@
     --ds-gray-900-value: 0, 0%, 30%;
     --ds-gray-1000-value: 0, 0%, 9%;
     --ds-blue-100-value: 212, 100%, 97%;
-    --ds-blue-200-value: 211, 100%, 96%;
-    --ds-blue-300-value: 211, 100%, 94%;
-    --ds-blue-400-value: 208, 100%, 90%;
+    --ds-blue-200-value: 210, 100%, 96%;
+    --ds-blue-300-value: 210, 100%, 94%;
+    --ds-blue-400-value: 209, 100%, 90%;
     --ds-blue-500-value: 209, 100%, 80%;
     --ds-blue-600-value: 208, 100%, 66%;
-    --ds-blue-700-value: 213, 100%, 48%;
-    --ds-blue-800-value: 214, 100%, 43%;
-    --ds-blue-900-value: 213, 100%, 44%;
-    --ds-blue-1000-value: 214, 100%, 16%;
-    --ds-red-100-value: 353, 100%, 97%;
-    --ds-red-200-value: 357, 100%, 96%;
-    --ds-red-300-value: 358, 100%, 95%;
-    --ds-red-400-value: 1, 100%, 92%;
-    --ds-red-500-value: 359, 100%, 85%;
-    --ds-red-600-value: 358, 100%, 71%;
-    --ds-red-700-value: 347, 100%, 49%;
-    --ds-red-800-value: 351, 100%, 45%;
-    --ds-red-900-value: 351, 100%, 42%;
-    --ds-red-1000-value: 350, 100%, 14%;
-    --ds-amber-100-value: 42, 100%, 94%;
-    --ds-amber-200-value: 45, 100%, 92%;
-    --ds-amber-300-value: 45, 100%, 89%;
-    --ds-amber-400-value: 43, 100%, 76%;
-    --ds-amber-500-value: 40, 100%, 68%;
-    --ds-amber-600-value: 40, 100%, 50%;
-    --ds-amber-700-value: 42, 100%, 50%;
-    --ds-amber-800-value: 36, 100%, 50%;
-    --ds-amber-900-value: 29, 100%, 33%;
-    --ds-amber-1000-value: 20, 100%, 16%;
-    --ds-green-100-value: 120, 81%, 96%;
-    --ds-green-200-value: 125, 79%, 94%;
-    --ds-green-300-value: 117, 80%, 90%;
-    --ds-green-400-value: 123, 75%, 84%;
-    --ds-green-500-value: 126, 72%, 72%;
-    --ds-green-600-value: 127, 71%, 59%;
-    --ds-green-700-value: 135, 62%, 41%;
-    --ds-green-800-value: 135, 58%, 36%;
-    --ds-green-900-value: 139, 77%, 28%;
-    --ds-green-1000-value: 134, 100%, 11%;
-    --ds-teal-100-value: 172, 100%, 94%;
-    --ds-teal-200-value: 165, 94%, 93%;
-    --ds-teal-300-value: 169, 79%, 89%;
-    --ds-teal-400-value: 171, 81%, 83%;
-    --ds-teal-500-value: 172, 84%, 63%;
-    --ds-teal-600-value: 172, 100%, 44%;
-    --ds-teal-700-value: 173, 100%, 33%;
-    --ds-teal-800-value: 173, 100%, 28%;
-    --ds-teal-900-value: 174, 100%, 24%;
-    --ds-teal-1000-value: 171, 100%, 12%;
+    --ds-blue-700-value: 212, 100%, 48%;
+    --ds-blue-800-value: 212, 100%, 41%;
+    --ds-blue-900-value: 211, 100%, 42%;
+    --ds-blue-1000-value: 211, 100%, 15%;
+    --ds-red-100-value: 0, 100%, 97%;
+    --ds-red-200-value: 0, 100%, 96%;
+    --ds-red-300-value: 0, 100%, 95%;
+    --ds-red-400-value: 0, 90%, 92%;
+    --ds-red-500-value: 0, 82%, 85%;
+    --ds-red-600-value: 359, 90%, 71%;
+    --ds-red-700-value: 358, 75%, 59%;
+    --ds-red-800-value: 358, 70%, 52%;
+    --ds-red-900-value: 358, 66%, 48%;
+    --ds-red-1000-value: 355, 49%, 15%;
+    --ds-amber-100-value: 39, 100%, 95%;
+    --ds-amber-200-value: 44, 100%, 92%;
+    --ds-amber-300-value: 43, 96%, 90%;
+    --ds-amber-400-value: 42, 100%, 78%;
+    --ds-amber-500-value: 38, 100%, 71%;
+    --ds-amber-600-value: 36, 90%, 62%;
+    --ds-amber-700-value: 39, 100%, 57%;
+    --ds-amber-800-value: 35, 100%, 52%;
+    --ds-amber-900-value: 30, 100%, 32%;
+    --ds-amber-1000-value: 20, 79%, 17%;
+    --ds-green-100-value: 120, 60%, 96%;
+    --ds-green-200-value: 120, 60%, 95%;
+    --ds-green-300-value: 120, 60%, 91%;
+    --ds-green-400-value: 122, 60%, 86%;
+    --ds-green-500-value: 124, 60%, 75%;
+    --ds-green-600-value: 125, 60%, 64%;
+    --ds-green-700-value: 131, 41%, 46%;
+    --ds-green-800-value: 132, 43%, 39%;
+    --ds-green-900-value: 133, 50%, 32%;
+    --ds-green-1000-value: 128, 29%, 15%;
+    --ds-teal-100-value: 169, 70%, 96%;
+    --ds-teal-200-value: 167, 70%, 94%;
+    --ds-teal-300-value: 168, 70%, 90%;
+    --ds-teal-400-value: 170, 70%, 85%;
+    --ds-teal-500-value: 170, 70%, 72%;
+    --ds-teal-600-value: 170, 70%, 57%;
+    --ds-teal-700-value: 173, 80%, 36%;
+    --ds-teal-800-value: 173, 83%, 30%;
+    --ds-teal-900-value: 174, 91%, 25%;
+    --ds-teal-1000-value: 171, 80%, 13%;
     --ds-purple-100-value: 276, 100%, 97%;
-    --ds-purple-200-value: 274, 100%, 97%;
-    --ds-purple-300-value: 274, 100%, 95%;
-    --ds-purple-400-value: 278, 100%, 93%;
-    --ds-purple-500-value: 276, 100%, 83%;
-    --ds-purple-600-value: 274, 100%, 75%;
-    --ds-purple-700-value: 279, 100%, 48%;
-    --ds-purple-800-value: 279, 100%, 40%;
-    --ds-purple-900-value: 277, 100%, 39%;
+    --ds-purple-200-value: 277, 87%, 97%;
+    --ds-purple-300-value: 274, 78%, 95%;
+    --ds-purple-400-value: 276, 71%, 92%;
+    --ds-purple-500-value: 274, 70%, 82%;
+    --ds-purple-600-value: 273, 72%, 73%;
+    --ds-purple-700-value: 272, 51%, 54%;
+    --ds-purple-800-value: 272, 47%, 45%;
+    --ds-purple-900-value: 274, 71%, 43%;
     --ds-purple-1000-value: 276, 100%, 15%;
-    --ds-pink-100-value: 329, 100%, 96%;
-    --ds-pink-200-value: 337, 100%, 96%;
-    --ds-pink-300-value: 339, 100%, 94%;
-    --ds-pink-400-value: 343, 100%, 92%;
-    --ds-pink-500-value: 340, 95%, 85%;
-    --ds-pink-600-value: 340, 91%, 74%;
-    --ds-pink-700-value: 333, 89%, 55%;
-    --ds-pink-800-value: 333, 87%, 48%;
-    --ds-pink-900-value: 334, 81%, 43%;
-    --ds-pink-1000-value: 332, 87%, 15%;
+    --ds-pink-100-value: 330, 100%, 96%;
+    --ds-pink-200-value: 340, 90%, 96%;
+    --ds-pink-300-value: 340, 82%, 94%;
+    --ds-pink-400-value: 341, 76%, 91%;
+    --ds-pink-500-value: 340, 75%, 84%;
+    --ds-pink-600-value: 341, 75%, 73%;
+    --ds-pink-700-value: 336, 80%, 58%;
+    --ds-pink-800-value: 336, 74%, 51%;
+    --ds-pink-900-value: 336, 65%, 45%;
+    --ds-pink-1000-value: 333, 74%, 15%;
 
     /* Gray alpha — translucent overlays (black-based, theme-scoped) */
     --ds-gray-alpha-100: rgba(0, 0, 0, 0.05);
@@ -244,27 +244,59 @@
     --ds-gray-alpha-1000: rgba(0, 0, 0, 0.91);
 
     /* ─────────────────────────────────────────────────────────────────────────
-       SPACING - Base spacing scale (matches Geist)
+       SPACING — verbatim port of Geist's --geist-space scale (4px base unit).
+       Theme-independent: declared identically in the light + dark blocks.
+       Every token carries a -negative twin where Geist defines one.
        ───────────────────────────────────────────────────────────────────────── */
     --ds-space: 4px;
+    --ds-space-negative: -4px;
     --ds-space-2x: 8px;
+    --ds-space-2x-negative: -8px;
     --ds-space-3x: 12px;
     --ds-space-4x: 16px;
+    --ds-space-4x-negative: -16px;
     --ds-space-6x: 24px;
     --ds-space-8x: 32px;
+    --ds-space-8x-negative: -32px;
     --ds-space-10x: 40px;
-    --ds-space-12x: 48px;
     --ds-space-16x: 64px;
+    --ds-space-16x-negative: -64px;
+    --ds-space-24x: 96px;
+    --ds-space-24x-negative: -96px;
+    --ds-space-32x: 128px;
+    --ds-space-32x-negative: -128px;
+    --ds-space-48x: 192px;
+    --ds-space-48x-negative: -192px;
+    --ds-space-64x: 256px;
+    --ds-space-64x-negative: -256px;
 
-    /* Component size tokens */
+    /* Component size tokens (Geist small/medium/large) */
     --ds-space-small: 32px; /* Small buttons, inputs */
+    --ds-space-small-negative: -32px;
     --ds-space-medium: 40px; /* Default buttons, inputs */
+    --ds-space-medium-negative: -40px;
     --ds-space-large: 48px; /* Large buttons, inputs */
+    --ds-space-large-negative: -48px;
 
-    /* Gap tokens */
+    /* Gap tokens. NB: Geist aliases gap-quarter to 2x (8px), not a literal
+       quarter of the 24px gap — kept verbatim. */
     --ds-space-gap: 24px;
+    --ds-space-gap-negative: -24px;
     --ds-space-gap-half: 12px;
-    --ds-space-gap-quarter: 6px;
+    --ds-space-gap-half-negative: -12px;
+    --ds-space-gap-quarter: var(--ds-space-2x);
+    --ds-space-gap-quarter-negative: var(--ds-space-2x-negative);
+
+    /* Geist's --geist-gap* convenience aliases over the scale above */
+    --ds-gap: var(--ds-space-gap); /* 24px */
+    --ds-gap-negative: var(--ds-space-gap-negative);
+    --ds-gap-half: var(--ds-space-gap-half); /* 12px */
+    --ds-gap-half-negative: var(--ds-space-gap-half-negative);
+    --ds-gap-quarter: var(--ds-space-gap-quarter); /* 8px */
+    --ds-gap-quarter-negative: var(--ds-space-gap-quarter-negative);
+    --ds-gap-double: var(--ds-space-large); /* 48px */
+    --ds-gap-double-negative: var(--ds-space-large-negative);
+    --ds-gap-section: var(--ds-space-small); /* 32px */
 
     /* ─────────────────────────────────────────────────────────────────────────
        BUTTON - Button-specific tokens
@@ -301,8 +333,6 @@
        RADIUS - Border radius scale (matches Materials page)
        ───────────────────────────────────────────────────────────────────────── */
     --ds-radius-small: 6px; /* Buttons, inputs, tooltips, base surfaces */
-    /* Frontify-style navbar cards and floating-pill containers */
-    --ds-radius-medium: 8px;
     --ds-radius-large: 12px; /* Menus, modals, medium/large surfaces */
     --ds-radius-xlarge: 16px; /* Fullscreen overlays */
     --ds-radius-full: 9999px; /* Pills, circular elements */
@@ -321,37 +351,73 @@
     /* ─────────────────────────────────────────────────────────────────────────
        SHADOWS - Geist shadow system for materials
        ───────────────────────────────────────────────────────────────────────── */
-    --ds-shadow-border-base: 0 0 0 1px rgba(0, 0, 0, 0.08);
-    --ds-shadow-small: 0px 2px 4px rgba(0, 0, 0, 0.06);
-    --ds-shadow-medium:
-      0px 2px 4px rgba(0, 0, 0, 0.06), 0px 8px 8px -8px rgba(0, 0, 0, 0.06);
-    --ds-shadow-large:
-      0px 2px 4px rgba(0, 0, 0, 0.06), 0px 8px 16px -4px rgba(0, 0, 0, 0.08);
+    /* Geist shadow system (verbatim). Every bordered shadow is composed
+       from two reusable rings: shadow-border-base (the inner hairline,
+       black in light) and shadow-background-border (a 1px ring coloured
+       as the page = bg-200). Only those two + small/medium flip by theme
+       — the floating-shadow formulas are identical light/dark. */
+    --ds-shadow-background-border: 0 0 0 1px var(--ds-background-200);
+    --ds-shadow-border-base: 0 0 0 1px #00000014;
+    /* Inset hairline ring (Geist `shadow-border-inset`) — for swatches,
+       avatars, chips: a 1px inner border that flips with the theme. */
+    --ds-shadow-border-inset: inset 0 0 0 1px #00000014;
+    --ds-shadow-border:
+      var(--ds-shadow-border-base), var(--ds-shadow-background-border);
+    /* Card materials — the shared border ring plus Geist's literal resting
+       (0 4px 6px) and hover (0 6px 14px) lifts. Defined as tokens (not inline
+       in tailwind.config) so each Tailwind shadow value is a SINGLE var(): v4
+       then can't split a composite var()+rgba into colour layers, which is what
+       tripped Lightning CSS during minification (the card-hover build warning).
+       The var(--ds-shadow-border) reference resolves per-theme at use time, so
+       one definition covers both light and dark. */
+    --ds-shadow-card: var(--ds-shadow-border);
+    --ds-shadow-card-raised:
+      var(--ds-shadow-border), 0 4px 6px rgba(0, 0, 0, 0.04);
+    --ds-shadow-card-hover:
+      var(--ds-shadow-border), 0 6px 14px rgba(0, 0, 0, 0.08);
+    /* Geist `shadow-border-small` — a softly raised hairline: border ring +
+       a small drop + the page-coloured ring. Used by the Banner pill. The
+       formula references the theme-flipping sub-tokens, so one definition
+       resolves correctly in both light and dark. */
+    --ds-shadow-border-small:
+      var(--ds-shadow-border-base), var(--ds-shadow-small),
+      var(--ds-shadow-background-border);
+    --ds-shadow-small: 0px 2px 2px #0000000a;
+    --ds-shadow-medium: 0px 2px 2px #0000000a, 0px 8px 8px -8px #0000000a;
+    --ds-shadow-large: 0px 2px 2px #0000000a, 0px 8px 16px -4px #0000000a;
+    /* shadow-border-{medium,large} — the raised hairline family at the
+       medium/large drop depths (Geist-verbatim; formulas reference the
+       theme-flipping sub-tokens, so one definition covers both themes). */
+    --ds-shadow-border-medium:
+      var(--ds-shadow-border-base), var(--ds-shadow-medium),
+      var(--ds-shadow-background-border);
+    --ds-shadow-border-large:
+      var(--ds-shadow-border-base), var(--ds-shadow-large),
+      var(--ds-shadow-background-border);
     --ds-shadow-tooltip:
-      0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
-      0px 4px 8px rgba(0, 0, 0, 0.04);
+      var(--ds-shadow-border-base), 0px 1px 1px #00000005,
+      0px 4px 8px #0000000a, var(--ds-shadow-background-border);
     --ds-shadow-menu:
-      0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
-      0px 4px 8px -4px rgba(0, 0, 0, 0.04),
-      0px 16px 24px -8px rgba(0, 0, 0, 0.06);
+      var(--ds-shadow-border-base), 0px 1px 1px #00000005,
+      0px 4px 8px -4px #0000000a, 0px 16px 24px -8px #0000000f,
+      var(--ds-shadow-background-border);
     --ds-shadow-modal:
-      0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
-      0px 8px 16px -4px rgba(0, 0, 0, 0.04),
-      0px 24px 32px -8px rgba(0, 0, 0, 0.06);
+      var(--ds-shadow-border-base), 0px 1px 1px #00000005,
+      0px 8px 16px -4px #0000000a, 0px 24px 32px -8px #0000000f,
+      var(--ds-shadow-background-border);
     --ds-shadow-fullscreen:
-      0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
-      0px 8px 16px -4px rgba(0, 0, 0, 0.04),
-      0px 24px 32px -8px rgba(0, 0, 0, 0.06);
+      var(--ds-shadow-border-base), 0px 1px 1px #00000005,
+      0px 8px 16px -4px #0000000a, 0px 24px 32px -8px #0000000f,
+      var(--ds-shadow-background-border);
 
-    /* Overlay / Backdrop — shared scrim for Mega-menu, Modal, and
-       Search. Dim direction in light mode (darken the page so the
-       foreground reads as active); flips to a light lift in dark
-       mode (black-on-black would be invisible). Moderate opacity:
-       the previous near-page-colour-at-80% was modal-grade frost,
-       which was too heavy for hover-driven chrome. Always paired
-       with backdrop-filter:blur(8px) at the callsite. */
-    --ds-overlay-backdrop-color: rgb(0, 0, 0);
-    --ds-overlay-backdrop-opacity: 0.2;
+    /* Overlay / Backdrop — Geist-verbatim: the page tone (bg-200) at
+       0.8 opacity, always paired with backdrop-filter:blur(8px) at the
+       callsite. Because the colour is bg-200 it flips with the theme —
+       a near-white #FAFAFA frost in light, a near-black #000 dim in
+       dark — so one definition covers both. Shared by Mega-menu, Modal,
+       Sheet, Feedback, and PopoverBackdrop. */
+    --ds-overlay-backdrop-color: var(--ds-background-200);
+    --ds-overlay-backdrop-opacity: 0.8;
 
     /* Modal backgrounds — panel is the body surface (bg-100, the
        brighter shade in light mode), sections (header / footer /
@@ -362,8 +428,37 @@
     --ds-modal-panel-bg: hsl(var(--color-surface)); /* raised panel */
     --ds-modal-section-bg: hsl(var(--color-canvas)); /* recessed section/footer */
 
-    /* Focus ring outer glow */
-    --ds-focus-ring: #00000029;
+    /* Focus ring (Geist): a blue halo — 2px page-bg gap then a 2px focus
+       ring. --ds-focus-color is the accent blue-700 (#0070F3) in light —
+       Geist-verbatim, and matching the link/chart/selection accent; dark
+       flips to blue-900 below. --ds-focus-ring is the full shadow;
+       --ds-focus-ring-outline is the outline form. */
+    --ds-focus-color: var(--ds-blue-700);
+    --ds-focus-ring-outline: 2px solid var(--ds-focus-color);
+    --ds-focus-ring: 0 0 0 2px var(--ds-background-100), 0 0 0 4px var(--ds-focus-color);
+    /* --ds-focus-border: the *grey* input-focus treatment (a gray-alpha-600
+       hairline + a soft halo), distinct from the blue --ds-focus-ring. The
+       outer halo colour flips by theme. Used by inputs/textarea/select. */
+    --ds-focus-border:
+      0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #00000029;
+
+    /* Motion (Geist) — overlay/popover enter-exit curves + timings. Theme-
+       independent, so defined once here. */
+    --ds-motion-timing-swift: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    --ds-motion-overlay-duration: 0.3s;
+    --ds-motion-overlay-scale: 0.96;
+    --ds-motion-overlay-timing: var(--ds-motion-timing-swift);
+    --ds-motion-popover-duration: 0.2s;
+    --ds-motion-popover-timing: var(--ds-motion-timing-swift);
+
+    /* Fixed white foreground for text/icons on solid coloured fills
+       (badges, etc.). #fff in both themes — Geist's --ds-contrast-fg. */
+    --ds-contrast-fg: #fff;
+
+    /* Letter/initials avatar fill — Geist's accents-6 (#444 light / #999 dark),
+       a touch darker than gray-900. The white-50% initials sit on this. Not a
+       step in the gray scale, so it gets its own theme-flipping token. */
+    --ds-avatar-initials-bg: #444;
 
     /* Rounded shadow button - marketing style */
     --ds-shadow-button-rounded:
@@ -379,16 +474,14 @@
     --calendar-button-shadow-hover: var(--ds-gray-500) 0px 0px 0px 1px;
     --calendar-button-bg: hsl(var(--color-surface));
     --calendar-button-bg-hover: var(--ds-gray-100);
-    --calendar-button-focus-ring: 0 0 0 1px #00000057, 0 0 0 4px #00000029;
+    /* Grey input-focus treatment, shared with inputs/select (theme-aware). */
+    --calendar-button-focus-ring: var(--ds-focus-border);
 
     /* Calendar popover - Geist design tokens */
     --calendar-popover-bg: hsl(var(--color-surface));
     --calendar-popover-radius: 12px;
-    --calendar-popover-shadow:
-      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.02) 0px 1px 1px 0px,
-      rgba(0, 0, 0, 0.04) 0px 4px 8px -4px,
-      rgba(0, 0, 0, 0.06) 0px 16px 24px -8px,
-      rgb(250, 250, 250) 0px 0px 0px 1px inset;
+    /* Floating menu material (Geist-verbatim, theme-aware). */
+    --calendar-popover-shadow: var(--ds-shadow-menu);
     --calendar-day-radius: 4px;
     --calendar-day-color: hsl(var(--color-textDefault));
     --calendar-day-outside-color: hsl(var(--color-textSubtler));
@@ -497,6 +590,16 @@
     --grid-gutter: 1.5rem; /* 24px - column spacing (small/medium, 2× gap) */
     --grid-outside-gutter: 1.5rem; /* 24px - outside padding (small/medium) */
 
+    /* Page width — Geist-verbatim layout constants. Theme-independent, so
+       declared once here. --ds-page-margin mirrors Geist's --geist-page-margin
+       (= the 24px gap); --ds-page-width-with-margin is the content cap plus a
+       gutter on each side (1400 + 2×24 = 1448px). */
+    --ds-page-margin: var(--ds-space-gap); /* 24px */
+    --ds-page-width: 1400px;
+    --ds-page-width-with-margin: calc(
+      var(--ds-page-width) + calc(2 * var(--ds-page-margin))
+    );
+
     /* ─────────────────────────────────────────────────────────────────────────
        NEWSPRINT — Editor's column grid
        Faint 60 px square grid for editorial panels (News, Races).
@@ -556,76 +659,76 @@
     --ds-gray-800-value: 0, 0%, 49%;
     --ds-gray-900-value: 0, 0%, 63%;
     --ds-gray-1000-value: 0, 0%, 93%;
-    --ds-blue-100-value: 218, 81%, 13%;
-    --ds-blue-200-value: 213, 95%, 15%;
-    --ds-blue-300-value: 211, 100%, 19%;
-    --ds-blue-400-value: 211, 100%, 22%;
-    --ds-blue-500-value: 211, 100%, 26%;
+    --ds-blue-100-value: 216, 50%, 12%;
+    --ds-blue-200-value: 214, 59%, 15%;
+    --ds-blue-300-value: 213, 71%, 20%;
+    --ds-blue-400-value: 212, 78%, 23%;
+    --ds-blue-500-value: 211, 86%, 27%;
     --ds-blue-600-value: 206, 100%, 50%;
     --ds-blue-700-value: 212, 100%, 48%;
-    --ds-blue-800-value: 214, 100%, 42%;
+    --ds-blue-800-value: 212, 100%, 41%;
     --ds-blue-900-value: 210, 100%, 66%;
-    --ds-blue-1000-value: 207, 100%, 96%;
-    --ds-red-100-value: 350, 67%, 12%;
-    --ds-red-200-value: 353, 68%, 16%;
-    --ds-red-300-value: 353, 74%, 21%;
-    --ds-red-400-value: 353, 75%, 25%;
-    --ds-red-500-value: 355, 73%, 31%;
-    --ds-red-600-value: 355, 89%, 57%;
-    --ds-red-700-value: 355, 87%, 57%;
-    --ds-red-800-value: 354, 82%, 49%;
-    --ds-red-900-value: 358, 100%, 68%;
-    --ds-red-1000-value: 351, 100%, 96%;
+    --ds-blue-1000-value: 206, 100%, 96%;
+    --ds-red-100-value: 357, 37%, 12%;
+    --ds-red-200-value: 357, 46%, 16%;
+    --ds-red-300-value: 356, 54%, 22%;
+    --ds-red-400-value: 357, 55%, 26%;
+    --ds-red-500-value: 357, 60%, 32%;
+    --ds-red-600-value: 358, 75%, 59%;
+    --ds-red-700-value: 358, 75%, 59%;
+    --ds-red-800-value: 358, 69%, 52%;
+    --ds-red-900-value: 358, 100%, 69%;
+    --ds-red-1000-value: 353, 90%, 96%;
     --ds-amber-100-value: 35, 100%, 8%;
-    --ds-amber-200-value: 29, 100%, 10%;
-    --ds-amber-300-value: 31, 100%, 15%;
-    --ds-amber-400-value: 33, 100%, 17%;
-    --ds-amber-500-value: 34, 100%, 22%;
-    --ds-amber-600-value: 40, 100%, 46%;
-    --ds-amber-700-value: 42, 100%, 50%;
-    --ds-amber-800-value: 36, 100%, 50%;
-    --ds-amber-900-value: 36, 100%, 50%;
-    --ds-amber-1000-value: 41, 100%, 93%;
-    --ds-green-100-value: 136, 100%, 7%;
-    --ds-green-200-value: 140, 100%, 10%;
-    --ds-green-300-value: 138, 100%, 11%;
-    --ds-green-400-value: 139, 100%, 14%;
-    --ds-green-500-value: 137, 100%, 20%;
-    --ds-green-600-value: 140, 100%, 29%;
-    --ds-green-700-value: 142, 100%, 34%;
-    --ds-green-800-value: 142, 100%, 29%;
-    --ds-green-900-value: 144, 100%, 40%;
-    --ds-green-1000-value: 138, 100%, 93%;
-    --ds-teal-100-value: 168, 100%, 7%;
-    --ds-teal-200-value: 170, 100%, 8%;
-    --ds-teal-300-value: 172, 100%, 12%;
-    --ds-teal-400-value: 170, 100%, 12%;
-    --ds-teal-500-value: 172, 100%, 19%;
-    --ds-teal-600-value: 173, 100%, 30%;
-    --ds-teal-700-value: 173, 100%, 33%;
-    --ds-teal-800-value: 173, 100%, 28%;
-    --ds-teal-900-value: 174, 100%, 39%;
-    --ds-teal-1000-value: 168, 100%, 90%;
-    --ds-purple-100-value: 285, 62%, 12%;
-    --ds-purple-200-value: 283, 59%, 16%;
-    --ds-purple-300-value: 280, 59%, 23%;
-    --ds-purple-400-value: 278, 64%, 28%;
-    --ds-purple-500-value: 276, 62%, 35%;
-    --ds-purple-600-value: 274, 64%, 54%;
-    --ds-purple-700-value: 274, 64%, 54%;
-    --ds-purple-800-value: 274, 62%, 45%;
-    --ds-purple-900-value: 276, 94%, 72%;
-    --ds-purple-1000-value: 283, 100%, 96%;
-    --ds-pink-100-value: 332, 58%, 12%;
-    --ds-pink-200-value: 332, 69%, 15%;
-    --ds-pink-300-value: 331, 69%, 20%;
-    --ds-pink-400-value: 330, 77%, 21%;
-    --ds-pink-500-value: 329, 90%, 24%;
-    --ds-pink-600-value: 332, 100%, 36%;
-    --ds-pink-700-value: 334, 88%, 56%;
-    --ds-pink-800-value: 331, 100%, 45%;
-    --ds-pink-900-value: 339, 100%, 66%;
-    --ds-pink-1000-value: 331, 100%, 96%;
+    --ds-amber-200-value: 32, 100%, 10%;
+    --ds-amber-300-value: 33, 100%, 15%;
+    --ds-amber-400-value: 35, 100%, 17%;
+    --ds-amber-500-value: 35, 91%, 22%;
+    --ds-amber-600-value: 39, 85%, 49%;
+    --ds-amber-700-value: 39, 100%, 57%;
+    --ds-amber-800-value: 35, 100%, 52%;
+    --ds-amber-900-value: 39, 90%, 50%;
+    --ds-amber-1000-value: 40, 94%, 93%;
+    --ds-green-100-value: 136, 50%, 9%;
+    --ds-green-200-value: 137, 50%, 12%;
+    --ds-green-300-value: 136, 50%, 14%;
+    --ds-green-400-value: 135, 70%, 16%;
+    --ds-green-500-value: 135, 70%, 23%;
+    --ds-green-600-value: 135, 70%, 34%;
+    --ds-green-700-value: 131, 41%, 46%;
+    --ds-green-800-value: 132, 43%, 39%;
+    --ds-green-900-value: 131, 43%, 57%;
+    --ds-green-1000-value: 136, 73%, 94%;
+    --ds-teal-100-value: 169, 78%, 7%;
+    --ds-teal-200-value: 170, 74%, 9%;
+    --ds-teal-300-value: 171, 75%, 13%;
+    --ds-teal-400-value: 171, 85%, 13%;
+    --ds-teal-500-value: 172, 85%, 20%;
+    --ds-teal-600-value: 172, 85%, 32%;
+    --ds-teal-700-value: 173, 80%, 36%;
+    --ds-teal-800-value: 173, 83%, 30%;
+    --ds-teal-900-value: 174, 90%, 41%;
+    --ds-teal-1000-value: 166, 71%, 93%;
+    --ds-purple-100-value: 283, 30%, 12%;
+    --ds-purple-200-value: 281, 38%, 16%;
+    --ds-purple-300-value: 279, 44%, 23%;
+    --ds-purple-400-value: 277, 46%, 28%;
+    --ds-purple-500-value: 274, 49%, 35%;
+    --ds-purple-600-value: 272, 51%, 54%;
+    --ds-purple-700-value: 272, 51%, 54%;
+    --ds-purple-800-value: 272, 47%, 45%;
+    --ds-purple-900-value: 275, 80%, 71%;
+    --ds-purple-1000-value: 281, 73%, 96%;
+    --ds-pink-100-value: 335, 32%, 12%;
+    --ds-pink-200-value: 335, 43%, 16%;
+    --ds-pink-300-value: 335, 47%, 21%;
+    --ds-pink-400-value: 335, 51%, 22%;
+    --ds-pink-500-value: 335, 57%, 27%;
+    --ds-pink-600-value: 336, 75%, 40%;
+    --ds-pink-700-value: 336, 80%, 58%;
+    --ds-pink-800-value: 336, 74%, 51%;
+    --ds-pink-900-value: 341, 90%, 67%;
+    --ds-pink-1000-value: 333, 90%, 96%;
 
     /* Gray alpha — translucent overlays (white-based, theme-scoped) */
     --ds-gray-alpha-100: rgba(255, 255, 255, 0.06);
@@ -640,25 +743,54 @@
     --ds-gray-alpha-1000: rgba(255, 255, 255, 0.92);
 
     /* ─────────────────────────────────────────────────────────────────────────
-       SPACING - Base spacing scale (same in dark mode)
+       SPACING — same scale as light (theme-independent; see the light block
+       for the Geist mapping notes).
        ───────────────────────────────────────────────────────────────────────── */
     --ds-space: 4px;
+    --ds-space-negative: -4px;
     --ds-space-2x: 8px;
+    --ds-space-2x-negative: -8px;
     --ds-space-3x: 12px;
     --ds-space-4x: 16px;
+    --ds-space-4x-negative: -16px;
     --ds-space-6x: 24px;
     --ds-space-8x: 32px;
+    --ds-space-8x-negative: -32px;
     --ds-space-10x: 40px;
-    --ds-space-12x: 48px;
     --ds-space-16x: 64px;
+    --ds-space-16x-negative: -64px;
+    --ds-space-24x: 96px;
+    --ds-space-24x-negative: -96px;
+    --ds-space-32x: 128px;
+    --ds-space-32x-negative: -128px;
+    --ds-space-48x: 192px;
+    --ds-space-48x-negative: -192px;
+    --ds-space-64x: 256px;
+    --ds-space-64x-negative: -256px;
 
     --ds-space-small: 32px;
+    --ds-space-small-negative: -32px;
     --ds-space-medium: 40px;
+    --ds-space-medium-negative: -40px;
     --ds-space-large: 48px;
+    --ds-space-large-negative: -48px;
 
     --ds-space-gap: 24px;
+    --ds-space-gap-negative: -24px;
     --ds-space-gap-half: 12px;
-    --ds-space-gap-quarter: 6px;
+    --ds-space-gap-half-negative: -12px;
+    --ds-space-gap-quarter: var(--ds-space-2x);
+    --ds-space-gap-quarter-negative: var(--ds-space-2x-negative);
+
+    --ds-gap: var(--ds-space-gap);
+    --ds-gap-negative: var(--ds-space-gap-negative);
+    --ds-gap-half: var(--ds-space-gap-half);
+    --ds-gap-half-negative: var(--ds-space-gap-half-negative);
+    --ds-gap-quarter: var(--ds-space-gap-quarter);
+    --ds-gap-quarter-negative: var(--ds-space-gap-quarter-negative);
+    --ds-gap-double: var(--ds-space-large);
+    --ds-gap-double-negative: var(--ds-space-large-negative);
+    --ds-gap-section: var(--ds-space-small);
 
     /* ─────────────────────────────────────────────────────────────────────────
        BUTTON - Button-specific tokens (same in dark mode)
@@ -695,7 +827,6 @@
        RADIUS - Border radius scale (same in dark mode)
        ───────────────────────────────────────────────────────────────────────── */
     --ds-radius-small: 6px;
-    --ds-radius-medium: 8px;
     --ds-radius-large: 12px;
     --ds-radius-xlarge: 16px;
     --ds-radius-full: 9999px;
@@ -714,36 +845,42 @@
     /* ─────────────────────────────────────────────────────────────────────────
        SHADOWS - Dark mode (inverted for dark backgrounds)
        ───────────────────────────────────────────────────────────────────────── */
-    --ds-shadow-border-base: 0 0 0 1px rgba(255, 255, 255, 0.1);
-    --ds-shadow-small: 0px 2px 2px rgba(0, 0, 0, 0.2);
-    --ds-shadow-medium:
-      0px 2px 2px rgba(0, 0, 0, 0.2), 0px 8px 8px -8px rgba(0, 0, 0, 0.3);
-    --ds-shadow-large:
-      0px 2px 2px rgba(0, 0, 0, 0.2), 0px 8px 16px -4px rgba(0, 0, 0, 0.3);
+    /* Geist shadow system (verbatim) — dark. Only the inner ring flips:
+       shadow-border-base becomes #ffffff25 (~14.5% white), which is how
+       Geist draws the menu/card hairline in dark. The floating-shadow
+       formulas are identical to light (they just inherit the white ring
+       via shadow-border-base). small/medium carry a heavier black drop. */
+    --ds-shadow-background-border: 0 0 0 1px var(--ds-background-200);
+    --ds-shadow-border-base: 0 0 0 1px #ffffff25;
+    /* Inset hairline ring (Geist `shadow-border-inset`), dark variant. */
+    --ds-shadow-border-inset: inset 0 0 0 1px #ffffff1a;
+    --ds-shadow-border:
+      var(--ds-shadow-border-base), var(--ds-shadow-background-border);
+    --ds-shadow-small: 0px 1px 2px #00000029;
+    --ds-shadow-medium: 0px 2px 2px #00000052, 0px 8px 8px -8px #00000029;
+    --ds-shadow-large: 0px 2px 2px #0000000a, 0px 8px 16px -4px #0000000a;
     --ds-shadow-tooltip:
-      0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
-      0px 4px 8px rgba(0, 0, 0, 0.2);
+      var(--ds-shadow-border-base), 0px 1px 1px #00000005,
+      0px 4px 8px #0000000a, var(--ds-shadow-background-border);
     --ds-shadow-menu:
-      0 0 0 1px rgba(255, 255, 255, 0.22), 0px 2px 2px rgba(0, 0, 0, 0.04),
-      0px 8px 16px -4px rgba(0, 0, 0, 0.04), 0 0 0 1px rgb(0, 0, 0);
+      var(--ds-shadow-border-base), 0px 1px 1px #00000005,
+      0px 4px 8px -4px #0000000a, 0px 16px 24px -8px #0000000f,
+      var(--ds-shadow-background-border);
     --ds-shadow-modal:
-      0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
-      0px 8px 16px -4px rgba(0, 0, 0, 0.2),
-      0px 24px 32px -8px rgba(0, 0, 0, 0.3);
+      var(--ds-shadow-border-base), 0px 1px 1px #00000005,
+      0px 8px 16px -4px #0000000a, 0px 24px 32px -8px #0000000f,
+      var(--ds-shadow-background-border);
     --ds-shadow-fullscreen:
-      0 0 0 1px rgba(255, 255, 255, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.1),
-      0px 8px 16px -4px rgba(0, 0, 0, 0.2),
-      0px 24px 32px -8px rgba(0, 0, 0, 0.3);
+      var(--ds-shadow-border-base), 0px 1px 1px #00000005,
+      0px 8px 16px -4px #0000000a, 0px 24px 32px -8px #0000000f,
+      var(--ds-shadow-background-border);
 
-    /* Overlay / Backdrop — dark mode.
-       Light mode dims with a dark wash; dark mode can't dim a
-       black page with black, so flip to a light wash that lifts
-       the page slightly. Opacity stays low — over near-black,
-       even a tiny white tint reads clearly when paired with the
-       8px blur. Same direction-flip lives in Tokens.md as a
-       house pattern. */
-    --ds-overlay-backdrop-color: rgb(255, 255, 255);
-    --ds-overlay-backdrop-opacity: 0.05;
+    /* Overlay / Backdrop — Geist-verbatim, identical formula to light:
+       page tone (bg-200, which is #000 in dark) at 0.8 + blur(8px).
+       Declared here too for parity with the rest of the dark block,
+       though the value resolves the same as :root. */
+    --ds-overlay-backdrop-color: var(--ds-background-200);
+    --ds-overlay-backdrop-opacity: 0.8;
 
     /* Modal backgrounds — panel = surface (bg-100, the brighter body),
        sections/footers = canvas (bg-200, the softer page tone). Same
@@ -753,8 +890,20 @@
     --ds-modal-panel-bg: hsl(var(--color-surface)); /* raised panel */
     --ds-modal-section-bg: hsl(var(--color-canvas)); /* recessed section/footer */
 
-    /* Focus ring outer glow */
-    --ds-focus-ring: #ffffff3d;
+    /* Focus ring (Geist) — references flip automatically; see :root. */
+    --ds-focus-color: var(--ds-blue-900);
+    --ds-focus-ring-outline: 2px solid var(--ds-focus-color);
+    --ds-focus-ring: 0 0 0 2px var(--ds-background-100), 0 0 0 4px var(--ds-focus-color);
+    /* grey input-focus treatment — outer halo flips to the on-dark value. */
+    --ds-focus-border:
+      0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px #ffffff3d;
+
+    /* Fixed white foreground for solid coloured fills — #fff in both
+       themes (Geist's --ds-contrast-fg). */
+    --ds-contrast-fg: #fff;
+
+    /* Letter/initials avatar fill — Geist's accents-6, dark variant (#999). */
+    --ds-avatar-initials-bg: #999;
 
     /* Rounded shadow button - marketing style (dark mode) */
     --ds-shadow-button-rounded:
@@ -773,17 +922,14 @@
     --calendar-button-shadow-hover: var(--ds-gray-500) 0px 0px 0px 1px;
     --calendar-button-bg: hsl(var(--color-surface));
     --calendar-button-bg-hover: var(--ds-gray-100);
-    --calendar-button-focus-ring: 0 0 0 1px #ffffff57, 0 0 0 4px #ffffff29;
+    /* --calendar-button-focus-ring flips automatically via --ds-focus-border. */
 
     /* Calendar popover - Geist design tokens (dark mode).
        Floating menu uses the raised surface (bg-100 #0A0A0A) + shadow so it
-       advances above the page (bg-200 #000). */
+       advances above the page (bg-200 #000). --calendar-popover-shadow
+       inherits --ds-shadow-menu from :root, which flips by theme. */
     --calendar-popover-bg: hsl(var(--color-surface));
     --calendar-popover-radius: 12px;
-    --calendar-popover-shadow:
-      rgba(255, 255, 255, 0.145) 0px 0px 0px 1px,
-      rgba(0, 0, 0, 0.02) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 4px 8px -4px,
-      rgba(0, 0, 0, 0.06) 0px 16px 24px -8px, rgb(0, 0, 0) 0px 0px 0px 1px inset;
     --calendar-day-radius: 4px;
     --calendar-day-color: hsl(var(--color-textDefault));
     --calendar-day-outside-color: hsl(var(--color-textSubtler));

@@ -63,30 +63,22 @@ const CONTEXT_MENU_CSS = `
     overscroll-behavior: contain;
     list-style-type: none;
     z-index: 100;
-    will-change: transform, opacity;
-    animation-duration: 200ms;
-    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.1);
   }
 
-  .ds-context-menu-content[data-state="open"] {
-    animation-name: ds-context-menu-in;
+  /* Geist: the context menu opens instantly and only fades out on close */
+  .ds-context-menu-content[data-state="closed"] {
+    animation: ds-context-menu-fade-out 150ms ease forwards;
   }
 
-  @keyframes ds-context-menu-in {
-    from {
-      opacity: 0;
-      transform: scale(0.96);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+  @keyframes ds-context-menu-fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
   }
 
   .ds-context-menu-item {
     display: flex;
     align-items: center;
-    gap: var(--ds-space-2x);
+    width: 100%;
     height: var(--ds-space-medium);
     padding: 0 var(--ds-space-2x);
     border-radius: var(--ds-radius-small);
@@ -97,16 +89,25 @@ const CONTEXT_MENU_CSS = `
     user-select: none;
     outline: none;
     text-decoration: none;
-    transition: background 0.1s ease;
+  }
+
+  /* Geist: items grow to a 48px touch target and 16px text below the sm
+     breakpoint (h-10 max-sm:h-12, text-sm max-sm:text-base). */
+  @media (max-width: 639px) {
+    .ds-context-menu-item {
+      height: 48px;
+      font-size: 16px;
+    }
   }
 
   .ds-context-menu-item[data-highlighted] {
-    background: var(--ds-gray-alpha-200);
+    background: var(--ds-gray-alpha-100);
   }
 
   .ds-context-menu-item[data-disabled] {
-    color: var(--ds-gray-600);
+    color: var(--ds-gray-700);
     cursor: default;
+    pointer-events: none;
   }
 
   .ds-context-menu-separator {
@@ -163,30 +164,11 @@ function ContextMenuItem({
   const content = (
     <>
       {prefix && (
-        <span
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 16,
-            height: 16,
-            flexShrink: 0,
-            color: disabled ? "var(--ds-gray-600)" : "var(--ds-gray-900)",
-          }}
-        >
-          {prefix}
-        </span>
+        <span style={{ display: "flex", marginRight: 8 }}>{prefix}</span>
       )}
-      <span style={{ flex: 1 }}>{children}</span>
+      {children}
       {suffix && (
-        <span
-          style={{
-            marginLeft: "auto",
-            fontSize: 12,
-            color: "var(--ds-gray-700)",
-            flexShrink: 0,
-          }}
-        >
+        <span style={{ display: "flex", marginLeft: "auto", paddingLeft: 12 }}>
           {suffix}
         </span>
       )}

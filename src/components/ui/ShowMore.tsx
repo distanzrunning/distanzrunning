@@ -26,6 +26,11 @@ interface ShowMoreProps {
   moreLabel?: string;
   /** Custom "show less" label. Defaults to `Show Less`. */
   lessLabel?: string;
+  /**
+   * Hide the flanking divider lines (render them at `opacity-0`) so the
+   * trigger floats on its own — Geist's "No border" variant.
+   */
+  noBorder?: boolean;
   /** Additional CSS classes */
   className?: string;
 }
@@ -42,7 +47,7 @@ function ChevronDownIcon() {
       <path
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M12.0607 6.74999L11.5303 7.28032L8.7071 10.1035C8.31657 10.4941 7.68341 10.4941 7.29288 10.1035L4.46966 7.28032L3.93933 6.74999L4.99999 5.68933L5.53032 6.21966L7.99999 8.68933L10.4697 6.21966L11 5.68933L12.0607 6.74999Z"
+        d="m12.06 6.75-.53.53-2.82 2.82a1 1 0 0 1-1.42 0L4.47 7.28l-.53-.53L5 5.69l.53.53L8 8.69l2.47-2.47.53-.53z"
         fill="currentColor"
       />
     </svg>
@@ -55,6 +60,7 @@ export function ShowMore({
   defaultExpanded = false,
   moreLabel,
   lessLabel = "Show Less",
+  noBorder = false,
   className = "",
 }: ShowMoreProps) {
   const [expanded, setExpanded] = useState(defaultExpanded);
@@ -115,7 +121,8 @@ export function ShowMore({
             style={{
               flex: 1,
               height: "1px",
-              background: "var(--ds-gray-400)",
+              background: "var(--ds-gray-alpha-400)",
+              opacity: noBorder ? 0 : 1,
             }}
             data-line=""
           />
@@ -152,7 +159,8 @@ export function ShowMore({
             style={{
               flex: 1,
               height: "1px",
-              background: "var(--ds-gray-400)",
+              background: "var(--ds-gray-alpha-400)",
+              opacity: noBorder ? 0 : 1,
             }}
             data-line=""
           />

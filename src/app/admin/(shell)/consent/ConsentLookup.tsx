@@ -12,23 +12,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { CountryCell } from "@/components/admin/CountryCell";
 import { WhenCell } from "@/components/admin/WhenCell";
 import DeleteIdButton from "./DeleteIdButton";
+import { getConsentRowsBySubject, type ConsentDecision } from "./data";
 
-type Decision = "accept_all" | "reject_all" | "custom";
-
-interface ConsentRow {
-  id: number;
-  anon_id: string;
-  marketing: boolean;
-  analytics: boolean;
-  functional: boolean;
-  decision: Decision;
-  country: string | null;
-  created_at: string;
-}
+type Decision = ConsentDecision;
 
 function decisionBadge(d: Decision): { label: string; variant: BadgeVariant } {
   switch (d) {
@@ -44,25 +33,16 @@ function decisionBadge(d: Decision): { label: string; variant: BadgeVariant } {
 const block = { display: "block" } as const;
 
 export async function ConsentLookupContent({ query }: { query: string }) {
-  const supabase = getSupabaseAdmin();
-
-  const { data, error } = await supabase
-    .from("consent_records")
-    .select(
-      "id, anon_id, marketing, analytics, functional, decision, country, created_at",
-    )
-    .eq("anon_id", query)
-    .order("created_at", { ascending: false });
-
-  if (error) {
+  let rows: Awaited<ReturnType<typeof getConsentRowsBySubject>>;
+  try {
+    rows = await getConsentRowsBySubject(query);
+  } catch (err) {
     return (
       <p style={{ color: "var(--ds-red-900)" }}>
-        Lookup failed: {error.message}
+        Lookup failed: {err instanceof Error ? err.message : "Unknown error"}
       </p>
     );
   }
-
-  const rows = (data ?? []) as ConsentRow[];
 
   return (
     <PanelCard>

@@ -104,9 +104,9 @@ export default function LeaderboardPanel({
             letterSpacing: "0.04em",
             color: "hsl(var(--color-textSubtle))",
             // Same 1px line the Tabs container's inset shadow paints
-            // — extended across the column-header gap to the right
-            // edge of the panel.
-            boxShadow: "var(--ds-gray-400) 0px -1px 0px 0px inset",
+            // (gray-200, matching Geist's accents-2 baseline) — extended
+            // across the column-header gap to the right edge of the panel.
+            boxShadow: "var(--ds-gray-200) 0px -1px 0px 0px inset",
           }}
         >
           {columnHeader}

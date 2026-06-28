@@ -18,6 +18,7 @@ import {
   TableCell,
   TableFooter,
 } from "@/components/ui/Table";
+import { Button } from "@/components/ui/Button";
 
 // ============================================================================
 // Toast Component
@@ -232,7 +233,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -550,11 +551,75 @@ export function Component(): JSX.Element {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={3}>Subtotal</TableCell>
-          <TableCell>$24,000.00</TableCell>
+          <TableCell colSpan={3} className="text-gray-1000">
+            Subtotal
+          </TableCell>
+          <TableCell className="text-gray-1000">$24,000.00</TableCell>
         </TableRow>
       </TableFooter>
     </Table>
+  );
+}`;
+
+const virtualizedCode = `import { useState } from 'react';
+import {
+  Table, TableHeader, TableBody, TableRow, TableHead, TableCell,
+} from '@/components/ui/Table';
+import { Button } from '@/components/ui/Button';
+import { ChevronDown } from 'lucide-react';
+import type { JSX } from 'react';
+
+const COLLAPSED_ROWS = 9;
+
+export function Component({ data }: { data: string[][] }): JSX.Element {
+  const [expanded, setExpanded] = useState(false);
+  const rows = expanded ? data : data.slice(0, COLLAPSED_ROWS);
+  const collapsible = data.length > COLLAPSED_ROWS;
+
+  return (
+    <div className="relative">
+      <Table striped interactive>
+        <colgroup>
+          <col style={{ width: '44%' }} />
+          <col style={{ width: '22%' }} />
+          <col style={{ width: '22%' }} />
+          <col style={{ width: '11%' }} />
+        </colgroup>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Product</TableHead>
+            <TableHead>Usage</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead>Charge</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {/* Only the visible window is mounted while collapsed. */}
+          {rows.map((row, i) => (
+            <TableRow key={i}>
+              {row.map((cell, j) => <TableCell key={j}>{cell}</TableCell>)}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      {collapsible && (expanded ? (
+        <div className="sticky bottom-4 mt-3 flex justify-center">
+          <Button variant="secondary" size="small" className="!rounded-full whitespace-nowrap" suffixIcon={<ChevronDown className="h-4 w-4 rotate-180" />} onClick={() => setExpanded(false)}>
+            Show Less
+          </Button>
+        </div>
+      ) : (
+        <>
+          <div className="pointer-events-none absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-[hsl(var(--color-surface))] to-transparent" />
+          <div className="absolute inset-x-0 bottom-4 flex justify-center">
+            <Button variant="secondary" size="small" className="!rounded-full whitespace-nowrap" suffixIcon={<ChevronDown className="h-4 w-4" />} onClick={() => setExpanded(true)}>
+              Show More
+            </Button>
+          </div>
+        </>
+      ))}
+    </div>
   );
 }`;
 
@@ -743,11 +808,100 @@ function FullFeaturedDemo() {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={3}>Subtotal</TableCell>
-          <TableCell>$24,000.00</TableCell>
+          <TableCell colSpan={3} className="text-gray-1000">
+            Subtotal
+          </TableCell>
+          <TableCell className="text-gray-1000">$24,000.00</TableCell>
         </TableRow>
       </TableFooter>
     </Table>
+  );
+}
+
+// Larger dataset for the virtualized preview (cycles the six base products).
+const VIRTUAL_BASE = [
+  ["Brake Pads Set", "100 sets", "$50 per set", "$5,000.00"],
+  ["Oil Filters", "200 filters", "$10 per filter", "$2,000.00"],
+  ["Car Batteries", "50 batteries", "$100 per battery", "$5,000.00"],
+  ["Headlight Bulbs", "300 bulbs", "$15 per bulb", "$4,500.00"],
+  ["Windshield Wipers", "250 pairs", "$20 per pair", "$5,000.00"],
+  ["Spark Plugs", "500 sets", "$5 per set", "$2,500.00"],
+];
+const VIRTUAL_DATA = Array.from(
+  { length: 36 },
+  (_, i) => VIRTUAL_BASE[i % VIRTUAL_BASE.length],
+);
+const COLLAPSED_ROWS = 9;
+
+// Renders a fixed preview window of the dataset; "Show More" mounts the rest.
+// Only the visible rows are in the DOM while collapsed — the off-screen rows
+// are never rendered, mirroring Geist's windowed body.
+function VirtualizedDemo() {
+  const [expanded, setExpanded] = useState(false);
+  const rows = expanded ? VIRTUAL_DATA : VIRTUAL_DATA.slice(0, COLLAPSED_ROWS);
+  const collapsible = VIRTUAL_DATA.length > COLLAPSED_ROWS;
+
+  return (
+    <div className="relative">
+      <Table striped interactive>
+        <colgroup>
+          <col style={{ width: "44%" }} />
+          <col style={{ width: "22%" }} />
+          <col style={{ width: "22%" }} />
+          <col style={{ width: "11%" }} />
+        </colgroup>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Product</TableHead>
+            <TableHead>Usage</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead>Charge</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rows.map((row, i) => (
+            <TableRow key={i}>
+              {row.map((cell, j) => (
+                <TableCell key={j}>{cell}</TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      {collapsible &&
+        (expanded ? (
+          // Expanded: no fade; the control sticks to the bottom of the viewport
+          // while the long table scrolls past.
+          <div className="sticky bottom-4 mt-3 flex justify-center">
+            <Button
+              variant="secondary"
+              size="small"
+              className="!rounded-full whitespace-nowrap"
+              suffixIcon={<ChevronDown className="h-4 w-4 rotate-180" />}
+              onClick={() => setExpanded(false)}
+            >
+              Show Less
+            </Button>
+          </div>
+        ) : (
+          // Collapsed: fade the last rows into the surface; control floats over it.
+          <>
+            <div className="pointer-events-none absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-[hsl(var(--color-surface))] to-transparent" />
+            <div className="absolute inset-x-0 bottom-4 flex justify-center">
+              <Button
+                variant="secondary"
+                size="small"
+                className="!rounded-full whitespace-nowrap"
+                suffixIcon={<ChevronDown className="h-4 w-4" />}
+                onClick={() => setExpanded(true)}
+              >
+                Show More
+              </Button>
+            </div>
+          </>
+        ))}
+    </div>
   );
 }
 
@@ -761,8 +915,8 @@ export default function TableComponent() {
   return (
     <>
       <Section>
-        <SectionHeader id="basic" onCopyLink={showToast}>
-          Basic
+        <SectionHeader id="basic-table" onCopyLink={showToast}>
+          Basic table
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={basicCode}>
@@ -772,8 +926,8 @@ export default function TableComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="striped" onCopyLink={showToast}>
-          Striped
+        <SectionHeader id="striped-table" onCopyLink={showToast}>
+          Striped table
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={stripedCode}>
@@ -783,8 +937,8 @@ export default function TableComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="bordered" onCopyLink={showToast}>
-          Bordered
+        <SectionHeader id="bordered-table" onCopyLink={showToast}>
+          Bordered table
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={borderedCode}>
@@ -794,8 +948,8 @@ export default function TableComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="interactive" onCopyLink={showToast}>
-          Interactive
+        <SectionHeader id="interactive-table" onCopyLink={showToast}>
+          Interactive table
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={interactiveCode}>
@@ -805,12 +959,27 @@ export default function TableComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="full-featured" onCopyLink={showToast}>
-          Full Featured
+        <SectionHeader id="full-featured-table" onCopyLink={showToast}>
+          Full featured table
         </SectionHeader>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={fullFeaturedCode}>
             <FullFeaturedDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="virtualized-table" onCopyLink={showToast}>
+          Virtualized table
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
+          Render a fixed preview window of a large dataset, mounting only the
+          visible rows. Show More reveals the rest.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={virtualizedCode}>
+            <VirtualizedDemo />
           </CodePreview>
         </div>
       </Section>

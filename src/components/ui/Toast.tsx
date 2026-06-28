@@ -234,7 +234,9 @@ function ToastCard({
   return (
     <div
       ref={cardRef}
-      role="status"
+      // Geist: action toasts (a decision the user must act on) are alertdialogs;
+      // passive notifications stay status.
+      role={item.action ? "alertdialog" : "status"}
       aria-atomic="true"
       data-exiting={item.exiting || undefined}
       style={
@@ -252,17 +254,19 @@ function ToastCard({
                 : item.variant === "error"
                   ? "var(--ds-red-800)"
                   : "hsl(var(--color-surface))",
-          boxShadow:
-            item.variant === "default" ? "var(--ds-shadow-menu)" : "none",
+          // Geist keeps the menu shadow on every variant — the token carries the
+          // hairline ring, so colored toasts read as bordered + floating too.
+          boxShadow: "var(--ds-shadow-menu)",
           borderRadius: 12,
           padding: 16,
-          lineHeight: "20px",
+          lineHeight: "21px",
+          // Geist text: amber (warning) keeps dark ink (gray-1000); blue/red
+          // (success/error) use the contrast fg — fixed white in BOTH themes,
+          // not textInverted (which flips to dark ink in dark mode).
           color:
-            item.variant === "warning"
-              ? "hsl(var(--color-textDefault))"
-              : item.variant !== "default"
-                ? "hsl(var(--color-textInverted))"
-                : "hsl(var(--color-textDefault))",
+            item.variant === "success" || item.variant === "error"
+              ? "#fff"
+              : "hsl(var(--color-textDefault))",
           zIndex,
           overflow: "hidden",
           pointerEvents:
@@ -310,6 +314,11 @@ function ToastCard({
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              {/* Geist prefixes success/error toasts with an SR-only label so
+                  the variant is announced; warning/default get none. */}
+              {(item.variant === "success" || item.variant === "error") && (
+                <span className="sr-only">{item.variant}: </span>
+              )}
               {item.jsx ? (
                 <span style={{ display: "block", lineHeight: "20px" }}>
                   {item.jsx}

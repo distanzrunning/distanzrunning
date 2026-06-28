@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { codeToTokens, type BundledLanguage } from "shiki";
+import type { BundledLanguage } from "shiki";
 
 // Token with dual theme colors
 export interface DualThemeToken {
@@ -61,39 +61,59 @@ export function useShikiHighlighter(
   code: string,
   language?: string,
   filename?: string,
+  /**
+   * Gate tokenization. Pass the code panel's open state so collapsed blocks
+   * (the default on every page) skip the Shiki load + tokenize entirely —
+   * highlighting only runs the first time a panel is expanded.
+   */
+  enabled: boolean = true,
 ): DualThemeToken[][] | null {
   const [tokenizedLines, setTokenizedLines] = useState<
     DualThemeToken[][] | null
   >(null);
 
   useEffect(() => {
+    if (!enabled) return;
+    let cancelled = false;
     const lang = getShikiLanguage(language, filename);
 
-    codeToTokens(code, {
-      lang,
-      themes: {
-        light: "one-light",
-        dark: "one-dark-pro",
-      },
-    }).then((result) => {
-      // Transform tokens to extract both light and dark colors
-      const dualThemeTokens: DualThemeToken[][] = result.tokens.map((line) =>
-        line.map((token) => {
-          const htmlStyle = token.htmlStyle as
-            | Record<string, string>
-            | undefined;
-          return {
-            content: token.content,
-            color: htmlStyle?.color || "inherit",
-            darkColor:
-              htmlStyle?.["--shiki-dark"] || htmlStyle?.color || "inherit",
-            fontStyle: token.fontStyle,
-          };
+    // Lazy-load Shiki so its (large) bundle stays out of each route's initial
+    // JS chunk — it loads once on demand and is cached across navigations, so
+    // page transitions aren't blocked downloading/parsing the highlighter.
+    import("shiki")
+      .then(({ codeToTokens }) =>
+        codeToTokens(code, {
+          lang,
+          themes: {
+            light: "one-light",
+            dark: "one-dark-pro",
+          },
         }),
-      );
-      setTokenizedLines(dualThemeTokens);
-    });
-  }, [code, language, filename]);
+      )
+      .then((result) => {
+        if (cancelled) return;
+        // Transform tokens to extract both light and dark colors
+        const dualThemeTokens: DualThemeToken[][] = result.tokens.map((line) =>
+          line.map((token) => {
+            const htmlStyle = token.htmlStyle as
+              | Record<string, string>
+              | undefined;
+            return {
+              content: token.content,
+              color: htmlStyle?.color || "inherit",
+              darkColor:
+                htmlStyle?.["--shiki-dark"] || htmlStyle?.color || "inherit",
+              fontStyle: token.fontStyle,
+            };
+          }),
+        );
+        setTokenizedLines(dualThemeTokens);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [code, language, filename, enabled]);
 
   return tokenizedLines;
 }
@@ -103,7 +123,7 @@ export function getTokenStyle(
   token: DualThemeToken,
   diffMode?: "added" | "removed",
 ): React.CSSProperties {
-  let style: React.CSSProperties = {};
+  const style: React.CSSProperties = {};
 
   if (diffMode) {
     const content = token.content.trim();

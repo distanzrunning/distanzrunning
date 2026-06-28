@@ -223,7 +223,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -340,28 +340,60 @@ import type { JSX } from 'react';
 export function Component(): JSX.Element {
   return (
     <Grid columns={3} rows={2}>
-      <GridCell solid>1</GridCell>
-      <GridCell solid>2</GridCell>
-      <GridCell solid>3</GridCell>
-      <GridCell solid>4</GridCell>
-      <GridCell solid>5</GridCell>
-      <GridCell solid>6</GridCell>
-    </Grid>
-  );
-}`;
-
-const spanningCellsCode = `import { Grid, GridCell } from '@/components/ui/Grid';
-import type { JSX } from 'react';
-
-export function Component(): JSX.Element {
-  return (
-    <Grid columns={3} rows={2}>
       <GridCell row="1" column="1 / 3" solid>
         1 + 2
       </GridCell>
       <GridCell>3</GridCell>
       <GridCell>4</GridCell>
       <GridCell row="2" column="2 / 4" solid>
+        5 + 6
+      </GridCell>
+    </Grid>
+  );
+}`;
+
+const responsiveGridCode = `import { Grid, GridCell } from '@/components/ui/Grid';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <Grid
+      columns={{ sm: 1, md: 2, lg: 3 }}
+      rows={{ sm: 6, md: 3, lg: 2 }}
+    >
+      <GridCell>1</GridCell>
+      <GridCell>2</GridCell>
+      <GridCell>3</GridCell>
+      <GridCell>4</GridCell>
+      <GridCell>5</GridCell>
+      <GridCell>6</GridCell>
+    </Grid>
+  );
+}`;
+
+const responsiveClippingCode = `import { Grid, GridCell } from '@/components/ui/Grid';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <Grid
+      columns={{ sm: 1, md: 2, lg: 3 }}
+      rows={{ sm: 6, md: 3, lg: 2 }}
+    >
+      <GridCell
+        column={{ sm: "1", md: "1 / 3" }}
+        row={{ sm: "1 / 3", md: "1 / span 1" }}
+        solid
+      >
+        1 + 2
+      </GridCell>
+      <GridCell>3</GridCell>
+      <GridCell>4</GridCell>
+      <GridCell
+        column={{ sm: "1 / span 1", md: "1 / 3", lg: "2 / 4" }}
+        row={{ sm: "5 / 7", md: "3 / span 1", lg: "2 / span 1" }}
+        solid
+      >
         5 + 6
       </GridCell>
     </Grid>
@@ -428,6 +460,75 @@ export function Component(): JSX.Element {
   );
 }`;
 
+const crossCode = `import { Grid, GridCell } from '@/components/ui/Grid';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <Grid
+      columns={3}
+      rows={2}
+      cross={[
+        { row: 1, column: 1 },
+        { row: 1, column: 4 },
+        { row: 3, column: 4 },
+        { row: 3, column: 1 },
+      ]}
+    >
+      <GridCell>1</GridCell>
+      <GridCell>2</GridCell>
+      <GridCell>3</GridCell>
+      <GridCell>4</GridCell>
+      <GridCell>5</GridCell>
+      <GridCell>6</GridCell>
+    </Grid>
+  );
+}`;
+
+const dashedCrossCode = `import { Grid, GridCell } from '@/components/ui/Grid';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <Grid
+      columns={1}
+      rows={1}
+      dashed
+      cross={[
+        { row: 1, column: 1 },
+        { row: 2, column: 2 },
+        { row: 1, column: 2 },
+        { row: 2, column: 1 },
+      ]}
+    >
+      <GridCell>Content here</GridCell>
+    </Grid>
+  );
+}`;
+
+const dashedPageCode = `import { Grid, GridCell } from '@/components/ui/Grid';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <div className="py-8">
+      <Grid
+        columns={1}
+        rows={1}
+        dashed
+        cross={[
+          { row: 1, column: 1 },
+          { row: 2, column: 2 },
+          { row: 1, column: 2 },
+          { row: 2, column: 1 },
+        ]}
+      >
+        <GridCell>Content here</GridCell>
+      </Grid>
+    </div>
+  );
+}`;
+
 // ============================================================================
 // Demo Components
 // ============================================================================
@@ -452,24 +553,94 @@ function BasicGridDemo() {
 function SolidCellsDemo() {
   return (
     <Grid rows={2} columns={3}>
-      <GridCell solid>1</GridCell>
-      <GridCell solid>2</GridCell>
-      <GridCell solid>3</GridCell>
-      <GridCell solid>4</GridCell>
-      <GridCell solid>5</GridCell>
-      <GridCell solid>6</GridCell>
-    </Grid>
-  );
-}
-
-function SpanningCellsDemo() {
-  return (
-    <Grid rows={2} columns={3}>
       <GridCell row="1" column="1 / 3" solid>1 + 2</GridCell>
       <GridCell>3</GridCell>
       <GridCell>4</GridCell>
       <GridCell row="2" column="2 / 4" solid>5 + 6</GridCell>
     </Grid>
+  );
+}
+
+function ResponsiveGridDemo() {
+  return (
+    <Grid columns={{ sm: 1, md: 2, lg: 3 }} rows={{ sm: 6, md: 3, lg: 2 }}>
+      <GridCell>1</GridCell>
+      <GridCell>2</GridCell>
+      <GridCell>3</GridCell>
+      <GridCell>4</GridCell>
+      <GridCell>5</GridCell>
+      <GridCell>6</GridCell>
+    </Grid>
+  );
+}
+
+function ResponsiveClippingDemo() {
+  return (
+    <Grid columns={{ sm: 1, md: 2, lg: 3 }} rows={{ sm: 6, md: 3, lg: 2 }}>
+      <GridCell
+        column={{ sm: "1", md: "1 / 3" }}
+        row={{ sm: "1 / 3", md: "1 / span 1" }}
+        solid
+      >
+        1 + 2
+      </GridCell>
+      <GridCell>3</GridCell>
+      <GridCell>4</GridCell>
+      <GridCell
+        column={{ sm: "1 / span 1", md: "1 / 3", lg: "2 / 4" }}
+        row={{ sm: "5 / 7", md: "3 / span 1", lg: "2 / span 1" }}
+        solid
+      >
+        5 + 6
+      </GridCell>
+    </Grid>
+  );
+}
+
+function CrossDemo() {
+  return (
+    <Grid
+      columns={3}
+      rows={2}
+      cross={[
+        { row: 1, column: 1 },
+        { row: 1, column: 4 },
+        { row: 3, column: 4 },
+        { row: 3, column: 1 },
+      ]}
+    >
+      <GridCell>1</GridCell>
+      <GridCell>2</GridCell>
+      <GridCell>3</GridCell>
+      <GridCell>4</GridCell>
+      <GridCell>5</GridCell>
+      <GridCell>6</GridCell>
+    </Grid>
+  );
+}
+
+const dashedCross = [
+  { row: 1, column: 1 },
+  { row: 2, column: 2 },
+  { row: 1, column: 2 },
+  { row: 2, column: 1 },
+];
+
+function DashedCrossDemo() {
+  return (
+    <Grid columns={1} rows={1} dashed cross={dashedCross}>
+      <GridCell>Content here</GridCell>
+    </Grid>
+  );
+}
+
+function DashedPageDemo() {
+  return (
+    <div className="py-8">
+      <Grid columns={1} rows={1} dashed cross={dashedCross}>
+        <GridCell>Content here</GridCell>
+      </Grid>
+    </div>
   );
 }
 
@@ -483,7 +654,7 @@ function HiddenColumnGuidesDemo() {
 
 function OverlayingCellsDemo() {
   return (
-    <Grid rows={3} columns={12} style={{ gridTemplateRows: "118px 69.5px 69.5px" }}>
+    <Grid rows={3} columns={12} gridStyle={{ gridTemplateRows: "118px 69.5px 69.5px" }}>
       <GridCell column="1 / 3" row="1 / 3" solid>1</GridCell>
       <GridCell column="2 / 4" row="2 / 4">2</GridCell>
       <GridCell column="3 / 10" row="2 / 4" style={{ zIndex: 3 }}>
@@ -497,7 +668,7 @@ function OverlayingCellsDemo() {
 
 function SpecificClippingDemo() {
   return (
-    <Grid rows={4} columns={3} style={{ gridTemplateRows: "118px 59px 59px 118px" }}>
+    <Grid rows={4} columns={3} gridStyle={{ gridTemplateRows: "118px 59px 59px 118px" }}>
       <GridCell row="1 / 3" column="1 / 2" solid>1</GridCell>
       <GridCell row="1 / 2" column="3 / 4">2</GridCell>
       <GridCell row="2 / 4" column="2 / 3">3</GridCell>
@@ -553,19 +724,32 @@ export default function GridComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="spanning-cells" onCopyLink={showToast}>
-          Spanning cells
+        <SectionHeader id="responsive-grid" onCopyLink={showToast}>
+          Responsive grid
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Cells can span multiple columns or rows with the{" "}
-          <code className="inline-code">column</code> /{" "}
-          <code className="inline-code">row</code> props (e.g.{" "}
-          <code className="inline-code">column=&quot;1 / 3&quot;</code>).
-          Pair with <code className="inline-code">solid</code> so the
-          cell content occludes the guides underneath.
+          Grid component with responsive <code className="inline-code">rows</code> and{" "}
+          <code className="inline-code">columns</code> props at all 3 breakpoints.
         </p>
-        <CodePreview componentCode={spanningCellsCode}>
-          <SpanningCellsDemo />
+        <CodePreview componentCode={responsiveGridCode}>
+          <ResponsiveGridDemo />
+        </CodePreview>
+      </Section>
+
+      <Section>
+        <SectionHeader
+          id="responsive-grid-with-responsive-guide-clipping-cells"
+          onCopyLink={showToast}
+        >
+          Responsive Grid with responsive guide clipping cells
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
+          Grid component with responsive <code className="inline-code">rows</code> and{" "}
+          <code className="inline-code">columns</code> props at all 3 breakpoints as
+          well as guide clipping on specific cells.
+        </p>
+        <CodePreview componentCode={responsiveClippingCode}>
+          <ResponsiveClippingDemo />
         </CodePreview>
       </Section>
 
@@ -611,6 +795,33 @@ export default function GridComponent() {
         </CodePreview>
       </Section>
 
+      <Section>
+        <SectionHeader id="grid-with-cross" onCopyLink={showToast}>
+          Grid with cross
+        </SectionHeader>
+        <CodePreview componentCode={crossCode}>
+          <CrossDemo />
+        </CodePreview>
+      </Section>
+
+      <Section>
+        <SectionHeader id="dashed-grid-with-cross" onCopyLink={showToast}>
+          Dashed grid with cross
+        </SectionHeader>
+        <CodePreview componentCode={dashedCrossCode}>
+          <DashedCrossDemo />
+        </CodePreview>
+      </Section>
+
+      <Section>
+        <SectionHeader id="dashed-grid-with-grid-page" onCopyLink={showToast}>
+          Dashed grid with grid page
+        </SectionHeader>
+        <CodePreview componentCode={dashedPageCode}>
+          <DashedPageDemo />
+        </CodePreview>
+      </Section>
+
       {/* Best Practices Section */}
       <Section>
         <SectionHeader id="best-practices" onCopyLink={showToast}>
@@ -652,9 +863,9 @@ export default function GridComponent() {
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
             Set <code className="inline-code">columns</code> and{" "}
-            <code className="inline-code">rows</code> per breakpoint
-            (swap Grid variants at the caller) so cells reflow
-            predictably between mobile, tablet, and desktop.
+            <code className="inline-code">rows</code> at all three
+            breakpoints so cells reflow predictably between mobile,
+            tablet, and desktop.
           </li>
           <li>
             Use <code className="inline-code">solid</code> cells to

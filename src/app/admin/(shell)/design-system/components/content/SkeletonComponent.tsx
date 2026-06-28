@@ -225,7 +225,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -318,11 +318,45 @@ export function Component(): JSX.Element {
   return <Skeleton width={160} />;
 }`;
 
+const buttonCode = `import { Skeleton } from '@/components/ui/Skeleton';
+import { Button } from '@/components/ui/Button';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col items-start gap-2">
+        <p className="text-label-14">Without button prop (default):</p>
+        <Skeleton show={false}>
+          <Button>Loading...</Button>
+        </Skeleton>
+      </div>
+      <div className="flex flex-col items-start gap-2">
+        <p className="text-label-14">With button prop (extends animation by 1px):</p>
+        <Skeleton show={false} button>
+          <Button>Loading...</Button>
+        </Skeleton>
+      </div>
+      <div className="flex flex-col items-start gap-2">
+        <p className="text-label-14">Multiple buttons loading:</p>
+        <div className="flex gap-3">
+          <Skeleton button>
+            <Button>Save</Button>
+          </Skeleton>
+          <Skeleton button>
+            <Button variant="secondary">Cancel</Button>
+          </Skeleton>
+        </div>
+      </div>
+    </div>
+  );
+}`;
+
 const defaultWithBoxHeightCode = `import { Skeleton } from '@/components/ui/Skeleton';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  return <Skeleton width={160} height={24} style={{ marginBottom: 18 }} />;
+  return <Skeleton width={160} style={{ marginBottom: 18 }} />;
 }`;
 
 const wrappingChildrenCode = `import { Skeleton } from '@/components/ui/Skeleton';
@@ -370,7 +404,7 @@ const roundedCode = `import { Skeleton } from '@/components/ui/Skeleton';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  return <Skeleton width={100} height={32} shape="rounded" />;
+  return <Skeleton width={48} height={48} shape="rounded" />;
 }`;
 
 const squaredCode = `import { Skeleton } from '@/components/ui/Skeleton';
@@ -392,11 +426,11 @@ export function Component(): JSX.Element {
 // ============================================================================
 
 function DefaultWithSetWidthDemo() {
-  return <Skeleton width={160} height={24} />;
+  return <Skeleton width={160} />;
 }
 
 function DefaultWithBoxHeightDemo() {
-  return <Skeleton width={160} height={24} style={{ marginBottom: 18 }} />;
+  return <Skeleton width={160} style={{ marginBottom: 18 }} />;
 }
 
 function WrappingChildrenDemo() {
@@ -428,7 +462,7 @@ function PillDemo() {
 }
 
 function RoundedDemo() {
-  return <Skeleton width={100} height={32} shape="rounded" />;
+  return <Skeleton width={48} height={48} shape="rounded" />;
 }
 
 function SquaredDemo() {
@@ -437,6 +471,38 @@ function SquaredDemo() {
 
 function NoAnimationDemo() {
   return <Skeleton width="100%" height={100} noAnimation />;
+}
+
+function ButtonDemo() {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col items-start gap-2">
+        <p className="text-label-14">Without button prop (default):</p>
+        <Skeleton show={false}>
+          <Button>Loading...</Button>
+        </Skeleton>
+      </div>
+      <div className="flex flex-col items-start gap-2">
+        <p className="text-label-14">
+          With button prop (extends animation by 1px):
+        </p>
+        <Skeleton show={false} button>
+          <Button>Loading...</Button>
+        </Skeleton>
+      </div>
+      <div className="flex flex-col items-start gap-2">
+        <p className="text-label-14">Multiple buttons loading:</p>
+        <div className="flex gap-3">
+          <Skeleton button>
+            <Button>Save</Button>
+          </Skeleton>
+          <Skeleton button>
+            <Button variant="secondary">Cancel</Button>
+          </Skeleton>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // ============================================================================
@@ -548,6 +614,17 @@ export default function SkeletonComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={noAnimationCode}>
             <NoAnimationDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="button" onCopyLink={showToast}>
+          Button
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={buttonCode}>
+            <ButtonDemo />
           </CodePreview>
         </div>
       </Section>

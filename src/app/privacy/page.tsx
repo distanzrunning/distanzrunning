@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 // before launch; the "Cookies" section's CookiePreferencesButton
 // is the load-bearing piece — keep it.
 
-const SECTION_HEADING_CLASS = "text-heading-24 font-serif";
+const SECTION_HEADING_CLASS = "text-heading-24";
 const SECTION_HEADING_STYLE = { color: "var(--ds-gray-1000)" } as const;
 const BODY_CLASS = "text-copy-16";
 const BODY_STYLE = { color: "var(--ds-gray-1000)" } as const;
@@ -39,7 +39,7 @@ export default function PrivacyPage() {
     >
       <header style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         <h1
-          className="text-heading-40 font-serif"
+          className="text-heading-40"
           style={{ margin: 0, color: "var(--ds-gray-1000)" }}
         >
           Privacy Policy

@@ -11,9 +11,14 @@ interface SkeletonProps {
   shape?: "default" | "pill" | "rounded" | "squared";
   /** Whether to show the skeleton (loading state) */
   show?: boolean;
-  /** Disable pulse animation */
+  /** Disable the shimmer animation */
   noAnimation?: boolean;
-  /** Children to wrap - skeleton hides when children are present and show is false */
+  /**
+   * Extend the shimmer 1px past the top/bottom/left edges so it fully
+   * covers a wrapped button's border (Geist's `button` prop).
+   */
+  button?: boolean;
+  /** Children to wrap — skeleton hides when present and show is false */
   children?: React.ReactNode;
   /** Additional CSS classes */
   className?: string;
@@ -21,13 +26,14 @@ interface SkeletonProps {
   style?: React.CSSProperties;
 }
 
+// Geist-verbatim radii (live page): default 5px, pill & rounded both
+// rounded-full (9999px — clamps to half the shorter side, so it stays a
+// constant circle/capsule while the sweep translates; 50% would scale
+// per-dimension and wobble), squared 0.
 const shapeRadiusMap: Record<NonNullable<SkeletonProps["shape"]>, string> = {
-  default: "4px",
-  // Capsule for rectangles, circle for squares — use for avatars.
+  default: "5px",
   pill: "9999px",
-  // Soft corners — use for buttons and chips.
-  rounded: "6px",
-  // No rounding — use for image tiles.
+  rounded: "9999px",
   squared: "0px",
 };
 
@@ -37,111 +43,99 @@ export function Skeleton({
   shape = "default",
   show = true,
   noAnimation = false,
+  button = false,
   children,
   className = "",
   style,
 }: SkeletonProps) {
   const borderRadius = shapeRadiusMap[shape];
 
-  const resolvedWidth =
-    typeof width === "number" ? `${width}px` : width;
+  const resolvedWidth = typeof width === "number" ? `${width}px` : width;
+  // Geist defaults the box height to 24px, but only for non-wrapping
+  // skeletons — when wrapping children the size comes from the children.
+  const effectiveHeight =
+    height ?? (children == null ? 24 : undefined);
   const resolvedHeight =
-    typeof height === "number" ? `${height}px` : height;
+    typeof effectiveHeight === "number"
+      ? `${effectiveHeight}px`
+      : effectiveHeight;
 
-  // When wrapping children and show is false, just render children
-  if (children && !show) {
-    return <>{children}</>;
-  }
-
-  // When wrapping children and show is true, render children hidden behind skeleton
-  if (children && show) {
-    return (
-      <span
-        className={`skeleton-wrapper ${className}`}
-        style={{
-          display: "inline-block",
-          position: "relative",
-          width: resolvedWidth,
-          minHeight: resolvedHeight,
-          borderRadius,
-          ...style,
-        }}
-      >
-        <span
-          style={{
-            opacity: 0,
-            visibility: "hidden",
-          }}
-        >
-          {children}
-        </span>
-        <span
-          className={noAnimation ? "" : "skeleton-pulse"}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "var(--ds-gray-200)",
-            borderRadius,
-          }}
-        />
-        <style jsx>{`
-          @keyframes skeletonPulse {
-            0% {
-              opacity: 1;
-            }
-            50% {
-              opacity: 0.5;
-            }
-            100% {
-              opacity: 1;
-            }
-          }
-          .skeleton-pulse {
-            animation: skeletonPulse 1.5s ease-in-out infinite;
-          }
-          @media (prefers-reduced-motion: reduce) {
-            .skeleton-pulse {
-              animation: none;
-            }
-          }
-        `}</style>
-      </span>
-    );
-  }
-
-  // Default: render a plain skeleton block
   return (
     <span
-      className={`${noAnimation ? "" : "skeleton-pulse"} ${className}`}
+      className={`ds-skeleton ${show ? "ds-skeleton--show" : "ds-skeleton--hide"} ${
+        noAnimation ? "" : "ds-skeleton--anim"
+      } ${button ? "ds-skeleton--button" : ""} ${className}`}
+      data-geist-skeleton=""
       style={{
-        display: "inline-block",
         width: resolvedWidth,
         minHeight: resolvedHeight,
-        background: "var(--ds-gray-200)",
         borderRadius,
         ...style,
       }}
     >
+      {children}
+      {/*
+        Geist shimmer model: the box is `overflow:hidden` and its `::after`
+        is a left→right sweeping gradient (gray-100 → gray-200 → gray-100).
+        When wrapping children we hide them with `visibility:hidden` on the
+        box and keep the `::after` visible (Geist's invisible + after:visible).
+        When `show` is false the children render normally and the shimmer is
+        removed (`content:none`).
+      */}
       <style jsx>{`
-        @keyframes skeletonPulse {
-          0% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
-          100% {
-            opacity: 1;
-          }
+        .ds-skeleton {
+          display: block;
+          position: relative;
+          overflow: hidden;
         }
-        .skeleton-pulse {
-          animation: skeletonPulse 1.5s ease-in-out infinite;
+        /* show: hide the wrapped content, keep the shimmer overlay */
+        .ds-skeleton--show {
+          visibility: hidden;
+        }
+        /* hide: reveal the wrapped content, drop the shimmer */
+        .ds-skeleton--hide {
+          overflow: visible;
+        }
+        .ds-skeleton::after {
+          content: "";
+          position: absolute;
+          inset: 0 -200% 0 0;
+          border-radius: inherit;
+          background: linear-gradient(
+              90deg,
+              var(--ds-gray-100),
+              var(--ds-gray-200),
+              var(--ds-gray-100)
+            )
+            0 0 / 50% 100%;
+          visibility: visible;
+        }
+        .ds-skeleton--hide::after {
+          content: none;
+        }
+        /* Geist button prop: cover the wrapped button's 1px border. */
+        .ds-skeleton--button::after {
+          top: -1px;
+          bottom: -1px;
+          left: -1px;
+        }
+        /*
+          Geist-verbatim: the ::after is 300% wide (inset right -200%) and the
+          gradient tiles at 50% (one tile === 150% of the box). Translating it
+          by -50% of its own width moves exactly one tile, so the loop is
+          seamless. The reverse keyword makes the band sweep left-to-right;
+          ease-in-out gives Geist's gentle pulse-and-sweep cadence.
+        */
+        .ds-skeleton--anim::after {
+          animation: 1.5s ease-in-out infinite reverse dsLoadingSkeleton;
+        }
+        @keyframes dsLoadingSkeleton {
+          to {
+            transform: translate(-50%);
+          }
         }
         @media (prefers-reduced-motion: reduce) {
-          .skeleton-pulse {
+          .ds-skeleton::after {
             animation: none;
           }
         }

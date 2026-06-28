@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { User } from "lucide-react";
 import { SiNike, SiAdidas, SiNewbalance } from "react-icons/si";
+import { Skeleton } from "./Skeleton";
 
 // ============================================================================
 // Types
@@ -89,8 +90,8 @@ export interface AvatarWithIconProps extends Omit<AvatarProps, "shimmer"> {
   iconColor?: string;
   /** Use gradient background instead of image */
   gradient?: { colors: string[]; angle?: number };
-  /** Fixed badge size in pixels (overrides proportional sizing) */
-  badgeSize?: number;
+  /** Custom avatar node (overrides src/gradient) — e.g. a textured fill */
+  avatar?: React.ReactNode;
 }
 
 // ============================================================================
@@ -116,19 +117,21 @@ export function Avatar({
 }: AvatarProps) {
   const [imageError, setImageError] = useState(false);
 
-  // Show shimmer placeholder when no src and placeholder is true (without custom icon)
+  // Geist's unresolved avatar (data-resolved=false): the same shimmer as the
+  // Skeleton component (gray-100 → gray-200 sweep) under the 1px gray-alpha-400
+  // hairline ring that every avatar carries. Reuse Skeleton so the shimmer
+  // stays verbatim, then overlay the ring.
   if (placeholder && !placeholderIcon && !fallback && !src) {
     return (
       <div
-        className="rounded-full overflow-hidden flex-shrink-0 animate-shimmer"
-        style={{
-          width: size,
-          height: size,
-          background:
-            "linear-gradient(90deg, var(--ds-gray-300) 0%, var(--ds-gray-200) 50%, var(--ds-gray-300) 100%)",
-          backgroundSize: "200% 100%",
-        }}
-      />
+        role="img"
+        aria-label={alt || "Placeholder Avatar"}
+        className="relative inline-block rounded-full overflow-hidden flex-shrink-0 align-top"
+        style={{ width: size, height: size, lineHeight: 0 }}
+      >
+        <Skeleton shape="pill" width={size} height={size} />
+        <AvatarRing />
+      </div>
     );
   }
 
@@ -159,6 +162,32 @@ export function Avatar({
         ? `Avatar with initials: ${initials}`
         : alt || "Avatar";
 
+  // Letter (initials) avatar — Geist renders it as an unresolved placeholder
+  // (the loading shimmer) with the initials overlaid at 50% opacity, where the
+  // accents-6 fill AND the white text are faded *together* (one `opacity-50`
+  // span). So it reads as a ghosted grey over the shimmer, not a solid fill.
+  // Callers that pass an explicit bgColor keep the solid treatment below.
+  if (showFallback && initials && !placeholderIcon && !bgColor) {
+    return (
+      <div
+        role="img"
+        aria-label={ariaLabel}
+        className="relative inline-block rounded-full overflow-hidden flex-shrink-0 align-top"
+        style={{ width: size, height: size, lineHeight: 0 }}
+      >
+        <Skeleton shape="pill" width={size} height={size} />
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 flex items-center justify-center font-medium text-white opacity-50"
+          style={{ backgroundColor: "var(--ds-avatar-initials-bg)", fontSize }}
+        >
+          {initials}
+        </span>
+        <AvatarRing />
+      </div>
+    );
+  }
+
   return (
     <div
       role="img"
@@ -167,7 +196,11 @@ export function Avatar({
       style={{
         width: size,
         height: size,
-        backgroundColor: bgColor || "var(--ds-gray-300)",
+        // Geist letter avatars sit on accents-6 (#444 light / #999 dark),
+        // carried by --ds-avatar-initials-bg (gray-900 was ~3% too light).
+        // Other states keep the lighter gray-300 shell. transition matches Geist.
+        backgroundColor: bgColor || (initials ? "var(--ds-avatar-initials-bg)" : "var(--ds-gray-300)"),
+        transition: "background 0.2s",
       }}
     >
       {!showFallback ? (
@@ -188,7 +221,10 @@ export function Avatar({
       ) : fallback ? (
         <span
           aria-hidden="true"
-          className="font-medium text-textSubtle"
+          // Geist letter avatar tokens: font-medium + text-white + opacity-50
+          // over the mid-gray fill. Font-size scales with the avatar (Geist
+          // leaves it to inherit; we scale so initials read at any size).
+          className="font-medium text-white opacity-50"
           style={{ fontSize }}
         >
           {initials}
@@ -200,7 +236,21 @@ export function Avatar({
           style={{ width: size * 0.5, height: size * 0.5 }}
         />
       )}
+      <AvatarRing />
     </div>
+  );
+}
+
+// Geist puts a 1px gray-alpha-400 hairline ring on every avatar (the avatar
+// `:after`). It sits above the image, so it's a positioned overlay rather
+// than a border on the clipped container.
+function AvatarRing() {
+  return (
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 rounded-full"
+      style={{ border: "1px solid var(--ds-gray-alpha-400)" }}
+    />
   );
 }
 
@@ -227,64 +277,67 @@ export function AvatarGroup({
   const visibleMembers = limit ? members.slice(0, limit) : members;
   const remainingCount = limit ? Math.max(0, members.length - limit) : 0;
 
-  const borderWidth = 2;
-  const innerSize = size;
-  const outerSize = size + borderWidth * 2;
-  const fontSize = Math.round(innerSize * 0.35);
-  const overlap = outerSize * 0.25;
+  // Geist stacking: each avatar carries a 1px ring in the page-background
+  // colour (the separator) and overlaps the previous by 10px (at 32px). No
+  // notch/mask — the bg-coloured ring is what reads as the gap.
+  const overlap = Math.round(size * 0.3125); // 10px at size 32
 
   const groupLabel =
     label ?? `${members.length} avatar${members.length === 1 ? "" : "s"}`;
 
   return (
     <div role="img" aria-label={groupLabel} className="flex items-center">
-      {visibleMembers.map((member, index) => (
-        <div
-          key={index}
-          aria-hidden="true"
-          className="relative rounded-full"
-          style={{
-            marginLeft: index === 0 ? 0 : -overlap,
-            width: outerSize,
-            height: outerSize,
-            padding: borderWidth,
-            backgroundColor: member.borderColor || "hsl(var(--color-surface))",
-          }}
-        >
-          <Avatar
-            src={member.src}
-            alt={member.alt || `Avatar ${index + 1}`}
-            size={innerSize}
-            placeholder={member.placeholder}
-            placeholderIcon={member.placeholderIcon}
-            bgColor={member.bgColor}
-          />
-        </div>
-      ))}
-      {remainingCount > 0 && (
-        <div
-          aria-hidden="true"
-          className="relative rounded-full"
-          style={{
-            marginLeft: -overlap,
-            width: outerSize,
-            height: outerSize,
-            padding: borderWidth,
-            backgroundColor: "hsl(var(--color-surface))",
-          }}
-        >
-          <div
-            className="flex items-center justify-center rounded-full bg-[var(--ds-gray-300)] text-textDefault font-semibold"
+      {visibleMembers.map((member, index) => {
+        // Geist overlays the +N note on the LAST visible slot (absolute
+        // inset-0) rather than appending an extra avatar — so a limit-4
+        // group of 6 renders 4 slots (3 avatars + the +2 chip over the
+        // 4th), matching Geist. remainingCount = members - limit.
+        const showOverflow =
+          remainingCount > 0 && index === visibleMembers.length - 1;
+        return (
+          <span
+            key={index}
+            aria-hidden="true"
+            className="relative inline-flex rounded-full"
             style={{
-              width: innerSize,
-              height: innerSize,
-              fontSize,
+              marginLeft: index === 0 ? 0 : -overlap,
+              boxShadow: `0 0 0 1px ${member.borderColor || "hsl(var(--color-surface))"}`,
             }}
           >
-            +{remainingCount}
-          </div>
-        </div>
-      )}
+            <Avatar
+              src={member.src}
+              alt={member.alt || `Avatar ${index + 1}`}
+              size={size}
+              placeholder={member.placeholder}
+              placeholderIcon={member.placeholderIcon}
+              bgColor={member.bgColor}
+            />
+            {showOverflow && (
+              // Geist's +N note is forced to the DARK theme on both light and
+              // dark pages (Geist tags the chip `dark-theme`): a dark gray-100
+              // fill (#1A1A1A) + gray-400 hairline + near-white gray-1000 text
+              // at 10px / 600, scaled 1% to cover the slot edge. We reproduce
+              // that by tagging the chip `dark`, which re-scopes its --ds-gray-*
+              // tokens to their dark values regardless of the page theme.
+              <span
+                aria-hidden="true"
+                className="dark absolute inset-0 flex items-center justify-center rounded-full"
+                style={{
+                  background: "var(--ds-gray-100)",
+                  border: "1px solid var(--ds-gray-400)",
+                  color: "var(--ds-gray-1000)",
+                  fontSize: 10,
+                  lineHeight: "12px",
+                  fontWeight: 600,
+                  transform: "scale(1.01)",
+                }}
+              >
+                +{remainingCount}
+              </span>
+            )}
+          </span>
+        );
+      })}
     </div>
   );
 }
@@ -323,8 +376,12 @@ export function AvatarBrand({
   brand,
   badgeSize: customBadgeSize,
 }: AvatarBrandProps) {
-  const badgeSize = customBadgeSize || Math.round(size * 0.55);
-  const iconSize = Math.round(badgeSize * 0.6);
+  // Badge sized to match AvatarWithIcon (and Geist's git badge): a ~14px
+  // coloured fill at avatar-32 → 16px outer with the 1px border. The brand
+  // glyph is scaled to ~0.72 so the brand colour rings it, like Geist scales
+  // the gitlab/bitbucket marks inside the badge.
+  const badgeSize = customBadgeSize || Math.round(size * 0.44);
+  const iconSize = Math.round(badgeSize * 0.72);
 
   const config = brandConfig[brand];
   const BrandIcon = config.icon;
@@ -333,11 +390,18 @@ export function AvatarBrand({
     <div className="relative inline-flex" style={{ width: size, height: size }}>
       <Avatar src={src} alt={alt} size={size} fallback={fallback} />
       <div
-        className="absolute flex items-center justify-center rounded-full"
+        className="absolute flex items-center justify-center rounded-full overflow-hidden"
         style={{
           width: badgeSize,
           height: badgeSize,
           backgroundColor: config.color,
+          // Geist's git badge separates from the avatar with a literal 1px
+          // page-bg border (border-white / dark:border-black) that grows the
+          // badge outward — content-box keeps the coloured fill at badgeSize
+          // (border-box would eat 1px off each side). bg-100 is the surface the
+          // avatar sits on, so the badge reads as cut into it.
+          border: "1px solid var(--ds-background-100)",
+          boxSizing: "content-box",
           bottom: -5,
           left: -3,
         }}
@@ -406,16 +470,21 @@ export function AvatarWithIcon({
   size = 32,
   fallback,
   icon,
-  iconBgColor = "var(--ds-blue-600)",
-  iconColor = "white",
+  // Geist's custom-icon badge (icon `data-background`) is a page-bg circle
+  // (Geist: white / #000 dark) carrying a gray-900 icon — not a coloured fill.
+  // We use the canvas/page token: #FAFAFA light / #000 dark — the #000 matches
+  // Geist exactly; a single token can't be pure #fff *and* #000, and bg-white/
+  // bg-black are disallowed, so canvas is the closest token-clean match.
+  iconBgColor = "hsl(var(--color-canvas))",
+  iconColor = "var(--ds-gray-900)",
   gradient,
-  badgeSize: customBadgeSize,
+  avatar,
 }: AvatarWithIconProps) {
-  const badgeSize = customBadgeSize || Math.round(size * 0.55);
-
   return (
     <div className="relative inline-flex" style={{ width: size, height: size }}>
-      {gradient ? (
+      {avatar ? (
+        avatar
+      ) : gradient ? (
         <AvatarGradient
           size={size}
           colors={gradient.colors}
@@ -424,23 +493,23 @@ export function AvatarWithIcon({
       ) : (
         <Avatar src={src} alt={alt} size={size} fallback={fallback} />
       )}
+      {/* Geist's custom-icon badge: a page-bg circle carrying the icon at its
+          natural size. Content-sized (inline-flex, no fixed width) to fit the
+          icon, with a 1px page-bg border that grows outward (content-box) so it
+          punches cleanly over the avatar edge — matching Geist's
+          `w-fit h-fit … border border-white`. */}
       <div
-        className="absolute flex items-center justify-center rounded-full"
+        className="absolute inline-flex items-center justify-center rounded-full overflow-hidden leading-none"
         style={{
-          width: badgeSize,
-          height: badgeSize,
           backgroundColor: iconBgColor,
           color: iconColor,
+          border: `1px solid ${iconBgColor}`,
+          boxSizing: "content-box",
           bottom: -5,
           left: -3,
         }}
       >
-        <span
-          style={{ width: badgeSize * 0.6, height: badgeSize * 0.6 }}
-          className="flex items-center justify-center"
-        >
-          {icon}
-        </span>
+        {icon}
       </div>
     </div>
   );

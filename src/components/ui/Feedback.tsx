@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
+import { Textarea } from "@/components/ui/Textarea";
 import {
   submitFeedback,
   type FeedbackEmotion,
@@ -79,6 +80,10 @@ export interface FeedbackProps {
   metadata?: Record<string, string>;
   /** Add a second step that collects an optional follow-up email */
   collectEmail?: boolean;
+  /** Icon rendered before the trigger label (Geist's button prefix). */
+  prefix?: React.ReactNode;
+  /** Icon rendered after the trigger label (Geist's button suffix). */
+  suffix?: React.ReactNode;
   className?: string;
 }
 
@@ -616,39 +621,18 @@ export function FeedbackInline({
                 padding: 8,
               }}
             >
-              <label>
-                <div className="feedback-textarea-wrapper">
-                  <textarea
-                    ref={textareaRef}
-                    id="feedback-textarea"
-                    className="feedback-inline-textarea"
-                    placeholder="Your feedback..."
-                    value={feedbackText}
-                    onChange={(e) => setFeedbackText(e.target.value)}
-                    disabled={isSending}
-                    autoCapitalize="off"
-                    autoComplete="off"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    style={{
-                      display: "flex",
-                      width: "100%",
-                      borderRadius: 6,
-                      border: "none",
-                      padding: "10px 12px",
-                      fontSize: 14,
-                      lineHeight: "normal",
-                      color: "hsl(var(--color-textDefault))",
-                      background: "hsl(var(--color-canvas))",
-                      resize: "none",
-                      outline: "none",
-                      fontFamily: "inherit",
-                      boxSizing: "border-box",
-                      appearance: "none",
-                    }}
-                  />
-                </div>
-              </label>
+              {/* Shared Textarea primitive; the wrapper div carries the
+                  inline grow animation (keyed off --expanded). */}
+              <div className="feedback-textarea-grow">
+                <Textarea
+                  ref={textareaRef}
+                  id="feedback-textarea"
+                  placeholder="Your feedback..."
+                  value={feedbackText}
+                  onChange={(e) => setFeedbackText(e.target.value)}
+                  disabled={isSending}
+                />
+              </div>
 
               <div
                 style={{
@@ -760,14 +744,11 @@ export function FeedbackInline({
           transform: translateZ(0);
           backface-visibility: hidden;
         }
-        .feedback-inline-textarea {
-          height: 100px;
-        }
         /* Input box visibly widens (and grows taller) as the panel
            expands. animation-fill-mode: both keeps the FROM state on
            mount so we don't see a flash of full size before the
            keyframe starts. */
-        .feedback-inline-wrapper--expanded .feedback-textarea-wrapper {
+        .feedback-inline-wrapper--expanded .feedback-textarea-grow {
           transform-origin: center center;
           animation: feedbackInlineInputGrow 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
         }
@@ -806,19 +787,32 @@ export function FeedbackInline({
           padding: 0;
           background: transparent;
           color: hsl(var(--color-textSubtle));
-          transition: background 0.2s ease, color 0.2s ease;
+          transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .feedback-inline-wrapper .feedback-emoji svg path {
+          transition: fill 0.2s ease;
         }
         .feedback-inline-wrapper .feedback-emoji:disabled {
           cursor: default;
         }
+        .feedback-inline-wrapper .feedback-emoji:focus-visible {
+          outline: none;
+          box-shadow: var(--ds-focus-ring);
+        }
+        /* Geist: selected/hover tints the whole glyph blue-900 (every path,
+           overriding the per-emoji accent fills) on a blue-300 chip. */
         .feedback-inline-wrapper .feedback-emoji--selected {
           background: var(--ds-blue-300);
-          color: var(--ds-blue-800);
+        }
+        .feedback-inline-wrapper .feedback-emoji--selected svg path {
+          fill: var(--ds-blue-900);
         }
         @media (hover: hover) {
           .feedback-inline-wrapper .feedback-emoji:hover {
             background: var(--ds-blue-300);
-            color: var(--ds-blue-800);
+          }
+          .feedback-inline-wrapper .feedback-emoji:hover svg path {
+            fill: var(--ds-blue-900);
           }
         }
         .feedback-inline-wrapper .feedback-textarea-wrapper {
@@ -837,7 +831,7 @@ export function FeedbackInline({
         .feedback-inline-wrapper .feedback-textarea-wrapper:focus-within {
           box-shadow:
             0 0 0 1px var(--ds-gray-alpha-600),
-            0 0 0 4px var(--ds-focus-ring);
+            0 0 0 4px var(--ds-focus-color);
         }
         .feedback-inline-wrapper .feedback-textarea-wrapper textarea::placeholder {
           color: hsl(var(--color-textSubtler));
@@ -1128,37 +1122,12 @@ export function FeedbackWithSelect({
         </div>
       </label>
 
-      <label>
-        <div className="feedback-textarea-wrapper">
-          <textarea
-            id={`${formIdBase}-textarea`}
-            placeholder="Your feedback..."
-            value={feedbackText}
-            onChange={(e) => setFeedbackText(e.target.value)}
-            autoCapitalize="off"
-            autoComplete="off"
-            autoCorrect="off"
-            spellCheck={false}
-            style={{
-              display: "flex",
-              width: "100%",
-              height: 100,
-              borderRadius: 6,
-              border: "none",
-              padding: "10px 12px",
-              fontSize: 14,
-              lineHeight: "normal",
-              color: "hsl(var(--color-textDefault))",
-              background: "hsl(var(--color-canvas))",
-              resize: "none",
-              outline: "none",
-              fontFamily: "inherit",
-              boxSizing: "border-box",
-              appearance: "none",
-            }}
-          />
-        </div>
-      </label>
+      <Textarea
+        id={`${formIdBase}-textarea`}
+        placeholder="Your feedback..."
+        value={feedbackText}
+        onChange={(e) => setFeedbackText(e.target.value)}
+      />
 
       <div
         style={{
@@ -1409,7 +1378,7 @@ function FeedbackWithSelectFormStyles() {
         }
       }
       .feedback-select-wrapper:focus-within {
-        box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+        box-shadow: var(--ds-focus-border);
       }
       .feedback-select {
         display: flex;
@@ -1462,7 +1431,7 @@ function FeedbackWithSelectFormStyles() {
         }
       }
       .feedback-textarea-wrapper:focus-within {
-        box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+        box-shadow: var(--ds-focus-border);
       }
       .feedback-textarea-wrapper textarea::placeholder,
       .feedback-textarea-wrapper input::placeholder {
@@ -1483,14 +1452,25 @@ function FeedbackWithSelectFormStyles() {
         flex-shrink: 0;
         transition: background 0.2s ease, border-color 0.2s ease;
       }
+      .feedback-emoji svg path {
+        transition: fill 0.2s ease;
+      }
+      .feedback-emoji:focus-visible {
+        outline: none;
+        box-shadow: var(--ds-focus-ring);
+      }
       .feedback-emoji--selected {
         background: var(--ds-blue-300);
-        color: var(--ds-blue-800);
+      }
+      .feedback-emoji--selected svg path {
+        fill: var(--ds-blue-900);
       }
       @media (hover: hover) {
         .feedback-emoji:hover {
           background: var(--ds-blue-300);
-          color: var(--ds-blue-800);
+        }
+        .feedback-emoji:hover svg path {
+          fill: var(--ds-blue-900);
         }
       }
       @keyframes feedbackFadeIn {
@@ -1516,6 +1496,8 @@ export function Feedback({
   onSubmit,
   metadata,
   collectEmail = false,
+  prefix,
+  suffix,
   className,
 }: FeedbackProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -1648,6 +1630,8 @@ export function Feedback({
         type="button"
         size="small"
         variant="secondary"
+        prefixIcon={prefix}
+        suffixIcon={suffix}
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
@@ -1758,37 +1742,12 @@ export function Feedback({
                 }}
               >
                 {/* Textarea */}
-                <label>
-                  <div className="feedback-textarea-wrapper">
-                    <textarea
-                      autoFocus
-                      placeholder="Your feedback..."
-                      value={feedbackText}
-                      onChange={(e) => setFeedbackText(e.target.value)}
-                      autoCapitalize="off"
-                      autoComplete="off"
-                      autoCorrect="off"
-                      spellCheck={false}
-                      style={{
-                        display: "flex",
-                        width: "100%",
-                        height: 100,
-                        borderRadius: 6,
-                        border: "none",
-                        padding: "10px 12px",
-                        fontSize: 14,
-                        lineHeight: "normal",
-                        color: "hsl(var(--color-textDefault))",
-                        background: "hsl(var(--color-canvas))",
-                        resize: "none",
-                        outline: "none",
-                        fontFamily: "inherit",
-                        boxSizing: "border-box",
-                        appearance: "none",
-                      }}
-                    />
-                  </div>
-                </label>
+                <Textarea
+                  autoFocus
+                  placeholder="Your feedback..."
+                  value={feedbackText}
+                  onChange={(e) => setFeedbackText(e.target.value)}
+                />
 
                 {/* Markdown tip */}
                 <div
@@ -1871,7 +1830,7 @@ export function Feedback({
           }
         }
         .feedback-textarea-wrapper:focus-within {
-          box-shadow: 0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px rgba(0, 0, 0, 0.16);
+          box-shadow: var(--ds-focus-border);
         }
         .feedback-textarea-wrapper textarea::placeholder {
           color: hsl(var(--color-textSubtler));
@@ -1890,14 +1849,25 @@ export function Feedback({
           color: hsl(var(--color-textSubtle));
           transition: background 0.2s ease, border-color 0.2s ease;
         }
+        .feedback-emoji svg path {
+          transition: fill 0.2s ease;
+        }
+        .feedback-emoji:focus-visible {
+          outline: none;
+          box-shadow: var(--ds-focus-ring);
+        }
         .feedback-emoji--selected {
           background: var(--ds-blue-300);
-          color: var(--ds-blue-800);
+        }
+        .feedback-emoji--selected svg path {
+          fill: var(--ds-blue-900);
         }
         @media (hover: hover) {
           .feedback-emoji:hover {
             background: var(--ds-blue-300);
-            color: var(--ds-blue-800);
+          }
+          .feedback-emoji:hover svg path {
+            fill: var(--ds-blue-900);
           }
         }
         @keyframes feedbackFadeIn {

@@ -7,8 +7,6 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import Checkbox from "./Checkbox";
-
 // ============================================================================
 // Context
 // ============================================================================
@@ -38,15 +36,23 @@ function useChoiceboxContext() {
 function RadioIndicator({
   checked,
   disabled,
+  hovered,
+  focusRing,
 }: {
   checked: boolean;
   disabled: boolean;
+  hovered: boolean;
+  focusRing: boolean;
 }) {
+  // Geist: --radio-color rests at gray-500, darkens to gray-700 on tile hover
+  // (enabled + unchecked), and is blue-900 once selected.
   const borderColor = disabled
     ? "hsl(var(--color-textDisabled))"
     : checked
       ? "var(--ds-blue-900)"
-      : "var(--ds-gray-600)";
+      : hovered
+        ? "var(--ds-gray-700)"
+        : "var(--ds-gray-500)";
 
   const dotColor = disabled
     ? "hsl(var(--color-textDisabled))"
@@ -61,19 +67,89 @@ function RadioIndicator({
         borderRadius: "50%",
         border: `1px solid ${borderColor}`,
         background: "hsl(var(--color-surface))",
-        transition: "border-color 0.2s ease, background 0.2s ease",
+        // Geist: transition-[border-color,background] duration-200 ease-in
+        transition: "border-color 0.2s ease-in, background 0.2s ease-in",
         position: "relative",
+        boxShadow: focusRing ? "var(--ds-focus-ring)" : undefined,
       }}
     >
+      {/* Dot is always rendered and scales in on select (Geist:
+          after:scale-0 → peer-checked:after:scale-100, 150ms ease-in). */}
+      <span
+        style={{
+          width: 8,
+          height: 8,
+          borderRadius: "50%",
+          background: dotColor,
+          transform: checked ? "scale(1)" : "scale(0)",
+          transition: "transform 0.15s ease-in",
+        }}
+      />
+    </span>
+  );
+}
+
+// ============================================================================
+// CheckIndicator (internal)
+// ============================================================================
+
+function CheckIndicator({
+  checked,
+  disabled,
+  hovered,
+  focusRing,
+}: {
+  checked: boolean;
+  disabled: boolean;
+  hovered: boolean;
+  focusRing: boolean;
+}) {
+  // Geist's choicebox checkbox tokens (distinct from the standalone Checkbox):
+  // rest border gray-500, hover (enabled + unchecked) darkens to gray-700,
+  // checked is blue-900 fill+border, disabled-checked gray-600, and
+  // disabled-unchecked is gray-100 fill with a gray-500 border.
+  let background = "hsl(var(--color-surface))";
+  let borderColor = "var(--ds-gray-500)";
+  if (disabled) {
+    background = checked ? "var(--ds-gray-600)" : "var(--ds-gray-100)";
+    borderColor = checked ? "var(--ds-gray-600)" : "var(--ds-gray-500)";
+  } else if (checked) {
+    background = "var(--ds-blue-900)";
+    borderColor = "var(--ds-blue-900)";
+  } else if (hovered) {
+    borderColor = "var(--ds-gray-700)";
+  }
+
+  return (
+    <span
+      aria-hidden="true"
+      className="relative inline-flex items-center justify-center flex-shrink-0 rotate-[0.000001deg]"
+      style={{
+        width: 16,
+        height: 16,
+        borderRadius: 4,
+        border: `1px solid ${borderColor}`,
+        background,
+        transition:
+          "border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
+        boxShadow: focusRing ? "var(--ds-focus-ring)" : undefined,
+      }}
+    >
+      {/* Checkmark — white (geist-background) stroke, visible when checked. */}
       {checked && (
-        <span
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: "50%",
-            background: dotColor,
-          }}
-        />
+        <svg
+          fill="none"
+          viewBox="0 0 20 20"
+          className="absolute inset-0 w-full h-full"
+        >
+          <path
+            d="M14 7L8.5 12.5L6 10"
+            stroke="var(--ds-background-100)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+          />
+        </svg>
       )}
     </span>
   );
@@ -169,6 +245,10 @@ export function Choicebox({
   const inputId = `choicebox-${value}-${reactId}`;
 
   const [isHovered, setIsHovered] = useState(false);
+  // Keyboard-focus state: the focus ring shows on the radio/checkbox
+  // control (like Geist's peer-focus-visible), not on the tile, and only
+  // for keyboard focus — clicking selects without a ring.
+  const [focusVisible, setFocusVisible] = useState(false);
 
   const isDisabled = disabled || ctx.groupDisabled;
   const isSelected =
@@ -199,7 +279,6 @@ export function Choicebox({
         flex flex-1 flex-col
         rounded-md border border-solid
         ${isDisabled ? "cursor-not-allowed" : "cursor-pointer"}
-        ${!isDisabled ? "focus-within:shadow-[0_0_0_2px_var(--ds-background-100),0_0_0_4px_var(--ds-focus-ring)]" : ""}
         ${className}
       `}
       onMouseEnter={() => setIsHovered(true)}
@@ -207,15 +286,15 @@ export function Choicebox({
       style={{
         borderColor:
           isSelected && !isDisabled
-            ? "var(--ds-blue-700)"
+            ? "var(--ds-blue-600)"
             : showHover
               ? "hsl(var(--color-borderDefaultHover))"
               : "hsl(var(--color-borderDefault))",
         background: showHover
           ? "var(--ds-gray-100)"
           : "hsl(var(--color-surface))",
-        transition:
-          "background 0.15s ease, border 0.15s ease, box-shadow 0.15s ease",
+        // Geist tile: transition-colors duration-150 ease-in
+        transition: "background 0.15s ease-in, border-color 0.15s ease-in",
       }}
     >
       <input
@@ -226,6 +305,8 @@ export function Choicebox({
         checked={isSelected}
         disabled={isDisabled}
         onChange={handleChange}
+        onFocus={(e) => setFocusVisible(e.target.matches(":focus-visible"))}
+        onBlur={() => setFocusVisible(false)}
         aria-label={ariaLabel}
         className="sr-only peer"
       />
@@ -240,9 +321,9 @@ export function Choicebox({
             isSelected && !isDisabled
               ? isHovered
                 ? "var(--ds-blue-200)"
-                : "color-mix(in oklch, var(--ds-blue-100) 40%, var(--ds-background-100))"
+                : "var(--ds-blue-100)"
               : "transparent",
-          transition: "background 0.15s ease, border 0.15s ease",
+          transition: "background 0.15s ease-in, border-color 0.15s ease-in",
         }}
       >
         {/* Icon + text content */}
@@ -255,7 +336,7 @@ export function Choicebox({
                 color: isDisabled
                   ? "hsl(var(--color-textDisabled))"
                   : isSelected
-                    ? "var(--ds-blue-700)"
+                    ? "var(--ds-blue-900)"
                     : "hsl(var(--color-textDefault))",
               }}
             >
@@ -271,7 +352,7 @@ export function Choicebox({
                     color: isDisabled
                       ? "hsl(var(--color-textDisabled))"
                       : isSelected
-                        ? "var(--ds-blue-700)"
+                        ? "var(--ds-blue-900)"
                         : "hsl(var(--color-textDefault))",
                   }}
                 >
@@ -285,7 +366,7 @@ export function Choicebox({
                     color: isDisabled
                       ? "hsl(var(--color-textDisabled))"
                       : isSelected
-                        ? "var(--ds-blue-700)"
+                        ? "var(--ds-blue-900)"
                         : "hsl(var(--color-textSubtle))",
                   }}
                 >
@@ -298,17 +379,19 @@ export function Choicebox({
 
         {/* Indicator */}
         {ctx.type === "single" ? (
-          <RadioIndicator checked={isSelected} disabled={isDisabled} />
+          <RadioIndicator
+            checked={isSelected}
+            disabled={isDisabled}
+            hovered={showHover}
+            focusRing={focusVisible}
+          />
         ) : (
-          <span style={{ pointerEvents: "none" }}>
-            <Checkbox
-              checked={isSelected}
-              disabled={isDisabled}
-              color={
-                isSelected && !isDisabled ? "var(--ds-blue-700)" : undefined
-              }
-            />
-          </span>
+          <CheckIndicator
+            checked={isSelected}
+            disabled={isDisabled}
+            hovered={showHover}
+            focusRing={focusVisible}
+          />
         )}
       </div>
 
@@ -317,7 +400,7 @@ export function Choicebox({
         <div
           className="flex items-center justify-center px-3 pb-3 pt-3 rounded-b-md overflow-hidden transition-colors hover:bg-[var(--ds-gray-100)]"
           style={{
-            borderTop: `1px solid ${!isDisabled ? "var(--ds-blue-700)" : "hsl(var(--color-borderDefault))"}`,
+            borderTop: `1px solid ${!isDisabled ? "var(--ds-blue-600)" : "hsl(var(--color-borderDefault))"}`,
           }}
         >
           {children}

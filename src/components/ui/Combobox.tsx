@@ -17,7 +17,10 @@ import * as Popover from "@radix-ui/react-popover";
 export interface ComboboxOption {
   value: string;
   label: string;
+  /** Icon rendered before the label. */
   icon?: React.ReactNode;
+  /** Icon rendered after the label, pushed to the trailing edge. */
+  suffixIcon?: React.ReactNode;
 }
 
 export type ComboboxSize = "small" | "default" | "large";
@@ -286,12 +289,12 @@ export function Combobox({
   );
 
   const handleInputFocus = useCallback(() => {
+    // Focus alone doesn't open the list (Geist) — opening happens on
+    // click, typing, or ArrowDown. This keeps the combobox closed when a
+    // Modal autofocuses it on open. justSelectedRef is reset so a later
+    // click still opens after a selection.
     if (!disabled) {
-      if (justSelectedRef.current) {
-        justSelectedRef.current = false;
-      } else {
-        setIsOpen(true);
-      }
+      justSelectedRef.current = false;
       setIsFocused(true);
     }
   }, [disabled]);
@@ -400,7 +403,9 @@ export function Combobox({
   const fontClass = getFontClass(size);
 
   const inputBoxShadow = isFocused
-    ? "0 0 0 1px var(--ds-gray-alpha-600), 0px 0px 0px 4px var(--ds-focus-ring)"
+    ? // Grey input-focus (Geist forms): gray-alpha-600 hairline + theme-aware
+      // halo. Was a grey-inner / blue-outer hybrid.
+      "var(--ds-focus-border)"
     : error
       ? "0 0 0 1px var(--ds-red-900), 0 0 0 4px var(--ds-red-300)"
       : isHovered && !disabled
@@ -628,7 +633,9 @@ export function Combobox({
         <Popover.Portal>
           <Popover.Content
             sideOffset={9}
-            align="start"
+            // A custom (wider) list centers on the trigger like Geist; the
+            // default trigger-width list stays left-aligned.
+            align={listWidth ? "center" : "start"}
             tabIndex={-1}
             onOpenAutoFocus={(e) => e.preventDefault()}
             onCloseAutoFocus={(e) => e.preventDefault()}
@@ -644,7 +651,7 @@ export function Combobox({
               padding: 8,
               borderRadius: 12,
               background: "hsl(var(--color-surface))",
-              boxShadow: "var(--ds-shadow-menu)",
+              boxShadow: "var(--ds-shadow-border-large)",
               maxHeight: 216,
               overflowY: "hidden",
               outline: "none",
@@ -745,6 +752,19 @@ export function Combobox({
                     >
                       {option.label}
                     </span>
+                    {option.suffixIcon && (
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginLeft: "auto",
+                          paddingLeft: 8,
+                          flexShrink: 0,
+                        }}
+                      >
+                        {option.suffixIcon}
+                      </span>
+                    )}
                     {option.value === currentValue && (
                       <span
                         style={{

@@ -29,7 +29,7 @@ export const LoadingDots = forwardRef<HTMLSpanElement, LoadingDotsProps>(
       width: size,
       height: size,
       borderRadius: "50%",
-      backgroundColor: "var(--ds-gray-800)",
+      backgroundColor: "var(--ds-gray-900)",
       margin: "0 1px",
       animationName: "loading-dot",
       animationDuration: "1.4s",

@@ -224,7 +224,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -369,7 +369,7 @@ function WithLinkExample() {
         href="/support"
         target="_blank"
         rel="noopener"
-        className="inline-flex items-center gap-0.5 underline"
+        className="inline-flex items-center gap-0.5 font-medium underline"
         style={{ color: 'inherit' }}
       >
         Contact Us
@@ -451,7 +451,7 @@ function WithLinkDemo() {
         href="/support"
         target="_blank"
         rel="noopener"
-        className="inline-flex items-center gap-0.5 underline"
+        className="inline-flex items-center gap-0.5 font-medium underline"
         style={{ color: "inherit" }}
       >
         Contact Us
@@ -474,60 +474,55 @@ export default function ErrorComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          A simple inline error message with an icon.
-        </p>
-        <CodePreview componentCode={defaultCode}>
-          <DefaultDemo />
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={defaultCode}>
+            <DefaultDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       <Section>
         <SectionHeader id="custom-label" onCopyLink={showToast}>
           Custom label
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Add a bold label prefix to provide context about the error source.
-        </p>
-        <CodePreview componentCode={customLabelCode}>
-          <CustomLabelDemo />
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={customLabelCode}>
+            <CustomLabelDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       <Section>
         <SectionHeader id="no-label" onCopyLink={showToast}>
           No label
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Without a label, the error message is displayed directly.
-        </p>
-        <CodePreview componentCode={noLabelCode}>
-          <NoLabelDemo />
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={noLabelCode}>
+            <NoLabelDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       <Section>
         <SectionHeader id="sizes" onCopyLink={showToast}>
           Sizes
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Three size variants: small, medium (default), and large.
-        </p>
-        <CodePreview componentCode={sizesCode}>
-          <SizesDemo />
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={sizesCode}>
+            <SizesDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       <Section>
         <SectionHeader id="with-an-error-property" onCopyLink={showToast}>
           With an error property
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-3 mb-6" style={{ lineHeight: 1.5 }}>
-          Error messages can contain interactive elements like links.
-        </p>
-        <CodePreview componentCode={withLinkCode}>
-          <WithLinkDemo />
-        </CodePreview>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={withLinkCode}>
+            <WithLinkDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       {/* Best Practices Section */}

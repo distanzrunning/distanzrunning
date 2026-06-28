@@ -225,7 +225,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -339,12 +339,10 @@ function CustomHeightExample() {
       <Drawer.Trigger>
         <Button>Open</Button>
       </Drawer.Trigger>
-      <Drawer.Content height="75vh">
+      <Drawer.Content height="200px">
         <Drawer.Body>
-          <Drawer.Title>Tall Drawer</Drawer.Title>
-          <Drawer.Description>
-            This drawer has a custom height of 75vh.
-          </Drawer.Description>
+          <Drawer.Title>A drawer title</Drawer.Title>
+          <Drawer.Description>Drawer body</Drawer.Description>
         </Drawer.Body>
       </Drawer.Content>
     </Drawer>
@@ -377,12 +375,10 @@ function CustomHeightDemo() {
       <Drawer.Trigger>
         <Button>Open</Button>
       </Drawer.Trigger>
-      <Drawer.Content height="75vh">
+      <Drawer.Content height="200px">
         <Drawer.Body>
-          <Drawer.Title>Tall Drawer</Drawer.Title>
-          <Drawer.Description>
-            This drawer has a custom height of 75vh.
-          </Drawer.Description>
+          <Drawer.Title>A drawer title</Drawer.Title>
+          <Drawer.Description>Drawer body</Drawer.Description>
         </Drawer.Body>
       </Drawer.Content>
     </Drawer>
@@ -432,115 +428,6 @@ export default function DrawerComponent() {
         </div>
       </Section>
 
-      {/* Props */}
-      <Section>
-        <SectionHeader id="props" onCopyLink={showToast}>
-          Props
-        </SectionHeader>
-
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
-          Drawer (Root) props.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">open</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Controlled open state
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">onOpenChange</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"(open: boolean) => void"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Called when the open state changes
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">shouldScaleBackground</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Whether to scale background content when drawer is open
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p className="text-copy-14 text-textSubtle mt-8 mb-4">
-          Drawer.Content props.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Content rendered inside the drawer
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">height</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string | number
-                </td>
-                <td className="py-3 px-4 text-textSubtle">auto</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Custom height for the drawer
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </Section>
-
       {/* Best Practices Section */}
       <Section>
         <SectionHeader id="best-practices" onCopyLink={showToast}>
@@ -555,7 +442,7 @@ export default function DrawerComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            Drawer is the bottom-sheet pattern for small viewports. On
+            Drawer renders as a bottom sheet on small viewports only. On
             desktop render <ComponentRef name="Modal" /> (or{" "}
             <ComponentRef name="Sheet" /> for lateral context) directly
             instead of forcing Drawer.

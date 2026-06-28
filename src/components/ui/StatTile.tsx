@@ -70,12 +70,17 @@ const directionStyles: Record<
   StatTileChangeDirection,
   { background: string; color: string }
 > = {
+  // Background tints are Vercel's literal web-analytics trend palette —
+  // a fixed coral (down) / mint (up) that reads on either theme at low
+  // opacity. These are intentionally raw rgb (not Geist hue tokens) to
+  // match Vercel's analytics exactly; the text stays on our theme-aware
+  // red/green-700 so it flips correctly. flat = neutral gray pill.
   up: {
-    background: "hsla(var(--ds-green-600-value), var(--chip-alpha))",
+    background: "rgba(94, 203, 117, var(--chip-alpha))",
     color: "var(--ds-green-700)",
   },
   down: {
-    background: "hsla(var(--ds-red-600-value), var(--chip-alpha))",
+    background: "rgba(255, 89, 89, var(--chip-alpha))",
     color: "var(--ds-red-700)",
   },
   flat: {
@@ -106,9 +111,9 @@ function ChangeChip({ change }: { change: StatTileChange }) {
             }
           : undefined
       }
-      // Vercel uses :focus (mouse + keyboard) so clicking shows the
-      // ring too — :focus-visible would skip the mouse case.
-      className="font-semibold text-center outline-none focus:[--chip-alpha:0.5] focus:shadow-[0_0_0_1px_var(--ds-gray-1000)]"
+      // Keyboard-only focus affordance (:focus-visible) — consistent with the
+      // rest of the DS, where the focus ring never fires on mouse click.
+      className="font-semibold text-center outline-none focus-visible:[--chip-alpha:0.5] focus-visible:shadow-[0_0_0_1px_var(--ds-gray-1000)]"
       style={{
         minWidth: 46,
         padding: 6,

@@ -2,11 +2,11 @@
 
 import { forwardRef } from "react";
 
-export type ProjectBannerVariant = "success" | "warning" | "error";
+export type ProjectBannerVariant = "gray" | "success" | "warning" | "error";
 
 export interface ProjectBannerProps {
-  /** The variant/severity of the banner */
-  variant: ProjectBannerVariant;
+  /** The variant/severity of the banner. Defaults to the neutral `gray`. */
+  variant?: ProjectBannerVariant;
   /** Icon to display before the message */
   icon?: React.ReactNode;
   /** The banner message content */
@@ -17,53 +17,48 @@ export interface ProjectBannerProps {
   className?: string;
 }
 
+/**
+ * Surface (aside) colours + the action's focus-ring colour per variant.
+ * Action text/underline colours live in {@link variantActionClasses} — the
+ * single source of truth for those — so they're not duplicated here.
+ */
 const variantStyles: Record<
   ProjectBannerVariant,
   {
     bg: string;
     text: string;
     border: string;
-    actionText: string;
-    actionHoverText: string;
-    actionDecoration: string;
-    actionHoverDecoration: string;
     focusColor: string;
   }
 > = {
+  gray: {
+    bg: "var(--ds-gray-100)",
+    text: "var(--ds-gray-900)",
+    border: "var(--ds-gray-400)",
+    focusColor: "var(--ds-blue-600)",
+  },
   success: {
     bg: "var(--ds-blue-100)",
     text: "var(--ds-blue-900)",
     border: "var(--ds-blue-400)",
-    actionText: "var(--ds-blue-1000)",
-    actionHoverText: "var(--ds-blue-900)",
-    actionDecoration: "var(--ds-blue-400)",
-    actionHoverDecoration: "var(--ds-blue-500)",
     focusColor: "var(--ds-blue-600)",
   },
   warning: {
     bg: "var(--ds-amber-100)",
     text: "var(--ds-amber-900)",
     border: "var(--ds-amber-400)",
-    actionText: "var(--ds-amber-1000)",
-    actionHoverText: "var(--ds-amber-900)",
-    actionDecoration: "var(--ds-amber-400)",
-    actionHoverDecoration: "var(--ds-amber-500)",
     focusColor: "var(--ds-amber-700)",
   },
   error: {
     bg: "var(--ds-red-100)",
     text: "var(--ds-red-900)",
     border: "var(--ds-red-400)",
-    actionText: "var(--ds-red-1000)",
-    actionHoverText: "var(--ds-red-900)",
-    actionDecoration: "var(--ds-red-400)",
-    actionHoverDecoration: "var(--ds-red-500)",
     focusColor: "var(--ds-red-700)",
   },
 };
 
 export const ProjectBanner = forwardRef<HTMLElement, ProjectBannerProps>(
-  ({ variant, icon, children, action, className = "" }, ref) => {
+  ({ variant = "gray", icon, children, action, className = "" }, ref) => {
     const styles = variantStyles[variant];
 
     return (
@@ -95,8 +90,8 @@ export const ProjectBanner = forwardRef<HTMLElement, ProjectBannerProps>(
 ProjectBanner.displayName = "ProjectBanner";
 
 export interface ProjectBannerActionProps {
-  /** The variant to match the parent banner */
-  variant: ProjectBannerVariant;
+  /** The variant to match the parent banner. Defaults to the neutral `gray`. */
+  variant?: ProjectBannerVariant;
   /** Action label */
   children: React.ReactNode;
   /** Click handler (renders as button) */
@@ -106,6 +101,8 @@ export interface ProjectBannerActionProps {
 }
 
 const variantActionClasses: Record<ProjectBannerVariant, string> = {
+  gray:
+    "text-[var(--ds-gray-1000)] decoration-[var(--ds-gray-500)] hover:text-[var(--ds-gray-900)] hover:decoration-[var(--ds-gray-500)]",
   success:
     "text-[var(--ds-blue-1000)] decoration-[var(--ds-blue-400)] hover:text-[var(--ds-blue-900)] hover:decoration-[var(--ds-blue-500)]",
   warning:
@@ -115,7 +112,7 @@ const variantActionClasses: Record<ProjectBannerVariant, string> = {
 };
 
 export function ProjectBannerAction({
-  variant,
+  variant = "gray",
   children,
   onClick,
   href,
@@ -123,7 +120,7 @@ export function ProjectBannerAction({
   const styles = variantStyles[variant];
 
   const baseClassName =
-    "cursor-pointer bg-transparent py-1 font-sans font-medium underline border-none underline-offset-[5px] outline-none px-0 h-6 my-[-1px] rounded-sm transition-colors";
+    "cursor-pointer bg-transparent py-1 font-sans font-medium underline border-none underline-offset-[5px] outline-none px-0 h-6 my-[-1px] rounded-sm transition-colors focus-visible:shadow-[var(--ds-focus-ring)]";
   const className = `${baseClassName} ${variantActionClasses[variant]}`;
 
   const style = {

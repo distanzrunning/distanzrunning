@@ -224,7 +224,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -339,27 +339,44 @@ export function Component(): JSX.Element {
 const errorCode = `import { Textarea } from '@/components/ui/Textarea';
 import type { JSX } from 'react';
 
+const sizes = ['xSmall', 'small', 'default', 'large'] as const;
+
 export function Component(): JSX.Element {
   return (
-    <Textarea
-      error
-      errorMessage="There has been an error."
-      value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    />
+    <div className="flex flex-col gap-8">
+      {sizes.map((size) => (
+        <Textarea key={size} size={size} error errorMessage="There has been an error." defaultValue="…" />
+      ))}
+    </div>
   );
 }`;
 
-const labelHelperCode = `import { Textarea } from '@/components/ui/Textarea';
+const sizesCode = `import { Textarea } from '@/components/ui/Textarea';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <Textarea
-      label="Release Notes"
-      placeholder="What changed in this release?"
-      helperText="Markdown is supported and rendered on the release page."
-    />
+    <div className="flex flex-col gap-6">
+      <Textarea size="xSmall" defaultValue="..." />
+      <Textarea size="small" defaultValue="..." />
+      <Textarea size="default" defaultValue="..." />
+      <Textarea size="large" defaultValue="..." />
+    </div>
   );
+}`;
+
+const readOnlyCode = `import { Textarea } from '@/components/ui/Textarea';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return <Textarea readOnly defaultValue="..." />;
+}`;
+
+const rowsCode = `import { Textarea } from '@/components/ui/Textarea';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return <Textarea rows={5} placeholder="Textarea with fixed number of rows" />;
 }`;
 
 // ============================================================================
@@ -376,20 +393,42 @@ function DisabledDemo() {
 
 function ErrorDemo() {
   return (
-    <Textarea
-      error
-      errorMessage="There has been an error."
-      defaultValue={LOREM}
-    />
+    <div className="flex flex-col items-stretch justify-start gap-8">
+      {(["xSmall", "small", "default", "large"] as const).map((size) => (
+        <Textarea
+          key={size}
+          size={size}
+          error
+          errorMessage="There has been an error."
+          defaultValue={LOREM}
+          aria-label={`With error (${size})`}
+        />
+      ))}
+    </div>
   );
 }
 
-function LabelHelperDemo() {
+function SizesDemo() {
+  return (
+    <div className="flex flex-col gap-6">
+      <Textarea size="xSmall" defaultValue={LOREM} aria-label="xSmall" />
+      <Textarea size="small" defaultValue={LOREM} aria-label="Small" />
+      <Textarea size="default" defaultValue={LOREM} aria-label="Default" />
+      <Textarea size="large" defaultValue={LOREM} aria-label="Large" />
+    </div>
+  );
+}
+
+function ReadOnlyDemo() {
+  return <Textarea readOnly defaultValue={LOREM} aria-label="Read only" />;
+}
+
+function RowsDemo() {
   return (
     <Textarea
-      label="Release Notes"
-      placeholder="What changed in this release?"
-      helperText="Markdown is supported and rendered on the release page."
+      rows={5}
+      placeholder="Textarea with fixed number of rows"
+      aria-label="Textarea with fixed rows"
     />
   );
 }
@@ -437,22 +476,34 @@ export default function TextareaComponent() {
       </Section>
 
       <Section>
-        <SectionHeader id="label-and-helper-text" onCopyLink={showToast}>
-          Label and helper text
+        <SectionHeader id="sizes" onCopyLink={showToast}>
+          Sizes
         </SectionHeader>
-        <p
-          className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "hsl(var(--color-textSubtle))" }}
-        >
-          Pass <code className="inline-code">label</code> for a Title
-          Case noun and <code className="inline-code">helperText</code>{" "}
-          for guidance. The component wires{" "}
-          <code className="inline-code">aria-describedby</code> and
-          hides the helper text when an error message is shown.
-        </p>
         <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={labelHelperCode}>
-            <LabelHelperDemo />
+          <CodePreview componentCode={sizesCode}>
+            <SizesDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="read-only" onCopyLink={showToast}>
+          Read Only
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={readOnlyCode}>
+            <ReadOnlyDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="rows" onCopyLink={showToast}>
+          Rows
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={rowsCode}>
+            <RowsDemo />
           </CodePreview>
         </div>
       </Section>

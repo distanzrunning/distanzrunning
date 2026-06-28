@@ -33,7 +33,7 @@ Two typefaces, two roles. **Don't mix them up.**
 
 | Family | Token | Tailwind | Use for |
 |---|---|---|---|
-| EB Garamond | `--font-family-serif` | `font-serif` | **Editorial only**: featured article headlines, article page titles, pull quotes |
+| EB Garamond | `--font-family-serif` | `font-serif` | **Editorial only — exactly two uses**: article page titles and pull quotes. Nothing else (not featured headlines, subheadings, blockquotes, or any UI). |
 | Inter / Geist | `--font-family-sans` | `font-sans` | **UI**: section titles, card headings, navigation, body text |
 
 The `text-heading-*` classes (defined in `tailwind.config.js`) carry size + line-height + letter-spacing + weight. They **don't set a font-family** — that's done separately. Default inheritance is Geist Sans, so omitting `font-serif` gives you UI styling.
@@ -48,14 +48,14 @@ The `text-heading-*` classes (defined in `tailwind.config.js`) carry size + line
 | `text-heading-16` | 16 / 24 / -0.01em / 600 | Small card titles, sidebar headers |
 | `text-heading-14` | 14 / 20 / -0.006em / 600 | Mini headers, metadata labels |
 
-**Editorial heading scale** (always pair with `font-serif`):
+**Editorial serif scale** — `font-serif` pairs with **only these two** slots; everything else (incl. featured headlines, subheadings, blockquotes) stays sans:
 
 | Class | Size / lh | Use for |
 |---|---|---|
-| `text-heading-48 font-serif` | 48 / 56 | Featured article headlines |
 | `text-heading-40 font-serif` | 40 / 48 | Article page titles |
-| `text-heading-32 font-serif` | 32 / 40 | Large article titles, pull quotes |
-| `text-heading-24 font-serif` | 24 / 32 | Article subheadings, blockquotes |
+| `text-heading-32 font-serif` | 32 / 40 | Pull quotes |
+
+The typography classes deliberately carry **no `font-family`** (they inherit Geist Sans) — unlike Geist, which hardcodes `font-sans` on each. That omission is intentional: it's what lets `font-serif` cleanly override these two editorial slots. Hardcoding `font-sans` would make the heading class win the cascade over `font-serif` (our `addUtilities` classes are emitted *after* `font-serif`), forcing `!font-serif` everywhere. The bleed Geist guards against (a heading inheriting serif) can't occur here — headings are never nested inside the serif elements.
 
 **Anti-patterns to avoid**:
 - Don't use `font-serif` for UI section titles. The DS Typography page explicitly forbids this.
@@ -82,15 +82,15 @@ Token namespace: `--ds-{hue}-{shade}`.
 
 **The rule:** *Is it the page/shell, or a footer/section inside a surface? → `bg-canvas`. Otherwise (cards, menus, **and every control** — inputs, buttons, selects…) → `bg-surface`.* Controls are `surface` + a hairline border, so they sit flush-with-border inside a panel and lift off the page in a filter bar — and a filter row of inputs + dropdowns + buttons all share one tone. Floating things (menus/modals/popovers) add a `material-*` shadow — **extra depth = shadow, never more tones.**
 
-**Elevation = border + shadow, not a lighter fill (Geist model).** `surface` *is* `bg-100`, so a raised card/menu is the same tone as other surfaces — it reads as raised via its hairline border and (when floating) a `material-*` shadow, the way Geist does it. The **hover/active/selected** tones `gray-100/200/300` are always one+ step *above* `surface` so a child state doesn't collapse into it (the ThemeSwitcher bug): light `#F2F2F2/#EBEBEB/#E6E6E6` (darker than white surface), dark `#1A1A1A/#1F1F1F/#292929` (lighter than the `#0A0A0A` surface). **Segmented controls** share one pattern: track = `bg-canvas` (recessed), selected segment = `bg-surface` (raised) + a hairline ring — see `ThemeSwitcher`/`Switch`.
+**Elevation = border + shadow, not a lighter fill (Geist model).** `surface` *is* `bg-100`, so a raised card/menu is the same tone as other surfaces — it reads as raised via its hairline border and (when floating) a `material-*` shadow, the way Geist does it. The **hover/active/selected** tones `gray-100/200/300` are always one+ step *above* `surface` so a child state doesn't collapse into it (the ThemeSwitcher bug): light `#F2F2F2/#EBEBEB/#E6E6E6` (darker than white surface), dark `#1A1A1A/#1F1F1F/#292929` (lighter than the `#0A0A0A` surface). **Segmented controls** — two models, don't unify them. `Switch` follows Geist verbatim: a raised `bg-surface` (bg-100) container + `gray-alpha-400` hairline ring, with the **selected** segment a `gray-100` pill (text `gray-1000`; unselected `gray-900`, hover `gray-1000`). `ThemeSwitcher` **deliberately diverges** — a recessed `surfaceSubtle`/`bg-canvas` track with the selected thumb defined by fill alone (no ring). The divergence is intentional.
 
 **Hard anti-pattern: never use `bg-[var(--ds-background-100)]` or `bg-[var(--ds-background-200)]` (or their inline/CSS forms) as a fill.** Those raw tokens only *feed* `canvas`/`surface` internally. Components always use `bg-canvas` / `bg-surface` — that's what guarantees conformity (no component "does its own thing"). Don't reach for `bg-white`/`bg-black`/`neutral-*` either. (The only legitimate non-token fills are deliberate translucent **glass** effects, e.g. `bg-white/15` + blur.)
 
 **Alpha tokens**: `--ds-gray-alpha-{100..1000}` for translucent overlays.
 
-**Token architecture (Geist two-layer model).** Each colour has a single source of truth — a `--ds-{hue}-{shade}-value` **HSL channel triplet** (e.g. `--ds-blue-700-value: 213, 100%, 48%;`, grays `0, 0%, 94%`). Only these triplets flip between themes (light in `:root,.light`, dark in `.dark`). The opaque token is resolved **once** in a shared block — `--ds-blue-700: hsl(var(--ds-blue-700-value))` — and never redeclared per theme. A `@media (color-gamut: p3) @supports (oklch)` block then overrides the resolved hue tokens with their exact **OKLCH** (the HSL triplet is the gamut-mapped sRGB base; OKLCH is the wide-gamut enhancement). Neutrals (gray/bg) carry no OKLCH layer — they're identical in both gamuts. This is Geist's exact structure (HSL base + OKLCH-P3).
+**Token architecture (Geist two-layer model).** Each colour has a single source of truth — a `--ds-{hue}-{shade}-value` **HSL channel triplet** (e.g. `--ds-blue-700-value: 213, 100%, 48%;`, grays `0, 0%, 94%`). Only these triplets flip between themes (light in `:root,.light`, dark in `.dark`). The opaque token is resolved **once** in a shared block — `--ds-blue-700: hsl(var(--ds-blue-700-value))` — and never redeclared per theme. A `@media (color-gamut: p3) @supports (oklch)` block then overrides the resolved hue tokens with their exact **OKLCH**. **Both layers are copied verbatim from Geist and are independently authored — the HSL triplet is *not* a gamut-map of the OKLCH.** Geist's sRGB fallback is deliberately softer than the vivid P3 colour: e.g. `red-900` light ships `358, 66%, 48%` in sRGB and `oklch(54.99% .232 25.29)` on P3 — gamut-mapping that OKLCH would instead yield a harsher `351, 100%, 42%`, which is *not* what Geist uses. So treat the two layers as two source-of-truth values, both taken from Geist, never one derived from the other. Neutrals (gray/bg) carry no OKLCH layer — they're identical in both gamuts. This is Geist's exact structure (HSL base + OKLCH-P3).
 
-**There is no `-rgb` companion any more** (removed in the Geist-structure migration — the old hand-maintained `-rgb` tuples had drifted from the OKLCH values). For a theme-aware translucent colour use the `-value` triplet directly via **`hsla()`**: `hsla(var(--ds-gray-1000-value), 0.04)` (the triplet flips with the theme automatically). The semantic `--color-*` layer also holds HSL triplets and is consumed as **`hsl(var(--color-X))` / `hsla(var(--color-X), N)`** (Tailwind exposes them this way too) — never `rgb()`. **To recolour a token, edit only its `-value` triplet** (and, if the hue's wide-gamut rendering matters, the matching OKLCH override) — there's no second representation to keep in sync. Regenerate the HSL fallbacks from OKLCH with `node scripts/convert-tokens.mjs --emit`; the same script with no args is a drift guard (CI-friendly, exits 1 on mismatch).
+**There is no `-rgb` companion any more** (removed in the Geist-structure migration — the old hand-maintained `-rgb` tuples had drifted from the OKLCH values). For a theme-aware translucent colour use the `-value` triplet directly via **`hsla()`**: `hsla(var(--ds-gray-1000-value), 0.04)` (the triplet flips with the theme automatically). The semantic `--color-*` layer also holds HSL triplets and is consumed as **`hsl(var(--color-X))` / `hsla(var(--color-X), N)`** (Tailwind exposes them this way too) — never `rgb()`. **To recolour a token, set *both* layers from Geist** — the `-value` HSL triplet (sRGB fallback) **and** the matching OKLCH override (P3). They're independent values, so editing one without the other leaves the layers out of step (sRGB displays would see one colour, P3 displays another). `node scripts/convert-tokens.mjs` is a **same-hue sanity guard** (CI-friendly, exits 1) — it confirms the two layers share a hue, catching a wrong-colour paste; it does **not** regenerate one layer from the other (Geist's sRGB isn't a gamut-map of its OKLCH).
 
 **Accessibility**: `textSubtle` (`gray-900`) is the readable secondary-text colour (Geist-verbatim `gray-900` is 30% L light / 63% L dark → ~7.8:1 light, ~6:1 dark — passes AA; note this is lower than the previously-tuned 20% L, a candidate tweak if you want AAA-grade secondary text). `textSubtler` (`gray-700`) is the **muted** tone for de-emphasised micro-text (line numbers, captions, tiny labels) — AA-Large in light, full AA in dark; still reserve it for non-essential text, prefer `textSubtle` for content. `textDisabled` (`gray-500`) is for disabled states only. An **increased-contrast mode** (`@media (prefers-contrast: more)` in `distanz-tokens.css`) automatically pushes the muted text + border tokens toward ink for users with the OS "Increase Contrast" setting — don't hand-roll your own; rely on the semantic tokens and it applies for free.
 
@@ -118,7 +118,7 @@ So: borders = `var(--ds-gray-400)`, primary text = `var(--ds-gray-1000)`, subtle
 - Don't use `bg-white` / `bg-black` / `text-neutral-*` etc. (Tailwind defaults). Use `--ds-background-100` and `--ds-gray-*`.
 - The legacy named aliases (`asphalt-*`, `pace-purple`, `volt-green`, `tech-cyan`, `track-red`, `trail-brown`, `signal-orange`, `electric-pink*`) have been **removed**. Don't reintroduce them — use the core `gray`/`--ds-gray-*` neutral scale and the `blue`/`green`/`amber`/`red`/`purple`/`teal` hue scales (for status/semantic) directly.
 - For theme-flipping semi-transparent colors, use `hsla(var(--ds-X-value), N)` (or `hsla(var(--color-X), N)`) over a hardcoded rgba + `dark:` override. The `-value`/`--color-*` triplets are **HSL channels** — always wrap them in `hsl()`/`hsla()`, never `rgb()`. (The old `--ds-X-rgb` companions were removed — see the token-architecture note above.)
-- To recolour a token, edit its `--ds-X-value` HSL triplet (the single source of truth). Don't hand-edit the resolved `--ds-X` or the P3 OKLCH override out of step with it — regenerate via `node scripts/convert-tokens.mjs --emit`.
+- To recolour a token, set **both** its `--ds-X-value` HSL triplet (sRGB) and its P3 OKLCH override, copying both from Geist — they're independent layers, not one derived from the other. Run `node scripts/convert-tokens.mjs` to confirm the two layers still share a hue (sanity guard).
 
 ---
 
@@ -175,11 +175,13 @@ Columns: 6 at ≥600 px, 12 at ≥960 px.
 
 Prefer these classes over hand-rolling shadows.
 
+Each `material-*` is **Geist-verbatim**: `background: --ds-background-100` + `box-shadow: var(--ds-shadow-border{,-small,-medium,-large} | --ds-shadow-{tooltip,menu,modal,fullscreen})` + `border-radius` — and **no `border`** (the hairline lives *inside* the shadow token). Don't add a `border` to a material (that was the old double-border bug). To put a material on a recessed tone, override only the fill (e.g. `material-small bg-canvas`), as `Browser` does.
+
 ---
 
 ## Iconography
 
-- **Library**: `lucide-react`. Don't introduce alternative icon sets.
+- **Library**: `lucide-react` is the default for general UI icons. For components that must match Geist **class-for-class**, inlining Geist's exact SVG glyphs is allowed (e.g. `CopyButton`'s copy/check). Don't pull in a *third* icon library — lucide or Geist-verbatim inline SVGs only.
 - **Sizes**: Small 16 px (`w-4 h-4`) inline / Medium 20 px (`w-5 h-5`) buttons / Large 24 px (`w-6 h-6`) prominent actions.
 - **Stroke**: 1.5 default/inactive, 2.5 active/selected.
 - **Color**: inherits via `currentColor` — apply Tailwind text utilities (e.g. `text-[color:var(--ds-gray-900)]`).
@@ -231,7 +233,7 @@ The following live in `src/components/` (some in `src/components/ui/`). When int
 
 ## DS docs page convention (when adding a new component page)
 
-Every component page under `src/app/admin/(shell)/design-system/<slug>/page.tsx` follows the same shape. Use **`ModalComponent.tsx`** or **`AccordionComponent.tsx`** as the reference when copying.
+Every component page under `src/app/admin/(shell)/design-system/<slug>/page.tsx` follows the same shape. Use **`ModalComponent.tsx`** as the reference when copying.
 
 **Page wrapper (`<slug>/page.tsx`):**
 ```tsx
@@ -248,24 +250,20 @@ Every component page under `src/app/admin/(shell)/design-system/<slug>/page.tsx`
 
 **Content (`components/content/<Name>Component.tsx`):**
 
-1. **Page chrome** — inline these helpers at the top of the file: `Toast`, `LinkIcon`, `SectionHeader`, `CopyIconButton`, `RenderShikiToken`, `CodePreview`. Copy verbatim from `AccordionComponent.tsx` — they're identical across pages. *(TODO: extract into a shared module once we touch more than one of these in a single PR.)*
+1. **Page chrome** — inline these helpers at the top of the file: `Toast`, `LinkIcon`, `SectionHeader`, `CopyIconButton`, `RenderShikiToken`, `CodePreview`. Copy verbatim from `ModalComponent.tsx` — they're identical across pages. *(TODO: extract into a shared module once we touch more than one of these in a single PR.)*
 
 2. **Each example** lives inside a `<CodePreview componentCode={…}>` card so the reader gets a Show-code toggle plus a Shiki-highlighted snippet with line numbers + copy button. Pair every demo component with a code string constant — the string is what the user sees in the panel.
 
 3. **`SectionHeader`** on every `<Section>` — hover surfaces a link icon, click copies the URL + smooth-scrolls. Pass `onCopyLink={showToast}` so the copy fires the toast.
 
-4. **Best Practices** section is required and follows this exact structure (in order):
+4. **Best Practices** section is required. **Match Geist's BP for that specific
+   page** (per-page convention — Geist isn't uniform, so don't force one style).
+   The common/default shape (Checkbox, Banner, Browser, …):
    - `<h3 id="when-to-use" className="text-heading-20 text-textDefault mt-8 scroll-mt-32">When to use</h3>`
-   - `<h3 id="behavior">Behavior</h3>`
-   - `<h3 id="content">Content</h3>`
-   - `<h3 id="accessibility">Accessibility</h3>`
+   - `<h3 id="behavior">Behavior</h3>` · `<h3 id="content">Content</h3>` · `<h3 id="accessibility">Accessibility</h3>`
+   - each followed by `<ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">`
 
-   Each followed by:
-   ```tsx
-   <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
-     <li>…</li>
-   </ul>
-   ```
+   But some pages differ — e.g. **Materials** uses denser BP chrome (`<h4 className="text-label-16 …">` subheadings in `mb-6 last:mb-0` wrappers, lists `text-copy-14 … pl-5 space-y-1.5`) and **omits Content**. Reproduce whatever that page does in Geist rather than the default.
 
 5. **Inline references in body copy:**
    - Component cross-refs → `<ComponentRef name="Modal" />` (from `../ComponentRef`) — never plain text like "Modal".

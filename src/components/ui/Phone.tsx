@@ -56,21 +56,24 @@ export const Phone = forwardRef<HTMLDivElement, PhoneProps>(
               style={{ boxShadow: buttonShadow }}
             >
               <svg
-                width="16"
-                height="16"
                 viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+                height="16"
+                width="16"
+                data-slot="geist-icon"
+                className="-ml-0.5 w-[5cqw] h-[5cqw]"
+                style={{ color: "currentcolor" }}
               >
                 <path
-                  d="M10.5 14.0607L9.96966 13.5303L5.14644 8.7071C4.75592 8.31658 4.75592 7.68341 5.14644 7.29289L9.96966 2.46966L10.5 1.93933L11.5607 2.99999L11.0303 3.53032L6.56065 7.99999L11.0303 12.4697L11.5607 13L10.5 14.0607Z"
                   fill="currentColor"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="m10.5 14.06-.53-.53-4.82-4.82a1 1 0 0 1 0-1.42l4.82-4.82.53-.53L11.56 3l-.53.53L6.56 8l4.47 4.47.53.53z"
                 />
               </svg>
             </div>
             {/* URL bar */}
             <div
-              className="text-[#fff]/80 bg-[rgba(15,15,15,0.32)] backdrop-blur-sm rounded-full flex items-center justify-center h-[12cqw] w-auto flex-1"
+              className="text-[#fff]/80 bg-[rgba(15,15,15,0.32)] backdrop-blur-sm rounded-full flex items-center justify-center h-[12cqw] w-auto flex-1 text-label-13 min-w-0"
               style={{ boxShadow: buttonShadow }}
             >
               <span className="text-[#fff] w-full block truncate px-4 text-center text-[4.5cqw]">
@@ -83,15 +86,18 @@ export const Phone = forwardRef<HTMLDivElement, PhoneProps>(
               style={{ boxShadow: buttonShadow }}
             >
               <svg
-                width="16"
-                height="16"
                 viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+                height="16"
+                width="16"
+                data-slot="geist-icon"
+                className="w-[5cqw] h-[5cqw]"
+                style={{ color: "currentcolor" }}
               >
                 <path
-                  d="M4 8C4 8.82843 3.32843 9.5 2.5 9.5C1.67157 9.5 1 8.82843 1 8C1 7.17157 1.67157 6.5 2.5 6.5C3.32843 6.5 4 7.17157 4 8ZM9.5 8C9.5 8.82843 8.82843 9.5 8 9.5C7.17157 9.5 6.5 8.82843 6.5 8C6.5 7.17157 7.17157 6.5 8 6.5C8.82843 6.5 9.5 7.17157 9.5 8ZM13.5 9.5C14.3284 9.5 15 8.82843 15 8C15 7.17157 14.3284 6.5 13.5 6.5C12.6716 6.5 12 7.17157 12 8C12 8.82843 12.6716 9.5 13.5 9.5Z"
                   fill="currentColor"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M4 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m5.5 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m4 1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"
                 />
               </svg>
             </div>

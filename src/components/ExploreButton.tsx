@@ -31,16 +31,16 @@ export function ExploreButton({ variant = "default" }: ExploreButtonProps) {
         className={`group whitespace-nowrap font-medium text-sm relative m-0 flex cursor-pointer select-none items-center rounded-lg border-none p-0 no-underline outline-none ease-out focus-visible:outline-none after:pointer-events-none after:absolute after:inset-0 after:z-[0] after:rounded-lg focus-visible:after:ring active:scale-[0.98] active:duration-100 h-12 gap-2 px-5 justify-center
           ${
             variant === "pink"
-              ? "text-textDefault transition-shadow after:transition-border after:border after:border-borderSubtle hover:bg-surfaceSubtle data-[state=open]:bg-surfaceSubtle hover:shadow-[0_0_20px_5px_rgba(228,60,129,0.2)] pr-4"
+              ? "text-textDefault transition-shadow after:transition-border after:border after:border-borderSubtle hover:bg-surfaceSubtle data-[state=open]:bg-surfaceSubtle hover:shadow-[0_0_20px_5px_rgba(0,112,243,0.2)] pr-4"
               : "bg-gray-1000 dark:bg-gray-300 text-textInverted hover:bg-gray-900 dark:hover:bg-gray-500"
           }`}
       >
-        {/* Rotating gradient border - Distanz Electric Pink */}
+        {/* Rotating gradient border - accent glow */}
         {variant === "pink" && (
           <>
             {/* Outer rotating gradient layer */}
             <div className="absolute inset-0 z-[1] overflow-hidden rounded-lg">
-              <div className="absolute inset-0 h-[100%] w-[100%] animate-flip [mask:linear-gradient(white,_transparent_50%)] before:absolute before:aspect-square before:w-[200%] before:rotate-[-90deg] before:animate-rotate before:bg-[conic-gradient(from_0deg,transparent_0_340deg,rgba(228,60,129,0.8)_360deg)] before:content-[''] before:[inset:0_auto_auto_50%] before:[translate:-50%_-15%]"></div>
+              <div className="absolute inset-0 h-[100%] w-[100%] animate-flip [mask:linear-gradient(white,_transparent_50%)] before:absolute before:aspect-square before:w-[200%] before:rotate-[-90deg] before:animate-rotate before:bg-[conic-gradient(from_0deg,transparent_0_340deg,rgba(0,112,243,0.8)_360deg)] before:content-[''] before:[inset:0_auto_auto_50%] before:[translate:-50%_-15%]"></div>
             </div>
             {/* Inner background layer */}
             <div className="absolute inset-[1px] z-[1] rounded-[7px] bg-surface group-hover:bg-surfaceSubtle"></div>

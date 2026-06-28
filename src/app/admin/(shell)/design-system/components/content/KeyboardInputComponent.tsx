@@ -224,7 +224,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -315,7 +315,7 @@ import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+    <div style={{ display: "flex", alignItems: "center" }}>
       <Kbd meta />
       <Kbd shift />
       <Kbd alt />
@@ -348,7 +348,7 @@ export function Component(): JSX.Element {
 
 function ModifiersDemo() {
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+    <div style={{ display: "flex", alignItems: "center" }}>
       <Kbd meta />
       <Kbd shift />
       <Kbd alt />
@@ -380,7 +380,7 @@ export default function KeyboardInputComponent() {
         <SectionHeader id="modifiers" onCopyLink={showToast}>
           Modifiers
         </SectionHeader>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={modifiersCode}>
             <ModifiersDemo />
           </CodePreview>
@@ -391,7 +391,7 @@ export default function KeyboardInputComponent() {
         <SectionHeader id="combination" onCopyLink={showToast}>
           Combination
         </SectionHeader>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={combinationCode}>
             <CombinationDemo />
           </CodePreview>
@@ -402,7 +402,7 @@ export default function KeyboardInputComponent() {
         <SectionHeader id="small" onCopyLink={showToast}>
           Small
         </SectionHeader>
-        <div className="mt-6">
+        <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={smallCode}>
             <SmallDemo />
           </CodePreview>

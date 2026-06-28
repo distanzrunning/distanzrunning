@@ -16,7 +16,7 @@ import { useContext, type ComponentType } from "react";
 import Link from "next/link";
 import { SiInstagram, SiX, SiStrava, SiLinkedin } from "react-icons/si";
 import { DarkModeContext } from "@/components/DarkModeProvider";
-import { useConsent } from "@/contexts/ConsentContext";
+import { useConsentSettings } from "@/components/consent/useConsentSettings";
 import Logo from "@/components/ui/Logo";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 
@@ -72,7 +72,7 @@ const socialLinks: ReadonlyArray<SocialLink> = [
 // ============================================================================
 
 export default function Footer() {
-  const { openSettings } = useConsent();
+  const { openSettings } = useConsentSettings();
   const { theme, setTheme } = useContext(DarkModeContext);
 
   const companyLinks: ReadonlyArray<FooterItem> = [
@@ -204,4 +204,4 @@ function SocialColumn() {
 // links that have a trailing arrow icon. With text-only links the
 // gap is invisible.
 const linkClasses =
-  "inline-flex items-center gap-x-0.5 rounded-sm text-[14px] leading-5 text-[color:var(--ds-gray-900)] transition-colors hover:text-[color:var(--ds-gray-1000)] focus-visible:text-[color:var(--ds-gray-1000)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--ds-focus-ring)]";
+  "inline-flex items-center gap-x-0.5 rounded-sm text-[14px] leading-5 text-[color:var(--ds-gray-900)] transition-colors hover:text-[color:var(--ds-gray-1000)] focus-visible:text-[color:var(--ds-gray-1000)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--ds-focus-color)]";

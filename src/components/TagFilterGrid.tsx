@@ -50,7 +50,7 @@ export default function TagFilterGrid({ articles, basePath = "/articles/" }: Pro
       <div className="w-full lg:max-w-xl lg:mx-auto">
         <div className="relative">
           <svg 
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-black" 
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-textDefault"
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
@@ -70,7 +70,7 @@ export default function TagFilterGrid({ articles, basePath = "/articles/" }: Pro
               setSearchTerm(e.target.value);
               setVisibleCount(ARTICLES_PER_BATCH);
             }}
-            className="w-full pl-12 pr-5 py-3 text-sm rounded-md bg-gray-200 text-dark placeholder:text-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-gray-400 transition"
+            className="w-full pl-12 pr-5 py-3 text-sm rounded-md bg-gray-200 text-dark placeholder:text-gray-500 focus:outline-none focus:bg-surface focus:ring-2 focus:ring-gray-400 transition"
           />
         </div>
       </div>

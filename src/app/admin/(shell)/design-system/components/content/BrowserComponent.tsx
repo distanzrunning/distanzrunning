@@ -240,7 +240,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [copied, setCopied] = useState(false);
 
   // Use Shiki for syntax highlighting
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -261,7 +261,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   }, [componentCode]);
 
   return (
-    <div className="border border-borderDefault rounded-lg overflow-hidden">
+    <div className="mt-4 xl:mt-7 border border-borderDefault rounded-lg overflow-hidden">
       {/* Preview area */}
       <div className="p-6" style={{ background: "hsl(var(--color-surface))" }}>
         {children}
@@ -351,12 +351,10 @@ export default function BrowserComponent() {
         <SectionHeader id="composition" onCopyLink={showToast}>
           Composition
         </SectionHeader>
-        <p className="text-copy-14 text-textSubtle mt-4 mb-6">
-          The Browser component provides a realistic browser-style frame for
-          showcasing website screenshots or any other content.
-        </p>
         <CodePreview componentCode={compositionCode}>
-          <Browser url="distanzrunning.com" />
+          <div className="max-w-4xl mx-auto">
+            <Browser url="distanzrunning.com" />
+          </div>
         </CodePreview>
       </Section>
 
@@ -384,12 +382,12 @@ export default function BrowserComponent() {
             surface.
           </li>
           <li>
-            Use{" "}
-            <code className="inline-code">&lt;BrowserHeader&gt;</code>{" "}
-            when the canned{" "}
-            <code className="inline-code">&lt;Browser&gt;</code>{" "}
-            shape doesn&apos;t fit the layout; don&apos;t fork the
-            chrome.
+            Compose from the building blocks (
+            <code className="inline-code">&lt;BrowserDots&gt;</code>,{" "}
+            <code className="inline-code">&lt;BrowserControls&gt;</code>,{" "}
+            <code className="inline-code">&lt;BrowserAddressBar&gt;</code>) when
+            the canned <code className="inline-code">&lt;Browser&gt;</code> shape
+            doesn&apos;t fit the layout; don&apos;t fork the chrome.
           </li>
         </ul>
 
@@ -401,15 +399,18 @@ export default function BrowserComponent() {
         </h3>
         <ul className="mt-4 list-disc pl-6 space-y-2 text-copy-16 text-textSubtle">
           <li>
-            The chrome reads correctly on both light and dark
-            surfaces &mdash; background, border, and text colours
-            flip automatically with the page theme so the frame
-            doesn&apos;t fight the page.
+            Match the variant to the surrounding theme:{" "}
+            <code className="inline-code">variant=&quot;light&quot;</code> on
+            light backgrounds,{" "}
+            <code className="inline-code">variant=&quot;dark&quot;</code> on
+            dark, so the frame doesn&apos;t fight the page. Omit{" "}
+            <code className="inline-code">variant</code> to follow the page
+            theme automatically.
           </li>
           <li>
-            For long URLs, pass a pre-shortened display value to{" "}
-            <code className="inline-code">url</code> so the host and
-            path tail both remain visible.
+            For long URLs, the address bar uses{" "}
+            <code className="inline-code">&lt;MiddleTruncate&gt;</code> so the
+            host and path tail both remain visible.
           </li>
           <li>
             Lock the inner image aspect ratio so the chrome

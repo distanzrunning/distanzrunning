@@ -72,8 +72,8 @@ export function MapLoadingProgress({ isLoading, currentStep, onComplete }: MapLo
   return (
     <div className="absolute inset-0 bg-white/60 dark:bg-neutral-900/60 backdrop-blur-md z-50 flex flex-col items-center justify-center transition-opacity duration-300">
       {/* Minimal progress bar container matching marathon showcase style */}
-      <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-700 p-1.5 shadow-lg transition-colors duration-300">
-        <div className="w-64 bg-neutral-200 dark:bg-neutral-700 rounded-xl h-1.5 transition-colors duration-300">
+      <div className="bg-surface rounded-xl border border-borderSubtle p-1.5 shadow-lg transition-colors duration-300">
+        <div className="w-64 bg-canvas rounded-xl h-1.5 transition-colors duration-300">
           <div 
             className="bg-gradient-to-r from-pink-500 to-pink-600 h-1.5 rounded-xl transition-all duration-300 ease-out"
             style={{ width: `${progress}%` }}

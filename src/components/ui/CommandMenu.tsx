@@ -76,8 +76,11 @@ interface CommandMenuItemProps {
   disabled?: boolean;
   /** Optional icon rendered before the label */
   icon?: ReactNode;
-  /** Optional keyboard shortcut label (e.g. "⌘K") */
+  /** Optional keyboard shortcut label (e.g. "⌘K"), rendered as a kbd. */
   shortcut?: string;
+  /** Optional trailing slot (text or icon) pinned to the right in
+   *  muted gray-700 — e.g. a country code or status icon. */
+  suffix?: ReactNode;
   /** Optional secondary line (e.g. category / breadcrumb) */
   subtitle?: ReactNode;
   /** Explicit cmdk value used for filter matching */
@@ -126,18 +129,16 @@ const CMDK_CSS = `
     position: fixed;
     inset: 0;
     z-index: 100;
-    background: var(--ds-overlay-backdrop-color);
-    opacity: var(--ds-overlay-backdrop-opacity);
-    /* Match the Modal + Mega-menu scrim: dim/lift + 8px frost so
-       all three overlays read as the same product moment. */
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    /* Geist's Command Menu overlay is its own treatment — a bg-100 wash at
+       80% opacity with no blur (distinct from the dark Modal/Sheet scrim). */
+    background: hsl(var(--color-surface));
+    opacity: 0.8;
     animation: ds-cmdk-fade-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
   }
 
   .ds-cmdk-content {
     position: fixed;
-    top: 20vh;
+    top: 15%;
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
@@ -168,7 +169,8 @@ const CMDK_CSS = `
     background: transparent;
     border: none;
     outline: none;
-    font-size: 18px;
+    /* Geist: text-base sm:text-lg — 16px on mobile, 18px at >=640px */
+    font-size: 16px;
     color: var(--ds-gray-1000);
     padding: 0;
     font-family: inherit;
@@ -192,16 +194,22 @@ const CMDK_CSS = `
     height: 40px;
     padding: 0 8px;
     font-size: 13px;
-    color: var(--ds-gray-700);
+    color: var(--ds-gray-900);
     user-select: none;
+  }
+
+  .ds-cmdk-content [cmdk-separator] {
+    height: 1px;
+    margin: 8px -8px;
+    background: var(--ds-gray-alpha-400);
   }
 
   .ds-cmdk-content [cmdk-item] {
     display: flex;
     align-items: center;
     gap: 12px;
-    height: 40px;
-    min-height: 40px;
+    /* Geist: min-h-12 sm:min-h-10 — 48px touch target on mobile, 40px at >=640px */
+    min-height: 48px;
     padding: 0 8px;
     border-radius: 6px;
     font-size: 14px;
@@ -213,7 +221,7 @@ const CMDK_CSS = `
   }
 
   .ds-cmdk-content [cmdk-item][data-selected="true"] {
-    background: var(--ds-gray-alpha-200);
+    background: var(--ds-gray-alpha-100);
   }
 
   .ds-cmdk-content [cmdk-item][data-disabled="true"] {
@@ -224,6 +232,17 @@ const CMDK_CSS = `
   .ds-cmdk-content [cmdk-item].ds-cmdk-item-tall {
     height: 48px;
     min-height: 48px;
+  }
+
+  /* Geist drops the input to text-base and items to min-h-10 below the sm
+     breakpoint; restore the larger desktop sizes at >=640px. */
+  @media (min-width: 640px) {
+    .ds-cmdk-content [cmdk-input] {
+      font-size: 18px;
+    }
+    .ds-cmdk-content [cmdk-item] {
+      min-height: 40px;
+    }
   }
 
   .ds-cmdk-content [cmdk-empty] {
@@ -296,12 +315,18 @@ function CommandMenuGroup({ heading, children }: CommandMenuGroupProps) {
   return <Command.Group heading={heading}>{children}</Command.Group>;
 }
 
+/** A horizontal divider between groups/items in the list. */
+function CommandMenuSeparator() {
+  return <Command.Separator />;
+}
+
 function CommandMenuItem({
   children,
   onSelect,
   disabled = false,
   icon,
   shortcut,
+  suffix,
   subtitle,
   value,
   keywords,
@@ -379,6 +404,22 @@ function CommandMenuItem({
       ) : (
         <span style={{ flex: 1 }}>{children}</span>
       )}
+      {suffix && (
+        <span
+          style={{
+            marginLeft: "auto",
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
+            fontSize: 14,
+            lineHeight: "20px",
+            color: "var(--ds-gray-700)",
+            flexShrink: 0,
+          }}
+        >
+          {suffix}
+        </span>
+      )}
       {shortcut && (
         <kbd
           style={{
@@ -400,9 +441,10 @@ function CommandMenuItem({
  * `subPage="<id>"`) pushes the user onto this page; Backspace at an
  * empty input pops back to the previous page.
  */
-function CommandMenuPage(_props: CommandMenuPageProps) {
+function CommandMenuPage(props: CommandMenuPageProps) {
   // Page is a config carrier — its children are rendered by the
   // CommandMenu host once the page is active. Nothing to render here.
+  void props;
   return null;
 }
 
@@ -612,3 +654,4 @@ export function CommandMenu({
 CommandMenu.Group = CommandMenuGroup;
 CommandMenu.Item = CommandMenuItem;
 CommandMenu.Page = CommandMenuPage;
+CommandMenu.Separator = CommandMenuSeparator;

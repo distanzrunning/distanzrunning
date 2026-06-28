@@ -35,7 +35,11 @@ export interface ProgressProps {
    * ]}
    */
   dynamicColors?: ProgressColorStop[];
-  /** Additional CSS classes */
+  /** Bar width (any CSS length). Default `100%`. */
+  width?: number | string;
+  /** Bar height (any CSS length). Default `10` (px). */
+  height?: number | string;
+  /** Additional CSS classes for the wrapper */
   className?: string;
 }
 
@@ -66,6 +70,8 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
       max = 100,
       color = "var(--ds-gray-1000)",
       dynamicColors,
+      width = "100%",
+      height = 10,
       className = "",
     },
     ref,
@@ -73,33 +79,23 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
     const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
     const fillColor = resolveColor(percentage, color, dynamicColors);
 
+    // Geist styles a native <progress> directly (track + ::-progress-value
+    // fill), so it carries the role/value semantics for free.
     return (
-      <div
-        className={`relative w-full overflow-hidden rounded-full ${className}`}
-        style={{ height: 10 }}
-      >
-        {/* Track */}
-        <div
-          className="absolute inset-0 rounded-full"
-          style={{ background: "var(--ds-gray-alpha-200)" }}
-        />
-        {/* Fill */}
-        <div
-          className="absolute inset-y-0 left-0 rounded-full transition-all duration-300 ease-out"
-          style={{
-            width: `${percentage}%`,
-            background: fillColor,
-          }}
-        />
-        {/* Hidden native progress for accessibility */}
+      <div className={`relative ${className}`.trim()} style={{ width, height }}>
         <progress
           ref={ref}
+          className="ds-progress"
           value={value}
           max={max}
-          className="sr-only"
-        >
-          {Math.round(percentage)}%
-        </progress>
+          style={
+            {
+              width: "100%",
+              height,
+              ["--fg" as string]: fillColor,
+            } as React.CSSProperties
+          }
+        />
       </div>
     );
   },
@@ -127,6 +123,8 @@ export const ProgressWithStops = forwardRef<HTMLDivElement, ProgressWithStopsPro
       color = "var(--ds-blue-700)",
       dynamicColors,
       stops,
+      width = "100%",
+      height = 10,
       className = "",
     },
     ref,
@@ -137,51 +135,36 @@ export const ProgressWithStops = forwardRef<HTMLDivElement, ProgressWithStopsPro
     return (
       <div
         ref={ref}
-        className={`relative w-full ${className}`}
-        style={{ height: 10 }}
+        className={`relative ${className}`.trim()}
+        style={{ width, height }}
       >
-        {/* Track */}
-        <div
-          className="absolute inset-0 rounded-full overflow-hidden"
-        >
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{ background: "var(--ds-gray-alpha-200)" }}
-          />
-          {/* Fill */}
-          <div
-            className="absolute inset-y-0 left-0 rounded-full transition-all duration-300 ease-out"
-            style={{
-              width: `${percentage}%`,
-              background: fillColor,
-            }}
-          />
-        </div>
-        {/* Stops */}
+        {/* `data-stops` squares off the fill so the notches sit flush. */}
+        <progress
+          data-stops=""
+          className="ds-progress"
+          value={value}
+          max={max}
+          style={
+            {
+              width: "100%",
+              height,
+              ["--fg" as string]: fillColor,
+            } as React.CSSProperties
+          }
+        />
+        {/* Notch per stop: a gray hairline next to a surface hairline, like
+            Geist, offset so the line centres on its position. */}
         {stops.map((stop) => (
           <div
             key={stop.position}
-            className="absolute top-0 bottom-0 flex items-center justify-center"
+            className="absolute top-0 bottom-0 z-10 flex items-center justify-center"
             style={{ left: `${stop.position}%`, transform: "translateX(-50%)" }}
+            aria-label={stop.label}
           >
-            <div
-              className="w-px h-full"
-              style={{ background: "var(--ds-gray-alpha-600)" }}
-            />
-            <div
-              className="absolute w-px h-full"
-              style={{ background: "hsl(var(--color-canvas))" }}
-            />
+            <div className="w-px h-full bg-[var(--ds-gray-alpha-600)]" />
+            <div className="w-px h-full bg-surface" />
           </div>
         ))}
-        {/* Hidden native progress for accessibility */}
-        <progress
-          value={value}
-          max={max}
-          className="sr-only"
-        >
-          {Math.round(percentage)}%
-        </progress>
       </div>
     );
   },

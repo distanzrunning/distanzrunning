@@ -224,7 +224,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -317,6 +317,7 @@ export function Component(): JSX.Element {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <LoadingDots />
+      <LoadingDots size={3} />
       <LoadingDots size={4} />
     </div>
   );
@@ -326,7 +327,7 @@ const withTextCode = `import { LoadingDots } from '@/components/ui/LoadingDots';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
-  return <LoadingDots size={4}>Saving</LoadingDots>;
+  return <LoadingDots size={3}>Loading</LoadingDots>;
 }`;
 
 // ============================================================================
@@ -337,13 +338,14 @@ function DefaultDemo() {
   return (
     <div className="flex flex-col items-start justify-between gap-6 flex-initial">
       <LoadingDots />
+      <LoadingDots size={3} />
       <LoadingDots size={4} />
     </div>
   );
 }
 
 function WithTextDemo() {
-  return <LoadingDots size={4}>Saving</LoadingDots>;
+  return <LoadingDots size={3}>Loading</LoadingDots>;
 }
 
 // ============================================================================

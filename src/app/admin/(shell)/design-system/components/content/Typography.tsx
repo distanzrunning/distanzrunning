@@ -210,18 +210,20 @@ export default function Typography() {
         </p>
 
         <p className="text-copy-16 text-textSubtle mb-6">
-          The{" "}
+          To use the <strong>Subtle</strong> and <strong>Strong</strong>{" "}
+          modifiers, nest a{" "}
           <code className="inline-code">
             strong
           </code>{" "}
-          element can be used as a modifier to change the font weight. For
-          Headings, this reduces the weight (for creating subtle variants),
-          while for Copy text it increases the weight for emphasis.
+          element inside a typography class. In Headings it creates a Subtle
+          variant (muted <code className="inline-code">gray-900</code>, lighter
+          weight); in Copy and Label it creates a Strong variant (
+          <code className="inline-code">gray-1000</code>, heavier weight).
         </p>
 
         <CodeBlock language="html">
-          {`<p className="text-heading-32 font-serif">
-  Heading with <strong>subtle</strong> text
+          {`<p className="text-copy-16">
+  Copy 16 <strong>with Strong</strong>
 </p>`}
         </CodeBlock>
       </Section>
@@ -237,13 +239,13 @@ export default function Typography() {
           <code className="inline-code">
             font-serif
           </code>{" "}
-          (EB Garamond) for editorial contexts like featured article headlines,
-          article page titles, and pull quotes. Use{" "}
+          (EB Garamond) for exactly two editorial slots — article page titles
+          and pull quotes. Use{" "}
           <code className="inline-code">
             font-sans
           </code>{" "}
-          (Geist Sans) for UI contexts like section titles, card headings, and
-          navigation.
+          (Geist Sans) for everything else: section titles, card headings,
+          navigation, and body.
         </p>
 
         <p className="text-copy-16 text-textSubtle mb-6">
@@ -276,13 +278,7 @@ export default function Typography() {
               </tr>
             </thead>
             <tbody className="text-copy-14">
-              {/* Editorial headings - EB Garamond */}
-              <TypographyRow
-                example={<p className="text-heading-48 font-serif">Heading</p>}
-                className="text-heading-48 font-serif"
-                usage="Featured article headlines"
-                onCopy={handleCopy}
-              />
+              {/* Editorial headings — EB Garamond, the only two serif slots */}
               <TypographyRow
                 example={<p className="text-heading-40 font-serif">Heading</p>}
                 className="text-heading-40 font-serif"
@@ -296,17 +292,7 @@ export default function Typography() {
                   </p>
                 }
                 className="text-heading-32 font-serif"
-                usage="Large article titles, pull quotes"
-                onCopy={handleCopy}
-              />
-              <TypographyRow
-                example={
-                  <p className="text-heading-24 font-serif">
-                    Heading <strong>Subtle</strong>
-                  </p>
-                }
-                className="text-heading-24 font-serif"
-                usage="Article subheadings, blockquotes"
+                usage="Pull quotes"
                 onCopy={handleCopy}
               />
               {/* UI headings - Geist Sans */}

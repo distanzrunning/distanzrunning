@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import ContentWithTOC from "../components/ContentWithTOC";
 import BrowserComponent from "../components/content/BrowserComponent";
-import { RegistryInstallButtons } from "../components/RegistryInstallButtons";
 
 export const metadata: Metadata = { title: "Browser" };
 
@@ -12,7 +11,6 @@ export default function BrowserPage() {
       pageTitle="Browser"
       pageSubtitle="The Browser component lets you showcase website screenshots or any other content within a realistic browser-style frame."
       mainSectionId="browser"
-      headerRight={<RegistryInstallButtons slug="browser" />}
     >
       <BrowserComponent />
     </ContentWithTOC>

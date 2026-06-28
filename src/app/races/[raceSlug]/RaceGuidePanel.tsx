@@ -535,6 +535,8 @@ function AdsCard() {
           size={{ width: 300, height: 100 }}
           preview
           label={false}
+          breathingRoom={false}
+          framed={false}
           fallback={<AdsCardFallback compact />}
           className="mx-auto"
         />
@@ -545,6 +547,8 @@ function AdsCard() {
           size="mpu"
           preview
           label={false}
+          breathingRoom={false}
+          framed={false}
           fallback={<AdsCardFallback />}
           className="mx-auto"
         />

@@ -731,6 +731,12 @@ module.exports = {
         23: "5.75rem",
       },
       boxShadow: {
+        // Card materials (shadow-card / -raised / -hover) live as @utility in
+        // globals.css, NOT here: Tailwind v4 colour-injects themed boxShadow
+        // entries and follows the token's var() into its composite value,
+        // tripping Lightning CSS on the var()+rgba mix (the card-hover build
+        // warning). A plain @utility with a direct box-shadow sidesteps the
+        // colour-injection and still supports hover:shadow-card-hover.
         "elevation-flyout":
           "0 4px 24px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.1)",
         // Elevated surface shadows - use CSS variables for light/dark mode
@@ -799,70 +805,70 @@ module.exports = {
           lineHeight: "72px",
           letterSpacing: "-0.06em",
           fontWeight: "600",
-          "& strong": { fontWeight: "400" },
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "500" },
         },
         ".text-heading-64": {
           fontSize: "64px",
           lineHeight: "64px",
           letterSpacing: "-0.06em",
           fontWeight: "600",
-          "& strong": { fontWeight: "400" },
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "500" },
         },
         ".text-heading-56": {
           fontSize: "56px",
           lineHeight: "56px",
           letterSpacing: "-0.06em",
           fontWeight: "600",
-          "& strong": { fontWeight: "400" },
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "500" },
         },
         ".text-heading-48": {
           fontSize: "48px",
           lineHeight: "56px",
           letterSpacing: "-0.06em",
           fontWeight: "600",
-          "& strong": { fontWeight: "400" },
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "500" },
         },
         ".text-heading-40": {
           fontSize: "40px",
           lineHeight: "48px",
           letterSpacing: "-0.06em",
           fontWeight: "600",
-          "& strong": { fontWeight: "400" },
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "500" },
         },
         ".text-heading-32": {
           fontSize: "32px",
           lineHeight: "40px",
           letterSpacing: "-0.04em",
           fontWeight: "600",
-          "& strong": { fontWeight: "400" },
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "500" },
         },
         ".text-heading-24": {
           fontSize: "24px",
           lineHeight: "32px",
           letterSpacing: "-0.04em",
           fontWeight: "600",
-          "& strong": { fontWeight: "400" },
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "500" },
         },
         ".text-heading-20": {
           fontSize: "20px",
           lineHeight: "26px",
           letterSpacing: "-0.02em",
           fontWeight: "600",
-          "& strong": { fontWeight: "400" },
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "500" },
         },
         ".text-heading-18": {
           fontSize: "18px",
           lineHeight: "24px",
           letterSpacing: "-0.02em",
           fontWeight: "600",
-          "& strong": { fontWeight: "400" },
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "500" },
         },
         ".text-heading-16": {
           fontSize: "16px",
           lineHeight: "24px",
           letterSpacing: "-0.02em",
           fontWeight: "600",
-          "& strong": { fontWeight: "400" },
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "500" },
         },
         ".text-heading-14": {
           fontSize: "14px",
@@ -876,7 +882,7 @@ module.exports = {
         // ─────────────────────────────────────────────────────────────────
         ".text-button-16": {
           fontSize: "16px",
-          lineHeight: "24px",
+          lineHeight: "20px",
           letterSpacing: "0",
           fontWeight: "500",
         },
@@ -913,14 +919,14 @@ module.exports = {
           lineHeight: "20px",
           letterSpacing: "0",
           fontWeight: "400",
-          "& strong": { fontWeight: "500" },
+          "& strong": { color: "var(--ds-gray-1000)", fontWeight: "500" },
         },
         ".text-label-14": {
           fontSize: "14px",
           lineHeight: "20px",
           letterSpacing: "0",
           fontWeight: "400",
-          "& strong": { fontWeight: "500" },
+          "& strong": { color: "var(--ds-gray-1000)", fontWeight: "500" },
         },
         ".text-label-14-mono": {
           fontSize: "14px",
@@ -935,8 +941,7 @@ module.exports = {
           lineHeight: "16px",
           letterSpacing: "0",
           fontWeight: "400",
-          fontVariantNumeric: "tabular-nums",
-          "& strong": { fontWeight: "500" },
+          "& strong": { color: "var(--ds-gray-1000)", fontWeight: "500" },
         },
         ".text-label-13-mono": {
           fontSize: "13px",
@@ -951,7 +956,7 @@ module.exports = {
           lineHeight: "16px",
           letterSpacing: "0",
           fontWeight: "400",
-          "& strong": { fontWeight: "500" },
+          "& strong": { color: "var(--ds-gray-1000)", fontWeight: "500" },
         },
         ".text-label-12-mono": {
           fontSize: "12px",
@@ -976,41 +981,42 @@ module.exports = {
           lineHeight: "36px",
           letterSpacing: "0",
           fontWeight: "400",
-          "& strong": { fontWeight: "600" },
+          "& strong": { color: "var(--ds-gray-1000)", fontWeight: "500" },
         },
         ".text-copy-20": {
           fontSize: "20px",
           lineHeight: "36px",
           letterSpacing: "0",
           fontWeight: "400",
-          "& strong": { fontWeight: "600" },
+          "& strong": { color: "var(--ds-gray-1000)", fontWeight: "500" },
         },
         ".text-copy-18": {
           fontSize: "18px",
           lineHeight: "28px",
           letterSpacing: "0",
           fontWeight: "400",
-          "& strong": { fontWeight: "600" },
+          "& strong": { color: "var(--ds-gray-1000)", fontWeight: "500" },
         },
         ".text-copy-16": {
           fontSize: "16px",
           lineHeight: "24px",
           letterSpacing: "0",
           fontWeight: "400",
-          "& strong": { fontWeight: "600" },
+          "& strong": { color: "var(--ds-gray-1000)", fontWeight: "500" },
         },
         ".text-copy-14": {
           fontSize: "14px",
           lineHeight: "20px",
           letterSpacing: "0",
           fontWeight: "400",
-          "& strong": { fontWeight: "600" },
+          "& strong": { color: "var(--ds-gray-1000)", fontWeight: "500" },
         },
         ".text-copy-13": {
           fontSize: "13px",
           lineHeight: "18px",
           letterSpacing: "0",
           fontWeight: "400",
+          "& strong": { color: "var(--ds-gray-1000)", fontWeight: "500" },
         },
         ".text-copy-13-mono": {
           fontSize: "13px",
@@ -1039,11 +1045,15 @@ module.exports = {
       };
       addUtilities(geistTypography);
     },
-    function ({ addComponents, theme }) {
+    function ({ addComponents }) {
       addComponents({
         // Distanz container system (Economist-inspired grid)
         // 4 columns (< 600px) → 6 columns (≥ 600px) → 12 columns (≥ 960px)
         // Gap: 12px (small/medium), 16px (large), Max-width: 1585px
+        // NOTE: responsive overrides are nested INSIDE each class (not as
+        // top-level `@media` sibling keys) so the config loads under Tailwind
+        // v4's engine, which requires every addComponents key to be a single
+        // class selector. Behaviour is identical to the old sibling form.
         ".distanz-container": {
           display: "grid",
           gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
@@ -1054,14 +1064,10 @@ module.exports = {
           columnGap: "0.75rem", // 12px
           paddingLeft: "1.5rem", // 24px
           paddingRight: "1.5rem",
-        },
-        "@media (min-width: 600px)": {
-          ".distanz-container": {
+          "@media (min-width: 600px)": {
             gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
           },
-        },
-        "@media (min-width: 960px)": {
-          ".distanz-container": {
+          "@media (min-width: 960px)": {
             gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
             columnGap: "1rem", // 16px
             paddingLeft: "2rem", // 32px
@@ -1081,14 +1087,10 @@ module.exports = {
           paddingLeft: "1.5rem", // 24px
           paddingRight: "1.5rem",
           paddingTop: "80px",
-        },
-        "@media (min-width: 600px)": {
-          ".distanz-article-container": {
+          "@media (min-width: 600px)": {
             gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
           },
-        },
-        "@media (min-width: 960px)": {
-          ".distanz-article-container": {
+          "@media (min-width: 960px)": {
             gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
             columnGap: "1rem", // 16px
             paddingLeft: "2rem", // 32px
@@ -1103,9 +1105,7 @@ module.exports = {
         // Centered content column (cols 3-10 of 12)
         ".distanz-article-col": {
           gridColumn: "1 / -1",
-        },
-        "@media (min-width: 768px)": {
-          ".distanz-article-col": {
+          "@media (min-width: 768px)": {
             gridColumnStart: "3",
             gridColumnEnd: "11",
           },
@@ -1126,9 +1126,7 @@ module.exports = {
           margin: "0 auto",
           minHeight: "100vh",
           overflow: "visible",
-        },
-        "@media (min-width: 768px)": {
-          ".main-wrapper": {
+          "@media (min-width: 768px)": {
             width: "100%",
             maxWidth: "1585px",
           },
@@ -1139,9 +1137,7 @@ module.exports = {
           position: "relative",
           width: "100%",
           overflow: "visible",
-        },
-        "@media (min-width: 768px)": {
-          ".main-bordered": {
+          "@media (min-width: 768px)": {
             borderLeft: "1px solid hsl(var(--color-borderNeutral))",
             borderRight: "1px solid hsl(var(--color-borderNeutral))",
           },
@@ -1151,9 +1147,7 @@ module.exports = {
         ".v-sep": {
           borderLeft: "1px solid hsl(var(--color-borderNeutral))",
           borderRight: "1px solid hsl(var(--color-borderNeutral))",
-        },
-        "@media (max-width: 767px)": {
-          ".v-sep": {
+          "@media (max-width: 767px)": {
             borderLeft: "none",
             borderRight: "none",
           },
@@ -1168,55 +1162,52 @@ module.exports = {
     // Based on Vercel's Geist Design System materials
     // ═══════════════════════════════════════════════════════════════════
     function ({ addUtilities }) {
+      // Geist-verbatim: bg-100 + a shadow-border-* token (the hairline lives
+      // INSIDE the shadow, so there is NO separate `border` — adding one is the
+      // double-border bug). Surface = shadow-border{,-small,-medium,-large};
+      // floating = shadow-{tooltip,menu,modal,fullscreen}.
       const materialUtilities = {
         // Surface materials - on the page
         ".material-base": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
+          boxShadow: "var(--ds-shadow-border)",
           borderRadius: "6px",
         },
         ".material-small": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
+          boxShadow: "var(--ds-shadow-border-small)",
           borderRadius: "6px",
-          boxShadow: "var(--ds-shadow-small)",
         },
         ".material-medium": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
+          boxShadow: "var(--ds-shadow-border-medium)",
           borderRadius: "12px",
-          boxShadow: "var(--ds-shadow-medium)",
         },
         ".material-large": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
+          boxShadow: "var(--ds-shadow-border-large)",
           borderRadius: "12px",
-          boxShadow: "var(--ds-shadow-large)",
         },
         // Floating materials - above the page
         ".material-tooltip": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
-          borderRadius: "6px",
           boxShadow: "var(--ds-shadow-tooltip)",
+          borderRadius: "6px",
         },
         ".material-menu": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
-          borderRadius: "12px",
           boxShadow: "var(--ds-shadow-menu)",
+          borderRadius: "12px",
         },
         ".material-modal": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
-          borderRadius: "12px",
           boxShadow: "var(--ds-shadow-modal)",
+          borderRadius: "12px",
         },
         ".material-fullscreen": {
           background: "var(--ds-background-100)",
-          border: "1px solid var(--ds-gray-400)",
-          borderRadius: "16px",
           boxShadow: "var(--ds-shadow-fullscreen)",
+          borderRadius: "16px",
         },
       };
       addUtilities(materialUtilities);

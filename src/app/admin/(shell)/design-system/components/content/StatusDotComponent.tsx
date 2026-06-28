@@ -224,7 +224,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -342,18 +342,6 @@ export function Component(): JSX.Element {
   );
 }`;
 
-const titlePrefixCode = `import { StatusDot } from '@/components/ui/StatusDot';
-import type { JSX } from 'react';
-
-export function Component(): JSX.Element {
-  return (
-    <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
-      <StatusDot state="BUILDING" titlePrefix="vercel-site production" label />
-      <StatusDot state="READY" titlePrefix="vercel-site preview" label />
-    </div>
-  );
-}`;
-
 // ============================================================================
 // Demo Components
 // ============================================================================
@@ -380,15 +368,6 @@ function LabelDemo() {
       <StatusDot state="ERROR" label />
       <StatusDot state="CANCELED" label />
       <StatusDot state="DELETED" label />
-    </div>
-  );
-}
-
-function TitlePrefixDemo() {
-  return (
-    <div className="flex flex-col items-stretch justify-start gap-6 flex-initial">
-      <StatusDot state="BUILDING" titlePrefix="vercel-site production" label />
-      <StatusDot state="READY" titlePrefix="vercel-site preview" label />
     </div>
   );
 }
@@ -428,26 +407,6 @@ export default function StatusDotComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={labelCode}>
             <LabelDemo />
-          </CodePreview>
-        </div>
-      </Section>
-
-      <Section>
-        <SectionHeader id="title-prefix" onCopyLink={showToast}>
-          Title prefix
-        </SectionHeader>
-        <p
-          className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "hsl(var(--color-textSubtle))" }}
-        >
-          In lists, pass the entity to{" "}
-          <code className="inline-code">titlePrefix</code> so the
-          screen-reader announcement names which deployment is in
-          which state.
-        </p>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={titlePrefixCode}>
-            <TitlePrefixDemo />
           </CodePreview>
         </div>
       </Section>

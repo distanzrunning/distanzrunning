@@ -10,6 +10,7 @@ import {
   type DualThemeToken,
 } from "@/components/ui/useShikiHighlighter";
 import { RelativeTimeCard } from "@/components/ui/RelativeTimeCard";
+import { Button } from "@/components/ui/Button";
 
 // ============================================================================
 // Toast Component
@@ -224,7 +225,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -311,24 +312,15 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 // ============================================================================
 
 const defaultCode = `import { RelativeTimeCard } from '@/components/ui/RelativeTimeCard';
+import { Button } from '@/components/ui/Button';
 import type { JSX } from 'react';
 
 export function Component(): JSX.Element {
   const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
   return (
-    <p className="text-copy-14">
-      Last deploy <RelativeTimeCard date={twoHoursAgo} />
-    </p>
-  );
-}`;
-
-const customLabelCode = `import { RelativeTimeCard } from '@/components/ui/RelativeTimeCard';
-import type { JSX } from 'react';
-
-export function Component(): JSX.Element {
-  const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
-  return (
-    <RelativeTimeCard date={twoHoursAgo}>Pending</RelativeTimeCard>
+    <RelativeTimeCard date={twoHoursAgo}>
+      <Button>Hover Me</Button>
+    </RelativeTimeCard>
   );
 }`;
 
@@ -339,16 +331,9 @@ export function Component(): JSX.Element {
 function DefaultDemo() {
   const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
   return (
-    <p className="text-copy-14">
-      Last deploy <RelativeTimeCard date={twoHoursAgo} />
-    </p>
-  );
-}
-
-function CustomLabelDemo() {
-  const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
-  return (
-    <RelativeTimeCard date={twoHoursAgo}>Pending</RelativeTimeCard>
+    <RelativeTimeCard date={twoHoursAgo}>
+      <Button>Hover Me</Button>
+    </RelativeTimeCard>
   );
 }
 
@@ -365,40 +350,9 @@ export default function RelativeTimeCardComponent() {
         <SectionHeader id="default" onCopyLink={showToast}>
           Default
         </SectionHeader>
-        <p
-          className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "hsl(var(--color-textSubtle))" }}
-        >
-          With no <code className="inline-code">children</code>, the
-          component renders its short formatter (
-          <code className="inline-code">2m ago</code>,{" "}
-          <code className="inline-code">Yesterday</code>,{" "}
-          <code className="inline-code">Mar 14</code>). Hover for the
-          absolute UTC + local card.
-        </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={defaultCode}>
             <DefaultDemo />
-          </CodePreview>
-        </div>
-      </Section>
-
-      <Section>
-        <SectionHeader id="custom-label" onCopyLink={showToast}>
-          Custom label
-        </SectionHeader>
-        <p
-          className="mt-2 leading-6 xl:mt-4"
-          style={{ color: "hsl(var(--color-textSubtle))" }}
-        >
-          Pass <code className="inline-code">children</code> only for
-          non-time labels the formatter can&apos;t describe (
-          <code className="inline-code">Pending</code>,{" "}
-          <code className="inline-code">Queued</code>).
-        </p>
-        <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={customLabelCode}>
-            <CustomLabelDemo />
           </CodePreview>
         </div>
       </Section>

@@ -226,7 +226,7 @@ export function CommandMenuDialog({
               value={item.label}
               keywords={["Design System", section.label]}
               onSelect={() => {
-                router.push(`/admin/design-system/${item.id}`);
+                router.push(item.href ?? `/admin/design-system/${item.id}`);
                 onClose();
               }}
             >

@@ -97,7 +97,7 @@ function ChevronDownIcon({ size = 16 }: { size?: number }) {
       <path
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M14.0607 5.49999L13.5303 6.03032L8.7071 10.8535C8.31658 11.2441 7.68341 11.2441 7.29289 10.8535L2.46966 6.03032L1.93933 5.49999L2.99999 4.43933L3.53032 4.96966L7.99999 9.43933L12.4697 4.96966L13 4.43933L14.0607 5.49999Z"
+        d="m14.06 5.5-.53.53-4.82 4.82a1 1 0 0 1-1.42 0L2.47 6.03l-.53-.53L3 4.44l.53.53L8 9.44l4.47-4.47.53-.53z"
         fill="currentColor"
       />
     </svg>
@@ -164,7 +164,8 @@ export function SplitButton({
   const textColor = isDefault
     ? "hsl(var(--color-textInverted))"
     : "hsl(var(--color-textDefault))";
-  const borderOuterColor = "hsl(var(--color-borderDefault))";
+  // Geist: !border-gray-400 on both halves.
+  const borderOuterColor = "var(--ds-gray-400)";
 
   // Primary button styles
   const primaryStyle: React.CSSProperties = {
@@ -198,16 +199,11 @@ export function SplitButton({
     boxShadow: "none",
   };
 
-  const dividerColor = isDefault
-    ? "var(--ds-gray-alpha-900)"
-    : "hsl(var(--color-borderSubtle))";
-
-  // Divider styles
-  const dividerStyle: React.CSSProperties = {
-    width: "1px",
-    alignSelf: "stretch",
-    backgroundColor: dividerColor,
-  };
+  // Divider colour is theme-aware for the filled default (#404040 light /
+  // #cdcdcd dark) and gray-300 for secondary — see globals .ds-splitbtn-divider.
+  const dividerClass = isDefault
+    ? "ds-splitbtn-divider ds-splitbtn-divider--default"
+    : "ds-splitbtn-divider ds-splitbtn-divider--secondary";
 
   // Menu styles
   const menuStyle: React.CSSProperties = {
@@ -236,6 +232,7 @@ export function SplitButton({
       {/* Primary action button */}
       <button
         type="button"
+        className="ds-splitbtn-btn"
         style={primaryStyle}
         onClick={onClick}
         onMouseEnter={(e) => {
@@ -261,11 +258,12 @@ export function SplitButton({
       </button>
 
       {/* Divider */}
-      <div style={dividerStyle} />
+      <div className={dividerClass} />
 
       {/* Dropdown trigger button */}
       <button
         type="button"
+        className="ds-splitbtn-btn"
         style={triggerStyle}
         onClick={() => setOpen((prev) => !prev)}
         aria-label={menuButtonLabel}
@@ -314,7 +312,10 @@ export function SplitButton({
                 setOpen(false);
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.05)";
+                // Theme-aware hover overlay: black 5% in light, white 5% in
+                // dark (the raw rgba(0,0,0,0.05) stayed black in dark mode).
+                e.currentTarget.style.backgroundColor =
+                  "hsla(var(--ds-gray-1000-value), 0.05)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "transparent";

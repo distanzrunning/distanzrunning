@@ -68,10 +68,11 @@ const sizeConfig: Record<
   }
 > = {
   small: {
+    // Geist small: text-[14px] / p-[0_12px] (same type as default, shorter).
     height: 32,
-    fontSize: 12,
-    lineHeight: "16px",
-    paddingX: 8,
+    fontSize: 14,
+    lineHeight: "20px",
+    paddingX: 12,
     containerPadding: 4,
     borderRadius: 6,
     innerRadius: 2,
@@ -88,12 +89,14 @@ const sizeConfig: Record<
     borderRadius: 6,
     innerRadius: 2,
     iconSize: 16,
-    iconPaddingX: 12,
+    // Geist default icon control: p-[8px_8px] (square, not the 12px text pad).
+    iconPaddingX: 8,
     iconPaddingY: 8,
   },
   large: {
+    // Geist large: text-[16px] / p-[0_16px], checked pill rounded-[4px].
     height: 48,
-    fontSize: 14,
+    fontSize: 16,
     lineHeight: "20px",
     paddingX: 16,
     containerPadding: 4,
@@ -144,8 +147,12 @@ export function Switch({
     alignItems: "stretch",
     padding: config.containerPadding,
     borderRadius: config.borderRadius,
-    backgroundColor: "hsl(var(--color-canvas))",
-    boxShadow: "hsla(var(--ds-gray-1000-value), 0.1) 0px 0px 0px 1px",
+    // Geist switch model: a raised surface container (bg-100) with a hairline
+    // gray-alpha-400 ring; the SELECTED segment is the gray-100 pill (below).
+    // This is the inverse of the recessed-track ThemeSwitcher, which diverges
+    // deliberately.
+    backgroundColor: "hsl(var(--color-surface))",
+    boxShadow: "var(--ds-gray-alpha-400) 0px 0px 0px 1px",
     position: "relative",
     width: fullWidth ? "100%" : undefined,
     gap: 0,
@@ -176,6 +183,7 @@ export function Switch({
           >
             <input
               type="radio"
+              className="ds-switch-input"
               name={groupName}
               value={option.value}
               checked={isSelected}
@@ -217,13 +225,13 @@ export function Switch({
                 userSelect: "none",
                 transition: "color 0.15s ease",
                 backgroundColor: isSelected
-                  ? "hsl(var(--color-surface))"
+                  ? "var(--ds-gray-100)"
                   : "transparent",
                 color: isDisabled
-                  ? "var(--ds-gray-600)"
+                  ? "var(--ds-gray-800)"
                   : isSelected
                     ? "var(--ds-gray-1000)"
-                    : "var(--ds-gray-800)",
+                    : "var(--ds-gray-900)",
                 gap: isIconOnly ? 0 : 6,
                 minWidth: isIconOnly ? config.height - config.containerPadding * 2 : undefined,
               }}

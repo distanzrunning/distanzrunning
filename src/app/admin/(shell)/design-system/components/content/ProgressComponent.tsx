@@ -225,7 +225,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -403,6 +403,35 @@ export function Component(): JSX.Element {
   );
 }`;
 
+const widthsCode = `import { Progress } from '@/components/ui/Progress';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-6">
+      <Progress value={60} width={100} />
+      <Progress value={60} width={200} />
+      <Progress value={60} width={300} />
+      <Progress value={60} width="50%" />
+      <Progress value={60} width="100%" />
+    </div>
+  );
+}`;
+
+const heightsCode = `import { Progress } from '@/components/ui/Progress';
+import type { JSX } from 'react';
+
+export function Component(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-6 max-w-prose">
+      <Progress value={60} height={4} />
+      <Progress value={60} height={10} />
+      <Progress value={60} height={50} />
+      <Progress value={60} height={200} />
+    </div>
+  );
+}`;
+
 // ============================================================================
 // Demo Components
 // ============================================================================
@@ -472,6 +501,29 @@ function WithStopsDemo() {
   );
 }
 
+function WidthsDemo() {
+  return (
+    <div className="flex flex-col items-start justify-start gap-6 flex-initial">
+      <Progress value={60} width={100} />
+      <Progress value={60} width={200} />
+      <Progress value={60} width={300} />
+      <Progress value={60} width="50%" />
+      <Progress value={60} width="100%" />
+    </div>
+  );
+}
+
+function HeightsDemo() {
+  return (
+    <div className="flex flex-col items-stretch justify-start gap-6 flex-initial max-w-prose">
+      <Progress value={60} height={4} />
+      <Progress value={60} height={10} />
+      <Progress value={60} height={50} />
+      <Progress value={60} height={200} />
+    </div>
+  );
+}
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -532,6 +584,28 @@ export default function ProgressComponent() {
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={withStopsCode}>
             <WithStopsDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="widths" onCopyLink={showToast}>
+          Widths
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={widthsCode}>
+            <WidthsDemo />
+          </CodePreview>
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeader id="heights" onCopyLink={showToast}>
+          Heights
+        </SectionHeader>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={heightsCode}>
+            <HeightsDemo />
           </CodePreview>
         </div>
       </Section>

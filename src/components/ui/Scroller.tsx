@@ -24,11 +24,7 @@ interface ScrollerProps {
   width?: string;
   /** Container height */
   height?: string;
-  /** Fade overlay color — defaults to the semantic canvas. */
-  fadeColor?: string;
-  /** Fade overlay size in px — defaults to 40 */
-  fadeSize?: number;
-  /** Hide fade overlays entirely */
+  /** Hide the edge-fade overlay entirely */
   hideFade?: boolean;
   /** Additional CSS classes */
   className?: string;
@@ -46,18 +42,12 @@ interface ScrollerButtonsProps {
 
 function ChevronUpIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 16 16" height="16" width="16" style={{ color: "currentcolor" }}>
       <path
+        fill="currentColor"
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M8.00001 4.93934L8.53034 5.46967L13.5303 10.4697L12.4697 11.5303L8.00001 7.06066L3.53034 11.5303L2.46968 10.4697L7.46968 5.46967L8.00001 4.93934Z"
-        fill="currentColor"
+        d="m1.94 10.5.53-.53 4.82-4.82a1 1 0 0 1 1.42 0l4.82 4.82.53.53L13 11.56l-.53-.53L8 6.56l-4.47 4.47-.53.53z"
       />
     </svg>
   );
@@ -65,18 +55,12 @@ function ChevronUpIcon() {
 
 function ChevronDownIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 16 16" height="16" width="16" style={{ color: "currentcolor" }}>
       <path
+        fill="currentColor"
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M8.00001 11.0607L7.46968 10.5303L2.46968 5.53033L3.53034 4.46967L8.00001 8.93934L12.4697 4.46967L13.5303 5.53033L8.53034 10.5303L8.00001 11.0607Z"
-        fill="currentColor"
+        d="m14.06 5.5-.53.53-4.82 4.82a1 1 0 0 1-1.42 0L2.47 6.03l-.53-.53L3 4.44l.53.53L8 9.44l4.47-4.47.53-.53z"
       />
     </svg>
   );
@@ -84,18 +68,12 @@ function ChevronDownIcon() {
 
 function ChevronLeftIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 16 16" height="16" width="16" style={{ color: "currentcolor" }}>
       <path
+        fill="currentColor"
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M4.93934 8.00001L5.46967 7.46968L10.4697 2.46968L11.5303 3.53034L7.06066 8.00001L11.5303 12.4697L10.4697 13.5303L5.46967 8.53034L4.93934 8.00001Z"
-        fill="currentColor"
+        d="m10.5 14.06-.53-.53-4.82-4.82a1 1 0 0 1 0-1.42l4.82-4.82.53-.53L11.56 3l-.53.53L6.56 8l4.47 4.47.53.53z"
       />
     </svg>
   );
@@ -103,18 +81,12 @@ function ChevronLeftIcon() {
 
 function ChevronRightIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 16 16" height="16" width="16" style={{ color: "currentcolor" }}>
       <path
+        fill="currentColor"
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M11.0607 8.00001L10.5303 8.53034L5.53033 13.5303L4.46967 12.4697L8.93934 8.00001L4.46967 3.53034L5.53033 2.46968L10.5303 7.46968L11.0607 8.00001Z"
-        fill="currentColor"
+        d="m5.5 1.94.53.53 4.82 4.82a1 1 0 0 1 0 1.42l-4.82 4.82-.53.53L4.44 13l.53-.53L9.44 8 4.97 3.53 4.44 3z"
       />
     </svg>
   );
@@ -132,13 +104,17 @@ export function ScrollerButtons({
   const isVertical = direction === "vertical";
 
   return (
-    <div className="flex flex-row gap-2 justify-center">
+    <div
+      className={`flex flex-row gap-2 ${
+        isVertical ? "justify-center" : "justify-start"
+      }`}
+    >
       <Button
         variant="secondary"
         shape="circle"
         size="small"
         onClick={onScrollPrev}
-        aria-label={isVertical ? "Scroll up" : "Scroll left"}
+        aria-label={isVertical ? "scroll top" : "scroll left"}
       >
         {isVertical ? <ChevronUpIcon /> : <ChevronLeftIcon />}
       </Button>
@@ -147,7 +123,7 @@ export function ScrollerButtons({
         shape="circle"
         size="small"
         onClick={onScrollNext}
-        aria-label={isVertical ? "Scroll down" : "Scroll right"}
+        aria-label={isVertical ? "scroll bottom" : "scroll right"}
       >
         {isVertical ? <ChevronDownIcon /> : <ChevronRightIcon />}
       </Button>
@@ -166,8 +142,6 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
       direction = "vertical",
       width,
       height,
-      fadeColor = "hsl(var(--color-canvas))",
-      fadeSize = 40,
       hideFade = false,
       className = "",
     },
@@ -232,91 +206,48 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
     }, [updateEdges]);
 
     const overflowStyle: React.CSSProperties = {};
+    let dataOverflow: "x" | "y" | "both";
     if (direction === "vertical") {
       overflowStyle.overflowY = "auto";
       overflowStyle.overflowX = "hidden";
+      dataOverflow = "y";
     } else if (direction === "horizontal") {
       overflowStyle.overflowX = "auto";
       overflowStyle.overflowY = "hidden";
+      dataOverflow = "x";
     } else {
       overflowStyle.overflow = "auto";
+      dataOverflow = "both";
     }
+
+    // Geist's overlay is a single element whose per-edge fade is revealed by
+    // toggling these classes (it shifts background-position with a transition).
+    const overlayClasses = [
+      "ds-scroller-overlay",
+      edges.top && "is-top",
+      edges.bottom && "is-bottom",
+      edges.left && "is-left",
+      edges.right && "is-right",
+    ]
+      .filter(Boolean)
+      .join(" ");
 
     return (
       <div
-        className={`relative ${className}`}
-        style={{
-          width,
-          height,
-          overflow: "hidden",
-        }}
+        className={`relative overflow-hidden ${className}`.trim()}
+        style={{ width, height }}
       >
-        {/* Scrollable inner container - absolute so it doesn't expand the outer container */}
+        {/* Scroll area — absolute so it doesn't expand the outer container. */}
         <div
           ref={setRefs}
-          className="scroller-hide-scrollbar absolute inset-0"
+          className="ds-scroller-track absolute inset-0"
           style={overflowStyle}
+          data-overflow={dataOverflow}
         >
           {children}
         </div>
 
-        {!hideFade && (
-          <>
-            {/* Top fade overlay */}
-            {edges.top && (
-              <div
-                className="pointer-events-none absolute top-0 left-0 right-0"
-                style={{
-                  height: fadeSize,
-                  background: `linear-gradient(to bottom, ${fadeColor}, transparent)`,
-                }}
-              />
-            )}
-
-            {/* Bottom fade overlay */}
-            {edges.bottom && (
-              <div
-                className="pointer-events-none absolute bottom-0 left-0 right-0"
-                style={{
-                  height: fadeSize,
-                  background: `linear-gradient(to top, ${fadeColor}, transparent)`,
-                }}
-              />
-            )}
-
-            {/* Left fade overlay */}
-            {edges.left && (
-              <div
-                className="pointer-events-none absolute top-0 bottom-0 left-0"
-                style={{
-                  width: fadeSize,
-                  background: `linear-gradient(to right, ${fadeColor}, transparent)`,
-                }}
-              />
-            )}
-
-            {/* Right fade overlay */}
-            {edges.right && (
-              <div
-                className="pointer-events-none absolute top-0 bottom-0 right-0"
-                style={{
-                  width: fadeSize,
-                  background: `linear-gradient(to left, ${fadeColor}, transparent)`,
-                }}
-              />
-            )}
-          </>
-        )}
-
-        <style jsx>{`
-          .scroller-hide-scrollbar {
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-          }
-          .scroller-hide-scrollbar::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
+        {!hideFade && <div aria-hidden="true" className={overlayClasses} />}
       </div>
     );
   },

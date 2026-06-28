@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useRef } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, CircleCheck } from "lucide-react";
 import { Section } from "../ContentWithTOC";
 import { ComponentRef } from "../ComponentRef";
 import {
@@ -225,7 +225,7 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tokenizedLines = useShikiHighlighter(componentCode, "tsx");
+  const tokenizedLines = useShikiHighlighter(componentCode, "tsx", undefined, isOpen);
   const lines: DualThemeToken[][] =
     tokenizedLines ||
     componentCode.split("\n").map(
@@ -355,131 +355,6 @@ export function DefaultExample() {
 // Demo Components
 // ============================================================================
 
-const pagesCode = `import { useState } from 'react';
-import { CommandMenu } from '@/components/ui/CommandMenu';
-import { Button } from '@/components/ui/Button';
-
-function Example() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <>
-      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
-      <CommandMenu
-        open={open}
-        onClose={() => setOpen(false)}
-        placeholder="Type a command or search..."
-      >
-        {/* Root page */}
-        <CommandMenu.Group heading="Actions">
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Deploy Project
-          </CommandMenu.Item>
-          {/* This item drills into a sub-page instead of acting */}
-          <CommandMenu.Item subPage="projects">
-            View Projects…
-          </CommandMenu.Item>
-          <CommandMenu.Item subPage="settings">
-            Open Settings…
-          </CommandMenu.Item>
-        </CommandMenu.Group>
-
-        {/* Sub-pages — only the matching one renders when active. */}
-        <CommandMenu.Page
-          id="projects"
-          label="Projects"
-          placeholder="Search projects..."
-        >
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Apollo Mission Control
-          </CommandMenu.Item>
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Berlin Marathon Hub
-          </CommandMenu.Item>
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Race Database Backend
-          </CommandMenu.Item>
-        </CommandMenu.Page>
-
-        <CommandMenu.Page
-          id="settings"
-          label="Settings"
-          placeholder="Search settings..."
-        >
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Toggle Dark Mode
-          </CommandMenu.Item>
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Manage Team Members
-          </CommandMenu.Item>
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Rotate API Key
-          </CommandMenu.Item>
-        </CommandMenu.Page>
-      </CommandMenu>
-    </>
-  );
-}`;
-
-function PagesDemo() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <>
-      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
-      <CommandMenu
-        open={open}
-        onClose={() => setOpen(false)}
-        placeholder="Type a command or search..."
-      >
-        <CommandMenu.Group heading="Actions">
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Deploy Project
-          </CommandMenu.Item>
-          <CommandMenu.Item subPage="projects">
-            View Projects…
-          </CommandMenu.Item>
-          <CommandMenu.Item subPage="settings">
-            Open Settings…
-          </CommandMenu.Item>
-        </CommandMenu.Group>
-
-        <CommandMenu.Page
-          id="projects"
-          label="Projects"
-          placeholder="Search projects..."
-        >
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Apollo Mission Control
-          </CommandMenu.Item>
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Berlin Marathon Hub
-          </CommandMenu.Item>
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Race Database Backend
-          </CommandMenu.Item>
-        </CommandMenu.Page>
-
-        <CommandMenu.Page
-          id="settings"
-          label="Settings"
-          placeholder="Search settings..."
-        >
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Toggle Dark Mode
-          </CommandMenu.Item>
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Manage Team Members
-          </CommandMenu.Item>
-          <CommandMenu.Item onSelect={() => setOpen(false)}>
-            Rotate API Key
-          </CommandMenu.Item>
-        </CommandMenu.Page>
-      </CommandMenu>
-    </>
-  );
-}
-
 function DefaultDemo() {
   const [open, setOpen] = useState(false);
 
@@ -514,6 +389,122 @@ function DefaultDemo() {
   );
 }
 
+const withDividerCode = `import { useState } from 'react';
+import { CommandMenu } from '@/components/ui/CommandMenu';
+import { Button } from '@/components/ui/Button';
+
+export function WithDivider() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
+      <CommandMenu open={open} onClose={() => setOpen(false)} placeholder="What do you need?">
+        <CommandMenu.Item onSelect={() => setOpen(false)}>Item 1</CommandMenu.Item>
+        <CommandMenu.Item onSelect={() => setOpen(false)}>Item 2</CommandMenu.Item>
+        <CommandMenu.Separator />
+        <CommandMenu.Item onSelect={() => setOpen(false)}>Item 3</CommandMenu.Item>
+        <CommandMenu.Group heading="Group 1">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>Grouped Item 1</CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>Grouped Item 2</CommandMenu.Item>
+        </CommandMenu.Group>
+      </CommandMenu>
+    </>
+  );
+}`;
+
+function WithDividerDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
+      <CommandMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        placeholder="What do you need?"
+      >
+        <CommandMenu.Item onSelect={() => setOpen(false)}>Item 1</CommandMenu.Item>
+        <CommandMenu.Item onSelect={() => setOpen(false)}>Item 2</CommandMenu.Item>
+        <CommandMenu.Separator />
+        <CommandMenu.Item onSelect={() => setOpen(false)}>Item 3</CommandMenu.Item>
+        <CommandMenu.Group heading="Group 1">
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Grouped Item 1
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => setOpen(false)}>
+            Grouped Item 2
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+      </CommandMenu>
+    </>
+  );
+}
+
+const withSuffixCode = `import { useState } from 'react';
+import { CircleCheck } from 'lucide-react';
+import { CommandMenu } from '@/components/ui/CommandMenu';
+import { Button } from '@/components/ui/Button';
+
+export function WithSuffix() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
+      <CommandMenu open={open} onClose={() => setOpen(false)} placeholder="What do you need?">
+        <CommandMenu.Group heading="Group 1">
+          <CommandMenu.Item suffix="USA">United States of America</CommandMenu.Item>
+          <CommandMenu.Item suffix="ESP">Spain</CommandMenu.Item>
+          <CommandMenu.Item suffix="FRA">France</CommandMenu.Item>
+        </CommandMenu.Group>
+        <CommandMenu.Group heading="Group 2">
+          <CommandMenu.Item suffix="AUT">Austria</CommandMenu.Item>
+          <CommandMenu.Item suffix={<CircleCheck size={16} />}>Switzerland</CommandMenu.Item>
+          <CommandMenu.Item suffix="GER">Germany</CommandMenu.Item>
+        </CommandMenu.Group>
+      </CommandMenu>
+    </>
+  );
+}`;
+
+function WithSuffixDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>
+      <CommandMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        placeholder="What do you need?"
+      >
+        <CommandMenu.Group heading="Group 1">
+          <CommandMenu.Item suffix="USA" onSelect={() => setOpen(false)}>
+            United States of America
+          </CommandMenu.Item>
+          <CommandMenu.Item suffix="ESP" onSelect={() => setOpen(false)}>
+            Spain
+          </CommandMenu.Item>
+          <CommandMenu.Item suffix="FRA" onSelect={() => setOpen(false)}>
+            France
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+        <CommandMenu.Group heading="Group 2">
+          <CommandMenu.Item suffix="AUT" onSelect={() => setOpen(false)}>
+            Austria
+          </CommandMenu.Item>
+          <CommandMenu.Item
+            suffix={<CircleCheck size={16} />}
+            onSelect={() => setOpen(false)}
+          >
+            Switzerland
+          </CommandMenu.Item>
+          <CommandMenu.Item suffix="GER" onSelect={() => setOpen(false)}>
+            Germany
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+      </CommandMenu>
+    </>
+  );
+}
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -541,232 +532,27 @@ export default function CommandMenuComponent() {
         </div>
       </Section>
 
-      {/* Pages */}
+      {/* With divider */}
       <Section>
-        <SectionHeader id="pages" onCopyLink={showToast}>
-          Pages
+        <SectionHeader id="with-divider" onCopyLink={showToast}>
+          With divider
         </SectionHeader>
-        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
-          For deep palettes, drill into a sub-page by pairing an item
-          with{" "}
-          <code className="inline-code">subPage=&quot;…&quot;</code> and
-          declaring a matching{" "}
-          <code className="inline-code">&lt;CommandMenu.Page id=&quot;…&quot;&gt;</code>{" "}
-          with its own label and placeholder. A breadcrumb chip appears
-          next to the input; Backspace at an empty input pops back to the
-          previous page, and clicking the chip jumps back to the root.
-        </p>
         <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={pagesCode}>
-            <PagesDemo />
+          <CodePreview componentCode={withDividerCode}>
+            <WithDividerDemo />
           </CodePreview>
         </div>
       </Section>
 
-      {/* Props */}
+      {/* With suffix */}
       <Section>
-        <SectionHeader id="props" onCopyLink={showToast}>
-          Props
+        <SectionHeader id="with-suffix" onCopyLink={showToast}>
+          With suffix
         </SectionHeader>
-
-        <p className="text-copy-14 text-textSubtle mt-4 mb-4">
-          Available props for the CommandMenu component.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">open</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Whether the command menu is visible
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">onClose</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"() => void"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Called when the command menu should close
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Command groups and items
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">placeholder</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  {`"Search for actions..."`}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Placeholder text for the search input
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">className</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">{`""`}</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Additional CSS classes for the wrapper
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p className="text-copy-14 text-textSubtle mt-8 mb-4">
-          CommandMenu.Group props.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">heading</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Optional heading label for the group
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Command items within the group
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p className="text-copy-14 text-textSubtle mt-8 mb-4">
-          CommandMenu.Item props.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-borderDefault">
-                <th className="text-left py-3 pr-4 text-heading-14">
-                  Prop
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Type
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Default
-                </th>
-                <th className="text-left py-3 px-4 text-heading-14">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-copy-14">
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">children</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Item label content
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">onSelect</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  {"() => void"}
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Called when the item is selected
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">disabled</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  boolean
-                </td>
-                <td className="py-3 px-4 text-textSubtle">false</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Whether the item is disabled
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">icon</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  ReactNode
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Optional icon rendered before the label
-                </td>
-              </tr>
-              <tr className="border-b border-borderSubtle">
-                <td className="py-3 pr-4 font-mono">shortcut</td>
-                <td className="py-3 px-4 font-mono text-textSubtle">
-                  string
-                </td>
-                <td className="py-3 px-4 text-textSubtle">-</td>
-                <td className="py-3 px-4 text-textSubtle">
-                  Optional keyboard shortcut label displayed on the right
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={withSuffixCode}>
+            <WithSuffixDemo />
+          </CodePreview>
         </div>
       </Section>
 

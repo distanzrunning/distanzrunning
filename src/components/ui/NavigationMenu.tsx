@@ -5,7 +5,7 @@
 // ============================================================================
 //
 // Shadcn-pattern primitive over @radix-ui/react-navigation-menu, styled
-// against our DS tokens (ds-gray-*, ds-background-*, ds-focus-ring,
+// against our DS tokens (ds-gray, ds-background, ds-focus-ring,
 // radius-small) instead of shadcn's default (accent, popover, etc).
 // Source transcribed from shadcn's navigation-menu.tsx (new-york-v4)
 // and adapted — structure and data-slot attrs kept identical so v0
@@ -90,7 +90,7 @@ const navigationMenuTriggerStyle = cva(
     "transition-all duration-150 outline-none",
     "hover:bg-[var(--ds-gray-100)] hover:text-textDefault",
     "focus:bg-[var(--ds-gray-100)] focus:text-textDefault",
-    "focus-visible:ring-[3px] focus-visible:ring-[color:var(--ds-focus-ring)] focus-visible:outline-1",
+    "focus-visible:ring-[3px] focus-visible:ring-[color:var(--ds-focus-color)] focus-visible:outline-1",
     "disabled:pointer-events-none disabled:opacity-50",
     "data-[state=open]:bg-[var(--ds-gray-100)] data-[state=open]:text-textDefault",
     "data-[active=true]:bg-transparent data-[active=true]:text-textDefault",
@@ -207,7 +207,7 @@ function NavigationMenuLink({
         "text-textSubtle",
         "hover:bg-[var(--ds-gray-100)] hover:text-textDefault",
         "focus:bg-[var(--ds-gray-100)] focus:text-textDefault",
-        "focus-visible:ring-[3px] focus-visible:ring-[color:var(--ds-focus-ring)] focus-visible:outline-1",
+        "focus-visible:ring-[3px] focus-visible:ring-[color:var(--ds-focus-color)] focus-visible:outline-1",
         "data-[active=true]:bg-[var(--ds-gray-100)] data-[active=true]:text-textDefault",
         "[&_svg:not([class*='size-'])]:size-4",
         className,

@@ -72,42 +72,41 @@ export function MultiSelect({
     [selected, updateSelected],
   );
 
-  // Smart action for button click
+  // Smart action for the name/button zone. Geist: "Check All" on a checked
+  // row that isn't already fully selected (selects every item); otherwise
+  // "Only" (selects just this one — for unchecked rows, or when all are
+  // already selected). The checkbox zone handles plain toggling.
   const smartAction = useCallback(
     (value: string) => {
       const isSelected = selected.includes(value);
       const allSelected = items.every((item) => selected.includes(item.value));
 
       if (allSelected || !isSelected) {
-        // Select Only: select just this item
         updateSelected([value]);
       } else {
-        // Select All: select all items
         updateSelected(items.map((item) => item.value));
       }
     },
     [selected, items, updateSelected],
   );
 
-  // Get action label for the button area
+  // Label shown when hovering/focusing the name/button zone (Geist:
+  // "Only" / "Check All").
   const getButtonActionLabel = useCallback(
     (value: string): string => {
       const isSelected = selected.includes(value);
       const allSelected = items.every((item) => selected.includes(item.value));
-
-      if (allSelected) return "Select Only";
-      if (!isSelected) return "Select Only";
-      return "Select All";
+      if (allSelected || !isSelected) return "Only";
+      return "Check All";
     },
     [selected, items],
   );
 
-  // Get action label for the checkbox area
+  // Label shown when hovering/focusing the checkbox zone (Geist:
+  // "Check" / "Uncheck").
   const getCheckboxActionLabel = useCallback(
-    (value: string): string => {
-      const isSelected = selected.includes(value);
-      return isSelected ? "Deselect" : "Select";
-    },
+    (value: string): string =>
+      selected.includes(value) ? "Uncheck" : "Check",
     [selected],
   );
 
@@ -206,7 +205,9 @@ export function MultiSelect({
       ? placeholder
       : formatSelection
         ? formatSelection(selected, items)
-        : `${selected.length} selected`;
+        : selected.length === items.length
+          ? "All items selected"
+          : `${selected.length} item${selected.length === 1 ? "" : "s"} selected`;
 
   return (
     <div
@@ -223,40 +224,39 @@ export function MultiSelect({
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         className={`
-          inline-flex items-center justify-center select-none cursor-pointer border-none
+          group/trigger inline-flex items-center justify-between select-none cursor-pointer border-none
           transition-[border-color,background,color,transform,box-shadow] duration-[var(--ds-transition-duration)] ease-[var(--ds-transition-timing)]
-          focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-ring)] focus-visible:ring-offset-2
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ds-background-100)]
           rounded-[var(--ds-radius-small)]
           h-[var(--ds-button-height-medium)] px-[var(--ds-button-padding-medium)] text-button-14 gap-[var(--ds-button-gap-medium)]
           bg-surface text-textDefault
           shadow-[0_0_0_1px_var(--ds-gray-400)]
-          hover:bg-[var(--ds-gray-100)] hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
-          dark:hover:bg-[var(--ds-gray-200)] dark:hover:shadow-[0_0_0_1px_var(--ds-gray-alpha-500)]
+          hover:bg-[var(--ds-gray-alpha-200)]
         `
           .replace(/\s+/g, " ")
           .trim()}
       >
-        <span className="content px-[var(--ds-button-content-padding)]">
-          {selectionText}
+        <span className="truncate inline-block px-1.5">{selectionText}</span>
+        <span className="shrink-0 mr-0.5 flex items-center justify-center">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            className="text-[var(--ds-gray-900)] group-hover/trigger:text-[var(--ds-gray-1000)]"
+            style={{
+              transition: "transform 150ms",
+              transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+            }}
+          >
+            <path
+              fill="currentColor"
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="m14.06 5.5-.53.53-4.82 4.82a1 1 0 0 1-1.42 0L2.47 6.03l-.53-.53L3 4.44l.53.53L8 9.44l4.47-4.47.53-.53z"
+            />
+          </svg>
         </span>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          style={{
-            transition: "transform 200ms",
-            transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-          }}
-        >
-          <path
-            d="M4 6L8 10L12 6"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
       </button>
 
       {/* Dropdown Portal */}
@@ -413,7 +413,8 @@ function MultiSelectRow({
   const [hoverArea, setHoverArea] = useState<"checkbox" | "button" | null>(
     null,
   );
-  // Mouse hover takes priority, then keyboard focus
+  // The action label reflects the hovered (or keyboard-focused) zone: the
+  // checkbox zone shows "Check"/"Uncheck", the name zone "Only"/"Check All".
   const activeArea = hoverArea ?? (isActive ? activeFocus : null);
   const displayLabel =
     activeArea === "checkbox" ? checkboxActionLabel : buttonActionLabel;
@@ -446,7 +447,7 @@ function MultiSelectRow({
         <label
           role="checkbox"
           aria-checked={isSelected}
-          aria-label={`Select ${item.label}`}
+          aria-label={`${checkboxActionLabel} ${item.label}`}
           onClick={(e) => {
             e.preventDefault();
             onToggle();
@@ -490,11 +491,11 @@ function MultiSelectRow({
                 borderRadius: 4,
                 position: "relative",
                 background: isSelected
-                  ? "hsl(var(--color-textDefault))"
-                  : "transparent",
+                  ? "var(--ds-gray-1000)"
+                  : "var(--ds-background-100)",
                 border: isSelected
-                  ? "1px solid hsl(var(--color-textDefault))"
-                  : "1px solid var(--ds-gray-alpha-400)",
+                  ? "1px solid var(--ds-gray-1000)"
+                  : "1px solid var(--ds-gray-700)",
                 transition:
                   "border-color 0.2s, background 0.2s, box-shadow 0.2s",
               }}
@@ -541,7 +542,7 @@ function MultiSelectRow({
           background:
             hoverArea === "button" ||
             (hoverArea === null && isActive && activeFocus === "button")
-              ? "var(--ds-gray-alpha-100)"
+              ? "var(--ds-gray-100)"
               : "transparent",
           border: "none",
           cursor: "pointer",
@@ -557,7 +558,7 @@ function MultiSelectRow({
             style={{
               fontSize: 14,
               lineHeight: "20px",
-              color: "hsl(var(--color-textDefault))",
+              color: "var(--ds-gray-1000)",
               whiteSpace: "nowrap",
             }}
           >
@@ -573,10 +574,10 @@ function MultiSelectRow({
               opacity: isActive ? 1 : 0,
               minWidth: 64,
               textAlign: "right",
-              color: "hsl(var(--color-textSubtle))",
+              color: "var(--ds-gray-900)",
               marginLeft: "auto",
               padding: "2px 4px",
-              borderRadius: 2,
+              borderRadius: 4,
               fontSize: 12,
               transition: "opacity 150ms ease",
             }}
@@ -593,7 +594,7 @@ function MultiSelectRow({
           opacity: 1 !important;
         }
         .multiselect-row-button:hover {
-          background: var(--ds-gray-alpha-100) !important;
+          background: var(--ds-gray-100) !important;
         }
       `}</style>
     </div>
