@@ -51,9 +51,8 @@ export interface LoginProvider {
 
 export interface LoginProps {
   /**
-   * Optional brand mark shown in a circular badge above the title
-   * (the v0-style logo lockup). Pass an icon/logomark node — it's
-   * centred inside an 80px bordered `surface` circle.
+   * Optional brand mark shown (centred, no background) above the title.
+   * Pass a sized icon/logomark node — it renders as-is on the canvas.
    */
   logo?: React.ReactNode;
   /** Title shown above the form */
@@ -134,7 +133,7 @@ function PasswordToggle({
 // ============================================================================
 
 /**
- * Login — a composable, boxless auth form: an optional circular logo badge,
+ * Login — a composable, boxless auth form: an optional brand mark / logo,
  * a title, optional OAuth/social providers (each with an optional "Last Used"
  * badge), configurable fields (text / email / password), submit button, error
  * state, and footer slot. Password fields get a built-in show/hide toggle.
@@ -204,9 +203,7 @@ export function Login({
       {(logo || title || subtitle) && (
         <div className="flex flex-col items-center gap-4">
           {logo && (
-            <div className="flex size-20 items-center justify-center overflow-hidden rounded-full border border-[var(--ds-gray-alpha-400)] bg-surface">
-              {logo}
-            </div>
+            <div className="flex items-center justify-center">{logo}</div>
           )}
           {(title || subtitle) && (
             <div className="flex flex-col items-center gap-2 text-center">

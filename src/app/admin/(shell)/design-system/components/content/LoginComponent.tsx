@@ -243,9 +243,8 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 }
 
 // ============================================================================
-// Brand mark for the logo demo — the Distanz icon, swapped by theme so it
-// reads on the badge's `surface` circle (dark mark on white, light mark on
-// near-black). Sized ~48px inside the 80px badge, mirroring v0's lockup.
+// Brand mark for the logo demo — the Distanz icon, swapped by theme so the
+// mark reads on the canvas in both modes (ink on light, white on dark).
 // ============================================================================
 
 function BrandMark() {
@@ -255,18 +254,18 @@ function BrandMark() {
       <img
         src="/brand/icon-black.svg"
         alt="Distanz Running"
-        className="block h-12 w-12 dark:hidden"
-        width={48}
-        height={48}
+        className="block h-14 w-14 dark:hidden"
+        width={56}
+        height={56}
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/brand/icon-white.svg"
         alt=""
         aria-hidden="true"
-        className="hidden h-12 w-12 dark:block"
-        width={48}
-        height={48}
+        className="hidden h-14 w-14 dark:block"
+        width={56}
+        height={56}
       />
     </>
   );
@@ -602,7 +601,7 @@ import Icon from '@/components/ui/Icon'; // your brand mark
 export function SignUp() {
   return (
     <Login
-      logo={<Icon className="h-12 w-12" />}
+      logo={<Icon className="h-14 w-14" />}
       title="Create your account"
       subtitle="Join Distanz Running for ad-free reading and bonus content."
       providers={[
@@ -840,10 +839,9 @@ export default function LoginComponent() {
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
           Pass a brand mark to the{" "}
-          <code className="inline-code">logo</code> prop to render it in a
-          circular badge above the title — an 80px bordered{" "}
-          <code className="inline-code">surface</code> circle, mirroring the
-          v0 sign-up lockup. Use it for the public subscribe / create-account
+          <code className="inline-code">logo</code> prop to render it above
+          the title — centred, with no background, so the mark sits directly
+          on the canvas. Use it for the public subscribe / create-account
           surface where the brand should lead.
         </p>
         <div className="mt-4 xl:mt-7">
