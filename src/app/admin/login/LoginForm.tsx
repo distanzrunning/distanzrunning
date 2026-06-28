@@ -10,13 +10,12 @@ export default function LoginForm() {
   return (
     <Login
       title="Admin Access"
-      subtitle="Enter the admin password to continue."
       fields={[
         {
           id: "password",
           type: "password",
           label: "Password",
-          visibleLabel: true,
+          placeholder: "password",
           autoComplete: "current-password",
           required: true,
           autoFocus: true,
