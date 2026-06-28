@@ -189,151 +189,155 @@ export function Login({
 
   return (
     <div
-      className={`w-full max-w-sm bg-surface material-medium p-8 ${className ?? ""}`.trim()}
+      className={`flex w-full max-w-[320px] flex-col items-center gap-6 ${className ?? ""}`.trim()}
     >
-      <div className="space-y-6">
-        {header && <div className="flex justify-center">{header}</div>}
+      {header && <div className="flex justify-center">{header}</div>}
 
-        {(title || subtitle) && (
-          <div className="space-y-2 text-center">
-            {title && (
-              <h2 className="text-heading-20 text-textDefault">{title}</h2>
-            )}
-            {subtitle && (
-              <p className="text-copy-14 text-textSubtle">{subtitle}</p>
-            )}
-          </div>
-        )}
+      {(title || subtitle) && (
+        <div className="flex flex-col items-center gap-2 text-center">
+          {title && (
+            <h2 className="text-heading-32 text-textDefault">{title}</h2>
+          )}
+          {subtitle && (
+            <p className="text-copy-16 text-textSubtle">{subtitle}</p>
+          )}
+        </div>
+      )}
 
-        {hasProviders && (
-          <div className="space-y-3">
-            {providers!.map((p) => (
-              <Button
-                key={p.id}
-                type="button"
-                variant="secondary"
-                size="large"
-                className="w-full"
-                onClick={p.onClick}
-                disabled={isLoading || !p.onClick}
-                prefixIcon={p.icon}
-              >
-                {p.label}
-              </Button>
-            ))}
-          </div>
-        )}
+      {(hasProviders || hasFields || disclaimer) && (
+        <div className="flex w-full flex-col gap-6">
+          {hasProviders && (
+            <div className="space-y-3">
+              {providers!.map((p) => (
+                <Button
+                  key={p.id}
+                  type="button"
+                  variant="secondary"
+                  size="large"
+                  className="w-full"
+                  onClick={p.onClick}
+                  disabled={isLoading || !p.onClick}
+                  prefixIcon={p.icon}
+                >
+                  {p.label}
+                </Button>
+              ))}
+            </div>
+          )}
 
-        {showDivider && (
-          <div
-            className="flex items-center gap-3"
-            aria-hidden="true"
-          >
-            <span
-              className="flex-1 h-px"
-              style={{ background: "var(--ds-gray-400)" }}
-            />
-            <span
-              className="text-copy-13 uppercase"
-              style={{ color: "var(--ds-gray-700)", letterSpacing: "0.04em" }}
+          {showDivider && (
+            <div
+              className="flex items-center gap-3"
+              aria-hidden="true"
             >
-              {dividerLabel}
-            </span>
-            <span
-              className="flex-1 h-px"
-              style={{ background: "var(--ds-gray-400)" }}
-            />
-          </div>
-        )}
+              <span
+                className="flex-1 h-px"
+                style={{ background: "var(--ds-gray-400)" }}
+              />
+              <span
+                className="text-copy-13 uppercase"
+                style={{ color: "var(--ds-gray-700)", letterSpacing: "0.04em" }}
+              >
+                {dividerLabel}
+              </span>
+              <span
+                className="flex-1 h-px"
+                style={{ background: "var(--ds-gray-400)" }}
+              />
+            </div>
+          )}
 
-        {hasFields && (
-          <form
-            className="space-y-4"
-            {...(action ? { action } : { onSubmit: handleSubmit })}
-            noValidate
-          >
-            {effectiveFields.map((field) => {
-              const type = field.type ?? "text";
-              const isPassword = type === "password";
-              const visible = passwordVisible[field.id] ?? false;
+          {hasFields && (
+            <form
+              className="space-y-4"
+              {...(action ? { action } : { onSubmit: handleSubmit })}
+              noValidate
+            >
+              {effectiveFields.map((field) => {
+                const type = field.type ?? "text";
+                const isPassword = type === "password";
+                const visible = passwordVisible[field.id] ?? false;
 
-              return (
-                <div key={field.id}>
-                  {field.label && !field.visibleLabel && (
-                    <label htmlFor={field.id} className="sr-only">
-                      {field.label}
-                    </label>
-                  )}
-                  <Input
-                    id={field.id}
-                    name={field.id}
-                    type={isPassword && visible ? "text" : type}
-                    label={field.visibleLabel ? field.label : undefined}
-                    placeholder={field.placeholder}
-                    autoComplete={field.autoComplete}
-                    required={field.required}
-                    autoFocus={field.autoFocus}
-                    value={values[field.id]}
-                    onChange={handleChange(field.id)}
-                    disabled={isLoading}
-                    size="large"
-                    error={Boolean(error)}
-                    suffix={
-                      isPassword ? (
-                        <PasswordToggle
-                          visible={visible}
-                          onToggle={() => togglePassword(field.id)}
-                        />
-                      ) : undefined
-                    }
-                    suffixStyling={false}
-                  />
+                return (
+                  <div key={field.id}>
+                    {field.label && !field.visibleLabel && (
+                      <label htmlFor={field.id} className="sr-only">
+                        {field.label}
+                      </label>
+                    )}
+                    <Input
+                      id={field.id}
+                      name={field.id}
+                      type={isPassword && visible ? "text" : type}
+                      label={field.visibleLabel ? field.label : undefined}
+                      placeholder={field.placeholder}
+                      autoComplete={field.autoComplete}
+                      required={field.required}
+                      autoFocus={field.autoFocus}
+                      value={values[field.id]}
+                      onChange={handleChange(field.id)}
+                      disabled={isLoading}
+                      size="large"
+                      error={Boolean(error)}
+                      suffix={
+                        isPassword ? (
+                          <PasswordToggle
+                            visible={visible}
+                            onToggle={() => togglePassword(field.id)}
+                          />
+                        ) : undefined
+                      }
+                      suffixStyling={false}
+                    />
+                  </div>
+                );
+              })}
+
+              {error && (
+                <div
+                  className="text-copy-14"
+                  style={{ color: "var(--ds-red-900)" }}
+                  role="alert"
+                >
+                  {error}
                 </div>
-              );
-            })}
+              )}
 
-            {error && (
-              <div
-                className="text-copy-14"
-                style={{ color: "var(--ds-red-900)" }}
-                role="alert"
+              <Button
+                type="submit"
+                className="w-full"
+                size="large"
+                loading={isLoading}
+                disabled={isLoading}
               >
-                {error}
-              </div>
-            )}
+                {isLoading ? loadingLabel : submitLabel}
+              </Button>
 
-            <Button
-              type="submit"
-              className="w-full"
-              size="large"
-              loading={isLoading}
-              disabled={isLoading}
+              {disclaimer && (
+                <p
+                  className="text-copy-13 text-center"
+                  style={{ color: "var(--ds-gray-700)" }}
+                >
+                  {disclaimer}
+                </p>
+              )}
+            </form>
+          )}
+
+          {!hasFields && disclaimer && (
+            <p
+              className="text-copy-13 text-center"
+              style={{ color: "var(--ds-gray-700)" }}
             >
-              {isLoading ? loadingLabel : submitLabel}
-            </Button>
+              {disclaimer}
+            </p>
+          )}
+        </div>
+      )}
 
-            {disclaimer && (
-              <p
-                className="text-copy-13 text-center"
-                style={{ color: "var(--ds-gray-700)" }}
-              >
-                {disclaimer}
-              </p>
-            )}
-          </form>
-        )}
-
-        {!hasFields && disclaimer && (
-          <p
-            className="text-copy-13 text-center"
-            style={{ color: "var(--ds-gray-700)" }}
-          >
-            {disclaimer}
-          </p>
-        )}
-
-        {footer && <div className="text-copy-14 text-center">{footer}</div>}
-      </div>
+      {footer && (
+        <div className="text-copy-16 text-center text-textSubtle">{footer}</div>
+      )}
     </div>
   );
 }

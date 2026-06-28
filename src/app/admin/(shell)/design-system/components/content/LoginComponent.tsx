@@ -698,11 +698,11 @@ export default function LoginComponent() {
           Intro
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 xl:mt-7 mb-6">
-          The Login component is a composable card for authentication flows.
-          It provides a logo slot, title and subtitle, configurable fields,
-          a built-in password show/hide toggle, error state, and a footer
-          slot for links such as "Forgot password?". The same component
-          powers the staging gate at{" "}
+          The Login component is a composable form for authentication flows.
+          It sits directly on the canvas — no card or background — with a logo
+          slot, title and subtitle, configurable fields, a built-in password
+          show/hide toggle, error state, and a footer slot for links such as
+          "Forgot password?". The same component powers the staging gate at{" "}
           <code className="inline-code">
             /login
           </code>{" "}
