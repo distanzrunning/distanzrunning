@@ -290,9 +290,21 @@ function WithLogoDemo() {
           onClick: () => {},
         },
         {
+          id: "apple",
+          label: "Continue with Apple",
+          icon: <AppleIcon />,
+          onClick: () => {},
+        },
+        {
           id: "strava",
-          label: "Continue with Strava",
+          label: "Connect with Strava",
           icon: <StravaIcon />,
+          onClick: () => {},
+        },
+        {
+          id: "passkey",
+          label: "Continue with Passkey",
+          icon: <PasskeyIcon />,
           onClick: () => {},
         },
       ]}
@@ -428,7 +440,7 @@ function SocialProvidersDemo() {
         },
         {
           id: "strava",
-          label: "Continue with Strava",
+          label: "Connect with Strava",
           icon: <StravaIcon />,
           onClick: () => {},
         },
@@ -584,7 +596,7 @@ function ErrorStateDemo() {
 // ============================================================================
 
 const withLogoCode = `import { Login } from '@/components/ui/Login';
-import { GoogleIcon, StravaIcon } from '@/components/ui/AuthIcons';
+import { GoogleIcon, AppleIcon, StravaIcon, PasskeyIcon } from '@/components/ui/AuthIcons';
 import Icon from '@/components/ui/Icon'; // your brand mark
 
 export function SignUp() {
@@ -595,7 +607,9 @@ export function SignUp() {
       subtitle="Join Distanz Running for ad-free reading and bonus content."
       providers={[
         { id: 'google', label: 'Continue with Google', icon: <GoogleIcon />, onClick: () => signIn('google') },
-        { id: 'strava', label: 'Continue with Strava', icon: <StravaIcon />, onClick: () => signIn('strava') },
+        { id: 'apple', label: 'Continue with Apple', icon: <AppleIcon />, onClick: () => signIn('apple') },
+        { id: 'strava', label: 'Connect with Strava', icon: <StravaIcon />, onClick: () => signIn('strava') },
+        { id: 'passkey', label: 'Continue with Passkey', icon: <PasskeyIcon />, onClick: () => signIn('passkey') },
       ]}
       divider="Or sign up with email"
       fields={[{ id: 'email', type: 'email', placeholder: 'Email', required: true }]}
@@ -687,7 +701,7 @@ export function SocialSignIn() {
           lastUsed: true, // surfaces a "Last Used" badge, top-right
         },
         { id: 'apple', label: 'Continue with Apple', icon: <AppleIcon />, onClick: () => signIn('apple') },
-        { id: 'strava', label: 'Continue with Strava', icon: <StravaIcon />, onClick: () => signIn('strava') },
+        { id: 'strava', label: 'Connect with Strava', icon: <StravaIcon />, onClick: () => signIn('strava') },
         { id: 'passkey', label: 'Continue with Passkey', icon: <PasskeyIcon />, onClick: () => signIn('passkey') },
       ]}
       footer={
