@@ -379,19 +379,12 @@ function BottomBanner() {
               {BANNER_TITLE}
             </h2>
             <p className="mt-2 text-copy-13 text-textSubtle">
-              {BANNER_DESCRIPTION} See our{" "}
+              {BANNER_DESCRIPTION} For more information, see our{" "}
               <a
                 href={COOKIE_POLICY_HREF}
                 className="text-textDefault underline hover:opacity-80"
               >
                 Cookie Policy
-              </a>{" "}
-              and{" "}
-              <a
-                href={PRIVACY_HREF}
-                className="text-textDefault underline hover:opacity-80"
-              >
-                Privacy Policy
               </a>
               .
             </p>

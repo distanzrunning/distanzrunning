@@ -239,21 +239,13 @@ function DemoFloatingBanner({
               {CONSENT_COPY.bannerTitle}
             </h2>
             <p className="mt-2 text-copy-13 text-textSubtle">
-              {CONSENT_COPY.bannerDescription} See our{" "}
+              {CONSENT_COPY.bannerDescription} For more information, see our{" "}
               <a
                 href={CONSENT_COPY.cookiePolicyHref}
                 className="text-textDefault underline hover:opacity-80"
                 onClick={(e) => e.preventDefault()}
               >
                 Cookie Policy
-              </a>{" "}
-              and{" "}
-              <a
-                href={CONSENT_COPY.privacyHref}
-                className="text-textDefault underline hover:opacity-80"
-                onClick={(e) => e.preventDefault()}
-              >
-                Privacy Policy
               </a>
               .
             </p>
