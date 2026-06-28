@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown, Copy } from "lucide-react";
 import Button from "@/components/ui/Button";
@@ -53,12 +53,12 @@ export const CONSENT_CATEGORIES: CategoryDef[] = [
 ];
 
 export const CONSENT_COPY = {
-  bannerTitle: "We use cookies",
+  bannerTitle: "We value your privacy",
   bannerDescription:
-    "We use cookies to improve your experience, show you personalised content, and analyse our traffic. For more information, see our",
+    "This site uses cookies to improve your browsing experience, analyse site traffic, and show personalised content.",
   modalTitle: "Privacy Settings",
   modalDescription:
-    "We use cookies to personalise content and ads, to provide essential features and to analyse our traffic. You may opt in or opt out of the use of these technologies.",
+    "Customise your privacy settings here. You can choose which types of cookies and tracking technologies you allow.",
   cookiePolicyHref: "/privacy#cookies",
   privacyHref: "/privacy",
   dataRequestEmail: "info@distanzrunning.com",
@@ -73,6 +73,47 @@ const {
   privacyHref: PRIVACY_HREF,
   dataRequestEmail: DATA_REQUEST_EMAIL,
 } = CONSENT_COPY;
+
+// ============================================================================
+// AnimatedCollapse — smooth height transition for expandable regions.
+// Uses the same measured-scrollHeight technique as the Collapse component, but
+// as a content-only wrapper so our rows can keep their custom trigger layout
+// (chevron + label + a Toggle on the right, which Collapse's title-only trigger
+// can't express). `inert` when closed so collapsed controls aren't tabbable.
+// ============================================================================
+
+function AnimatedCollapse({
+  open,
+  id,
+  children,
+}: {
+  open: boolean;
+  id?: string;
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (el) setHeight(el.scrollHeight);
+  }, [open, children]);
+
+  return (
+    <div
+      id={id}
+      aria-hidden={!open}
+      inert={!open}
+      style={{
+        height: open ? height : 0,
+        overflow: "hidden",
+        transition: "height 200ms ease-in-out",
+      }}
+    >
+      <div ref={ref}>{children}</div>
+    </div>
+  );
+}
 
 // ============================================================================
 // Category row — name + description with a toggle on the right
@@ -126,13 +167,13 @@ export function ConsentCategoryRow({
           </Toggle>
         </div>
       </div>
-      <div
-        id={contentId}
-        hidden={!open}
-        className={`px-4 pb-4 pt-3 text-copy-13 text-textSubtle ${isLast ? "" : "border-b border-borderDefault"}`}
-      >
-        {category.description}
-      </div>
+      <AnimatedCollapse open={open} id={contentId}>
+        <div
+          className={`px-4 pb-4 pt-3 text-copy-13 text-textSubtle ${isLast ? "" : "border-b border-borderDefault"}`}
+        >
+          {category.description}
+        </div>
+      </AnimatedCollapse>
     </div>
   );
 }
@@ -184,12 +225,9 @@ export function ConsentSubjectIdSection({
           className={`h-3.5 w-3.5 text-textSubtle transition-transform ${open ? "rotate-0" : "-rotate-90"}`}
         />
       </button>
-      <div
-        id="consent-subject-id-body"
-        hidden={!open}
-        className="flex flex-col gap-3 border-t border-borderDefault px-4 pb-4"
-      >
-        <div className="mt-3 flex items-center gap-2 rounded-md border border-borderDefault bg-canvas px-3 py-2.5">
+      <AnimatedCollapse open={open} id="consent-subject-id-body">
+        <div className="flex flex-col gap-3 border-t border-borderDefault px-4 pb-4">
+          <div className="mt-3 flex items-center gap-2 rounded-md border border-borderDefault bg-canvas px-3 py-2.5">
           <span className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-copy-13 text-textDefault">
             {subjectId ?? "—"}
           </span>
@@ -217,7 +255,8 @@ export function ConsentSubjectIdSection({
           </a>{" "}
           with this ID to request access to or deletion of your consent data.
         </p>
-      </div>
+        </div>
+      </AnimatedCollapse>
     </div>
   );
 }
@@ -280,7 +319,7 @@ export function ConsentSettingsModal() {
         <div className="flex flex-col gap-4 p-6">
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="secondary" onClick={handleDeny}>
-              Deny
+              Reject all
             </Button>
             <Button variant="secondary" onClick={handleAcceptAll}>
               Accept all
@@ -327,6 +366,25 @@ function BottomBanner() {
 
   if (!mounted || !banner.isVisible) return null;
 
+  // Render the actions c15t resolved for this jurisdiction's policy — which
+  // actions are allowed, how they're grouped/ordered, and which is primary —
+  // rather than hardcoding three buttons, so the banner honours each policy
+  // pack. Falls back to deny/accept + customise if a policy omits them.
+  const labelFor: Record<string, string> = {
+    accept: "Accept all",
+    reject: "Reject all",
+    customize: "Customise",
+  };
+  const groups =
+    banner.actionGroups.length > 0
+      ? banner.actionGroups
+      : ([["reject", "accept"], ["customize"]] as typeof banner.actionGroups);
+  const primary =
+    banner.primaryActions.length > 0
+      ? banner.primaryActions
+      : (["customize"] as typeof banner.primaryActions);
+  const isColumn = banner.direction === "column";
+
   return createPortal(
     <>
       <style>{`
@@ -360,49 +418,58 @@ function BottomBanner() {
               {BANNER_TITLE}
             </h2>
             <p className="mt-2 text-copy-13 text-textSubtle">
-              {BANNER_DESCRIPTION}{" "}
+              {BANNER_DESCRIPTION} For more information, see our{" "}
               <a
                 href={COOKIE_POLICY_HREF}
                 className="text-textDefault underline hover:opacity-80"
               >
                 Cookie Policy
-              </a>{" "}
-              and{" "}
-              <a
-                href={PRIVACY_HREF}
-                className="text-textDefault underline hover:opacity-80"
-              >
-                Privacy Policy
               </a>
               .
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <Button
-              variant="secondary"
-              shape="rounded"
-              size="small"
-              onClick={() => performBannerAction("reject")}
-            >
-              Deny
-            </Button>
-            <Button
-              variant="secondary"
-              shape="rounded"
-              size="small"
-              onClick={() => performBannerAction("accept")}
-            >
-              Accept all
-            </Button>
-            <Button
-              shape="rounded"
-              size="small"
-              onClick={openDialog}
-              className="ml-auto"
-            >
-              Customise
-            </Button>
+          <div
+            className={`flex ${isColumn ? "flex-col" : "flex-wrap items-center"} gap-2`}
+          >
+            {groups.map((group, groupIndex) => (
+              <div
+                key={groupIndex}
+                className={`flex ${
+                  isColumn ? "flex-col" : "flex-wrap items-center"
+                } gap-2 ${
+                  !isColumn &&
+                  groups.length > 1 &&
+                  groupIndex === groups.length - 1
+                    ? "ml-auto"
+                    : ""
+                }`}
+              >
+                {group.map((action) => {
+                  const label = labelFor[action];
+                  if (!label) return null;
+                  return (
+                    <Button
+                      key={action}
+                      variant={primary.includes(action) ? undefined : "secondary"}
+                      shape="rounded"
+                      size="small"
+                      onClick={
+                        action === "customize"
+                          ? openDialog
+                          : () =>
+                              void performBannerAction(
+                                action as "accept" | "reject",
+                              )
+                      }
+                      className={banner.shouldFillActions ? "flex-1" : undefined}
+                    >
+                      {label}
+                    </Button>
+                  );
+                })}
+              </div>
+            ))}
           </div>
         </div>
       </div>

@@ -23,6 +23,8 @@ const TOC = [
 export default function HowFeedbackWorksPage() {
   return (
     <DocPage
+      category="Feedback"
+      title="How feedback works"
       toc={TOC}
       lede={
         <>

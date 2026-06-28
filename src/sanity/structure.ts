@@ -65,6 +65,20 @@ export const structure: StructureResolver = (S) =>
         .title('Authors')
         .child(S.documentTypeList('author').title('Authors')),
 
+      S.divider(),
+
+      // --- Legal & Privacy ---
+      S.listItem()
+        .title('Legal Pages')
+        .child(S.documentTypeList('legalPage').title('Legal Pages')),
+      S.listItem()
+        .title('Cookie Declaration')
+        .child(
+          S.documentTypeList('cookie')
+            .title('Cookie Declaration')
+            .defaultOrdering([{ field: 'category', direction: 'asc' }]),
+        ),
+
       // Catch all fallback for anything you forget
       S.divider(),
       ...S.documentTypeListItems().filter(
@@ -80,6 +94,9 @@ export const structure: StructureResolver = (S) =>
             // Singleton — surfaced explicitly above, hide from the
             // catch-all so it doesn't appear twice.
             'homepageSettings',
+            // Legal & Privacy — surfaced explicitly above.
+            'legalPage',
+            'cookie',
           ].includes(item.getId() || '')
       ),
     ])

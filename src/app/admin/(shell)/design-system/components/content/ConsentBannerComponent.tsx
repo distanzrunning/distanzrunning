@@ -218,20 +218,18 @@ function DemoFloatingBanner({
         role="alertdialog"
         aria-labelledby="consent-demo-title"
         aria-modal="false"
-        className="fixed bottom-4 left-4 right-4 z-[10000] sm:right-auto sm:max-w-[400px]"
+        className="fixed bottom-4 left-4 right-4 z-[10000] sm:left-auto sm:max-w-[400px]"
         style={{
           animation:
             "ds-consent-demo-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both",
           willChange: "transform, opacity",
         }}
       >
+        {/* Matches the live banner: bg-surface + --ds-shadow-menu, no explicit
+            border (the shadow opens with a hairline ring). */}
         <div
-          className="flex flex-col gap-4 rounded-xl p-5"
-          style={{
-            background: "hsl(var(--color-surface))",
-            border: "1px solid hsl(var(--color-borderDefault))",
-            boxShadow: "var(--ds-shadow-menu)",
-          }}
+          className="flex flex-col gap-4 rounded-xl bg-surface p-5"
+          style={{ boxShadow: "var(--ds-shadow-menu)" }}
         >
           <div>
             <h2
@@ -240,22 +238,14 @@ function DemoFloatingBanner({
             >
               {CONSENT_COPY.bannerTitle}
             </h2>
-            <p className="mt-2 text-copy-13 leading-[1.55] text-textSubtle">
-              {CONSENT_COPY.bannerDescription}{" "}
+            <p className="mt-2 text-copy-13 text-textSubtle">
+              {CONSENT_COPY.bannerDescription} For more information, see our{" "}
               <a
                 href={CONSENT_COPY.cookiePolicyHref}
                 className="text-textDefault underline hover:opacity-80"
                 onClick={(e) => e.preventDefault()}
               >
                 Cookie Policy
-              </a>{" "}
-              and{" "}
-              <a
-                href={CONSENT_COPY.privacyHref}
-                className="text-textDefault underline hover:opacity-80"
-                onClick={(e) => e.preventDefault()}
-              >
-                Privacy Policy
               </a>
               .
             </p>
@@ -267,7 +257,7 @@ function DemoFloatingBanner({
               size="small"
               onClick={onDeny}
             >
-              Deny
+              Reject all
             </Button>
             <Button
               variant="secondary"
@@ -313,15 +303,7 @@ function DemoSettingsModal({
     <Modal open={open} onClose={onClose}>
       <Modal.Title>{CONSENT_COPY.modalTitle}</Modal.Title>
       <Modal.P>{CONSENT_COPY.modalDescription}</Modal.P>
-      <div
-        className="overflow-hidden"
-        style={{
-          border: "1px solid hsl(var(--color-borderDefault))",
-          borderRadius: 6,
-          background: "hsl(var(--color-surface))",
-          marginTop: 24,
-        }}
-      >
+      <div className="mt-6 overflow-hidden rounded-md border border-borderDefault bg-surface">
         {CONSENT_CATEGORIES.map((cat, i) => (
           <ConsentCategoryRow
             key={cat.key}
@@ -337,17 +319,10 @@ function DemoSettingsModal({
       </div>
       <ConsentSubjectIdSection subjectId="sub_demo00000000000000000" />
       <Modal.Footer>
-        <div
-          style={{
-            padding: 24,
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-          }}
-        >
+        <div className="flex flex-col gap-4 p-6">
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="secondary" onClick={onClose}>
-              Deny
+              Reject all
             </Button>
             <Button variant="secondary" onClick={onClose}>
               Accept all
@@ -356,10 +331,7 @@ function DemoSettingsModal({
               Save
             </Button>
           </div>
-          <p
-            className="text-[12px] leading-[1.6]"
-            style={{ color: "hsl(var(--color-textSubtler))", margin: 0 }}
-          >
+          <p className="text-copy-13 text-textSubtler">
             For more information, see our{" "}
             <a
               href={CONSENT_COPY.cookiePolicyHref}
@@ -498,10 +470,11 @@ export default function ConsentBannerComponent() {
           Preview
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
-          Click <strong>Show banner</strong> to pop the real floating banner
-          at its fixed bottom-left position. Deny and Accept dismiss it;
-          Customise opens the settings modal. The demo runs on local state —
-          nothing here changes your actual consent preferences.
+          Click <strong>Show banner</strong> to pop the floating banner at its
+          fixed bottom-right position (jurisdiction-gated on the live site).
+          Deny and Accept dismiss it; Customise opens the settings dialog. The
+          demo runs on local state — nothing here changes your actual consent
+          preferences.
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={previewCode}>

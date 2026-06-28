@@ -15,6 +15,8 @@ import { authorType } from './authorType'
 import { tableType } from './tableType'
 import { customCodeBlockType } from './customCodeBlockType'
 import { homepageSettingsType } from './homepageSettingsType'
+import { legalPageType } from './legalPageType'
+import { cookieType } from './cookieType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -31,5 +33,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     tableType,
     customCodeBlockType,
     homepageSettingsType,
+    legalPageType,
+    cookieType,
   ],
 }

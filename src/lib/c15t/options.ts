@@ -64,6 +64,12 @@ export const baseC15tOptions: Omit<C15TOptions, "adapter" | "logger"> = {
   // zeroed). This replaces our old salted-SHA-256 approach with c15t's standard
   // masking — still de-identified, no salt to manage.
   ipAddress: { tracking: true, masking: true },
+  // Don't serve the OpenAPI docs UI (/api/c15t/docs) or spec (/spec.json) in
+  // deployed environments — no secrets there, but no reason to advertise the
+  // API surface publicly. Kept available in local dev for exploration.
+  ...(process.env.NODE_ENV === "production"
+    ? { openapi: { enabled: false } }
+    : {}),
   // Regional policy packs — c15t's MAINTAINED mappings (not hand-rolled lists).
   // Omitting policyPacks is deprecated and removed in 2.0 GA. Presets:
   //   europeOptIn      → EEA(30)+UK, opt-in banner, fallback when geo fails
