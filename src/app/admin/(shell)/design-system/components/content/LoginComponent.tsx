@@ -180,9 +180,14 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 
   return (
     <div className="border border-borderDefault rounded-lg w-full min-w-0 overflow-hidden">
+      {/*
+        Login renders on the page canvas (it's boxless), so the preview pane
+        uses the canvas tone rather than the usual surface fill — otherwise the
+        examples would imply a white "card" backdrop the component never has.
+      */}
       <div
         className="p-6 flex items-center justify-center min-h-[320px]"
-        style={{ background: "hsl(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         {children}
       </div>
