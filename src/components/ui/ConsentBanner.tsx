@@ -53,9 +53,9 @@ export const CONSENT_CATEGORIES: CategoryDef[] = [
 ];
 
 export const CONSENT_COPY = {
-  bannerTitle: "We use cookies",
+  bannerTitle: "We value your privacy",
   bannerDescription:
-    "We use cookies to improve your experience, show you personalised content, and analyse our traffic. For more information, see our",
+    "This site uses cookies to improve your browsing experience, analyse site traffic, and show personalised content.",
   modalTitle: "Privacy Settings",
   modalDescription:
     "We use cookies to personalise content and ads, to provide essential features and to analyse our traffic. You may opt in or opt out of the use of these technologies.",
@@ -280,7 +280,7 @@ export function ConsentSettingsModal() {
         <div className="flex flex-col gap-4 p-6">
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="secondary" onClick={handleDeny}>
-              Deny
+              Reject all
             </Button>
             <Button variant="secondary" onClick={handleAcceptAll}>
               Accept all
@@ -333,7 +333,7 @@ function BottomBanner() {
   // pack. Falls back to deny/accept + customise if a policy omits them.
   const labelFor: Record<string, string> = {
     accept: "Accept all",
-    reject: "Deny",
+    reject: "Reject all",
     customize: "Customise",
   };
   const groups =
@@ -379,7 +379,7 @@ function BottomBanner() {
               {BANNER_TITLE}
             </h2>
             <p className="mt-2 text-copy-13 text-textSubtle">
-              {BANNER_DESCRIPTION}{" "}
+              {BANNER_DESCRIPTION} See our{" "}
               <a
                 href={COOKIE_POLICY_HREF}
                 className="text-textDefault underline hover:opacity-80"

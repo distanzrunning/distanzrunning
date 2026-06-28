@@ -239,7 +239,7 @@ function DemoFloatingBanner({
               {CONSENT_COPY.bannerTitle}
             </h2>
             <p className="mt-2 text-copy-13 text-textSubtle">
-              {CONSENT_COPY.bannerDescription}{" "}
+              {CONSENT_COPY.bannerDescription} See our{" "}
               <a
                 href={CONSENT_COPY.cookiePolicyHref}
                 className="text-textDefault underline hover:opacity-80"
@@ -265,7 +265,7 @@ function DemoFloatingBanner({
               size="small"
               onClick={onDeny}
             >
-              Deny
+              Reject all
             </Button>
             <Button
               variant="secondary"
@@ -330,7 +330,7 @@ function DemoSettingsModal({
         <div className="flex flex-col gap-4 p-6">
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="secondary" onClick={onClose}>
-              Deny
+              Reject all
             </Button>
             <Button variant="secondary" onClick={onClose}>
               Accept all
