@@ -4,6 +4,7 @@ import React, { useState, FormEvent } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 
 // ============================================================================
 // Types
@@ -41,12 +42,15 @@ export interface LoginProvider {
   icon?: React.ReactNode;
   /** Click handler */
   onClick?: () => void;
+  /**
+   * Render a "Last Used" badge in the top-right corner of the button —
+   * a returning-user hint surfaced on whichever provider was used last.
+   */
+  lastUsed?: boolean;
 }
 
 export interface LoginProps {
-  /** Optional header slot — typically a logo */
-  header?: React.ReactNode;
-  /** Card title */
+  /** Title shown above the form */
   title?: string;
   /** Optional description shown under the title */
   subtitle?: string;
@@ -124,13 +128,13 @@ function PasswordToggle({
 // ============================================================================
 
 /**
- * Login card — a composable form with a logo slot, title, configurable
- * fields (text / email / password), submit button, error state, and footer
- * slot. Password fields get a built-in show/hide toggle.
+ * Login — a composable, boxless auth form: a title, optional OAuth/social
+ * providers (each with an optional "Last Used" badge), configurable fields
+ * (text / email / password), submit button, error state, and footer slot.
+ * Password fields get a built-in show/hide toggle.
  *
  * @example
  * <Login
- *   header={<img src="/brand/wordmark-black.svg" alt="Logo" height={60} />}
  *   title="Sign in"
  *   fields={[
  *     { id: "email", type: "email", placeholder: "Email", required: true },
@@ -140,7 +144,6 @@ function PasswordToggle({
  * />
  */
 export function Login({
-  header,
   title,
   subtitle,
   providers,
@@ -191,8 +194,6 @@ export function Login({
     <div
       className={`flex w-full max-w-[320px] flex-col items-center gap-6 ${className ?? ""}`.trim()}
     >
-      {header && <div className="flex justify-center">{header}</div>}
-
       {(title || subtitle) && (
         <div className="flex flex-col items-center gap-2 text-center">
           {title && (
@@ -207,20 +208,28 @@ export function Login({
       {(hasProviders || hasFields || disclaimer) && (
         <div className="flex w-full flex-col gap-6">
           {hasProviders && (
-            <div className="space-y-3">
+            <div className="flex flex-col gap-4">
               {providers!.map((p) => (
-                <Button
-                  key={p.id}
-                  type="button"
-                  variant="secondary"
-                  size="large"
-                  className="w-full"
-                  onClick={p.onClick}
-                  disabled={isLoading || !p.onClick}
-                  prefixIcon={p.icon}
-                >
-                  {p.label}
-                </Button>
+                <div key={p.id} className="relative">
+                  {p.lastUsed && (
+                    <div className="absolute -top-2 -right-2 z-10">
+                      <Badge variant="blue" size="sm">
+                        Last Used
+                      </Badge>
+                    </div>
+                  )}
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="large"
+                    className="w-full"
+                    onClick={p.onClick}
+                    disabled={isLoading || !p.onClick}
+                    prefixIcon={p.icon}
+                  >
+                    {p.label}
+                  </Button>
+                </div>
               ))}
             </div>
           )}
