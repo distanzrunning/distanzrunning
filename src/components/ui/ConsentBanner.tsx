@@ -327,6 +327,25 @@ function BottomBanner() {
 
   if (!mounted || !banner.isVisible) return null;
 
+  // Render the actions c15t resolved for this jurisdiction's policy — which
+  // actions are allowed, how they're grouped/ordered, and which is primary —
+  // rather than hardcoding three buttons, so the banner honours each policy
+  // pack. Falls back to deny/accept + customise if a policy omits them.
+  const labelFor: Record<string, string> = {
+    accept: "Accept all",
+    reject: "Deny",
+    customize: "Customise",
+  };
+  const groups =
+    banner.actionGroups.length > 0
+      ? banner.actionGroups
+      : ([["reject", "accept"], ["customize"]] as typeof banner.actionGroups);
+  const primary =
+    banner.primaryActions.length > 0
+      ? banner.primaryActions
+      : (["customize"] as typeof banner.primaryActions);
+  const isColumn = banner.direction === "column";
+
   return createPortal(
     <>
       <style>{`
@@ -378,31 +397,47 @@ function BottomBanner() {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <Button
-              variant="secondary"
-              shape="rounded"
-              size="small"
-              onClick={() => performBannerAction("reject")}
-            >
-              Deny
-            </Button>
-            <Button
-              variant="secondary"
-              shape="rounded"
-              size="small"
-              onClick={() => performBannerAction("accept")}
-            >
-              Accept all
-            </Button>
-            <Button
-              shape="rounded"
-              size="small"
-              onClick={openDialog}
-              className="ml-auto"
-            >
-              Customise
-            </Button>
+          <div
+            className={`flex ${isColumn ? "flex-col" : "flex-wrap items-center"} gap-2`}
+          >
+            {groups.map((group, groupIndex) => (
+              <div
+                key={groupIndex}
+                className={`flex ${
+                  isColumn ? "flex-col" : "flex-wrap items-center"
+                } gap-2 ${
+                  !isColumn &&
+                  groups.length > 1 &&
+                  groupIndex === groups.length - 1
+                    ? "ml-auto"
+                    : ""
+                }`}
+              >
+                {group.map((action) => {
+                  const label = labelFor[action];
+                  if (!label) return null;
+                  return (
+                    <Button
+                      key={action}
+                      variant={primary.includes(action) ? undefined : "secondary"}
+                      shape="rounded"
+                      size="small"
+                      onClick={
+                        action === "customize"
+                          ? openDialog
+                          : () =>
+                              void performBannerAction(
+                                action as "accept" | "reject",
+                              )
+                      }
+                      className={banner.shouldFillActions ? "flex-1" : undefined}
+                    >
+                      {label}
+                    </Button>
+                  );
+                })}
+              </div>
+            ))}
           </div>
         </div>
       </div>
