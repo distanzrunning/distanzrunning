@@ -27,10 +27,14 @@ export interface DocTocItem {
 }
 
 export function DocPage({
+  category,
+  title,
   lede,
   toc,
   children,
 }: {
+  category: string;
+  title: string;
   lede: ReactNode;
   toc: DocTocItem[];
   children: ReactNode;
@@ -43,9 +47,20 @@ export function DocPage({
             area so prose lines stay short and the column reads balanced next
             to the TOC rather than left-shifted. */}
         <article className="mx-auto max-w-[760px]">
-          <p className="text-copy-18 mb-10 text-balance text-textSubtle">
-            {lede}
-          </p>
+          <header className="mb-10">
+            {/* Category eyebrow + page title (docs-page header). */}
+            <div className="flex flex-col gap-2">
+              <span className="text-label-13 font-medium text-textSubtle">
+                {category}
+              </span>
+              <h1 className="text-heading-24 md:text-heading-32 text-balance text-textDefault">
+                {title}
+              </h1>
+            </div>
+            <p className="text-copy-18 mt-4 text-balance text-textSubtle">
+              {lede}
+            </p>
+          </header>
           <div className="space-y-12">{children}</div>
         </article>
       </div>

@@ -24,6 +24,8 @@ const TOC = [
 export default function HowItWorksPage() {
   return (
     <DocPage
+      category="Consent"
+      title="How our CMP works"
       toc={TOC}
       lede={
         <>
