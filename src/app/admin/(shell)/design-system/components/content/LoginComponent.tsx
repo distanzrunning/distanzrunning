@@ -12,9 +12,9 @@ import { useToast } from "@/components/ui/Toast";
 import { Login } from "@/components/ui/Login";
 import {
   GoogleIcon,
-  GitHubIcon,
   AppleIcon,
   PasskeyIcon,
+  StravaIcon,
 } from "@/components/ui/AuthIcons";
 
 // ============================================================================
@@ -243,8 +243,87 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 }
 
 // ============================================================================
+// Brand mark for the logo demo — the Distanz icon, swapped by theme so it
+// reads on the badge's `surface` circle (dark mark on white, light mark on
+// near-black). Sized ~48px inside the 80px badge, mirroring v0's lockup.
+// ============================================================================
+
+function BrandMark() {
+  return (
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/brand/icon-black.svg"
+        alt="Distanz Running"
+        className="block h-12 w-12 dark:hidden"
+        width={48}
+        height={48}
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/brand/icon-white.svg"
+        alt=""
+        aria-hidden="true"
+        className="hidden h-12 w-12 dark:block"
+        width={48}
+        height={48}
+      />
+    </>
+  );
+}
+
+// ============================================================================
 // Demo components (live previews)
 // ============================================================================
+
+function WithLogoDemo() {
+  return (
+    <Login
+      logo={<BrandMark />}
+      title="Create your account"
+      subtitle="Join Distanz Running for ad-free reading and bonus content."
+      providers={[
+        {
+          id: "google",
+          label: "Continue with Google",
+          icon: <GoogleIcon />,
+          onClick: () => {},
+        },
+        {
+          id: "strava",
+          label: "Continue with Strava",
+          icon: <StravaIcon />,
+          onClick: () => {},
+        },
+      ]}
+      divider="Or sign up with email"
+      fields={[
+        {
+          id: "email",
+          type: "email",
+          label: "Email",
+          placeholder: "Email",
+          autoComplete: "email",
+          required: true,
+        },
+      ]}
+      submitLabel="Continue"
+      footer={
+        <span className="text-textSubtle">
+          Already have an account?{" "}
+          <a
+            href="#"
+            onClick={(e) => e.preventDefault()}
+            className="text-link hover:underline"
+          >
+            Sign in
+          </a>
+        </span>
+      }
+      onSubmit={() => {}}
+    />
+  );
+}
 
 function StagingGateDemo() {
   return (
@@ -348,9 +427,9 @@ function SocialProvidersDemo() {
           onClick: () => {},
         },
         {
-          id: "github",
-          label: "Continue with GitHub",
-          icon: <GitHubIcon />,
+          id: "strava",
+          label: "Continue with Strava",
+          icon: <StravaIcon />,
           onClick: () => {},
         },
         {
@@ -366,7 +445,7 @@ function SocialProvidersDemo() {
           <a
             href="#"
             onClick={(e) => e.preventDefault()}
-            className="text-textDefault underline"
+            className="text-link hover:underline"
           >
             Sign up
           </a>
@@ -504,6 +583,36 @@ function ErrorStateDemo() {
 // Code strings
 // ============================================================================
 
+const withLogoCode = `import { Login } from '@/components/ui/Login';
+import { GoogleIcon, StravaIcon } from '@/components/ui/AuthIcons';
+import Icon from '@/components/ui/Icon'; // your brand mark
+
+export function SignUp() {
+  return (
+    <Login
+      logo={<Icon className="h-12 w-12" />}
+      title="Create your account"
+      subtitle="Join Distanz Running for ad-free reading and bonus content."
+      providers={[
+        { id: 'google', label: 'Continue with Google', icon: <GoogleIcon />, onClick: () => signIn('google') },
+        { id: 'strava', label: 'Continue with Strava', icon: <StravaIcon />, onClick: () => signIn('strava') },
+      ]}
+      divider="Or sign up with email"
+      fields={[{ id: 'email', type: 'email', placeholder: 'Email', required: true }]}
+      submitLabel="Continue"
+      footer={
+        <span>
+          Already have an account?{' '}
+          <a href="/login" className="text-link hover:underline">Sign in</a>
+        </span>
+      }
+      onSubmit={(values) => {
+        // ...
+      }}
+    />
+  );
+}`;
+
 const stagingGateCode = `import { Login } from '@/components/ui/Login';
 
 export function StagingGate() {
@@ -563,7 +672,7 @@ export function SignInWithReset() {
 }`;
 
 const socialProvidersCode = `import { Login } from '@/components/ui/Login';
-import { GoogleIcon, AppleIcon, GitHubIcon, PasskeyIcon } from '@/components/ui/AuthIcons';
+import { GoogleIcon, AppleIcon, StravaIcon, PasskeyIcon } from '@/components/ui/AuthIcons';
 
 export function SocialSignIn() {
   return (
@@ -578,10 +687,15 @@ export function SocialSignIn() {
           lastUsed: true, // surfaces a "Last Used" badge, top-right
         },
         { id: 'apple', label: 'Continue with Apple', icon: <AppleIcon />, onClick: () => signIn('apple') },
-        { id: 'github', label: 'Continue with GitHub', icon: <GitHubIcon />, onClick: () => signIn('github') },
+        { id: 'strava', label: 'Continue with Strava', icon: <StravaIcon />, onClick: () => signIn('strava') },
         { id: 'passkey', label: 'Continue with Passkey', icon: <PasskeyIcon />, onClick: () => signIn('passkey') },
       ]}
-      footer={<span>Don't have an account? <a href="/signup">Sign up</a></span>}
+      footer={
+        <span>
+          Don't have an account?{' '}
+          <a href="/signup" className="text-link hover:underline">Sign up</a>
+        </span>
+      }
     />
   );
 }`;
@@ -703,6 +817,26 @@ export default function LoginComponent() {
           </code>{" "}
           and is suitable for any sign-in surface across the product.
         </p>
+      </Section>
+
+      {/* With logo */}
+      <Section>
+        <SectionHeader id="with-logo" onCopyLink={showToast}>
+          With logo
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          Pass a brand mark to the{" "}
+          <code className="inline-code">logo</code> prop to render it in a
+          circular badge above the title — an 80px bordered{" "}
+          <code className="inline-code">surface</code> circle, mirroring the
+          v0 sign-up lockup. Use it for the public subscribe / create-account
+          surface where the brand should lead.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={withLogoCode}>
+            <WithLogoDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       {/* Password only */}

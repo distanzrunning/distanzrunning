@@ -50,6 +50,12 @@ export interface LoginProvider {
 }
 
 export interface LoginProps {
+  /**
+   * Optional brand mark shown in a circular badge above the title
+   * (the v0-style logo lockup). Pass an icon/logomark node — it's
+   * centred inside an 80px bordered `surface` circle.
+   */
+  logo?: React.ReactNode;
   /** Title shown above the form */
   title?: string;
   /** Optional description shown under the title */
@@ -128,10 +134,10 @@ function PasswordToggle({
 // ============================================================================
 
 /**
- * Login — a composable, boxless auth form: a title, optional OAuth/social
- * providers (each with an optional "Last Used" badge), configurable fields
- * (text / email / password), submit button, error state, and footer slot.
- * Password fields get a built-in show/hide toggle.
+ * Login — a composable, boxless auth form: an optional circular logo badge,
+ * a title, optional OAuth/social providers (each with an optional "Last Used"
+ * badge), configurable fields (text / email / password), submit button, error
+ * state, and footer slot. Password fields get a built-in show/hide toggle.
  *
  * @example
  * <Login
@@ -144,6 +150,7 @@ function PasswordToggle({
  * />
  */
 export function Login({
+  logo,
   title,
   subtitle,
   providers,
@@ -194,13 +201,22 @@ export function Login({
     <div
       className={`flex w-full max-w-[320px] flex-col items-center gap-6 ${className ?? ""}`.trim()}
     >
-      {(title || subtitle) && (
-        <div className="flex flex-col items-center gap-2 text-center">
-          {title && (
-            <h2 className="text-heading-32 text-textDefault">{title}</h2>
+      {(logo || title || subtitle) && (
+        <div className="flex flex-col items-center gap-4">
+          {logo && (
+            <div className="flex size-20 items-center justify-center overflow-hidden rounded-full border border-[var(--ds-gray-alpha-400)] bg-surface">
+              {logo}
+            </div>
           )}
-          {subtitle && (
-            <p className="text-copy-16 text-textSubtle">{subtitle}</p>
+          {(title || subtitle) && (
+            <div className="flex flex-col items-center gap-2 text-center">
+              {title && (
+                <h2 className="text-heading-32 text-textDefault">{title}</h2>
+              )}
+              {subtitle && (
+                <p className="text-copy-16 text-textSubtle">{subtitle}</p>
+              )}
+            </div>
           )}
         </div>
       )}
