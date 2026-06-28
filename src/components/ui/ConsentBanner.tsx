@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown, Copy } from "lucide-react";
 import Button from "@/components/ui/Button";
@@ -75,6 +75,47 @@ const {
 } = CONSENT_COPY;
 
 // ============================================================================
+// AnimatedCollapse — smooth height transition for expandable regions.
+// Uses the same measured-scrollHeight technique as the Collapse component, but
+// as a content-only wrapper so our rows can keep their custom trigger layout
+// (chevron + label + a Toggle on the right, which Collapse's title-only trigger
+// can't express). `inert` when closed so collapsed controls aren't tabbable.
+// ============================================================================
+
+function AnimatedCollapse({
+  open,
+  id,
+  children,
+}: {
+  open: boolean;
+  id?: string;
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (el) setHeight(el.scrollHeight);
+  }, [open, children]);
+
+  return (
+    <div
+      id={id}
+      aria-hidden={!open}
+      inert={!open}
+      style={{
+        height: open ? height : 0,
+        overflow: "hidden",
+        transition: "height 200ms ease-in-out",
+      }}
+    >
+      <div ref={ref}>{children}</div>
+    </div>
+  );
+}
+
+// ============================================================================
 // Category row — name + description with a toggle on the right
 // ============================================================================
 
@@ -126,13 +167,13 @@ export function ConsentCategoryRow({
           </Toggle>
         </div>
       </div>
-      <div
-        id={contentId}
-        hidden={!open}
-        className={`px-4 pb-4 pt-3 text-copy-13 text-textSubtle ${isLast ? "" : "border-b border-borderDefault"}`}
-      >
-        {category.description}
-      </div>
+      <AnimatedCollapse open={open} id={contentId}>
+        <div
+          className={`px-4 pb-4 pt-3 text-copy-13 text-textSubtle ${isLast ? "" : "border-b border-borderDefault"}`}
+        >
+          {category.description}
+        </div>
+      </AnimatedCollapse>
     </div>
   );
 }
@@ -184,12 +225,9 @@ export function ConsentSubjectIdSection({
           className={`h-3.5 w-3.5 text-textSubtle transition-transform ${open ? "rotate-0" : "-rotate-90"}`}
         />
       </button>
-      <div
-        id="consent-subject-id-body"
-        hidden={!open}
-        className="flex flex-col gap-3 border-t border-borderDefault px-4 pb-4"
-      >
-        <div className="mt-3 flex items-center gap-2 rounded-md border border-borderDefault bg-canvas px-3 py-2.5">
+      <AnimatedCollapse open={open} id="consent-subject-id-body">
+        <div className="flex flex-col gap-3 border-t border-borderDefault px-4 pb-4">
+          <div className="mt-3 flex items-center gap-2 rounded-md border border-borderDefault bg-canvas px-3 py-2.5">
           <span className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-copy-13 text-textDefault">
             {subjectId ?? "—"}
           </span>
@@ -217,7 +255,8 @@ export function ConsentSubjectIdSection({
           </a>{" "}
           with this ID to request access to or deletion of your consent data.
         </p>
-      </div>
+        </div>
+      </AnimatedCollapse>
     </div>
   );
 }
