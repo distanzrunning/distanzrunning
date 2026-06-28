@@ -58,7 +58,7 @@ export const CONSENT_COPY = {
     "This site uses cookies to improve your browsing experience, analyse site traffic, and show personalised content.",
   modalTitle: "Privacy Settings",
   modalDescription:
-    "We use cookies to personalise content and ads, to provide essential features and to analyse our traffic. You may opt in or opt out of the use of these technologies.",
+    "Customise your privacy settings here. You can choose which types of cookies and tracking technologies you allow.",
   cookiePolicyHref: "/privacy#cookies",
   privacyHref: "/privacy",
   dataRequestEmail: "info@distanzrunning.com",
