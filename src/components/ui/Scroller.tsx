@@ -247,13 +247,7 @@ export const Scroller = forwardRef<HTMLDivElement, ScrollerProps>(
           {children}
         </div>
 
-        {!hideFade && (
-          <div
-            aria-hidden="true"
-            className={overlayClasses}
-            data-axis={dataOverflow}
-          />
-        )}
+        {!hideFade && <div aria-hidden="true" className={overlayClasses} />}
       </div>
     );
   },

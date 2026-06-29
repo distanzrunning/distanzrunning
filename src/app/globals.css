@@ -848,6 +848,25 @@
     overflow: hidden;
     transform: scale(1.01);
   }
+  /* Geist-verbatim. ::before carries the top + left fades, ::after the
+     bottom + right; per-edge classes shift background-position to slide the
+     relevant fade in. ORDER MATTERS: the `background` shorthands must precede
+     the shared rule below, because a `background` shorthand resets
+     background-size — declaring `background-size: 200%` first (then a
+     shorthand) would drop it back to auto and the perpendicular gradient
+     would leak across the cross axis. */
+  .ds-scroller-overlay::before {
+    background:
+      linear-gradient(to bottom, var(--scroller-gradient)),
+      linear-gradient(to right, var(--scroller-gradient));
+    background-position: -40px -40px;
+  }
+  .ds-scroller-overlay::after {
+    background:
+      linear-gradient(to top, var(--scroller-gradient)),
+      linear-gradient(to left, var(--scroller-gradient));
+    background-position: calc(100% + 40px) calc(100% + 40px);
+  }
   .ds-scroller-overlay::before,
   .ds-scroller-overlay::after {
     content: "";
@@ -859,39 +878,6 @@
     position: absolute;
     transform: translateZ(0);
     transition: background-position 0.3s;
-  }
-  /* ::before carries the start-edge fades (top for vertical, left for
-     horizontal); ::after the end-edge fades (bottom / right). Each axis emits
-     ONLY the gradient layer it can actually overflow, so a vertical scroller
-     never paints a left/right fade — and a horizontal one never paints a
-     top/bottom fade. (data-axis mirrors the track's data-overflow.) */
-  .ds-scroller-overlay[data-axis="y"]::before {
-    background: linear-gradient(to bottom, var(--scroller-gradient));
-    background-position: 0 -40px;
-  }
-  .ds-scroller-overlay[data-axis="y"]::after {
-    background: linear-gradient(to top, var(--scroller-gradient));
-    background-position: 0 calc(100% + 40px);
-  }
-  .ds-scroller-overlay[data-axis="x"]::before {
-    background: linear-gradient(to right, var(--scroller-gradient));
-    background-position: -40px 0;
-  }
-  .ds-scroller-overlay[data-axis="x"]::after {
-    background: linear-gradient(to left, var(--scroller-gradient));
-    background-position: calc(100% + 40px) 0;
-  }
-  .ds-scroller-overlay[data-axis="both"]::before {
-    background:
-      linear-gradient(to bottom, var(--scroller-gradient)),
-      linear-gradient(to right, var(--scroller-gradient));
-    background-position: -40px -40px;
-  }
-  .ds-scroller-overlay[data-axis="both"]::after {
-    background:
-      linear-gradient(to top, var(--scroller-gradient)),
-      linear-gradient(to left, var(--scroller-gradient));
-    background-position: calc(100% + 40px) calc(100% + 40px);
   }
   .ds-scroller-overlay.is-top::before {
     background-position-y: top;
