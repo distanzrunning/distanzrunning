@@ -458,7 +458,7 @@ export async function ConsentDashboardContent({
           border: "1px solid hsl(var(--color-borderDefault))",
           borderRadius: 10,
           overflow: "hidden",
-          background: "hsl(var(--color-canvas))",
+          background: "hsl(var(--color-analyticsPanel))",
           marginBottom: 16,
         }}
       >
@@ -479,7 +479,7 @@ export async function ConsentDashboardContent({
             display: "grid",
             gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
             borderBottom: "1px solid hsl(var(--color-borderDefault))",
-            background: "hsl(var(--color-canvas))",
+            background: "hsl(var(--color-analyticsPanel))",
           }}
         >
           <div>
@@ -547,7 +547,7 @@ export async function ConsentDashboardContent({
             <StatTile
               label="Sessions"
               value={<NumberTicker value={breakdowns.sessions} />}
-              tone="canvas"
+              tone="flat"
             />
           </div>
         </div>
@@ -565,7 +565,7 @@ export async function ConsentDashboardContent({
           tween via the CategoryBar's CSS width transition when
           the picker / tile selection changes the window. */}
       <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-category opt-in" tone="canvas">
+        <PanelCard title="Per-category opt-in" tone="flat">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <CategoryBar
               label="Marketing"
@@ -599,7 +599,7 @@ export async function ConsentDashboardContent({
       >
         <LeaderboardPanel
           columnHeader="Consents"
-          tone="canvas"
+          tone="flat"
           bodyHeight={320}
           tabs={[
             {
@@ -636,7 +636,7 @@ export async function ConsentDashboardContent({
         />
         <LeaderboardPanel
           columnHeader="Consents"
-          tone="canvas"
+          tone="flat"
           bodyHeight={320}
           tabs={[
             {
@@ -701,7 +701,7 @@ export function ConsentDashboardSkeleton() {
           border: "1px solid hsl(var(--color-borderDefault))",
           borderRadius: 10,
           overflow: "hidden",
-          background: "hsl(var(--color-canvas))",
+          background: "hsl(var(--color-analyticsPanel))",
           marginBottom: 16,
         }}
       >
@@ -711,7 +711,7 @@ export function ConsentDashboardSkeleton() {
             display: "grid",
             gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
             borderBottom: "1px solid hsl(var(--color-borderDefault))",
-            background: "hsl(var(--color-canvas))",
+            background: "hsl(var(--color-analyticsPanel))",
           }}
         >
           <StatTileSkeleton label="Unique visitors" />
@@ -732,7 +732,7 @@ export function ConsentDashboardSkeleton() {
       </div>
 
       <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-category opt-in" tone="canvas">
+        <PanelCard title="Per-category opt-in" tone="flat">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {["Marketing", "Analytics", "Functional"].map((label) => (
               <div
@@ -771,7 +771,7 @@ export function ConsentDashboardSkeleton() {
           <div
             key={i}
             style={{
-              background: "hsl(var(--color-canvas))",
+              background: "hsl(var(--color-analyticsPanel))",
               border: "1px solid hsl(var(--color-borderDefault))",
               borderRadius: 6,
               overflow: "hidden",
@@ -813,7 +813,7 @@ export function ConsentDashboardSkeleton() {
         ))}
       </div>
 
-      <PanelCard title="Recent decisions" tone="canvas">
+      <PanelCard title="Recent decisions" tone="flat">
         <Table>
           <TableHeader>
             <TableRow>

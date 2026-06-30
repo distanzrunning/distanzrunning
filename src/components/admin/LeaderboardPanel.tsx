@@ -49,9 +49,10 @@ interface LeaderboardPanelProps {
    *  space. Omit for content-height (the default). */
   bodyHeight?: number;
   /** Panel surface tone. `surface` (default, bg-100) is the raised
-   *  card; `canvas` (bg-200) flattens it flush with the page — used
-   *  by the consent dashboard to match Vercel's flat analytics. */
-  tone?: "surface" | "canvas";
+   *  card; `flat` uses the theme-aware analytics-panel tone (raised
+   *  white in light, flush-black in dark) so the consent dashboard
+   *  matches Vercel's flat analytics in both themes. */
+  tone?: "surface" | "flat";
 }
 
 export default function LeaderboardPanel({
@@ -76,8 +77,8 @@ export default function LeaderboardPanel({
     <div
       style={{
         background:
-          tone === "canvas"
-            ? "hsl(var(--color-canvas))"
+          tone === "flat"
+            ? "hsl(var(--color-analyticsPanel))"
             : "hsl(var(--color-surface))",
         border: "1px solid hsl(var(--color-borderDefault))",
         borderRadius: 6,

@@ -54,10 +54,11 @@ export interface StatTileProps {
   /** Marks the currently-selected tab — pairs with `href`. */
   active?: boolean;
   /** Standalone (non-tab) tone. `surface` (default) is the raised
-   *  tile; `canvas` flattens it flush with a bg-200 strip so a
-   *  non-interactive metric doesn't read as a selected tab. Ignored
-   *  for tabs (those follow active/inactive). */
-  tone?: "surface" | "canvas";
+   *  tile; `flat` uses the theme-aware analytics-panel tone (raised
+   *  white in light, flush-black in dark) so a non-interactive metric
+   *  sits flush with the dashboard's flat panels instead of reading as
+   *  a selected tab. Ignored for tabs (those follow active/inactive). */
+  tone?: "surface" | "flat";
   /** Forwarded to the underlying <a> for analytics, rel, target. */
   anchorProps?: AnchorHTMLAttributes<HTMLAnchorElement>;
 }
@@ -170,8 +171,8 @@ export function StatTile({
     ? active
       ? "hsl(var(--color-surface))"
       : "hsl(var(--color-canvas))"
-    : tone === "canvas"
-      ? "hsl(var(--color-canvas))"
+    : tone === "flat"
+      ? "hsl(var(--color-analyticsPanel))"
       : "hsl(var(--color-surface))";
   // Inactive tabs dim only the value number (Vercel keeps the title at
   // full strength), via opacity on that span alone — not the whole tile.

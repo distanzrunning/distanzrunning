@@ -31,10 +31,11 @@ export interface PanelCardProps {
    *    the panel radii line up. */
   radius?: "md" | "xl";
   /** Surface tone. `surface` (default, bg-100) is the standard raised
-   *  panel. `canvas` (bg-200) flattens the card flush with the page —
-   *  used by the consent dashboard to match Vercel's flat analytics
-   *  layout while still using DS tokens. */
-  tone?: "surface" | "canvas";
+   *  panel. `flat` uses the theme-aware analytics-panel tone — raised
+   *  white (bg-100) in light, flush-black (bg-200) in dark — so the
+   *  consent dashboard matches Vercel's web-analytics panels in BOTH
+   *  themes. Still all DS tokens. */
+  tone?: "surface" | "flat";
 }
 
 export function PanelCard({
@@ -46,7 +47,7 @@ export function PanelCard({
 }: PanelCardProps) {
   const hasHeader = title != null || action != null;
   const radiusClass = radius === "md" ? "rounded-md" : "rounded-xl";
-  const toneClass = tone === "canvas" ? "bg-canvas" : "bg-surface";
+  const toneClass = tone === "flat" ? "bg-analyticsPanel" : "bg-surface";
   return (
     <section
       className={`flex flex-col gap-4 p-6 ${radiusClass} ${toneClass} border border-[color:var(--ds-gray-400)]`}
