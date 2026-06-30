@@ -480,7 +480,7 @@ export async function ConsentDashboardContent({
             width: "max-content",
             minWidth: "100%",
             borderBottom: "1px solid hsl(var(--color-borderDefault))",
-            background: "hsl(var(--color-surface))",
+            background: "hsl(var(--color-canvas))",
           }}
         >
           <div style={{ minWidth: 220, flexShrink: 0 }}>
@@ -705,7 +705,7 @@ export function ConsentDashboardSkeleton() {
             width: "max-content",
             minWidth: "100%",
             borderBottom: "1px solid hsl(var(--color-borderDefault))",
-            background: "hsl(var(--color-surface))",
+            background: "hsl(var(--color-canvas))",
           }}
         >
           {["Unique visitors", "Decisions", "Accept rate", "Reject rate", "Custom rate"].map(
