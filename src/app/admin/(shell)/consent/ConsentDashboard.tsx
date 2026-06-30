@@ -458,7 +458,7 @@ export async function ConsentDashboardContent({
           border: "1px solid hsl(var(--color-borderDefault))",
           borderRadius: 10,
           overflow: "hidden",
-          background: "hsl(var(--color-surface))",
+          background: "hsl(var(--color-canvas))",
           marginBottom: 16,
         }}
       >
@@ -547,6 +547,7 @@ export async function ConsentDashboardContent({
             <StatTile
               label="Sessions"
               value={<NumberTicker value={breakdowns.sessions} />}
+              tone="canvas"
             />
           </div>
         </div>
@@ -564,7 +565,7 @@ export async function ConsentDashboardContent({
           tween via the CategoryBar's CSS width transition when
           the picker / tile selection changes the window. */}
       <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-category opt-in">
+        <PanelCard title="Per-category opt-in" tone="canvas">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <CategoryBar
               label="Marketing"
@@ -598,6 +599,7 @@ export async function ConsentDashboardContent({
       >
         <LeaderboardPanel
           columnHeader="Consents"
+          tone="canvas"
           bodyHeight={320}
           tabs={[
             {
@@ -634,6 +636,7 @@ export async function ConsentDashboardContent({
         />
         <LeaderboardPanel
           columnHeader="Consents"
+          tone="canvas"
           bodyHeight={320}
           tabs={[
             {
@@ -698,7 +701,7 @@ export function ConsentDashboardSkeleton() {
           border: "1px solid hsl(var(--color-borderDefault))",
           borderRadius: 10,
           overflow: "hidden",
-          background: "hsl(var(--color-surface))",
+          background: "hsl(var(--color-canvas))",
           marginBottom: 16,
         }}
       >
@@ -729,7 +732,7 @@ export function ConsentDashboardSkeleton() {
       </div>
 
       <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-category opt-in">
+        <PanelCard title="Per-category opt-in" tone="canvas">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {["Marketing", "Analytics", "Functional"].map((label) => (
               <div
@@ -768,7 +771,7 @@ export function ConsentDashboardSkeleton() {
           <div
             key={i}
             style={{
-              background: "hsl(var(--color-surface))",
+              background: "hsl(var(--color-canvas))",
               border: "1px solid hsl(var(--color-borderDefault))",
               borderRadius: 6,
               overflow: "hidden",
@@ -810,7 +813,7 @@ export function ConsentDashboardSkeleton() {
         ))}
       </div>
 
-      <PanelCard title="Recent decisions">
+      <PanelCard title="Recent decisions" tone="canvas">
         <Table>
           <TableHeader>
             <TableRow>

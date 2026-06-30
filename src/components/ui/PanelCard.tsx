@@ -30,6 +30,11 @@ export interface PanelCardProps {
    *    Vercel-style leaderboard chrome elsewhere on the page so
    *    the panel radii line up. */
   radius?: "md" | "xl";
+  /** Surface tone. `surface` (default, bg-100) is the standard raised
+   *  panel. `canvas` (bg-200) flattens the card flush with the page —
+   *  used by the consent dashboard to match Vercel's flat analytics
+   *  layout while still using DS tokens. */
+  tone?: "surface" | "canvas";
 }
 
 export function PanelCard({
@@ -37,12 +42,14 @@ export function PanelCard({
   action,
   children,
   radius = "xl",
+  tone = "surface",
 }: PanelCardProps) {
   const hasHeader = title != null || action != null;
   const radiusClass = radius === "md" ? "rounded-md" : "rounded-xl";
+  const toneClass = tone === "canvas" ? "bg-canvas" : "bg-surface";
   return (
     <section
-      className={`flex flex-col gap-4 p-6 ${radiusClass} bg-surface border border-[color:var(--ds-gray-400)]`}
+      className={`flex flex-col gap-4 p-6 ${radiusClass} ${toneClass} border border-[color:var(--ds-gray-400)]`}
     >
       {hasHeader && (
         <header className="flex justify-between items-center">

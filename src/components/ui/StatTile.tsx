@@ -53,6 +53,11 @@ export interface StatTileProps {
   href?: string;
   /** Marks the currently-selected tab — pairs with `href`. */
   active?: boolean;
+  /** Standalone (non-tab) tone. `surface` (default) is the raised
+   *  tile; `canvas` flattens it flush with a bg-200 strip so a
+   *  non-interactive metric doesn't read as a selected tab. Ignored
+   *  for tabs (those follow active/inactive). */
+  tone?: "surface" | "canvas";
   /** Forwarded to the underlying <a> for analytics, rel, target. */
   anchorProps?: AnchorHTMLAttributes<HTMLAnchorElement>;
 }
@@ -152,6 +157,7 @@ export function StatTile({
   change,
   href,
   active,
+  tone = "surface",
   anchorProps,
 }: StatTileProps) {
   const isTab = !!href;
@@ -164,7 +170,9 @@ export function StatTile({
     ? active
       ? "hsl(var(--color-surface))"
       : "hsl(var(--color-canvas))"
-    : "hsl(var(--color-surface))";
+    : tone === "canvas"
+      ? "hsl(var(--color-canvas))"
+      : "hsl(var(--color-surface))";
   // Inactive tabs dim only the value number (Vercel keeps the title at
   // full strength), via opacity on that span alone — not the whole tile.
   const muted = isTab && !active;

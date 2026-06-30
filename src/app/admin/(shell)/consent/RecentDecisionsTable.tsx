@@ -108,7 +108,7 @@ export default function RecentDecisionsTable({
             };
 
   return (
-    <PanelCard title={title}>
+    <PanelCard title={title} tone="canvas">
       {empty ? (
         <EmptyState live>
           <EmptyState.Icon>{empty.icon}</EmptyState.Icon>

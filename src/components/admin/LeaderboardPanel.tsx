@@ -48,12 +48,17 @@ interface LeaderboardPanelProps {
    *  aligned. Overflowing rows scroll; shorter tabs leave empty
    *  space. Omit for content-height (the default). */
   bodyHeight?: number;
+  /** Panel surface tone. `surface` (default, bg-100) is the raised
+   *  card; `canvas` (bg-200) flattens it flush with the page — used
+   *  by the consent dashboard to match Vercel's flat analytics. */
+  tone?: "surface" | "canvas";
 }
 
 export default function LeaderboardPanel({
   tabs,
   columnHeader,
   bodyHeight,
+  tone = "surface",
 }: LeaderboardPanelProps) {
   const [active, setActive] = useState(tabs[0]?.value ?? "");
   const activeTab = tabs.find((t) => t.value === active) ?? tabs[0];
@@ -70,7 +75,10 @@ export default function LeaderboardPanel({
   return (
     <div
       style={{
-        background: "hsl(var(--color-surface))",
+        background:
+          tone === "canvas"
+            ? "hsl(var(--color-canvas))"
+            : "hsl(var(--color-surface))",
         border: "1px solid hsl(var(--color-borderDefault))",
         borderRadius: 6,
         overflow: "hidden",
