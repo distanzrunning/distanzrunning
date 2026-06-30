@@ -532,14 +532,14 @@
     --color-surfaceWarm: var(--ds-gray-200-value); /* Warm-tinted surface */
     --color-canvas: var(--ds-background-200-value); /* page — #FAFAFA */
 
-    /* Analytics-panel tone — Vercel's flat-dashboard surface. Resolves
-       per theme to match Vercel's web-analytics panels in BOTH modes:
-       in LIGHT it is the raised white surface (bg-100, #FFFFFF) so the
-       panels read clearly off the #FAFAFA page; in DARK it collapses to
-       the canvas tone (bg-200, #000) so the panels sit flush-black,
-       border-defined, the way Vercel's dark analytics look. A theme-
-       agnostic `canvas` was wrong in light (grey #FAFAFA panels). Used
-       by the consent dashboard via tone="flat". */
+    /* Analytics-panel tone — Vercel's web-analytics dashboard surface.
+       It is the RAISED surface (bg-100) in BOTH themes — #FFFFFF light,
+       #0A0A0A dark — exactly like Vercel's panels; recessed elements
+       inside it (inactive metric tabs, blank tab space reads through to
+       the panel) sit on bg-200. Earlier this dropped to bg-200 (#000) in
+       dark for a "flush-black" look, but Vercel's dark panels are bg-100
+       (#0A0A0A) — the blank tab space and chart card must match that, so
+       the panel stays bg-100 in both modes. Used via tone="flat". */
     --color-analyticsPanel: var(--ds-background-100-value); /* light → #FFFFFF */
 
     /* Elevated Surfaces */
@@ -980,11 +980,13 @@
     --color-surfaceWarm: var(--ds-gray-200-value); /* Warm-tinted surface */
     --color-canvas: var(--ds-background-200-value); /* page — #000 */
 
-    /* Analytics-panel tone — flush-black in dark (bg-200, #000), so the
-       consent dashboard panels read border-defined against the page the
-       way Vercel's dark analytics do. Flips to the raised white surface
-       in light (see the :root/.light block). */
-    --color-analyticsPanel: var(--ds-background-200-value); /* dark → #000 */
+    /* Analytics-panel tone — the raised surface (bg-100, #0A0A0A) in dark,
+       matching Vercel's dark web-analytics panels (background-100). The
+       recessed bits inside (inactive metric tabs = canvas #000) read as
+       a step down from this; the blank tab space and chart card sit on
+       this panel tone. (Previously bg-200 #000, but Vercel's panel — and
+       so the blank space — is bg-100.) See the :root/.light block. */
+    --color-analyticsPanel: var(--ds-background-100-value); /* dark → #0A0A0A */
 
     /* Elevated Surfaces - Progressive lightening */
     --color-surfaceElevated1: var(--ds-gray-200-value); /* Level 1 */
