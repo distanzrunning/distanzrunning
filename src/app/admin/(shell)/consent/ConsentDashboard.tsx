@@ -458,7 +458,7 @@ export async function ConsentDashboardContent({
           border: "1px solid hsl(var(--color-borderDefault))",
           borderRadius: 6,
           overflow: "hidden",
-          background: "hsl(var(--color-analyticsPanel))",
+          background: "hsl(var(--color-surface))",
           marginBottom: 16,
         }}
       >
@@ -480,7 +480,7 @@ export async function ConsentDashboardContent({
             width: "max-content",
             minWidth: "100%",
             borderBottom: "1px solid hsl(var(--color-borderDefault))",
-            background: "hsl(var(--color-analyticsPanel))",
+            background: "hsl(var(--color-surface))",
           }}
         >
           <div style={{ minWidth: 220, flexShrink: 0 }}>
@@ -694,7 +694,7 @@ export function ConsentDashboardSkeleton() {
           border: "1px solid hsl(var(--color-borderDefault))",
           borderRadius: 6,
           overflow: "hidden",
-          background: "hsl(var(--color-analyticsPanel))",
+          background: "hsl(var(--color-surface))",
           marginBottom: 16,
         }}
       >
@@ -705,7 +705,7 @@ export function ConsentDashboardSkeleton() {
             width: "max-content",
             minWidth: "100%",
             borderBottom: "1px solid hsl(var(--color-borderDefault))",
-            background: "hsl(var(--color-analyticsPanel))",
+            background: "hsl(var(--color-surface))",
           }}
         >
           {["Unique visitors", "Decisions", "Accept rate", "Reject rate", "Custom rate"].map(
