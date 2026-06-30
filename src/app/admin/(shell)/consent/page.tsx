@@ -82,7 +82,7 @@ export default async function ConsentDashboardPage({
     <div>
       <div
         style={{
-          maxWidth: 1248,
+          maxWidth: 1200,
           marginLeft: "auto",
           marginRight: "auto",
           paddingLeft: 24,
