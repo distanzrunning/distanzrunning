@@ -462,27 +462,28 @@ export async function ConsentDashboardContent({
           marginBottom: 16,
         }}
       >
-        {/* Tile row laid out as a 6-column grid: 5 tiles + 1 empty
-            placeholder. The empty cell gives the trailing gap the
-            same width as a tile (slot for a future 6th metric) and
-            lets `divide-x` paint a divider after the last tile
-            without the old borderRight hack. minmax(0, 1fr)
-            keeps each column above 200px, flexing equally above
-            that — overflowX:auto on the wrapper handles the
-            narrow-viewport case. paddingBottom:6 on the wrapper
-            sits below the row's border (matches Vercel's tabs
-            structure) and leaves room for a horizontal scrollbar. */}
+        {/* Tile row — a flex strip of fixed 220px tiles (Vercel's
+            `min-w-[220px] shrink-0` metric tabs) followed by a flex-1
+            spacer. Now the panel is full-width we DON'T stretch the tiles
+            to fill it; they keep a natural width and the spacer leaves the
+            remaining width blank, like Vercel. `divide-x` paints the
+            divider between tiles and the spacer's left edge closes the
+            group. width:max-content + min-width:100% lets the strip grow
+            past the panel (overflowX:auto scrolls) on narrow viewports while
+            still spanning the full width — so the bottom border runs edge to
+            edge. paddingBottom:6 leaves room for the scrollbar. */}
         <div style={{ overflowX: "auto", paddingBottom: 6 }}>
         <div
           className="divide-x divide-borderDefault"
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
+            display: "flex",
+            width: "max-content",
+            minWidth: "100%",
             borderBottom: "1px solid hsl(var(--color-borderDefault))",
             background: "hsl(var(--color-analyticsPanel))",
           }}
         >
-          <div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Unique visitors"
               value={<NumberTicker value={currentUnique} />}
@@ -491,7 +492,7 @@ export async function ConsentDashboardContent({
               active={metric === "visitors"}
             />
           </div>
-          <div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Decisions"
               value={<NumberTicker value={currentCount} />}
@@ -500,7 +501,7 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && !filter}
             />
           </div>
-          <div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Accept rate"
               value={<NumberTicker value={currentAcceptRate} suffix="%" />}
@@ -513,7 +514,7 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && filter === "accept_all"}
             />
           </div>
-          <div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Reject rate"
               value={<NumberTicker value={currentRejectRate} suffix="%" />}
@@ -526,7 +527,7 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && filter === "reject_all"}
             />
           </div>
-          <div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Custom rate"
               value={<NumberTicker value={currentCustomRate} suffix="%" />}
@@ -539,17 +540,9 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && filter === "custom"}
             />
           </div>
-          {/* 6th tile — Sessions (policy-decision / init calls in the
-              window). Non-interactive: it's context for the breakdown
-              panels below, not a chart metric, so it carries no href or
-              trend pill. */}
-          <div>
-            <StatTile
-              label="Sessions"
-              value={<NumberTicker value={breakdowns.sessions} />}
-              tone="flat"
-            />
-          </div>
+          {/* Blank trailing space — fills the leftover panel width so the
+              tiles don't stretch (Vercel parity). */}
+          <div style={{ flex: 1, minWidth: 0 }} aria-hidden />
         </div>
         </div>
 
@@ -708,18 +701,21 @@ export function ConsentDashboardSkeleton() {
         <div
           className="divide-x divide-borderDefault"
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
+            display: "flex",
+            width: "max-content",
+            minWidth: "100%",
             borderBottom: "1px solid hsl(var(--color-borderDefault))",
             background: "hsl(var(--color-analyticsPanel))",
           }}
         >
-          <StatTileSkeleton label="Unique visitors" />
-          <StatTileSkeleton label="Decisions" />
-          <StatTileSkeleton label="Accept rate" />
-          <StatTileSkeleton label="Reject rate" />
-          <StatTileSkeleton label="Custom rate" />
-          <StatTileSkeleton label="Sessions" />
+          {["Unique visitors", "Decisions", "Accept rate", "Reject rate", "Custom rate"].map(
+            (label) => (
+              <div key={label} style={{ minWidth: 220, flexShrink: 0 }}>
+                <StatTileSkeleton label={label} />
+              </div>
+            ),
+          )}
+          <div style={{ flex: 1, minWidth: 0 }} aria-hidden />
         </div>
         <div style={{ padding: "24px 24px 16px" }}>
           <Skeleton
