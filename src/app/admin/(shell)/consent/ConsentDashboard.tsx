@@ -456,7 +456,7 @@ export async function ConsentDashboardContent({
       <div
         style={{
           border: "1px solid hsl(var(--color-borderDefault))",
-          borderRadius: 10,
+          borderRadius: 6,
           overflow: "hidden",
           background: "hsl(var(--color-analyticsPanel))",
           marginBottom: 16,
@@ -565,7 +565,7 @@ export async function ConsentDashboardContent({
           tween via the CategoryBar's CSS width transition when
           the picker / tile selection changes the window. */}
       <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-category opt-in" tone="flat">
+        <PanelCard title="Per-category opt-in" tone="flat" radius="sm">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <CategoryBar
               label="Marketing"
@@ -699,7 +699,7 @@ export function ConsentDashboardSkeleton() {
       <div
         style={{
           border: "1px solid hsl(var(--color-borderDefault))",
-          borderRadius: 10,
+          borderRadius: 6,
           overflow: "hidden",
           background: "hsl(var(--color-analyticsPanel))",
           marginBottom: 16,
@@ -732,7 +732,7 @@ export function ConsentDashboardSkeleton() {
       </div>
 
       <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-category opt-in" tone="flat">
+        <PanelCard title="Per-category opt-in" tone="flat" radius="sm">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {["Marketing", "Analytics", "Functional"].map((label) => (
               <div
@@ -813,7 +813,7 @@ export function ConsentDashboardSkeleton() {
         ))}
       </div>
 
-      <PanelCard title="Recent decisions" tone="flat">
+      <PanelCard title="Recent decisions" tone="flat" radius="sm">
         <Table>
           <TableHeader>
             <TableRow>

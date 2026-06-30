@@ -142,13 +142,28 @@ export default function AdminPageHeader() {
         height: HEADER_HEIGHT,
         background: "hsl(var(--color-canvas))",
         borderBottom: "1px solid hsl(var(--color-borderDefault))",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        padding: "0 16px",
       }}
     >
-      <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center max-w-[50%]">
+      {/* Inner column — shares the page content's 1248 max-width + 24px
+          gutters (see the consent/feedback/settings page wrappers) so the
+          title row + options menu align with the dashboard column below
+          instead of sitting flush to the viewport edge. The full-width
+          sticky bar (border + bg) still spans edge to edge. */}
+      <div
+        style={{
+          maxWidth: 1248,
+          marginLeft: "auto",
+          marginRight: "auto",
+          paddingLeft: 24,
+          paddingRight: 24,
+          height: "100%",
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+        }}
+      >
+        <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center max-w-[50%]">
         {section && (
           <div className="hidden md:flex items-center gap-2 pr-2.5 min-w-0">
             <Link
@@ -227,7 +242,8 @@ export default function AdminPageHeader() {
         >
           Sign out
         </MenuItem>
-      </Menu>
+        </Menu>
+      </div>
 
       <FeedbackWithSelect
         centered
