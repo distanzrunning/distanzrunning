@@ -106,7 +106,7 @@ export default async function FeedbackDashboardPage({
     <div>
       <div
         style={{
-          maxWidth: 1200,
+          maxWidth: "none",
           marginLeft: "auto",
           marginRight: "auto",
           paddingLeft: 24,

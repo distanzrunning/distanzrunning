@@ -144,15 +144,14 @@ export default function AdminPageHeader() {
         borderBottom: "1px solid hsl(var(--color-borderDefault))",
       }}
     >
-      {/* Inner column — shares the page content's 1200px max-width + 24px
-          gutters (Vercel's --geist-page-width / --geist-page-margin; see the
-          consent/feedback/settings page wrappers) so the title row + options
-          menu align with the dashboard column below instead of sitting flush
-          to the viewport edge. The full-width sticky bar (border + bg) still
-          spans edge to edge. */}
+      {/* Inner row — full-width with 24px gutters, matching the consent /
+          feedback dashboard content (Vercel's analytics dashboard fills the
+          content column rather than capping at the marketing 1200px width).
+          The options menu pins to the same 24px right gutter as the content
+          below; the title stays centred. The sticky bar spans edge to edge. */}
       <div
         style={{
-          maxWidth: 1200,
+          maxWidth: "none",
           marginLeft: "auto",
           marginRight: "auto",
           paddingLeft: 24,
