@@ -37,7 +37,7 @@ import TrendChart from "@/components/ui/TrendChart";
 
 import ContactedToggle from "./ContactedToggle";
 import DeleteFeedbackButton from "./DeleteFeedbackButton";
-import LeaderboardPanel, { type LeaderRow } from "./LeaderboardPanel";
+import LeaderboardPanel, { type LeaderRow } from "@/components/admin/LeaderboardPanel";
 import {
   getFeedbackRowsInRange,
   type Emotion,

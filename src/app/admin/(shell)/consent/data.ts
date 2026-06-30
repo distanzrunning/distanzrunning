@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 
 import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { parseUserAgent } from "@/lib/userAgent";
 
 // ============================================================================
 // Consent dashboard data layer — sourced from the self-hosted c15t tables.
@@ -19,6 +20,9 @@ export const CONSENT_CACHE_TAG = "consent_records";
 
 const C15T_CONSENT = "c15t_consent";
 const C15T_PURPOSE = "c15t_consentPurpose";
+const C15T_DOMAIN = "c15t_domain";
+const C15T_POLICY = "c15t_consentPolicy";
+const C15T_DECISION = "c15t_runtimePolicyDecision";
 
 export type ConsentDecision = "accept_all" | "reject_all" | "custom";
 
@@ -182,3 +186,249 @@ export async function getConsentRowsBySubject(
     projectRow(row, purposeCode),
   );
 }
+
+// ============================================================================
+// Breakdown panels (Audience / Source) — ranked counts over the active window.
+// ----------------------------------------------------------------------------
+// Each consent row carries enough signal to bucket it by device/browser/OS
+// (parsed from `userAgent`), UI surface (`uiSource`), domain, and policy; the
+// linked `runtimePolicyDecision` adds country + language. We aggregate per
+// CONSENT (not per session) so every panel's counts share the "Consents"
+// denominator. `sessions` is the count of policy decisions (init calls) in the
+// window — surfaced as its own tile.
+// ============================================================================
+
+export interface RankedItem {
+  key: string;
+  label: string;
+  total: number;
+  /** Italic "(unknown)" fallback bucket. */
+  italic?: boolean;
+}
+
+export interface ConsentBreakdowns {
+  sessions: number;
+  devices: RankedItem[];
+  browsers: RankedItem[];
+  operatingSystems: RankedItem[];
+  countries: RankedItem[];
+  languages: RankedItem[];
+  uiSources: RankedItem[];
+  domains: RankedItem[];
+  policies: RankedItem[];
+}
+
+const UNKNOWN_KEY = "__unknown__";
+
+// Intl.DisplayNames turns ISO-2 region / BCP-47 language codes into readable
+// names ("GB" → "United Kingdom", "en" → "English") with zero dependencies.
+const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+const languageNames = new Intl.DisplayNames(["en"], { type: "language" });
+
+function safeRegion(code: string): string {
+  try {
+    return regionNames.of(code.toUpperCase()) ?? code;
+  } catch {
+    return code;
+  }
+}
+
+function safeLanguage(code: string): string {
+  try {
+    return languageNames.of(code) ?? code;
+  } catch {
+    return code;
+  }
+}
+
+/** Tally `{ value, label }` pairs into ranked rows, top N by count. Null /
+ *  empty / "Unknown" values collapse into a single italic "(unknown)" bucket
+ *  that sorts purely by count alongside the rest (so the leader is always the
+ *  bar that anchors the panel at full width). */
+function rank(
+  items: { value: string | null | undefined; label?: string }[],
+  topN = 8,
+): RankedItem[] {
+  const counts = new Map<
+    string,
+    { label: string; total: number; italic: boolean }
+  >();
+  for (const { value, label } of items) {
+    const unknown = value == null || value === "" || value === "Unknown";
+    const key = unknown ? UNKNOWN_KEY : value;
+    const entry = counts.get(key) ?? {
+      label: unknown ? "(unknown)" : (label ?? value),
+      total: 0,
+      italic: unknown,
+    };
+    entry.total += 1;
+    counts.set(key, entry);
+  }
+  return [...counts.entries()]
+    .map(([key, v]) => ({
+      key,
+      label: v.label,
+      total: v.total,
+      italic: v.italic || undefined,
+    }))
+    .sort((a, b) => b.total - a.total || a.label.localeCompare(b.label))
+    .slice(0, topN);
+}
+
+/** id → display name lookups for the small reference tables. Cached 5 min. */
+const getDomainNameMap = unstable_cache(
+  async (): Promise<Record<string, string>> => {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase.from(C15T_DOMAIN).select("id, name");
+    if (error) {
+      console.error("[consent] domain map lookup failed", error.message);
+      return {};
+    }
+    const map: Record<string, string> = {};
+    for (const row of (data ?? []) as { id: string; name: string }[]) {
+      map[row.id] = row.name;
+    }
+    return map;
+  },
+  ["c15t-domain-map"],
+  { revalidate: 300, tags: [CONSENT_CACHE_TAG] },
+);
+
+const getPolicyLabelMap = unstable_cache(
+  async (): Promise<Record<string, string>> => {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase
+      .from(C15T_POLICY)
+      .select("id, version, type");
+    if (error) {
+      console.error("[consent] policy map lookup failed", error.message);
+      return {};
+    }
+    const map: Record<string, string> = {};
+    for (const row of (data ?? []) as {
+      id: string;
+      version: string;
+      type: string;
+    }[]) {
+      // e.g. "cookie_banner v1" — type carries the policy kind, version the rev.
+      map[row.id] = [row.type, row.version].filter(Boolean).join(" ");
+    }
+    return map;
+  },
+  ["c15t-policy-map"],
+  { revalidate: 300, tags: [CONSENT_CACHE_TAG] },
+);
+
+interface C15tConsentBreakdownRow {
+  id: string;
+  userAgent: string | null;
+  uiSource: string | null;
+  domainId: string | null;
+  policyId: string | null;
+  runtimePolicyDecisionId: string | null;
+}
+
+interface C15tDecisionRow {
+  id: string;
+  countryCode: string | null;
+  language: string | null;
+}
+
+const EMPTY_BREAKDOWNS: ConsentBreakdowns = {
+  sessions: 0,
+  devices: [],
+  browsers: [],
+  operatingSystems: [],
+  countries: [],
+  languages: [],
+  uiSources: [],
+  domains: [],
+  policies: [],
+};
+
+/** Ranked breakdowns for the active window. Cached per (startIso, endIso) for
+ *  30s — same cadence as getConsentRowsInRange so a window change refreshes
+ *  the tiles, chart, and breakdowns together. */
+export const getConsentBreakdownsInRange = unstable_cache(
+  async (startIso: string, endIso: string): Promise<ConsentBreakdowns> => {
+    const supabase = getSupabaseAdmin();
+    const [domainMap, policyMap] = await Promise.all([
+      getDomainNameMap(),
+      getPolicyLabelMap(),
+    ]);
+
+    const { data: consentData, error: consentErr } = await supabase
+      .from(C15T_CONSENT)
+      .select("id, userAgent, uiSource, domainId, policyId, runtimePolicyDecisionId")
+      .gte("givenAt", startIso)
+      .lte("givenAt", endIso)
+      .limit(FETCH_LIMIT);
+    if (consentErr) {
+      console.error("[consent] breakdown lookup failed", consentErr.message);
+      return EMPTY_BREAKDOWNS;
+    }
+    const consents = (consentData ?? []) as C15tConsentBreakdownRow[];
+
+    // Policy decisions in the same window → country/language per consent, and
+    // the session count. Keyed by id so each consent resolves its own geo.
+    const { data: decisionData } = await supabase
+      .from(C15T_DECISION)
+      .select("id, countryCode, language")
+      .gte("createdAt", startIso)
+      .lte("createdAt", endIso)
+      .limit(FETCH_LIMIT);
+    const decisions = (decisionData ?? []) as C15tDecisionRow[];
+    const decisionMap = new Map<string, C15tDecisionRow>();
+    for (const d of decisions) decisionMap.set(d.id, d);
+
+    const parsed = consents.map((c) => {
+      const ua = parseUserAgent(c.userAgent);
+      const decision = c.runtimePolicyDecisionId
+        ? decisionMap.get(c.runtimePolicyDecisionId)
+        : undefined;
+      return { c, ua, decision };
+    });
+
+    return {
+      sessions: decisions.length,
+      devices: rank(parsed.map((p) => ({ value: p.ua.device }))),
+      browsers: rank(parsed.map((p) => ({ value: p.ua.browser }))),
+      operatingSystems: rank(parsed.map((p) => ({ value: p.ua.os }))),
+      countries: rank(
+        parsed.map((p) => {
+          const code = p.decision?.countryCode ?? null;
+          return { value: code, label: code ? safeRegion(code) : undefined };
+        }),
+      ),
+      languages: rank(
+        parsed.map((p) => {
+          const code = p.decision?.language ?? null;
+          return { value: code, label: code ? safeLanguage(code) : undefined };
+        }),
+      ),
+      uiSources: rank(
+        parsed.map((p) => ({
+          value: p.c.uiSource,
+          // Title-case the surface name (banner → Banner, dialog → Dialog).
+          label: p.c.uiSource
+            ? p.c.uiSource.charAt(0).toUpperCase() + p.c.uiSource.slice(1)
+            : undefined,
+        })),
+      ),
+      domains: rank(
+        parsed.map((p) => ({
+          value: p.c.domainId,
+          label: p.c.domainId ? (domainMap[p.c.domainId] ?? p.c.domainId) : undefined,
+        })),
+      ),
+      policies: rank(
+        parsed.map((p) => ({
+          value: p.c.policyId,
+          label: p.c.policyId ? (policyMap[p.c.policyId] ?? p.c.policyId) : undefined,
+        })),
+      ),
+    };
+  },
+  ["c15t-consent-breakdowns"],
+  { revalidate: 30, tags: [CONSENT_CACHE_TAG] },
+);

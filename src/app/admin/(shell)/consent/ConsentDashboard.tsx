@@ -30,7 +30,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
-import { getConsentRowsInRange, type ConsentRowRaw } from "./data";
+import LeaderboardPanel from "@/components/admin/LeaderboardPanel";
+import {
+  getConsentRowsInRange,
+  getConsentBreakdownsInRange,
+  type ConsentRowRaw,
+} from "./data";
 import RecentDecisionsTable from "./RecentDecisionsTable";
 
 interface BuildHrefContext {
@@ -344,6 +349,13 @@ export async function ConsentDashboardContent({
     currentWindow.end.toISOString(),
   );
 
+  // Ranked breakdowns (Audience / Source panels) are scoped to the active
+  // window only — fetched in parallel with the trend slice above.
+  const breakdowns = await getConsentBreakdownsInRange(
+    currentWindow.start.toISOString(),
+    currentWindow.end.toISOString(),
+  );
+
   // Slice the fetched rows into "current window" and the same-
   // length window immediately before, so trend pills come from one
   // DB hit regardless of the user's selected range. Comparison is
@@ -527,10 +539,16 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && filter === "custom"}
             />
           </div>
-          {/* Empty 6th cell — reserves the trailing gap as one
-              tile-width, gives divide-x a sibling to paint a
-              divider against, and slots a future tile in cleanly. */}
-          <div aria-hidden />
+          {/* 6th tile — Sessions (policy-decision / init calls in the
+              window). Non-interactive: it's context for the breakdown
+              panels below, not a chart metric, so it carries no href or
+              trend pill. */}
+          <div>
+            <StatTile
+              label="Sessions"
+              value={<NumberTicker value={breakdowns.sessions} />}
+            />
+          </div>
         </div>
         </div>
 
@@ -565,6 +583,77 @@ export async function ConsentDashboardContent({
             />
           </div>
         </PanelCard>
+      </div>
+
+      {/* Breakdown panels — Audience (who) + Source (how), each a tabbed
+          ranked-bar leaderboard scoped to the active window. Two-up on
+          desktop, stacking below 760px via the auto-fit grid. */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
+          gap: 16,
+          marginBottom: 16,
+        }}
+      >
+        <LeaderboardPanel
+          columnHeader="Consents"
+          tabs={[
+            {
+              value: "devices",
+              title: "Devices",
+              rows: breakdowns.devices,
+              emptyMessage: "No device data in this window.",
+            },
+            {
+              value: "browsers",
+              title: "Browsers",
+              rows: breakdowns.browsers,
+              emptyMessage: "No browser data in this window.",
+            },
+            {
+              value: "os",
+              title: "OS",
+              rows: breakdowns.operatingSystems,
+              emptyMessage: "No operating-system data in this window.",
+            },
+            {
+              value: "geography",
+              title: "Geography",
+              rows: breakdowns.countries,
+              emptyMessage: "No geographic data in this window.",
+            },
+            {
+              value: "languages",
+              title: "Languages",
+              rows: breakdowns.languages,
+              emptyMessage: "No language data in this window.",
+            },
+          ]}
+        />
+        <LeaderboardPanel
+          columnHeader="Consents"
+          tabs={[
+            {
+              value: "ui",
+              title: "UI",
+              rows: breakdowns.uiSources,
+              emptyMessage: "No UI-source data in this window.",
+            },
+            {
+              value: "domains",
+              title: "Domains",
+              rows: breakdowns.domains,
+              emptyMessage: "No domain data in this window.",
+            },
+            {
+              value: "policy",
+              title: "Policy",
+              rows: breakdowns.policies,
+              emptyMessage: "No policy data in this window.",
+            },
+          ]}
+        />
       </div>
 
       <RecentDecisionsTable
@@ -625,8 +714,7 @@ export function ConsentDashboardSkeleton() {
           <StatTileSkeleton label="Accept rate" />
           <StatTileSkeleton label="Reject rate" />
           <StatTileSkeleton label="Custom rate" />
-          {/* Empty 6th cell — see ConsentDashboardContent comment. */}
-          <div aria-hidden />
+          <StatTileSkeleton label="Sessions" />
         </div>
         <div style={{ padding: "24px 24px 16px" }}>
           <Skeleton
@@ -663,6 +751,59 @@ export function ConsentDashboardSkeleton() {
             ))}
           </div>
         </PanelCard>
+      </div>
+
+      {/* Breakdown panel pair skeleton — mirrors the live auto-fit grid. */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
+          gap: 16,
+          marginBottom: 16,
+        }}
+      >
+        {[0, 1].map((i) => (
+          <div
+            key={i}
+            style={{
+              background: "hsl(var(--color-surface))",
+              border: "1px solid hsl(var(--color-borderDefault))",
+              borderRadius: 6,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                gap: 24,
+                padding: "14px 20px",
+                borderBottom: "1px solid hsl(var(--color-borderDefault))",
+              }}
+            >
+              {[0, 1, 2].map((t) => (
+                <Skeleton key={t} width={56} height={14} style={block} />
+              ))}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+                padding: "16px 12px",
+              }}
+            >
+              {Array.from({ length: 5 }).map((_, r) => (
+                <Skeleton
+                  key={r}
+                  width="100%"
+                  height={32}
+                  shape="rounded"
+                  style={block}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
 
       <PanelCard title="Recent decisions">
