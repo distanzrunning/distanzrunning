@@ -598,6 +598,7 @@ export async function ConsentDashboardContent({
       >
         <LeaderboardPanel
           columnHeader="Consents"
+          bodyHeight={320}
           tabs={[
             {
               value: "devices",
@@ -633,6 +634,7 @@ export async function ConsentDashboardContent({
         />
         <LeaderboardPanel
           columnHeader="Consents"
+          bodyHeight={320}
           tabs={[
             {
               value: "ui",
@@ -790,9 +792,11 @@ export function ConsentDashboardSkeleton() {
                 flexDirection: "column",
                 gap: 8,
                 padding: "16px 12px",
+                height: 320,
+                overflow: "hidden",
               }}
             >
-              {Array.from({ length: 5 }).map((_, r) => (
+              {Array.from({ length: 7 }).map((_, r) => (
                 <Skeleton
                   key={r}
                   width="100%"

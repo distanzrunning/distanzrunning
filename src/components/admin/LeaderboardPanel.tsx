@@ -43,11 +43,17 @@ interface LeaderboardPanelProps {
   /** Uppercase column header on the right of the tab strip, e.g.
    *  `Feedback` or `Visitors`. */
   columnHeader: string;
+  /** Fixes the rows area to this height (px) so the panel doesn't
+   *  resize when switching tabs, and panels sharing a row stay
+   *  aligned. Overflowing rows scroll; shorter tabs leave empty
+   *  space. Omit for content-height (the default). */
+  bodyHeight?: number;
 }
 
 export default function LeaderboardPanel({
   tabs,
   columnHeader,
+  bodyHeight,
 }: LeaderboardPanelProps) {
   const [active, setActive] = useState(tabs[0]?.value ?? "");
   const activeTab = tabs.find((t) => t.value === active) ?? tabs[0];
@@ -113,7 +119,19 @@ export default function LeaderboardPanel({
         </span>
       </div>
       <div
-        style={{ display: "flex", flexDirection: "column", margin: "8px 0" }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          margin: "8px 0",
+          ...(bodyHeight !== undefined
+            ? {
+                height: bodyHeight,
+                overflowY: "auto",
+                // Centre the empty-state copy within the fixed body.
+                justifyContent: rows.length === 0 ? "center" : "flex-start",
+              }
+            : {}),
+        }}
       >
         {rows.length === 0 ? (
           <div
