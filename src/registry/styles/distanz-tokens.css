@@ -533,14 +533,18 @@
     --color-canvas: var(--ds-background-200-value); /* page — #FAFAFA */
 
     /* Analytics-panel tone — Vercel's web-analytics dashboard panel.
-       Per Vercel's metric-tab markup the panel sits on background-200 in
-       BOTH themes — #FAFAFA light, #000 dark — with inactive tabs flush on
-       it (also bg-200) and only the ACTIVE tab popping up to bg-100. So the
-       panel, the inactive tiles, and the blank tab space all = bg-200; the
-       active tile (surface/bg-100) is the single raised element. Used via
-       tone="flat". (== canvas in both modes; kept as a named token to
-       document the analytics-panel intent — collapsible to canvas later.) */
-    --color-analyticsPanel: var(--ds-background-200-value); /* light → #FAFAFA */
+       THEME-AWARE: the panel takes the MUTED tone in each mode, which makes
+       the active metric tab (always `surface`/bg-100) relate to it the way
+       Vercel's does in each theme:
+         · LIGHT → bg-200 (#FAFAFA, the page tone). Active tab pops UP to
+           #FFF; inactive tabs + blank space sit flush at #FAFAFA.
+         · DARK  → bg-100 (#0A0A0A, raised above the #000 page). Active tab
+           is FLUSH at #0A0A0A (marked only by its gray-1000 rule); inactive
+           tabs + page recess DOWN to #000.
+       So it's canvas in light, surface in dark — NOT one tone. The blank tab
+       space + inactive tiles read through to this; the active tile is
+       `surface`. Used via tone="flat". */
+    --color-analyticsPanel: var(--ds-background-200-value); /* light → #FAFAFA (canvas) */
 
     /* Elevated Surfaces */
     --color-surfaceElevated1: 0, 0%, 100%;
@@ -980,11 +984,12 @@
     --color-surfaceWarm: var(--ds-gray-200-value); /* Warm-tinted surface */
     --color-canvas: var(--ds-background-200-value); /* page — #000 */
 
-    /* Analytics-panel tone — background-200 (#000) in dark, matching
-       Vercel's dark analytics panel: inactive metric tabs + panel + blank
-       tab space all sit on bg-200, and only the active tab pops to bg-100
-       (#0A0A0A). See the :root/.light block. */
-    --color-analyticsPanel: var(--ds-background-200-value); /* dark → #000 */
+    /* Analytics-panel tone — bg-100 (#0A0A0A) in DARK: the panel sits raised
+       above the #000 page, the active tab is flush with it, and the inactive
+       tabs + page recess to #000 (bg-200) — matching Vercel's dark analytics.
+       (Light uses bg-200 #FAFAFA; the token is genuinely theme-aware — canvas
+       in light, surface in dark. See the :root/.light block.) */
+    --color-analyticsPanel: var(--ds-background-100-value); /* dark → #0A0A0A (surface) */
 
     /* Elevated Surfaces - Progressive lightening */
     --color-surfaceElevated1: var(--ds-gray-200-value); /* Level 1 */
