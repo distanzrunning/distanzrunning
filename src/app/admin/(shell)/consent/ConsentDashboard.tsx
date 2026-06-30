@@ -558,7 +558,7 @@ export async function ConsentDashboardContent({
           tween via the CategoryBar's CSS width transition when
           the picker / tile selection changes the window. */}
       <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-category opt-in" tone="flat" radius="sm">
+        <PanelCard title="Per-category opt-in" tone="surface" radius="sm">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <CategoryBar
               label="Marketing"
@@ -592,7 +592,7 @@ export async function ConsentDashboardContent({
       >
         <LeaderboardPanel
           columnHeader="Consents"
-          tone="flat"
+          tone="surface"
           bodyHeight={320}
           tabs={[
             {
@@ -629,7 +629,7 @@ export async function ConsentDashboardContent({
         />
         <LeaderboardPanel
           columnHeader="Consents"
-          tone="flat"
+          tone="surface"
           bodyHeight={320}
           tabs={[
             {
@@ -728,7 +728,7 @@ export function ConsentDashboardSkeleton() {
       </div>
 
       <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-category opt-in" tone="flat" radius="sm">
+        <PanelCard title="Per-category opt-in" tone="surface" radius="sm">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {["Marketing", "Analytics", "Functional"].map((label) => (
               <div
@@ -767,7 +767,7 @@ export function ConsentDashboardSkeleton() {
           <div
             key={i}
             style={{
-              background: "hsl(var(--color-analyticsPanel))",
+              background: "hsl(var(--color-surface))",
               border: "1px solid hsl(var(--color-borderDefault))",
               borderRadius: 6,
               overflow: "hidden",
@@ -809,7 +809,7 @@ export function ConsentDashboardSkeleton() {
         ))}
       </div>
 
-      <PanelCard title="Recent decisions" tone="flat" radius="sm">
+      <PanelCard title="Recent decisions" tone="surface" radius="sm">
         <Table>
           <TableHeader>
             <TableRow>
