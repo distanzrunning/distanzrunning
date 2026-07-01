@@ -6,7 +6,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import type { EventClickArg, DayCellContentArg } from "@fullcalendar/core";
 import { ChevronLeft, ChevronRight, Star, Info } from "lucide-react";
-import type { RaceGuide } from "../page";
+import type { RaceGuide } from "./_types";
 import { RaceEventPopup } from "./RaceEventPopup";
 
 interface CalendarEvent {

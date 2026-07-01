@@ -24,12 +24,20 @@ export interface PanelCardProps {
   action?: ReactNode;
   /** Card body */
   children: ReactNode;
-  /** Border radius variant.
-   *  - `xl` (default, 12 px) — the standard admin panel.
-   *  - `md` (6 px) — tighter; use when pairing the card with the
-   *    Vercel-style leaderboard chrome elsewhere on the page so
-   *    the panel radii line up. */
-  radius?: "md" | "xl";
+  /** Border radius variant. NB: our Tailwind radius scale is remapped
+   *  (rounded-md = 10px, rounded-xl = 16px), so these map by intent:
+   *  - `xl` (default, 16 px) — the standard admin panel.
+   *  - `md` (10 px) — medium.
+   *  - `sm` (6 px) — DS base-surface radius (--ds-radius-small); use when
+   *    pairing the card with the Vercel-style leaderboard chrome on the
+   *    same page so all panel radii line up at 6px. */
+  radius?: "sm" | "md" | "xl";
+  /** Surface tone. `surface` (default, bg-100) is the standard raised
+   *  panel. `flat` uses the theme-aware analytics-panel tone — raised
+   *  white (bg-100) in light, flush-black (bg-200) in dark — so the
+   *  consent dashboard matches Vercel's web-analytics panels in BOTH
+   *  themes. Still all DS tokens. */
+  tone?: "surface" | "flat";
 }
 
 export function PanelCard({
@@ -37,12 +45,19 @@ export function PanelCard({
   action,
   children,
   radius = "xl",
+  tone = "surface",
 }: PanelCardProps) {
   const hasHeader = title != null || action != null;
-  const radiusClass = radius === "md" ? "rounded-md" : "rounded-xl";
+  const radiusClass =
+    radius === "sm"
+      ? "rounded-sm"
+      : radius === "md"
+        ? "rounded-md"
+        : "rounded-xl";
+  const toneClass = tone === "flat" ? "bg-analyticsPanel" : "bg-surface";
   return (
     <section
-      className={`flex flex-col gap-4 p-6 ${radiusClass} bg-surface border border-[color:var(--ds-gray-400)]`}
+      className={`flex flex-col gap-4 p-6 ${radiusClass} ${toneClass} border border-[color:var(--ds-gray-400)]`}
     >
       {hasHeader && (
         <header className="flex justify-between items-center">

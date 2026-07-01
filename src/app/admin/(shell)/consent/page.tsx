@@ -2,10 +2,7 @@ import { Suspense } from "react";
 import { ChevronLeft } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { getSiteSettings } from "@/lib/site-settings";
-import {
-  ConsentDashboardContent,
-  ConsentDashboardSkeleton,
-} from "./ConsentDashboard";
+import { ConsentDashboardContent } from "./ConsentDashboard";
 import ConsentFilterRow from "./ConsentFilterRow";
 import { ConsentFilterShell } from "./ConsentFilterShell";
 import {
@@ -13,7 +10,7 @@ import {
   ConsentLookupSkeleton,
 } from "./ConsentLookup";
 import { windowFromParams } from "@/components/admin/datePresets";
-import { getEarliestDecisionDate } from "./data";
+import { getEarliestDecisionDate, parseFilters } from "./data";
 
 export const metadata = {
   title: "Consent — Stride Admin",
@@ -53,6 +50,7 @@ export default async function ConsentDashboardPage({
     period?: string;
     from?: string;
     to?: string;
+    f?: string | string[];
   }>;
 }) {
   const params = await searchParams;
@@ -63,6 +61,10 @@ export default async function ConsentDashboardPage({
   const rawFilter = normaliseFilter(params.filter);
   const metric = resolveMetric(params.metric, rawFilter);
   const filter = metric === "visitors" ? null : rawFilter;
+  // Page-wide breakdown filters (repeated ?f=dim:val) — validated against the
+  // known dimensions, one per dimension. Compose with metric/decision-filter;
+  // orthogonal to both. Managed from the chart-area filter buttons + funnels.
+  const filters = parseFilters(params.f);
   const { timezone: tz } = await getSiteSettings();
   // Earliest stored decision date — drives the "All time" preset
   // for both server-side window resolution and the client picker's
@@ -82,7 +84,7 @@ export default async function ConsentDashboardPage({
     <div>
       <div
         style={{
-          maxWidth: 1248,
+          maxWidth: "none",
           marginLeft: "auto",
           marginRight: "auto",
           paddingLeft: 24,
@@ -130,24 +132,23 @@ export default async function ConsentDashboardPage({
         ) : (
           <ConsentFilterShell>
             <ConsentFilterRow tz={tz} earliestDate={earliestDate} />
-            {/* No `key` on this Suspense — keeping the boundary
-                stable across filter/window changes means React
-                preserves the existing dashboard tree during a
-                transition (Link click / picker startTransition),
-                so the previous tile values stay on screen while
-                the new data streams in and NumberTicker animates
-                between old and new readings instead of the row
-                flashing a skeleton. */}
-            <Suspense fallback={<ConsentDashboardSkeleton />}>
-              <ConsentDashboardContent
-                filter={filter}
-                metric={metric}
-                windowStart={window.start}
-                windowEnd={window.end}
-                tz={tz}
-                earliestDate={earliestDate}
-              />
-            </Suspense>
+            {/* No in-page Suspense: loading.tsx is the single loading
+                boundary. It streams on both hard load and client nav, so the
+                whole page (filter row + dashboard) resolves together — no
+                second skeleton stage where the filter row goes live while the
+                content is still a skeleton, and nothing re-flashes to skeleton
+                when you navigate away. Filter/date changes are searchParam
+                transitions (loading.tsx doesn't fire), so React holds the
+                previous tile values and NumberTicker animates old → new. */}
+            <ConsentDashboardContent
+              filter={filter}
+              metric={metric}
+              filters={filters}
+              windowStart={window.start}
+              windowEnd={window.end}
+              tz={tz}
+              earliestDate={earliestDate}
+            />
           </ConsentFilterShell>
         )}
       </div>

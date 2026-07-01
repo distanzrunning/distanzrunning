@@ -59,7 +59,7 @@ export type CopyButtonVariant = "secondary" | "ghost";
 export type CopyButtonSize = "small" | "medium";
 
 export interface CopyButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick" | "value"> {
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick" | "value" | "onCopy"> {
   /** The string written to the clipboard when pressed */
   value: string;
   /** How long (ms) the copied (check) state shows before reverting. Default 2000. */

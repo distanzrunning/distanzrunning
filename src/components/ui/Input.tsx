@@ -182,7 +182,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             outline: "none",
             background: disabled ? "var(--ds-gray-100)" : "hsl(var(--color-surface))",
             fontSize: config.fontSize,
-            lineHeight: "20px",
+            // Geist parity: 16px/large text rides on a 24px line, smaller sizes on 20px.
+            lineHeight: config.fontSize >= 16 ? "24px" : "20px",
             color: disabled ? "hsl(var(--color-textSubtler))" : "hsl(var(--color-textDefault))",
             fontFamily: "inherit",
             paddingLeft: config.paddingX,

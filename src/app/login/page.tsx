@@ -10,7 +10,7 @@ function AuthenticatingScreen() {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4"
-      style={{ background: "var(--ds-background-200)" }}
+      style={{ background: "hsl(var(--color-canvas))" }}
     >
       <div className="flex flex-col items-center gap-6">
         <Spinner size={32} />
@@ -84,19 +84,18 @@ export default function LoginPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "var(--ds-background-200)",
+          background: "hsl(var(--color-canvas))",
           padding: 24,
         }}
       >
         <Login
           title="Staging Access"
-          subtitle="Enter the staging password to continue."
           fields={[
             {
               id: "password",
               type: "password",
               label: "Password",
-              visibleLabel: true,
+              placeholder: "Password",
               autoComplete: "current-password",
               required: true,
               autoFocus: true,

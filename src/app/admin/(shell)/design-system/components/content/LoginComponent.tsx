@@ -2,7 +2,6 @@
 
 import React, { useState, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
-import { TbBrandGoogleFilled } from "react-icons/tb";
 import { Section } from "../ContentWithTOC";
 import {
   useShikiHighlighter,
@@ -11,6 +10,12 @@ import {
 } from "@/components/ui/useShikiHighlighter";
 import { useToast } from "@/components/ui/Toast";
 import { Login } from "@/components/ui/Login";
+import {
+  GoogleIcon,
+  AppleIcon,
+  PasskeyIcon,
+  StravaIcon,
+} from "@/components/ui/AuthIcons";
 
 // ============================================================================
 // Section header + copy link (matches other DS pages)
@@ -175,9 +180,14 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 
   return (
     <div className="border border-borderDefault rounded-lg w-full min-w-0 overflow-hidden">
+      {/*
+        Login renders on the page canvas (it's boxless), so the preview pane
+        uses the canvas tone rather than the usual surface fill — otherwise the
+        examples would imply a white "card" backdrop the component never has.
+      */}
       <div
         className="p-6 flex items-center justify-center min-h-[320px]"
-        style={{ background: "hsl(var(--color-surface))" }}
+        style={{ background: "hsl(var(--color-canvas))" }}
       >
         {children}
       </div>
@@ -233,37 +243,29 @@ function CodePreview({ children, componentCode }: CodePreviewProps) {
 }
 
 // ============================================================================
-// Logo slot used by the staging-gate variant
+// Brand mark for the logo demo — the Distanz icon, swapped by theme so the
+// mark reads on the canvas in both modes (ink on light, white on dark).
 // ============================================================================
 
-function WordmarkLogo() {
-  // Intrinsic SVG viewBox is 1579.12 × 484.75 (aspect ratio ~3.26:1).
-  // At height 40, width is ~130 — set both explicitly so the browser
-  // reserves the layout slot before the SVG loads (prevents the
-  // logo-pop on first paint).
-  const dims = { width: 130, height: 40 };
+function BrandMark() {
   return (
     <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/brand/wordmark-black.svg"
+        src="/brand/icon-black.svg"
         alt="Distanz Running"
-        className="block dark:hidden"
-        width={dims.width}
-        height={dims.height}
-        loading="eager"
-        decoding="async"
+        className="block h-14 w-14 dark:hidden"
+        width={56}
+        height={56}
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/brand/wordmark-white.svg"
+        src="/brand/icon-white.svg"
         alt=""
         aria-hidden="true"
-        className="hidden dark:block"
-        width={dims.width}
-        height={dims.height}
-        loading="eager"
-        decoding="async"
+        className="hidden h-14 w-14 dark:block"
+        width={56}
+        height={56}
       />
     </>
   );
@@ -273,10 +275,70 @@ function WordmarkLogo() {
 // Demo components (live previews)
 // ============================================================================
 
+function WithLogoDemo() {
+  return (
+    <Login
+      logo={<BrandMark />}
+      title="Create your account"
+      subtitle="Join Distanz Running for ad-free reading and bonus content."
+      providers={[
+        {
+          id: "google",
+          label: "Continue with Google",
+          icon: <GoogleIcon />,
+          onClick: () => {},
+        },
+        {
+          id: "apple",
+          label: "Continue with Apple",
+          icon: <AppleIcon />,
+          onClick: () => {},
+        },
+        {
+          id: "strava",
+          label: "Connect with Strava",
+          icon: <StravaIcon />,
+          onClick: () => {},
+        },
+        {
+          id: "passkey",
+          label: "Continue with Passkey",
+          icon: <PasskeyIcon />,
+          onClick: () => {},
+        },
+      ]}
+      divider="Or sign up with email"
+      fields={[
+        {
+          id: "email",
+          type: "email",
+          label: "Email",
+          placeholder: "Email",
+          autoComplete: "email",
+          required: true,
+        },
+      ]}
+      submitLabel="Continue"
+      footer={
+        <span className="text-textSubtle">
+          Already have an account?{" "}
+          <a
+            href="#"
+            onClick={(e) => e.preventDefault()}
+            className="text-link hover:underline"
+          >
+            Sign in
+          </a>
+        </span>
+      }
+      onSubmit={() => {}}
+    />
+  );
+}
+
 function StagingGateDemo() {
   return (
     <Login
-      header={<WordmarkLogo />}
       title="Staging Access"
       fields={[
         {
@@ -357,7 +419,7 @@ function ForgotPasswordDemo() {
   );
 }
 
-function GoogleOnlyDemo() {
+function SocialProvidersDemo() {
   return (
     <Login
       title="Sign in"
@@ -365,7 +427,26 @@ function GoogleOnlyDemo() {
         {
           id: "google",
           label: "Continue with Google",
-          icon: <TbBrandGoogleFilled size={18} />,
+          icon: <GoogleIcon />,
+          onClick: () => {},
+          lastUsed: true,
+        },
+        {
+          id: "apple",
+          label: "Continue with Apple",
+          icon: <AppleIcon />,
+          onClick: () => {},
+        },
+        {
+          id: "strava",
+          label: "Connect with Strava",
+          icon: <StravaIcon />,
+          onClick: () => {},
+        },
+        {
+          id: "passkey",
+          label: "Continue with Passkey",
+          icon: <PasskeyIcon />,
           onClick: () => {},
         },
       ]}
@@ -375,7 +456,7 @@ function GoogleOnlyDemo() {
           <a
             href="#"
             onClick={(e) => e.preventDefault()}
-            className="text-textDefault underline"
+            className="text-link hover:underline"
           >
             Sign up
           </a>
@@ -393,7 +474,7 @@ function GoogleAndEmailDemo() {
         {
           id: "google",
           label: "Continue with Google",
-          icon: <TbBrandGoogleFilled size={18} />,
+          icon: <GoogleIcon />,
           onClick: () => {},
         },
       ]}
@@ -429,7 +510,7 @@ function SignUpDemo() {
         {
           id: "google",
           label: "Continue with Google",
-          icon: <TbBrandGoogleFilled size={18} />,
+          icon: <GoogleIcon />,
           onClick: () => {},
         },
       ]}
@@ -513,12 +594,43 @@ function ErrorStateDemo() {
 // Code strings
 // ============================================================================
 
+const withLogoCode = `import { Login } from '@/components/ui/Login';
+import { GoogleIcon, AppleIcon, StravaIcon, PasskeyIcon } from '@/components/ui/AuthIcons';
+import Icon from '@/components/ui/Icon'; // your brand mark
+
+export function SignUp() {
+  return (
+    <Login
+      logo={<Icon className="h-14 w-14" />}
+      title="Create your account"
+      subtitle="Join Distanz Running for ad-free reading and bonus content."
+      providers={[
+        { id: 'google', label: 'Continue with Google', icon: <GoogleIcon />, onClick: () => signIn('google') },
+        { id: 'apple', label: 'Continue with Apple', icon: <AppleIcon />, onClick: () => signIn('apple') },
+        { id: 'strava', label: 'Connect with Strava', icon: <StravaIcon />, onClick: () => signIn('strava') },
+        { id: 'passkey', label: 'Continue with Passkey', icon: <PasskeyIcon />, onClick: () => signIn('passkey') },
+      ]}
+      divider="Or sign up with email"
+      fields={[{ id: 'email', type: 'email', placeholder: 'Email', required: true }]}
+      submitLabel="Continue"
+      footer={
+        <span>
+          Already have an account?{' '}
+          <a href="/login" className="text-link hover:underline">Sign in</a>
+        </span>
+      }
+      onSubmit={(values) => {
+        // ...
+      }}
+    />
+  );
+}`;
+
 const stagingGateCode = `import { Login } from '@/components/ui/Login';
 
 export function StagingGate() {
   return (
     <Login
-      header={<img src="/brand/wordmark-black.svg" alt="Logo" height={40} />}
       title="Staging Access"
       fields={[
         {
@@ -572,10 +684,10 @@ export function SignInWithReset() {
   );
 }`;
 
-const googleOnlyCode = `import { TbBrandGoogleFilled } from 'react-icons/tb';
-import { Login } from '@/components/ui/Login';
+const socialProvidersCode = `import { Login } from '@/components/ui/Login';
+import { GoogleIcon, AppleIcon, StravaIcon, PasskeyIcon } from '@/components/ui/AuthIcons';
 
-export function GoogleSignIn() {
+export function SocialSignIn() {
   return (
     <Login
       title="Sign in"
@@ -583,17 +695,26 @@ export function GoogleSignIn() {
         {
           id: 'google',
           label: 'Continue with Google',
-          icon: <TbBrandGoogleFilled size={18} />,
-          onClick: () => signInWithGoogle(),
+          icon: <GoogleIcon />,
+          onClick: () => signIn('google'),
+          lastUsed: true, // surfaces a "Last Used" badge, top-right
         },
+        { id: 'apple', label: 'Continue with Apple', icon: <AppleIcon />, onClick: () => signIn('apple') },
+        { id: 'strava', label: 'Connect with Strava', icon: <StravaIcon />, onClick: () => signIn('strava') },
+        { id: 'passkey', label: 'Continue with Passkey', icon: <PasskeyIcon />, onClick: () => signIn('passkey') },
       ]}
-      footer={<span>Don't have an account? <a href="/signup">Sign up</a></span>}
+      footer={
+        <span>
+          Don't have an account?{' '}
+          <a href="/signup" className="text-link hover:underline">Sign up</a>
+        </span>
+      }
     />
   );
 }`;
 
-const googleAndEmailCode = `import { TbBrandGoogleFilled } from 'react-icons/tb';
-import { Login } from '@/components/ui/Login';
+const googleAndEmailCode = `import { Login } from '@/components/ui/Login';
+import { GoogleIcon } from '@/components/ui/AuthIcons';
 
 export function SignIn() {
   return (
@@ -603,7 +724,7 @@ export function SignIn() {
         {
           id: 'google',
           label: 'Continue with Google',
-          icon: <TbBrandGoogleFilled size={18} />,
+          icon: <GoogleIcon />,
           onClick: () => signInWithGoogle(),
         },
       ]}
@@ -619,8 +740,8 @@ export function SignIn() {
   );
 }`;
 
-const signUpCode = `import { TbBrandGoogleFilled } from 'react-icons/tb';
-import { Login } from '@/components/ui/Login';
+const signUpCode = `import { Login } from '@/components/ui/Login';
+import { GoogleIcon } from '@/components/ui/AuthIcons';
 
 export function SignUp() {
   return (
@@ -630,7 +751,7 @@ export function SignUp() {
         {
           id: 'google',
           label: 'Continue with Google',
-          icon: <TbBrandGoogleFilled size={18} />,
+          icon: <GoogleIcon />,
           onClick: () => signInWithGoogle(),
         },
       ]}
@@ -698,16 +819,36 @@ export default function LoginComponent() {
           Intro
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 xl:mt-7 mb-6">
-          The Login component is a composable card for authentication flows.
-          It provides a logo slot, title and subtitle, configurable fields,
-          a built-in password show/hide toggle, error state, and a footer
-          slot for links such as "Forgot password?". The same component
-          powers the staging gate at{" "}
+          The Login component is a composable form for authentication flows.
+          It sits directly on the canvas — no card or background — with a title
+          and subtitle, OAuth / passkey providers (each with an optional
+          "Last Used" badge), configurable fields, a built-in password
+          show/hide toggle, error state, and a footer slot for links such as
+          "Forgot password?". The same component powers the staging gate at{" "}
           <code className="inline-code">
             /login
           </code>{" "}
           and is suitable for any sign-in surface across the product.
         </p>
+      </Section>
+
+      {/* With logo */}
+      <Section>
+        <SectionHeader id="with-logo" onCopyLink={showToast}>
+          With logo
+        </SectionHeader>
+        <p className="text-copy-16 text-textSubtle mt-4 mb-6">
+          Pass a brand mark to the{" "}
+          <code className="inline-code">logo</code> prop to render it above
+          the title — centred, with no background, so the mark sits directly
+          on the canvas. Use it for the public subscribe / create-account
+          surface where the brand should lead.
+        </p>
+        <div className="mt-4 xl:mt-7">
+          <CodePreview componentCode={withLogoCode}>
+            <WithLogoDemo />
+          </CodePreview>
+        </div>
       </Section>
 
       {/* Password only */}
@@ -716,9 +857,8 @@ export default function LoginComponent() {
           Password only
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
-          The minimal variant — a single password field with a logo header
-          and title. This is the pattern used by the Distanz Running staging
-          gate.
+          The minimal variant — a single password field under a title. This
+          is the pattern used by the Distanz Running staging gate.
         </p>
         <div className="mt-4 xl:mt-7">
           <CodePreview componentCode={stagingGateCode}>
@@ -746,20 +886,22 @@ export default function LoginComponent() {
 
       {/* Social only */}
       <Section>
-        <SectionHeader id="continue-with-google" onCopyLink={showToast}>
-          Continue with Google
+        <SectionHeader id="social-providers" onCopyLink={showToast}>
+          Social providers
         </SectionHeader>
         <p className="text-copy-16 text-textSubtle mt-4 mb-6">
-          A social-only variant — no email form, just one or more OAuth
-          providers. Pass each provider through the{" "}
-          <code className="inline-code">
-            providers
-          </code>{" "}
-          prop with a label, icon, and click handler.
+          A social-only variant — no email form, just OAuth and passkey
+          providers. Pass each through the{" "}
+          <code className="inline-code">providers</code> prop with a label,
+          icon, and click handler; brand glyphs live in{" "}
+          <code className="inline-code">@/components/ui/AuthIcons</code>. Set{" "}
+          <code className="inline-code">lastUsed</code> on the provider a
+          returning visitor signed in with last to surface a{" "}
+          <em>Last Used</em> badge in the button&apos;s top-right corner.
         </p>
         <div className="mt-4 xl:mt-7">
-          <CodePreview componentCode={googleOnlyCode}>
-            <GoogleOnlyDemo />
+          <CodePreview componentCode={socialProvidersCode}>
+            <SocialProvidersDemo />
           </CodePreview>
         </div>
       </Section>

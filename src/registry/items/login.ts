@@ -11,7 +11,7 @@ export async function buildLoginItem(): Promise<RegistryItem> {
     description:
       "Email + password login form block. Drop into a page or a modal.",
     dependencies: ["react", "lucide-react"],
-    registryDependencies: ["tokens", "button", "input"],
+    registryDependencies: ["tokens", "button", "input", "badge"],
     files: [
       {
         path: "components/ui/Login.tsx",

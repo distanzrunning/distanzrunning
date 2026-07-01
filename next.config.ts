@@ -17,6 +17,15 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: true,
     optimizeServerReact: true,
+    // Keep visited dynamic route segments in the client router cache for 30s
+    // (Next 15 default is 0 = never). Switching between already-visited admin
+    // dashboards then serves from cache instantly — no loading.tsx commit, so
+    // no skeleton/blank flash on leave — while first visits + hard loads still
+    // stream the loading fallback. 30s matches the server data-cache TTL, so
+    // the cached view is never more stale than a fresh fetch would be.
+    staleTimes: {
+      dynamic: 30,
+    },
   },
   productionBrowserSourceMaps: false,
   
@@ -34,11 +43,14 @@ const nextConfig: NextConfig = {
   },
   
   eslint: {
+    // TODO(advisor-003): 13 lint errors across 7 files to clear before we can
+    // enable this gate (unused vars, prefer-const, a handful of `any`). The
+    // type gate below has been restored; the lint gate is a follow-up. Until
+    // then `next build` will not fail on lint errors.
     ignoreDuringBuilds: true,
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  // Type errors now fail the build again (backlog cleared in advisor-003).
+  // Do NOT re-add `typescript.ignoreBuildErrors` — it silently ships type bugs.
 
   // The /r/* registry routes read component source from the repo at
   // request time. Vercel's deployment tracing won't include those

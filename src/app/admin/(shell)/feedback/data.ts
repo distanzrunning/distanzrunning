@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache";
 
 import type { Environment, EnvFilter } from "@/components/admin/env";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { parseFilterParams, type FilterParam } from "@/lib/filterParams";
 
 /** Tag used by every feedback-data unstable_cache entry. The delete
  *  action calls revalidateTag(FEEDBACK_CACHE_TAG) so admin writes
@@ -28,6 +29,46 @@ export interface FeedbackRowRaw {
 }
 
 const FETCH_LIMIT = 10_000;
+
+// ============================================================================
+// Breakdown filters — page-wide click-to-filter from the Pages / Topics
+// leaderboard rows, mirroring the consent dashboard. Both dimensions are stored
+// columns, so no enriched fetch is needed: a filter is a plain field match.
+// ============================================================================
+
+/** Breakdown dimensions a page-wide filter can key on — the LeaderboardPanel
+ *  tab ids, so a tab is its own filter dimension. */
+export type FeedbackDimKey = "pages" | "topics";
+
+export const FEEDBACK_DIM_KEYS: FeedbackDimKey[] = ["pages", "topics"];
+
+export function isFeedbackDimKey(x: string | undefined): x is FeedbackDimKey {
+  return x != null && (FEEDBACK_DIM_KEYS as string[]).includes(x);
+}
+
+/** A single active breakdown filter (e.g. {dim:"pages", val:"/races"}). */
+export type FeedbackBreakdownFilter = FilterParam<FeedbackDimKey>;
+
+/** Parse repeated `?f=dim:val` params into validated filters — one per
+ *  dimension (later wins). Split on the first ":" (dims never contain one;
+ *  paths may, so everything after the first colon is the value). Delegates to
+ *  the shared parser with the feedback dim-key allowlist. */
+export function parseFeedbackFilters(
+  raw: string | string[] | undefined,
+): FeedbackBreakdownFilter[] {
+  return parseFilterParams(raw, isFeedbackDimKey);
+}
+
+/** True when a row satisfies EVERY active filter (AND across dimensions).
+ *  pages → page_path, topics → topic. */
+export function matchesFeedbackFilters(
+  row: FeedbackRowRaw,
+  filters: FeedbackBreakdownFilter[],
+): boolean {
+  return filters.every((f) =>
+    f.dim === "pages" ? row.page_path === f.val : row.topic === f.val,
+  );
+}
 
 /** Internal cached fetcher — returns the raw ISO string so the value
  *  round-trips JSON safely through unstable_cache (Date objects don't

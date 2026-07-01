@@ -111,6 +111,44 @@
   }
 }
 
+/* Admin sidebar level swap — the sub-nav (Consent / Feedback / Races / Design
+   System) fades + slides in when you drill in/out, matching Vercel's dashboard
+   sidebar (a ~0.2s transform/opacity transition on the nav content). Sub-levels
+   enter from the right; the top-level admin nav enters from the left, mirroring
+   the drill direction. */
+@keyframes adminSidebarLevelInRight {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes adminSidebarLevelInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.admin-sidebar-level--in {
+  animation: adminSidebarLevelInRight 0.2s ease;
+}
+.admin-sidebar-level--out {
+  animation: adminSidebarLevelInLeft 0.2s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-sidebar-level--in,
+  .admin-sidebar-level--out {
+    animation: none;
+  }
+}
+
 .animate-blink {
   animation: blink 1s step-end infinite;
 }
@@ -848,18 +886,13 @@
     overflow: hidden;
     transform: scale(1.01);
   }
-  .ds-scroller-overlay::before,
-  .ds-scroller-overlay::after {
-    content: "";
-    will-change: background;
-    background-repeat: no-repeat;
-    background-size: 200% 200%;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    transform: translateZ(0);
-    transition: background-position 0.3s;
-  }
+  /* Geist-verbatim. ::before carries the top + left fades, ::after the
+     bottom + right; per-edge classes shift background-position to slide the
+     relevant fade in. ORDER MATTERS: the `background` shorthands must precede
+     the shared rule below, because a `background` shorthand resets
+     background-size — declaring `background-size: 200%` first (then a
+     shorthand) would drop it back to auto and the perpendicular gradient
+     would leak across the cross axis. */
   .ds-scroller-overlay::before {
     background:
       linear-gradient(to bottom, var(--scroller-gradient)),
@@ -871,6 +904,18 @@
       linear-gradient(to top, var(--scroller-gradient)),
       linear-gradient(to left, var(--scroller-gradient));
     background-position: calc(100% + 40px) calc(100% + 40px);
+  }
+  .ds-scroller-overlay::before,
+  .ds-scroller-overlay::after {
+    content: "";
+    will-change: background;
+    background-repeat: no-repeat;
+    background-size: 200% 200%;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform: translateZ(0);
+    transition: background-position 0.3s;
   }
   .ds-scroller-overlay.is-top::before {
     background-position-y: top;

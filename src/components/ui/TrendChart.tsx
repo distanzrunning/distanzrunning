@@ -577,6 +577,7 @@ function ChartInner({
             transform: "translate(-50%, -50%)",
             background: "hsl(var(--color-surface))",
             color: "hsl(var(--color-textDefault))",
+            border: "1px solid hsl(var(--color-borderDefault))",
             fontSize: 12,
             lineHeight: "16px",
             fontWeight: 500,

@@ -11,7 +11,9 @@ import { useConsentFilter } from "./ConsentFilterShell";
 // picker on the right. Typing filters the Recent decisions table
 // client-side instantly (no navigation). Pressing Enter commits the
 // query and navigates to the per-ID lookup view (which filters the
-// charts too — full-history scope).
+// charts too — full-history scope). The active breakdown filter (set
+// via a leaderboard row's funnel) is cleared from that panel's own
+// Remove-filter toolbar, matching Vercel — not from here.
 export default function ConsentFilterRow({
   tz,
   earliestDate,

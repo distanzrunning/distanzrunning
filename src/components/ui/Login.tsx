@@ -4,6 +4,7 @@ import React, { useState, FormEvent } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 
 // ============================================================================
 // Types
@@ -41,12 +42,20 @@ export interface LoginProvider {
   icon?: React.ReactNode;
   /** Click handler */
   onClick?: () => void;
+  /**
+   * Render a "Last Used" badge in the top-right corner of the button —
+   * a returning-user hint surfaced on whichever provider was used last.
+   */
+  lastUsed?: boolean;
 }
 
 export interface LoginProps {
-  /** Optional header slot — typically a logo */
-  header?: React.ReactNode;
-  /** Card title */
+  /**
+   * Optional brand mark shown (centred, no background) above the title.
+   * Pass a sized icon/logomark node — it renders as-is on the canvas.
+   */
+  logo?: React.ReactNode;
+  /** Title shown above the form */
   title?: string;
   /** Optional description shown under the title */
   subtitle?: string;
@@ -124,13 +133,13 @@ function PasswordToggle({
 // ============================================================================
 
 /**
- * Login card — a composable form with a logo slot, title, configurable
- * fields (text / email / password), submit button, error state, and footer
- * slot. Password fields get a built-in show/hide toggle.
+ * Login — a composable, boxless auth form: an optional brand mark / logo,
+ * a title, optional OAuth/social providers (each with an optional "Last Used"
+ * badge), configurable fields (text / email / password), submit button, error
+ * state, and footer slot. Password fields get a built-in show/hide toggle.
  *
  * @example
  * <Login
- *   header={<img src="/brand/wordmark-black.svg" alt="Logo" height={60} />}
  *   title="Sign in"
  *   fields={[
  *     { id: "email", type: "email", placeholder: "Email", required: true },
@@ -140,7 +149,7 @@ function PasswordToggle({
  * />
  */
 export function Login({
-  header,
+  logo,
   title,
   subtitle,
   providers,
@@ -189,151 +198,168 @@ export function Login({
 
   return (
     <div
-      className={`w-full max-w-sm bg-surface material-medium p-8 ${className ?? ""}`.trim()}
+      className={`flex w-full max-w-[320px] flex-col items-center gap-6 ${className ?? ""}`.trim()}
     >
-      <div className="space-y-6">
-        {header && <div className="flex justify-center">{header}</div>}
+      {(logo || title || subtitle) && (
+        <div className="flex flex-col items-center gap-4">
+          {logo && (
+            <div className="flex items-center justify-center">{logo}</div>
+          )}
+          {(title || subtitle) && (
+            <div className="flex flex-col items-center gap-2 text-center">
+              {title && (
+                <h2 className="text-heading-32 text-textDefault">{title}</h2>
+              )}
+              {subtitle && (
+                <p className="text-copy-16 text-textSubtle">{subtitle}</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
-        {(title || subtitle) && (
-          <div className="space-y-2 text-center">
-            {title && (
-              <h2 className="text-heading-20 text-textDefault">{title}</h2>
-            )}
-            {subtitle && (
-              <p className="text-copy-14 text-textSubtle">{subtitle}</p>
-            )}
-          </div>
-        )}
-
-        {hasProviders && (
-          <div className="space-y-3">
-            {providers!.map((p) => (
-              <Button
-                key={p.id}
-                type="button"
-                variant="secondary"
-                size="large"
-                className="w-full"
-                onClick={p.onClick}
-                disabled={isLoading || !p.onClick}
-                prefixIcon={p.icon}
-              >
-                {p.label}
-              </Button>
-            ))}
-          </div>
-        )}
-
-        {showDivider && (
-          <div
-            className="flex items-center gap-3"
-            aria-hidden="true"
-          >
-            <span
-              className="flex-1 h-px"
-              style={{ background: "var(--ds-gray-400)" }}
-            />
-            <span
-              className="text-copy-13 uppercase"
-              style={{ color: "var(--ds-gray-700)", letterSpacing: "0.04em" }}
-            >
-              {dividerLabel}
-            </span>
-            <span
-              className="flex-1 h-px"
-              style={{ background: "var(--ds-gray-400)" }}
-            />
-          </div>
-        )}
-
-        {hasFields && (
-          <form
-            className="space-y-4"
-            {...(action ? { action } : { onSubmit: handleSubmit })}
-            noValidate
-          >
-            {effectiveFields.map((field) => {
-              const type = field.type ?? "text";
-              const isPassword = type === "password";
-              const visible = passwordVisible[field.id] ?? false;
-
-              return (
-                <div key={field.id}>
-                  {field.label && !field.visibleLabel && (
-                    <label htmlFor={field.id} className="sr-only">
-                      {field.label}
-                    </label>
+      {(hasProviders || hasFields || disclaimer) && (
+        <div className="flex w-full flex-col gap-6">
+          {hasProviders && (
+            <div className="flex flex-col gap-4">
+              {providers!.map((p) => (
+                <div key={p.id} className="relative">
+                  {p.lastUsed && (
+                    <div className="absolute -top-2 -right-2 z-10">
+                      <Badge variant="blue" size="sm">
+                        Last Used
+                      </Badge>
+                    </div>
                   )}
-                  <Input
-                    id={field.id}
-                    name={field.id}
-                    type={isPassword && visible ? "text" : type}
-                    label={field.visibleLabel ? field.label : undefined}
-                    placeholder={field.placeholder}
-                    autoComplete={field.autoComplete}
-                    required={field.required}
-                    autoFocus={field.autoFocus}
-                    value={values[field.id]}
-                    onChange={handleChange(field.id)}
-                    disabled={isLoading}
+                  <Button
+                    type="button"
+                    variant="secondary"
                     size="large"
-                    error={Boolean(error)}
-                    suffix={
-                      isPassword ? (
-                        <PasswordToggle
-                          visible={visible}
-                          onToggle={() => togglePassword(field.id)}
-                        />
-                      ) : undefined
-                    }
-                    suffixStyling={false}
-                  />
+                    className="w-full"
+                    onClick={p.onClick}
+                    disabled={isLoading || !p.onClick}
+                    prefixIcon={p.icon}
+                  >
+                    {p.label}
+                  </Button>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+          )}
 
-            {error && (
-              <div
-                className="text-copy-14"
-                style={{ color: "var(--ds-red-900)" }}
-                role="alert"
-              >
-                {error}
-              </div>
-            )}
-
-            <Button
-              type="submit"
-              className="w-full"
-              size="large"
-              loading={isLoading}
-              disabled={isLoading}
+          {showDivider && (
+            <div
+              className="flex items-center gap-3"
+              aria-hidden="true"
             >
-              {isLoading ? loadingLabel : submitLabel}
-            </Button>
-
-            {disclaimer && (
-              <p
-                className="text-copy-13 text-center"
-                style={{ color: "var(--ds-gray-700)" }}
+              <span
+                className="flex-1 h-px"
+                style={{ background: "var(--ds-gray-400)" }}
+              />
+              <span
+                className="text-copy-13 uppercase"
+                style={{ color: "var(--ds-gray-700)", letterSpacing: "0.04em" }}
               >
-                {disclaimer}
-              </p>
-            )}
-          </form>
-        )}
+                {dividerLabel}
+              </span>
+              <span
+                className="flex-1 h-px"
+                style={{ background: "var(--ds-gray-400)" }}
+              />
+            </div>
+          )}
 
-        {!hasFields && disclaimer && (
-          <p
-            className="text-copy-13 text-center"
-            style={{ color: "var(--ds-gray-700)" }}
-          >
-            {disclaimer}
-          </p>
-        )}
+          {hasFields && (
+            <form
+              className="space-y-4"
+              {...(action ? { action } : { onSubmit: handleSubmit })}
+              noValidate
+            >
+              {effectiveFields.map((field) => {
+                const type = field.type ?? "text";
+                const isPassword = type === "password";
+                const visible = passwordVisible[field.id] ?? false;
 
-        {footer && <div className="text-copy-14 text-center">{footer}</div>}
-      </div>
+                return (
+                  <div key={field.id}>
+                    {field.label && !field.visibleLabel && (
+                      <label htmlFor={field.id} className="sr-only">
+                        {field.label}
+                      </label>
+                    )}
+                    <Input
+                      id={field.id}
+                      name={field.id}
+                      type={isPassword && visible ? "text" : type}
+                      label={field.visibleLabel ? field.label : undefined}
+                      placeholder={field.placeholder}
+                      autoComplete={field.autoComplete}
+                      required={field.required}
+                      autoFocus={field.autoFocus}
+                      value={values[field.id]}
+                      onChange={handleChange(field.id)}
+                      disabled={isLoading}
+                      size="large"
+                      error={Boolean(error)}
+                      suffix={
+                        isPassword ? (
+                          <PasswordToggle
+                            visible={visible}
+                            onToggle={() => togglePassword(field.id)}
+                          />
+                        ) : undefined
+                      }
+                      suffixStyling={false}
+                    />
+                  </div>
+                );
+              })}
+
+              {error && (
+                <div
+                  className="text-copy-14"
+                  style={{ color: "var(--ds-red-900)" }}
+                  role="alert"
+                >
+                  {error}
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full"
+                size="large"
+                loading={isLoading}
+                disabled={isLoading}
+              >
+                {isLoading ? loadingLabel : submitLabel}
+              </Button>
+
+              {disclaimer && (
+                <p
+                  className="text-copy-13 text-center"
+                  style={{ color: "var(--ds-gray-700)" }}
+                >
+                  {disclaimer}
+                </p>
+              )}
+            </form>
+          )}
+
+          {!hasFields && disclaimer && (
+            <p
+              className="text-copy-13 text-center"
+              style={{ color: "var(--ds-gray-700)" }}
+            >
+              {disclaimer}
+            </p>
+          )}
+        </div>
+      )}
+
+      {footer && (
+        <div className="text-copy-16 text-center text-textSubtle">{footer}</div>
+      )}
     </div>
   );
 }

@@ -6,16 +6,13 @@ import type { EnvFilter } from "@/components/admin/env";
 import { ButtonLink } from "@/components/ui/Button";
 import { getSiteSettings } from "@/lib/site-settings";
 
-import {
-  FeedbackDashboardContent,
-  FeedbackDashboardSkeleton,
-} from "./FeedbackDashboard";
+import { FeedbackDashboardContent } from "./FeedbackDashboard";
 import FeedbackFilterRow from "./FeedbackFilterRow";
 import {
   FeedbackLookupContent,
   FeedbackLookupSkeleton,
 } from "./FeedbackLookup";
-import { getEarliestFeedbackDate } from "./data";
+import { getEarliestFeedbackDate, parseFeedbackFilters } from "./data";
 
 export const metadata = {
   title: "Feedback — Stride Admin",
@@ -76,6 +73,7 @@ export default async function FeedbackDashboardPage({
     period?: string;
     from?: string;
     to?: string;
+    f?: string | string[];
   }>;
 }) {
   const params = await searchParams;
@@ -86,6 +84,8 @@ export default async function FeedbackDashboardPage({
   // edits that pair an emotion filter with the submitters metric.
   const filter = metric === "submitters" ? null : rawFilter;
   const env = normaliseEnv(params.env);
+  // Page-wide breakdown filters (repeated ?f=dim:val) — Pages / Topics.
+  const filters = parseFeedbackFilters(params.f);
   const { timezone: tz } = await getSiteSettings();
   // Earliest feedback row — drives the "All time" preset for both
   // server-side window resolution and the client picker's visual
@@ -106,7 +106,7 @@ export default async function FeedbackDashboardPage({
     <div>
       <div
         style={{
-          maxWidth: 1248,
+          maxWidth: "none",
           marginLeft: "auto",
           marginRight: "auto",
           paddingLeft: 24,
@@ -162,24 +162,22 @@ export default async function FeedbackDashboardPage({
             <FeedbackLookupContent query={query} env={env} />
           </Suspense>
         ) : (
-          // No `key` on this Suspense — keeping the boundary stable
-          // across filter / window changes means React preserves the
-          // existing dashboard tree during a transition (Link click /
-          // picker startTransition), so the previous tile values stay
-          // on screen while the new data streams in and NumberTicker
-          // animates between old and new readings instead of the row
-          // flashing a skeleton.
-          <Suspense fallback={<FeedbackDashboardSkeleton />}>
-            <FeedbackDashboardContent
-              filter={filter}
-              metric={metric}
-              windowStart={window.start}
-              windowEnd={window.end}
-              tz={tz}
-              earliestDate={earliestDate}
-              env={env}
-            />
-          </Suspense>
+          // No in-page Suspense: loading.tsx is the single loading boundary
+          // (streams on both hard load and client nav), so the whole page
+          // resolves together — no second skeleton stage, and nothing
+          // re-flashes to skeleton when navigating away. Filter / env / date
+          // changes are searchParam transitions (loading.tsx doesn't fire), so
+          // React holds the previous tile values and NumberTicker animates.
+          <FeedbackDashboardContent
+            filter={filter}
+            metric={metric}
+            filters={filters}
+            windowStart={window.start}
+            windowEnd={window.end}
+            tz={tz}
+            earliestDate={earliestDate}
+            env={env}
+          />
         )}
       </div>
     </div>

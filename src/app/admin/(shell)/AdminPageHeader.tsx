@@ -142,13 +142,28 @@ export default function AdminPageHeader() {
         height: HEADER_HEIGHT,
         background: "hsl(var(--color-canvas))",
         borderBottom: "1px solid hsl(var(--color-borderDefault))",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        padding: "0 16px",
       }}
     >
-      <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center max-w-[50%]">
+      {/* Inner row — full-width with 24px gutters, matching the consent /
+          feedback dashboard content (Vercel's analytics dashboard fills the
+          content column rather than capping at the marketing 1200px width).
+          The options menu pins to the same 24px right gutter as the content
+          below; the title stays centred. The sticky bar spans edge to edge. */}
+      <div
+        style={{
+          maxWidth: "none",
+          marginLeft: "auto",
+          marginRight: "auto",
+          paddingLeft: 24,
+          paddingRight: 24,
+          height: "100%",
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+        }}
+      >
+        <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center max-w-[50%]">
         {section && (
           <div className="hidden md:flex items-center gap-2 pr-2.5 min-w-0">
             <Link
@@ -227,7 +242,8 @@ export default function AdminPageHeader() {
         >
           Sign out
         </MenuItem>
-      </Menu>
+        </Menu>
+      </div>
 
       <FeedbackWithSelect
         centered

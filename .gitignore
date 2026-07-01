@@ -32,12 +32,18 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# …but the placeholder template IS committed
+!.env.example
 
 # local MCP server config (contains secrets)
 .mcp.json
 
 # Claude Code per-project local state (settings, scheduled task locks)
 .claude/
+
+# Agent Skills (per-developer install via `npx skills add ...`, not committed)
+.agents/
+skills-lock.json
 
 # vercel
 .vercel

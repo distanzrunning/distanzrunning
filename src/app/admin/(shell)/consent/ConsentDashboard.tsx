@@ -1,4 +1,16 @@
-import { Inbox } from "lucide-react";
+import type { ReactNode } from "react";
+import {
+  AppWindow,
+  Cpu,
+  FileText,
+  Globe,
+  Inbox,
+  Languages,
+  LayoutTemplate,
+  Monitor,
+  Network,
+  type LucideIcon,
+} from "lucide-react";
 
 import TrendChart from "@/components/ui/TrendChart";
 import {
@@ -30,12 +42,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
-import { getConsentRowsInRange, type ConsentRowRaw } from "./data";
+import LeaderboardPanel, {
+  type LeaderRow,
+} from "@/components/admin/LeaderboardPanel";
+import FilterBar, { type ActiveFilter } from "@/components/admin/FilterBar";
+import { getCountryFlag } from "@/lib/countryFlags";
+import {
+  getEnrichedConsentsInRange,
+  matchesFilters,
+  rankBreakdowns,
+  resolveFilterLabel,
+  type ConsentDimKey,
+  type ConsentFilter,
+  type ConsentRowRaw,
+} from "./data";
 import RecentDecisionsTable from "./RecentDecisionsTable";
 
 interface BuildHrefContext {
   tz: string;
   earliestDate: Date | null;
+  /** Active breakdown filters — preserved across tile clicks so switching
+   *  metric/window doesn't drop the page-wide scope. */
+  filters?: ConsentFilter[];
 }
 
 type Decision = "accept_all" | "reject_all" | "custom";
@@ -54,7 +82,7 @@ function buildHref(
   window: DateWindow,
   filter: Decision | null,
   metric: Metric,
-  { tz, earliestDate }: BuildHrefContext,
+  { tz, earliestDate, filters }: BuildHrefContext,
 ): string {
   const usp = new URLSearchParams();
   const preset = matchPreset(window, tz, earliestDate);
@@ -76,6 +104,11 @@ function buildHref(
     } else {
       usp.set("metric", "decisions");
     }
+  }
+  // Carry the active breakdown filters across tile clicks — orthogonal to
+  // metric/decision-filter, composes with them. Repeated `f=dim:val`.
+  for (const f of filters ?? []) {
+    usp.append("f", `${f.dim}:${f.val}`);
   }
   const qs = usp.toString();
   return qs ? `${BASE_PATH}?${qs}` : BASE_PATH;
@@ -281,9 +314,61 @@ function CategoryBar({
   );
 }
 
+const CONSENT_DIM_ICON: Record<ConsentDimKey, LucideIcon> = {
+  devices: Monitor,
+  browsers: AppWindow,
+  os: Cpu,
+  geography: Globe,
+  languages: Languages,
+  ui: LayoutTemplate,
+  domains: Network,
+  policy: FileText,
+};
+
+type FlagComponent = NonNullable<ReturnType<typeof getCountryFlag>>;
+
+/** A country flag in a rounded, clipping 16×12 badge with a hairline ring so
+ *  all-white flags (e.g. Japan) stay visible on the white card. */
+function flagBadge(Flag: FlagComponent): ReactNode {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        width: 16,
+        height: 12,
+        borderRadius: 2,
+        overflow: "hidden",
+        boxShadow: "inset 0 0 0 1px hsla(var(--ds-gray-1000-value), 0.12)",
+      }}
+    >
+      <Flag style={{ width: 16, height: 12, display: "block" }} />
+    </span>
+  );
+}
+
+/** Prefix glyph for a filter button — the country flag for geography (falling
+ *  back to a globe), otherwise the dimension's lucide icon. */
+function filterIcon(dim: ConsentDimKey, val: string): ReactNode {
+  if (dim === "geography") {
+    const Flag = getCountryFlag(val);
+    if (Flag) return flagBadge(Flag);
+  }
+  const Icon = CONSENT_DIM_ICON[dim];
+  return <Icon className="w-4 h-4" />;
+}
+
+/** Add a copy action (copies the displayed label) to non-italic breakdown
+ *  rows so the consent row action strip matches feedback (copy + filter). */
+function withCopy(rows: LeaderRow[]): LeaderRow[] {
+  return rows.map((r) =>
+    r.italic || r.copyValue ? r : { ...r, copyValue: r.label },
+  );
+}
+
 export async function ConsentDashboardContent({
   filter,
   metric,
+  filters = [],
   windowStart,
   windowEnd,
   tz,
@@ -291,6 +376,7 @@ export async function ConsentDashboardContent({
 }: {
   filter?: DecisionFilter | null;
   metric: Metric;
+  filters?: ConsentFilter[];
   windowStart: Date;
   windowEnd: Date;
   tz: string;
@@ -331,17 +417,33 @@ export async function ConsentDashboardContent({
       currentWindow,
       filter === target ? null : target,
       "decisions",
-      { tz, earliestDate },
+      { tz, earliestDate, filters },
     );
 
-  // Single DB hit covering the union of the previous + current
-  // window so the trend pills, tile values, and chart all come from
-  // one cached read. Cache key is (previous.start, currentWindow.end,
-  // env) so identical tile clicks within the same window + env reuse
-  // the cache.
-  const rows = await getConsentRowsInRange(
+  // Single DB hit covering the union of the previous + current window so the
+  // trend pills, tile values, chart, AND the ranked breakdowns all come from
+  // one cached read. Cache key is (previous.start, currentWindow.end) so
+  // identical tile clicks within the same window reuse the cache.
+  const allRows = await getEnrichedConsentsInRange(
     previous.start.toISOString(),
     currentWindow.end.toISOString(),
+  );
+  // Page-wide breakdown filters (e.g. Devices = Desktop AND Geography = United
+  // Kingdom) re-scope EVERYTHING — tiles, chart, category bars, recent table,
+  // and every breakdown panel — to consents matching ALL of them. Applied
+  // in-memory here (kept out of the cache key) before any metric is computed.
+  const rows = filters.length
+    ? allRows.filter((r) => matchesFilters(r, filters))
+    : allRows;
+
+  // Resolve each active filter's display label for the filter buttons in the
+  // chart area (the always-visible clear affordance).
+  const activeFilters: ActiveFilter[] = await Promise.all(
+    filters.map(async (f) => ({
+      ...f,
+      label: await resolveFilterLabel(f.dim, f.val),
+      icon: filterIcon(f.dim, f.val),
+    })),
   );
 
   // Slice the fetched rows into "current window" and the same-
@@ -361,6 +463,11 @@ export async function ConsentDashboardContent({
     const key = formatBusinessDay(new Date(r.created_at), tz);
     return key >= previousStartKey && key <= previousEndKey;
   });
+
+  // Ranked breakdowns (Audience / Source panels) come from the same enriched
+  // rows, scoped to the active window (and the active filter, since `rows` is
+  // already filtered) — so filtering by Geography narrows every other panel too.
+  const breakdowns = rankBreakdowns(currentRows);
 
   const currentCount = currentRows.length;
   const previousCount = previousRows.length;
@@ -444,33 +551,34 @@ export async function ConsentDashboardContent({
       <div
         style={{
           border: "1px solid hsl(var(--color-borderDefault))",
-          borderRadius: 10,
+          borderRadius: 6,
           overflow: "hidden",
           background: "hsl(var(--color-surface))",
           marginBottom: 16,
         }}
       >
-        {/* Tile row laid out as a 6-column grid: 5 tiles + 1 empty
-            placeholder. The empty cell gives the trailing gap the
-            same width as a tile (slot for a future 6th metric) and
-            lets `divide-x` paint a divider after the last tile
-            without the old borderRight hack. minmax(0, 1fr)
-            keeps each column above 200px, flexing equally above
-            that — overflowX:auto on the wrapper handles the
-            narrow-viewport case. paddingBottom:6 on the wrapper
-            sits below the row's border (matches Vercel's tabs
-            structure) and leaves room for a horizontal scrollbar. */}
+        {/* Tile row — a flex strip of fixed 220px tiles (Vercel's
+            `min-w-[220px] shrink-0` metric tabs) followed by a flex-1
+            spacer. Now the panel is full-width we DON'T stretch the tiles
+            to fill it; they keep a natural width and the spacer leaves the
+            remaining width blank, like Vercel. `divide-x` paints the
+            divider between tiles and the spacer's left edge closes the
+            group. width:max-content + min-width:100% lets the strip grow
+            past the panel (overflowX:auto scrolls) on narrow viewports while
+            still spanning the full width — so the bottom border runs edge to
+            edge. paddingBottom:6 leaves room for the scrollbar. */}
         <div style={{ overflowX: "auto", paddingBottom: 6 }}>
         <div
           className="divide-x divide-borderDefault"
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
+            display: "flex",
+            width: "max-content",
+            minWidth: "100%",
             borderBottom: "1px solid hsl(var(--color-borderDefault))",
             background: "hsl(var(--color-canvas))",
           }}
         >
-          <div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Unique visitors"
               value={<NumberTicker value={currentUnique} />}
@@ -479,7 +587,7 @@ export async function ConsentDashboardContent({
               active={metric === "visitors"}
             />
           </div>
-          <div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Decisions"
               value={<NumberTicker value={currentCount} />}
@@ -488,7 +596,7 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && !filter}
             />
           </div>
-          <div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Accept rate"
               value={<NumberTicker value={currentAcceptRate} suffix="%" />}
@@ -501,7 +609,7 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && filter === "accept_all"}
             />
           </div>
-          <div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Reject rate"
               value={<NumberTicker value={currentRejectRate} suffix="%" />}
@@ -514,7 +622,7 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && filter === "reject_all"}
             />
           </div>
-          <div>
+          <div style={{ minWidth: 220, flexShrink: 0 }}>
             <StatTile
               label="Custom rate"
               value={<NumberTicker value={currentCustomRate} suffix="%" />}
@@ -527,12 +635,21 @@ export async function ConsentDashboardContent({
               active={metric === "decisions" && filter === "custom"}
             />
           </div>
-          {/* Empty 6th cell — reserves the trailing gap as one
-              tile-width, gives divide-x a sibling to paint a
-              divider against, and slots a future tile in cleanly. */}
-          <div aria-hidden />
+          {/* Blank trailing space — fills the leftover panel width so the
+              tiles don't stretch (Vercel parity). */}
+          <div style={{ flex: 1, minWidth: 0 }} aria-hidden />
         </div>
         </div>
+
+        {/* Active-filter bar — one removable button per filter + a Clear,
+            right-aligned in the always-on-screen chart area (the per-panel
+            toolbar hides when you switch to a breakdown that doesn't own the
+            filtered dimension). */}
+        {activeFilters.length > 0 && (
+          <div style={{ padding: "12px 20px 0" }}>
+            <FilterBar filters={activeFilters} />
+          </div>
+        )}
 
         <TrendChart
           trend={trend}
@@ -546,7 +663,7 @@ export async function ConsentDashboardContent({
           tween via the CategoryBar's CSS width transition when
           the picker / tile selection changes the window. */}
       <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-category opt-in">
+        <PanelCard title="Per-category opt-in" tone="surface" radius="sm">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <CategoryBar
               label="Marketing"
@@ -565,6 +682,96 @@ export async function ConsentDashboardContent({
             />
           </div>
         </PanelCard>
+      </div>
+
+      {/* Breakdown panels — Audience (who) + Source (how), each a tabbed
+          ranked-bar leaderboard scoped to the active window. Two-up on
+          desktop, stacking below 760px via the auto-fit grid. */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
+          gap: 16,
+          marginBottom: 16,
+        }}
+      >
+        <LeaderboardPanel
+          columnHeader="Consents"
+          tone="surface"
+          bodyHeight={320}
+          tabs={[
+            {
+              value: "devices",
+              title: "Devices",
+              rows: withCopy(breakdowns.devices),
+              emptyMessage: "No device data in this window.",
+              filterDim: "devices",
+            },
+            {
+              value: "browsers",
+              title: "Browsers",
+              rows: withCopy(breakdowns.browsers),
+              emptyMessage: "No browser data in this window.",
+              filterDim: "browsers",
+            },
+            {
+              value: "os",
+              title: "OS",
+              rows: withCopy(breakdowns.operatingSystems),
+              emptyMessage: "No operating-system data in this window.",
+              filterDim: "os",
+            },
+            {
+              value: "geography",
+              title: "Geography",
+              // Row key is the ISO code (e.g. "GB") — resolve it to a flag
+              // glyph shown before the country name.
+              rows: withCopy(
+                breakdowns.countries.map((r) => {
+                  const Flag = getCountryFlag(r.key);
+                  return Flag ? { ...r, leadingIcon: flagBadge(Flag) } : r;
+                }),
+              ),
+              emptyMessage: "No geographic data in this window.",
+              filterDim: "geography",
+            },
+            {
+              value: "languages",
+              title: "Languages",
+              rows: withCopy(breakdowns.languages),
+              emptyMessage: "No language data in this window.",
+              filterDim: "languages",
+            },
+          ]}
+        />
+        <LeaderboardPanel
+          columnHeader="Consents"
+          tone="surface"
+          bodyHeight={320}
+          tabs={[
+            {
+              value: "ui",
+              title: "UI",
+              rows: withCopy(breakdowns.uiSources),
+              emptyMessage: "No UI-source data in this window.",
+              filterDim: "ui",
+            },
+            {
+              value: "domains",
+              title: "Domains",
+              rows: withCopy(breakdowns.domains),
+              emptyMessage: "No domain data in this window.",
+              filterDim: "domains",
+            },
+            {
+              value: "policy",
+              title: "Policy",
+              rows: withCopy(breakdowns.policies),
+              emptyMessage: "No policy data in this window.",
+              filterDim: "policy",
+            },
+          ]}
+        />
       </div>
 
       <RecentDecisionsTable
@@ -605,7 +812,7 @@ export function ConsentDashboardSkeleton() {
       <div
         style={{
           border: "1px solid hsl(var(--color-borderDefault))",
-          borderRadius: 10,
+          borderRadius: 6,
           overflow: "hidden",
           background: "hsl(var(--color-surface))",
           marginBottom: 16,
@@ -614,32 +821,34 @@ export function ConsentDashboardSkeleton() {
         <div
           className="divide-x divide-borderDefault"
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
+            display: "flex",
+            width: "max-content",
+            minWidth: "100%",
             borderBottom: "1px solid hsl(var(--color-borderDefault))",
             background: "hsl(var(--color-canvas))",
           }}
         >
-          <StatTileSkeleton label="Unique visitors" />
-          <StatTileSkeleton label="Decisions" />
-          <StatTileSkeleton label="Accept rate" />
-          <StatTileSkeleton label="Reject rate" />
-          <StatTileSkeleton label="Custom rate" />
-          {/* Empty 6th cell — see ConsentDashboardContent comment. */}
-          <div aria-hidden />
+          {["Unique visitors", "Decisions", "Accept rate", "Reject rate", "Custom rate"].map(
+            (label) => (
+              <div key={label} style={{ minWidth: 220, flexShrink: 0 }}>
+                <StatTileSkeleton label={label} />
+              </div>
+            ),
+          )}
+          <div style={{ flex: 1, minWidth: 0 }} aria-hidden />
         </div>
         <div style={{ padding: "24px 24px 16px" }}>
           <Skeleton
             width="100%"
             height={400}
-            shape="rounded"
+            shape="squared"
             style={block}
           />
         </div>
       </div>
 
       <div style={{ marginBottom: 16 }}>
-        <PanelCard title="Per-category opt-in">
+        <PanelCard title="Per-category opt-in" tone="surface" radius="sm">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {["Marketing", "Analytics", "Functional"].map((label) => (
               <div
@@ -665,7 +874,62 @@ export function ConsentDashboardSkeleton() {
         </PanelCard>
       </div>
 
-      <PanelCard title="Recent decisions">
+      {/* Breakdown panel pair skeleton — mirrors the live auto-fit grid. */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
+          gap: 16,
+          marginBottom: 16,
+        }}
+      >
+        {[0, 1].map((i) => (
+          <div
+            key={i}
+            style={{
+              background: "hsl(var(--color-surface))",
+              border: "1px solid hsl(var(--color-borderDefault))",
+              borderRadius: 6,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                gap: 24,
+                padding: "14px 20px",
+                borderBottom: "1px solid hsl(var(--color-borderDefault))",
+              }}
+            >
+              {[0, 1, 2].map((t) => (
+                <Skeleton key={t} width={56} height={14} style={block} />
+              ))}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+                padding: "16px 12px",
+                height: 320,
+                overflow: "hidden",
+              }}
+            >
+              {Array.from({ length: 7 }).map((_, r) => (
+                <Skeleton
+                  key={r}
+                  width="100%"
+                  height={32}
+                  shape="rounded"
+                  style={block}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <PanelCard title="Recent decisions" tone="surface" radius="sm">
         <Table>
           <TableHeader>
             <TableRow>
