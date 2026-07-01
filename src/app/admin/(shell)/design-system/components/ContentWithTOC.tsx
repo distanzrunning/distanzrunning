@@ -251,10 +251,10 @@ export default function ContentWithTOC({
     activeIdRef.current = activeId;
   }, [activeId]);
 
-  // Flatten TOC items to get all IDs
+  // Flatten TOC items to get all IDs (the section headings — the page title /
+  // mainSectionId is no longer a TOC entry, so it's excluded here too).
   const getAllIds = useCallback(() => {
     const ids: string[] = [];
-    if (mainSectionId) ids.push(mainSectionId);
     tocItems.forEach((item) => {
       ids.push(item.id);
       if (item.children) {
@@ -262,7 +262,7 @@ export default function ContentWithTOC({
       }
     });
     return ids;
-  }, [tocItems, mainSectionId]);
+  }, [tocItems]);
 
   // Scroll spy — deterministic position check, mirroring the consent/feedback
   // DocToc (which is noticeably more stable than the old IntersectionObserver
@@ -489,13 +489,12 @@ export default function ContentWithTOC({
 
       {/* Table of Contents - Right Sidebar (≥1280px) */}
       <aside className="hidden xl:block w-[260px] flex-shrink-0 border-l border-borderSubtle">
-        {(tocItems.length > 0 || mainSectionId) && (
+        {tocItems.length > 0 && (
           <div className="sticky top-[65px] max-h-[calc(100vh-65px)] overflow-y-auto px-6 py-6">
             <h4 className="text-heading-14 text-textDefault mb-3">
               {tocTitle}
             </h4>
             <div className="flex flex-col">
-              {mainSectionId && renderTOCLink(mainSectionId, "Intro")}
               {tocItems.map((item) => (
                 <div key={item.id}>
                   {renderTOCLink(item.id, item.title)}
