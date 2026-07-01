@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   ArrowUpRight,
+  Map,
   MessageSquare,
   PanelsTopLeft,
   SquareCheckBig,
@@ -33,6 +34,14 @@ const SECTIONS: {
       "Submissions from the site feedback widgets — emoji, message, optional follow-up email, and page context.",
     href: "/admin/feedback",
     icon: <MessageSquare className="w-5 h-5" />,
+  },
+  {
+    id: "races",
+    label: "Races",
+    description:
+      "Race date review queue — approve, reject, or re-scan past-dated races that feed the guides and calendar.",
+    href: "/admin/races",
+    icon: <Map className="w-5 h-5" />,
   },
   {
     id: "design-system",
