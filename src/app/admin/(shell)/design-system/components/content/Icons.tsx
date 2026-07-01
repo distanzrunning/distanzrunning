@@ -6,6 +6,7 @@ import * as LucideIcons from "lucide-react";
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import { Section } from "../ContentWithTOC";
 import { CodeBlock } from "@/components/ui/CodeBlock";
+import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
 
 // Import icons from other libraries via react-icons
@@ -462,46 +463,6 @@ function IconCard({ icon }: { icon: IconDefinition }) {
   );
 }
 
-// Search input component matching Geist design
-function SearchInput({
-  value,
-  onChange,
-  inputRef,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  inputRef?: React.RefObject<HTMLInputElement | null>;
-}) {
-  return (
-    <div
-      className="relative flex items-center w-full"
-      style={{ "--ds-icon-size": "16px" } as React.CSSProperties}
-    >
-      <input
-        ref={inputRef}
-        placeholder="Search icons..."
-        aria-label="Search"
-        aria-invalid="false"
-        autoCapitalize="none"
-        autoComplete="off"
-        autoCorrect="off"
-        spellCheck="false"
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full h-11 pl-11 pr-4 text-sm rounded-md border border-borderNeutral outline-none placeholder:text-textSubtler hover:border-borderNeutralHover focus:border-borderNeutralHover focus:ring-2 focus:ring-borderNeutral transition-colors"
-        style={{ background: "hsl(var(--color-surface))" }}
-      />
-      <label
-        aria-hidden="true"
-        className="absolute left-4 pointer-events-none text-textSubtler"
-      >
-        <Search size={16} />
-      </label>
-    </div>
-  );
-}
-
 export default function Icons() {
   const [searchTerm, setSearchTerm] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -544,10 +505,18 @@ export default function Icons() {
     <div>
         {/* Search Section */}
         <Section>
-          <SearchInput
+          <Input
+            ref={searchInputRef}
+            type="text"
             value={searchTerm}
-            onChange={setSearchTerm}
-            inputRef={searchInputRef}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search icons..."
+            aria-label="Search"
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            prefix={<Search className="w-4 h-4" />}
           />
         </Section>
 
