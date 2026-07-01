@@ -13,11 +13,7 @@ import {
   ConsentLookupSkeleton,
 } from "./ConsentLookup";
 import { windowFromParams } from "@/components/admin/datePresets";
-import {
-  getEarliestDecisionDate,
-  isConsentDimKey,
-  resolveScopeLabel,
-} from "./data";
+import { getEarliestDecisionDate, isConsentDimKey } from "./data";
 
 export const metadata = {
   title: "Consent — Stride Admin",
@@ -70,14 +66,11 @@ export default async function ConsentDashboardPage({
   const metric = resolveMetric(params.metric, rawFilter);
   const filter = metric === "visitors" ? null : rawFilter;
   // Page-wide breakdown filter (?dim=geography&val=GB) — validated against the
-  // known dimensions, then resolved to a display label for the chip. Composes
-  // with metric/decision-filter; orthogonal to both.
+  // known dimensions. Composes with metric/decision-filter; orthogonal to both.
+  // Cleared from the owning panel's Remove-filter toolbar (Vercel pattern).
   const scopeDim = isConsentDimKey(params.dim) ? params.dim : null;
   const scope =
     scopeDim && params.val ? { dim: scopeDim, val: params.val } : null;
-  const scopeLabel = scope
-    ? await resolveScopeLabel(scope.dim, scope.val)
-    : null;
   const { timezone: tz } = await getSiteSettings();
   // Earliest stored decision date — drives the "All time" preset
   // for both server-side window resolution and the client picker's
@@ -144,15 +137,7 @@ export default async function ConsentDashboardPage({
           </Suspense>
         ) : (
           <ConsentFilterShell>
-            <ConsentFilterRow
-              tz={tz}
-              earliestDate={earliestDate}
-              activeFilter={
-                scope && scopeLabel
-                  ? { dim: scope.dim, val: scope.val, label: scopeLabel }
-                  : null
-              }
-            />
+            <ConsentFilterRow tz={tz} earliestDate={earliestDate} />
             {/* No `key` on this Suspense — keeping the boundary
                 stable across filter/window changes means React
                 preserves the existing dashboard tree during a

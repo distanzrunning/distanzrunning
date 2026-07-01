@@ -2,7 +2,9 @@
 
 import { useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { X } from "lucide-react";
 
+import { Button } from "@/components/ui/Button";
 import { Tabs, type TabItem } from "@/components/ui/Tabs";
 import { Tooltip } from "@/components/ui/Tooltip";
 
@@ -130,6 +132,22 @@ export default function LeaderboardPanel({
     });
   };
 
+  const clearFilter = () => {
+    const next = new URLSearchParams(searchParams.toString());
+    next.delete("dim");
+    next.delete("val");
+    const qs = next.toString();
+    startTransition(() => {
+      router.push(qs ? `${pathname}?${qs}` : pathname);
+    });
+  };
+
+  // This panel "owns" the active filter when one of its tabs is the filtered
+  // dimension — that's where Vercel surfaces the Remove-filter toolbar (a
+  // recessed strip between the tab row and the body).
+  const ownsActiveFilter =
+    !!activeDim && tabs.some((t) => t.filterDim && t.filterDim === activeDim);
+
   const dsTabs: TabItem[] = tabs.map((t) => ({
     value: t.value,
     title: t.title,
@@ -189,6 +207,31 @@ export default function LeaderboardPanel({
           {columnHeader}
         </span>
       </div>
+      {/* Remove-filter toolbar — a recessed canvas strip that appears between
+          the tab row and the body while this panel's dimension is the active
+          page-wide filter (Vercel's analytics pattern). */}
+      {ownsActiveFilter && (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: 8,
+            padding: "8px 12px",
+            background: "hsl(var(--color-canvas))",
+            borderBottom: "1px solid hsl(var(--color-borderDefault))",
+          }}
+        >
+          <Button
+            variant="secondary"
+            size="tiny"
+            suffixIcon={<X className="w-4 h-4" />}
+            onClick={clearFilter}
+          >
+            Remove filter
+          </Button>
+        </div>
+      )}
       <div
         style={{
           display: "flex",
