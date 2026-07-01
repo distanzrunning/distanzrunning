@@ -1,47 +1,29 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useTransition } from "react";
-import {
-  AppWindow,
-  Cpu,
-  FileText,
-  Globe,
-  Languages,
-  LayoutTemplate,
-  Monitor,
-  Network,
-  X,
-  type LucideIcon,
-} from "lucide-react";
+import { useTransition, type ReactNode } from "react";
+import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
-import type { ConsentDimKey } from "./data";
 
 export interface ActiveFilter {
-  dim: ConsentDimKey;
+  /** Breakdown dimension key (e.g. "geography", "pages"). */
+  dim: string;
+  /** Selected value / grouping key. */
   val: string;
   /** Resolved display label (e.g. "United Kingdom"), from the server. */
   label: string;
+  /** Prefix glyph — a server-rendered element (dimension icon or flag).
+   *  Passed as an element (not a component) so it crosses the RSC boundary. */
+  icon?: ReactNode;
 }
 
-// A recognisable glyph per dimension — the prefix on each filter button,
-// matching Vercel's per-filter icon (device / globe / …).
-const DIM_ICON: Record<ConsentDimKey, LucideIcon> = {
-  devices: Monitor,
-  browsers: AppWindow,
-  os: Cpu,
-  geography: Globe,
-  languages: Languages,
-  ui: LayoutTemplate,
-  domains: Network,
-  policy: FileText,
-};
-
-// Active-filter bar — one secondary button per filter ([icon][label][X],
-// removes that filter) plus a Clear button (removes all). Right-aligned and
-// wrapping, matching Vercel's analytics filter row. Soft-navigates under a
-// transition so the dashboard tree persists while the re-scoped data streams.
+// Shared active-filter bar for the admin dashboards — one secondary button per
+// active filter ([icon][label][X], removes that filter) plus a Clear button
+// (removes all). Right-aligned and wrapping, matching Vercel's analytics filter
+// row. Filters live in repeated `?f=dim:val` params; the bar soft-navigates
+// under a transition so the dashboard tree persists while re-scoped data
+// streams in.
 export default function FilterBar({ filters }: { filters: ActiveFilter[] }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -81,22 +63,19 @@ export default function FilterBar({ filters }: { filters: ActiveFilter[] }) {
         gap: 8,
       }}
     >
-      {filters.map((f) => {
-        const Icon = DIM_ICON[f.dim];
-        return (
-          <Button
-            key={`${f.dim}:${f.val}`}
-            variant="secondary"
-            size="tiny"
-            aria-label={`Remove ${f.label} filter`}
-            prefixIcon={<Icon className="w-4 h-4" />}
-            suffixIcon={<X className="w-4 h-4" />}
-            onClick={() => removeOne(f.dim, f.val)}
-          >
-            {f.label}
-          </Button>
-        );
-      })}
+      {filters.map((f) => (
+        <Button
+          key={`${f.dim}:${f.val}`}
+          variant="secondary"
+          size="tiny"
+          aria-label={`Remove ${f.label} filter`}
+          prefixIcon={f.icon}
+          suffixIcon={<X className="w-4 h-4" />}
+          onClick={() => removeOne(f.dim, f.val)}
+        >
+          {f.label}
+        </Button>
+      ))}
       <Button variant="secondary" size="tiny" onClick={clearAll}>
         Clear
       </Button>

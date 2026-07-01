@@ -75,11 +75,11 @@ export default function CopyPathButton({ value }: { value: string }) {
   };
 
   return (
-    <Tooltip content={copied ? "Copied" : "Copy path"}>
+    <Tooltip content={copied ? "Copied" : "Copy"}>
       <button
         type="button"
         onClick={handleClick}
-        aria-label="Copy path"
+        aria-label="Copy"
         className={ROW_ACTION_BUTTON_CLASS}
       >
         {copied ? <CheckGlyph /> : <CopyGlyph />}

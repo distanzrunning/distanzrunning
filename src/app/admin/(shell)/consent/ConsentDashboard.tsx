@@ -1,4 +1,16 @@
-import { Inbox } from "lucide-react";
+import type { ReactNode } from "react";
+import {
+  AppWindow,
+  Cpu,
+  FileText,
+  Globe,
+  Inbox,
+  Languages,
+  LayoutTemplate,
+  Monitor,
+  Network,
+  type LucideIcon,
+} from "lucide-react";
 
 import TrendChart from "@/components/ui/TrendChart";
 import {
@@ -30,17 +42,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
-import LeaderboardPanel from "@/components/admin/LeaderboardPanel";
+import LeaderboardPanel, {
+  type LeaderRow,
+} from "@/components/admin/LeaderboardPanel";
+import FilterBar, { type ActiveFilter } from "@/components/admin/FilterBar";
 import { getCountryFlag } from "@/lib/countryFlags";
 import {
   getEnrichedConsentsInRange,
   matchesFilters,
   rankBreakdowns,
   resolveFilterLabel,
+  type ConsentDimKey,
   type ConsentFilter,
   type ConsentRowRaw,
 } from "./data";
-import FilterBar, { type ActiveFilter } from "./FilterBar";
 import RecentDecisionsTable from "./RecentDecisionsTable";
 
 interface BuildHrefContext {
@@ -299,6 +314,57 @@ function CategoryBar({
   );
 }
 
+const CONSENT_DIM_ICON: Record<ConsentDimKey, LucideIcon> = {
+  devices: Monitor,
+  browsers: AppWindow,
+  os: Cpu,
+  geography: Globe,
+  languages: Languages,
+  ui: LayoutTemplate,
+  domains: Network,
+  policy: FileText,
+};
+
+type FlagComponent = NonNullable<ReturnType<typeof getCountryFlag>>;
+
+/** A country flag in a rounded, clipping 16×12 badge with a hairline ring so
+ *  all-white flags (e.g. Japan) stay visible on the white card. */
+function flagBadge(Flag: FlagComponent): ReactNode {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        width: 16,
+        height: 12,
+        borderRadius: 2,
+        overflow: "hidden",
+        boxShadow: "inset 0 0 0 1px hsla(var(--ds-gray-1000-value), 0.12)",
+      }}
+    >
+      <Flag style={{ width: 16, height: 12, display: "block" }} />
+    </span>
+  );
+}
+
+/** Prefix glyph for a filter button — the country flag for geography (falling
+ *  back to a globe), otherwise the dimension's lucide icon. */
+function filterIcon(dim: ConsentDimKey, val: string): ReactNode {
+  if (dim === "geography") {
+    const Flag = getCountryFlag(val);
+    if (Flag) return flagBadge(Flag);
+  }
+  const Icon = CONSENT_DIM_ICON[dim];
+  return <Icon className="w-4 h-4" />;
+}
+
+/** Add a copy action (copies the displayed label) to non-italic breakdown
+ *  rows so the consent row action strip matches feedback (copy + filter). */
+function withCopy(rows: LeaderRow[]): LeaderRow[] {
+  return rows.map((r) =>
+    r.italic || r.copyValue ? r : { ...r, copyValue: r.label },
+  );
+}
+
 export async function ConsentDashboardContent({
   filter,
   metric,
@@ -376,6 +442,7 @@ export async function ConsentDashboardContent({
     filters.map(async (f) => ({
       ...f,
       label: await resolveFilterLabel(f.dim, f.val),
+      icon: filterIcon(f.dim, f.val),
     })),
   );
 
@@ -636,21 +703,21 @@ export async function ConsentDashboardContent({
             {
               value: "devices",
               title: "Devices",
-              rows: breakdowns.devices,
+              rows: withCopy(breakdowns.devices),
               emptyMessage: "No device data in this window.",
               filterDim: "devices",
             },
             {
               value: "browsers",
               title: "Browsers",
-              rows: breakdowns.browsers,
+              rows: withCopy(breakdowns.browsers),
               emptyMessage: "No browser data in this window.",
               filterDim: "browsers",
             },
             {
               value: "os",
               title: "OS",
-              rows: breakdowns.operatingSystems,
+              rows: withCopy(breakdowns.operatingSystems),
               emptyMessage: "No operating-system data in this window.",
               filterDim: "os",
             },
@@ -659,40 +726,19 @@ export async function ConsentDashboardContent({
               title: "Geography",
               // Row key is the ISO code (e.g. "GB") — resolve it to a flag
               // glyph shown before the country name.
-              rows: breakdowns.countries.map((r) => {
-                const Flag = getCountryFlag(r.key);
-                return Flag
-                  ? {
-                      ...r,
-                      leadingIcon: (
-                        <span
-                          style={{
-                            display: "inline-flex",
-                            width: 16,
-                            height: 12,
-                            borderRadius: 2,
-                            overflow: "hidden",
-                            // Hairline ring so all-white flags (e.g. Japan)
-                            // stay visible on the white card.
-                            boxShadow:
-                              "inset 0 0 0 1px hsla(var(--ds-gray-1000-value), 0.12)",
-                          }}
-                        >
-                          <Flag
-                            style={{ width: 16, height: 12, display: "block" }}
-                          />
-                        </span>
-                      ),
-                    }
-                  : r;
-              }),
+              rows: withCopy(
+                breakdowns.countries.map((r) => {
+                  const Flag = getCountryFlag(r.key);
+                  return Flag ? { ...r, leadingIcon: flagBadge(Flag) } : r;
+                }),
+              ),
               emptyMessage: "No geographic data in this window.",
               filterDim: "geography",
             },
             {
               value: "languages",
               title: "Languages",
-              rows: breakdowns.languages,
+              rows: withCopy(breakdowns.languages),
               emptyMessage: "No language data in this window.",
               filterDim: "languages",
             },
@@ -706,21 +752,21 @@ export async function ConsentDashboardContent({
             {
               value: "ui",
               title: "UI",
-              rows: breakdowns.uiSources,
+              rows: withCopy(breakdowns.uiSources),
               emptyMessage: "No UI-source data in this window.",
               filterDim: "ui",
             },
             {
               value: "domains",
               title: "Domains",
-              rows: breakdowns.domains,
+              rows: withCopy(breakdowns.domains),
               emptyMessage: "No domain data in this window.",
               filterDim: "domains",
             },
             {
               value: "policy",
               title: "Policy",
-              rows: breakdowns.policies,
+              rows: withCopy(breakdowns.policies),
               emptyMessage: "No policy data in this window.",
               filterDim: "policy",
             },
