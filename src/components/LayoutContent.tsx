@@ -39,12 +39,15 @@ export default async function LayoutContent({
   const isLoginPage = pathname === "/login";
   const isAdmin = pathname.startsWith("/admin");
   const isComingSoon = pathname === "/coming-soon";
+  // Homepage layout mockups own their chrome (MockHeader/MockFooter) — suppress
+  // the production SiteHeader + Footer so they aren't doubled.
+  const isMockups = pathname.startsWith("/home-mockups");
   const isHome = pathname === "/";
 
   // Hide footer on the calendar page (fullscreen app-like view)
   const isCalendarPage = pathname === "/races/calendar";
 
-  if (isPreviewMode || isLoginPage || isAdmin || isComingSoon) {
+  if (isPreviewMode || isLoginPage || isAdmin || isComingSoon || isMockups) {
     return <main className="min-h-screen">{children}</main>;
   }
 
