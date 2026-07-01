@@ -58,86 +58,44 @@ interface ContentWithTOCProps {
   headerRight?: React.ReactNode;
 }
 
-// Helper to scan headings from a container
+// Helper to scan headings from a container. Only the top-level section
+// headings (h2, whether direct h2[id] or a wrapper[id] > h2) become TOC
+// entries — h3 subheadings (e.g. the Best Practices parts: When to use /
+// Behavior / Content / Accessibility) are intentionally excluded so the TOC
+// stays a flat list of sections.
 function scanHeadingsFromContainer(
   container: HTMLElement,
   mainSectionId?: string,
 ): TOCItem[] {
-  // Find h2/h3 with IDs directly, OR elements with IDs that contain h2/h3
-  const directHeadings = container.querySelectorAll("h2[id], h3[id]");
-  const wrappedHeadings = container.querySelectorAll(
-    "[id]:has(> h2), [id]:has(> h3)",
-  );
+  const directHeadings = container.querySelectorAll("h2[id]");
+  const wrappedHeadings = container.querySelectorAll("[id]:has(> h2)");
 
-  // Build a map of id -> {element, level, title} to avoid duplicates
-  const headingMap = new Map<
-    string,
-    { level: string; title: string; position: number }
-  >();
+  const headingMap = new Map<string, { title: string; position: number }>();
+  const allNodes = Array.from(container.querySelectorAll("*"));
 
-  // Process direct headings (h2[id], h3[id])
+  // Direct h2[id]
   directHeadings.forEach((heading) => {
     const id = heading.id;
     if (mainSectionId && id === mainSectionId) return;
-
     const title = heading.textContent?.trim() || id;
-    const level = heading.tagName.toLowerCase();
-    // Use element's position in document for ordering
-    const position = Array.from(container.querySelectorAll("*")).indexOf(
-      heading,
-    );
-    headingMap.set(id, { level, title, position });
+    headingMap.set(id, { title, position: allNodes.indexOf(heading) });
   });
 
-  // Process wrapped headings (button[id] > h2, etc.)
+  // Wrapped headings (e.g. button[id] > h2)
   wrappedHeadings.forEach((wrapper) => {
     const id = wrapper.id;
     if (mainSectionId && id === mainSectionId) return;
-    if (headingMap.has(id)) return; // Already found as direct heading
-
+    if (headingMap.has(id)) return; // already found as a direct heading
     const h2 = wrapper.querySelector(":scope > h2");
-    const h3 = wrapper.querySelector(":scope > h3");
-    const heading = h2 || h3;
-
-    if (heading) {
-      const title = heading.textContent?.trim() || id;
-      const level = heading.tagName.toLowerCase();
-      const position = Array.from(container.querySelectorAll("*")).indexOf(
-        wrapper,
-      );
-      headingMap.set(id, { level, title, position });
+    if (h2) {
+      const title = h2.textContent?.trim() || id;
+      headingMap.set(id, { title, position: allNodes.indexOf(wrapper) });
     }
   });
 
-  // Sort by document position and build TOC structure
-  const sortedEntries = Array.from(headingMap.entries()).sort(
-    (a, b) => a[1].position - b[1].position,
-  );
-
-  const items: TOCItem[] = [];
-  let currentH2: TOCItem | null = null;
-
-  sortedEntries.forEach(([id, { level, title }]) => {
-    if (level === "h2") {
-      currentH2 = { id, title, children: [] };
-      items.push(currentH2);
-    } else if (level === "h3" && currentH2) {
-      currentH2.children = currentH2.children || [];
-      currentH2.children.push({ id, title });
-    } else if (level === "h3") {
-      // h3 without a parent h2, add as top-level
-      items.push({ id, title });
-    }
-  });
-
-  // Clean up empty children arrays
-  items.forEach((item) => {
-    if (item.children && item.children.length === 0) {
-      delete item.children;
-    }
-  });
-
-  return items;
+  return Array.from(headingMap.entries())
+    .sort((a, b) => a[1].position - b[1].position)
+    .map(([id, { title }]) => ({ id, title }));
 }
 
 // Stable signature of a TOC tree (ids + nesting) so we can skip no-op updates.
