@@ -286,9 +286,12 @@ export default function ContentWithTOC({
           active = id;
         }
       }
+      // Highlight only — don't write the hash on scroll (DocToc doesn't
+      // either). Writing it would leave the URL at #first-section even at the
+      // top of the page, so a reload / re-nav would scroll down to it instead
+      // of opening at the top. The hash is only set on an explicit TOC click.
       if (active !== activeIdRef.current) {
         setActiveId(active);
-        window.history.replaceState(null, "", `#${active}`);
       }
     };
 
