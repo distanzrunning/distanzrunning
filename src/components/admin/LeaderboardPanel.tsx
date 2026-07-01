@@ -368,7 +368,7 @@ function LeaderboardRow({
             )}
             {(showCopy || showFilter) && (
               <div
-                className="opacity-0 group-hover/row:opacity-100 transition-opacity"
+                className="opacity-0 group-hover/row:opacity-100 group-focus-within/row:opacity-100 transition-opacity"
                 style={{
                   position: "absolute",
                   top: 4,
