@@ -721,7 +721,7 @@ export function ConsentDashboardSkeleton() {
           <Skeleton
             width="100%"
             height={400}
-            shape="rounded"
+            shape="squared"
             style={block}
           />
         </div>

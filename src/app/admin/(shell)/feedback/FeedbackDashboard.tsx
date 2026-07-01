@@ -676,7 +676,7 @@ export async function FeedbackDashboardContent({
       <div
         style={{
           border: "1px solid hsl(var(--color-borderDefault))",
-          borderRadius: 10,
+          borderRadius: 6,
           overflow: "hidden",
           background: "hsl(var(--color-surface))",
           marginBottom: 16,
@@ -964,7 +964,7 @@ export function FeedbackDashboardSkeleton() {
       <div
         style={{
           border: "1px solid hsl(var(--color-borderDefault))",
-          borderRadius: 10,
+          borderRadius: 6,
           overflow: "hidden",
           background: "hsl(var(--color-surface))",
           marginBottom: 16,
@@ -1000,7 +1000,9 @@ export function FeedbackDashboardSkeleton() {
             </div>
           </div>
         </div>
-        <div style={{ height: 400, background: "hsl(var(--color-surface))" }} />
+        <div style={{ padding: "24px 24px 16px" }}>
+          <Skeleton width="100%" height={400} shape="squared" style={block} />
+        </div>
       </div>
 
       {/* Per-emotion + Top pages share a row in the real dashboard;
