@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache";
 
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { parseUserAgent } from "@/lib/userAgent";
+import { parseFilterParams, type FilterParam } from "@/lib/filterParams";
 
 // ============================================================================
 // Consent dashboard data layer — sourced from the self-hosted c15t tables.
@@ -464,29 +465,16 @@ export const getEnrichedConsentsInRange = unstable_cache(
 
 /** A single active breakdown filter: dim = the dimension, val = the selected
  *  row's grouping key (e.g. {dim:"geography", val:"GB"}). */
-export interface ConsentFilter {
-  dim: ConsentDimKey;
-  val: string;
-}
+export type ConsentFilter = FilterParam<ConsentDimKey>;
 
 /** Parse repeated `?f=dim:val` params into validated filters — one per
  *  dimension (later wins), so you can stack Desktop + United Kingdom but not
- *  two countries. Split on the first ":" (dims never contain one). */
+ *  two countries. Split on the first ":" (dims never contain one). Delegates
+ *  to the shared parser with the consent dim-key allowlist. */
 export function parseFilters(
   raw: string | string[] | undefined,
 ): ConsentFilter[] {
-  if (raw == null) return [];
-  const list = Array.isArray(raw) ? raw : [raw];
-  const byDim = new Map<ConsentDimKey, string>();
-  for (const entry of list) {
-    const idx = entry.indexOf(":");
-    if (idx < 1) continue;
-    const dim = entry.slice(0, idx);
-    const val = entry.slice(idx + 1);
-    if (!isConsentDimKey(dim) || !val) continue;
-    byDim.set(dim, val);
-  }
-  return [...byDim.entries()].map(([dim, val]) => ({ dim, val }));
+  return parseFilterParams(raw, isConsentDimKey);
 }
 
 /** True when `row` satisfies EVERY active filter (AND across dimensions).

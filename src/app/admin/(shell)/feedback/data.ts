@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache";
 
 import type { Environment, EnvFilter } from "@/components/admin/env";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { parseFilterParams, type FilterParam } from "@/lib/filterParams";
 
 /** Tag used by every feedback-data unstable_cache entry. The delete
  *  action calls revalidateTag(FEEDBACK_CACHE_TAG) so admin writes
@@ -46,29 +47,16 @@ export function isFeedbackDimKey(x: string | undefined): x is FeedbackDimKey {
 }
 
 /** A single active breakdown filter (e.g. {dim:"pages", val:"/races"}). */
-export interface FeedbackBreakdownFilter {
-  dim: FeedbackDimKey;
-  val: string;
-}
+export type FeedbackBreakdownFilter = FilterParam<FeedbackDimKey>;
 
 /** Parse repeated `?f=dim:val` params into validated filters — one per
  *  dimension (later wins). Split on the first ":" (dims never contain one;
- *  paths may, so everything after the first colon is the value). */
+ *  paths may, so everything after the first colon is the value). Delegates to
+ *  the shared parser with the feedback dim-key allowlist. */
 export function parseFeedbackFilters(
   raw: string | string[] | undefined,
 ): FeedbackBreakdownFilter[] {
-  if (raw == null) return [];
-  const list = Array.isArray(raw) ? raw : [raw];
-  const byDim = new Map<FeedbackDimKey, string>();
-  for (const entry of list) {
-    const idx = entry.indexOf(":");
-    if (idx < 1) continue;
-    const dim = entry.slice(0, idx);
-    const val = entry.slice(idx + 1);
-    if (!isFeedbackDimKey(dim) || !val) continue;
-    byDim.set(dim, val);
-  }
-  return [...byDim.entries()].map(([dim, val]) => ({ dim, val }));
+  return parseFilterParams(raw, isFeedbackDimKey);
 }
 
 /** True when a row satisfies EVERY active filter (AND across dimensions).
