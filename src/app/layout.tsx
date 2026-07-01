@@ -1,5 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
@@ -57,11 +58,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Admin is an authenticated internal SPA — it needs none of the public
+  // visitor machinery (AdSense, c15t consent + prefetch + GCM, reCAPTCHA,
+  // PostHog, Speed Insights, site chrome). Loading those on every admin page
+  // is dead third-party JS + network that pushes out FCP/LCP, so scope the
+  // whole stack to public routes and give admin a lean tree (theme only).
+  // The app already reads headers() in LayoutContent, so this adds no SSG cost.
+  const headerStore = await headers();
+  const isAdmin = (headerStore.get("x-pathname") ?? "").startsWith("/admin");
+
   return (
     <html
       lang="en"
@@ -118,56 +128,74 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* Google Consent Mode v2 — must run before AdSense so it picks up the
-            denied baseline. ConsentModeSync (in <body>) fires
-            gtag('consent','update',…) once the user decides. PostHog is no
-            longer inlined here — c15t loads it after `measurement` consent
-            (see ConsentManagerClient). */}
-        <script
-          id="gcm-defaults"
-          dangerouslySetInnerHTML={{ __html: gcmDefaultsScript() }}
-        />
-        {/* Start the c15t /init prefetch before hydration (jurisdiction +
-            policy). Static-safe: an inline script, not next/headers, so it
-            doesn't deopt SSG pages. The provider auto-consumes the matched
-            prefetch (same backendURL), killing the banner flash + the lazy
-            client /init waterfall. c15t's recommended init flow for static
-            routes. */}
-        <C15tPrefetch backendURL="/api/c15t" />
+        {/* Public-only consent/analytics bootstrap — skipped on admin, which
+            has no consent surface. */}
+        {!isAdmin && (
+          <>
+            {/* Google Consent Mode v2 — must run before AdSense so it picks up
+                the denied baseline. ConsentModeSync (in <body>) fires
+                gtag('consent','update',…) once the user decides. PostHog is no
+                longer inlined here — c15t loads it after `measurement` consent
+                (see ConsentManagerClient). */}
+            <script
+              id="gcm-defaults"
+              dangerouslySetInnerHTML={{ __html: gcmDefaultsScript() }}
+            />
+            {/* Start the c15t /init prefetch before hydration (jurisdiction +
+                policy). Static-safe: an inline script, not next/headers, so it
+                doesn't deopt SSG pages. The provider auto-consumes the matched
+                prefetch (same backendURL), killing the banner flash + the lazy
+                client /init waterfall. c15t's recommended init flow for static
+                routes. */}
+            <C15tPrefetch backendURL="/api/c15t" />
+          </>
+        )}
       </head>
       <body className="font-sans antialiased bg-canvas text-textDefault min-h-screen flex flex-col distanz-font-features">
-        <ReCaptchaProvider>
+        {isAdmin ? (
+          // Lean admin tree — DarkModeProvider (theme) + the admin SPA. No
+          // consent/reCAPTCHA/AdSense/analytics; LayoutContent already
+          // suppresses the public header/footer for /admin.
           <DarkModeProvider>
-            <UnitsProvider>
-            <ConsentManagerClient>
-              <SearchProvider>
-                <ConsentModeSync />
-                <PostHogConsentSync />
-                <LayoutContent
-                  header={<SiteHeaderWrapper newsletterSource="homepage" />}
-                  footer={<Footer />}
-                >
-                  {children}
-                </LayoutContent>
-                <ConsentBanner />
-
-                <ConsentedAnalytics />
-                <SpeedInsights />
-              </SearchProvider>
-            </ConsentManagerClient>
-            </UnitsProvider>
+            <main className="min-h-screen">{children}</main>
           </DarkModeProvider>
-        </ReCaptchaProvider>
+        ) : (
+          <ReCaptchaProvider>
+            <DarkModeProvider>
+              <UnitsProvider>
+                <ConsentManagerClient>
+                  <SearchProvider>
+                    <ConsentModeSync />
+                    <PostHogConsentSync />
+                    <LayoutContent
+                      header={<SiteHeaderWrapper newsletterSource="homepage" />}
+                      footer={<Footer />}
+                    >
+                      {children}
+                    </LayoutContent>
+                    <ConsentBanner />
+
+                    <ConsentedAnalytics />
+                    <SpeedInsights />
+                  </SearchProvider>
+                </ConsentManagerClient>
+              </UnitsProvider>
+            </DarkModeProvider>
+          </ReCaptchaProvider>
+        )}
 
         {/* Google AdSense — loads once for the whole app. Individual ad units
             live in <AdSlot /> and push themselves to `adsbygoogle` once visible.
             Rendered as a raw <script> (rather than next/script) so AdSense
-            doesn't log a warning about the data-nscript attribute. */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8457173435004026"
-          crossOrigin="anonymous"
-        />
+            doesn't log a warning about the data-nscript attribute. Public
+            only — admin has no ad slots. */}
+        {!isAdmin && (
+          <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8457173435004026"
+            crossOrigin="anonymous"
+          />
+        )}
       </body>
     </html>
   );
