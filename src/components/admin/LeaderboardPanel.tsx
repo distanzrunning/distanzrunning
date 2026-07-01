@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Filter } from "lucide-react";
 
 import { Tabs, type TabItem } from "@/components/ui/Tabs";
 
@@ -36,6 +38,10 @@ export interface LeaderboardTab {
   rows: LeaderRow[];
   /** Sentence shown inside the tab when rows.length === 0. */
   emptyMessage: string;
+  /** When set, each non-italic row in this tab gets a hover-revealed
+   *  funnel button that re-scopes the whole page to that row via the
+   *  `dim`/`val` URL params (dim === this key, val === row.key). */
+  filterDim?: string;
 }
 
 interface LeaderboardPanelProps {
@@ -61,12 +67,44 @@ export default function LeaderboardPanel({
   bodyHeight,
   tone = "surface",
 }: LeaderboardPanelProps) {
-  const [active, setActive] = useState(tabs[0]?.value ?? "");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [, startTransition] = useTransition();
+
+  // If a breakdown filter is already applied, default to its tab so the
+  // applied row is visible; otherwise start on the first tab.
+  const activeDim = searchParams.get("dim");
+  const activeVal = searchParams.get("val");
+  const filteredTab = tabs.find((t) => t.filterDim && t.filterDim === activeDim);
+  const [active, setActive] = useState(
+    filteredTab?.value ?? tabs[0]?.value ?? "",
+  );
   const activeTab = tabs.find((t) => t.value === active) ?? tabs[0];
   const rows = activeTab?.rows ?? [];
   // Bar widths scale to the largest row in the active tab so the
   // leader anchors at full width and the rest scale relative.
   const topTotal = rows[0]?.total ?? 0;
+
+  // Apply / toggle a page-wide breakdown filter. Preserves every other
+  // URL param (period/metric/filter…); clicking the already-active row
+  // clears it. Soft-navigates under a transition so the stable Suspense
+  // boundary keeps the current data on screen while the scoped data
+  // streams in.
+  const applyFilter = (dim: string, key: string) => {
+    const next = new URLSearchParams(searchParams.toString());
+    if (activeDim === dim && activeVal === key) {
+      next.delete("dim");
+      next.delete("val");
+    } else {
+      next.set("dim", dim);
+      next.set("val", key);
+    }
+    const qs = next.toString();
+    startTransition(() => {
+      router.push(qs ? `${pathname}?${qs}` : pathname);
+    });
+  };
 
   const dsTabs: TabItem[] = tabs.map((t) => ({
     value: t.value,
@@ -155,9 +193,27 @@ export default function LeaderboardPanel({
             {activeTab?.emptyMessage ?? "No data in this window."}
           </div>
         ) : (
-          rows.map((row) => (
-            <LeaderboardRow key={row.key} row={row} topTotal={topTotal} />
-          ))
+          rows.map((row) => {
+            const filterable =
+              !!activeTab?.filterDim && !row.italic && !!row.key;
+            const isActiveFilter =
+              filterable &&
+              activeDim === activeTab!.filterDim &&
+              activeVal === row.key;
+            return (
+              <LeaderboardRow
+                key={row.key}
+                row={row}
+                topTotal={topTotal}
+                onFilter={
+                  filterable
+                    ? () => applyFilter(activeTab!.filterDim!, row.key)
+                    : undefined
+                }
+                filterActive={isActiveFilter}
+              />
+            );
+          })
         )}
       </div>
     </div>
@@ -167,13 +223,20 @@ export default function LeaderboardPanel({
 function LeaderboardRow({
   row,
   topTotal,
+  onFilter,
+  filterActive = false,
 }: {
   row: LeaderRow;
   topTotal: number;
+  /** When set, renders a hover-revealed funnel that re-scopes the page. */
+  onFilter?: () => void;
+  /** This row is the active page-wide filter — funnel stays lit + visible. */
+  filterActive?: boolean;
 }) {
   const widthRatio = topTotal === 0 ? 0 : row.total / topTotal;
   const showLink = !row.italic && !!row.href;
   const showCopy = !row.italic && !!row.copyValue;
+  const showFilter = !!onFilter;
   return (
     <div
       className="group/row"
@@ -262,7 +325,7 @@ function LeaderboardRow({
                 {row.label}
               </span>
             )}
-            {showCopy && (
+            {(showCopy || showFilter) && (
               <div
                 className="opacity-0 group-hover/row:opacity-100"
                 style={{
@@ -272,13 +335,45 @@ function LeaderboardRow({
                   right: 4,
                   display: "flex",
                   alignItems: "center",
+                  gap: 2,
                   padding: "0 4px",
                   background: "hsl(var(--color-surface))",
                   borderRadius: 6,
                   transition: "opacity 0.15s ease",
                 }}
               >
-                <CopyPathButton value={row.copyValue!} />
+                {showFilter && (
+                  <button
+                    type="button"
+                    onClick={onFilter}
+                    aria-pressed={filterActive}
+                    aria-label={
+                      filterActive
+                        ? `Clear ${row.label} filter`
+                        : `Filter by ${row.label}`
+                    }
+                    title={filterActive ? "Clear filter" : "Filter"}
+                    className={`inline-flex items-center justify-center rounded-[6px] transition-colors ${
+                      filterActive
+                        ? ""
+                        : "text-[color:hsl(var(--color-textSubtle))] hover:text-[color:hsl(var(--color-textDefault))]"
+                    }`}
+                    style={{
+                      width: 24,
+                      height: 24,
+                      cursor: "pointer",
+                      ...(filterActive
+                        ? { color: "var(--ds-blue-700)" }
+                        : {}),
+                    }}
+                  >
+                    <Filter
+                      className="w-4 h-4"
+                      strokeWidth={filterActive ? 2.5 : 1.5}
+                    />
+                  </button>
+                )}
+                {showCopy && <CopyPathButton value={row.copyValue!} />}
               </div>
             )}
           </div>

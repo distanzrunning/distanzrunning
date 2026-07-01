@@ -32,8 +32,10 @@ import {
 } from "@/components/ui/Table";
 import LeaderboardPanel from "@/components/admin/LeaderboardPanel";
 import {
-  getConsentRowsInRange,
-  getConsentBreakdownsInRange,
+  getEnrichedConsentsInRange,
+  matchesScope,
+  rankBreakdowns,
+  type ConsentDimKey,
   type ConsentRowRaw,
 } from "./data";
 import RecentDecisionsTable from "./RecentDecisionsTable";
@@ -41,6 +43,16 @@ import RecentDecisionsTable from "./RecentDecisionsTable";
 interface BuildHrefContext {
   tz: string;
   earliestDate: Date | null;
+  /** Active breakdown filter — preserved across tile clicks so switching
+   *  metric/window doesn't drop the page-wide scope. */
+  scope?: ScopeFilter | null;
+}
+
+/** A page-wide breakdown filter: dim = the breakdown dimension, val = the
+ *  selected row's grouping key (e.g. dim="geography", val="GB"). */
+export interface ScopeFilter {
+  dim: ConsentDimKey;
+  val: string;
 }
 
 type Decision = "accept_all" | "reject_all" | "custom";
@@ -59,7 +71,7 @@ function buildHref(
   window: DateWindow,
   filter: Decision | null,
   metric: Metric,
-  { tz, earliestDate }: BuildHrefContext,
+  { tz, earliestDate, scope }: BuildHrefContext,
 ): string {
   const usp = new URLSearchParams();
   const preset = matchPreset(window, tz, earliestDate);
@@ -81,6 +93,12 @@ function buildHref(
     } else {
       usp.set("metric", "decisions");
     }
+  }
+  // Carry the active breakdown filter across tile clicks — it's orthogonal
+  // to metric/decision-filter and composes with them.
+  if (scope) {
+    usp.set("dim", scope.dim);
+    usp.set("val", scope.val);
   }
   const qs = usp.toString();
   return qs ? `${BASE_PATH}?${qs}` : BASE_PATH;
@@ -289,6 +307,7 @@ function CategoryBar({
 export async function ConsentDashboardContent({
   filter,
   metric,
+  scope = null,
   windowStart,
   windowEnd,
   tz,
@@ -296,6 +315,7 @@ export async function ConsentDashboardContent({
 }: {
   filter?: DecisionFilter | null;
   metric: Metric;
+  scope?: ScopeFilter | null;
   windowStart: Date;
   windowEnd: Date;
   tz: string;
@@ -336,25 +356,24 @@ export async function ConsentDashboardContent({
       currentWindow,
       filter === target ? null : target,
       "decisions",
-      { tz, earliestDate },
+      { tz, earliestDate, scope },
     );
 
-  // Single DB hit covering the union of the previous + current
-  // window so the trend pills, tile values, and chart all come from
-  // one cached read. Cache key is (previous.start, currentWindow.end,
-  // env) so identical tile clicks within the same window + env reuse
-  // the cache.
-  const rows = await getConsentRowsInRange(
+  // Single DB hit covering the union of the previous + current window so the
+  // trend pills, tile values, chart, AND the ranked breakdowns all come from
+  // one cached read. Cache key is (previous.start, currentWindow.end) so
+  // identical tile clicks within the same window reuse the cache.
+  const allRows = await getEnrichedConsentsInRange(
     previous.start.toISOString(),
     currentWindow.end.toISOString(),
   );
-
-  // Ranked breakdowns (Audience / Source panels) are scoped to the active
-  // window only — fetched in parallel with the trend slice above.
-  const breakdowns = await getConsentBreakdownsInRange(
-    currentWindow.start.toISOString(),
-    currentWindow.end.toISOString(),
-  );
+  // A page-wide breakdown filter (e.g. Geography = United Kingdom) re-scopes
+  // EVERYTHING — tiles, chart, category bars, recent table, and every other
+  // breakdown panel — to matching consents. Applied in-memory here (kept out
+  // of the cache key) before any metric is computed.
+  const rows = scope
+    ? allRows.filter((r) => matchesScope(r, scope.dim, scope.val))
+    : allRows;
 
   // Slice the fetched rows into "current window" and the same-
   // length window immediately before, so trend pills come from one
@@ -373,6 +392,11 @@ export async function ConsentDashboardContent({
     const key = formatBusinessDay(new Date(r.created_at), tz);
     return key >= previousStartKey && key <= previousEndKey;
   });
+
+  // Ranked breakdowns (Audience / Source panels) come from the same enriched
+  // rows, scoped to the active window (and the active filter, since `rows` is
+  // already filtered) — so filtering by Geography narrows every other panel too.
+  const breakdowns = rankBreakdowns(currentRows);
 
   const currentCount = currentRows.length;
   const previousCount = previousRows.length;
@@ -600,30 +624,35 @@ export async function ConsentDashboardContent({
               title: "Devices",
               rows: breakdowns.devices,
               emptyMessage: "No device data in this window.",
+              filterDim: "devices",
             },
             {
               value: "browsers",
               title: "Browsers",
               rows: breakdowns.browsers,
               emptyMessage: "No browser data in this window.",
+              filterDim: "browsers",
             },
             {
               value: "os",
               title: "OS",
               rows: breakdowns.operatingSystems,
               emptyMessage: "No operating-system data in this window.",
+              filterDim: "os",
             },
             {
               value: "geography",
               title: "Geography",
               rows: breakdowns.countries,
               emptyMessage: "No geographic data in this window.",
+              filterDim: "geography",
             },
             {
               value: "languages",
               title: "Languages",
               rows: breakdowns.languages,
               emptyMessage: "No language data in this window.",
+              filterDim: "languages",
             },
           ]}
         />
@@ -637,18 +666,21 @@ export async function ConsentDashboardContent({
               title: "UI",
               rows: breakdowns.uiSources,
               emptyMessage: "No UI-source data in this window.",
+              filterDim: "ui",
             },
             {
               value: "domains",
               title: "Domains",
               rows: breakdowns.domains,
               emptyMessage: "No domain data in this window.",
+              filterDim: "domains",
             },
             {
               value: "policy",
               title: "Policy",
               rows: breakdowns.policies,
               emptyMessage: "No policy data in this window.",
+              filterDim: "policy",
             },
           ]}
         />

@@ -13,7 +13,11 @@ import {
   ConsentLookupSkeleton,
 } from "./ConsentLookup";
 import { windowFromParams } from "@/components/admin/datePresets";
-import { getEarliestDecisionDate } from "./data";
+import {
+  getEarliestDecisionDate,
+  isConsentDimKey,
+  resolveScopeLabel,
+} from "./data";
 
 export const metadata = {
   title: "Consent — Stride Admin",
@@ -53,6 +57,8 @@ export default async function ConsentDashboardPage({
     period?: string;
     from?: string;
     to?: string;
+    dim?: string;
+    val?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -63,6 +69,15 @@ export default async function ConsentDashboardPage({
   const rawFilter = normaliseFilter(params.filter);
   const metric = resolveMetric(params.metric, rawFilter);
   const filter = metric === "visitors" ? null : rawFilter;
+  // Page-wide breakdown filter (?dim=geography&val=GB) — validated against the
+  // known dimensions, then resolved to a display label for the chip. Composes
+  // with metric/decision-filter; orthogonal to both.
+  const scopeDim = isConsentDimKey(params.dim) ? params.dim : null;
+  const scope =
+    scopeDim && params.val ? { dim: scopeDim, val: params.val } : null;
+  const scopeLabel = scope
+    ? await resolveScopeLabel(scope.dim, scope.val)
+    : null;
   const { timezone: tz } = await getSiteSettings();
   // Earliest stored decision date — drives the "All time" preset
   // for both server-side window resolution and the client picker's
@@ -129,7 +144,15 @@ export default async function ConsentDashboardPage({
           </Suspense>
         ) : (
           <ConsentFilterShell>
-            <ConsentFilterRow tz={tz} earliestDate={earliestDate} />
+            <ConsentFilterRow
+              tz={tz}
+              earliestDate={earliestDate}
+              activeFilter={
+                scope && scopeLabel
+                  ? { dim: scope.dim, val: scope.val, label: scopeLabel }
+                  : null
+              }
+            />
             {/* No `key` on this Suspense — keeping the boundary
                 stable across filter/window changes means React
                 preserves the existing dashboard tree during a
@@ -142,6 +165,7 @@ export default async function ConsentDashboardPage({
               <ConsentDashboardContent
                 filter={filter}
                 metric={metric}
+                scope={scope}
                 windowStart={window.start}
                 windowEnd={window.end}
                 tz={tz}
