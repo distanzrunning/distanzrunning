@@ -111,6 +111,44 @@
   }
 }
 
+/* Admin sidebar level swap — the sub-nav (Consent / Feedback / Races / Design
+   System) fades + slides in when you drill in/out, matching Vercel's dashboard
+   sidebar (a ~0.2s transform/opacity transition on the nav content). Sub-levels
+   enter from the right; the top-level admin nav enters from the left, mirroring
+   the drill direction. */
+@keyframes adminSidebarLevelInRight {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes adminSidebarLevelInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.admin-sidebar-level--in {
+  animation: adminSidebarLevelInRight 0.2s ease;
+}
+.admin-sidebar-level--out {
+  animation: adminSidebarLevelInLeft 0.2s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-sidebar-level--in,
+  .admin-sidebar-level--out {
+    animation: none;
+  }
+}
+
 .animate-blink {
   animation: blink 1s step-end infinite;
 }

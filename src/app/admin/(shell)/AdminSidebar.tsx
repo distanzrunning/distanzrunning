@@ -69,6 +69,14 @@ function levelFromPathname(pathname: string): SidebarLevel {
   return "admin";
 }
 
+// Back-header label per sub-level (the top-level "admin" nav has no back row).
+const SUBLEVEL_LABEL: Record<Exclude<SidebarLevel, "admin">, string> = {
+  "design-system": "Design System",
+  consent: "Consent",
+  feedback: "Feedback",
+  races: "Races",
+};
+
 export const CONSENT_NAV: { id: string; label: string; href: string }[] = [
   { id: "dashboard", label: "Dashboard", href: "/admin/consent" },
   {
@@ -626,49 +634,38 @@ export default function AdminSidebar({
       )}
       <div style={{ flex: 1, minHeight: 0 }}>
         <div style={{ height: "100%", overflowY: "auto" }}>
-          {level === "design-system" && (
-            <BackHeader
-              leftSlot={<ChevronLeft className="w-4 h-4" />}
-              label="Design System"
-              onClick={() => setLevel("admin")}
-              ariaLabel="Back to admin"
-            />
-          )}
-          {level === "consent" && (
-            <BackHeader
-              leftSlot={<ChevronLeft className="w-4 h-4" />}
-              label="Consent"
-              onClick={() => setLevel("admin")}
-              ariaLabel="Back to admin"
-            />
-          )}
-          {level === "feedback" && (
-            <BackHeader
-              leftSlot={<ChevronLeft className="w-4 h-4" />}
-              label="Feedback"
-              onClick={() => setLevel("admin")}
-              ariaLabel="Back to admin"
-            />
-          )}
-          {level === "races" && (
-            <BackHeader
-              leftSlot={<ChevronLeft className="w-4 h-4" />}
-              label="Races"
-              onClick={() => setLevel("admin")}
-              ariaLabel="Back to admin"
-            />
-          )}
-          {level === "design-system" ? (
-            <DesignSystemNav pathname={pathname} />
-          ) : level === "consent" ? (
-            <ConsentNav pathname={pathname} />
-          ) : level === "feedback" ? (
-            <FeedbackNav pathname={pathname} />
-          ) : level === "races" ? (
-            <RacesNav pathname={pathname} />
-          ) : (
-            <AdminNav pathname={pathname} />
-          )}
+          {/* Keyed on `level` so a drill in/out remounts the sub-nav and
+              replays the entrance animation — sub-levels slide in from the
+              right, the top-level admin nav from the left (matching Vercel's
+              dashboard sidebar content transition). */}
+          <div
+            key={level}
+            className={
+              level === "admin"
+                ? "admin-sidebar-level--out"
+                : "admin-sidebar-level--in"
+            }
+          >
+            {level !== "admin" && (
+              <BackHeader
+                leftSlot={<ChevronLeft className="w-4 h-4" />}
+                label={SUBLEVEL_LABEL[level]}
+                onClick={() => setLevel("admin")}
+                ariaLabel="Back to admin"
+              />
+            )}
+            {level === "design-system" ? (
+              <DesignSystemNav pathname={pathname} />
+            ) : level === "consent" ? (
+              <ConsentNav pathname={pathname} />
+            ) : level === "feedback" ? (
+              <FeedbackNav pathname={pathname} />
+            ) : level === "races" ? (
+              <RacesNav pathname={pathname} />
+            ) : (
+              <AdminNav pathname={pathname} />
+            )}
+          </div>
         </div>
       </div>
     </div>
