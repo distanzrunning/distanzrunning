@@ -502,21 +502,18 @@ function ChartInner({
           // (instead of adding +8 to `left`) keeps both sides equal.
           offsetLeft={8}
           offsetTop={0}
-          // A visible hairline border on the rounded edge. The shipped
-          // DS Tooltip is shadow-only, but it uses a dark inverted fill
-          // so its edge reads against any surface; this chart tooltip is
-          // a white `surface` fill floating over the white chart card,
-          // where --ds-shadow-tooltip's faint `0 0 0 1px #00000014`
-          // hairline barely registers on the corners. Pair the shadow
-          // (float/elevation) with a real borderDefault hairline so the
-          // rounded edge is defined. Not `material-tooltip` — that
-          // utility layers a gray-400 border on the SAME shadow token
-          // (double border); and not `unstyled`, since visx writes its
-          // positional top/left into this style prop.
+          // No `material-tooltip` className — that utility layers a
+          // 1px gray-400 border on top of --ds-shadow-tooltip, which
+          // already opens with a `0 0 0 1px rgba(0,0,0,0.08)`
+          // hairline. The shipped DS Tooltip (src/components/ui/
+          // Tooltip.tsx) follows the same shadow-only pattern.
+          // `unstyled` would drop the style prop entirely — but visx
+          // also writes positional `top`/`left` into the same style
+          // prop, so the tooltip would end up un-positioned. Keep
+          // it off.
           style={{
             position: "absolute",
             background: "hsl(var(--color-surface))",
-            border: "1px solid hsl(var(--color-borderDefault))",
             boxShadow: "var(--ds-shadow-tooltip)",
             borderRadius: 6,
             padding: "8px 16px",
@@ -580,6 +577,7 @@ function ChartInner({
             transform: "translate(-50%, -50%)",
             background: "hsl(var(--color-surface))",
             color: "hsl(var(--color-textDefault))",
+            border: "1px solid hsl(var(--color-borderDefault))",
             fontSize: 12,
             lineHeight: "16px",
             fontWeight: 500,
