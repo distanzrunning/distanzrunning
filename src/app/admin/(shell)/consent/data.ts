@@ -462,14 +462,40 @@ export const getEnrichedConsentsInRange = unstable_cache(
   { revalidate: 30, tags: [CONSENT_CACHE_TAG] },
 );
 
-/** True when `row` belongs to the active breakdown filter (dim = val, where
- *  val is the row's grouping key). Unknown buckets aren't filterable. */
-export function matchesScope(
+/** A single active breakdown filter: dim = the dimension, val = the selected
+ *  row's grouping key (e.g. {dim:"geography", val:"GB"}). */
+export interface ConsentFilter {
+  dim: ConsentDimKey;
+  val: string;
+}
+
+/** Parse repeated `?f=dim:val` params into validated filters — one per
+ *  dimension (later wins), so you can stack Desktop + United Kingdom but not
+ *  two countries. Split on the first ":" (dims never contain one). */
+export function parseFilters(
+  raw: string | string[] | undefined,
+): ConsentFilter[] {
+  if (raw == null) return [];
+  const list = Array.isArray(raw) ? raw : [raw];
+  const byDim = new Map<ConsentDimKey, string>();
+  for (const entry of list) {
+    const idx = entry.indexOf(":");
+    if (idx < 1) continue;
+    const dim = entry.slice(0, idx);
+    const val = entry.slice(idx + 1);
+    if (!isConsentDimKey(dim) || !val) continue;
+    byDim.set(dim, val);
+  }
+  return [...byDim.entries()].map(([dim, val]) => ({ dim, val }));
+}
+
+/** True when `row` satisfies EVERY active filter (AND across dimensions).
+ *  Unknown buckets aren't filterable (funnels are suppressed on them). */
+export function matchesFilters(
   row: EnrichedConsent,
-  dim: ConsentDimKey,
-  val: string,
+  filters: ConsentFilter[],
 ): boolean {
-  return row.dims[dim] === val;
+  return filters.every((f) => row.dims[f.dim] === f.val);
 }
 
 /** Rank every dimension of a (already window-scoped, already filter-scoped)
@@ -496,11 +522,11 @@ export function rankBreakdowns(rows: EnrichedConsent[]): ConsentBreakdowns {
   };
 }
 
-/** Resolve a filter (dim, val) to its display label for the active-filter chip
- *  — used server-side in page.tsx, where the enriched rows aren't in hand.
+/** Resolve a filter (dim, val) to its display label for the filter buttons.
  *  Geography/languages resolve via Intl; domain/policy via the cached ref
- *  maps; the rest are their own label. */
-export async function resolveScopeLabel(
+ *  maps; the rest are their own label. Reliable regardless of the active
+ *  window (doesn't depend on the value appearing in the current rows). */
+export async function resolveFilterLabel(
   dim: ConsentDimKey,
   val: string,
 ): Promise<string> {

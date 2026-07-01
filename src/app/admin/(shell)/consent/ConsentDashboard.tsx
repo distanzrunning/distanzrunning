@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { Inbox, X } from "lucide-react";
+import { Inbox } from "lucide-react";
 
 import TrendChart from "@/components/ui/TrendChart";
 import {
@@ -33,28 +32,22 @@ import {
 } from "@/components/ui/Table";
 import LeaderboardPanel from "@/components/admin/LeaderboardPanel";
 import {
-  CONSENT_DIM_LABEL,
   getEnrichedConsentsInRange,
-  matchesScope,
+  matchesFilters,
   rankBreakdowns,
-  type ConsentDimKey,
+  resolveFilterLabel,
+  type ConsentFilter,
   type ConsentRowRaw,
 } from "./data";
+import FilterBar, { type ActiveFilter } from "./FilterBar";
 import RecentDecisionsTable from "./RecentDecisionsTable";
 
 interface BuildHrefContext {
   tz: string;
   earliestDate: Date | null;
-  /** Active breakdown filter — preserved across tile clicks so switching
+  /** Active breakdown filters — preserved across tile clicks so switching
    *  metric/window doesn't drop the page-wide scope. */
-  scope?: ScopeFilter | null;
-}
-
-/** A page-wide breakdown filter: dim = the breakdown dimension, val = the
- *  selected row's grouping key (e.g. dim="geography", val="GB"). */
-export interface ScopeFilter {
-  dim: ConsentDimKey;
-  val: string;
+  filters?: ConsentFilter[];
 }
 
 type Decision = "accept_all" | "reject_all" | "custom";
@@ -73,7 +66,7 @@ function buildHref(
   window: DateWindow,
   filter: Decision | null,
   metric: Metric,
-  { tz, earliestDate, scope }: BuildHrefContext,
+  { tz, earliestDate, filters }: BuildHrefContext,
 ): string {
   const usp = new URLSearchParams();
   const preset = matchPreset(window, tz, earliestDate);
@@ -96,11 +89,10 @@ function buildHref(
       usp.set("metric", "decisions");
     }
   }
-  // Carry the active breakdown filter across tile clicks — it's orthogonal
-  // to metric/decision-filter and composes with them.
-  if (scope) {
-    usp.set("dim", scope.dim);
-    usp.set("val", scope.val);
+  // Carry the active breakdown filters across tile clicks — orthogonal to
+  // metric/decision-filter, composes with them. Repeated `f=dim:val`.
+  for (const f of filters ?? []) {
+    usp.append("f", `${f.dim}:${f.val}`);
   }
   const qs = usp.toString();
   return qs ? `${BASE_PATH}?${qs}` : BASE_PATH;
@@ -309,7 +301,7 @@ function CategoryBar({
 export async function ConsentDashboardContent({
   filter,
   metric,
-  scope = null,
+  filters = [],
   windowStart,
   windowEnd,
   tz,
@@ -317,7 +309,7 @@ export async function ConsentDashboardContent({
 }: {
   filter?: DecisionFilter | null;
   metric: Metric;
-  scope?: ScopeFilter | null;
+  filters?: ConsentFilter[];
   windowStart: Date;
   windowEnd: Date;
   tz: string;
@@ -358,7 +350,7 @@ export async function ConsentDashboardContent({
       currentWindow,
       filter === target ? null : target,
       "decisions",
-      { tz, earliestDate, scope },
+      { tz, earliestDate, filters },
     );
 
   // Single DB hit covering the union of the previous + current window so the
@@ -369,27 +361,22 @@ export async function ConsentDashboardContent({
     previous.start.toISOString(),
     currentWindow.end.toISOString(),
   );
-  // A page-wide breakdown filter (e.g. Geography = United Kingdom) re-scopes
-  // EVERYTHING — tiles, chart, category bars, recent table, and every other
-  // breakdown panel — to matching consents. Applied in-memory here (kept out
-  // of the cache key) before any metric is computed.
-  const rows = scope
-    ? allRows.filter((r) => matchesScope(r, scope.dim, scope.val))
+  // Page-wide breakdown filters (e.g. Devices = Desktop AND Geography = United
+  // Kingdom) re-scope EVERYTHING — tiles, chart, category bars, recent table,
+  // and every breakdown panel — to consents matching ALL of them. Applied
+  // in-memory here (kept out of the cache key) before any metric is computed.
+  const rows = filters.length
+    ? allRows.filter((r) => matchesFilters(r, filters))
     : allRows;
 
-  // Display label + clear-href for the active-filter chip shown in the chart
-  // card. The chip is the always-visible clear affordance — the per-panel
-  // Remove-filter toolbar hides when you switch to a breakdown that doesn't
-  // own the active dimension, so the chart (always on screen) carries a clear.
-  const scopeLabel = scope
-    ? (allRows.find((r) => r.dims[scope.dim] === scope.val)?.dimLabels[
-        scope.dim
-      ] ?? scope.val)
-    : null;
-  const clearScopeHref = buildHref(currentWindow, filter ?? null, metric, {
-    tz,
-    earliestDate,
-  });
+  // Resolve each active filter's display label for the filter buttons in the
+  // chart area (the always-visible clear affordance).
+  const activeFilters: ActiveFilter[] = await Promise.all(
+    filters.map(async (f) => ({
+      ...f,
+      label: await resolveFilterLabel(f.dim, f.val),
+    })),
+  );
 
   // Slice the fetched rows into "current window" and the same-
   // length window immediately before, so trend pills come from one
@@ -586,60 +573,13 @@ export async function ConsentDashboardContent({
         </div>
         </div>
 
-        {/* Active-filter chip — the always-visible clear affordance in the
-            chart area (the per-panel Remove-filter toolbar hides when you
-            switch to a breakdown that doesn't own the active dimension). */}
-        {scope && scopeLabel && (
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 8,
-              alignItems: "center",
-              padding: "12px 20px 0",
-            }}
-          >
-            <Link
-              href={clearScopeHref}
-              scroll={false}
-              aria-label={`Remove ${CONSENT_DIM_LABEL[scope.dim]} filter`}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                height: 28,
-                paddingLeft: 10,
-                paddingRight: 6,
-                borderRadius: 6,
-                background: "hsl(var(--color-surface))",
-                border: "1px solid hsl(var(--color-borderDefault))",
-                textDecoration: "none",
-                fontSize: 13,
-                lineHeight: "20px",
-                whiteSpace: "nowrap",
-                maxWidth: "100%",
-              }}
-            >
-              <span style={{ color: "hsl(var(--color-textSubtle))" }}>
-                {CONSENT_DIM_LABEL[scope.dim]}
-              </span>
-              <span
-                style={{
-                  color: "hsl(var(--color-textDefault))",
-                  fontWeight: 500,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  minWidth: 0,
-                }}
-                title={scopeLabel}
-              >
-                {scopeLabel}
-              </span>
-              <X
-                className="w-4 h-4"
-                style={{ color: "hsl(var(--color-textSubtle))", flexShrink: 0 }}
-              />
-            </Link>
+        {/* Active-filter bar — one removable button per filter + a Clear,
+            right-aligned in the always-on-screen chart area (the per-panel
+            toolbar hides when you switch to a breakdown that doesn't own the
+            filtered dimension). */}
+        {activeFilters.length > 0 && (
+          <div style={{ padding: "12px 20px 0" }}>
+            <FilterBar filters={activeFilters} />
           </div>
         )}
 

@@ -2,9 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { X } from "lucide-react";
 
-import { Button } from "@/components/ui/Button";
 import { Tabs, type TabItem } from "@/components/ui/Tabs";
 import { Tooltip } from "@/components/ui/Tooltip";
 
@@ -98,11 +96,12 @@ export default function LeaderboardPanel({
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
 
-  // If a breakdown filter is already applied, default to its tab so the
-  // applied row is visible; otherwise start on the first tab.
-  const activeDim = searchParams.get("dim");
-  const activeVal = searchParams.get("val");
-  const filteredTab = tabs.find((t) => t.filterDim && t.filterDim === activeDim);
+  // Active filters live in repeated `?f=dim:val` params. A token is one such
+  // pair; the funnel toggles membership of its `dim:key`.
+  const activeTokens = searchParams.getAll("f");
+  const filteredTab = tabs.find(
+    (t) => t.filterDim && activeTokens.some((tk) => tk.startsWith(`${t.filterDim}:`)),
+  );
   const [active, setActive] = useState(
     filteredTab?.value ?? tabs[0]?.value ?? "",
   );
@@ -112,41 +111,27 @@ export default function LeaderboardPanel({
   // leader anchors at full width and the rest scale relative.
   const topTotal = rows[0]?.total ?? 0;
 
-  // Apply / toggle a page-wide breakdown filter. Preserves every other
-  // URL param (period/metric/filter…); clicking the already-active row
-  // clears it. Soft-navigates under a transition so the stable Suspense
-  // boundary keeps the current data on screen while the scoped data
-  // streams in.
+  // Apply / toggle a page-wide breakdown filter. Preserves every other URL
+  // param (period/metric/filter/other f=…); one filter per dimension, so
+  // adding a value replaces any existing filter on the same dim, and clicking
+  // the already-active row clears it. Soft-navigates under a transition so the
+  // stable Suspense boundary keeps the current data on screen while the scoped
+  // data streams in.
   const applyFilter = (dim: string, key: string) => {
     const next = new URLSearchParams(searchParams.toString());
-    if (activeDim === dim && activeVal === key) {
-      next.delete("dim");
-      next.delete("val");
-    } else {
-      next.set("dim", dim);
-      next.set("val", key);
-    }
+    const token = `${dim}:${key}`;
+    const existing = next.getAll("f");
+    next.delete("f");
+    const isActive = existing.includes(token);
+    // Drop any filter on this dimension (replace / toggle-off semantics).
+    const kept = existing.filter((tk) => !tk.startsWith(`${dim}:`));
+    if (!isActive) kept.push(token);
+    kept.forEach((tk) => next.append("f", tk));
     const qs = next.toString();
     startTransition(() => {
       router.push(qs ? `${pathname}?${qs}` : pathname);
     });
   };
-
-  const clearFilter = () => {
-    const next = new URLSearchParams(searchParams.toString());
-    next.delete("dim");
-    next.delete("val");
-    const qs = next.toString();
-    startTransition(() => {
-      router.push(qs ? `${pathname}?${qs}` : pathname);
-    });
-  };
-
-  // This panel "owns" the active filter when one of its tabs is the filtered
-  // dimension — that's where Vercel surfaces the Remove-filter toolbar (a
-  // recessed strip between the tab row and the body).
-  const ownsActiveFilter =
-    !!activeDim && tabs.some((t) => t.filterDim && t.filterDim === activeDim);
 
   const dsTabs: TabItem[] = tabs.map((t) => ({
     value: t.value,
@@ -207,31 +192,6 @@ export default function LeaderboardPanel({
           {columnHeader}
         </span>
       </div>
-      {/* Remove-filter toolbar — a recessed canvas strip that appears between
-          the tab row and the body while this panel's dimension is the active
-          page-wide filter (Vercel's analytics pattern). */}
-      {ownsActiveFilter && (
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "center",
-            gap: 8,
-            padding: "8px 12px",
-            background: "hsl(var(--color-canvas))",
-            borderBottom: "1px solid hsl(var(--color-borderDefault))",
-          }}
-        >
-          <Button
-            variant="secondary"
-            size="tiny"
-            suffixIcon={<X className="w-4 h-4" />}
-            onClick={clearFilter}
-          >
-            Remove filter
-          </Button>
-        </div>
-      )}
       <div
         style={{
           display: "flex",
@@ -265,8 +225,7 @@ export default function LeaderboardPanel({
               !!activeTab?.filterDim && !row.italic && !!row.key;
             const isActiveFilter =
               filterable &&
-              activeDim === activeTab!.filterDim &&
-              activeVal === row.key;
+              activeTokens.includes(`${activeTab!.filterDim}:${row.key}`);
             return (
               <LeaderboardRow
                 key={row.key}

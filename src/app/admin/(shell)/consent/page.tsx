@@ -13,7 +13,7 @@ import {
   ConsentLookupSkeleton,
 } from "./ConsentLookup";
 import { windowFromParams } from "@/components/admin/datePresets";
-import { getEarliestDecisionDate, isConsentDimKey } from "./data";
+import { getEarliestDecisionDate, parseFilters } from "./data";
 
 export const metadata = {
   title: "Consent — Stride Admin",
@@ -53,8 +53,7 @@ export default async function ConsentDashboardPage({
     period?: string;
     from?: string;
     to?: string;
-    dim?: string;
-    val?: string;
+    f?: string | string[];
   }>;
 }) {
   const params = await searchParams;
@@ -65,12 +64,10 @@ export default async function ConsentDashboardPage({
   const rawFilter = normaliseFilter(params.filter);
   const metric = resolveMetric(params.metric, rawFilter);
   const filter = metric === "visitors" ? null : rawFilter;
-  // Page-wide breakdown filter (?dim=geography&val=GB) — validated against the
-  // known dimensions. Composes with metric/decision-filter; orthogonal to both.
-  // Cleared from the owning panel's Remove-filter toolbar (Vercel pattern).
-  const scopeDim = isConsentDimKey(params.dim) ? params.dim : null;
-  const scope =
-    scopeDim && params.val ? { dim: scopeDim, val: params.val } : null;
+  // Page-wide breakdown filters (repeated ?f=dim:val) — validated against the
+  // known dimensions, one per dimension. Compose with metric/decision-filter;
+  // orthogonal to both. Managed from the chart-area filter buttons + funnels.
+  const filters = parseFilters(params.f);
   const { timezone: tz } = await getSiteSettings();
   // Earliest stored decision date — drives the "All time" preset
   // for both server-side window resolution and the client picker's
@@ -150,7 +147,7 @@ export default async function ConsentDashboardPage({
               <ConsentDashboardContent
                 filter={filter}
                 metric={metric}
-                scope={scope}
+                filters={filters}
                 windowStart={window.start}
                 windowEnd={window.end}
                 tz={tz}
