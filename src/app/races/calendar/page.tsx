@@ -2,7 +2,7 @@
 
 import { client as sanity } from '@/sanity/lib/client'
 import { RaceCalendarClient } from './RaceCalendarClient'
-import type { RaceGuide } from '../page'
+import type { RaceGuide } from './_types'
 
 export const metadata = {
   title: 'Race Calendar | Distanz Running',

@@ -172,7 +172,7 @@ export default function ContactForm() {
             disabled={isSubmitting || !formData.email || !formData.name || formData.interests.length === 0}
             className="group whitespace-nowrap font-medium text-base relative flex cursor-pointer select-none items-center rounded-lg border-none p-0 no-underline outline-none transition ease-out focus-visible:outline-none active:scale-[0.98] active:duration-100 h-12 gap-2 px-5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed justify-center"
           >
-            {isSubmitting ? 'Sending...' : submitStatus === 'success' ? 'Sent!' : 'Send'}
+            {isSubmitting ? 'Sending...' : 'Send'}
           </button>
         </div>
       </div>

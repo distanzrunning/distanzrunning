@@ -43,11 +43,14 @@ const nextConfig: NextConfig = {
   },
   
   eslint: {
+    // TODO(advisor-003): 13 lint errors across 7 files to clear before we can
+    // enable this gate (unused vars, prefer-const, a handful of `any`). The
+    // type gate below has been restored; the lint gate is a follow-up. Until
+    // then `next build` will not fail on lint errors.
     ignoreDuringBuilds: true,
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  // Type errors now fail the build again (backlog cleared in advisor-003).
+  // Do NOT re-add `typescript.ignoreBuildErrors` — it silently ships type bugs.
 
   // The /r/* registry routes read component source from the repo at
   // request time. Vercel's deployment tracing won't include those
