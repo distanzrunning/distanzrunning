@@ -2,11 +2,35 @@
 
 import { useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Filter } from "lucide-react";
 
 import { Tabs, type TabItem } from "@/components/ui/Tabs";
+import { Tooltip } from "@/components/ui/Tooltip";
 
-import CopyPathButton from "./CopyPathButton";
+import CopyPathButton, { ROW_ACTION_BUTTON_CLASS } from "./CopyPathButton";
+
+// Geist's exact funnel glyph (filled path) — matches Vercel's leaderboard
+// filter action class-for-class, per the DS iconography rule allowing inlined
+// Geist SVGs where a component must mirror Geist exactly.
+function FunnelGlyph() {
+  return (
+    <svg
+      height="16"
+      width="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12.8721 5.48633L12.6855 5.66992L9.875 8.43457V12.876H8.2998L8.13672 12.7598L6.38672 11.5088L6.125 11.3213V8.43457L3.31152 5.66992L3.125 5.48633V3.125H12.8721V5.48633ZM4.375 4.96094L7.18848 7.72754L7.375 7.91113V10.6777L8.625 11.5713V7.91113L8.81152 7.72754L11.6221 4.96191V4.375H4.375V4.96094Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
 
 // Row shape consumed by the panel. Keeps the rendering generic
 // across Pages (path is a link, copyable) and Topics (text only).
@@ -327,7 +351,7 @@ function LeaderboardRow({
             )}
             {(showCopy || showFilter) && (
               <div
-                className="opacity-0 group-hover/row:opacity-100"
+                className="opacity-0 group-hover/row:opacity-100 transition-opacity"
                 style={{
                   position: "absolute",
                   top: 4,
@@ -335,45 +359,28 @@ function LeaderboardRow({
                   right: 4,
                   display: "flex",
                   alignItems: "center",
-                  gap: 2,
-                  padding: "0 4px",
                   background: "hsl(var(--color-surface))",
                   borderRadius: 6,
-                  transition: "opacity 0.15s ease",
                 }}
               >
-                {showFilter && (
-                  <button
-                    type="button"
-                    onClick={onFilter}
-                    aria-pressed={filterActive}
-                    aria-label={
-                      filterActive
-                        ? `Clear ${row.label} filter`
-                        : `Filter by ${row.label}`
-                    }
-                    title={filterActive ? "Clear filter" : "Filter"}
-                    className={`inline-flex items-center justify-center rounded-[6px] transition-colors ${
-                      filterActive
-                        ? ""
-                        : "text-[color:hsl(var(--color-textSubtle))] hover:text-[color:hsl(var(--color-textDefault))]"
-                    }`}
-                    style={{
-                      width: 24,
-                      height: 24,
-                      cursor: "pointer",
-                      ...(filterActive
-                        ? { color: "var(--ds-blue-700)" }
-                        : {}),
-                    }}
-                  >
-                    <Filter
-                      className="w-4 h-4"
-                      strokeWidth={filterActive ? 2.5 : 1.5}
-                    />
-                  </button>
-                )}
                 {showCopy && <CopyPathButton value={row.copyValue!} />}
+                {showFilter && (
+                  <Tooltip content={filterActive ? "Clear filter" : "Filter"}>
+                    <button
+                      type="button"
+                      onClick={onFilter}
+                      aria-pressed={filterActive}
+                      aria-label={
+                        filterActive
+                          ? `Clear ${row.label} filter`
+                          : `Filter by ${row.label}`
+                      }
+                      className={ROW_ACTION_BUTTON_CLASS}
+                    >
+                      <FunnelGlyph />
+                    </button>
+                  </Tooltip>
+                )}
               </div>
             )}
           </div>
