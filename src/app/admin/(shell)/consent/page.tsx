@@ -2,10 +2,7 @@ import { Suspense } from "react";
 import { ChevronLeft } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { getSiteSettings } from "@/lib/site-settings";
-import {
-  ConsentDashboardContent,
-  ConsentDashboardSkeleton,
-} from "./ConsentDashboard";
+import { ConsentDashboardContent } from "./ConsentDashboard";
 import ConsentFilterRow from "./ConsentFilterRow";
 import { ConsentFilterShell } from "./ConsentFilterShell";
 import {
@@ -135,25 +132,23 @@ export default async function ConsentDashboardPage({
         ) : (
           <ConsentFilterShell>
             <ConsentFilterRow tz={tz} earliestDate={earliestDate} />
-            {/* No `key` on this Suspense — keeping the boundary
-                stable across filter/window changes means React
-                preserves the existing dashboard tree during a
-                transition (Link click / picker startTransition),
-                so the previous tile values stay on screen while
-                the new data streams in and NumberTicker animates
-                between old and new readings instead of the row
-                flashing a skeleton. */}
-            <Suspense fallback={<ConsentDashboardSkeleton />}>
-              <ConsentDashboardContent
-                filter={filter}
-                metric={metric}
-                filters={filters}
-                windowStart={window.start}
-                windowEnd={window.end}
-                tz={tz}
-                earliestDate={earliestDate}
-              />
-            </Suspense>
+            {/* No in-page Suspense: loading.tsx is the single loading
+                boundary. It streams on both hard load and client nav, so the
+                whole page (filter row + dashboard) resolves together — no
+                second skeleton stage where the filter row goes live while the
+                content is still a skeleton, and nothing re-flashes to skeleton
+                when you navigate away. Filter/date changes are searchParam
+                transitions (loading.tsx doesn't fire), so React holds the
+                previous tile values and NumberTicker animates old → new. */}
+            <ConsentDashboardContent
+              filter={filter}
+              metric={metric}
+              filters={filters}
+              windowStart={window.start}
+              windowEnd={window.end}
+              tz={tz}
+              earliestDate={earliestDate}
+            />
           </ConsentFilterShell>
         )}
       </div>

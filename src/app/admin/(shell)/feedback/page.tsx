@@ -6,10 +6,7 @@ import type { EnvFilter } from "@/components/admin/env";
 import { ButtonLink } from "@/components/ui/Button";
 import { getSiteSettings } from "@/lib/site-settings";
 
-import {
-  FeedbackDashboardContent,
-  FeedbackDashboardSkeleton,
-} from "./FeedbackDashboard";
+import { FeedbackDashboardContent } from "./FeedbackDashboard";
 import FeedbackFilterRow from "./FeedbackFilterRow";
 import {
   FeedbackLookupContent,
@@ -165,25 +162,22 @@ export default async function FeedbackDashboardPage({
             <FeedbackLookupContent query={query} env={env} />
           </Suspense>
         ) : (
-          // No `key` on this Suspense — keeping the boundary stable
-          // across filter / window changes means React preserves the
-          // existing dashboard tree during a transition (Link click /
-          // picker startTransition), so the previous tile values stay
-          // on screen while the new data streams in and NumberTicker
-          // animates between old and new readings instead of the row
-          // flashing a skeleton.
-          <Suspense fallback={<FeedbackDashboardSkeleton />}>
-            <FeedbackDashboardContent
-              filter={filter}
-              metric={metric}
-              filters={filters}
-              windowStart={window.start}
-              windowEnd={window.end}
-              tz={tz}
-              earliestDate={earliestDate}
-              env={env}
-            />
-          </Suspense>
+          // No in-page Suspense: loading.tsx is the single loading boundary
+          // (streams on both hard load and client nav), so the whole page
+          // resolves together — no second skeleton stage, and nothing
+          // re-flashes to skeleton when navigating away. Filter / env / date
+          // changes are searchParam transitions (loading.tsx doesn't fire), so
+          // React holds the previous tile values and NumberTicker animates.
+          <FeedbackDashboardContent
+            filter={filter}
+            metric={metric}
+            filters={filters}
+            windowStart={window.start}
+            windowEnd={window.end}
+            tz={tz}
+            earliestDate={earliestDate}
+            env={env}
+          />
         )}
       </div>
     </div>

@@ -9,7 +9,7 @@ import { FeedbackDashboardSkeleton } from "./FeedbackDashboard";
 // live tile values across those.
 export default function Loading() {
   return (
-    <div>
+    <div className="admin-loading-reveal">
       <div
         style={{
           maxWidth: "none",
