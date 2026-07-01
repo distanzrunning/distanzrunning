@@ -140,6 +140,19 @@ function scanHeadingsFromContainer(
   return items;
 }
 
+// Stable signature of a TOC tree (ids + nesting) so we can skip no-op updates.
+function tocSignature(items: TOCItem[]): string {
+  return items
+    .map(
+      (i) =>
+        i.id +
+        (i.children?.length
+          ? `(${i.children.map((c) => c.id).join(",")})`
+          : ""),
+    )
+    .join("|");
+}
+
 // Hook to extract TOC items from DOM headings using callback ref
 function useAutoTOC(
   manualItems?: TOCItem[],
@@ -163,10 +176,15 @@ function useAutoTOC(
 
       if (!node) return;
 
-      // Scan function
+      // Scan function — only commit when the heading set actually changed. DS
+      // demos mutate the DOM constantly (show-code toggles, accordions); without
+      // this guard every mutation would replace the TOC array, re-rendering and
+      // re-attaching the scroll spy on each interaction (a source of jitter).
       const scan = () => {
         const items = scanHeadingsFromContainer(node, mainSectionId);
-        setAutoItems(items);
+        setAutoItems((prev) =>
+          tocSignature(prev) === tocSignature(items) ? prev : items,
+        );
       };
 
       // Initial scan
@@ -246,74 +264,41 @@ export default function ContentWithTOC({
     return ids;
   }, [tocItems, mainSectionId]);
 
-  // Scroll spy using Intersection Observer
+  // Scroll spy — deterministic position check, mirroring the consent/feedback
+  // DocToc (which is noticeably more stable than the old IntersectionObserver
+  // "visible band" here). On each scroll, the active section is simply the LAST
+  // heading whose top has passed the offset line (sticky header + section
+  // padding). This is monotonic and height-independent, so it can't flicker
+  // between headings or go stale inside a tall section — unlike an IO band that
+  // depends on each element's height and a 50%-viewport window.
   useEffect(() => {
     const ids = getAllIds();
     if (ids.length === 0) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Don't update during click-initiated scrolling
-        if (isClickScrolling.current) return;
-
-        // Build fresh set of currently visible sections from all observed elements
-        const visibleSections = new Set<string>();
-
-        // Check all observed elements, not just the ones in this callback
-        ids.forEach((id) => {
-          const element = document.getElementById(id);
-          if (element) {
-            const rect = element.getBoundingClientRect();
-            const topBoundary = HEADER_HEIGHT + SECTION_PADDING;
-            const bottomBoundary = window.innerHeight * 0.5;
-
-            // Element is visible if its top is below header and above 50% viewport
-            if (
-              rect.top >= topBoundary - rect.height &&
-              rect.top < bottomBoundary
-            ) {
-              visibleSections.add(id);
-            }
-          }
-        });
-
-        // Find the topmost visible section
-        if (visibleSections.size > 0) {
-          let topmostId = "";
-          let topmostPosition = Infinity;
-
-          visibleSections.forEach((id) => {
-            const element = document.getElementById(id);
-            if (element) {
-              const rect = element.getBoundingClientRect();
-              if (rect.top < topmostPosition) {
-                topmostPosition = rect.top;
-                topmostId = id;
-              }
-            }
-          });
-
-          if (topmostId && topmostId !== activeIdRef.current) {
-            setActiveId(topmostId);
-            window.history.replaceState(null, "", `#${topmostId}`);
-          }
+    const OFFSET = HEADER_HEIGHT + SECTION_PADDING;
+    const compute = () => {
+      // Don't fight a click-initiated smooth scroll.
+      if (isClickScrolling.current) return;
+      let active = ids[0];
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= OFFSET + 8) {
+          active = id;
         }
-      },
-      {
-        rootMargin: `-${HEADER_HEIGHT + SECTION_PADDING}px 0px -50% 0px`,
-        threshold: 0,
-      },
-    );
-
-    // Observe all section elements
-    ids.forEach((id) => {
-      const element = document.getElementById(id);
-      if (element) {
-        observer.observe(element);
       }
-    });
+      if (active !== activeIdRef.current) {
+        setActiveId(active);
+        window.history.replaceState(null, "", `#${active}`);
+      }
+    };
 
-    return () => observer.disconnect();
+    compute();
+    window.addEventListener("scroll", compute, { passive: true });
+    window.addEventListener("resize", compute);
+    return () => {
+      window.removeEventListener("scroll", compute);
+      window.removeEventListener("resize", compute);
+    };
   }, [getAllIds]);
 
   // Initialize from URL hash or set first item as active (only once)
