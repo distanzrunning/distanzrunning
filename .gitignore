@@ -39,6 +39,10 @@ yarn-error.log*
 # Claude Code per-project local state (settings, scheduled task locks)
 .claude/
 
+# Agent Skills (per-developer install via `npx skills add ...`, not committed)
+.agents/
+skills-lock.json
+
 # vercel
 .vercel
 
