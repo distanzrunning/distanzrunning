@@ -1,4 +1,5 @@
-import { Inbox } from "lucide-react";
+import Link from "next/link";
+import { Inbox, X } from "lucide-react";
 
 import TrendChart from "@/components/ui/TrendChart";
 import {
@@ -32,6 +33,7 @@ import {
 } from "@/components/ui/Table";
 import LeaderboardPanel from "@/components/admin/LeaderboardPanel";
 import {
+  CONSENT_DIM_LABEL,
   getEnrichedConsentsInRange,
   matchesScope,
   rankBreakdowns,
@@ -375,6 +377,20 @@ export async function ConsentDashboardContent({
     ? allRows.filter((r) => matchesScope(r, scope.dim, scope.val))
     : allRows;
 
+  // Display label + clear-href for the active-filter chip shown in the chart
+  // card. The chip is the always-visible clear affordance — the per-panel
+  // Remove-filter toolbar hides when you switch to a breakdown that doesn't
+  // own the active dimension, so the chart (always on screen) carries a clear.
+  const scopeLabel = scope
+    ? (allRows.find((r) => r.dims[scope.dim] === scope.val)?.dimLabels[
+        scope.dim
+      ] ?? scope.val)
+    : null;
+  const clearScopeHref = buildHref(currentWindow, filter ?? null, metric, {
+    tz,
+    earliestDate,
+  });
+
   // Slice the fetched rows into "current window" and the same-
   // length window immediately before, so trend pills come from one
   // DB hit regardless of the user's selected range. Comparison is
@@ -569,6 +585,63 @@ export async function ConsentDashboardContent({
           <div style={{ flex: 1, minWidth: 0 }} aria-hidden />
         </div>
         </div>
+
+        {/* Active-filter chip — the always-visible clear affordance in the
+            chart area (the per-panel Remove-filter toolbar hides when you
+            switch to a breakdown that doesn't own the active dimension). */}
+        {scope && scopeLabel && (
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 8,
+              alignItems: "center",
+              padding: "12px 20px 0",
+            }}
+          >
+            <Link
+              href={clearScopeHref}
+              scroll={false}
+              aria-label={`Remove ${CONSENT_DIM_LABEL[scope.dim]} filter`}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                height: 28,
+                paddingLeft: 10,
+                paddingRight: 6,
+                borderRadius: 6,
+                background: "hsl(var(--color-surface))",
+                border: "1px solid hsl(var(--color-borderDefault))",
+                textDecoration: "none",
+                fontSize: 13,
+                lineHeight: "20px",
+                whiteSpace: "nowrap",
+                maxWidth: "100%",
+              }}
+            >
+              <span style={{ color: "hsl(var(--color-textSubtle))" }}>
+                {CONSENT_DIM_LABEL[scope.dim]}
+              </span>
+              <span
+                style={{
+                  color: "hsl(var(--color-textDefault))",
+                  fontWeight: 500,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  minWidth: 0,
+                }}
+                title={scopeLabel}
+              >
+                {scopeLabel}
+              </span>
+              <X
+                className="w-4 h-4"
+                style={{ color: "hsl(var(--color-textSubtle))", flexShrink: 0 }}
+              />
+            </Link>
+          </div>
+        )}
 
         <TrendChart
           trend={trend}
