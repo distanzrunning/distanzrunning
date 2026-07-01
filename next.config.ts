@@ -17,6 +17,15 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: true,
     optimizeServerReact: true,
+    // Keep visited dynamic route segments in the client router cache for 30s
+    // (Next 15 default is 0 = never). Switching between already-visited admin
+    // dashboards then serves from cache instantly — no loading.tsx commit, so
+    // no skeleton/blank flash on leave — while first visits + hard loads still
+    // stream the loading fallback. 30s matches the server data-cache TTL, so
+    // the cached view is never more stale than a fresh fetch would be.
+    staleTimes: {
+      dynamic: 30,
+    },
   },
   productionBrowserSourceMaps: false,
   
