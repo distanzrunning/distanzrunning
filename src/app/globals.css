@@ -136,27 +136,6 @@
     transform: translateX(0);
   }
 }
-/* Admin route loading fallback (loading.tsx) — reveal the skeleton only after a
-   short delay so fast, cached navigations (e.g. switching between the consent
-   and feedback dashboards) don't flash a full skeleton on the way to content;
-   genuinely slow loads fade it in. Under the delay the content area is blank
-   (the shell — sidebar + header — stays), which reads calmer than a skeleton
-   blink. */
-@keyframes adminLoadingReveal {
-  to {
-    opacity: 1;
-  }
-}
-.admin-loading-reveal {
-  opacity: 0;
-  animation: adminLoadingReveal 0.2s ease 0.15s forwards;
-}
-@media (prefers-reduced-motion: reduce) {
-  .admin-loading-reveal {
-    animation-delay: 0s;
-  }
-}
-
 .admin-sidebar-level--in {
   animation: adminSidebarLevelInRight 0.2s ease;
 }

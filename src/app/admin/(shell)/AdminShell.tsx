@@ -1,7 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { Spinner } from "@/components/ui/Spinner";
 import { ToastContainer } from "@/components/ui/Toast";
 import {
   CommandMenuDialog,
@@ -11,6 +12,9 @@ import AdminPageHeader from "./AdminPageHeader";
 import AdminSidebar from "./AdminSidebar";
 
 const SIDEBAR_WIDTH = 260;
+// Mirrors AdminPageHeader's HEADER_HEIGHT — used to size the content
+// Suspense fallback so its spinner centres in the area below the header.
+const HEADER_HEIGHT = 56;
 
 export default function AdminShell({ children }: { children: ReactNode }) {
   const [cmdOpen, setCmdOpen] = useState(false);
@@ -74,7 +78,31 @@ export default function AdminShell({ children }: { children: ReactNode }) {
         }}
       >
         <AdminPageHeader />
-        {children}
+        {/* Stable Suspense boundary living in the persistent shell. On hard
+            load it streams the fallback so the sidebar + header paint fast
+            (good FCP). On client navigation it does NOT flash the fallback:
+            because the boundary is stable (the shell survives navigation) and
+            Link navigations are React transitions, React keeps the current
+            page visible and only swaps when the destination is ready — no
+            skeleton/blank flash on leave. Replaces the per-route loading.tsx,
+            which committed instantly on every nav and so always flashed. */}
+        <Suspense
+          fallback={
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
+                color: "hsl(var(--color-textSubtle))",
+              }}
+            >
+              <Spinner size={24} />
+            </div>
+          }
+        >
+          {children}
+        </Suspense>
       </main>
 
       <CommandMenuDialog
