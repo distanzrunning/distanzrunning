@@ -31,6 +31,7 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import LeaderboardPanel from "@/components/admin/LeaderboardPanel";
+import { getCountryFlag } from "@/lib/countryFlags";
 import {
   getEnrichedConsentsInRange,
   matchesFilters,
@@ -656,7 +657,35 @@ export async function ConsentDashboardContent({
             {
               value: "geography",
               title: "Geography",
-              rows: breakdowns.countries,
+              // Row key is the ISO code (e.g. "GB") — resolve it to a flag
+              // glyph shown before the country name.
+              rows: breakdowns.countries.map((r) => {
+                const Flag = getCountryFlag(r.key);
+                return Flag
+                  ? {
+                      ...r,
+                      leadingIcon: (
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            width: 16,
+                            height: 12,
+                            borderRadius: 2,
+                            overflow: "hidden",
+                            // Hairline ring so all-white flags (e.g. Japan)
+                            // stay visible on the white card.
+                            boxShadow:
+                              "inset 0 0 0 1px hsla(var(--ds-gray-1000-value), 0.12)",
+                          }}
+                        >
+                          <Flag
+                            style={{ width: 16, height: 12, display: "block" }}
+                          />
+                        </span>
+                      ),
+                    }
+                  : r;
+              }),
               emptyMessage: "No geographic data in this window.",
               filterDim: "geography",
             },

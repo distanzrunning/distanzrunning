@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, type ReactNode } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { Tabs, type TabItem } from "@/components/ui/Tabs";
@@ -51,6 +51,9 @@ export interface LeaderRow {
   /** Italic + gray-700 fallback (used for "(no path)" / "(no topic)"
    *  bucket rows). Suppresses href + copy chip. */
   italic?: boolean;
+  /** Optional glyph rendered before the label — e.g. a country flag on
+   *  the Geography tab. */
+  leadingIcon?: ReactNode;
 }
 
 export interface LeaderboardTab {
@@ -310,6 +313,18 @@ function LeaderboardRow({
               minWidth: 0,
             }}
           >
+            {row.leadingIcon && (
+              <span
+                style={{
+                  flexShrink: 0,
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
+                aria-hidden
+              >
+                {row.leadingIcon}
+              </span>
+            )}
             {showLink ? (
               <a
                 href={row.href}
