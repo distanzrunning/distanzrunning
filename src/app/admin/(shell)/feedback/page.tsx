@@ -15,7 +15,7 @@ import {
   FeedbackLookupContent,
   FeedbackLookupSkeleton,
 } from "./FeedbackLookup";
-import { getEarliestFeedbackDate } from "./data";
+import { getEarliestFeedbackDate, parseFeedbackFilters } from "./data";
 
 export const metadata = {
   title: "Feedback — Stride Admin",
@@ -76,6 +76,7 @@ export default async function FeedbackDashboardPage({
     period?: string;
     from?: string;
     to?: string;
+    f?: string | string[];
   }>;
 }) {
   const params = await searchParams;
@@ -86,6 +87,8 @@ export default async function FeedbackDashboardPage({
   // edits that pair an emotion filter with the submitters metric.
   const filter = metric === "submitters" ? null : rawFilter;
   const env = normaliseEnv(params.env);
+  // Page-wide breakdown filters (repeated ?f=dim:val) — Pages / Topics.
+  const filters = parseFeedbackFilters(params.f);
   const { timezone: tz } = await getSiteSettings();
   // Earliest feedback row — drives the "All time" preset for both
   // server-side window resolution and the client picker's visual
@@ -173,6 +176,7 @@ export default async function FeedbackDashboardPage({
             <FeedbackDashboardContent
               filter={filter}
               metric={metric}
+              filters={filters}
               windowStart={window.start}
               windowEnd={window.end}
               tz={tz}

@@ -1,4 +1,5 @@
-import { Inbox } from "lucide-react";
+import type { ReactNode } from "react";
+import { FileText, Inbox, Tag } from "lucide-react";
 
 import { CountryCell } from "@/components/admin/CountryCell";
 import {
@@ -38,9 +39,13 @@ import TrendChart from "@/components/ui/TrendChart";
 import ContactedToggle from "./ContactedToggle";
 import DeleteFeedbackButton from "./DeleteFeedbackButton";
 import LeaderboardPanel, { type LeaderRow } from "@/components/admin/LeaderboardPanel";
+import FilterBar, { type ActiveFilter } from "@/components/admin/FilterBar";
 import {
   getFeedbackRowsInRange,
+  matchesFeedbackFilters,
   type Emotion,
+  type FeedbackBreakdownFilter,
+  type FeedbackDimKey,
   type FeedbackRowRaw,
 } from "./data";
 
@@ -64,17 +69,25 @@ const FILTER_LABEL: Record<FeedbackFilter, string> = {
 
 const BASE_PATH = "/admin/feedback";
 
+// Prefix glyph per breakdown dimension for the filter buttons.
+const FEEDBACK_DIM_ICON: Record<FeedbackDimKey, ReactNode> = {
+  pages: <FileText className="w-4 h-4" />,
+  topics: <Tag className="w-4 h-4" />,
+};
+
 interface BuildHrefContext {
   tz: string;
   earliestDate: Date | null;
   env: EnvFilter;
+  /** Active breakdown filters — preserved across tile clicks. */
+  filters?: FeedbackBreakdownFilter[];
 }
 
 function buildHref(
   window: DateWindow,
   filter: FeedbackFilter | null,
   metric: Metric,
-  { tz, earliestDate, env }: BuildHrefContext,
+  { tz, earliestDate, env, filters }: BuildHrefContext,
 ): string {
   const usp = new URLSearchParams();
   const preset = matchPreset(window, tz, earliestDate);
@@ -96,6 +109,10 @@ function buildHref(
     }
   }
   if (env !== "all") usp.set("env", env);
+  // Carry active breakdown filters across tile clicks — repeated `f=dim:val`.
+  for (const f of filters ?? []) {
+    usp.append("f", `${f.dim}:${f.val}`);
+  }
   const qs = usp.toString();
   return qs ? `${BASE_PATH}?${qs}` : BASE_PATH;
 }
@@ -477,6 +494,7 @@ function RecentFeedbackTable({
 export async function FeedbackDashboardContent({
   filter,
   metric,
+  filters = [],
   windowStart,
   windowEnd,
   tz,
@@ -485,6 +503,7 @@ export async function FeedbackDashboardContent({
 }: {
   filter?: FeedbackFilter | null;
   metric: Metric;
+  filters?: FeedbackBreakdownFilter[];
   windowStart: Date;
   windowEnd: Date;
   tz: string;
@@ -530,7 +549,7 @@ export async function FeedbackDashboardContent({
       currentWindow,
       filter === target ? null : target,
       "feedback",
-      { tz, earliestDate, env },
+      { tz, earliestDate, env, filters },
     );
 
   // Single DB hit covering the union of the previous + current
@@ -542,15 +561,30 @@ export async function FeedbackDashboardContent({
     env,
   );
 
+  // Page-wide breakdown filters (e.g. Pages = /races AND Topics = Bug) re-scope
+  // EVERYTHING — tiles, chart, breakdown panels, recent table — to matching
+  // rows. Applied in-memory before any metric is computed.
+  const scopedRows = filters.length
+    ? rows.filter((r) => matchesFeedbackFilters(r, filters))
+    : rows;
+
+  // Resolve each active filter's display label (pages / topics are their own
+  // label) + icon for the filter buttons in the chart area.
+  const activeFilters: ActiveFilter[] = filters.map((f) => ({
+    ...f,
+    label: f.val,
+    icon: FEEDBACK_DIM_ICON[f.dim],
+  }));
+
   const currentStartKey = formatBusinessDay(currentWindow.start, tz);
   const currentEndKey = formatBusinessDay(currentWindow.end, tz);
   const previousStartKey = formatBusinessDay(previous.start, tz);
   const previousEndKey = formatBusinessDay(previous.end, tz);
-  const currentRows = rows.filter((r) => {
+  const currentRows = scopedRows.filter((r) => {
     const key = formatBusinessDay(new Date(r.created_at), tz);
     return key >= currentStartKey && key <= currentEndKey;
   });
-  const previousRows = rows.filter((r) => {
+  const previousRows = scopedRows.filter((r) => {
     const key = formatBusinessDay(new Date(r.created_at), tz);
     return key >= previousStartKey && key <= previousEndKey;
   });
@@ -686,13 +720,14 @@ export async function FeedbackDashboardContent({
           <div
             className="divide-x divide-borderDefault"
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
+              display: "flex",
+              width: "max-content",
+              minWidth: "100%",
               borderBottom: "1px solid hsl(var(--color-borderDefault))",
               background: "hsl(var(--color-canvas))",
             }}
           >
-            <div>
+            <div style={{ minWidth: 220, flexShrink: 0 }}>
               <StatTile
                 label="Unique submitters"
                 value={<NumberTicker value={currentUnique} />}
@@ -705,11 +740,12 @@ export async function FeedbackDashboardContent({
                   tz,
                   earliestDate,
                   env,
+                  filters,
                 })}
                 active={metric === "submitters"}
               />
             </div>
-            <div>
+            <div style={{ minWidth: 220, flexShrink: 0 }}>
               <StatTile
                 label="Total feedback"
                 value={<NumberTicker value={currentCount} />}
@@ -722,11 +758,12 @@ export async function FeedbackDashboardContent({
                   tz,
                   earliestDate,
                   env,
+                  filters,
                 })}
                 active={metric === "feedback" && !filter}
               />
             </div>
-            <div>
+            <div style={{ minWidth: 220, flexShrink: 0 }}>
               <StatTile
                 label="Love rate"
                 value={<NumberTicker value={currentLoveRate} suffix="%" />}
@@ -739,7 +776,7 @@ export async function FeedbackDashboardContent({
                 active={metric === "feedback" && filter === "love"}
               />
             </div>
-            <div>
+            <div style={{ minWidth: 220, flexShrink: 0 }}>
               <StatTile
                 label="Hate rate"
                 value={<NumberTicker value={currentHateRate} suffix="%" />}
@@ -752,7 +789,7 @@ export async function FeedbackDashboardContent({
                 active={metric === "feedback" && filter === "hate"}
               />
             </div>
-            <div>
+            <div style={{ minWidth: 220, flexShrink: 0 }}>
               <StatTile
                 label="With email"
                 value={<NumberTicker value={currentEmailRate} suffix="%" />}
@@ -765,7 +802,7 @@ export async function FeedbackDashboardContent({
                 active={metric === "feedback" && filter === "email"}
               />
             </div>
-            <div>
+            <div style={{ minWidth: 220, flexShrink: 0 }}>
               <StatTile
                 label="Needs follow-up"
                 value={<NumberTicker value={currentFollowUp} />}
@@ -778,8 +815,19 @@ export async function FeedbackDashboardContent({
                 active={metric === "feedback" && filter === "follow-up"}
               />
             </div>
+            {/* Blank trailing space — fills the leftover panel width so the
+                tiles don't stretch (Vercel parity, matching consent). */}
+            <div style={{ flex: 1, minWidth: 0 }} aria-hidden />
           </div>
         </div>
+
+        {/* Active-filter bar — one removable button per filter + a Clear,
+            right-aligned in the always-on-screen chart area. */}
+        {activeFilters.length > 0 && (
+          <div style={{ padding: "12px 20px 0" }}>
+            <FilterBar filters={activeFilters} />
+          </div>
+        )}
 
         <TrendChart
           trend={trend}
@@ -912,6 +960,7 @@ export async function FeedbackDashboardContent({
               rows: pageRows,
               emptyMessage:
                 "No feedback rows in this window carry a page reference yet.",
+              filterDim: "pages",
             },
             {
               value: "topics",
@@ -919,6 +968,7 @@ export async function FeedbackDashboardContent({
               rows: topicRows,
               emptyMessage:
                 "No feedback rows in this window carry a topic yet.",
+              filterDim: "topics",
             },
           ]}
         />
@@ -974,30 +1024,32 @@ export function FeedbackDashboardSkeleton() {
           <div
             className="divide-x divide-borderDefault"
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
+              display: "flex",
+              width: "max-content",
+              minWidth: "100%",
               borderBottom: "1px solid hsl(var(--color-borderDefault))",
               background: "hsl(var(--color-canvas))",
             }}
           >
-            <div>
+            <div style={{ minWidth: 220, flexShrink: 0 }}>
               <StatTileSkeleton label="Unique submitters" />
             </div>
-            <div>
+            <div style={{ minWidth: 220, flexShrink: 0 }}>
               <StatTileSkeleton label="Total feedback" />
             </div>
-            <div>
+            <div style={{ minWidth: 220, flexShrink: 0 }}>
               <StatTileSkeleton label="Love rate" />
             </div>
-            <div>
+            <div style={{ minWidth: 220, flexShrink: 0 }}>
               <StatTileSkeleton label="Hate rate" />
             </div>
-            <div>
+            <div style={{ minWidth: 220, flexShrink: 0 }}>
               <StatTileSkeleton label="With email" />
             </div>
-            <div>
+            <div style={{ minWidth: 220, flexShrink: 0 }}>
               <StatTileSkeleton label="Needs follow-up" />
             </div>
+            <div style={{ flex: 1, minWidth: 0 }} aria-hidden />
           </div>
         </div>
         <div style={{ padding: "24px 24px 16px" }}>
