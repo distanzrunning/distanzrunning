@@ -83,13 +83,13 @@ export default function Masthead() {
             <img
               src="/brand/wordmark-black.svg"
               alt="Distanz"
-              className="block h-9 w-auto dark:hidden"
+              className="block h-12 w-auto dark:hidden"
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/brand/wordmark-white.svg"
               alt="Distanz"
-              className="hidden h-9 w-auto dark:block"
+              className="hidden h-12 w-auto dark:block"
             />
           </Link>
 
