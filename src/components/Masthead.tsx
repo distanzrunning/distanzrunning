@@ -41,7 +41,7 @@ export default function Masthead() {
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-surface transition-shadow ${
+      className={`sticky top-0 z-50 bg-canvas transition-shadow ${
         scrolled ? "shadow-[0_6px_16px_-12px_rgba(0,0,0,0.45)]" : ""
       }`}
     >
