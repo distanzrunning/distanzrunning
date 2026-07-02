@@ -130,7 +130,7 @@ export default function Masthead() {
               <li key={item.label}>
                 <Link
                   href={item.href}
-                  className="text-copy-16 font-medium tracking-[0.02em] text-textSubtle no-underline transition-colors hover:text-textDefault"
+                  className="text-copy-14 font-medium tracking-[0.02em] text-textSubtle no-underline transition-colors hover:text-textDefault"
                 >
                   {item.label}
                 </Link>
