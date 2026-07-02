@@ -1,9 +1,6 @@
-import { redirect } from "next/navigation";
-
-// TEMPORARY (homepage exploration): the root points at homepage mockup 1a so
-// distanzrunning.vercel.app/ shows the new design directly instead of the old
-// empty homepage + production SiteHeader. Compare the other directions at
-// /home-mockups. Replace this with the finalized homepage once 1a is polished.
-export default function Home() {
-  redirect("/home-mockups/1a");
+// Homepage — being rebuilt from scratch. LayoutContent renders this route bare
+// (a full-height <main> with no production SiteHeader/Footer), so the homepage
+// owns its own header + sections. Clean canvas to build on.
+export default function HomePage() {
+  return <div className="min-h-screen bg-canvas" />;
 }

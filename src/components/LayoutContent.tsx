@@ -39,15 +39,14 @@ export default async function LayoutContent({
   const isLoginPage = pathname === "/login";
   const isAdmin = pathname.startsWith("/admin");
   const isComingSoon = pathname === "/coming-soon";
-  // Homepage layout mockups own their chrome (MockHeader/MockFooter) — suppress
-  // the production SiteHeader + Footer so they aren't doubled.
-  const isMockups = pathname.startsWith("/home-mockups");
+  // The homepage is being rebuilt from scratch and owns its own header, so it
+  // renders bare (no production SiteHeader/Footer) like the app-shell routes.
   const isHome = pathname === "/";
 
   // Hide footer on the calendar page (fullscreen app-like view)
   const isCalendarPage = pathname === "/races/calendar";
 
-  if (isPreviewMode || isLoginPage || isAdmin || isComingSoon || isMockups) {
+  if (isPreviewMode || isLoginPage || isAdmin || isComingSoon || isHome) {
     return <main className="min-h-screen">{children}</main>;
   }
 
@@ -56,19 +55,6 @@ export default async function LayoutContent({
   // admin shell pattern; elevated chrome (SiteHeader pill, future
   // cards/panels) pops above it on bg-100.
   const chromeClass = "flex min-h-screen flex-col bg-canvas";
-
-  // Homepage gets the SiteHeader (so we can iterate on the new
-  // floating-pill chrome in context) but skips the PageFrame and the
-  // footer — a blank canvas under the navbar. Other public routes
-  // continue to get the full chrome (header + PageFrame + footer).
-  if (isHome) {
-    return (
-      <div className={chromeClass}>
-        {header}
-        <main className="flex flex-1 flex-col">{children}</main>
-      </div>
-    );
-  }
 
   return (
     <div className={chromeClass}>
