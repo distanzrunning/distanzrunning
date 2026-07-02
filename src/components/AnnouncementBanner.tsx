@@ -39,7 +39,7 @@ export default function AnnouncementBanner() {
       <div
         role="region"
         aria-label="Announcement"
-        className="relative w-full bg-canvas"
+        className="relative w-full border-b border-borderSubtle bg-canvas"
       >
         <button
           type="button"
