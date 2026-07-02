@@ -15,12 +15,15 @@ import { Button } from "@/components/ui/Button";
 // and SearchContext (⌘K search). Section links + auth targets are placeholders
 // to finalise.
 
+// Matches the Sanity CMS sections: Road/Trail/Track are article category slugs
+// (category->slug.current), routing at /articles/<slug>; Gear + Races are
+// top-level sections. Mirrors the production SiteNavigationMenu hrefs.
 const NAV: { label: string; href: string }[] = [
-  { label: "Racing", href: "/races" },
-  { label: "Training", href: "/articles" },
+  { label: "Road", href: "/articles/road" },
+  { label: "Trail", href: "/articles/trail" },
+  { label: "Track", href: "/articles/track" },
   { label: "Gear", href: "/gear" },
-  { label: "Shoes", href: "/shoes" },
-  { label: "Nutrition", href: "/nutrition" },
+  { label: "Races", href: "/races" },
 ];
 
 export default function Masthead() {
