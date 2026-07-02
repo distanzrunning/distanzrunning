@@ -9,9 +9,9 @@ import {
 
 // Full-width announcement bar above the masthead, in the 404 Media mould:
 // a promo line that opens the Shakeout newsletter modal, with a dismiss button.
-// Theme-aware inverse (ink background / surface text) so it stands out in both
-// light and dark, rather than a fixed-dark bar that would blend into dark mode.
-// Dismissal persists in localStorage so it doesn't nag on every visit.
+// Sits on the page canvas (blends with the masthead); the hover affordance is
+// scoped to the "Shakeout" word (underline). Dismissal persists in localStorage
+// so it doesn't nag on every visit.
 
 const DISMISS_KEY = "distanz-shakeout-banner-dismissed";
 
@@ -39,24 +39,26 @@ export default function AnnouncementBanner() {
       <div
         role="region"
         aria-label="Announcement"
-        className="relative w-full bg-[hsl(var(--color-textDefault))] text-[hsl(var(--color-surface))]"
+        className="relative w-full bg-canvas"
       >
         <button
           type="button"
           onClick={() => setModalOpen(true)}
           onMouseEnter={preloadNewsletterHero}
           onFocus={preloadNewsletterHero}
-          className="block w-full px-12 py-2.5 text-center text-copy-14 transition-opacity hover:opacity-80"
+          className="group block w-full px-12 py-2.5 text-center text-copy-14 text-textSubtle"
         >
           Subscribe to the{" "}
-          <span className="font-serif text-[15px] italic">Shakeout</span>{" "}
+          <span className="font-serif text-[18px] italic text-textDefault underline-offset-[3px] group-hover:underline">
+            Shakeout
+          </span>{" "}
           newsletter
         </button>
         <button
           type="button"
           onClick={dismiss}
           aria-label="Dismiss announcement"
-          className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-[6px] opacity-70 transition-opacity hover:opacity-100"
+          className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-[6px] text-textSubtle transition-colors hover:bg-[var(--ds-gray-100)] hover:text-textDefault"
         >
           <X className="h-4 w-4" />
         </button>
