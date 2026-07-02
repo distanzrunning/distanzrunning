@@ -46,10 +46,10 @@ export default function AnnouncementBanner() {
           onClick={() => setModalOpen(true)}
           onMouseEnter={preloadNewsletterHero}
           onFocus={preloadNewsletterHero}
-          className="group block w-full px-12 py-2.5 text-center text-copy-14 text-textSubtle"
+          className="block w-full px-12 py-2.5 text-center text-copy-14 text-textSubtle"
         >
           Subscribe to the{" "}
-          <span className="font-serif text-[18px] italic text-textDefault underline-offset-[3px] group-hover:underline">
+          <span className="font-serif text-[18px] italic text-textDefault underline-offset-[3px] hover:underline">
             Shakeout
           </span>{" "}
           newsletter
