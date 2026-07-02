@@ -23,11 +23,8 @@ const NAV: { label: string; href: string }[] = [
   { label: "Nutrition", href: "/nutrition" },
 ];
 
-const iconBtn =
-  "inline-flex h-8 w-8 items-center justify-center rounded-[6px] text-[color:var(--ds-gray-900)] transition-colors hover:bg-[var(--ds-gray-100)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)]";
-
 export default function Masthead() {
-  const { isDark, setTheme } = useContext(DarkModeContext);
+  const { isDark, toggleDarkMode } = useContext(DarkModeContext);
   const { openSearch } = useSearch();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -48,39 +45,32 @@ export default function Masthead() {
       {/* top tier */}
       <div className="border-b border-borderSubtle">
         <div className="mx-auto grid max-w-[1280px] grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 py-3">
-          {/* left — search + theme */}
+          {/* left — search + single theme toggle */}
           <div className="flex items-center gap-1">
-            <button
-              type="button"
+            <Button
+              shape="square"
+              size="large"
+              variant="tertiary"
               onClick={openSearch}
-              className={iconBtn}
               aria-label="Search"
               title="Search (⌘K)"
             >
-              <Search className="h-4 w-4" />
-            </button>
-            <div className="ml-1 flex items-center gap-0.5">
-              <button
-                type="button"
-                onClick={() => setTheme("dark")}
-                className={`${iconBtn} ${isDark ? "text-textDefault" : "text-textSubtler"}`}
-                aria-label="Dark theme"
-                aria-pressed={isDark}
-                title="Dark theme"
-              >
-                <Moon className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setTheme("light")}
-                className={`${iconBtn} ${!isDark ? "text-textDefault" : "text-textSubtler"}`}
-                aria-label="Light theme"
-                aria-pressed={!isDark}
-                title="Light theme"
-              >
-                <Sun className="h-4 w-4" />
-              </button>
-            </div>
+              <Search className="h-5 w-5" />
+            </Button>
+            <Button
+              shape="square"
+              size="large"
+              variant="tertiary"
+              onClick={toggleDarkMode}
+              aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+              title={isDark ? "Light theme" : "Dark theme"}
+            >
+              {isDark ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
+            </Button>
           </div>
 
           {/* center — wordmark */}
@@ -113,19 +103,21 @@ export default function Masthead() {
                 Subscribe
               </Button>
             </div>
-            <button
-              type="button"
+            <Button
+              shape="square"
+              size="large"
+              variant="tertiary"
               onClick={() => setMobileOpen((v) => !v)}
-              className={`${iconBtn} sm:hidden`}
+              className="sm:hidden"
               aria-label="Menu"
               aria-expanded={mobileOpen}
             >
               {mobileOpen ? (
-                <X className="h-4 w-4" />
+                <X className="h-5 w-5" />
               ) : (
-                <Menu className="h-4 w-4" />
+                <Menu className="h-5 w-5" />
               )}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
