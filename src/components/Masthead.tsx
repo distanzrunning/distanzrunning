@@ -45,9 +45,9 @@ export default function Masthead() {
         scrolled ? "shadow-[0_6px_16px_-12px_rgba(0,0,0,0.45)]" : ""
       }`}
     >
-      {/* top tier */}
-      <div className="border-b border-borderSubtle">
-        <div className="mx-auto grid max-w-[1280px] grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 py-3">
+      {/* top tier — divider spans the content (button to button), not full width */}
+      <div className="mx-auto max-w-[1280px] px-6">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-borderSubtle py-3">
           {/* left — search + single theme toggle */}
           <div className="flex items-center gap-1">
             <Button
@@ -125,9 +125,9 @@ export default function Masthead() {
         </div>
       </div>
 
-      {/* bottom tier — section nav (desktop) */}
-      <div className="hidden border-b border-borderSubtle sm:block">
-        <nav className="mx-auto max-w-[1280px] px-6">
+      {/* bottom tier — section nav (desktop); divider inset to content width */}
+      <div className="mx-auto hidden max-w-[1280px] px-6 sm:block">
+        <nav className="border-b border-borderSubtle">
           <ul className="flex items-center justify-center gap-6 py-2.5">
             {NAV.map((item) => (
               <li key={item.label}>
