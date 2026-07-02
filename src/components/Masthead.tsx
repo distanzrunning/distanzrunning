@@ -91,25 +91,25 @@ export default function Masthead() {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/logo.svg"
+              src="/brand/wordmark-black.svg"
               alt="Distanz"
-              className="block h-6 w-auto dark:hidden"
+              className="block h-9 w-auto dark:hidden"
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/logo_white.svg"
+              src="/brand/wordmark-white.svg"
               alt="Distanz"
-              className="hidden h-6 w-auto dark:block"
+              className="hidden h-9 w-auto dark:block"
             />
           </Link>
 
           {/* right — auth + hamburger */}
           <div className="flex items-center justify-end gap-2">
             <div className="hidden items-center gap-2 sm:flex">
-              <Button variant="tertiary" size="small">
+              <Button variant="tertiary" size="large">
                 Sign in
               </Button>
-              <Button variant="default" size="small">
+              <Button variant="default" size="large">
                 Subscribe
               </Button>
             </div>
@@ -133,7 +133,7 @@ export default function Masthead() {
       {/* bottom tier — section nav (desktop) */}
       <div className="hidden border-b border-borderSubtle sm:block">
         <nav className="mx-auto max-w-[1280px] px-6">
-          <ul className="flex items-center gap-6 py-2.5">
+          <ul className="flex items-center justify-center gap-6 py-2.5">
             {NAV.map((item) => (
               <li key={item.label}>
                 <Link
