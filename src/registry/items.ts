@@ -56,7 +56,6 @@ import { buildSearchItem } from "./items/search";
 import { buildSelectItem } from "./items/select";
 import { buildSheetItem } from "./items/sheet";
 import { buildShowMoreItem } from "./items/show-more";
-import { buildSiteHeaderItem } from "./items/site-header";
 import { buildSkeletonItem } from "./items/skeleton";
 import { buildSliderItem } from "./items/slider";
 import { buildSnippetItem } from "./items/snippet";
@@ -168,7 +167,6 @@ const BUILDERS: Record<string, Builder> = {
   "newsletter-signup": buildNewsletterSignupItem,
   "project-banner": buildProjectBannerItem,
   sheet: buildSheetItem,
-  "site-header": buildSiteHeaderItem,
   table: buildTableItem,
   toast: buildToastItem,
 
