@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Search, Moon, Sun, Menu, X } from "lucide-react";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { useSearch } from "@/contexts/SearchContext";
@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/Button";
 //   top tier:  search + theme toggle (left) · centered wordmark · Sign in /
 //              Subscribe + mobile hamburger (right)
 //   bottom tier: left-aligned section nav (collapses into the mobile menu)
-// Sticky, with a shadow once scrolled. Wires the real DarkModeContext (theme)
+// Sticky (flat, no scroll shadow). Wires the real DarkModeContext (theme)
 // and SearchContext (⌘K search). Section links + auth targets are placeholders
 // to finalise.
 
@@ -31,22 +31,10 @@ const NAV: { label: string; href: string }[] = [
 export default function Masthead() {
   const { isDark, toggleDarkMode } = useContext(DarkModeContext);
   const { openSearch } = useSearch();
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 4);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <header
-      className={`sticky top-0 z-50 bg-canvas transition-shadow ${
-        scrolled ? "shadow-[0_6px_16px_-12px_rgba(0,0,0,0.45)]" : ""
-      }`}
-    >
+    <header className="sticky top-0 z-50 bg-canvas">
       {/* top tier — divider spans the content (button to button), not full width */}
       <div className="mx-auto max-w-[1400px] px-6">
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-borderSubtle py-3">
