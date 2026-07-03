@@ -69,7 +69,7 @@ export function AnnouncementEditor({ initial }: { initial: AnnouncementConfig })
             When off, the banner is hidden across the whole site.
           </span>
         </div>
-        <Toggle checked={enabled} onChange={setEnabled} />
+        <Toggle checked={enabled} onChange={setEnabled} size="large" />
       </div>
 
       {/* Message */}
