@@ -10,6 +10,7 @@ import {
   Database,
   Home,
   Map,
+  Megaphone,
   MessageSquare,
   PanelsTopLeft,
   Settings,
@@ -219,6 +220,12 @@ const ADMIN_NAV: {
     href: "/admin/feedback",
     icon: <MessageSquare className="w-4 h-4" />,
     hasSubmenu: true,
+  },
+  {
+    id: "announcement",
+    label: "Announcement",
+    href: "/admin/announcement",
+    icon: <Megaphone className="w-4 h-4" />,
   },
   {
     id: "races",

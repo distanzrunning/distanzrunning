@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   ArrowUpRight,
   Map,
+  Megaphone,
   MessageSquare,
   PanelsTopLeft,
   SquareCheckBig,
@@ -34,6 +35,14 @@ const SECTIONS: {
       "Submissions from the site feedback widgets — emoji, message, optional follow-up email, and page context.",
     href: "/admin/feedback",
     icon: <MessageSquare className="w-5 h-5" />,
+  },
+  {
+    id: "announcement",
+    label: "Announcement",
+    description:
+      "Compose and publish the site-wide announcement bar — message, per-word serif, background colour, and link target.",
+    href: "/admin/announcement",
+    icon: <Megaphone className="w-5 h-5" />,
   },
   {
     id: "races",

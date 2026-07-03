@@ -15,6 +15,8 @@
 import { headers } from "next/headers";
 import { ReactNode } from "react";
 import PageFrame from "./ui/PageFrame";
+import AnnouncementBanner from "./AnnouncementBanner";
+import { getAnnouncement } from "@/lib/announcement";
 
 interface LayoutContentProps {
   children: ReactNode;
@@ -46,8 +48,27 @@ export default async function LayoutContent({
   // Hide footer on the calendar page (fullscreen app-like view)
   const isCalendarPage = pathname === "/races/calendar";
 
-  if (isPreviewMode || isLoginPage || isAdmin || isComingSoon || isHome) {
+  // Login / admin / coming-soon own their layout — no chrome, no announcement.
+  if (isPreviewMode || isLoginPage || isAdmin || isComingSoon) {
     return <main className="min-h-screen">{children}</main>;
+  }
+
+  // Site-wide announcement bar (admin-managed) sits above everything on public
+  // content pages. Cached read; renders only when enabled with a message.
+  const announcement = await getAnnouncement();
+  const banner =
+    announcement?.enabled && announcement.text.trim() ? (
+      <AnnouncementBanner config={announcement} />
+    ) : null;
+
+  // The homepage owns its own header (Masthead) — render bare, banner on top.
+  if (isHome) {
+    return (
+      <>
+        {banner}
+        <main className="min-h-screen">{children}</main>
+      </>
+    );
   }
 
   // Chrome background (the canvas around PageFrame):
@@ -57,12 +78,15 @@ export default async function LayoutContent({
   const chromeClass = "flex min-h-screen flex-col bg-canvas";
 
   return (
-    <div className={chromeClass}>
-      {header}
-      <PageFrame as="main" className="flex flex-1 flex-col">
-        {children}
-      </PageFrame>
-      {!isCalendarPage && footer}
-    </div>
+    <>
+      {banner}
+      <div className={chromeClass}>
+        {header}
+        <PageFrame as="main" className="flex flex-1 flex-col">
+          {children}
+        </PageFrame>
+        {!isCalendarPage && footer}
+      </div>
+    </>
   );
 }

@@ -207,3 +207,18 @@ on conflict (id) do nothing;
 alter table public.site_settings enable row level security;
 revoke all on public.site_settings from anon;
 revoke all on public.site_settings from authenticated;
+
+-- ---------------------------------------------------------------------------
+-- Announcement banner (admin-managed, site-wide promo bar). Singleton row.
+-- ---------------------------------------------------------------------------
+create table if not exists public.announcement_banner (
+  id smallint primary key default 1,
+  enabled boolean not null default false,
+  text text not null default '',
+  serif_word_indices int[] not null default '{}',
+  color text not null default 'canvas',
+  link_href text,
+  updated_at timestamptz not null default now(),
+  constraint announcement_banner_singleton check (id = 1)
+);
+alter table public.announcement_banner enable row level security;
