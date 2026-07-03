@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useContext, useRef, useState } from "react";
 import { Search, Moon, Sun, Menu, X, ChevronDown } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
@@ -197,6 +198,18 @@ const TRIGGER_CLASS = cn(
   "data-[state=open]:bg-[var(--ds-gray-100)]",
 );
 
+// Active-section indicator — a short bar along the bottom of the nav item for
+// the category the current page belongs to (BBC-style). Spans the text width
+// (inset by the item's px-3) and sits on the bottom divider. Hidden on hover
+// / while the trigger's menu is open, so the regular hover block shows instead.
+const ACTIVE_BAR = cn(
+  "relative",
+  "after:pointer-events-none after:absolute after:inset-x-3 after:bottom-0",
+  "after:h-[2px] after:bg-textDefault after:content-['']",
+  "after:transition-opacity after:duration-150",
+  "hover:after:opacity-0 data-[state=open]:after:opacity-0",
+);
+
 // Chevron — 14 px, inherits the trigger's colour, rotates 180° on hover,
 // focus, or while this trigger's panel is open.
 const CHEVRON_CLASS = cn(
@@ -239,6 +252,13 @@ export default function Masthead({
   // deferring close to the wrapper's own onPointerLeave. Escape closes through
   // the keydown handler so keyboard dismissal still works.
   const cursorInBridgeRef = useRef(false);
+
+  const pathname = usePathname();
+  // A nav item is active when the current path is its section index or a child
+  // of it (e.g. /shoes/race-day-shoes activates Shoes; /articles/road activates
+  // Road). The homepage ("/") matches nothing, so no bar shows there.
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`);
 
   const featuredBySection: Record<MegaKey, MegaMenuFeatured | null> = {
     shoes: buildFeaturedFromProduct(featuredShoe, "shoes"),
@@ -381,7 +401,8 @@ export default function Masthead({
                     <NavigationMenuPrimitive.Link asChild>
                       <Link
                         href={item.href}
-                        className={LINK_CLASS}
+                        className={cn(LINK_CLASS, isActive(item.href) && ACTIVE_BAR)}
+                        aria-current={isActive(item.href) ? "page" : undefined}
                         onPointerEnter={() => setValue("")}
                       >
                         {item.label}
@@ -399,7 +420,10 @@ export default function Masthead({
                   >
                     <NavigationMenuPrimitive.Trigger
                       data-nav-trigger
-                      className={TRIGGER_CLASS}
+                      className={cn(
+                        TRIGGER_CLASS,
+                        isActive(section.href) && ACTIVE_BAR,
+                      )}
                     >
                       {section.label}
                       <ChevronDown className={CHEVRON_CLASS} aria-hidden />
