@@ -38,6 +38,8 @@ export function AnnouncementEditor({ initial }: { initial: AnnouncementConfig })
   );
   const [color, setColor] = useState<AnnouncementColorKey>(initial.color);
   const [linkHref, setLinkHref] = useState(initial.linkHref ?? "");
+  const [buttonLabel, setButtonLabel] = useState(initial.buttonLabel);
+  const [buttonHref, setButtonHref] = useState(initial.buttonHref ?? "");
 
   const words = tokenize(text).filter((t) => t.isWord);
 
@@ -61,6 +63,8 @@ export function AnnouncementEditor({ initial }: { initial: AnnouncementConfig })
       />
       <input type="hidden" name="color" value={color} />
       <input type="hidden" name="linkHref" value={linkHref} />
+      <input type="hidden" name="buttonLabel" value={buttonLabel} />
+      <input type="hidden" name="buttonHref" value={buttonHref} />
 
       {/* Visibility */}
       <div className="flex items-center justify-between gap-4 rounded-sm border border-borderDefault bg-surface p-4">
@@ -210,6 +214,30 @@ export function AnnouncementEditor({ initial }: { initial: AnnouncementConfig })
         placeholder="/races or https://…  — leave blank to open the newsletter signup"
       />
 
+      {/* Button */}
+      <div className="flex flex-col gap-2">
+        <FieldLabel>Button</FieldLabel>
+        <span className="text-copy-13 text-textSubtle">
+          Optional call-to-action. Blank label = no button; blank link = opens
+          the newsletter. (The button becomes the click target when set.)
+        </span>
+        <div className="mt-1 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <Input
+            value={buttonLabel}
+            onChange={(e) => setButtonLabel(e.target.value)}
+            placeholder="Label — e.g. Subscribe"
+            maxLength={60}
+            aria-label="Button label"
+          />
+          <Input
+            value={buttonHref}
+            onChange={(e) => setButtonHref(e.target.value)}
+            placeholder="Link — /signup or https://…"
+            aria-label="Button link"
+          />
+        </div>
+      </div>
+
       {/* Live preview */}
       <div className="flex flex-col gap-2">
         <FieldLabel>Preview</FieldLabel>
@@ -218,6 +246,7 @@ export function AnnouncementEditor({ initial }: { initial: AnnouncementConfig })
             text={text || "Your announcement…"}
             serifWordIndices={[...serif]}
             color={color}
+            buttonLabel={buttonLabel || undefined}
           />
         </div>
       </div>

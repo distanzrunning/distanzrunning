@@ -38,6 +38,9 @@ export async function saveAnnouncement(formData: FormData) {
 
   const linkHref = safeHref(String(formData.get("linkHref") ?? ""));
 
+  const buttonLabel = String(formData.get("buttonLabel") ?? "").slice(0, 60);
+  const buttonHref = safeHref(String(formData.get("buttonHref") ?? ""));
+
   let serifWordIndices: number[] = [];
   try {
     const parsed = JSON.parse(String(formData.get("serifWordIndices") ?? "[]"));
@@ -61,6 +64,8 @@ export async function saveAnnouncement(formData: FormData) {
       serif_word_indices: serifWordIndices,
       color,
       link_href: linkHref,
+      button_label: buttonLabel,
+      button_href: buttonHref,
       updated_at: new Date().toISOString(),
     })
     .eq("id", 1);

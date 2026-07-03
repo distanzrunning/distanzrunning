@@ -50,6 +50,10 @@ export interface AnnouncementConfig {
   color: AnnouncementColorKey;
   /** Where the bar links to; null / empty = not clickable. */
   linkHref: string | null;
+  /** Optional CTA button label; empty = no button. */
+  buttonLabel: string;
+  /** Button link; null/empty (with a label) = opens the newsletter modal. */
+  buttonHref: string | null;
   /** ISO timestamp of the last save — used as the dismissal version so edits
    *  re-show the bar to users who dismissed a previous version. */
   updatedAt: string;
@@ -88,7 +92,9 @@ export async function getAnnouncementFresh(): Promise<AnnouncementConfig | null>
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
     .from("announcement_banner")
-    .select("enabled, text, serif_word_indices, color, link_href, updated_at")
+    .select(
+      "enabled, text, serif_word_indices, color, link_href, button_label, button_href, updated_at",
+    )
     .eq("id", 1)
     .maybeSingle();
 
@@ -106,6 +112,8 @@ export async function getAnnouncementFresh(): Promise<AnnouncementConfig | null>
       : [],
     color: isAnnouncementColor(data.color) ? data.color : "canvas",
     linkHref: data.link_href || null,
+    buttonLabel: data.button_label ?? "",
+    buttonHref: data.button_href || null,
     updatedAt: data.updated_at ?? "",
   };
 }

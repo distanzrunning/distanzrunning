@@ -222,3 +222,6 @@ create table if not exists public.announcement_banner (
   constraint announcement_banner_singleton check (id = 1)
 );
 alter table public.announcement_banner enable row level security;
+
+alter table public.announcement_banner add column if not exists button_label text not null default '';
+alter table public.announcement_banner add column if not exists button_href text;

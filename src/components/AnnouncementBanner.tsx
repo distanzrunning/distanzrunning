@@ -45,7 +45,12 @@ export default function AnnouncementBanner({
 
   if (dismissed) return null;
 
-  const hasLink = Boolean(config.linkHref);
+  const hasButton = Boolean(config.buttonLabel && config.buttonLabel.trim());
+  const barLinks = !hasButton && Boolean(config.linkHref);
+  const barToModal = !hasButton && !config.linkHref;
+  const buttonToModal = hasButton && !config.buttonHref;
+  // The newsletter modal backs whichever active action has no explicit href.
+  const usesModal = barToModal || buttonToModal;
 
   return (
     <>
@@ -53,12 +58,16 @@ export default function AnnouncementBanner({
         text={config.text}
         serifWordIndices={config.serifWordIndices}
         color={config.color}
-        href={config.linkHref ?? undefined}
-        onActivate={hasLink ? undefined : () => setModalOpen(true)}
-        onActivateHover={hasLink ? undefined : preloadNewsletterHero}
+        href={barLinks ? (config.linkHref ?? undefined) : undefined}
+        onActivate={barToModal ? () => setModalOpen(true) : undefined}
+        onActivateHover={barToModal ? preloadNewsletterHero : undefined}
+        buttonLabel={config.buttonLabel || undefined}
+        buttonHref={config.buttonHref ?? undefined}
+        onButtonActivate={buttonToModal ? () => setModalOpen(true) : undefined}
+        onButtonActivateHover={buttonToModal ? preloadNewsletterHero : undefined}
         onClose={dismiss}
       />
-      {!hasLink && (
+      {usesModal && (
         <NewsletterModal
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}

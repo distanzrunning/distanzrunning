@@ -15,6 +15,8 @@ const DEFAULT: AnnouncementConfig = {
   serifWordIndices: [],
   color: "canvas",
   linkHref: null,
+  buttonLabel: "",
+  buttonHref: null,
   updatedAt: "",
 };
 

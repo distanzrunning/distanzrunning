@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { Button, ButtonLink } from "@/components/ui/Button";
 import {
   tokenize,
   ANNOUNCEMENT_COLORS,
@@ -10,19 +11,26 @@ import {
 // Pure presentational announcement bar — the single source of visual truth,
 // shared by the public banner and the admin live preview so they match exactly.
 // Background + foreground come from the curated (theme-aware) palette; serif
-// words render in EB Garamond italic, a touch larger (serif reads small).
+// words render in EB Garamond italic; an optional CTA button auto-contrasts by
+// inverting the bar's colours. When a button is present the message is plain
+// text and the button is the action; otherwise the whole line can link.
 
 export interface AnnouncementBarProps {
   text: string;
   serifWordIndices: number[];
   color: AnnouncementColorKey;
-  /** Render the line as a link to this href. */
+  /** Render the whole line as a link (only used when there's no button). */
   href?: string;
-  /** Otherwise, an onClick action (e.g. open the newsletter modal). */
+  /** Otherwise, a whole-line onClick (e.g. open the newsletter modal). */
   onActivate?: () => void;
+  onActivateHover?: () => void;
+  /** Optional CTA button. */
+  buttonLabel?: string;
+  buttonHref?: string;
+  onButtonActivate?: () => void;
+  onButtonActivateHover?: () => void;
   /** Show a dismiss button wired to this handler. */
   onClose?: () => void;
-  onActivateHover?: () => void;
 }
 
 export function AnnouncementBar({
@@ -31,11 +39,16 @@ export function AnnouncementBar({
   color,
   href,
   onActivate,
-  onClose,
   onActivateHover,
+  buttonLabel,
+  buttonHref,
+  onButtonActivate,
+  onButtonActivateHover,
+  onClose,
 }: AnnouncementBarProps) {
   const palette = ANNOUNCEMENT_COLORS[color] ?? ANNOUNCEMENT_COLORS.canvas;
   const serif = new Set(serifWordIndices);
+  const hasButton = Boolean(buttonLabel && buttonLabel.trim());
 
   // On the canvas (blends with the page) use the DS borderSubtle token so the
   // rule matches the rest of the chrome; on distinctly-coloured bars use a
@@ -60,6 +73,62 @@ export function AnnouncementBar({
 
   const lineClass = "block w-full px-12 py-2.5 text-center text-copy-14";
 
+  // Auto-contrast: invert the bar's colours for the button.
+  const button = hasButton ? (
+    buttonHref ? (
+      <ButtonLink
+        href={buttonHref}
+        size="small"
+        customColors={{ fg: palette.bg, bg: palette.fg }}
+        onMouseEnter={onButtonActivateHover}
+        onFocus={onButtonActivateHover}
+      >
+        {buttonLabel}
+      </ButtonLink>
+    ) : (
+      <Button
+        size="small"
+        customColors={{ fg: palette.bg, bg: palette.fg }}
+        onClick={onButtonActivate}
+        onMouseEnter={onButtonActivateHover}
+        onFocus={onButtonActivateHover}
+      >
+        {buttonLabel}
+      </Button>
+    )
+  ) : null;
+
+  // With a button: plain message + the button (the button is the action).
+  // Without: the whole line is the link / trigger / static text.
+  const line = hasButton ? (
+    <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 px-12 py-2 text-center text-copy-14">
+      <span>{content}</span>
+      {button}
+    </div>
+  ) : href ? (
+    <a
+      href={href}
+      className={`${lineClass} no-underline`}
+      style={{ color: palette.fg }}
+      onMouseEnter={onActivateHover}
+      onFocus={onActivateHover}
+    >
+      {content}
+    </a>
+  ) : onActivate ? (
+    <button
+      type="button"
+      onClick={onActivate}
+      onMouseEnter={onActivateHover}
+      onFocus={onActivateHover}
+      className={lineClass}
+    >
+      {content}
+    </button>
+  ) : (
+    <div className={`${lineClass} cursor-default`}>{content}</div>
+  );
+
   return (
     <div
       role="region"
@@ -71,29 +140,7 @@ export function AnnouncementBar({
         borderBottom: `1px solid ${borderColor}`,
       }}
     >
-      {href ? (
-        <a
-          href={href}
-          className={`${lineClass} no-underline`}
-          style={{ color: palette.fg }}
-          onMouseEnter={onActivateHover}
-          onFocus={onActivateHover}
-        >
-          {content}
-        </a>
-      ) : onActivate ? (
-        <button
-          type="button"
-          onClick={onActivate}
-          onMouseEnter={onActivateHover}
-          onFocus={onActivateHover}
-          className={lineClass}
-        >
-          {content}
-        </button>
-      ) : (
-        <div className={`${lineClass} cursor-default`}>{content}</div>
-      )}
+      {line}
 
       {onClose && (
         <button
