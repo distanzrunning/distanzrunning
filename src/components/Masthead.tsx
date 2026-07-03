@@ -20,9 +20,11 @@ import { Button } from "@/components/ui/Button";
 // top-level sections. Mirrors the production SiteNavigationMenu hrefs.
 const NAV: { label: string; href: string }[] = [
   { label: "Road", href: "/articles/road" },
-  { label: "Trail", href: "/articles/trail" },
   { label: "Track", href: "/articles/track" },
+  { label: "Trail", href: "/articles/trail" },
+  { label: "Shoes", href: "/shoes" },
   { label: "Gear", href: "/gear" },
+  { label: "Nutrition", href: "/nutrition" },
   { label: "Races", href: "/races" },
 ];
 
@@ -46,7 +48,7 @@ export default function Masthead() {
       }`}
     >
       {/* top tier — divider spans the content (button to button), not full width */}
-      <div className="mx-auto max-w-[1280px] px-6">
+      <div className="mx-auto max-w-[1400px] px-6">
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-borderSubtle py-3">
           {/* left — search + single theme toggle */}
           <div className="flex items-center gap-1">
@@ -126,7 +128,7 @@ export default function Masthead() {
       </div>
 
       {/* bottom tier — section nav (desktop); divider inset to content width */}
-      <div className="mx-auto hidden max-w-[1280px] px-6 sm:block">
+      <div className="mx-auto hidden max-w-[1400px] px-6 sm:block">
         <nav className="border-b border-borderSubtle">
           <ul className="flex items-center justify-center gap-6 py-2.5">
             {NAV.map((item) => (
@@ -146,7 +148,7 @@ export default function Masthead() {
       {/* mobile menu */}
       {mobileOpen && (
         <div className="border-b border-borderSubtle sm:hidden">
-          <div className="mx-auto flex max-w-[1280px] flex-col gap-3 px-6 py-4">
+          <div className="mx-auto flex max-w-[1400px] flex-col gap-3 px-6 py-4">
             {NAV.map((item) => (
               <Link
                 key={item.label}

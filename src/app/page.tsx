@@ -9,7 +9,7 @@ export default function HomePage() {
     <>
       <AnnouncementBanner />
       <Masthead />
-      <div className="mx-auto max-w-[1280px] px-6 py-16">
+      <div className="mx-auto max-w-[1400px] px-6 py-16">
         {/* Homepage sections build here. */}
       </div>
     </>
