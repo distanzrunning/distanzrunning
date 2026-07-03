@@ -1,0 +1,187 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stride — Radio</title>
+    <style>
+      :root {
+        --bg-100: hsl(0, 0%, 100%);
+        --bg-200: hsl(0, 0%, 98%);
+        --gray-100: hsl(0, 0%, 95%);
+        --gray-200: hsl(0, 0%, 92%);
+        --gray-400: hsl(0, 0%, 92%);
+        --gray-500: hsl(0, 0%, 79%);
+        --gray-600: hsl(0, 0%, 66%);
+        --gray-700: hsl(0, 0%, 56%);
+        --gray-900: hsl(0, 0%, 30%);
+        --gray-1000: hsl(0, 0%, 9%);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 40px;
+        background: var(--bg-200);
+        color: var(--gray-1000);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 { font-size: 32px; line-height: 40px; letter-spacing: -0.02em; font-weight: 600; margin: 0 0 4px; }
+      .lede { color: var(--gray-900); font-size: 16px; margin: 0 0 32px; }
+
+      table { border-collapse: collapse; width: 100%; }
+      th, td { padding: 14px; text-align: left; vertical-align: middle; }
+      thead th {
+        font-size: 12px; font-weight: 600; color: var(--gray-700);
+        border-bottom: 1px solid var(--gray-400);
+      }
+      tbody td { border-bottom: 1px solid var(--gray-200); }
+      tbody th {
+        font-size: 13px; font-weight: 600; color: var(--gray-900);
+        border-bottom: 1px solid var(--gray-200);
+      }
+      .sname { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+      .muted { color: var(--gray-900); font-size: 13px; margin: 12px 0 0; }
+
+      /* ---- Radio (faithful to src/components/ui/Radio.tsx + globals.css) ---- */
+      /* Outer ring: 16px, 1px border, full radius, surface fill.
+         Inner dot: 8px, same --radio-color. Neutral-ink accent (Geist):
+         idle gray-700 → hover gray-900 → active gray-600 → checked gray-1000
+         → disabled gray-500. Hover fills the box gray-200. */
+      .radio {
+        position: relative;
+        display: block;
+        width: 16px;
+        height: 16px;
+        border-radius: 9999px;
+        border: 1px solid var(--radio-color, var(--gray-700));
+        background: var(--bg-100);
+        flex: none;
+        transition: border-color 0.2s ease-in, background 0.2s ease-in;
+      }
+      .radio::after {
+        content: "";
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 8px; height: 8px;
+        border-radius: 9999px;
+        background: var(--radio-color, var(--gray-700));
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.15s ease-in;
+      }
+      .radio.is-checked { --radio-color: var(--gray-1000); }
+      .radio.is-checked::after { transform: translate(-50%, -50%) scale(1); }
+      .radio.is-hover { background: var(--gray-200); --radio-color: var(--gray-900); }
+      .radio.is-active { --radio-color: var(--gray-600); }
+      .radio.is-disabled { --radio-color: var(--gray-500); }
+
+      /* Interactive demo — real inputs so hover/active/checked track live. */
+      .ds-radio-box {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+      }
+      .ds-radio-box.dis { cursor: not-allowed; }
+      .ds-radio-box input { position: absolute; opacity: 0; width: 0; height: 0; }
+      .ds-radio-box input:checked + .radio { --radio-color: var(--gray-1000); }
+      .ds-radio-box input:checked + .radio::after { transform: translate(-50%, -50%) scale(1); }
+      .ds-radio-box:hover input:not(:checked):not(:active) + .radio {
+        background: var(--gray-200); --radio-color: var(--gray-900);
+      }
+      .ds-radio-box input:active + .radio { --radio-color: var(--gray-600); }
+      .ds-radio-box input:disabled + .radio { --radio-color: var(--gray-500); }
+
+      /* Label — text-copy-13 (13px), gray-1000 default / gray-500 disabled. */
+      .rlabel {
+        display: inline-flex; align-items: center;
+        font-size: 13px; line-height: 20px;
+      }
+      .rlabel .rtext { margin-left: 6px; user-select: none; }
+      .rlabel.dis { color: var(--gray-500); }
+
+      .group { display: flex; flex-direction: column; gap: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Radio</h1>
+      <p class="lede">
+        Single-select control. A 16px hairline ring over the surface with an
+        8px inner dot — both share one <code>--radio-color</code> that shifts
+        per state. The accent is neutral ink (Geist): no hue.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>State</th>
+            <th>Control</th>
+            <th>Ring / dot colour</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th class="sname">unchecked</th>
+            <td><span class="radio"></span></td>
+            <td class="muted" style="margin:0">gray-700 ring · dot hidden (scale 0)</td>
+          </tr>
+          <tr>
+            <th class="sname">hover</th>
+            <td><span class="radio is-hover"></span></td>
+            <td class="muted" style="margin:0">gray-900 ring · box fills gray-200</td>
+          </tr>
+          <tr>
+            <th class="sname">active</th>
+            <td><span class="radio is-active"></span></td>
+            <td class="muted" style="margin:0">gray-600 ring (press)</td>
+          </tr>
+          <tr>
+            <th class="sname">checked</th>
+            <td><span class="radio is-checked"></span></td>
+            <td class="muted" style="margin:0">gray-1000 ring + dot</td>
+          </tr>
+          <tr>
+            <th class="sname">disabled</th>
+            <td><span class="radio is-disabled"></span></td>
+            <td class="muted" style="margin:0">gray-500 ring · dot hidden</td>
+          </tr>
+          <tr>
+            <th class="sname">disabled&nbsp;checked</th>
+            <td><span class="radio is-disabled is-checked" style="--radio-color: var(--gray-500)"></span></td>
+            <td class="muted" style="margin:0">gray-500 ring + dot (disabled wins)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="muted" style="margin-top:32px">
+        With labels (text-copy-13) — hover and click these to see live states:
+      </p>
+      <div class="group" style="margin-top:16px">
+        <label class="ds-radio-box">
+          <input type="radio" name="pace" />
+          <span class="radio"></span>
+          <span class="rlabel"><span class="rtext">5:00 / km</span></span>
+        </label>
+        <label class="ds-radio-box">
+          <input type="radio" name="pace" checked />
+          <span class="radio"></span>
+          <span class="rlabel"><span class="rtext">4:30 / km</span></span>
+        </label>
+        <label class="ds-radio-box dis">
+          <input type="radio" name="pace" disabled />
+          <span class="radio"></span>
+          <span class="rlabel dis"><span class="rtext">4:00 / km (locked)</span></span>
+        </label>
+        <label class="ds-radio-box dis">
+          <input type="radio" name="pace" disabled checked />
+          <span class="radio"></span>
+          <span class="rlabel dis"><span class="rtext">Sub-4:00 (locked)</span></span>
+        </label>
+      </div>
+    </div>
+  </body>
+</html>

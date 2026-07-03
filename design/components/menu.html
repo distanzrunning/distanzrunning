@@ -1,0 +1,219 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stride — Menu</title>
+    <style>
+      :root {
+        --bg-100: hsl(0, 0%, 100%);
+        --bg-200: hsl(0, 0%, 98%);
+        --gray-100: hsl(0, 0%, 95%);
+        --gray-200: hsl(0, 0%, 92%);
+        --gray-300: hsl(0, 0%, 90%);
+        --gray-400: hsl(0, 0%, 92%);
+        --gray-700: hsl(0, 0%, 56%);
+        --gray-900: hsl(0, 0%, 30%);
+        --gray-1000: hsl(0, 0%, 9%);
+        --red-800: hsl(358, 70%, 52%);
+        --red-100: hsl(0, 90%, 98%);
+        /* Geist material-menu shadow: hairline ring + layered ambient */
+        --shadow-menu:
+          0 0 0 1px #00000014, 0px 1px 1px #00000005,
+          0px 4px 8px -4px #0000000a, 0px 16px 24px -8px #0000000f;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 40px;
+        background: var(--bg-200);
+        color: var(--gray-1000);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 { font-size: 32px; line-height: 40px; letter-spacing: -0.04em; font-weight: 600; margin: 0 0 4px; }
+      .lede { color: var(--gray-900); font-size: 16px; line-height: 24px; margin: 0 0 32px; max-width: 640px; }
+
+      h2 {
+        font-size: 14px; line-height: 20px; letter-spacing: -0.006em;
+        font-weight: 600; color: var(--gray-700);
+        margin: 40px 0 16px; text-transform: uppercase;
+      }
+
+      .stage { display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start; }
+      .specimen { display: inline-flex; flex-direction: column; }
+      .specimen .caption { margin-top: 12px; font-size: 12px; color: var(--gray-700); }
+
+      /* ---- Trigger (MenuButton, secondary variant + chevron) ---- */
+      .trigger {
+        display: inline-flex; align-items: center; justify-content: center;
+        height: 40px; padding: 0 10px; gap: 8px;
+        font-family: inherit; font-size: 14px; line-height: 20px; font-weight: 500;
+        border: 0; border-radius: 6px; cursor: pointer; user-select: none;
+        background: var(--bg-100); color: var(--gray-1000);
+        box-shadow: 0 0 0 1px var(--gray-400);
+      }
+      .trigger .chev { transform: rotate(180deg); }
+
+      /* ---- Menu panel (MenuDropdown, faithful to Menu.tsx) ---- */
+      .panel {
+        margin-top: 4px;
+        background: var(--bg-100);
+        border-radius: 12px;
+        box-shadow: var(--shadow-menu);
+        padding: 8px;
+        min-width: 220px;
+        width: max-content;
+        font-size: 14px;
+        list-style: none;
+      }
+
+      /* ---- MenuItem rows: 40px tall, 0 8px pad, 6px radius, 8px gap ---- */
+      .item {
+        display: flex; align-items: center; gap: 8px;
+        height: 40px; padding: 0 8px;
+        border-radius: 6px; font-size: 14px; line-height: 20px;
+        color: var(--gray-1000);
+        cursor: pointer; background: transparent; border: none;
+        width: 100%; text-align: left; text-decoration: none;
+        font-family: inherit;
+      }
+      .item .label { flex: 1; }
+      .item .lead { display: flex; align-items: center; flex-shrink: 0; }
+      .item .kbd {
+        display: inline-flex; align-items: center;
+        flex-shrink: 0; color: var(--gray-700);
+        font-size: 12px;
+      }
+      .item .kbd kbd {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px; line-height: 1;
+        min-width: 18px; height: 18px; padding: 0 4px;
+        display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 4px;
+        background: var(--gray-100);
+        color: var(--gray-900);
+      }
+      /* Geist: one tint for hover + active (gray-alpha-100 ≈ gray-100) */
+      .item:hover { background: var(--gray-100); }
+
+      /* Row demonstrating the resting hover tint (the "highlighted" row) */
+      .item.is-hover { background: var(--gray-100); }
+
+      /* Destructive item: red-800 ink, red-100 hover */
+      .item.danger { color: var(--red-800); }
+      .item.danger:hover, .item.danger.is-hover { background: var(--red-100); }
+
+      /* Disabled item: gray-700 ink, no hover, no pointer */
+      .item.disabled { color: var(--gray-700); cursor: default; pointer-events: none; }
+
+      /* ---- Separator: 1px, my-2, bleeds into the 8px panel padding ---- */
+      .sep {
+        height: 1px; background: var(--gray-300);
+        margin: 8px 0; width: calc(100% + 16px); margin-left: -8px;
+      }
+
+      /* ---- Section header: 12px gray-900, padding 8 ---- */
+      .section-title {
+        display: block; padding: 8px; font-size: 12px; line-height: 16px;
+        color: var(--gray-900);
+      }
+
+      .icon { width: 16px; height: 16px; display: block; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Menu</h1>
+      <p class="lede">
+        A dropdown of actions triggered from a control. The panel is a raised
+        <code>surface</code> with the <code>material-menu</code> shadow (12px
+        radius, 8px padding, 220px min-width). Rows are 40px tall with a 6px
+        radius and a <code>gray-100</code> hover tint. Separators bleed to the
+        panel edges; destructive items use <code>red-800</code> ink.
+      </p>
+
+      <h2>Open menu</h2>
+      <div class="stage">
+        <div class="specimen">
+          <button class="trigger" aria-expanded="true">
+            <span>Actions</span>
+            <svg class="chev icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+
+          <div class="panel" role="menu" aria-label="Actions">
+            <div class="section-title">Manage</div>
+
+            <button class="item is-hover" role="menuitem">
+              <span class="lead">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" />
+                </svg>
+              </span>
+              <span class="label">Edit race</span>
+              <span class="kbd"><kbd>E</kbd></span>
+            </button>
+
+            <button class="item" role="menuitem">
+              <span class="lead">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+              </span>
+              <span class="label">Duplicate</span>
+              <span class="kbd"><kbd>⌘</kbd><kbd>D</kbd></span>
+            </button>
+
+            <button class="item disabled" role="menuitem" aria-disabled="true">
+              <span class="lead">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                  <polyline points="16 6 12 2 8 6" />
+                  <line x1="12" y1="2" x2="12" y2="15" />
+                </svg>
+              </span>
+              <span class="label">Export GPX</span>
+            </button>
+
+            <div class="sep" role="separator"></div>
+
+            <a class="item" role="menuitem" href="#">
+              <span class="lead">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                  <polyline points="16 6 12 2 8 6" />
+                  <line x1="12" y1="2" x2="12" y2="15" />
+                </svg>
+              </span>
+              <span class="label">Share link</span>
+            </a>
+
+            <button class="item danger" role="menuitem">
+              <span class="lead">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+              </span>
+              <span class="label">Delete race</span>
+              <span class="kbd"><kbd>⌫</kbd></span>
+            </button>
+          </div>
+
+          <div class="caption">
+            Highlighted row shows the resting <code>gray-100</code> hover tint ·
+            disabled row is <code>gray-700</code> · danger row is
+            <code>red-800</code>. Hover any live row.
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

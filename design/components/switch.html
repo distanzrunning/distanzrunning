@@ -1,0 +1,190 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stride — Switch</title>
+    <style>
+      :root {
+        --bg-100: hsl(0, 0%, 100%);
+        --bg-200: hsl(0, 0%, 98%);
+        --gray-100: hsl(0, 0%, 95%);
+        --gray-200: hsl(0, 0%, 92%);
+        --gray-400: hsl(0, 0%, 92%);
+        --gray-500: hsl(0, 0%, 79%);
+        --gray-700: hsl(0, 0%, 56%);
+        --gray-800: hsl(0, 0%, 44%);
+        --gray-900: hsl(0, 0%, 30%);
+        --gray-1000: hsl(0, 0%, 9%);
+        --gray-alpha-400: rgba(0, 0, 0, 0.08);
+        --surface: var(--bg-100);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 40px;
+        background: var(--bg-200);
+        color: var(--gray-1000);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 { font-size: 32px; line-height: 40px; letter-spacing: -0.04em; font-weight: 600; margin: 0 0 4px; }
+      .lede { color: var(--gray-900); font-size: 16px; line-height: 24px; margin: 0 0 32px; }
+      .lede code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 13px; background: var(--gray-100); padding: 1px 5px; border-radius: 4px;
+      }
+
+      section { margin-top: 36px; }
+      h2 {
+        font-size: 14px; font-weight: 600; letter-spacing: -0.006em;
+        color: var(--gray-900); margin: 0 0 16px;
+      }
+
+      .row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 40px; }
+      .specimen { display: flex; flex-direction: column; gap: 10px; }
+      .caption { font-size: 12px; line-height: 16px; color: var(--gray-700); }
+
+      /* ---- Switch (faithful to src/components/ui/Switch.tsx) ----
+         Geist segmented control: raised bg-surface (bg-100/#fff) container
+         with a gray-alpha-400 hairline ring; padding 4px; the SELECTED
+         segment is a gray-100 pill, unselected text is gray-900. */
+      .ds-switch {
+        display: inline-flex;
+        align-items: stretch;
+        padding: 4px;
+        background: var(--surface);
+        box-shadow: var(--gray-alpha-400) 0 0 0 1px;
+        position: relative;
+        gap: 0;
+      }
+      .ds-switch .seg {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        background: transparent;
+        color: var(--gray-900);
+        user-select: none;
+        transition: color 0.15s ease;
+      }
+      .ds-switch .seg[data-selected] {
+        background: var(--gray-100);
+        color: var(--gray-1000);
+      }
+
+      /* size: default — height 40, inner 32, radius 6 / inner 2, pad 0 12, font 14/20 */
+      .sw--default { border-radius: 6px; }
+      .sw--default .seg {
+        height: 32px; padding: 0 12px; border-radius: 2px;
+        font-size: 14px; line-height: 20px;
+      }
+      /* size: small — height 32, inner 24, radius 6 / inner 2 */
+      .sw--small { border-radius: 6px; }
+      .sw--small .seg {
+        height: 24px; padding: 0 12px; border-radius: 2px;
+        font-size: 14px; line-height: 20px;
+      }
+      /* size: large — height 48, inner 40, radius 8 / inner 4, pad 0 16, font 16/20 */
+      .sw--large { border-radius: 8px; }
+      .sw--large .seg {
+        height: 40px; padding: 0 16px; border-radius: 4px;
+        font-size: 16px; line-height: 20px;
+      }
+
+      /* disabled: whole control muted; selected text falls to gray-800 */
+      .ds-switch[data-disabled] { cursor: not-allowed; opacity: 1; }
+      .ds-switch[data-disabled] .seg { color: var(--gray-800); cursor: not-allowed; }
+      .ds-switch[data-disabled] .seg[data-selected] { color: var(--gray-800); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Switch</h1>
+      <p class="lede">
+        A segmented control, Geist-verbatim: a raised <code>bg-surface</code>
+        (#fff) container with a <code>gray-alpha-400</code> hairline ring and
+        4px padding. The <em>selected</em> segment fills to a
+        <code>gray-100</code> pill (inner radius 2px, or 4px at
+        <code>large</code>); unselected labels sit at <code>gray-900</code>.
+      </p>
+
+      <section>
+        <h2>Selection</h2>
+        <div class="row">
+          <div class="specimen">
+            <div class="ds-switch sw--default" role="radiogroup" aria-label="View, off">
+              <span class="seg">Off</span>
+              <span class="seg" data-selected>On</span>
+            </div>
+            <span class="caption">On — right segment selected (gray-100 pill)</span>
+          </div>
+
+          <div class="specimen">
+            <div class="ds-switch sw--default" role="radiogroup" aria-label="View, on">
+              <span class="seg" data-selected>Off</span>
+              <span class="seg">On</span>
+            </div>
+            <span class="caption">Off — left segment selected</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Sizes</h2>
+        <div class="row">
+          <div class="specimen">
+            <div class="ds-switch sw--small" role="radiogroup" aria-label="Size small">
+              <span class="seg" data-selected>Day</span>
+              <span class="seg">Week</span>
+              <span class="seg">Month</span>
+            </div>
+            <span class="caption">small — 32px track</span>
+          </div>
+
+          <div class="specimen">
+            <div class="ds-switch sw--default" role="radiogroup" aria-label="Size default">
+              <span class="seg" data-selected>Day</span>
+              <span class="seg">Week</span>
+              <span class="seg">Month</span>
+            </div>
+            <span class="caption">default — 40px track</span>
+          </div>
+
+          <div class="specimen">
+            <div class="ds-switch sw--large" role="radiogroup" aria-label="Size large">
+              <span class="seg" data-selected>Day</span>
+              <span class="seg">Week</span>
+              <span class="seg">Month</span>
+            </div>
+            <span class="caption">large — 48px track, inner radius 4px</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Disabled</h2>
+        <div class="row">
+          <div class="specimen">
+            <div class="ds-switch sw--default" data-disabled role="radiogroup" aria-label="Disabled, off" aria-disabled="true">
+              <span class="seg" data-selected>Off</span>
+              <span class="seg">On</span>
+            </div>
+            <span class="caption">Disabled — Off selected (text falls to gray-800)</span>
+          </div>
+
+          <div class="specimen">
+            <div class="ds-switch sw--default" data-disabled role="radiogroup" aria-label="Disabled, on" aria-disabled="true">
+              <span class="seg">Off</span>
+              <span class="seg" data-selected>On</span>
+            </div>
+            <span class="caption">Disabled — On selected</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,84 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stride — Typography</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-100: #fff; --bg-200: #fafafa;
+        --ink: hsl(0, 0%, 9%); --subtle: hsl(0, 0%, 30%); --muted: hsl(0, 0%, 56%);
+        --hairline: hsl(0, 0%, 92%);
+        --sans: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        --serif: "EB Garamond", Georgia, "Times New Roman", serif;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 40px; background: var(--bg-200); color: var(--ink);
+        font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 { font-size: 32px; line-height: 40px; letter-spacing: -0.04em; font-weight: 600; margin: 0 0 4px; }
+      .lede { color: var(--subtle); font-size: 16px; margin: 0 0 32px; max-width: 60ch; }
+      section { margin-bottom: 36px; }
+      h2 { font-size: 14px; line-height: 20px; letter-spacing: -0.006em; font-weight: 600; margin: 0 0 4px; }
+      .h2note { color: var(--muted); font-size: 13px; margin: 0 0 16px; }
+      .row { display: grid; grid-template-columns: 150px 1fr; gap: 20px; padding: 16px 0; border-top: 1px solid var(--hairline); align-items: baseline; }
+      .spec { font-size: 12px; color: var(--muted); font-family: ui-monospace, Menlo, monospace; line-height: 1.5; }
+      .spec .cls { color: var(--ink); font-weight: 600; display: block; margin-bottom: 2px; }
+      .sample { min-width: 0; }
+      /* heading scale — sans, no font-family override needed (inherits Inter) */
+      .t-h32 { font-size: 32px; line-height: 40px; letter-spacing: -0.04em; font-weight: 600; }
+      .t-h24 { font-size: 24px; line-height: 32px; letter-spacing: -0.04em; font-weight: 600; }
+      .t-h20 { font-size: 20px; line-height: 26px; letter-spacing: -0.02em; font-weight: 600; }
+      .t-h16 { font-size: 16px; line-height: 24px; letter-spacing: -0.02em; font-weight: 600; }
+      .t-h14 { font-size: 14px; line-height: 20px; letter-spacing: -0.02em; font-weight: 600; }
+      /* editorial serif — ONLY two slots */
+      .t-serif40 { font-family: var(--serif); font-size: 40px; line-height: 48px; letter-spacing: -0.02em; font-weight: 500; }
+      .t-serif32 { font-family: var(--serif); font-size: 32px; line-height: 40px; font-style: italic; font-weight: 400; }
+      /* body copy */
+      .t-c16 { font-size: 16px; line-height: 24px; }
+      .t-c14 { font-size: 14px; line-height: 20px; }
+      .t-c13 { font-size: 13px; line-height: 18px; color: var(--subtle); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Typography</h1>
+      <p class="lede">
+        Two typefaces, two roles. <strong>Inter / Geist Sans</strong> for all UI.
+        <strong>EB Garamond</strong> for editorial — and only two slots: article
+        page titles and pull quotes. Never mix them up.
+      </p>
+
+      <section>
+        <h2>UI heading scale — Sans</h2>
+        <p class="h2note">Section titles, cards, navigation. Inter, weight 600.</p>
+        <div class="row"><div class="spec"><span class="cls">text-heading-32</span>32 / 40 · -0.04em · 600</div><div class="sample"><div class="t-h32">Race weekend recap</div></div></div>
+        <div class="row"><div class="spec"><span class="cls">text-heading-24</span>24 / 32 · -0.04em · 600</div><div class="sample"><div class="t-h24">Race weekend recap</div></div></div>
+        <div class="row"><div class="spec"><span class="cls">text-heading-20</span>20 / 26 · -0.02em · 600</div><div class="sample"><div class="t-h20">Race weekend recap</div></div></div>
+        <div class="row"><div class="spec"><span class="cls">text-heading-16</span>16 / 24 · -0.02em · 600</div><div class="sample"><div class="t-h16">Race weekend recap</div></div></div>
+        <div class="row"><div class="spec"><span class="cls">text-heading-14</span>14 / 20 · -0.02em · 600</div><div class="sample"><div class="t-h14">Race weekend recap</div></div></div>
+      </section>
+
+      <section>
+        <h2>Editorial — Serif <span style="color: var(--muted); font-weight: 400">(exactly two slots)</span></h2>
+        <p class="h2note">EB Garamond pairs with these two only. Everything else stays sans.</p>
+        <div class="row"><div class="spec"><span class="cls">text-heading-40 font-serif</span>40 / 48 · article title</div><div class="sample"><div class="t-serif40">The last mile of the Berlin Marathon</div></div></div>
+        <div class="row"><div class="spec"><span class="cls">text-heading-32 font-serif</span>32 / 40 · pull quote</div><div class="sample"><div class="t-serif32">"You don't run 26 miles at five minutes a mile on talent."</div></div></div>
+      </section>
+
+      <section>
+        <h2>Body copy — Sans</h2>
+        <div class="row"><div class="spec"><span class="cls">text-copy-16</span>16 / 24</div><div class="sample"><div class="t-c16">The course record has stood for nearly a decade, and every spring a new field lines up to chase it.</div></div></div>
+        <div class="row"><div class="spec"><span class="cls">text-copy-14</span>14 / 20</div><div class="sample"><div class="t-c14">The course record has stood for nearly a decade, and every spring a new field lines up to chase it.</div></div></div>
+        <div class="row"><div class="spec"><span class="cls">text-copy-13</span>13 / 18 · subtle</div><div class="sample"><div class="t-c13">Metadata, captions, and secondary detail.</div></div></div>
+      </section>
+    </div>
+  </body>
+</html>

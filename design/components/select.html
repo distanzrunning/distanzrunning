@@ -1,0 +1,258 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stride — Select</title>
+    <style>
+      :root {
+        --bg-100: #fff;
+        --bg-200: #fafafa;
+        --gray-100: hsl(0, 0%, 95%);
+        --gray-200: hsl(0, 0%, 92%);
+        --gray-300: hsl(0, 0%, 90%);
+        --gray-400: hsl(0, 0%, 92%);
+        --gray-700: hsl(0, 0%, 56%);
+        --gray-900: hsl(0, 0%, 30%);
+        --gray-1000: hsl(0, 0%, 9%);
+        --blue-700: hsl(212, 100%, 48%);
+        --menu-shadow: 0 0 0 1px #00000014, 0px 1px 1px #00000005,
+          0px 4px 8px -4px #0000000a, 0px 16px 24px -8px #0000000f;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 40px;
+        background: var(--bg-200);
+        color: var(--gray-1000);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 { font-size: 32px; line-height: 40px; letter-spacing: -0.04em; font-weight: 600; margin: 0 0 4px; }
+      .lede { color: var(--gray-900); font-size: 16px; margin: 0 0 32px; }
+
+      section { margin: 0 0 40px; }
+      .sec-title {
+        font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
+        text-transform: uppercase; color: var(--gray-700);
+        margin: 0 0 16px; padding-bottom: 8px;
+        border-bottom: 1px solid var(--gray-400);
+      }
+      .row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 32px; }
+      .spec { display: flex; flex-direction: column; gap: 8px; }
+      .spec-label {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px; color: var(--gray-700);
+      }
+
+      /* ---- Select trigger (faithful to src/components/ui/Select.tsx, medium) ---- */
+      .select {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        width: 260px;
+      }
+      .select .field {
+        appearance: none;
+        width: 100%;
+        height: 40px;                 /* medium h-10 */
+        padding: 0 36px 0 12px;       /* px-3 pr-9 */
+        font-family: inherit;
+        font-size: 14px;
+        line-height: 20px;
+        color: var(--gray-1000);
+        background: var(--bg-100);     /* bg-surface */
+        border: none;
+        border-radius: 6px;           /* rounded-[6px] */
+        box-shadow: 0 0 0 1px var(--gray-400);  /* hairline */
+        cursor: pointer;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        transition: box-shadow 200ms ease, color 200ms ease;
+        display: flex;
+        align-items: center;
+      }
+      .field.placeholder { color: var(--gray-700); }
+      .field.is-focused {
+        outline: none;
+        box-shadow: 0 0 0 1px var(--blue-700);  /* focus ring = blue-700 */
+      }
+      .select.is-disabled .field {
+        background: var(--gray-100);
+        color: var(--gray-700);
+        box-shadow: 0 0 0 1px var(--gray-300);
+        cursor: not-allowed;
+      }
+      .select .chevron {
+        position: absolute;
+        right: 12px;                  /* right-3 */
+        top: 50%;
+        transform: translateY(-50%);
+        display: inline-flex;
+        color: var(--gray-900);       /* suffix text-gray-900 */
+        pointer-events: none;
+      }
+      .select.is-disabled .chevron { color: var(--gray-700); }
+
+      /* ---- Open listbox mock (material-menu) ---- */
+      .menu-mock { width: 260px; }
+      .menu {
+        margin-top: 6px;
+        background: var(--bg-100);
+        border-radius: 12px;          /* material-menu radius */
+        box-shadow: var(--menu-shadow);
+        padding: 4px;
+        overflow: hidden;
+      }
+      .opt {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        height: 32px;
+        padding: 0 8px;
+        border-radius: 6px;
+        font-size: 14px;
+        line-height: 20px;
+        color: var(--gray-1000);
+        cursor: pointer;
+      }
+      .opt.selected,
+      .opt.hovered { background: var(--gray-100); }  /* hover/selected tone */
+      .opt .check { display: inline-flex; color: var(--gray-1000); }
+      .opt .check.hidden { visibility: hidden; }
+
+      .note { margin-top: 12px; font-size: 13px; color: var(--gray-700); }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Select</h1>
+      <p class="lede">
+        Native <code>&lt;select&gt;</code> styled as a surface control: 40px tall
+        (medium), 6px radius, a <code>gray-400</code> hairline that becomes a
+        <code>blue-700</code> ring on focus. A lucide chevron sits at right;
+        placeholder text uses <code>gray-700</code>, values <code>gray-1000</code>.
+      </p>
+
+      <!-- ================= Closed triggers ================= -->
+      <section>
+        <div class="sec-title">Trigger — closed states</div>
+        <div class="row">
+          <div class="spec">
+            <span class="spec-label">default</span>
+            <label class="select">
+              <span class="field">Marathon</span>
+              <span class="chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </span>
+            </label>
+          </div>
+
+          <div class="spec">
+            <span class="spec-label">placeholder</span>
+            <label class="select">
+              <span class="field placeholder">Select distance</span>
+              <span class="chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </span>
+            </label>
+          </div>
+
+          <div class="spec">
+            <span class="spec-label">focused</span>
+            <label class="select">
+              <span class="field is-focused">Marathon</span>
+              <span class="chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </span>
+            </label>
+          </div>
+
+          <div class="spec">
+            <span class="spec-label">disabled</span>
+            <label class="select is-disabled">
+              <span class="field">Marathon</span>
+              <span class="chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= Open menu mock ================= -->
+      <section>
+        <div class="sec-title">Open — listbox</div>
+        <div class="menu-mock">
+          <label class="select">
+            <span class="field is-focused">Marathon</span>
+            <span class="chevron">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </span>
+          </label>
+
+          <div class="menu" role="listbox" aria-label="Distance">
+            <div class="opt" role="option">
+              <span>5K</span>
+              <span class="check hidden"></span>
+            </div>
+            <div class="opt" role="option">
+              <span>10K</span>
+              <span class="check hidden"></span>
+            </div>
+            <div class="opt" role="option">
+              <span>Half marathon</span>
+              <span class="check hidden"></span>
+            </div>
+            <div class="opt selected" role="option" aria-selected="true">
+              <span>Marathon</span>
+              <span class="check">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              </span>
+            </div>
+            <div class="opt hovered" role="option">
+              <span>Ultra</span>
+              <span class="check hidden"></span>
+            </div>
+          </div>
+        </div>
+        <p class="note">
+          Native rendering delegates the open list to the OS. This mock shows the
+          Stride listbox treatment: a <code>bg-surface</code> panel with the
+          <code>material-menu</code> shadow (12px radius), option rows on a
+          <code>gray-100</code> hover/selected tone, and a check on the selected row.
+        </p>
+      </section>
+    </div>
+  </body>
+</html>

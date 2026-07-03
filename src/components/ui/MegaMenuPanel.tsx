@@ -26,11 +26,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { ButtonLink } from "@/components/ui/Button";
 import { urlFor } from "@/sanity/lib/image";
 import { cn } from "@/lib/utils";
-import type {
-  CategoryItem,
-  FeaturedProduct,
-  FeaturedRace,
-} from "@/components/ui/SiteNavigationMenu";
+import type { CategoryItem } from "@/components/ui/SiteNavigationMenu";
 
 // ----------------------------------------------------------------------------
 // Featured item shape (union of product / race) — the panel doesn't
@@ -80,18 +76,23 @@ export default function MegaMenuPanel({
 }: MegaMenuPanelProps) {
   return (
     <div
-      // 3-col grid hardcoded to the Frontify spec: left 376, middle
-      // 752, right 376 with 32 px column gaps. Height is content-
-      // driven — Radix reads --radix-navigation-menu-viewport-height
-      // from the active Content's measured box, so a taller section
-      // (longer heading, more links) gets a taller panel without
-      // anything clipping against the Viewport's overflow-hidden.
-      // Grid's default align-items:stretch keeps all three columns
-      // the same height as the tallest within a given section, so the
-      // CTA's mt-auto and the left-column divider line still anchor
-      // to the bottom of the panel.
+      // 3-col grid in the Frontify 1:2:1 ratio (left : middle : right).
+      // Fluid minmax(0,Nfr) instead of fixed px so the same panel fits
+      // both hosts: the production SiteHeader Viewport (1600 px → resolves
+      // to exactly 376/752/376, identical to the old fixed spec) and the
+      // homepage Masthead Viewport (1400 px → scales the columns down
+      // proportionally). minmax(0,…) lets the tracks shrink below their
+      // content's intrinsic width so nothing overflows the narrower host.
+      // Height is content-driven — Radix reads
+      // --radix-navigation-menu-viewport-height from the active Content's
+      // measured box, so a taller section (longer heading, more links)
+      // gets a taller panel without clipping against the Viewport's
+      // overflow-hidden. Grid's default align-items:stretch keeps all
+      // three columns the same height as the tallest within a section, so
+      // the CTA's mt-auto and the left-column divider still anchor to the
+      // bottom of the panel.
       className={cn(
-        "grid w-full grid-cols-[376px_752px_376px] gap-x-8",
+        "grid w-full grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] gap-x-8",
         className,
       )}
       data-mega-menu-panel={sectionKey}

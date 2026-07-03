@@ -1,0 +1,197 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stride — Checkbox</title>
+    <style>
+      :root {
+        --bg-100: hsl(0, 0%, 100%);
+        --bg-200: hsl(0, 0%, 98%);
+        --gray-100: hsl(0, 0%, 95%);
+        --gray-200: hsl(0, 0%, 92%);
+        --gray-400: hsl(0, 0%, 92%);
+        --gray-500: hsl(0, 0%, 79%);
+        --gray-600: hsl(0, 0%, 66%);
+        --gray-700: hsl(0, 0%, 56%);
+        --gray-900: hsl(0, 0%, 30%);
+        --gray-1000: hsl(0, 0%, 9%);
+        --text-disabled: var(--gray-500);
+        --text-subtler: var(--gray-700);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 40px;
+        background: var(--bg-200);
+        color: var(--gray-1000);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 { font-size: 32px; line-height: 40px; letter-spacing: -0.04em; font-weight: 600; margin: 0 0 4px; }
+      .lede { color: var(--gray-900); font-size: 16px; line-height: 24px; margin: 0 0 32px; }
+
+      table { border-collapse: collapse; width: 100%; }
+      th, td { padding: 14px; text-align: left; vertical-align: middle; }
+      thead th {
+        font-size: 12px; font-weight: 600; color: var(--gray-700);
+        border-bottom: 1px solid var(--gray-400);
+      }
+      tbody td { border-bottom: 1px solid var(--gray-200); }
+      tbody th {
+        font-size: 13px; font-weight: 600; color: var(--gray-900);
+        border-bottom: 1px solid var(--gray-200);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        white-space: nowrap; padding-right: 32px;
+      }
+      td .desc { font-size: 13px; color: var(--gray-700); }
+
+      /* ---- Checkbox (faithful to src/components/ui/Checkbox.tsx) ---- */
+      .cbx {
+        display: inline-flex; align-items: flex-start;
+        gap: 8px;                 /* label ml-2 */
+        font-size: 13px;          /* text-copy-13 */
+        line-height: 18px;
+        user-select: none;
+        color: var(--gray-1000);  /* textDefault */
+        cursor: pointer;
+      }
+      .cbx.is-disabled { color: var(--text-disabled); cursor: not-allowed; }
+
+      /* the 16px box: w-4 h-4, rounded-[4px], 1px solid border */
+      .box {
+        position: relative;
+        flex: none;
+        width: 16px; height: 16px;
+        border-radius: 4px;
+        border: 1px solid var(--text-subtler);   /* gray-700 default */
+        background: var(--bg-100);               /* bg-surface */
+        display: flex; align-items: center; justify-content: center;
+      }
+      .box svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+      /* checked: ink fill + white check */
+      .cbx.is-checked .box {
+        background: var(--gray-1000);            /* border-textDefault / bg-textDefault */
+        border-color: var(--gray-1000);
+      }
+      /* indeterminate: surface box, muted dash (unchanged fill) */
+      .cbx.is-indet .box {
+        background: var(--bg-100);
+        border-color: var(--text-subtler);
+      }
+      /* disabled + checked: gray-600 fill (Geist) */
+      .cbx.is-disabled.is-checked .box {
+        background: var(--gray-600);
+        border-color: var(--gray-600);
+      }
+      /* disabled (unchecked / indeterminate): gray-100 fill, disabled border */
+      .cbx.is-disabled:not(.is-checked) .box {
+        background: var(--gray-100);
+        border-color: var(--text-disabled);
+      }
+
+      .align-note { margin-top: 40px; font-size: 13px; color: var(--gray-700); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Checkbox</h1>
+      <p class="lede">
+        16&nbsp;px box, 4&nbsp;px radius, 1&nbsp;px hairline. The accent is
+        neutral ink — a checked box fills <code>gray-1000</code> with a white
+        check; there is no colour. Indeterminate keeps the surface box and shows
+        a muted <code>gray-700</code> dash. Label is 13&nbsp;px, 8&nbsp;px gap.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>State</th>
+            <th>Specimen</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>unchecked</th>
+            <td>
+              <label class="cbx">
+                <span class="box"></span>
+                <span>Email me about race results</span>
+              </label>
+            </td>
+            <td><span class="desc">Surface fill, <code>gray-700</code> border.</span></td>
+          </tr>
+
+          <tr>
+            <th>checked</th>
+            <td>
+              <label class="cbx is-checked">
+                <span class="box">
+                  <svg fill="none" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M14 7L8.5 12.5L6 10" stroke="#fff"
+                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                  </svg>
+                </span>
+                <span>Email me about race results</span>
+              </label>
+            </td>
+            <td><span class="desc">Ink fill (<code>gray-1000</code>), white check glyph.</span></td>
+          </tr>
+
+          <tr>
+            <th>indeterminate</th>
+            <td>
+              <label class="cbx is-indet">
+                <span class="box">
+                  <svg fill="none" viewBox="0 0 20 20" aria-hidden="true">
+                    <line x1="5" x2="15" y1="10" y2="10" stroke="hsl(0,0%,56%)"
+                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                  </svg>
+                </span>
+                <span>Select all distances</span>
+              </label>
+            </td>
+            <td><span class="desc">Surface box, muted <code>gray-700</code> dash.</span></td>
+          </tr>
+
+          <tr>
+            <th>disabled</th>
+            <td>
+              <label class="cbx is-disabled">
+                <span class="box"></span>
+                <span>Notify me (unavailable)</span>
+              </label>
+            </td>
+            <td><span class="desc"><code>gray-100</code> fill, disabled border + text.</span></td>
+          </tr>
+
+          <tr>
+            <th>disabled&nbsp;·&nbsp;checked</th>
+            <td>
+              <label class="cbx is-disabled is-checked">
+                <span class="box">
+                  <svg fill="none" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M14 7L8.5 12.5L6 10" stroke="#fff"
+                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                  </svg>
+                </span>
+                <span>Locked preference</span>
+              </label>
+            </td>
+            <td><span class="desc"><code>gray-600</code> fill (softer than active ink).</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="align-note">
+        Box top-aligns to the first line of the label (<code>items-start</code>),
+        so multi-line labels wrap cleanly beneath the text, not the box.
+      </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stride — Rules</title>
+    <style>
+      :root {
+        --bg-200: #fafafa; --ink: hsl(0, 0%, 9%); --subtle: hsl(0, 0%, 30%);
+        --muted: hsl(0, 0%, 56%);
+        --border-subtle: hsl(0, 0%, 88%); /* borderSubtle */
+        --text-default: hsl(0, 0%, 9%); /* ink */
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 40px; background: var(--bg-200); color: var(--ink);
+        font-family: "Inter", -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 { font-size: 32px; line-height: 40px; letter-spacing: -0.04em; font-weight: 600; margin: 0 0 4px; }
+      .lede { color: var(--subtle); font-size: 16px; margin: 0 0 32px; max-width: 62ch; }
+      .rule-block { margin-bottom: 32px; }
+      .rule-block .label { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+      .rule-block .spec { font-size: 12px; color: var(--muted); font-family: ui-monospace, Menlo, monospace; margin-bottom: 14px; }
+      .rule-block .use { font-size: 13px; color: var(--subtle); margin-top: 12px; }
+      hr { border: 0; margin: 0; }
+      .r-default { border-top: 1px solid var(--border-subtle); }
+      .r-emphasised { border-top: 1px solid var(--text-default); }
+      .r-heavy { border-top: 4px solid var(--text-default); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Rules</h1>
+      <p class="lede">
+        Horizontal dividers. Three weights — from a subtle list separator to a
+        heavy section break. Editorial emphasis uses neutral ink, never a colour.
+      </p>
+
+      <div class="rule-block">
+        <div class="label">Default</div>
+        <div class="spec">border-t border-borderSubtle</div>
+        <hr class="r-default" />
+        <div class="use">Subtle separation — list / table rows.</div>
+      </div>
+
+      <div class="rule-block">
+        <div class="label">Emphasised</div>
+        <div class="spec">border-t border-textDefault</div>
+        <hr class="r-emphasised" />
+        <div class="use">After headings, distinct sections.</div>
+      </div>
+
+      <div class="rule-block">
+        <div class="label">Heavy</div>
+        <div class="spec">border-t-4 border-textDefault</div>
+        <hr class="r-heavy" />
+        <div class="use">Major page sections, page titles, featured content.</div>
+      </div>
+    </div>
+  </body>
+</html>

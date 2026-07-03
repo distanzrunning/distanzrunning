@@ -1,0 +1,175 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stride — Colors</title>
+    <style>
+      :root {
+        /* Backgrounds / surfaces (light) — Geist-verbatim */
+        --bg-100: hsl(0, 0%, 100%); /* Surface (raised) */
+        --bg-200: hsl(0, 0%, 98%); /* Canvas (page) */
+
+        /* Neutral gray scale (light) */
+        --gray-100: hsl(0, 0%, 95%);
+        --gray-200: hsl(0, 0%, 92%);
+        --gray-300: hsl(0, 0%, 90%);
+        --gray-400: hsl(0, 0%, 92%);
+        --gray-500: hsl(0, 0%, 79%);
+        --gray-600: hsl(0, 0%, 66%);
+        --gray-700: hsl(0, 0%, 56%);
+        --gray-800: hsl(0, 0%, 49%);
+        --gray-900: hsl(0, 0%, 30%);
+        --gray-1000: hsl(0, 0%, 9%);
+
+        /* Accent — Blue (light). The only hue for data-viz/focus/selection. */
+        --blue-100: hsl(212, 100%, 97%);
+        --blue-200: hsl(210, 100%, 96%);
+        --blue-300: hsl(210, 100%, 94%);
+        --blue-400: hsl(209, 100%, 90%);
+        --blue-500: hsl(209, 100%, 80%);
+        --blue-600: hsl(208, 100%, 66%);
+        --blue-700: hsl(212, 100%, 48%);
+        --blue-800: hsl(212, 100%, 41%);
+        --blue-900: hsl(211, 100%, 42%);
+        --blue-1000: hsl(211, 100%, 15%);
+
+        --ink: var(--gray-1000);
+        --subtle: var(--gray-900);
+        --muted: var(--gray-700);
+        --hairline: var(--gray-400);
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 40px;
+        background: var(--bg-200);
+        color: var(--ink);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 {
+        font-size: 32px;
+        line-height: 40px;
+        letter-spacing: -0.02em;
+        font-weight: 600;
+        margin: 0 0 4px;
+      }
+      .lede { color: var(--subtle); font-size: 16px; margin: 0 0 32px; }
+      section { margin-bottom: 36px; }
+      h2 {
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: -0.006em;
+        font-weight: 600;
+        margin: 0 0 12px;
+        color: var(--ink);
+      }
+      .note { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+
+      /* Surfaces row — two big tiles */
+      .surfaces { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .surface-tile {
+        border: 1px solid var(--hairline);
+        border-radius: 12px;
+        padding: 20px;
+        min-height: 96px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+      .surface-tile .name { font-size: 14px; font-weight: 600; }
+      .surface-tile .val { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+      /* Scale rows */
+      .scale {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 8px;
+      }
+      .swatch { text-align: left; }
+      .chip {
+        height: 56px;
+        border-radius: 6px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+      }
+      .swatch .k { font-size: 11px; font-weight: 600; margin-top: 6px; }
+      .swatch .v { font-size: 10px; color: var(--muted); margin-top: 1px; }
+      .role {
+        display: inline-block;
+        font-size: 11px;
+        color: var(--muted);
+        margin-left: 8px;
+        font-weight: 400;
+      }
+      @media (max-width: 720px) {
+        .scale { grid-template-columns: repeat(5, 1fr); }
+        .surfaces { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Colors</h1>
+      <p class="lede">
+        Stride's palette — a neutral black-and-white brand plus a single blue
+        accent. Tokens follow <code>--ds-{hue}-{shade}</code>. Light mode shown.
+      </p>
+
+      <section>
+        <h2>Surfaces <span class="role">two roles, one rule</span></h2>
+        <p class="note">
+          Canvas = the page / recessed sections. Surface = everything raised
+          (cards, menus, every control). Elevation is border + shadow, not a
+          lighter fill.
+        </p>
+        <div class="surfaces">
+          <div class="surface-tile" style="background: var(--bg-200)">
+            <div class="name">Canvas</div>
+            <div class="val">bg-200 · #FAFAFA</div>
+          </div>
+          <div class="surface-tile" style="background: var(--bg-100)">
+            <div class="name">Surface</div>
+            <div class="val">bg-100 · #FFFFFF</div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Gray <span class="role">100–300 bg · 400–600 border · 700–800 hi-contrast · 900–1000 text</span></h2>
+        <div class="scale">
+          <div class="swatch"><div class="chip" style="background: var(--gray-100)"></div><div class="k">100</div><div class="v">95%</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--gray-200)"></div><div class="k">200</div><div class="v">92%</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--gray-300)"></div><div class="k">300</div><div class="v">90%</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--gray-400)"></div><div class="k">400</div><div class="v">92%</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--gray-500)"></div><div class="k">500</div><div class="v">79%</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--gray-600)"></div><div class="k">600</div><div class="v">66%</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--gray-700)"></div><div class="k">700</div><div class="v">56%</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--gray-800)"></div><div class="k">800</div><div class="v">49%</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--gray-900)"></div><div class="k">900</div><div class="v">30%</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--gray-1000)"></div><div class="k">1000</div><div class="v">9%</div></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Blue <span class="role">the accent — focus, selection, data-viz</span></h2>
+        <div class="scale">
+          <div class="swatch"><div class="chip" style="background: var(--blue-100)"></div><div class="k">100</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--blue-200)"></div><div class="k">200</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--blue-300)"></div><div class="k">300</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--blue-400)"></div><div class="k">400</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--blue-500)"></div><div class="k">500</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--blue-600)"></div><div class="k">600</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--blue-700)"></div><div class="k">700</div><div class="v">#0070F3</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--blue-800)"></div><div class="k">800</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--blue-900)"></div><div class="k">900</div></div>
+          <div class="swatch"><div class="chip" style="background: var(--blue-1000)"></div><div class="k">1000</div></div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,278 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stride — Input</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+    />
+    <style>
+      :root {
+        --bg-100: hsl(0, 0%, 100%); /* Surface — controls sit on this */
+        --bg-200: hsl(0, 0%, 98%);  /* Canvas / page */
+        --gray-100: hsl(0, 0%, 95%);
+        --gray-200: hsl(0, 0%, 92%);
+        --gray-400: hsl(0, 0%, 92%);
+        --gray-700: hsl(0, 0%, 56%);
+        --gray-900: hsl(0, 0%, 30%);
+        --gray-1000: hsl(0, 0%, 9%);
+        --blue-700: hsl(212, 100%, 48%);
+        --red-900: hsl(358, 66%, 48%);   /* error hairline */
+        --red-300: hsl(0, 100%, 95%);    /* error halo */
+
+        /* hairline ring / hover ring (gray-alpha, verbatim) */
+        --alpha-400: rgba(0, 0, 0, 0.08);
+        --alpha-500: rgba(0, 0, 0, 0.21);
+        --alpha-600: rgba(0, 0, 0, 0.34);
+
+        /* --ds-focus-border: grey input-focus halo (NOT the blue accent) */
+        --focus-border: 0 0 0 1px var(--alpha-600), 0 0 0 4px #00000029;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 40px;
+        background: var(--bg-200);
+        color: var(--gray-1000);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 { font-size: 32px; line-height: 40px; letter-spacing: -0.04em; font-weight: 600; margin: 0 0 4px; }
+      .lede { color: var(--gray-900); font-size: 16px; line-height: 24px; margin: 0 0 40px; max-width: 640px; }
+      .lede code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; }
+
+      section { margin: 0 0 40px; }
+      h2 { font-size: 20px; line-height: 28px; letter-spacing: -0.01em; font-weight: 600; margin: 0 0 6px; }
+      .note { color: var(--gray-900); font-size: 14px; line-height: 20px; margin: 0 0 20px; max-width: 640px; }
+
+      /* specimen grid */
+      .specimens { display: flex; flex-direction: column; gap: 22px; max-width: 400px; }
+      .row { display: flex; flex-wrap: wrap; gap: 22px; }
+      .row > .field { flex: 1 1 180px; min-width: 180px; }
+      .field { max-width: 400px; }
+      .lbl {
+        display: block;
+        font-size: 13px;
+        line-height: 20px;
+        color: var(--gray-900);       /* textSubtle */
+        text-transform: capitalize;
+        margin-bottom: 8px;
+        cursor: text;
+      }
+
+      /* ---- Input container (faithful to src/components/ui/Input.tsx) ---- */
+      .ds-input {
+        display: flex;
+        align-items: center;
+        max-width: 100%;
+        background: var(--bg-100);      /* surface */
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 0 0 1px var(--alpha-400);   /* hairline ring */
+        transition: box-shadow 0.15s ease;
+      }
+      .ds-input:hover:not(.is-error):not(.is-disabled) {
+        box-shadow: 0 0 0 1px var(--alpha-500);
+      }
+      .ds-input:focus-within:not(.is-error) {
+        box-shadow: var(--focus-border);          /* grey halo, not blue */
+      }
+
+      .ds-input input {
+        flex: 1;
+        width: 100%;
+        min-width: 0;
+        height: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--gray-1000);        /* textDefault */
+        font-family: inherit;
+        border-radius: 0;
+      }
+      .ds-input input::placeholder { color: var(--gray-700); }
+
+      /* sizes: height / font / padding-x / radius */
+      .sz-xsmall  { height: 24px; border-radius: 6px; font-size: 12px; }
+      .sz-xsmall  input { font-size: 12px; line-height: 20px; padding: 0 8px; }
+      .sz-small   { height: 32px; border-radius: 6px; font-size: 14px; }
+      .sz-small   input { font-size: 14px; line-height: 20px; padding: 0 12px; }
+      .sz-default { height: 40px; border-radius: 6px; font-size: 14px; }
+      .sz-default input { font-size: 14px; line-height: 20px; padding: 0 12px; }
+      .sz-large   { height: 48px; border-radius: 8px; font-size: 16px; }
+      .sz-large   input { font-size: 16px; line-height: 24px; padding: 0 12px; }
+
+      /* focused (simulated ring for the specimen) */
+      .ds-input.is-focus { box-shadow: var(--focus-border); }
+
+      /* disabled */
+      .ds-input.is-disabled { cursor: not-allowed; }
+      .ds-input.is-disabled input {
+        background: var(--gray-100);
+        color: var(--gray-700);         /* textSubtler */
+        cursor: not-allowed;
+      }
+      .ds-input.is-disabled input::placeholder { color: var(--gray-700); }
+
+      /* error: red hairline + soft red halo */
+      .ds-input.is-error {
+        box-shadow: 0 0 0 1px var(--red-900), 0 0 0 4px var(--red-300);
+      }
+      .err-msg {
+        display: flex; align-items: center; gap: 6px;
+        margin-top: 8px;
+        font-size: 13px; line-height: 20px;
+        color: var(--red-900);
+      }
+      .err-msg svg { flex-shrink: 0; }
+
+      /* prefix / suffix affixes */
+      .affix {
+        display: flex; align-items: center; justify-content: center;
+        height: 100%;
+        color: var(--gray-700);         /* muted */
+        white-space: nowrap;
+        flex-shrink: 0;
+        cursor: default;
+      }
+      .affix.styled { background: var(--bg-200); }  /* bordered affix sits on canvas */
+      /* affix padding matches the size's paddingX */
+      .sz-default .affix { padding: 0 12px; font-size: 14px; line-height: 20px; }
+      /* divider between affix and field */
+      .ds-input .affix.styled + input,
+      .ds-input input.has-prefix { border-left: 1px solid var(--alpha-400); }
+      .ds-input input.has-suffix { border-right: 1px solid var(--alpha-400); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Input</h1>
+      <p class="lede">
+        A single-line text field. Sits on <code>surface</code> (#fff) with a
+        hairline <code>gray-alpha-400</code> ring; base radius 6px. Focus is a
+        <strong>grey</strong> halo (<code>--ds-focus-border</code>) — the grey
+        form-control treatment, not the blue accent, which is reserved for
+        actionable elements. Four sizes, plus error, disabled, and
+        prefix / suffix affixes.
+      </p>
+
+      <!-- Sizes -->
+      <section>
+        <h2>Sizes</h2>
+        <p class="note">
+          <code>xSmall</code> 24px · <code>small</code> 32px ·
+          <code>default</code> 40px · <code>large</code> 48px. Radius is 6px
+          except <code>large</code> (8px). Type is 12 / 14 / 14 / 16px.
+        </p>
+        <div class="specimens">
+          <div class="field">
+            <label class="lbl" for="i-xs">xSmall</label>
+            <div class="ds-input sz-xsmall"><input id="i-xs" placeholder="Placeholder" /></div>
+          </div>
+          <div class="field">
+            <label class="lbl" for="i-sm">Small</label>
+            <div class="ds-input sz-small"><input id="i-sm" placeholder="Placeholder" /></div>
+          </div>
+          <div class="field">
+            <label class="lbl" for="i-df">Default</label>
+            <div class="ds-input sz-default"><input id="i-df" placeholder="Placeholder" /></div>
+          </div>
+          <div class="field">
+            <label class="lbl" for="i-lg">Large</label>
+            <div class="ds-input sz-large"><input id="i-lg" placeholder="Placeholder" /></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- States -->
+      <section>
+        <h2>States</h2>
+        <p class="note">
+          Default, focused (grey <code>--ds-focus-border</code> halo), filled,
+          and disabled. Placeholder text is <code>gray-700</code>. Disabled
+          fills the field <code>gray-100</code> and mutes text to
+          <code>gray-700</code>.
+        </p>
+        <div class="specimens">
+          <div class="field">
+            <label class="lbl" for="s-default">Default</label>
+            <div class="ds-input sz-default"><input id="s-default" placeholder="you@distanzrunning.com" /></div>
+          </div>
+          <div class="field">
+            <label class="lbl" for="s-focus">Focused</label>
+            <div class="ds-input sz-default is-focus"><input id="s-focus" placeholder="you@distanzrunning.com" /></div>
+          </div>
+          <div class="field">
+            <label class="lbl" for="s-filled">Filled</label>
+            <div class="ds-input sz-default"><input id="s-filled" value="Eliud Kipchoge" /></div>
+          </div>
+          <div class="field">
+            <label class="lbl" for="s-disabled">Disabled</label>
+            <div class="ds-input sz-default is-disabled"><input id="s-disabled" value="Read only" disabled /></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Error -->
+      <section>
+        <h2>Error</h2>
+        <p class="note">
+          Error swaps the ring to a <code>red-900</code> hairline over a soft
+          <code>red-300</code> halo, with a message below in
+          <code>red-900</code> and the Geist error glyph.
+        </p>
+        <div class="specimens">
+          <div class="field">
+            <label class="lbl" for="e-1">Email</label>
+            <div class="ds-input sz-default is-error"><input id="e-1" value="not-an-email" aria-invalid="true" /></div>
+            <div class="err-msg">
+              <svg height="16" width="16" viewBox="0 0 16 16" stroke-linejoin="round" aria-hidden="true">
+                <path fill="currentColor" d="M10.9 0a1 1 0 0 1 .7.3l4.1 4.1.07.07a1 1 0 0 1 .23.63v5.8a1 1 0 0 1-.3.7l-4.1 4.1a1 1 0 0 1-.7.3H5a1 1 0 0 1-.53-.23l-.08-.06-4.1-4.1A1 1 0 0 1 0 10.9V5.1a1 1 0 0 1 .3-.7L4.4.3A1 1 0 0 1 5 0h5.9M1.5 5.3v5.4l3.8 3.8h5.4l3.8-3.8V5.3l-3.8-3.8H5.3zM8 10a1 1 0 1 1 0 2 1 1 0 0 1 0-2m.75-1.25h-1.5v-5h1.5z" />
+              </svg>
+              <span>Enter a valid email address.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Prefix / Suffix -->
+      <section>
+        <h2>Prefix &amp; suffix</h2>
+        <p class="note">
+          Bordered affixes sit on <code>canvas</code> (#fafafa), muted
+          <code>gray-700</code>, divided from the field by a
+          <code>gray-alpha-400</code> hairline.
+        </p>
+        <div class="specimens">
+          <div class="field">
+            <label class="lbl" for="p-1">Website</label>
+            <div class="ds-input sz-default">
+              <span class="affix styled">https://</span>
+              <input id="p-1" class="has-prefix" placeholder="distanzrunning.com" />
+            </div>
+          </div>
+          <div class="field">
+            <label class="lbl" for="p-2">Weight</label>
+            <div class="ds-input sz-default">
+              <input id="p-2" class="has-suffix" placeholder="72" />
+              <span class="affix styled">kg</span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="lbl" for="p-3">Price</label>
+            <div class="ds-input sz-default">
+              <span class="affix styled">$</span>
+              <input id="p-3" class="has-prefix has-suffix" placeholder="0.00" />
+              <span class="affix styled">USD</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

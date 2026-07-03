@@ -1,0 +1,217 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stride — Tabs</title>
+    <style>
+      :root {
+        --bg-100: hsl(0, 0%, 100%);
+        --bg-200: hsl(0, 0%, 98%);
+        --gray-100: hsl(0, 0%, 95%);
+        --gray-200: hsl(0, 0%, 92%);
+        --gray-400: hsl(0, 0%, 92%);
+        --gray-700: hsl(0, 0%, 56%);
+        --gray-900: hsl(0, 0%, 30%);
+        --gray-1000: hsl(0, 0%, 9%);
+        /* gray-alpha-200 ≈ translucent hairline fill on white */
+        --gray-alpha-200: rgba(0, 0, 0, 0.05);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 40px;
+        background: var(--bg-200);
+        color: var(--gray-1000);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 { font-size: 32px; line-height: 40px; letter-spacing: -0.02em; font-weight: 600; margin: 0 0 4px; }
+      .lede { color: var(--gray-900); font-size: 16px; margin: 0 0 32px; }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9em;
+        background: var(--gray-100);
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+
+      .section { margin-top: 40px; }
+      .section:first-of-type { margin-top: 0; }
+      .section-label {
+        font-size: 12px; font-weight: 600; color: var(--gray-700);
+        text-transform: uppercase; letter-spacing: 0.04em;
+        margin: 0 0 16px;
+      }
+      .note { color: var(--gray-900); font-size: 13px; margin: 12px 0 0; }
+
+      /* A framed context card so the tab bar sits on a real surface */
+      .card {
+        background: var(--bg-100);
+        border: 1px solid var(--gray-400);
+        border-radius: 12px;
+        padding: 20px 24px;
+      }
+
+      /* ---- Default variant (faithful to src/components/ui/Tabs.tsx) ---- */
+      /* container: flex, columnGap 24, height 48, gray-200 baseline (inset -1px) */
+      .ds-tabs-list {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        column-gap: 24px;
+        height: 48px;
+        padding-bottom: 1px;
+        box-shadow: var(--gray-200) 0px -1px 0px 0px inset;
+      }
+      .ds-tabs-tab {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 14px 2px;
+        font-size: 14px;
+        font-weight: 400;
+        font-family: inherit;
+        color: var(--gray-900);
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        white-space: nowrap;
+        height: 48px;
+        margin-bottom: -1px;
+        transition: color 0.15s ease, border-color 0.15s ease;
+      }
+      .ds-tabs-tab:hover { color: var(--gray-1000); }
+      .ds-tabs-tab[aria-selected="true"] {
+        color: var(--gray-1000);
+        border-bottom: 2px solid var(--gray-1000);
+      }
+      .ds-tabs-tab[disabled] {
+        cursor: not-allowed;
+        /* default variant: disabled inherits enabled color — only cursor differs */
+      }
+      .ds-tabs-tab .badge {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 4px;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 5px;
+        border-radius: 9px;
+        background: var(--gray-100);
+        color: var(--gray-900);
+        font-size: 11px;
+        font-weight: 600;
+        justify-content: center;
+      }
+
+      /* content area below the bar to convey context */
+      .panel {
+        padding: 20px 2px 4px;
+        color: var(--gray-900);
+        font-size: 14px;
+        line-height: 22px;
+      }
+
+      /* ---- Secondary variant (pill segmented) ---- */
+      .ds-tabs-list--secondary {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        column-gap: 8px;
+        height: 24px;
+        padding-bottom: 1px;
+        box-shadow: none;
+      }
+      .ds-tabs-tab--secondary {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 6px;
+        font-size: 13px;
+        font-weight: 400;
+        font-family: inherit;
+        border: none;
+        border-radius: 6px;
+        height: 24px;
+        margin-bottom: -1px;
+        white-space: nowrap;
+        cursor: pointer;
+        color: var(--gray-1000);
+        background: var(--gray-alpha-200);
+        transition: color 0.15s ease, background 0.15s ease;
+      }
+      .ds-tabs-tab--secondary:hover { background: var(--gray-100); }
+      .ds-tabs-tab--secondary[aria-selected="true"] {
+        color: var(--bg-100);
+        background: var(--gray-1000);
+      }
+      .ds-tabs-tab--secondary[disabled] {
+        cursor: not-allowed;
+        color: var(--gray-900);
+        background: var(--gray-200);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Tabs</h1>
+      <p class="lede">
+        Two variants. <code>default</code> is the underlined navigation bar — a
+        faint <code>gray-200</code> baseline with the selected tab's
+        <code>gray-1000</code> underline riding over it. <code>secondary</code>
+        is a compact pill segmented control. Labels are Title Case nouns; active
+        text is ink, inactive is <code>gray-900</code>.
+      </p>
+
+      <div class="section">
+        <p class="section-label">Default — underline navigation</p>
+        <div class="card">
+          <div role="tablist" aria-label="Sections" class="ds-tabs-list">
+            <button class="ds-tabs-tab" role="tab" aria-selected="true">Overview</button>
+            <button class="ds-tabs-tab" role="tab" aria-selected="false">Results</button>
+            <button class="ds-tabs-tab" role="tab" aria-selected="false">
+              Athletes<span class="badge">128</span>
+            </button>
+            <button class="ds-tabs-tab" role="tab" aria-selected="false" disabled>Settings</button>
+          </div>
+          <div class="panel">
+            Overview content sits here. The selected tab carries the 2px ink
+            underline; inactive tabs are <code>gray-900</code> and shift to ink
+            on hover. The disabled tab keeps its colour but shows a not-allowed
+            cursor.
+          </div>
+        </div>
+        <p class="note">
+          48px track · 24px column gap · 14px / weight 400 · underline
+          <code>2px&nbsp;gray-1000</code> over a <code>gray-200</code> baseline.
+        </p>
+      </div>
+
+      <div class="section">
+        <p class="section-label">Secondary — pill segmented</p>
+        <div class="card">
+          <div role="tablist" aria-label="View" class="ds-tabs-list--secondary">
+            <button class="ds-tabs-tab--secondary" role="tab" aria-selected="true">Day</button>
+            <button class="ds-tabs-tab--secondary" role="tab" aria-selected="false">Week</button>
+            <button class="ds-tabs-tab--secondary" role="tab" aria-selected="false">Month</button>
+            <button class="ds-tabs-tab--secondary" role="tab" aria-selected="false" disabled>Year</button>
+          </div>
+          <div class="panel">
+            Compact 24px pills. The selected pill fills <code>gray-1000</code>
+            with inverted text; inactive pills sit on a translucent
+            <code>gray-alpha-200</code> fill.
+          </div>
+        </div>
+        <p class="note">
+          24px height · 8px gap · 13px / weight 400 · selected =
+          <code>gray-1000</code> fill + inverted text · no baseline rule.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

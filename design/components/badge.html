@@ -1,0 +1,196 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stride — Badge</title>
+    <style>
+      :root {
+        --bg-100: hsl(0, 0%, 100%);
+        --bg-200: hsl(0, 0%, 98%);
+        --gray-100: hsl(0, 0%, 95%);
+        --gray-200: hsl(0, 0%, 92%);
+        --gray-300: hsl(0, 0%, 90%);
+        --gray-400: hsl(0, 0%, 92%);
+        --gray-500: hsl(0, 0%, 62%);
+        --gray-700: hsl(0, 0%, 56%);
+        --gray-900: hsl(0, 0%, 30%);
+        --gray-1000: hsl(0, 0%, 9%);
+
+        /* alpha ring for the pill */
+        --gray-alpha-400: rgba(0, 0, 0, 0.08);
+
+        /* Solid fills (variant name maps to a specific shade in the source) */
+        --blue-800: hsl(212, 100%, 45%);
+        --purple-900: hsl(272, 51%, 42%);
+        --amber-700: hsl(38, 100%, 50%);
+        --red-900: hsl(358, 66%, 48%);
+        --pink-900: hsl(336, 75%, 44%);
+        --green-900: hsl(131, 41%, 34%);
+        --teal-900: hsl(180, 55%, 28%);
+
+        /* Subtle tints (100/200/300) */
+        --gray-200-tint: hsl(0, 0%, 92%);
+        --blue-200: hsl(212, 100%, 94%);
+        --purple-200: hsl(272, 60%, 94%);
+        --amber-200: hsl(45, 100%, 90%);
+        --red-200: hsl(0, 100%, 94%);
+        --pink-300: hsl(336, 80%, 92%);
+        --green-200: hsl(120, 55%, 92%);
+        --teal-300: hsl(180, 55%, 90%);
+
+        /* Subtle text (900) */
+        --blue-900: hsl(211, 100%, 42%);
+        --purple-900-text: hsl(272, 51%, 42%);
+        --amber-900: hsl(30, 90%, 34%);
+        --red-900-text: hsl(358, 66%, 48%);
+        --pink-900-text: hsl(336, 75%, 44%);
+        --green-900-text: hsl(131, 41%, 30%);
+        --teal-900-text: hsl(180, 55%, 26%);
+
+        --contrast-fg: #fff;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 40px;
+        background: var(--bg-200);
+        color: var(--gray-1000);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 { font-size: 32px; line-height: 40px; letter-spacing: -0.04em; font-weight: 600; margin: 0 0 4px; }
+      .lede { color: var(--gray-900); font-size: 16px; margin: 0 0 32px; max-width: 640px; }
+      .lede code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 13px; background: var(--gray-100);
+        border-radius: 4px; padding: 1px 5px;
+      }
+
+      section { margin: 0 0 40px; }
+      h2 {
+        font-size: 14px; font-weight: 600; letter-spacing: -0.006em;
+        color: var(--gray-900); margin: 0 0 16px;
+        padding-bottom: 8px; border-bottom: 1px solid var(--gray-400);
+      }
+
+      /* specimen grid */
+      .specimens {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 20px 16px;
+      }
+      .specimen {
+        display: flex; flex-direction: column;
+        align-items: flex-start; gap: 8px;
+      }
+      .caption {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px; color: var(--gray-700);
+      }
+
+      /* ---- Badge (faithful to src/components/ui/Badge.tsx) ---- */
+      .badge {
+        display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 9999px; font-weight: 500;
+        white-space: nowrap; font-variant-numeric: tabular-nums;
+        text-transform: capitalize;
+      }
+
+      /* sizes: sm 11px/h20/px6/gap4, md 12px/h24/px12/gap4, lg 14px/h32/px12/gap6 */
+      .sz--sm { height: 20px; padding: 0 6px;  font-size: 11px; letter-spacing: 0.2px; gap: 4px; }
+      .sz--md { height: 24px; padding: 0 12px; font-size: 12px; gap: 4px; }
+      .sz--lg { height: 32px; padding: 0 12px; font-size: 14px; gap: 6px; }
+
+      /* solid variants — coloured fill + contrast (white) text */
+      .v--gray     { background: var(--gray-900);   color: var(--contrast-fg); }
+      .v--blue     { background: var(--blue-800);   color: var(--contrast-fg); }
+      .v--purple   { background: var(--purple-900); color: var(--contrast-fg); }
+      .v--amber    { background: var(--amber-700);  color: #000; }
+      .v--red      { background: var(--red-900);    color: var(--contrast-fg); }
+      .v--pink     { background: var(--pink-900);   color: var(--contrast-fg); }
+      .v--green    { background: var(--green-900);  color: var(--contrast-fg); }
+      .v--teal     { background: var(--teal-900);   color: var(--contrast-fg); }
+      .v--inverted { background: var(--gray-1000);  color: var(--gray-100); }
+
+      /* subtle variants — light tint + coloured text */
+      .v--gray-subtle   { background: var(--gray-200-tint); color: var(--gray-1000); }
+      .v--blue-subtle   { background: var(--blue-200);   color: var(--blue-900); }
+      .v--purple-subtle { background: var(--purple-200); color: var(--purple-900-text); }
+      .v--amber-subtle  { background: var(--amber-200);  color: var(--amber-900); }
+      .v--red-subtle    { background: var(--red-200);    color: var(--red-900-text); }
+      .v--pink-subtle   { background: var(--pink-300);   color: var(--pink-900-text); }
+      .v--green-subtle  { background: var(--green-200);  color: var(--green-900-text); }
+      .v--teal-subtle   { background: var(--teal-300);   color: var(--teal-900-text); }
+
+      /* BadgePill — surface fill, gray-1000 text, inset gray-alpha ring */
+      .pill {
+        background: var(--bg-100); color: var(--gray-1000);
+        box-shadow: inset 0 0 0 1px var(--gray-alpha-400);
+        text-decoration: none; cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Badge</h1>
+      <p class="lede">
+        Pill-shaped labels for tags and status. Eight hues in two families —
+        <code>solid</code> (coloured fill, white text) and <code>-subtle</code>
+        (tinted fill, coloured text) — plus <code>inverted</code>. Three sizes
+        (<code>sm</code> / <code>md</code> / <code>lg</code>). Always fully
+        rounded (<code>rounded-full</code>) with <code>capitalize</code> text.
+      </p>
+
+      <section>
+        <h2>Solid</h2>
+        <div class="specimens">
+          <div class="specimen"><span class="badge v--gray sz--md">Draft</span><span class="caption">gray</span></div>
+          <div class="specimen"><span class="badge v--blue sz--md">New</span><span class="caption">blue</span></div>
+          <div class="specimen"><span class="badge v--purple sz--md">Pro</span><span class="caption">purple</span></div>
+          <div class="specimen"><span class="badge v--amber sz--md">Beta</span><span class="caption">amber</span></div>
+          <div class="specimen"><span class="badge v--red sz--md">Error</span><span class="caption">red</span></div>
+          <div class="specimen"><span class="badge v--pink sz--md">Live</span><span class="caption">pink</span></div>
+          <div class="specimen"><span class="badge v--green sz--md">Active</span><span class="caption">green</span></div>
+          <div class="specimen"><span class="badge v--teal sz--md">Synced</span><span class="caption">teal</span></div>
+          <div class="specimen"><span class="badge v--inverted sz--md">Inverted</span><span class="caption">inverted</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Subtle</h2>
+        <div class="specimens">
+          <div class="specimen"><span class="badge v--gray-subtle sz--md">Draft</span><span class="caption">gray-subtle</span></div>
+          <div class="specimen"><span class="badge v--blue-subtle sz--md">New</span><span class="caption">blue-subtle</span></div>
+          <div class="specimen"><span class="badge v--purple-subtle sz--md">Pro</span><span class="caption">purple-subtle</span></div>
+          <div class="specimen"><span class="badge v--amber-subtle sz--md">Beta</span><span class="caption">amber-subtle</span></div>
+          <div class="specimen"><span class="badge v--red-subtle sz--md">Error</span><span class="caption">red-subtle</span></div>
+          <div class="specimen"><span class="badge v--pink-subtle sz--md">Live</span><span class="caption">pink-subtle</span></div>
+          <div class="specimen"><span class="badge v--green-subtle sz--md">Active</span><span class="caption">green-subtle</span></div>
+          <div class="specimen"><span class="badge v--teal-subtle sz--md">Synced</span><span class="caption">teal-subtle</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Sizes</h2>
+        <div class="specimens">
+          <div class="specimen"><span class="badge v--blue sz--sm">Small</span><span class="caption">sm · 11 / h20</span></div>
+          <div class="specimen"><span class="badge v--blue sz--md">Medium</span><span class="caption">md · 12 / h24</span></div>
+          <div class="specimen"><span class="badge v--blue sz--lg">Large</span><span class="caption">lg · 14 / h32</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Pill (link-style)</h2>
+        <div class="specimens">
+          <div class="specimen"><a class="badge pill sz--sm" href="#">Docs</a><span class="caption">pill · sm</span></div>
+          <div class="specimen"><a class="badge pill sz--md" href="#">Docs</a><span class="caption">pill · md</span></div>
+          <div class="specimen"><a class="badge pill sz--lg" href="#">Docs</a><span class="caption">pill · lg</span></div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

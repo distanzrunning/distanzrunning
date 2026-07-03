@@ -1,0 +1,206 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stride — Article Card</title>
+    <style>
+      :root {
+        --bg-100: hsl(0, 0%, 100%);
+        --bg-200: hsl(0, 0%, 98%);
+        --gray-100: hsl(0, 0%, 95%);
+        --gray-200: hsl(0, 0%, 92%);
+        --gray-300: hsl(0, 0%, 90%);
+        --gray-400: hsl(0, 0%, 92%);
+        --gray-600: hsl(0, 0%, 66%);
+        --gray-700: hsl(0, 0%, 56%);
+        --gray-900: hsl(0, 0%, 30%);
+        --gray-1000: hsl(0, 0%, 9%);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 40px;
+        background: var(--bg-200);
+        color: var(--gray-1000);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 { font-size: 32px; line-height: 40px; letter-spacing: -0.04em; font-weight: 600; margin: 0 0 4px; }
+      .lede { color: var(--gray-900); font-size: 16px; margin: 0 0 32px; max-width: 640px; }
+
+      /* ---- Article Card (faithful to src/components/ArticleCard.tsx) ---- */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      @media (max-width: 720px) {
+        .grid { grid-template-columns: 1fr; }
+      }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;                 /* gap-4 */
+        width: 100%;
+        text-decoration: none;
+        position: relative;        /* group + relative */
+      }
+
+      /* Cinematic ~16/8.75 image, rounded-md (6px), gray-100 fallback */
+      .card__media {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 8.75;
+        overflow: hidden;
+        border-radius: 6px;
+        background: var(--gray-100);
+      }
+      /* Placeholder "image" — neutral two-gray gradient, no external assets.
+         Starts at scale 1.04 and settles to 1.00 on hover (settle-zoom). */
+      .card__img {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, var(--gray-300) 0%, var(--gray-200) 55%, var(--gray-100) 100%);
+        transform: scale(1.04);
+        transition: transform 300ms ease-out;
+        will-change: transform;
+      }
+      .card:hover .card__img { transform: scale(1); }
+
+      .card__body {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;                  /* gap-2 */
+        padding: 0 4px;            /* px-1 */
+      }
+
+      /* Meta row: kicker · date — 11px, medium, tracked, gray-900 */
+      .card__meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;                  /* gap-1.5 */
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.0275em;
+        color: var(--gray-900);
+      }
+      .card__kicker { color: inherit; text-decoration: none; transition: color 150ms; }
+      .card:hover .card__kicker { color: var(--gray-1000); }
+      .card__dot { color: var(--gray-700); }
+      .card__time { color: inherit; }
+
+      /* Title — SANS (featured headlines stay sans), 19px / 1.4 / -0.01em / 600,
+         gray-1000, 3-line clamp. No hover underline. */
+      .card__title {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 600;
+        line-height: 1.4;
+        letter-spacing: -0.01em;
+        color: var(--gray-1000);
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .card__title a { color: inherit; text-decoration: none; }
+
+      /* Excerpt — 15px / 1.4 / 500, gray-900, 2-line clamp */
+      .card__excerpt {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.4;
+        color: var(--gray-900);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .hint {
+        margin: 28px 0 0;
+        font-size: 13px;
+        color: var(--gray-700);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Article Card</h1>
+      <p class="lede">
+        Editorial card for homepage rows and section listings. Cinematic
+        ~16&#8202;/&#8202;8.75 image, a kicker&nbsp;·&nbsp;date meta row, and a sans
+        headline. Featured headlines stay <strong>sans</strong>, not serif. Hover
+        settles the image from 104% to 100% — no title underline.
+      </p>
+
+      <div class="grid">
+        <!-- Card 1 -->
+        <article class="card">
+          <div class="card__media"><div class="card__img"></div></div>
+          <div class="card__body">
+            <div class="card__meta">
+              <a href="#" class="card__kicker">Race Guide</a>
+              <span class="card__dot" aria-hidden="true">·</span>
+              <time class="card__time">14 Apr 2026</time>
+            </div>
+            <h3 class="card__title">
+              <a href="#">Inside the Boston Marathon's brutal, beloved Newton hills</a>
+            </h3>
+            <p class="card__excerpt">
+              Why the back half of Boston breaks so many runners — and how the
+              elites pace the descent into Cleveland Circle.
+            </p>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="card">
+          <div class="card__media"><div class="card__img"></div></div>
+          <div class="card__body">
+            <div class="card__meta">
+              <a href="#" class="card__kicker">Gear</a>
+              <span class="card__dot" aria-hidden="true">·</span>
+              <time class="card__time">2 Apr 2026</time>
+            </div>
+            <h3 class="card__title">
+              <a href="#">The super-shoe arms race enters its most volatile year yet</a>
+            </h3>
+            <p class="card__excerpt">
+              Carbon plates, PEBA foams and stack-height limits — a field guide
+              to what actually makes you faster.
+            </p>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="card">
+          <div class="card__media"><div class="card__img"></div></div>
+          <div class="card__body">
+            <div class="card__meta">
+              <a href="#" class="card__kicker">Training</a>
+              <span class="card__dot" aria-hidden="true">·</span>
+              <time class="card__time">28 Mar 2026</time>
+            </div>
+            <h3 class="card__title">
+              <a href="#">Threshold work is having a moment. Here's how to do it right.</a>
+            </h3>
+            <p class="card__excerpt">
+              Double-threshold days built a generation of Norwegian champions.
+              The science — and the pitfalls — for everyone else.
+            </p>
+          </div>
+        </article>
+      </div>
+
+      <p class="hint">Hover a card to see the image settle-zoom (104%&nbsp;→&nbsp;100%).</p>
+    </div>
+  </body>
+</html>

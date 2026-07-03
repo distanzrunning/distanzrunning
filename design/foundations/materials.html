@@ -1,0 +1,69 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stride — Materials</title>
+    <style>
+      :root {
+        --bg-100: #fff; --bg-200: #fafafa;
+        --ink: hsl(0, 0%, 9%); --subtle: hsl(0, 0%, 30%); --muted: hsl(0, 0%, 56%);
+        /* Geist-verbatim shadow tokens (bg-ring omitted for the white preview) */
+        --m-base: 0 0 0 1px #00000014;
+        --m-small: 0 0 0 1px #00000014, 0px 2px 2px #0000000a;
+        --m-medium: 0 0 0 1px #00000014, 0px 2px 2px #0000000a, 0px 8px 8px -8px #0000000a;
+        --m-large: 0 0 0 1px #00000014, 0px 2px 2px #0000000a, 0px 8px 16px -4px #0000000a;
+        --m-tooltip: 0 0 0 1px #00000014, 0px 1px 1px #00000005, 0px 4px 8px #0000000a;
+        --m-menu: 0 0 0 1px #00000014, 0px 1px 1px #00000005, 0px 4px 8px -4px #0000000a, 0px 16px 24px -8px #0000000f;
+        --m-modal: 0 0 0 1px #00000014, 0px 1px 1px #00000005, 0px 8px 16px -4px #0000000a, 0px 24px 32px -8px #0000000f;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 40px; background: var(--bg-200); color: var(--ink);
+        font-family: "Inter", -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 { font-size: 32px; line-height: 40px; letter-spacing: -0.04em; font-weight: 600; margin: 0 0 4px; }
+      .lede { color: var(--subtle); font-size: 16px; margin: 0 0 32px; max-width: 62ch; }
+      section { margin-bottom: 40px; }
+      h2 { font-size: 14px; font-weight: 600; margin: 0 0 4px; }
+      .h2note { color: var(--muted); font-size: 13px; margin: 0 0 24px; }
+      .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+      .tile { background: var(--bg-100); min-height: 96px; display: flex; align-items: center; justify-content: center; }
+      .cell .name { font-size: 13px; font-weight: 600; margin-top: 16px; font-family: ui-monospace, Menlo, monospace; }
+      .cell .meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+      @media (max-width: 720px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Materials</h1>
+      <p class="lede">
+        Radii + shadows. Elevation is <strong>border + shadow</strong>, never a
+        lighter fill. Each <code>material-*</code> is Geist-verbatim — the
+        hairline lives inside the shadow token, so never add a CSS border.
+      </p>
+
+      <section>
+        <h2>Surface materials <span style="font-weight: 400; color: var(--muted)">— on the page</span></h2>
+        <p class="h2note">Everyday to further-raised surfaces.</p>
+        <div class="grid">
+          <div class="cell"><div class="tile" style="box-shadow: var(--m-base); border-radius: 6px"></div><div class="name">material-base</div><div class="meta">radius 6 · everyday</div></div>
+          <div class="cell"><div class="tile" style="box-shadow: var(--m-small); border-radius: 6px"></div><div class="name">material-small</div><div class="meta">radius 6 · slightly raised</div></div>
+          <div class="cell"><div class="tile" style="box-shadow: var(--m-medium); border-radius: 12px"></div><div class="name">material-medium</div><div class="meta">radius 12 · raised</div></div>
+          <div class="cell"><div class="tile" style="box-shadow: var(--m-large); border-radius: 12px"></div><div class="name">material-large</div><div class="meta">radius 12 · further raised</div></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Floating materials <span style="font-weight: 400; color: var(--muted)">— above the page</span></h2>
+        <p class="h2note">Tooltips, menus, modals, fullscreen overlays.</p>
+        <div class="grid">
+          <div class="cell"><div class="tile" style="box-shadow: var(--m-tooltip); border-radius: 6px"></div><div class="name">material-tooltip</div><div class="meta">radius 6 · the only stem</div></div>
+          <div class="cell"><div class="tile" style="box-shadow: var(--m-menu); border-radius: 12px"></div><div class="name">material-menu</div><div class="meta">radius 12 · dropdowns</div></div>
+          <div class="cell"><div class="tile" style="box-shadow: var(--m-modal); border-radius: 12px"></div><div class="name">material-modal</div><div class="meta">radius 12 · dialogs</div></div>
+          <div class="cell"><div class="tile" style="box-shadow: var(--m-modal); border-radius: 16px"></div><div class="name">material-fullscreen</div><div class="meta">radius 16 · overlays</div></div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
