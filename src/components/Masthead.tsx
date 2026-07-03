@@ -197,12 +197,15 @@ const CHEVRON_CLASS = cn(
   "group-data-[state=open]/trigger:rotate-180",
 );
 
-// Viewport chrome — opaque surface panel, 8 px radius + menu shadow, height
-// driven by Radix's measured-content var. Height/width transition eases the
-// resize between sections; no enter/exit animation (matches production).
+// Viewport chrome — the panel reads as the header itself expanding downward:
+// same bg-canvas tone as the masthead, no outer border / shadow / radius, just
+// a single bottom rule that becomes the header's bottom border once open (the
+// nav row's own border goes transparent while open — see the List below). The
+// Radix-measured height var + transition drives the downward-expand reveal;
+// overflow-hidden clips the content as it unfolds.
 const VIEWPORT_CLASS = cn(
   "relative w-full overflow-hidden",
-  "rounded-[8px] bg-surface shadow-[var(--ds-shadow-menu)]",
+  "bg-canvas border-b border-borderSubtle",
   "h-[var(--radix-navigation-menu-viewport-height)]",
   "transition-[height,width] duration-200 ease-out",
 );
@@ -238,24 +241,6 @@ export default function Masthead({
 
   return (
     <>
-      {/* Full-viewport scrim — sibling of the header so it sits BELOW the
-          z-50 header (header stays crisp) but above page content. Reads the
-          shared --ds-overlay-backdrop-* tokens so it matches Modal / Search
-          1:1. Always mounted; only opacity toggles for a smooth fade. */}
-      <div
-        aria-hidden
-        data-mega-menu-overlay
-        style={{
-          opacity: isOpen ? "var(--ds-overlay-backdrop-opacity)" : 0,
-        }}
-        className={cn(
-          "pointer-events-none fixed inset-0 z-40",
-          "bg-[var(--ds-overlay-backdrop-color)]",
-          "[backdrop-filter:blur(8px)] [-webkit-backdrop-filter:blur(8px)]",
-          "transition-opacity duration-200 ease-out",
-        )}
-      />
-
       <header className="sticky top-0 z-50 bg-canvas">
         {/* top tier — divider spans the content (button to button) */}
         <div className="mx-auto max-w-[1400px] px-6">
@@ -374,7 +359,15 @@ export default function Masthead({
             }}
           >
             <div className="mx-auto max-w-[1400px] px-6">
-              <NavigationMenuPrimitive.List className="flex items-center justify-center gap-6 border-b border-borderSubtle py-2.5">
+              {/* Border-b is kept (no layout shift) but goes transparent while
+                  the menu is open, so the panel's bottom rule reads as the one
+                  border that expanded downward from under the links. */}
+              <NavigationMenuPrimitive.List
+                className={cn(
+                  "flex items-center justify-center gap-6 border-b py-2.5",
+                  isOpen ? "border-transparent" : "border-borderSubtle",
+                )}
+              >
                 {/* Editorial disciplines — plain links, no panel. */}
                 {EDITORIAL_LINKS.map((item) => (
                   <NavigationMenuPrimitive.Item key={item.href}>
