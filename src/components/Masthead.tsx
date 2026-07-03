@@ -359,15 +359,10 @@ export default function Masthead({
             }}
           >
             <div className="mx-auto max-w-[1400px] px-6">
-              {/* Border-b is kept (no layout shift) but goes transparent while
-                  the menu is open, so the panel's bottom rule reads as the one
-                  border that expanded downward from under the links. */}
-              <NavigationMenuPrimitive.List
-                className={cn(
-                  "flex items-center justify-center gap-6 border-b py-2.5",
-                  isOpen ? "border-transparent" : "border-borderSubtle",
-                )}
-              >
+              {/* Persistent navbar bottom rule — stays under the links whether
+                  the menu is open or closed; the panel then expands downward
+                  below it with its own matching bottom border. */}
+              <NavigationMenuPrimitive.List className="flex items-center justify-center gap-6 border-b border-borderSubtle py-2.5">
                 {/* Editorial disciplines — plain links, no panel. */}
                 {EDITORIAL_LINKS.map((item) => (
                   <NavigationMenuPrimitive.Item key={item.href}>
