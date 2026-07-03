@@ -6,7 +6,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { EB_Garamond } from "next/font/google";
 import LayoutContent from "@/components/LayoutContent";
-import SiteHeaderWrapper from "@/components/SiteHeaderWrapper";
+import MastheadWrapper from "@/components/MastheadWrapper";
 import Footer from "@/components/Footer";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
 import ReCaptchaProvider from "@/components/ReCaptchaProvider";
@@ -168,7 +168,7 @@ export default async function RootLayout({
                     <ConsentModeSync />
                     <PostHogConsentSync />
                     <LayoutContent
-                      header={<SiteHeaderWrapper newsletterSource="homepage" />}
+                      header={<MastheadWrapper />}
                       footer={<Footer />}
                     >
                       {children}

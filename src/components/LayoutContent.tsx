@@ -7,10 +7,10 @@
 // which returns null during static rendering) avoids a flash
 // between layouts on first paint.
 //
-// SiteHeader is now the only public chrome. Previously the app
-// also rendered a legacy NavbarAlt for routes that hadn't been
-// migrated to the new DS — that branch is gone, every public
-// page renders SiteHeader unconditionally.
+// The Masthead (two-tier sticky nav) is now the public chrome for
+// every content page — passed in as the `header` prop from layout.tsx
+// via MastheadWrapper. The homepage renders its own Masthead (isHome
+// branch is bare); all other public pages get it here.
 
 import { headers } from "next/headers";
 import { ReactNode } from "react";
@@ -71,10 +71,9 @@ export default async function LayoutContent({
     );
   }
 
-  // Chrome background (the canvas around PageFrame):
-  // Page canvas sits on bg-200 (recessed) in both modes — matches the
-  // admin shell pattern; elevated chrome (SiteHeader pill, future
-  // cards/panels) pops above it on bg-100.
+  // Chrome background (the canvas around PageFrame): the Masthead is also
+  // bg-canvas, so the header reads flush with the page canvas and PageFrame
+  // (bg-100) pops above it — matches the admin shell pattern.
   const chromeClass = "flex min-h-screen flex-col bg-canvas";
 
   return (
