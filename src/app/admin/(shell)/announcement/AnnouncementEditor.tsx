@@ -63,33 +63,35 @@ export function AnnouncementEditor({ initial }: { initial: AnnouncementConfig })
       <input type="hidden" name="linkHref" value={linkHref} />
 
       {/* Visibility */}
-      <div className="flex items-center justify-between gap-4 rounded-lg border border-borderDefault bg-surface p-4">
+      <div className="flex items-center justify-between gap-4 rounded-sm border border-borderDefault bg-surface p-4">
         <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2.5">
-            <FieldLabel>Show banner</FieldLabel>
-            <span className="inline-flex items-center gap-1.5 text-copy-13 font-medium text-textDefault">
-              <span
-                className={`h-2 w-2 rounded-full ${
-                  enabled
-                    ? "bg-[var(--ds-green-700)]"
-                    : "bg-[var(--ds-gray-500)]"
-                }`}
-              />
-              {enabled ? "Live" : "Off"}
-            </span>
-          </div>
+          <FieldLabel>Show banner</FieldLabel>
           <span className="text-copy-13 text-textSubtle">
             {enabled
-              ? "The banner is live — showing at the top of every page on the site."
-              : "The banner is turned off and hidden across the entire site."}
+              ? "Live — showing at the top of every page on the site."
+              : "Off — hidden across the entire site."}
           </span>
         </div>
-        <Toggle
-          checked={enabled}
-          onChange={setEnabled}
-          size="large"
-          aria-label="Show banner"
-        />
+        <div className="flex items-center gap-2.5">
+          <span
+            className={`inline-flex items-center gap-1.5 text-copy-14 font-medium ${
+              enabled ? "text-textDefault" : "text-textSubtle"
+            }`}
+          >
+            <span
+              className={`h-2 w-2 rounded-full ${
+                enabled ? "bg-[var(--ds-green-700)]" : "bg-[var(--ds-gray-500)]"
+              }`}
+            />
+            {enabled ? "On" : "Off"}
+          </span>
+          <Toggle
+            checked={enabled}
+            onChange={setEnabled}
+            size="large"
+            aria-label="Show banner"
+          />
+        </div>
       </div>
 
       {/* Message */}
