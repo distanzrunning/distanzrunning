@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useContext, useRef, useState } from "react";
-import { Search, Moon, Sun, Menu, X } from "lucide-react";
+import { Search, Moon, Sun, Menu, X, ChevronDown } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
@@ -180,9 +180,21 @@ const LINK_CLASS = cn(
 
 const TRIGGER_CLASS = cn(
   LINK_CLASS,
+  // inline-flex + gap for the chevron; named group so the chevron reacts to
+  // THIS trigger's hover/focus/open state only. No pill padding — same text
+  // size + spacing as the plain links, just a trailing chevron.
+  "group/trigger inline-flex items-center gap-1",
   "cursor-pointer bg-transparent p-0",
   "focus-visible:text-textDefault focus-visible:outline-none",
   "data-[state=open]:text-textDefault",
+);
+
+// Chevron — 14 px, inherits the trigger's colour, rotates 180° on hover,
+// focus, or while this trigger's panel is open.
+const CHEVRON_CLASS = cn(
+  "size-3.5 transition-transform duration-200 ease-out",
+  "group-hover/trigger:rotate-180 group-focus-visible/trigger:rotate-180",
+  "group-data-[state=open]/trigger:rotate-180",
 );
 
 // Viewport chrome — opaque surface panel, 8 px radius + menu shadow, height
@@ -385,6 +397,7 @@ export default function Masthead({
                       className={TRIGGER_CLASS}
                     >
                       {section.label}
+                      <ChevronDown className={CHEVRON_CLASS} aria-hidden />
                     </NavigationMenuPrimitive.Trigger>
                     {/* absolute + p-4: outgoing and incoming Content overlap in
                         the Viewport during a section switch, and Radix measures
