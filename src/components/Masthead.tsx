@@ -174,12 +174,14 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
 // textDefault on hover; triggers also light on open). No pill padding, no
 // chevron — same size + spacing as the original plain links.
 const LINK_CLASS = cn(
-  // px/py give the hover pill a body; the List pulls an equal amount out of
-  // its own padding so the row height is unchanged (see the List below).
-  "rounded-md px-3 py-1.5",
+  // Full-height hover target: px for width, py-2.5 to span the nav band. The
+  // List carries no vertical padding, so the hover block fills the whole space
+  // between the top and bottom dividers — a flush rectangle, not a rounded
+  // pill.
+  "px-3 py-2.5",
   "text-copy-14 font-medium tracking-[0.02em]",
   "text-textSubtle no-underline transition-colors",
-  // Hover reveals a subtle gray-100 pill behind the label instead of shifting
+  // Hover reveals a subtle gray-100 block behind the label instead of shifting
   // the text colour; reads on the canvas nav in both themes.
   "hover:bg-[var(--ds-gray-100)]",
 );
@@ -368,12 +370,20 @@ export default function Masthead({
               {/* Persistent navbar bottom rule — stays under the links whether
                   the menu is open or closed; the panel then expands downward
                   below it with its own matching bottom border. */}
-              <NavigationMenuPrimitive.List className="flex items-center justify-center gap-1 border-b border-borderSubtle py-1">
-                {/* Editorial disciplines — plain links, no panel. */}
+              <NavigationMenuPrimitive.List className="flex items-center justify-center gap-1 border-b border-borderSubtle">
+                {/* Editorial disciplines — plain links, no panel. Entering one
+                    closes any open mega-menu: the bridge suppresses Radix's
+                    close while the cursor is still in the row, so a plain link
+                    (which has no Radix value to switch to) would otherwise leave
+                    the previous trigger stuck open. */}
                 {EDITORIAL_LINKS.map((item) => (
                   <NavigationMenuPrimitive.Item key={item.href}>
                     <NavigationMenuPrimitive.Link asChild>
-                      <Link href={item.href} className={LINK_CLASS}>
+                      <Link
+                        href={item.href}
+                        className={LINK_CLASS}
+                        onPointerEnter={() => setValue("")}
+                      >
                         {item.label}
                       </Link>
                     </NavigationMenuPrimitive.Link>
