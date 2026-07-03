@@ -102,7 +102,7 @@ export function AnnouncementEditor({ initial }: { initial: AnnouncementConfig })
                 key={w.wordIndex}
                 onClick={() => toggleWord(w.wordIndex)}
                 aria-pressed={on}
-                className={`rounded-[6px] border px-2.5 py-1 text-copy-14 transition-colors ${
+                className={`rounded-sm border px-2.5 py-1 text-copy-14 transition-colors ${
                   on
                     ? "border-textDefault bg-[var(--ds-gray-100)] text-textDefault"
                     : "border-borderDefault bg-surface text-textSubtle hover:bg-[var(--ds-gray-100)]"
@@ -135,7 +135,7 @@ export function AnnouncementEditor({ initial }: { initial: AnnouncementConfig })
               key={key}
               onClick={() => setColor(key)}
               aria-pressed={color === key}
-              className={`inline-flex items-center gap-2 rounded-[6px] border px-2.5 py-1.5 text-copy-14 transition-colors ${
+              className={`inline-flex items-center gap-2 rounded-sm border px-2.5 py-1.5 text-copy-14 transition-colors ${
                 color === key
                   ? "border-textDefault text-textDefault"
                   : "border-borderDefault text-textSubtle hover:bg-[var(--ds-gray-100)]"
