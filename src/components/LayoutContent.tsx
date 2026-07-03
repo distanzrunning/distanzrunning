@@ -21,13 +21,11 @@ import { getAnnouncement } from "@/lib/announcement";
 interface LayoutContentProps {
   children: ReactNode;
   header: ReactNode;
-  footer: ReactNode;
 }
 
 export default async function LayoutContent({
   children,
   header,
-  footer,
 }: LayoutContentProps) {
   const headerStore = await headers();
   const pathname = headerStore.get("x-pathname") ?? "/";
@@ -44,9 +42,6 @@ export default async function LayoutContent({
   // The homepage is being rebuilt from scratch and owns its own header, so it
   // renders bare (no production SiteHeader/Footer) like the app-shell routes.
   const isHome = pathname === "/";
-
-  // Hide footer on the calendar page (fullscreen app-like view)
-  const isCalendarPage = pathname === "/races/calendar";
 
   // Login / admin / coming-soon own their layout — no chrome, no announcement.
   if (isPreviewMode || isLoginPage || isAdmin || isComingSoon) {
@@ -84,7 +79,6 @@ export default async function LayoutContent({
         <PageFrame as="main" className="flex flex-1 flex-col">
           {children}
         </PageFrame>
-        {!isCalendarPage && footer}
       </div>
     </>
   );

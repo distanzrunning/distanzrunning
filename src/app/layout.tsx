@@ -7,7 +7,6 @@ import { GeistMono } from "geist/font/mono";
 import { EB_Garamond } from "next/font/google";
 import LayoutContent from "@/components/LayoutContent";
 import MastheadWrapper from "@/components/MastheadWrapper";
-import Footer from "@/components/Footer";
 import { DarkModeProvider } from "@/components/DarkModeProvider";
 import ReCaptchaProvider from "@/components/ReCaptchaProvider";
 import { C15tPrefetch } from "@c15t/nextjs";
@@ -167,10 +166,7 @@ export default async function RootLayout({
                   <SearchProvider>
                     <ConsentModeSync />
                     <PostHogConsentSync />
-                    <LayoutContent
-                      header={<MastheadWrapper />}
-                      footer={<Footer />}
-                    >
+                    <LayoutContent header={<MastheadWrapper />}>
                       {children}
                     </LayoutContent>
                     <ConsentBanner />
