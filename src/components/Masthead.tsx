@@ -174,11 +174,11 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
 // textDefault on hover; triggers also light on open). No pill padding, no
 // chevron — same size + spacing as the original plain links.
 const LINK_CLASS = cn(
-  // Full-height hover target: px for width, py-2.5 to span the nav band. The
-  // List carries no vertical padding, so the hover block fills the whole space
-  // between the top and bottom dividers — a flush rectangle, not a rounded
-  // pill.
-  "px-3 py-2.5",
+  // flex + full height so each item fills the fixed-height nav band edge to
+  // edge (its <li> stretches, and this element stretches inside it). px for
+  // width; the hover block is a flush rectangle spanning both dividers — no
+  // rounding, no gap. Text vertically centred.
+  "flex h-full items-center px-3",
   "text-copy-14 font-medium tracking-[0.02em]",
   "text-textSubtle no-underline transition-colors",
   // Hover reveals a subtle gray-100 block behind the label instead of shifting
@@ -188,12 +188,12 @@ const LINK_CLASS = cn(
 
 const TRIGGER_CLASS = cn(
   LINK_CLASS,
-  // inline-flex + gap for the chevron; named group so the chevron reacts to
-  // THIS trigger's hover/focus/open state only.
-  "group/trigger inline-flex items-center gap-1",
+  // gap for the chevron; named group so the chevron reacts to THIS trigger's
+  // hover/focus/open state only.
+  "group/trigger gap-1",
   "cursor-pointer bg-transparent",
   "focus-visible:outline-none focus-visible:bg-[var(--ds-gray-100)]",
-  // Open trigger keeps the hover pill lit so the active section stays obvious.
+  // Open trigger keeps the hover block lit so the active section stays obvious.
   "data-[state=open]:bg-[var(--ds-gray-100)]",
 );
 
@@ -370,14 +370,14 @@ export default function Masthead({
               {/* Persistent navbar bottom rule — stays under the links whether
                   the menu is open or closed; the panel then expands downward
                   below it with its own matching bottom border. */}
-              <NavigationMenuPrimitive.List className="flex items-center justify-center gap-1 border-b border-borderSubtle">
+              <NavigationMenuPrimitive.List className="flex h-10 items-stretch justify-center gap-1 border-b border-borderSubtle">
                 {/* Editorial disciplines — plain links, no panel. Entering one
                     closes any open mega-menu: the bridge suppresses Radix's
                     close while the cursor is still in the row, so a plain link
                     (which has no Radix value to switch to) would otherwise leave
                     the previous trigger stuck open. */}
                 {EDITORIAL_LINKS.map((item) => (
-                  <NavigationMenuPrimitive.Item key={item.href}>
+                  <NavigationMenuPrimitive.Item key={item.href} className="flex">
                     <NavigationMenuPrimitive.Link asChild>
                       <Link
                         href={item.href}
@@ -395,6 +395,7 @@ export default function Masthead({
                   <NavigationMenuPrimitive.Item
                     key={section.key}
                     value={section.key}
+                    className="flex"
                   >
                     <NavigationMenuPrimitive.Trigger
                       data-nav-trigger
