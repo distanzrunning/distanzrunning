@@ -62,7 +62,7 @@ export function AnnouncementEditor({ initial }: { initial: AnnouncementConfig })
       <input type="hidden" name="linkHref" value={linkHref} />
 
       {/* Enabled */}
-      <div className="flex items-center justify-between rounded-xl border border-borderDefault bg-surface p-4">
+      <div className="flex items-center justify-between rounded-lg border border-borderDefault bg-surface p-4">
         <div className="flex flex-col gap-0.5">
           <FieldLabel>Show banner</FieldLabel>
           <span className="text-copy-13 text-textSubtle">
@@ -162,7 +162,7 @@ export function AnnouncementEditor({ initial }: { initial: AnnouncementConfig })
       {/* Live preview */}
       <div className="flex flex-col gap-2">
         <FieldLabel>Preview</FieldLabel>
-        <div className="overflow-hidden rounded-xl border border-borderDefault">
+        <div className="border border-borderDefault">
           <AnnouncementBar
             text={text || "Your announcement…"}
             serifWordIndices={[...serif]}
