@@ -10,23 +10,27 @@ import {
 // Full-width announcement bar above the masthead, in the 404 Media mould:
 // a promo line that opens the Shakeout newsletter modal, with a dismiss button.
 // Sits on the page canvas (blends with the masthead); the hover affordance is
-// scoped to the "Shakeout" word (underline). Dismissal persists in localStorage
-// so it doesn't nag on every visit.
+// scoped to the "Shakeout" word (underline). Closing it hides the banner for
+// DISMISS_DAYS (an expiry timestamp in localStorage), after which it resurfaces.
 
-const DISMISS_KEY = "distanz-shakeout-banner-dismissed";
+const DISMISS_KEY = "distanz-shakeout-banner-dismissed-until";
+// How long the banner stays hidden after the user closes it.
+const DISMISS_DAYS = 30;
 
 export default function AnnouncementBanner() {
   const [dismissed, setDismissed] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem(DISMISS_KEY) === "1") setDismissed(true);
+    const until = Number(localStorage.getItem(DISMISS_KEY) ?? 0);
+    if (until > Date.now()) setDismissed(true);
   }, []);
 
   const dismiss = () => {
     setDismissed(true);
     try {
-      localStorage.setItem(DISMISS_KEY, "1");
+      const until = Date.now() + DISMISS_DAYS * 24 * 60 * 60 * 1000;
+      localStorage.setItem(DISMISS_KEY, String(until));
     } catch {
       // storage may be unavailable (private mode) — dismiss for the session only
     }
