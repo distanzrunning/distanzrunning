@@ -73,13 +73,24 @@ export function AnnouncementBar({
 
   const lineClass = "block w-full px-12 py-2.5 text-center text-copy-14";
 
-  // Auto-contrast: invert the bar's colours for the button.
+  // Auto-contrast: invert the bar's colours for the button. Give it an explicit
+  // hover (custom-colour buttons otherwise fall back to the base colour with no
+  // hover change) — nudge the fill toward the bar's background so it reads on
+  // any palette, mirroring the default button's lighten-on-hover.
+  const buttonHoverFill = `color-mix(in srgb, ${palette.fg} 86%, ${palette.bg})`;
+  const buttonColors = {
+    fg: palette.bg,
+    bg: palette.fg,
+    bgHover: buttonHoverFill,
+    borderHover: buttonHoverFill,
+  };
+
   const button = hasButton ? (
     buttonHref ? (
       <ButtonLink
         href={buttonHref}
         size="small"
-        customColors={{ fg: palette.bg, bg: palette.fg }}
+        customColors={buttonColors}
         onMouseEnter={onButtonActivateHover}
         onFocus={onButtonActivateHover}
       >
@@ -88,7 +99,7 @@ export function AnnouncementBar({
     ) : (
       <Button
         size="small"
-        customColors={{ fg: palette.bg, bg: palette.fg }}
+        customColors={buttonColors}
         onClick={onButtonActivate}
         onMouseEnter={onButtonActivateHover}
         onFocus={onButtonActivateHover}
