@@ -13,24 +13,33 @@ import {
 // scoped to the "Shakeout" word (underline). Closing it hides the banner for
 // DISMISS_DAYS (an expiry timestamp in localStorage), after which it resurfaces.
 
-const DISMISS_KEY = "distanz-shakeout-banner-dismissed-until";
+const DISMISS_KEY = "distanz-announcement-dismissed";
 // How long the banner stays hidden after the user closes it.
-const DISMISS_DAYS = 30;
+const DISMISS_DAYS = 7;
+// Signature of the current banner content. Dismissal is stored against it, so
+// changing/updating the banner re-shows it even to users who dismissed the old
+// one. Bump on content change. (Once the banner is CMS-managed this becomes the
+// document's revision id.)
+const BANNER_VERSION = "shakeout-signup-v1";
 
 export default function AnnouncementBanner() {
   const [dismissed, setDismissed] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    const until = Number(localStorage.getItem(DISMISS_KEY) ?? 0);
-    if (until > Date.now()) setDismissed(true);
+    const raw = localStorage.getItem(DISMISS_KEY);
+    if (!raw) return;
+    const [version, until] = raw.split("|");
+    if (version === BANNER_VERSION && Number(until) > Date.now()) {
+      setDismissed(true);
+    }
   }, []);
 
   const dismiss = () => {
     setDismissed(true);
     try {
       const until = Date.now() + DISMISS_DAYS * 24 * 60 * 60 * 1000;
-      localStorage.setItem(DISMISS_KEY, String(until));
+      localStorage.setItem(DISMISS_KEY, `${BANNER_VERSION}|${until}`);
     } catch {
       // storage may be unavailable (private mode) — dismiss for the session only
     }
