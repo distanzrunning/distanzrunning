@@ -174,19 +174,25 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
 // textDefault on hover; triggers also light on open). No pill padding, no
 // chevron — same size + spacing as the original plain links.
 const LINK_CLASS = cn(
+  // px/py give the hover pill a body; the List pulls an equal amount out of
+  // its own padding so the row height is unchanged (see the List below).
+  "rounded-md px-3 py-1.5",
   "text-copy-14 font-medium tracking-[0.02em]",
-  "text-textSubtle no-underline transition-colors hover:text-textDefault",
+  "text-textSubtle no-underline transition-colors",
+  // Hover reveals a subtle gray-100 pill behind the label instead of shifting
+  // the text colour; reads on the canvas nav in both themes.
+  "hover:bg-[var(--ds-gray-100)]",
 );
 
 const TRIGGER_CLASS = cn(
   LINK_CLASS,
   // inline-flex + gap for the chevron; named group so the chevron reacts to
-  // THIS trigger's hover/focus/open state only. No pill padding — same text
-  // size + spacing as the plain links, just a trailing chevron.
+  // THIS trigger's hover/focus/open state only.
   "group/trigger inline-flex items-center gap-1",
-  "cursor-pointer bg-transparent p-0",
-  "focus-visible:text-textDefault focus-visible:outline-none",
-  "data-[state=open]:text-textDefault",
+  "cursor-pointer bg-transparent",
+  "focus-visible:outline-none focus-visible:bg-[var(--ds-gray-100)]",
+  // Open trigger keeps the hover pill lit so the active section stays obvious.
+  "data-[state=open]:bg-[var(--ds-gray-100)]",
 );
 
 // Chevron — 14 px, inherits the trigger's colour, rotates 180° on hover,
@@ -362,7 +368,7 @@ export default function Masthead({
               {/* Persistent navbar bottom rule — stays under the links whether
                   the menu is open or closed; the panel then expands downward
                   below it with its own matching bottom border. */}
-              <NavigationMenuPrimitive.List className="flex items-center justify-center gap-6 border-b border-borderSubtle py-2.5">
+              <NavigationMenuPrimitive.List className="flex items-center justify-center gap-1 border-b border-borderSubtle py-1">
                 {/* Editorial disciplines — plain links, no panel. */}
                 {EDITORIAL_LINKS.map((item) => (
                   <NavigationMenuPrimitive.Item key={item.href}>
