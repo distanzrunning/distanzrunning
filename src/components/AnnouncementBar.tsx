@@ -37,6 +37,14 @@ export function AnnouncementBar({
   const palette = ANNOUNCEMENT_COLORS[color] ?? ANNOUNCEMENT_COLORS.canvas;
   const serif = new Set(serifWordIndices);
 
+  // On the canvas (blends with the page) use the DS borderSubtle token so the
+  // rule matches the rest of the chrome; on distinctly-coloured bars use a
+  // subtle tint of the text colour instead (a flat gray line would clash).
+  const borderColor =
+    color === "canvas"
+      ? "hsl(var(--color-borderSubtle))"
+      : `color-mix(in srgb, ${palette.fg} 18%, transparent)`;
+
   const content = tokenize(text).map((token, i) =>
     token.isWord && serif.has(token.wordIndex) ? (
       <span
@@ -60,7 +68,7 @@ export function AnnouncementBar({
       style={{
         background: palette.bg,
         color: palette.fg,
-        borderBottom: `1px solid color-mix(in srgb, ${palette.fg} 18%, transparent)`,
+        borderBottom: `1px solid ${borderColor}`,
       }}
     >
       {href ? (
