@@ -198,13 +198,14 @@ const TRIGGER_CLASS = cn(
   "data-[state=open]:bg-[var(--ds-gray-100)]",
 );
 
-// Active-section indicator — a short bar along the bottom of the nav item for
-// the category the current page belongs to (BBC-style). Spans the text width
-// (inset by the item's px-3) and sits on the bottom divider. Hidden on hover
-// / while the trigger's menu is open, so the regular hover block shows instead.
+// Active-section indicator — a bar along the bottom of the nav item for the
+// category the current page belongs to (BBC-style). Spans the full trigger
+// width (same footprint as the hover block) and sits on the bottom divider.
+// Hidden on hover / while the trigger's menu is open, so the regular hover
+// block shows instead.
 const ACTIVE_BAR = cn(
   "relative",
-  "after:pointer-events-none after:absolute after:inset-x-3 after:bottom-0",
+  "after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0",
   "after:h-[2px] after:bg-textDefault after:content-['']",
   "after:transition-opacity after:duration-150",
   "hover:after:opacity-0 data-[state=open]:after:opacity-0",
