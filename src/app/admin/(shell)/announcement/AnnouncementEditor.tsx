@@ -62,26 +62,48 @@ export function AnnouncementEditor({ initial }: { initial: AnnouncementConfig })
       <input type="hidden" name="color" value={color} />
       <input type="hidden" name="linkHref" value={linkHref} />
 
-      {/* Enabled */}
-      <div className="flex items-center justify-between rounded-lg border border-borderDefault bg-surface p-4">
-        <div className="flex flex-col gap-0.5">
-          <FieldLabel>Show banner</FieldLabel>
+      {/* Visibility */}
+      <div className="flex items-center justify-between gap-4 rounded-lg border border-borderDefault bg-surface p-4">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2.5">
+            <FieldLabel>Show banner</FieldLabel>
+            <span className="inline-flex items-center gap-1.5 text-copy-13 font-medium text-textDefault">
+              <span
+                className={`h-2 w-2 rounded-full ${
+                  enabled
+                    ? "bg-[var(--ds-green-700)]"
+                    : "bg-[var(--ds-gray-500)]"
+                }`}
+              />
+              {enabled ? "Live" : "Off"}
+            </span>
+          </div>
           <span className="text-copy-13 text-textSubtle">
-            When off, the banner is hidden across the whole site.
+            {enabled
+              ? "The banner is live — showing at the top of every page on the site."
+              : "The banner is turned off and hidden across the entire site."}
           </span>
         </div>
-        <Toggle checked={enabled} onChange={setEnabled} size="large" />
+        <Toggle
+          checked={enabled}
+          onChange={setEnabled}
+          size="large"
+          aria-label="Show banner"
+        />
       </div>
 
       {/* Message */}
-      <Textarea
-        label="Message"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        minHeight={72}
-        maxLength={300}
-        placeholder="e.g. Subscribe to the Shakeout newsletter"
-      />
+      <div className="flex flex-col gap-2">
+        <FieldLabel>Message</FieldLabel>
+        <Textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          minHeight={72}
+          maxLength={300}
+          placeholder="e.g. Subscribe to the Shakeout newsletter"
+          aria-label="Message"
+        />
+      </div>
 
       {/* Per-word font */}
       <div className="flex flex-col gap-2">
