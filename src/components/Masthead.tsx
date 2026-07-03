@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useContext, useRef, useState } from "react";
-import { Search, Moon, Sun, Menu, X, ChevronDown } from "lucide-react";
+import { Search, Moon, Sun, Menu, X } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
@@ -12,7 +12,6 @@ import MegaMenuPanel, {
   type MegaMenuFeatured,
 } from "@/components/ui/MegaMenuPanel";
 import {
-  newsLinks,
   shoeLinks,
   gearLinks,
   nutritionLinks,
@@ -26,29 +25,21 @@ import { cn } from "@/lib/utils";
 // Distanz masthead — our take on the 404 Media two-tier header:
 //   top tier:    search + theme toggle (left) · centered wordmark · Sign in /
 //                Subscribe + mobile hamburger (right)
-//   bottom tier: centered section nav — each item is a mega-menu TRIGGER,
-//                not a plain link. Hovering/focusing a trigger folds down a
+//   bottom tier: centered section nav. Road/Track/Trail are plain links
+//                (single article categories, no children). Shoes/Gear/
+//                Nutrition/Races are mega-menu TRIGGERS that fold down a
 //                full-width panel (the production MegaMenuPanel, adapted to
-//                the 1400 px navbar width) with that section's subcategory
-//                links + a featured Sanity card.
+//                the 1400 px navbar) with subcategory links + a featured
+//                Sanity card.
 // Sticky (flat, no scroll shadow). Wires the real DarkModeContext (theme)
 // and SearchContext (⌘K search). Featured items are fetched server-side in
 // page.tsx and passed down.
 
 // ============================================================================
-// Featured data plumbing (mirrors SiteNavigationMenu's helpers — kept local
-// so the Masthead owns its own 7-section split of Road/Track/Trail).
+// Featured data plumbing (mirrors SiteNavigationMenu's helpers — kept local).
 // ============================================================================
 
-/** One featured News article per discipline (see featuredNewsByCategoryQuery). */
-export type FeaturedNewsByCategory = {
-  road: FeaturedProduct;
-  track: FeaturedProduct;
-  trail: FeaturedProduct;
-} | null;
-
 export interface MastheadProps {
-  featuredNews: FeaturedNewsByCategory;
   featuredShoe: FeaturedProduct;
   featuredGear: FeaturedProduct;
   featuredNutrition: FeaturedProduct;
@@ -57,20 +48,13 @@ export interface MastheadProps {
 
 function buildFeaturedFromProduct(
   item: FeaturedProduct,
-  section: "news" | "shoes" | "gear" | "nutrition",
+  section: "shoes" | "gear" | "nutrition",
 ): MegaMenuFeatured | null {
   if (!item) return null;
-  // News articles live under /articles/post/<slug>; the product sections
-  // (shoes/gear/nutrition) live at /<section>/<slug>. Mirrors the production
-  // nav so a given featured item resolves to the same URL there and here.
-  const href =
-    section === "news"
-      ? `/articles/post/${item.slug.current}`
-      : `/${section}/${item.slug.current}`;
   return {
     title: item.title,
     description: item.excerpt,
-    href,
+    href: `/${section}/${item.slug.current}`,
     image: item.mainImage,
   };
 }
@@ -109,25 +93,26 @@ function buildRaceDescription(
 }
 
 // ============================================================================
-// Section taxonomy — 7 top-level triggers. Road/Track/Trail each carry the
-// shared discipline set (they're single-category sections with no sub-routes,
-// so the panel lists the three disciplines as a switcher); the product
-// sections carry their real subcategory links.
+// Nav taxonomy
 // ============================================================================
+//
+// Editorial disciplines: plain links (single article categories, no
+// sub-routes). Rendered first so the row reads Road · Track · Trail · … .
 
-type SectionKey =
-  | "road"
-  | "track"
-  | "trail"
-  | "shoes"
-  | "gear"
-  | "nutrition"
-  | "races";
+const EDITORIAL_LINKS: ReadonlyArray<{ label: string; href: string }> = [
+  { label: "Road", href: "/articles/road" },
+  { label: "Track", href: "/articles/track" },
+  { label: "Trail", href: "/articles/trail" },
+];
 
-interface SectionDef {
-  key: SectionKey;
+// Mega-menu sections: each folds down a MegaMenuPanel with real subcategory
+// links + a featured Sanity card.
+
+type MegaKey = "shoes" | "gear" | "nutrition" | "races";
+
+interface MegaSection {
+  key: MegaKey;
   label: string;
-  /** Where the trigger's section index lives (used for the mobile fallback). */
   href: string;
   eyebrow: string;
   heading: string;
@@ -137,40 +122,7 @@ interface SectionDef {
   links: ReadonlyArray<CategoryItem>;
 }
 
-const SECTIONS: ReadonlyArray<SectionDef> = [
-  {
-    key: "road",
-    label: "Road",
-    href: "/articles/road",
-    eyebrow: "Road",
-    heading: "Roads and majors",
-    tagline: "Marathon majors, road racing, and the training behind the times.",
-    ctaLabel: "View all road",
-    ctaHref: "/articles/road",
-    links: newsLinks,
-  },
-  {
-    key: "track",
-    label: "Track",
-    href: "/articles/track",
-    eyebrow: "Track",
-    heading: "Track and field",
-    tagline: "From the 100 m to the 10,000 m — the oval and everything on it.",
-    ctaLabel: "View all track",
-    ctaHref: "/articles/track",
-    links: newsLinks,
-  },
-  {
-    key: "trail",
-    label: "Trail",
-    href: "/articles/trail",
-    eyebrow: "Trail",
-    heading: "Trail and ultra",
-    tagline: "Mountains, ultras, and the long way round.",
-    ctaLabel: "View all trail",
-    ctaHref: "/articles/trail",
-    links: newsLinks,
-  },
+const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
   {
     key: "shoes",
     label: "Shoes",
@@ -217,31 +169,25 @@ const SECTIONS: ReadonlyArray<SectionDef> = [
   },
 ];
 
-// Trigger anatomy — keeps the established bottom-tier look (plain 14 px text,
-// textSubtle → textDefault on hover/open) rather than the production pill, so
-// the row still reads as the flat 404-style nav. The chevron rotates 180° on
-// hover, focus, or while this trigger's panel is open. All three selectors
-// target the named /trigger group so a chevron only reacts to ITS OWN trigger
-// (the outer /menu group also carries data-state=open for the whole menu).
-const TRIGGER_CLASS = cn(
-  "group/trigger inline-flex items-center gap-1 rounded-sm px-1.5 py-1",
+// Row item styling — identical for plain links and mega-menu triggers so the
+// bottom tier reads as one uniform 404-style nav (14 px, textSubtle →
+// textDefault on hover; triggers also light on open). No pill padding, no
+// chevron — same size + spacing as the original plain links.
+const LINK_CLASS = cn(
   "text-copy-14 font-medium tracking-[0.02em]",
-  "text-textSubtle transition-colors",
-  "hover:text-textDefault focus-visible:text-textDefault",
-  "data-[state=open]:text-textDefault",
-  "focus-visible:outline-none",
+  "text-textSubtle no-underline transition-colors hover:text-textDefault",
 );
 
-const CHEVRON_CLASS = cn(
-  "size-3.5 transition-transform duration-200 ease-out",
-  "group-hover/trigger:rotate-180 group-focus-visible/trigger:rotate-180",
-  "group-data-[state=open]/trigger:rotate-180",
+const TRIGGER_CLASS = cn(
+  LINK_CLASS,
+  "cursor-pointer bg-transparent p-0",
+  "focus-visible:text-textDefault focus-visible:outline-none",
+  "data-[state=open]:text-textDefault",
 );
 
 // Viewport chrome — opaque surface panel, 8 px radius + menu shadow, height
 // driven by Radix's measured-content var. Height/width transition eases the
-// resize between sections; no enter/exit animation (matches production — a
-// primary nav should feel instant).
+// resize between sections; no enter/exit animation (matches production).
 const VIEWPORT_CLASS = cn(
   "relative w-full overflow-hidden",
   "rounded-[8px] bg-surface shadow-[var(--ds-shadow-menu)]",
@@ -250,7 +196,6 @@ const VIEWPORT_CLASS = cn(
 );
 
 export default function Masthead({
-  featuredNews,
   featuredShoe,
   featuredGear,
   featuredNutrition,
@@ -272,10 +217,7 @@ export default function Masthead({
   // the keydown handler so keyboard dismissal still works.
   const cursorInBridgeRef = useRef(false);
 
-  const featuredBySection: Record<SectionKey, MegaMenuFeatured | null> = {
-    road: buildFeaturedFromProduct(featuredNews?.road ?? null, "news"),
-    track: buildFeaturedFromProduct(featuredNews?.track ?? null, "news"),
-    trail: buildFeaturedFromProduct(featuredNews?.trail ?? null, "news"),
+  const featuredBySection: Record<MegaKey, MegaMenuFeatured | null> = {
     shoes: buildFeaturedFromProduct(featuredShoe, "shoes"),
     gear: buildFeaturedFromProduct(featuredGear, "gear"),
     nutrition: buildFeaturedFromProduct(featuredNutrition, "nutrition"),
@@ -385,10 +327,10 @@ export default function Masthead({
           </div>
         </div>
 
-        {/* bottom tier — mega-menu nav (desktop). The Root wraps the trigger
-            row AND the fold-down Viewport so Radix can wire them together;
-            `relative` anchors the absolutely-positioned Viewport below the
-            row. Hidden on mobile — the hamburger menu handles small screens. */}
+        {/* bottom tier — nav (desktop). The Root wraps the row AND the
+            fold-down Viewport so Radix can wire them together; `relative`
+            anchors the absolutely-positioned Viewport below the row. Hidden
+            on mobile — the hamburger menu handles small screens. */}
         <NavigationMenuPrimitive.Root
           aria-label="Primary"
           delayDuration={0}
@@ -404,8 +346,7 @@ export default function Masthead({
         >
           {/* Bridge wrapper — spans the trigger row + the flush panel beneath
               it so the cursor never leaves the "menu" while traversing from a
-              trigger down into its panel. `group/menu` + data-state lets other
-              chrome react to the whole-menu open flag if needed. */}
+              trigger down into its panel. */}
           <div
             className="group/menu"
             data-state={isOpen ? "open" : "closed"}
@@ -422,7 +363,19 @@ export default function Masthead({
           >
             <div className="mx-auto max-w-[1400px] px-6">
               <NavigationMenuPrimitive.List className="flex items-center justify-center gap-6 border-b border-borderSubtle py-2.5">
-                {SECTIONS.map((section) => (
+                {/* Editorial disciplines — plain links, no panel. */}
+                {EDITORIAL_LINKS.map((item) => (
+                  <NavigationMenuPrimitive.Item key={item.href}>
+                    <NavigationMenuPrimitive.Link asChild>
+                      <Link href={item.href} className={LINK_CLASS}>
+                        {item.label}
+                      </Link>
+                    </NavigationMenuPrimitive.Link>
+                  </NavigationMenuPrimitive.Item>
+                ))}
+
+                {/* Product + races — mega-menu triggers. */}
+                {MEGA_SECTIONS.map((section) => (
                   <NavigationMenuPrimitive.Item
                     key={section.key}
                     value={section.key}
@@ -432,12 +385,11 @@ export default function Masthead({
                       className={TRIGGER_CLASS}
                     >
                       {section.label}
-                      <ChevronDown className={CHEVRON_CLASS} aria-hidden />
                     </NavigationMenuPrimitive.Trigger>
-                    {/* absolute + p-4: both the outgoing and incoming Content
-                        overlap in the Viewport during a section switch, and
-                        Radix measures this box for the Viewport height (so the
-                        padding lives here, not on the Viewport). */}
+                    {/* absolute + p-4: outgoing and incoming Content overlap in
+                        the Viewport during a section switch, and Radix measures
+                        this box for the Viewport height (padding lives here, not
+                        on the Viewport). */}
                     <NavigationMenuPrimitive.Content className="absolute left-0 top-0 w-full p-4">
                       <MegaMenuPanel
                         sectionKey={section.key}
@@ -466,19 +418,21 @@ export default function Masthead({
           </div>
         </NavigationMenuPrimitive.Root>
 
-        {/* mobile menu — flat top-level links (subcategory drill-down is a
-            later pass; matches the pre-mega-menu behaviour). */}
+        {/* mobile menu — flat top-level links. */}
         {mobileOpen && (
           <div className="border-b border-borderSubtle sm:hidden">
             <div className="mx-auto flex max-w-[1400px] flex-col gap-3 px-6 py-4">
-              {SECTIONS.map((section) => (
+              {[
+                ...EDITORIAL_LINKS,
+                ...MEGA_SECTIONS.map((s) => ({ label: s.label, href: s.href })),
+              ].map((item) => (
                 <Link
-                  key={section.key}
-                  href={section.href}
+                  key={item.href}
+                  href={item.href}
                   onClick={() => setMobileOpen(false)}
                   className="text-copy-14 font-medium text-textSubtle no-underline hover:text-textDefault"
                 >
-                  {section.label}
+                  {item.label}
                 </Link>
               ))}
               <div className="flex gap-2 pt-2">

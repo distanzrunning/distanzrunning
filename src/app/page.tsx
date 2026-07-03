@@ -1,6 +1,5 @@
 import Masthead from "@/components/Masthead";
 import { sanityFetch } from "@/sanity/lib/live";
-import { featuredNewsByCategoryQuery } from "@/sanity/queries/featuredNewsByCategoryQuery";
 import {
   featuredShoeProductQuery,
   featuredGearProductQuery,
@@ -12,14 +11,12 @@ import { featuredRaceQuery } from "@/sanity/queries/featuredRaceQuery";
 // full-height <main> with no production chrome + the site-wide announcement
 // bar), so the homepage owns its own header (Masthead) + sections below.
 //
-// Server component: fetches the mega-menu featured items (one featured News
-// article per discipline + one product per section + a featured race) and
-// forwards them to the client Masthead. Mirrors SiteHeaderWrapper's fetch,
-// but per-discipline for News since the Masthead splits Road/Track/Trail
-// into separate mega-menu triggers.
+// Server component: fetches the mega-menu featured items (one product per
+// section + a featured race) and forwards them to the client Masthead. The
+// editorial triggers (Road/Track/Trail) are plain links with no panel, so
+// they need no featured data.
 export default async function HomePage() {
-  const [news, shoe, gear, nutrition, race] = await Promise.all([
-    sanityFetch({ query: featuredNewsByCategoryQuery }),
+  const [shoe, gear, nutrition, race] = await Promise.all([
     sanityFetch({ query: featuredShoeProductQuery }),
     sanityFetch({ query: featuredGearProductQuery }),
     sanityFetch({ query: featuredNutritionProductQuery }),
@@ -29,7 +26,6 @@ export default async function HomePage() {
   return (
     <>
       <Masthead
-        featuredNews={news.data}
         featuredShoe={shoe.data}
         featuredGear={gear.data}
         featuredNutrition={nutrition.data}
