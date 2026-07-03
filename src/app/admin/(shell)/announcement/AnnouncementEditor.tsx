@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
+import { Check } from "lucide-react";
 
 import { Textarea } from "@/components/ui/Textarea";
 import { Input } from "@/components/ui/Input";
@@ -121,33 +122,59 @@ export function AnnouncementEditor({ initial }: { initial: AnnouncementConfig })
       <div className="flex flex-col gap-2">
         <FieldLabel>Background</FieldLabel>
         <span className="text-copy-13 text-textSubtle">
-          Text colour is set automatically for contrast (light &amp; dark).
+          Text colour is picked automatically for contrast. Canvas &amp; Ink
+          follow the theme; White &amp; Black stay fixed.
         </span>
-        <div className="mt-1 flex flex-wrap gap-2">
+        <div className="mt-2 grid grid-cols-3 gap-2.5 sm:grid-cols-5">
           {(
             Object.entries(ANNOUNCEMENT_COLORS) as [
               AnnouncementColorKey,
               (typeof ANNOUNCEMENT_COLORS)[AnnouncementColorKey],
             ][]
-          ).map(([key, c]) => (
-            <button
-              type="button"
-              key={key}
-              onClick={() => setColor(key)}
-              aria-pressed={color === key}
-              className={`inline-flex items-center gap-2 rounded-sm border px-2.5 py-1.5 text-copy-14 transition-colors ${
-                color === key
-                  ? "border-textDefault text-textDefault"
-                  : "border-borderDefault text-textSubtle hover:bg-[var(--ds-gray-100)]"
-              }`}
-            >
-              <span
-                className="h-4 w-4 rounded-full border border-borderSubtle"
-                style={{ background: c.bg }}
-              />
-              {c.label}
-            </button>
-          ))}
+          ).map(([key, c]) => {
+            const selected = color === key;
+            return (
+              <button
+                type="button"
+                key={key}
+                onClick={() => setColor(key)}
+                aria-pressed={selected}
+                title={c.label}
+                className={`relative flex flex-col items-center gap-2 rounded-lg border p-2 transition-colors ${
+                  selected
+                    ? "border-textDefault"
+                    : "border-borderDefault hover:bg-[var(--ds-gray-100)]"
+                }`}
+              >
+                <span
+                  className="flex h-12 w-full items-center justify-center rounded-sm border border-borderSubtle"
+                  style={{ background: c.bg, color: c.fg }}
+                >
+                  <span className="text-[18px] leading-none">
+                    A<span className="font-serif italic">a</span>
+                  </span>
+                </span>
+                <span
+                  className={`text-copy-13 ${
+                    selected
+                      ? "font-medium text-textDefault"
+                      : "text-textSubtle"
+                  }`}
+                >
+                  {c.label}
+                </span>
+                {selected && (
+                  <span className="absolute right-1.5 top-1.5 inline-flex h-4 w-4 items-center justify-center rounded-full bg-textDefault">
+                    <Check
+                      className="h-3 w-3"
+                      strokeWidth={3}
+                      style={{ color: "hsl(var(--color-surface))" }}
+                    />
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
 

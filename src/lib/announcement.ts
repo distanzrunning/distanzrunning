@@ -10,11 +10,12 @@ import { getSupabaseAdmin } from "./supabase/server";
 
 export const ANNOUNCEMENT_CACHE_TAG = "announcement-banner";
 
-// Curated background palette. Each entry is theme-aware: canvas/ink resolve via
-// the semantic --color-* tokens (which flip with light/dark); the hue options
-// use DS hue tokens that are stable across themes, with a fixed readable
-// foreground. Foreground is derived from the background — the editor never
-// picks it.
+// Curated background palette. Foreground is derived from the background — the
+// editor never picks it. Three flavours:
+//   • theme-aware: Canvas / Ink use --color-* tokens that FLIP with light/dark.
+//   • fixed:       White / Black are absolute — they stay put through the theme
+//                  switch (intentional raw hex, not tokens).
+//   • hues:        DS hue tokens (stable across themes) with a readable fg.
 export const ANNOUNCEMENT_COLORS = {
   canvas: {
     label: "Canvas",
@@ -26,6 +27,8 @@ export const ANNOUNCEMENT_COLORS = {
     bg: "hsl(var(--color-textDefault))",
     fg: "hsl(var(--color-surface))",
   },
+  white: { label: "White", bg: "#ffffff", fg: "#0a0a0a" },
+  black: { label: "Black", bg: "#0a0a0a", fg: "#ffffff" },
   blue: { label: "Blue", bg: "var(--ds-blue-700)", fg: "#ffffff" },
   green: { label: "Green", bg: "var(--ds-green-700)", fg: "#ffffff" },
   amber: { label: "Amber", bg: "var(--ds-amber-800)", fg: "#0a0a0a" },
