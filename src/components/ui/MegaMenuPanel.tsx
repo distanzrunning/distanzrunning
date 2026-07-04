@@ -177,7 +177,7 @@ export default function MegaMenuPanel({
             title={featured.title}
             badge="Featured"
             badgeVariant="blue-subtle"
-            badgeSize="lg"
+            badgeSize="md"
             imageUrl={
               featured.image
                 ? urlFor(featured.image)
