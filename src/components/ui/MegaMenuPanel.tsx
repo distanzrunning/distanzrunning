@@ -53,8 +53,6 @@ export interface MegaMenuFeatured {
 export interface MegaMenuPanelProps {
   /** Section taxonomy key — used as a stable id for the panel. */
   sectionKey: string;
-  /** Column heading over the intro column, e.g. "Shoes". */
-  eyebrow: string;
   /** Section headline, e.g. "Shoes that work". */
   heading: string;
   /** Lede beneath the heading. */
@@ -70,16 +68,8 @@ export interface MegaMenuPanelProps {
   className?: string;
 }
 
-// Prismic-style column heading — sentence case, semibold, ink.
-function ColumnHeading({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-heading-16 text-textDefault">{children}</p>
-  );
-}
-
 export default function MegaMenuPanel({
   sectionKey,
-  eyebrow,
   heading,
   tagline,
   ctaLabel,
@@ -104,8 +94,7 @@ export default function MegaMenuPanel({
       {/* Left column — section intro                                */}
       {/* ---------------------------------------------------------- */}
       <div className="flex h-full flex-col pr-10">
-        <ColumnHeading>{eyebrow}</ColumnHeading>
-        <h3 className="mt-5 text-heading-32 text-balance text-textDefault">
+        <h3 className="text-heading-32 text-balance text-textDefault">
           {heading}
         </h3>
         <p className="mt-3 max-w-[36ch] text-copy-14 text-textSubtle">
@@ -117,8 +106,7 @@ export default function MegaMenuPanel({
       {/* Middle column — link rows (Prismic "Features" anatomy)     */}
       {/* ---------------------------------------------------------- */}
       <div className="h-full border-l border-borderSubtle px-10">
-        <ColumnHeading>Explore</ColumnHeading>
-        <div className="mt-5 flex flex-col gap-3">
+        <div className="flex flex-col gap-3">
           {links.map((item) => (
             <NavigationMenuPrimitive.Link asChild key={item.href}>
               <Link
@@ -172,26 +160,23 @@ export default function MegaMenuPanel({
       {/* Right column — featured media card (Prismic "Popular")     */}
       {/* ---------------------------------------------------------- */}
       <div className="flex h-full flex-col border-l border-borderSubtle pl-10">
-        <ColumnHeading>Featured</ColumnHeading>
         {featured ? (
-          <div className="group relative mt-5 aspect-[10/7] w-full max-w-[480px] overflow-hidden rounded-lg border border-borderSubtle bg-surface">
+          <div className="group relative aspect-[10/7] w-full max-w-[480px] overflow-hidden rounded-lg border border-borderSubtle bg-surface">
             <div className="flex h-full flex-col gap-4 px-5 pt-4">
-              {/* Title + sub-header at the top; the overlay (after:inset-0)
-                  makes the whole card the click target — the DS
-                  card-with-overlay-link pattern. */}
+              {/* "Featured" kicker + title at the top (no sub-header); the
+                  overlay (after:inset-0) makes the whole card the click
+                  target — the DS card-with-overlay-link pattern. */}
               <NavigationMenuPrimitive.Link asChild>
                 <Link
                   href={featured.href}
-                  className="flex flex-col gap-0.5 after:absolute after:inset-0 after:z-10 focus-visible:outline-none"
+                  className="flex flex-col gap-1 after:absolute after:inset-0 after:z-10 focus-visible:outline-none"
                 >
+                  <span className="block text-copy-13 font-medium uppercase tracking-[0.08em] text-textSubtle">
+                    Featured
+                  </span>
                   <span className="block text-heading-16 text-balance text-textDefault">
                     {featured.title}
                   </span>
-                  {featured.description && (
-                    <span className="block text-copy-14 font-normal text-textSubtle line-clamp-2">
-                      {featured.description}
-                    </span>
-                  )}
                 </Link>
               </NavigationMenuPrimitive.Link>
               {/* Image centred inside the card (deliberate divergence from
@@ -222,7 +207,7 @@ export default function MegaMenuPanel({
           // Stable layout: no featured item still renders a placeholder at
           // the same aspect so the column keeps its footprint and the panel
           // doesn't shrink for unfeatured sections.
-          <div className="mt-5 flex aspect-[10/7] w-full max-w-[480px] items-center justify-center rounded-lg border border-dashed border-borderSubtle bg-[var(--ds-gray-100)] p-4 text-copy-14 text-textSubtle">
+          <div className="flex aspect-[10/7] w-full max-w-[480px] items-center justify-center rounded-lg border border-dashed border-borderSubtle bg-[var(--ds-gray-100)] p-4 text-copy-14 text-textSubtle">
             No featured item yet
           </div>
         )}

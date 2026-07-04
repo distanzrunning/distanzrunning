@@ -114,7 +114,6 @@ interface MegaSection {
   key: MegaKey;
   label: string;
   href: string;
-  eyebrow: string;
   heading: string;
   tagline: string;
   ctaLabel: string;
@@ -127,7 +126,6 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     key: "shoes",
     label: "Shoes",
     href: "/shoes",
-    eyebrow: "Shoes",
     heading: "Shoes that work",
     tagline: "From PR-day plates to daily trainers — tested by runners.",
     ctaLabel: "Browse all shoes",
@@ -138,7 +136,6 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     key: "gear",
     label: "Gear",
     href: "/gear",
-    eyebrow: "Gear",
     heading: "Kit for every run",
     tagline: "Watches, headphones, apparel — what to wear and carry.",
     ctaLabel: "Browse all gear",
@@ -149,7 +146,6 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     key: "nutrition",
     label: "Nutrition",
     href: "/nutrition",
-    eyebrow: "Nutrition",
     heading: "Fuel that delivers",
     tagline: "Gels and hydration that hold up at race pace.",
     ctaLabel: "Browse all nutrition",
@@ -160,7 +156,6 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     key: "races",
     label: "Races",
     href: "/races",
-    eyebrow: "Races",
     heading: "Find your next race",
     tagline: "Race guides, calendar, and a full database of events.",
     ctaLabel: "Browse all races",
@@ -412,7 +407,6 @@ export default function Masthead({
                     <NavigationMenuPrimitive.Content className="absolute left-0 top-0 w-full">
                       <MegaMenuPanel
                         sectionKey={section.key}
-                        eyebrow={section.eyebrow}
                         heading={section.heading}
                         tagline={section.tagline}
                         ctaLabel={section.ctaLabel}

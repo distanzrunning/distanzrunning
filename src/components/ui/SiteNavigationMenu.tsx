@@ -517,7 +517,6 @@ export function SiteNavigationMenuTriggers({
           >
             <MegaMenuPanel
               sectionKey={section.key}
-              eyebrow={section.eyebrow}
               heading={section.heading}
               tagline={section.tagline}
               ctaLabel={section.ctaLabel}
