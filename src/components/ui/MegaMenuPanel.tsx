@@ -171,56 +171,44 @@ export default function MegaMenuPanel({
       </div>
 
       {/* ---------------------------------------------------------- */}
-      {/* Right column — featured image card (Flowbite "with image") */}
+      {/* Right column — featured tile (image + title + button)      */}
       {/* ---------------------------------------------------------- */}
       <div className="flex h-full flex-col border-l border-borderSubtle pl-8">
         <Eyebrow>Featured</Eyebrow>
         {featured ? (
-          <NavigationMenuPrimitive.Link asChild>
-            <Link
-              href={featured.href}
-              // Full-bleed media card: fills the column (flex-1) so it always
-              // spans the panel height; content sits on an ink wash at the
-              // bottom. group drives the image settle-zoom + chip invert.
-              className="group relative mt-4 flex min-h-[260px] flex-1 flex-col justify-end overflow-hidden rounded-lg p-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--ds-focus-color)]"
-            >
-              {featured.image ? (
+          // Raised tile per the DS elevation model (surface + hairline, 12px):
+          // image on top, title + full-width button below — no text-over-image
+          // wash. The ButtonLink is the interactive element (a real <a>), so
+          // there's no nesting problem and no chip pastiche.
+          <div className="mt-4 flex flex-1 flex-col rounded-lg border border-borderSubtle bg-surface p-4">
+            <div className="relative aspect-video w-full overflow-hidden rounded-sm bg-[var(--ds-gray-100)]">
+              {featured.image && (
                 <Image
                   src={urlFor(featured.image)
                     .width(1000)
-                    .height(640)
+                    .height(563)
                     .auto("format")
                     .url()}
                   alt=""
                   fill
                   sizes="480px"
-                  className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100"
+                  className="object-cover"
                 />
-              ) : (
-                <div className="absolute inset-0 bg-[var(--ds-gray-800)]" />
               )}
-              {/* Ink wash so the white copy reads on any image — a deliberate
-                  fixed-black overlay (image treatment, not a themed surface). */}
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/5"
-              />
-              <div className="relative">
-                {/* Title only — the card stays image-led, no description. */}
-                <p className="text-heading-20 text-balance text-white">
-                  {featured.title}
-                </p>
-                {/* Outline chip (Flowbite's card CTA): white hairline, inverts
-                    to white fill + ink text on card hover. A styled span, not
-                    a ButtonLink — the whole card is already the <a>, and
-                    anchors can't nest. Sized to the DS tiny button. */}
-                <span className="mt-4 inline-flex items-center gap-1.5 rounded-sm border border-white/60 px-3 py-1.5 text-copy-13 font-medium text-white transition-colors group-hover:border-white group-hover:bg-white group-hover:text-[#0a0a0a]">
+            </div>
+            {/* Title only — no sub-header on the featured slot. */}
+            <p className="mt-3 text-heading-16 text-balance text-textDefault">
+              {featured.title}
+            </p>
+            <div className="mt-auto pt-4">
+              <NavigationMenuPrimitive.Link asChild>
+                <ButtonLink href={featured.href} size="small" className="w-full">
                   Read more
                   <ArrowRight className="size-4" aria-hidden />
-                </span>
-              </div>
-            </Link>
-          </NavigationMenuPrimitive.Link>
+                </ButtonLink>
+              </NavigationMenuPrimitive.Link>
+            </div>
+          </div>
         ) : (
           // Stable layout: no featured item still renders a placeholder that
           // fills the same slot so the column keeps its footprint and the
