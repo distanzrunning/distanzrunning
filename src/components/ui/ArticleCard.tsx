@@ -4,34 +4,35 @@
 // ArticleCard — the canonical editorial card for the rebuilt site
 // ============================================================================
 //
-// One card, eight optional feature slots; each placement renders the subset
-// it needs (and each content type has a different subset available — race
+// One card, optional feature slots; each placement renders the subset it
+// needs (and each content type has a different subset available — race
 // guides have no author, for example):
 //
-//   1. image            — pre-resolved URL (resolve with urlFor at the data
-//                         layer, per the DS convention; no raw Sanity refs)
-//   2. category icon    — the SAME glyph the mega-menu taxonomy uses for
-//                         that category (newsLinks/shoeLinks/…), sized down
-//   3. category name    — kicker text next to the icon
-//   4. title            — always required
-//   5. subtitle/excerpt
-//   6. author avatar
-//   7. author name
-//   8. published date   — pass a pre-formatted display string
+//   image · badge · category name · published date · title ·
+//   subtitle/excerpt · author avatar · author name
+//
+// Content order follows Quartr's card anatomy:
+//   category · date  (meta line, smallest label slot)
+//   title            (semibold, clamped to 2 lines)
+//   subtitle/excerpt (muted, clamped to 2 lines)
 //
 // Anatomy (all DS-established patterns):
 //   - surface + hairline border, 12px radius (elevation = border, no shadow)
 //   - image on top, settle-zoom on card hover (rests at 1.04 → 1.0)
 //   - card-with-overlay-link: the title's <a> spans the card via
-//     after:inset-0; the category kicker is its own link punched above it
+//     after:inset-0; the category label is its own link punched above it
 //     with relative z-10 (see the DS convention notes)
 //   - no hover underline on the title
+//   - image URL pre-resolved at the data layer (urlFor), date passed as a
+//     pre-formatted display string (e.g. "29 May 2026")
 //
-// Example — mega-menu featured placement (image + category + title):
-//   <ArticleCard href=… title=… imageUrl=… category={{label, Icon, href}} />
+// Example — mega-menu featured placement (image + badge + category + title):
+//   <ArticleCard href=… title=… imageUrl=… badge="Featured"
+//                category={{ label, href }} />
 
 import Link from "next/link";
 import Image from "next/image";
+import { Dot } from "lucide-react";
 
 import {
   Badge,
@@ -42,10 +43,8 @@ import { cn } from "@/lib/utils";
 
 export interface ArticleCardCategory {
   label: string;
-  /** Category landing page; when set the kicker is its own click target. */
+  /** Category landing page; when set the label is its own click target. */
   href?: string;
-  /** Taxonomy glyph (Tabler icon component), rendered in a tinted tile. */
-  Icon?: React.ComponentType<{ className?: string }>;
 }
 
 export interface ArticleCardProps {
@@ -115,14 +114,39 @@ export default function ArticleCard({
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-5">
-        {/* Category kicker — taxonomy icon in a tinted tile + name. Its own
-            link (z-10 above the title overlay) when a category href exists. */}
-        {category && (
-          <CategoryKicker category={category} />
+        {/* Meta line (Quartr anatomy): category · date, in the smallest
+            label slot. The category is its own link (z-10 above the title
+            overlay) when it has an href. */}
+        {(category || publishedAt) && (
+          <div className="flex shrink-0 items-center gap-1">
+            {category &&
+              (category.href ? (
+                <Link
+                  href={category.href}
+                  className="relative z-10 text-copy-13 text-textSubtle transition-colors hover:text-textDefault focus-visible:text-textDefault focus-visible:outline-none"
+                >
+                  {category.label}
+                </Link>
+              ) : (
+                <span className="text-copy-13 text-textSubtle">
+                  {category.label}
+                </span>
+              ))}
+            {category && publishedAt && (
+              <span aria-hidden className="flex h-4 items-center">
+                <Dot className="w-5 text-textSubtler opacity-75" />
+              </span>
+            )}
+            {publishedAt && (
+              <span className="text-copy-13 text-textSubtle">
+                {publishedAt}
+              </span>
+            )}
+          </div>
         )}
 
         {/* Title — its overlay makes the whole card the click target. */}
-        <h3 className="text-heading-16 text-balance text-textDefault">
+        <h3 className="text-heading-16 text-balance text-textDefault line-clamp-2">
           <Link
             href={href}
             className="after:absolute after:inset-0 focus-visible:outline-none"
@@ -131,10 +155,12 @@ export default function ArticleCard({
           </Link>
         </h3>
 
+        {/* Subtitle/excerpt. */}
         {excerpt && (
           <p className="text-copy-14 text-textSubtle line-clamp-2">{excerpt}</p>
         )}
 
+        {/* Author (avatar + name) — date lives in the meta line above. */}
         {hasMeta && (
           <div className="mt-auto flex items-center gap-2 pt-2">
             {author?.avatarUrl && (
@@ -151,53 +177,9 @@ export default function ArticleCard({
                 {author.name}
               </span>
             )}
-            {author && publishedAt && (
-              <span aria-hidden className="text-copy-13 text-textSubtler">
-                ·
-              </span>
-            )}
-            {publishedAt && (
-              <span className="text-copy-13 text-textSubtler">
-                {publishedAt}
-              </span>
-            )}
           </div>
         )}
       </div>
     </article>
-  );
-}
-
-// Kicker row — same currentColor-tinted tile as the mega-menu link rows,
-// sized down (24px tile / 16px glyph). Muted at rest; when it's a link it
-// inks up on its own hover without triggering the card affordance.
-function CategoryKicker({ category }: { category: ArticleCardCategory }) {
-  const body = (
-    <>
-      {category.Icon && (
-        <span
-          className="flex size-6 shrink-0 items-center justify-center rounded-sm"
-          style={{
-            background: "color-mix(in srgb, currentColor 15%, transparent)",
-          }}
-        >
-          <category.Icon className="size-4" aria-hidden />
-        </span>
-      )}
-      <span className="text-copy-13 font-medium">{category.label}</span>
-    </>
-  );
-
-  return category.href ? (
-    <Link
-      href={category.href}
-      className="relative z-10 flex items-center gap-2 self-start text-textSubtle transition-colors hover:text-textDefault focus-visible:text-textDefault focus-visible:outline-none"
-    >
-      {body}
-    </Link>
-  ) : (
-    <span className="flex items-center gap-2 self-start text-textSubtle">
-      {body}
-    </span>
   );
 }

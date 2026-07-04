@@ -46,24 +46,11 @@ export interface MastheadProps {
   featuredRace: FeaturedRace;
 }
 
-// Category-icon lookup: href → taxonomy glyph, so the featured card's kicker
-// carries the SAME icon the mega-menu rows use for that category. (Road/
-// Track/Trail have icons in newsLinks for when editorial cards need them.)
-const CATEGORY_ICONS: Record<string, CategoryItem["Icon"]> = Object.fromEntries(
-  [...shoeLinks, ...gearLinks, ...nutritionLinks, ...raceLinks].map((l) => [
-    l.href,
-    l.Icon,
-  ]),
-);
-
 function buildFeaturedFromProduct(
   item: FeaturedProduct,
   section: "shoes" | "gear" | "nutrition",
 ): MegaMenuFeatured | null {
   if (!item) return null;
-  const categoryHref = item.category
-    ? `/${section}/${item.category.slug}`
-    : undefined;
   return {
     title: item.title,
     description: item.excerpt,
@@ -72,8 +59,7 @@ function buildFeaturedFromProduct(
     category: item.category
       ? {
           label: item.category.title,
-          href: categoryHref,
-          Icon: categoryHref ? CATEGORY_ICONS[categoryHref] : undefined,
+          href: `/${section}/${item.category.slug}`,
         }
       : null,
   };
@@ -86,13 +72,9 @@ function buildFeaturedFromRace(race: FeaturedRace): MegaMenuFeatured | null {
     description: buildRaceDescription(race.location, race.eventDate),
     href: `/races/${race.slug.current}`,
     image: race.mainImage,
-    // Race guides have no product category — kicker is the Races section
-    // itself, with its taxonomy icon.
-    category: {
-      label: "Races",
-      href: "/races",
-      Icon: CATEGORY_ICONS["/races"],
-    },
+    // Race guides have no product category — the meta line shows the Races
+    // section itself.
+    category: { label: "Races", href: "/races" },
   };
 }
 
