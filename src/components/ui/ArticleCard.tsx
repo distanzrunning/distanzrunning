@@ -60,10 +60,15 @@ export interface ArticleCardCategory {
 // sm: dense grids/sidebars · md: the standard card · lg: leads/features.
 export type ArticleCardSize = "sm" | "md" | "lg";
 
+// Titles use text-pretty (not text-balance): balance equalises line lengths,
+// which wraps titles early and makes the type read smaller than it is —
+// pretty only prevents orphans, so lines fill the measure (Quartr/404 both
+// let card titles run full-measure). lg titles get a third line before
+// clamping, matching their larger presence.
 const titleSizeStyles: Record<ArticleCardSize, string> = {
-  sm: "text-heading-16",
-  md: "text-heading-20",
-  lg: "text-heading-24",
+  sm: "text-heading-16 line-clamp-2",
+  md: "text-heading-20 line-clamp-2",
+  lg: "text-heading-24 line-clamp-3",
 };
 
 export interface ArticleCardProps {
@@ -169,10 +174,7 @@ export default function ArticleCard({
 
         {/* Title — its overlay makes the whole card the click target. */}
         <h3
-          className={cn(
-            titleSizeStyles[size],
-            "text-balance text-textDefault line-clamp-2",
-          )}
+          className={cn(titleSizeStyles[size], "text-pretty text-textDefault")}
         >
           <Link
             href={href}
@@ -187,7 +189,7 @@ export default function ArticleCard({
           <p
             className={cn(
               size === "lg" ? "text-copy-16" : "text-copy-14",
-              "text-textSubtle line-clamp-2",
+              "text-pretty text-textSubtle line-clamp-2",
             )}
           >
             {excerpt}

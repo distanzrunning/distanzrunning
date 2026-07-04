@@ -175,6 +175,7 @@ export default function MegaMenuPanel({
           // at the data boundary per the DS convention.
           <ArticleCard
             className="w-full max-w-[480px]"
+            size="lg"
             href={featured.href}
             title={featured.title}
             badge="Featured"
