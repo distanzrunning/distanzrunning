@@ -10,21 +10,24 @@
 // CTA + link grid + featured item) and renders the layout. The parent
 // owns the section taxonomy and forwards the right slice per Content slot.
 //
-// Design (AngelList / Frontify / Parallel-style, on Stride tokens):
+// Design (Flowbite mega-menu structure on Stride tokens):
 //   - uppercase micro-label eyebrow on every column
 //   - full-height hairline dividers (borderSubtle) between columns
-//   - link rows: icon tile (surface + hairline, 6px) + title + muted
-//     description, flush gray-100 hover
-//   - featured: image (6px radius + hairline, settle-zoom on hover) with
-//     the caption below it — no filled card
+//   - link blocks (Flowbite "full dropdown" anatomy): semibold 16px title
+//     + 14px muted description, block padding, flush gray-100 hover
+//   - featured (Flowbite "with image" anatomy, widened): a full-bleed
+//     image card filling the column — ink gradient wash, white overlaid
+//     title + description, and an outline chip that inverts on hover;
+//     image settle-zoom on hover
 //   - generous vertical padding; columns align to the 1400px site grid
 // ----------------------------------------------------------------------------
-// Left column   — section intro (eyebrow + heading + lede + CTA)
-// Middle column — "Explore" link grid (icon + title + description)
-// Right column  — "Featured" image card
+// Left column   — section intro (eyebrow + heading + lede + CTA)   (1fr)
+// Middle column — "Explore" link blocks                            (1.4fr)
+// Right column  — "Featured" full-bleed image card                 (1.4fr)
 
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
@@ -67,9 +70,8 @@ export interface MegaMenuPanelProps {
   className?: string;
 }
 
-// Uppercase micro-label used as the column eyebrow (the AngelList
-// "BY PRODUCT SUITE" / Planhat "CAPABILITIES" pattern). textSubtle keeps
-// it AA-readable at 13px; the tracking does the "premium" work.
+// Uppercase micro-label used as the column eyebrow. textSubtle keeps it
+// AA-readable at 13px; the tracking does the "premium" work.
 function Eyebrow({
   children,
   className,
@@ -107,13 +109,13 @@ export default function MegaMenuPanel({
 
   return (
     <div
-      // 1:2:1 fluid columns on the 1400px site grid (the viewport wrapper
-      // carries the container + px). Height is content-driven — Radix reads
-      // --radix-navigation-menu-viewport-height from the active Content's
-      // measured box. align-items:stretch keeps the hairline dividers and
-      // the left column's bottom-anchored CTA spanning the full panel.
+      // 1 : 1.4 : 1.4 fluid columns on the 1400px site grid (the viewport
+      // wrapper carries the container + px) — the featured card gets equal
+      // billing with the link grid instead of a quarter-width slot. Height
+      // is content-driven; align-items:stretch keeps the hairline dividers
+      // and the full-height featured card spanning the panel.
       className={cn(
-        "grid w-full grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] py-10",
+        "grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_minmax(0,1.4fr)] py-10",
         className,
       )}
       data-mega-menu-panel={sectionKey}
@@ -142,32 +144,25 @@ export default function MegaMenuPanel({
       </div>
 
       {/* ---------------------------------------------------------- */}
-      {/* Middle column — link grid                                  */}
+      {/* Middle column — link blocks (Flowbite anatomy)             */}
       {/* ---------------------------------------------------------- */}
-      <div className="h-full border-l border-borderSubtle px-10">
+      <div className="h-full border-l border-borderSubtle px-8">
         <Eyebrow className="pl-3">Explore</Eyebrow>
         <div
-          className="mt-4 grid grid-flow-col grid-cols-2 gap-x-6 gap-y-1"
+          className="mt-4 grid grid-flow-col grid-cols-2 gap-x-4 gap-y-1"
           style={{ gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))` }}
         >
           {links.map((item) => (
             <NavigationMenuPrimitive.Link asChild key={item.href}>
               <Link
                 href={item.href}
-                className="group/item flex items-start gap-3 rounded-sm p-3 transition-colors hover:bg-[var(--ds-gray-100)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:outline-none"
+                className="block rounded-sm p-3 transition-colors hover:bg-[var(--ds-gray-100)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:outline-none"
               >
-                {/* Icon tile — surface + hairline control chrome (Parallel
-                    style); ink follows the row's hover via currentColor. */}
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-sm border border-borderSubtle bg-surface text-textSubtle transition-colors group-hover/item:text-textDefault">
-                  <item.Icon className="size-5" />
+                <span className="block text-heading-16 text-textDefault">
+                  {item.label}
                 </span>
-                <span className="min-w-0">
-                  <span className="block text-heading-16 text-textDefault">
-                    {item.label}
-                  </span>
-                  <span className="mt-0.5 block text-copy-14 text-textSubtle">
-                    {item.description}
-                  </span>
+                <span className="mt-0.5 block text-copy-14 text-textSubtle">
+                  {item.description}
                 </span>
               </Link>
             </NavigationMenuPrimitive.Link>
@@ -176,69 +171,69 @@ export default function MegaMenuPanel({
       </div>
 
       {/* ---------------------------------------------------------- */}
-      {/* Right column — featured card                               */}
+      {/* Right column — featured image card (Flowbite "with image") */}
       {/* ---------------------------------------------------------- */}
-      <div className="flex h-full flex-col border-l border-borderSubtle pl-10">
+      <div className="flex h-full flex-col border-l border-borderSubtle pl-8">
         <Eyebrow>Featured</Eyebrow>
         {featured ? (
           <NavigationMenuPrimitive.Link asChild>
             <Link
               href={featured.href}
-              className="group mt-4 block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--ds-focus-color)]"
+              // Full-bleed media card: fills the column (flex-1) so it always
+              // spans the panel height; content sits on an ink wash at the
+              // bottom. group drives the image settle-zoom + chip invert.
+              className="group relative mt-4 flex min-h-[260px] flex-1 flex-col justify-end overflow-hidden rounded-lg p-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--ds-focus-color)]"
             >
-              <FeaturedImage image={featured.image} alt={featured.title} />
-              {/* Caption below the image (no filled card) — per the DS card
-                  convention, no hover underline on the title. */}
-              <h4 className="mt-3 text-heading-16 text-textDefault">
-                {featured.title}
-              </h4>
-              {featured.description && (
-                <p className="mt-1 text-copy-14 text-textSubtle line-clamp-2">
-                  {featured.description}
-                </p>
+              {featured.image ? (
+                <Image
+                  src={urlFor(featured.image)
+                    .width(1000)
+                    .height(640)
+                    .auto("format")
+                    .url()}
+                  alt=""
+                  fill
+                  sizes="480px"
+                  className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-[var(--ds-gray-800)]" />
               )}
+              {/* Ink wash so the white copy reads on any image — a deliberate
+                  fixed-black overlay (image treatment, not a themed surface). */}
+              <div
+                aria-hidden
+                className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/5"
+              />
+              <div className="relative">
+                <p className="text-heading-20 text-balance text-white">
+                  {featured.title}
+                </p>
+                {featured.description && (
+                  <p className="mt-1.5 text-copy-14 text-white/80 line-clamp-2">
+                    {featured.description}
+                  </p>
+                )}
+                {/* Outline chip (Flowbite's card CTA): white hairline, inverts
+                    to white fill + ink text on card hover. A styled span, not
+                    a ButtonLink — the whole card is already the <a>, and
+                    anchors can't nest. Sized to the DS tiny button. */}
+                <span className="mt-4 inline-flex items-center gap-1.5 rounded-sm border border-white/60 px-3 py-1.5 text-copy-13 font-medium text-white transition-colors group-hover:border-white group-hover:bg-white group-hover:text-[#0a0a0a]">
+                  Read more
+                  <ArrowRight className="size-4" aria-hidden />
+                </span>
+              </div>
             </Link>
           </NavigationMenuPrimitive.Link>
         ) : (
-          // Stable layout: no featured item still renders a placeholder at
-          // the image slot's aspect so the column keeps its footprint and the
+          // Stable layout: no featured item still renders a placeholder that
+          // fills the same slot so the column keeps its footprint and the
           // panel doesn't shrink for unfeatured sections.
-          <div className="mt-4 flex aspect-[4/3] w-full items-center justify-center rounded-sm border border-dashed border-borderSubtle bg-[var(--ds-gray-100)] p-4 text-copy-14 text-textSubtle">
+          <div className="mt-4 flex min-h-[260px] flex-1 items-center justify-center rounded-lg border border-dashed border-borderSubtle bg-[var(--ds-gray-100)] p-4 text-copy-14 text-textSubtle">
             No featured item yet
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-// ----------------------------------------------------------------------------
-// FeaturedImage
-// ----------------------------------------------------------------------------
-//
-// Resolves the Sanity image URL with urlFor (matching the ArticleCard
-// convention) and renders it at 4/3 inside a hairline-bordered 6px frame.
-// Hover uses the DS settle-zoom: the image rests at scale-[1.04] and
-// settles to scale-100 on group-hover.
-
-function FeaturedImage({
-  image,
-  alt,
-}: {
-  image: SanityImageSource | null | undefined;
-  alt: string;
-}) {
-  return (
-    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-sm border border-borderSubtle bg-[var(--ds-gray-100)]">
-      {image && (
-        <Image
-          src={urlFor(image).width(720).height(540).auto("format").url()}
-          alt={alt}
-          fill
-          sizes="360px"
-          className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100"
-        />
-      )}
     </div>
   );
 }
