@@ -126,8 +126,9 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     key: "shoes",
     label: "Shoes",
     href: "/shoes",
-    heading: "Shoes that work",
-    tagline: "From PR-day plates to daily trainers — tested by runners.",
+    heading: "Shoes for every run",
+    tagline:
+      "From one shoe to rule them all, to race-day carbon plates. Explore what fits in your rotation.",
     ctaLabel: "Browse all shoes",
     ctaHref: "/shoes",
     links: shoeLinks,
