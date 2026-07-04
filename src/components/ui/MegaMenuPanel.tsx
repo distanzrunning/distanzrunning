@@ -16,9 +16,9 @@
 //   - 18px-ish semibold column headings (text-heading-16), sentence case
 //   - link cards: hairline-outlined blocks (title + description) that fully
 //     INVERT on hover — ink fill, surface-coloured text
-//   - featured: bordered media card, title at the top (whole card clickable
-//     via the DS overlay-link pattern), image oversized to 110% bleeding off
-//     the card edges, nudging up 8px on hover — no wash, no text-on-image
+//   - featured: the canonical ArticleCard (lg) — image + "Featured" badge,
+//     category · date meta line, title, excerpt; whole card clickable via
+//     the DS overlay-link pattern, image settle-zoom on hover
 //   - full-height hairline dividers between columns; py-12; columns align
 //     to the 1400px site grid
 // ----------------------------------------------------------------------------
@@ -170,9 +170,10 @@ export default function MegaMenuPanel({
       {/* ---------------------------------------------------------- */}
       <div className="flex h-full flex-col border-l border-borderSubtle pl-10">
         {featured ? (
-          // The canonical ArticleCard, mega-menu subset: image + category
-          // kicker (taxonomy icon + name) + title. Image URL resolved here
-          // at the data boundary per the DS convention.
+          // The canonical ArticleCard, mega-menu subset: image + badge +
+          // meta line (category · date) + title + excerpt (the product's
+          // excerpt, or "Location · date" for a race guide). Image URL
+          // resolved here at the data boundary per the DS convention.
           <ArticleCard
             className="w-full max-w-[480px]"
             size="lg"
@@ -193,6 +194,7 @@ export default function MegaMenuPanel({
             imageSizes="480px"
             category={featured.category ?? undefined}
             publishedAt={featured.publishedAt}
+            excerpt={featured.description}
           />
         ) : (
           // Stable layout: no featured item still renders a placeholder at

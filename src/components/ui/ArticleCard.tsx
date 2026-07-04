@@ -110,7 +110,6 @@ export default function ArticleCard({
   publishedAt,
   className,
 }: ArticleCardProps) {
-  const hasMeta = Boolean(author || publishedAt);
 
   return (
     <article
@@ -150,7 +149,7 @@ export default function ArticleCard({
               (category.href ? (
                 <Link
                   href={category.href}
-                  className="relative z-10 text-copy-13 text-textSubtle transition-colors hover:text-textDefault focus-visible:text-textDefault focus-visible:outline-none"
+                  className="relative z-10 rounded-sm text-copy-13 text-textSubtle transition-colors hover:text-textDefault focus-visible:text-textDefault focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--ds-focus-color)]"
                 >
                   {category.label}
                 </Link>
@@ -176,9 +175,11 @@ export default function ArticleCard({
         <h3
           className={cn(titleSizeStyles[size], "text-pretty text-textDefault")}
         >
+          {/* Keyboard focus draws the DS focus outline via the overlay —
+              inset 2px so the card's overflow-hidden doesn't clip it. */}
           <Link
             href={href}
-            className="after:absolute after:inset-0 focus-visible:outline-none"
+            className="outline-none after:absolute after:inset-0 focus-visible:after:rounded-lg focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
           >
             {title}
           </Link>
@@ -196,10 +197,11 @@ export default function ArticleCard({
           </p>
         )}
 
-        {/* Author (avatar + name) — date lives in the meta line above. */}
-        {hasMeta && (
+        {/* Author byline (avatar + name) — date lives in the meta line
+            above, so this row only exists when there's an author. */}
+        {author && (
           <div className="mt-auto flex items-center gap-2 pt-2">
-            {author?.avatarUrl && (
+            {author.avatarUrl && (
               <Image
                 src={author.avatarUrl}
                 alt=""
@@ -208,11 +210,7 @@ export default function ArticleCard({
                 className="size-5 rounded-full object-cover"
               />
             )}
-            {author && (
-              <span className="text-copy-13 text-textSubtle">
-                {author.name}
-              </span>
-            )}
+            <span className="text-copy-13 text-textSubtle">{author.name}</span>
           </div>
         )}
       </div>

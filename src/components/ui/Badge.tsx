@@ -135,7 +135,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         title={title}
         aria-label={title}
         className={`
-          inline-flex shrink-0 items-center justify-center rounded-full py-0.5 font-medium whitespace-nowrap tabular-nums capitalize
+          inline-flex shrink-0 items-center justify-center rounded-full py-0.5 font-medium whitespace-nowrap tabular-nums
           ${variantStyles[variant]}
           ${sizeStyles[size]}
           ${className}
@@ -174,7 +174,7 @@ export const BadgePill = forwardRef<
   // Geist pill: surface fill, gray-1000 text, a gray-alpha-400 INSET ring
   // (not a solid border), hover → gray-200. It's a link, so no underline.
   const pillStyles = `
-    inline-flex shrink-0 items-center justify-center rounded-full py-0.5 font-medium whitespace-nowrap tabular-nums capitalize
+    inline-flex shrink-0 items-center justify-center rounded-full py-0.5 font-medium whitespace-nowrap tabular-nums
     bg-surface text-textDefault no-underline
     ring-1 ring-inset ring-[var(--ds-gray-alpha-400)]
     hover:bg-[var(--ds-gray-200)]
