@@ -150,7 +150,7 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     href: "/nutrition",
     heading: "Fuel that delivers",
     tagline:
-      "Explore the latest brands and products pushing sports nutrition.",
+      "Explore the latest brands and products pushing the limits in sports nutrition.",
     ctaLabel: "Browse all nutrition",
     ctaHref: "/nutrition",
     links: nutritionLinks,
