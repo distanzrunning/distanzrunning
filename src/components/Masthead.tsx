@@ -149,7 +149,8 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     label: "Nutrition",
     href: "/nutrition",
     heading: "Fuel that delivers",
-    tagline: "Gels and hydration that hold up at race pace.",
+    tagline:
+      "Explore the latest brands and products pushing sports nutrition.",
     ctaLabel: "Browse all nutrition",
     ctaHref: "/nutrition",
     links: nutritionLinks,
