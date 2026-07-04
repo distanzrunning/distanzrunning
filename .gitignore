@@ -57,3 +57,9 @@ Screen Recording*.mov
 # during DS alignment — local-only, never commit)
 Giest_css_*.css
 giest_css_*.txt
+
+# Local reference CSS dumps (Geist/Prismic/Quartr) — never commit
+Giest_css*.css
+giest_css*.txt
+prismic_css.txt
+quart_css.txt
