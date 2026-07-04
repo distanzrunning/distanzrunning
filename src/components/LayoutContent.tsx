@@ -17,7 +17,6 @@
 
 import { headers } from "next/headers";
 import { ReactNode } from "react";
-import PageFrame from "./ui/PageFrame";
 import AnnouncementBanner from "./AnnouncementBanner";
 import { getAnnouncement } from "@/lib/announcement";
 
@@ -56,19 +55,16 @@ export default async function LayoutContent({
       <AnnouncementBanner config={announcement} />
     ) : null;
 
-  // Chrome background (the canvas around PageFrame): the Masthead is also
-  // bg-canvas, so the header reads flush with the page canvas and PageFrame
-  // (bg-100) pops above it — matches the admin shell pattern.
-  const chromeClass = "flex min-h-screen flex-col bg-canvas";
-
+  // Bare canvas below the Masthead — no PageFrame (the old framed page
+  // surface was removed in the teardown; pages own their surfaces as they
+  // are rebuilt). The wrapper keeps the header + content on one full-height
+  // canvas column.
   return (
     <>
       {banner}
-      <div className={chromeClass}>
+      <div className="flex min-h-screen flex-col bg-canvas">
         {header}
-        <PageFrame as="main" className="flex flex-1 flex-col">
-          {children}
-        </PageFrame>
+        <main className="flex flex-1 flex-col">{children}</main>
       </div>
     </>
   );
