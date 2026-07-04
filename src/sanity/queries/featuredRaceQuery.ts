@@ -4,6 +4,7 @@ export const featuredRaceQuery = `
   title,
   slug,
   mainImage,
+  publishedAt,
   eventDate,
   location
 }

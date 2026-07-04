@@ -11,6 +11,7 @@ const featuredProductFragment = groq`
   slug,
   mainImage,
   excerpt,
+  publishedAt,
   "category": productCategory->{title, "slug": slug.current}
 `
 

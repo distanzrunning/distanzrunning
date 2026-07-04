@@ -46,6 +46,18 @@ export interface MastheadProps {
   featuredRace: FeaturedRace;
 }
 
+// "29 May 2026" — the article-card meta-line display format.
+function formatDisplayDate(iso?: string): string | undefined {
+  if (!iso) return undefined;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return undefined;
+  return d.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 function buildFeaturedFromProduct(
   item: FeaturedProduct,
   section: "shoes" | "gear" | "nutrition",
@@ -56,6 +68,7 @@ function buildFeaturedFromProduct(
     description: item.excerpt,
     href: `/${section}/${item.slug.current}`,
     image: item.mainImage,
+    publishedAt: formatDisplayDate(item.publishedAt),
     category: item.category
       ? {
           label: item.category.title,
@@ -72,6 +85,9 @@ function buildFeaturedFromRace(race: FeaturedRace): MegaMenuFeatured | null {
     description: buildRaceDescription(race.location, race.eventDate),
     href: `/races/${race.slug.current}`,
     image: race.mainImage,
+    // Publication date of the guide (the event date lives in the guide
+    // itself — the meta line is about the article).
+    publishedAt: formatDisplayDate(race.publishedAt),
     // Race guides have no product category — the meta line shows the Races
     // section itself.
     category: { label: "Races", href: "/races" },

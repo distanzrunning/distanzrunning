@@ -50,8 +50,10 @@ export interface MegaMenuFeatured {
   description?: string;
   href: string;
   image?: SanityImageSource | null;
-  /** Article-card kicker: the item's category (label + taxonomy icon). */
+  /** Article-card meta line: the item's category (label + href). */
   category?: ArticleCardCategory | null;
+  /** Pre-formatted display date for the meta line, e.g. "29 May 2026". */
+  publishedAt?: string;
 }
 
 export interface MegaMenuPanelProps {
@@ -189,6 +191,7 @@ export default function MegaMenuPanel({
             }
             imageSizes="480px"
             category={featured.category ?? undefined}
+            publishedAt={featured.publishedAt}
           />
         ) : (
           // Stable layout: no featured item still renders a placeholder at
