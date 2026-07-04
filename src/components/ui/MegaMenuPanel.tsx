@@ -32,7 +32,6 @@ import { ArrowRight } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
-import { ButtonLink } from "@/components/ui/Button";
 import { urlFor } from "@/sanity/lib/image";
 import { cn } from "@/lib/utils";
 import type { CategoryItem } from "@/components/ui/SiteNavigationMenu";
@@ -112,16 +111,6 @@ export default function MegaMenuPanel({
         <p className="mt-3 max-w-[36ch] text-copy-14 text-textSubtle">
           {tagline}
         </p>
-        <div className="mt-auto pt-8">
-          {/* ButtonLink renders as an <a> so Radix's NavigationMenu.Link can
-              forward its focus/dismiss wiring to the same anchor — no illegal
-              <button>-inside-<a> nesting. */}
-          <NavigationMenuPrimitive.Link asChild>
-            <ButtonLink href={ctaHref} size="small">
-              {ctaLabel}
-            </ButtonLink>
-          </NavigationMenuPrimitive.Link>
-        </div>
       </div>
 
       {/* ---------------------------------------------------------- */}
@@ -163,6 +152,19 @@ export default function MegaMenuPanel({
               </Link>
             </NavigationMenuPrimitive.Link>
           ))}
+
+          {/* Section CTA — Prismic's "Explore all features" treatment: bold
+              underlined ink link closing the list (an underlined text link
+              reads as "this list continues"; a filled button here would
+              outweigh everything around it). */}
+          <NavigationMenuPrimitive.Link asChild>
+            <Link
+              href={ctaHref}
+              className="mt-2 self-start text-heading-16 text-textDefault underline underline-offset-8 transition-opacity hover:opacity-60 focus-visible:opacity-60 focus-visible:outline-none"
+            >
+              {ctaLabel}
+            </Link>
+          </NavigationMenuPrimitive.Link>
         </div>
       </div>
 
