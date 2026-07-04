@@ -176,10 +176,12 @@ export default function MegaMenuPanel({
                 </Link>
               </NavigationMenuPrimitive.Link>
               {/* Image centred inside the card (deliberate divergence from
-                  Prismic's off-edge bleed) — fully inset, ink hairline frame
-                  visible on all four sides; nudges up 8px on hover. */}
-              <div className="relative w-full flex-1 pb-5 transition-transform duration-300 group-hover:-translate-y-2">
-                <div className="relative h-full w-full overflow-hidden rounded-sm border border-textDefault bg-[var(--ds-gray-100)]">
+                  Prismic's off-edge bleed) — fully inset, DS hairline frame
+                  visible on all four sides. Hover uses the DS settle-zoom
+                  (rests at 1.04, settles to 1.0) instead of the old translate
+                  nudge, which only made sense for the bleeding crop. */}
+              <div className="relative w-full flex-1 pb-5">
+                <div className="relative h-full w-full overflow-hidden rounded-sm border border-borderSubtle bg-[var(--ds-gray-100)]">
                   {featured.image && (
                     <Image
                       src={urlFor(featured.image)
@@ -190,7 +192,7 @@ export default function MegaMenuPanel({
                       alt=""
                       fill
                       sizes="480px"
-                      className="object-cover"
+                      className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100"
                     />
                   )}
                 </div>
