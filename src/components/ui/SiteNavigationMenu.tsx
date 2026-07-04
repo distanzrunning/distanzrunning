@@ -39,6 +39,9 @@ export type FeaturedProduct = {
   slug: SanitySlug;
   mainImage?: SanityImageSource | null;
   excerpt?: string;
+  /** The post's product category (title + slug) — drives the article-card
+      kicker (icon + name) in the mega-menu featured slot. */
+  category?: { title: string; slug: string } | null;
 } | null;
 
 export type FeaturedRace = {

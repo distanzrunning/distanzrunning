@@ -27,11 +27,13 @@
 // Right column  — "Featured" media card
 
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
+import ArticleCard, {
+  type ArticleCardCategory,
+} from "@/components/ui/ArticleCard";
 import { urlFor } from "@/sanity/lib/image";
 import { cn } from "@/lib/utils";
 import type { CategoryItem } from "@/components/ui/SiteNavigationMenu";
@@ -48,6 +50,8 @@ export interface MegaMenuFeatured {
   description?: string;
   href: string;
   image?: SanityImageSource | null;
+  /** Article-card kicker: the item's category (label + taxonomy icon). */
+  category?: ArticleCardCategory | null;
 }
 
 export interface MegaMenuPanelProps {
@@ -164,52 +168,29 @@ export default function MegaMenuPanel({
       {/* ---------------------------------------------------------- */}
       <div className="flex h-full flex-col border-l border-borderSubtle pl-10">
         {featured ? (
-          <div className="group relative aspect-[10/7] w-full max-w-[480px] overflow-hidden rounded-lg border border-borderSubtle bg-surface">
-            <div className="flex h-full flex-col gap-4 px-5 pt-4">
-              {/* "Featured" kicker + title at the top (no sub-header); the
-                  overlay (after:inset-0) makes the whole card the click
-                  target — the DS card-with-overlay-link pattern. */}
-              <NavigationMenuPrimitive.Link asChild>
-                <Link
-                  href={featured.href}
-                  className="flex flex-col gap-1 after:absolute after:inset-0 after:z-10 focus-visible:outline-none"
-                >
-                  <span className="block text-copy-13 font-medium uppercase tracking-[0.08em] text-textSubtle">
-                    Featured
-                  </span>
-                  <span className="block text-heading-16 text-balance text-textDefault">
-                    {featured.title}
-                  </span>
-                </Link>
-              </NavigationMenuPrimitive.Link>
-              {/* Image centred inside the card (deliberate divergence from
-                  Prismic's off-edge bleed) — fully inset, DS hairline frame
-                  visible on all four sides. Hover uses the DS settle-zoom
-                  (rests at 1.04, settles to 1.0) instead of the old translate
-                  nudge, which only made sense for the bleeding crop. */}
-              <div className="relative w-full flex-1 pb-5">
-                <div className="relative h-full w-full overflow-hidden rounded-sm border border-borderSubtle bg-[var(--ds-gray-100)]">
-                  {featured.image && (
-                    <Image
-                      src={urlFor(featured.image)
-                        .width(1000)
-                        .height(700)
-                        .auto("format")
-                        .url()}
-                      alt=""
-                      fill
-                      sizes="480px"
-                      className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100"
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
+          // The canonical ArticleCard, mega-menu subset: image + category
+          // kicker (taxonomy icon + name) + title. Image URL resolved here
+          // at the data boundary per the DS convention.
+          <ArticleCard
+            className="w-full max-w-[480px]"
+            href={featured.href}
+            title={featured.title}
+            imageUrl={
+              featured.image
+                ? urlFor(featured.image)
+                    .width(960)
+                    .height(600)
+                    .auto("format")
+                    .url()
+                : null
+            }
+            imageSizes="480px"
+            category={featured.category ?? undefined}
+          />
         ) : (
           // Stable layout: no featured item still renders a placeholder at
-          // the same aspect so the column keeps its footprint and the panel
-          // doesn't shrink for unfeatured sections.
+          // roughly the card's footprint so the panel doesn't shrink for
+          // unfeatured sections.
           <div className="flex aspect-[10/7] w-full max-w-[480px] items-center justify-center rounded-lg border border-dashed border-borderSubtle bg-[var(--ds-gray-100)] p-4 text-copy-14 text-textSubtle">
             No featured item yet
           </div>

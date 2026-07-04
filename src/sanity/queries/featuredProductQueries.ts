@@ -10,7 +10,8 @@ const featuredProductFragment = groq`
   title,
   slug,
   mainImage,
-  excerpt
+  excerpt,
+  "category": productCategory->{title, "slug": slug.current}
 `
 
 export const featuredShoeProductQuery = groq`
