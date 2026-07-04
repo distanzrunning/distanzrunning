@@ -118,9 +118,26 @@ export async function getAnnouncementFresh(): Promise<AnnouncementConfig | null>
   };
 }
 
-/** Site-wide cached reader for the public banner. Cached across requests
- *  (revalidated on admin save via ANNOUNCEMENT_CACHE_TAG) so the banner isn't a
- *  per-request DB hit. */
-export const getAnnouncement = unstable_cache(getAnnouncementFresh, [
+const getAnnouncementCached = unstable_cache(getAnnouncementFresh, [
   "announcement-banner",
 ], { revalidate: 60, tags: [ANNOUNCEMENT_CACHE_TAG] });
+
+/** Site-wide cached reader for the public banner. Cached across requests
+ *  (revalidated on admin save via ANNOUNCEMENT_CACHE_TAG) so the banner isn't a
+ *  per-request DB hit.
+ *
+ *  Never throws: the banner is optional chrome awaited in the public layout,
+ *  so a Supabase misconfig or outage must cost the promo bar, not 500 every
+ *  page. (getAnnouncementFresh stays throwing for the admin editor, where a
+ *  broken connection should surface.) */
+export async function getAnnouncement(): Promise<AnnouncementConfig | null> {
+  try {
+    return await getAnnouncementCached();
+  } catch (err) {
+    console.error(
+      "[announcement] unavailable, rendering without banner:",
+      err instanceof Error ? err.message : err,
+    );
+    return null;
+  }
+}

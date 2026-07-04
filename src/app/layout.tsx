@@ -1,24 +1,19 @@
 // src/app/layout.tsx
+//
+// Root layout — the only owner of <html>/<body>. Deliberately minimal:
+// fonts, metadata, and the pre-paint theme bootstrap. Everything
+// section-specific lives in the route groups below it:
+//   (public)/         — visitor machinery (consent, analytics, providers)
+//     (site)/         — public chrome (announcement banner + Masthead)
+//     (bare)/         — login + coming-soon (machinery, no chrome)
+//   admin/            — lean authenticated tree (theme only)
+// No headers()/pathname sniffing here — route groups pick the chrome
+// statically, so pages stay eligible for static rendering.
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { EB_Garamond } from "next/font/google";
-import LayoutContent from "@/components/LayoutContent";
-import MastheadWrapper from "@/components/MastheadWrapper";
-import { DarkModeProvider } from "@/components/DarkModeProvider";
-import ReCaptchaProvider from "@/components/ReCaptchaProvider";
-import { C15tPrefetch } from "@c15t/nextjs";
-import { ConsentManagerClient } from "@/components/consent/ConsentManagerClient";
-import { UnitsProvider } from "@/contexts/UnitsContext";
-import { SearchProvider } from "@/contexts/SearchContext";
-import { ConsentBanner } from "@/components/ui/ConsentBanner";
-import { ConsentModeSync } from "@/components/consent/ConsentModeSync";
-import { PostHogConsentSync } from "@/components/consent/PostHogConsentSync";
-import { gcmDefaultsScript } from "@/lib/c15t/gcm";
-import { ConsentedAnalytics } from "@/components/consent/ConsentedAnalytics";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // Distanz Typography System — all fonts self-hosted
 // Body/UI: Geist Sans (`geist/font/sans`)
@@ -57,20 +52,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Admin is an authenticated internal SPA — it needs none of the public
-  // visitor machinery (AdSense, c15t consent + prefetch + GCM, reCAPTCHA,
-  // PostHog, Speed Insights, site chrome). Loading those on every admin page
-  // is dead third-party JS + network that pushes out FCP/LCP, so scope the
-  // whole stack to public routes and give admin a lean tree (theme only).
-  // The app already reads headers() in LayoutContent, so this adds no SSG cost.
-  const headerStore = await headers();
-  const isAdmin = (headerStore.get("x-pathname") ?? "").startsWith("/admin");
-
   return (
     <html
       lang="en"
@@ -127,71 +113,9 @@ export default async function RootLayout({
             `,
           }}
         />
-        {/* Public-only consent/analytics bootstrap — skipped on admin, which
-            has no consent surface. */}
-        {!isAdmin && (
-          <>
-            {/* Google Consent Mode v2 — must run before AdSense so it picks up
-                the denied baseline. ConsentModeSync (in <body>) fires
-                gtag('consent','update',…) once the user decides. PostHog is no
-                longer inlined here — c15t loads it after `measurement` consent
-                (see ConsentManagerClient). */}
-            <script
-              id="gcm-defaults"
-              dangerouslySetInnerHTML={{ __html: gcmDefaultsScript() }}
-            />
-            {/* Start the c15t /init prefetch before hydration (jurisdiction +
-                policy). Static-safe: an inline script, not next/headers, so it
-                doesn't deopt SSG pages. The provider auto-consumes the matched
-                prefetch (same backendURL), killing the banner flash + the lazy
-                client /init waterfall. c15t's recommended init flow for static
-                routes. */}
-            <C15tPrefetch backendURL="/api/c15t" />
-          </>
-        )}
       </head>
       <body className="font-sans antialiased bg-canvas text-textDefault min-h-screen flex flex-col distanz-font-features">
-        {isAdmin ? (
-          // Lean admin tree — DarkModeProvider (theme) + the admin SPA. No
-          // consent/reCAPTCHA/AdSense/analytics; LayoutContent already
-          // suppresses the public header/footer for /admin.
-          <DarkModeProvider>
-            <main className="min-h-screen">{children}</main>
-          </DarkModeProvider>
-        ) : (
-          <ReCaptchaProvider>
-            <DarkModeProvider>
-              <UnitsProvider>
-                <ConsentManagerClient>
-                  <SearchProvider>
-                    <ConsentModeSync />
-                    <PostHogConsentSync />
-                    <LayoutContent header={<MastheadWrapper />}>
-                      {children}
-                    </LayoutContent>
-                    <ConsentBanner />
-
-                    <ConsentedAnalytics />
-                    <SpeedInsights />
-                  </SearchProvider>
-                </ConsentManagerClient>
-              </UnitsProvider>
-            </DarkModeProvider>
-          </ReCaptchaProvider>
-        )}
-
-        {/* Google AdSense — loads once for the whole app. Individual ad units
-            live in <AdSlot /> and push themselves to `adsbygoogle` once visible.
-            Rendered as a raw <script> (rather than next/script) so AdSense
-            doesn't log a warning about the data-nscript attribute. Public
-            only — admin has no ad slots. */}
-        {!isAdmin && (
-          <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8457173435004026"
-            crossOrigin="anonymous"
-          />
-        )}
+        {children}
       </body>
     </html>
   );

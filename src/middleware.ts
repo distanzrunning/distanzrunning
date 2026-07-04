@@ -79,14 +79,10 @@ function handleHoldingPage(request: NextRequest): NextResponse | null {
   const url = request.nextUrl.clone();
   url.pathname = HOLDING_PAGE_PATH;
 
-  // Forward the rewritten path as x-pathname so LayoutContent
-  // resolves to the no-chrome branch (no header, no footer). Without
-  // this the rewrite hits the route at /coming-soon but LayoutContent
-  // reads x-pathname = "/" (the original URL) and renders the
-  // homepage chrome around the holding page.
-  const headers = new Headers(request.headers);
-  headers.set("x-pathname", HOLDING_PAGE_PATH);
-  return NextResponse.rewrite(url, { request: { headers } });
+  // The rewrite lands on the /coming-soon route, which lives in the
+  // chrome-less (bare) route group — no header forwarding needed for
+  // the layout to pick the right chrome.
+  return NextResponse.rewrite(url);
 }
 
 async function handleStagingAuth(
@@ -139,19 +135,12 @@ export async function middleware(request: NextRequest) {
   if (authRedirect) return authRedirect;
 
   // 3. Regional gating — write / refresh the distanz-region cookie.
+  //    (Chrome selection needs no forwarded pathname header — the route
+  //    groups under src/app pick it per section at build time.)
   const country = request.headers.get("x-vercel-ip-country") ?? "";
   const region = classifyRegion(country);
 
-  // 4. Forward the request pathname as a custom header so server
-  //    components / layouts can branch chrome without falling back
-  //    to a client-only usePathname() (which returns null during
-  //    static rendering and causes a flash of the wrong navbar).
-  const forwardedHeaders = new Headers(request.headers);
-  forwardedHeaders.set("x-pathname", request.nextUrl.pathname);
-
-  const response = NextResponse.next({
-    request: { headers: forwardedHeaders },
-  });
+  const response = NextResponse.next();
   const existing = request.cookies.get(REGION_COOKIE)?.value;
   if (existing !== region) {
     response.cookies.set({

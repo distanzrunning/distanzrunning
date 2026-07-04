@@ -1,9 +1,9 @@
 // src/components/MastheadWrapper.tsx
 //
 // Server component that fetches the mega-menu featured items (one product per
-// section + a featured race) and forwards them to the client Masthead. Used
-// both as the site-wide header (layout.tsx) and on the homepage (page.tsx),
-// so the fetch + prop wiring lives in one place.
+// section + a featured race) and forwards them to the client Masthead.
+// Mounted exactly once, in the (site) route-group layout — pages must not
+// mount it themselves (a second mount double-stacks the header on soft nav).
 
 import { sanityFetch } from "@/sanity/lib/live";
 import {
