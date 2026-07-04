@@ -7,10 +7,13 @@
 // which returns null during static rendering) avoids a flash
 // between layouts on first paint.
 //
-// The Masthead (two-tier sticky nav) is now the public chrome for
-// every content page — passed in as the `header` prop from layout.tsx
-// via MastheadWrapper. The homepage renders its own Masthead (isHome
-// branch is bare); all other public pages get it here.
+// The Masthead (two-tier sticky nav) is the public chrome for every
+// page, homepage included — passed in as the `header` prop from
+// layout.tsx via MastheadWrapper. It must have exactly ONE mount site
+// (here): this layout persists across client-side navigations, so any
+// page that also mounted its own header would double-stack it after a
+// soft nav (and pathname-dependent chrome branches go stale the same
+// way — keep the public chrome identical for every public route).
 
 import { headers } from "next/headers";
 import { ReactNode } from "react";
@@ -39,9 +42,6 @@ export default async function LayoutContent({
   const isLoginPage = pathname === "/login";
   const isAdmin = pathname.startsWith("/admin");
   const isComingSoon = pathname === "/coming-soon";
-  // The homepage is being rebuilt from scratch and owns its own header, so it
-  // renders bare (no production SiteHeader/Footer) like the app-shell routes.
-  const isHome = pathname === "/";
 
   // Login / admin / coming-soon own their layout — no chrome, no announcement.
   if (isPreviewMode || isLoginPage || isAdmin || isComingSoon) {
@@ -55,16 +55,6 @@ export default async function LayoutContent({
     announcement?.enabled && announcement.text.trim() ? (
       <AnnouncementBanner config={announcement} />
     ) : null;
-
-  // The homepage owns its own header (Masthead) — render bare, banner on top.
-  if (isHome) {
-    return (
-      <>
-        {banner}
-        <main className="min-h-screen">{children}</main>
-      </>
-    );
-  }
 
   // Chrome background (the canvas around PageFrame): the Masthead is also
   // bg-canvas, so the header reads flush with the page canvas and PageFrame
