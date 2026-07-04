@@ -175,6 +175,7 @@ export default function MegaMenuPanel({
             className="w-full max-w-[480px]"
             href={featured.href}
             title={featured.title}
+            badge="Featured"
             imageUrl={
               featured.image
                 ? urlFor(featured.image)

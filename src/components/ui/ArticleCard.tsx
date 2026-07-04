@@ -33,6 +33,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
+import { Badge } from "@/components/ui/Badge";
 import { cn } from "@/lib/utils";
 
 export interface ArticleCardCategory {
@@ -51,6 +52,9 @@ export interface ArticleCardProps {
   imageAlt?: string;
   /** next/image `sizes` for the slot the card is placed in. */
   imageSizes?: string;
+  /** Placement label rendered as a DS Badge over the image's top-left
+      corner, e.g. "Featured". */
+  badge?: string | null;
   category?: ArticleCardCategory | null;
   excerpt?: string | null;
   author?: { name: string; avatarUrl?: string | null } | null;
@@ -65,6 +69,7 @@ export default function ArticleCard({
   imageUrl,
   imageAlt = "",
   imageSizes = "480px",
+  badge,
   category,
   excerpt,
   author,
@@ -90,6 +95,14 @@ export default function ArticleCard({
             sizes={imageSizes}
             className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100"
           />
+        )}
+        {/* Placement badge — solid fill reads on any photograph. */}
+        {badge && (
+          <span className="absolute left-3 top-3">
+            <Badge variant="gray" size="sm">
+              {badge}
+            </Badge>
+          </span>
         )}
       </div>
 
