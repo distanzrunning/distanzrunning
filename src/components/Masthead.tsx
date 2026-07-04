@@ -160,7 +160,8 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     label: "Races",
     href: "/races",
     heading: "Find your next race",
-    tagline: "Race guides, calendar, and a full database of events.",
+    tagline:
+      "Explore detailed race guides and a race calendar from a full database of upcoming events.",
     ctaLabel: "Browse all races",
     ctaHref: "/races",
     links: raceLinks,
