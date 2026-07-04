@@ -128,7 +128,7 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     href: "/shoes",
     heading: "Shoes for every run",
     tagline:
-      "From one shoe to rule them all, to race-day carbon plates. Explore what fits in your rotation.",
+      "From one shoe to rule them all, to race-day carbon plates. Explore our reviews and guides to pick the right shoes.",
     ctaLabel: "Browse all shoes",
     ctaHref: "/shoes",
     links: shoeLinks,
