@@ -141,10 +141,19 @@ export default function MegaMenuPanel({
                 className="group/item flex items-center justify-between leading-6 text-textDefault focus-visible:outline-none"
               >
                 <span className="flex items-center text-heading-16">
-                  <item.Icon
-                    className="mr-2.5 h-6 w-6 text-textSubtler transition-colors group-hover/item:text-textDefault group-focus-visible/item:text-textDefault"
-                    aria-hidden
-                  />
+                  {/* Icon tile mirroring Prismic's built-in squircle backdrop:
+                      the fill is currentColor at 15% via color-mix, so tint
+                      and glyph ink up together on hover — muted at rest,
+                      textDefault on hover/focus. */}
+                  <span
+                    className="mr-2.5 flex size-8 shrink-0 items-center justify-center rounded-sm text-textSubtler transition-colors group-hover/item:text-textDefault group-focus-visible/item:text-textDefault"
+                    style={{
+                      background:
+                        "color-mix(in srgb, currentColor 15%, transparent)",
+                    }}
+                  >
+                    <item.Icon className="h-5 w-5" aria-hidden />
+                  </span>
                   {item.label}
                 </span>
                 <ArrowRight
