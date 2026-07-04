@@ -157,24 +157,31 @@ export default function MegaMenuPanel({
         {featured ? (
           <div className="group relative mt-5 aspect-[10/7] w-full max-w-[480px] overflow-hidden rounded-lg border border-borderSubtle bg-surface">
             <div className="flex h-full flex-col gap-4 px-5 pt-4">
-              {/* Title at the top; its overlay (after:inset-0) makes the whole
-                  card the click target — the DS card-with-overlay-link
-                  pattern. Title only, no sub-header. */}
+              {/* Title + sub-header at the top; the overlay (after:inset-0)
+                  makes the whole card the click target — the DS
+                  card-with-overlay-link pattern. */}
               <NavigationMenuPrimitive.Link asChild>
                 <Link
                   href={featured.href}
-                  className="after:absolute after:inset-0 after:z-10 focus-visible:outline-none"
+                  className="flex flex-col gap-0.5 after:absolute after:inset-0 after:z-10 focus-visible:outline-none"
                 >
                   <span className="block text-heading-16 text-balance text-textDefault">
                     {featured.title}
                   </span>
+                  {featured.description && (
+                    <span className="block text-copy-14 font-normal text-textSubtle line-clamp-2">
+                      {featured.description}
+                    </span>
+                  )}
                 </Link>
               </NavigationMenuPrimitive.Link>
               {/* Oversized image (110%) bleeding off the card's right and
                   bottom edges; nudges up 8px on hover (Prismic's affordance —
                   no wash, no zoom). */}
               <div className="relative w-[110%] flex-1 transition-transform duration-300 group-hover:-translate-y-2">
-                <div className="relative h-full w-full overflow-hidden rounded-sm border border-borderDefault bg-[var(--ds-gray-100)]">
+                {/* Ink hairline around the image, like Prismic's
+                    border-gray-15 frame on the bleeding screenshot. */}
+                <div className="relative h-full w-full overflow-hidden rounded-sm border border-textDefault bg-[var(--ds-gray-100)]">
                   {featured.image && (
                     <Image
                       src={urlFor(featured.image)
