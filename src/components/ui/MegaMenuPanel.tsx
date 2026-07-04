@@ -206,14 +206,10 @@ export default function MegaMenuPanel({
                 className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/5"
               />
               <div className="relative">
+                {/* Title only — the card stays image-led, no description. */}
                 <p className="text-heading-20 text-balance text-white">
                   {featured.title}
                 </p>
-                {featured.description && (
-                  <p className="mt-1.5 text-copy-14 text-white/80 line-clamp-2">
-                    {featured.description}
-                  </p>
-                )}
                 {/* Outline chip (Flowbite's card CTA): white hairline, inverts
                     to white fill + ink text on card hover. A styled span, not
                     a ButtonLink — the whole card is already the <a>, and
