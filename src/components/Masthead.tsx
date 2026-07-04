@@ -115,7 +115,6 @@ interface MegaSection {
   label: string;
   href: string;
   heading: string;
-  tagline: string;
   ctaLabel: string;
   ctaHref: string;
   links: ReadonlyArray<CategoryItem>;
@@ -127,7 +126,6 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     label: "Shoes",
     href: "/shoes",
     heading: "Shoes that work",
-    tagline: "From PR-day plates to daily trainers — tested by runners.",
     ctaLabel: "Browse all shoes",
     ctaHref: "/shoes",
     links: shoeLinks,
@@ -137,7 +135,6 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     label: "Gear",
     href: "/gear",
     heading: "Kit for every run",
-    tagline: "Watches, headphones, apparel — what to wear and carry.",
     ctaLabel: "Browse all gear",
     ctaHref: "/gear",
     links: gearLinks,
@@ -147,7 +144,6 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     label: "Nutrition",
     href: "/nutrition",
     heading: "Fuel that delivers",
-    tagline: "Gels and hydration that hold up at race pace.",
     ctaLabel: "Browse all nutrition",
     ctaHref: "/nutrition",
     links: nutritionLinks,
@@ -157,7 +153,6 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     label: "Races",
     href: "/races",
     heading: "Find your next race",
-    tagline: "Race guides, calendar, and a full database of events.",
     ctaLabel: "Browse all races",
     ctaHref: "/races",
     links: raceLinks,
@@ -408,7 +403,6 @@ export default function Masthead({
                       <MegaMenuPanel
                         sectionKey={section.key}
                         heading={section.heading}
-                        tagline={section.tagline}
                         ctaLabel={section.ctaLabel}
                         ctaHref={section.ctaHref}
                         links={section.links}

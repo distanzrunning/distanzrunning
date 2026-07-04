@@ -181,8 +181,6 @@ interface SectionDef {
   eyebrow: string;
   /** Serif heading shown in the left column. */
   heading: string;
-  /** Lede beneath the heading. */
-  tagline: string;
   /** CTA label, e.g. "View all news". */
   ctaLabel: string;
   /** CTA destination. */
@@ -198,7 +196,6 @@ const SECTIONS: ReadonlyArray<SectionDef> = [
     href: "/articles",
     eyebrow: "News",
     heading: "The latest in running",
-    tagline: "Road, track, trail — every story worth your time.",
     ctaLabel: "View all news",
     ctaHref: "/articles",
     links: newsLinks,
@@ -209,7 +206,6 @@ const SECTIONS: ReadonlyArray<SectionDef> = [
     href: "/shoes",
     eyebrow: "Shoes",
     heading: "Shoes that work",
-    tagline: "From PR-day plates to daily trainers — tested by runners.",
     ctaLabel: "Browse all shoes",
     ctaHref: "/shoes",
     links: shoeLinks,
@@ -220,7 +216,6 @@ const SECTIONS: ReadonlyArray<SectionDef> = [
     href: "/gear",
     eyebrow: "Gear",
     heading: "Kit for every run",
-    tagline: "Watches, headphones, apparel — what to wear and carry.",
     ctaLabel: "Browse all gear",
     ctaHref: "/gear",
     links: gearLinks,
@@ -231,7 +226,6 @@ const SECTIONS: ReadonlyArray<SectionDef> = [
     href: "/nutrition",
     eyebrow: "Nutrition",
     heading: "Fuel that delivers",
-    tagline: "Gels and hydration that hold up at race pace.",
     ctaLabel: "Browse all nutrition",
     ctaHref: "/nutrition",
     links: nutritionLinks,
@@ -242,7 +236,6 @@ const SECTIONS: ReadonlyArray<SectionDef> = [
     href: "/races",
     eyebrow: "Races",
     heading: "Find your next race",
-    tagline: "Race guides, calendar, and a full database of events.",
     ctaLabel: "Browse all races",
     ctaHref: "/races",
     links: raceLinks,
@@ -518,7 +511,6 @@ export function SiteNavigationMenuTriggers({
             <MegaMenuPanel
               sectionKey={section.key}
               heading={section.heading}
-              tagline={section.tagline}
               ctaLabel={section.ctaLabel}
               ctaHref={section.ctaHref}
               links={section.links}

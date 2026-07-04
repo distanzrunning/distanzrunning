@@ -55,8 +55,6 @@ export interface MegaMenuPanelProps {
   sectionKey: string;
   /** Section headline, e.g. "Shoes that work". */
   heading: string;
-  /** Lede beneath the heading. */
-  tagline: string;
   /** CTA label, e.g. "Browse all shoes". */
   ctaLabel: string;
   /** CTA destination. */
@@ -71,7 +69,6 @@ export interface MegaMenuPanelProps {
 export default function MegaMenuPanel({
   sectionKey,
   heading,
-  tagline,
   ctaLabel,
   ctaHref,
   links,
@@ -94,12 +91,10 @@ export default function MegaMenuPanel({
       {/* Left column — section intro                                */}
       {/* ---------------------------------------------------------- */}
       <div className="flex h-full flex-col pr-10">
+        {/* The headline carries the whole intro — no lede (less is more). */}
         <h3 className="text-heading-32 text-balance text-textDefault">
           {heading}
         </h3>
-        <p className="mt-3 max-w-[36ch] text-copy-14 text-textSubtle">
-          {tagline}
-        </p>
       </div>
 
       {/* ---------------------------------------------------------- */}
