@@ -4,30 +4,30 @@
 // MegaMenuPanel
 // ============================================================================
 //
-// Premium three-column mega-menu panel rendered inside a Radix
-// NavigationMenu.Content (the Masthead's canvas expand-down viewport).
-// Pure presentational shell — takes one section's config (intro copy +
-// CTA + link grid + featured item) and renders the layout. The parent
-// owns the section taxonomy and forwards the right slice per Content slot.
+// Mega-menu panel rendered inside a Radix NavigationMenu.Content (the
+// Masthead's canvas expand-down viewport). Pure presentational shell —
+// takes one section's config (intro copy + CTA + links + featured item)
+// and renders the layout. The parent owns the section taxonomy and
+// forwards the right slice per Content slot.
 //
-// Design (Flowbite mega-menu structure on Stride tokens):
-//   - uppercase micro-label eyebrow on every column
-//   - full-height hairline dividers (borderSubtle) between columns
-//   - link blocks (Flowbite "full dropdown" anatomy): semibold 16px title
-//     + 14px muted description, block padding, flush gray-100 hover
-//   - featured (Flowbite "with image" anatomy, widened): a full-bleed
-//     image card filling the column — ink gradient wash, white overlaid
-//     title + description, and an outline chip that inverts on hover;
-//     image settle-zoom on hover
-//   - generous vertical padding; columns align to the 1400px site grid
+// Design: Prismic's mega-menu anatomy on Stride tokens. Their palette maps
+// 1:1 — gray-15 #151515 (ink) → textDefault, gray-F7 hover → --ds-gray-100,
+// gray-EE borders → borderSubtle.
+//   - 18px-ish semibold column headings (text-heading-16), sentence case
+//   - link cards: hairline-outlined blocks (title + description) that fully
+//     INVERT on hover — ink fill, surface-coloured text
+//   - featured: bordered media card, title at the top (whole card clickable
+//     via the DS overlay-link pattern), image oversized to 110% bleeding off
+//     the card edges, nudging up 8px on hover — no wash, no text-on-image
+//   - full-height hairline dividers between columns; py-12; columns align
+//     to the 1400px site grid
 // ----------------------------------------------------------------------------
-// Left column   — section intro (eyebrow + heading + lede + CTA)   (1fr)
-// Middle column — "Explore" link blocks                            (1.4fr)
-// Right column  — "Featured" full-bleed image card                 (1.4fr)
+// Left column   — section intro (heading + lede + CTA)
+// Middle column — "Explore" outlined link cards
+// Right column  — "Featured" media card
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
@@ -51,9 +51,9 @@ export interface MegaMenuFeatured {
 }
 
 export interface MegaMenuPanelProps {
-  /** Section taxonomy key — used as a stable id for the eyebrows. */
+  /** Section taxonomy key — used as a stable id for the panel. */
   sectionKey: string;
-  /** Eyebrow label above the section heading, e.g. "Shoes". */
+  /** Column heading over the intro column, e.g. "Shoes". */
   eyebrow: string;
   /** Section headline, e.g. "Shoes that work". */
   heading: string;
@@ -63,31 +63,17 @@ export interface MegaMenuPanelProps {
   ctaLabel: string;
   /** CTA destination. */
   ctaHref: string;
-  /** The link grid items rendered in the middle column. */
+  /** The link cards rendered in the middle column. */
   links: ReadonlyArray<CategoryItem>;
   /** Featured item rendered in the right column, or null/undefined. */
   featured?: MegaMenuFeatured | null;
   className?: string;
 }
 
-// Uppercase micro-label used as the column eyebrow. textSubtle keeps it
-// AA-readable at 13px; the tracking does the "premium" work.
-function Eyebrow({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+// Prismic-style column heading — sentence case, semibold, ink.
+function ColumnHeading({ children }: { children: React.ReactNode }) {
   return (
-    <p
-      className={cn(
-        "text-copy-13 font-medium uppercase tracking-[0.08em] text-textSubtle",
-        className,
-      )}
-    >
-      {children}
-    </p>
+    <p className="text-heading-16 text-textDefault">{children}</p>
   );
 }
 
@@ -102,20 +88,14 @@ export default function MegaMenuPanel({
   featured,
   className,
 }: MegaMenuPanelProps) {
-  // Column-major fill over two columns: ceil(n/2) rows, so 5 links pack
-  // 3 + 2 and 3 links pack 2 + 1 — the first column always carries more,
-  // which reads deliberate rather than lopsided.
-  const rows = Math.max(1, Math.ceil(links.length / 2));
-
   return (
     <div
-      // 1 : 1.4 : 1.4 fluid columns on the 1400px site grid (the viewport
-      // wrapper carries the container + px) — the featured card gets equal
-      // billing with the link grid instead of a quarter-width slot. Height
-      // is content-driven; align-items:stretch keeps the hairline dividers
-      // and the full-height featured card spanning the panel.
+      // Equal thirds on the 1400px site grid (the viewport wrapper carries
+      // the container + px), Prismic-style. Height is content-driven;
+      // align-items:stretch keeps the hairline dividers and the intro
+      // column's bottom-anchored CTA spanning the full panel.
       className={cn(
-        "grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_minmax(0,1.4fr)] py-10",
+        "grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] py-12",
         className,
       )}
       data-mega-menu-panel={sectionKey}
@@ -124,8 +104,8 @@ export default function MegaMenuPanel({
       {/* Left column — section intro                                */}
       {/* ---------------------------------------------------------- */}
       <div className="flex h-full flex-col pr-10">
-        <Eyebrow>{eyebrow}</Eyebrow>
-        <h3 className="mt-4 text-heading-32 text-balance text-textDefault">
+        <ColumnHeading>{eyebrow}</ColumnHeading>
+        <h3 className="mt-5 text-heading-32 text-balance text-textDefault">
           {heading}
         </h3>
         <p className="mt-3 max-w-[36ch] text-copy-14 text-textSubtle">
@@ -144,24 +124,23 @@ export default function MegaMenuPanel({
       </div>
 
       {/* ---------------------------------------------------------- */}
-      {/* Middle column — link blocks (Flowbite anatomy)             */}
+      {/* Middle column — outlined link cards (Prismic anatomy)      */}
       {/* ---------------------------------------------------------- */}
-      <div className="h-full border-l border-borderSubtle px-8">
-        <Eyebrow className="pl-3">Explore</Eyebrow>
-        <div
-          className="mt-4 grid grid-flow-col grid-cols-2 gap-x-4 gap-y-1"
-          style={{ gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))` }}
-        >
+      <div className="h-full border-l border-borderSubtle px-10">
+        <ColumnHeading>Explore</ColumnHeading>
+        <div className="mt-5 flex flex-col gap-3">
           {links.map((item) => (
             <NavigationMenuPrimitive.Link asChild key={item.href}>
               <Link
                 href={item.href}
-                className="block rounded-sm p-3 transition-colors hover:bg-[var(--ds-gray-100)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:outline-none"
+                // Full invert on hover: ink fill + border, text flips to the
+                // surface tone (theme-aware — near-black text on the white
+                // pill in dark mode). Both lines inherit the link colour so
+                // they flip together.
+                className="flex flex-col gap-0.5 rounded-sm border border-borderSubtle px-6 py-4 text-textDefault transition-colors hover:border-textDefault hover:bg-textDefault hover:text-[color:hsl(var(--color-surface))] focus-visible:border-textDefault focus-visible:bg-textDefault focus-visible:text-[color:hsl(var(--color-surface))] focus-visible:outline-none"
               >
-                <span className="block text-heading-16 text-textDefault">
-                  {item.label}
-                </span>
-                <span className="mt-0.5 block text-copy-14 text-textSubtle">
+                <span className="text-heading-16">{item.label}</span>
+                <span className="text-copy-14 font-normal">
                   {item.description}
                 </span>
               </Link>
@@ -171,49 +150,53 @@ export default function MegaMenuPanel({
       </div>
 
       {/* ---------------------------------------------------------- */}
-      {/* Right column — featured tile (image + title + button)      */}
+      {/* Right column — featured media card (Prismic "Popular")     */}
       {/* ---------------------------------------------------------- */}
-      <div className="flex h-full flex-col border-l border-borderSubtle pl-8">
-        <Eyebrow>Featured</Eyebrow>
+      <div className="flex h-full flex-col border-l border-borderSubtle pl-10">
+        <ColumnHeading>Featured</ColumnHeading>
         {featured ? (
-          // Raised tile per the DS elevation model (surface + hairline, 12px):
-          // image on top, title + full-width button below — no text-over-image
-          // wash. The ButtonLink is the interactive element (a real <a>), so
-          // there's no nesting problem and no chip pastiche.
-          <div className="mt-4 flex flex-1 flex-col rounded-lg border border-borderSubtle bg-surface p-4">
-            <div className="relative aspect-video w-full overflow-hidden rounded-sm bg-[var(--ds-gray-100)]">
-              {featured.image && (
-                <Image
-                  src={urlFor(featured.image)
-                    .width(1000)
-                    .height(563)
-                    .auto("format")
-                    .url()}
-                  alt=""
-                  fill
-                  sizes="480px"
-                  className="object-cover"
-                />
-              )}
-            </div>
-            {/* Title only — no sub-header on the featured slot. */}
-            <p className="mt-3 text-heading-16 text-balance text-textDefault">
-              {featured.title}
-            </p>
-            <div className="mt-auto pt-4">
+          <div className="group relative mt-5 aspect-[10/7] w-full max-w-[480px] overflow-hidden rounded-lg border border-borderSubtle bg-surface">
+            <div className="flex h-full flex-col gap-4 px-5 pt-4">
+              {/* Title at the top; its overlay (after:inset-0) makes the whole
+                  card the click target — the DS card-with-overlay-link
+                  pattern. Title only, no sub-header. */}
               <NavigationMenuPrimitive.Link asChild>
-                <ButtonLink href={featured.href} size="small" className="w-full">
-                  Read more
-                  <ArrowRight className="size-4" aria-hidden />
-                </ButtonLink>
+                <Link
+                  href={featured.href}
+                  className="after:absolute after:inset-0 after:z-10 focus-visible:outline-none"
+                >
+                  <span className="block text-heading-16 text-balance text-textDefault">
+                    {featured.title}
+                  </span>
+                </Link>
               </NavigationMenuPrimitive.Link>
+              {/* Oversized image (110%) bleeding off the card's right and
+                  bottom edges; nudges up 8px on hover (Prismic's affordance —
+                  no wash, no zoom). */}
+              <div className="relative w-[110%] flex-1 transition-transform duration-300 group-hover:-translate-y-2">
+                <div className="relative h-full w-full overflow-hidden rounded-sm border border-borderDefault bg-[var(--ds-gray-100)]">
+                  {featured.image && (
+                    <Image
+                      src={urlFor(featured.image)
+                        .width(1000)
+                        .height(700)
+                        .auto("format")
+                        .url()}
+                      alt=""
+                      fill
+                      sizes="480px"
+                      className="object-cover object-left-top"
+                    />
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         ) : (
-          // Stable layout: no featured item still renders a placeholder that
-          // fills the same slot so the column keeps its footprint and the
-          // panel doesn't shrink for unfeatured sections.
-          <div className="mt-4 flex min-h-[260px] flex-1 items-center justify-center rounded-lg border border-dashed border-borderSubtle bg-[var(--ds-gray-100)] p-4 text-copy-14 text-textSubtle">
+          // Stable layout: no featured item still renders a placeholder at
+          // the same aspect so the column keeps its footprint and the panel
+          // doesn't shrink for unfeatured sections.
+          <div className="mt-5 flex aspect-[10/7] w-full max-w-[480px] items-center justify-center rounded-lg border border-dashed border-borderSubtle bg-[var(--ds-gray-100)] p-4 text-copy-14 text-textSubtle">
             No featured item yet
           </div>
         )}
