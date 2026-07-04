@@ -175,12 +175,10 @@ export default function MegaMenuPanel({
                   )}
                 </Link>
               </NavigationMenuPrimitive.Link>
-              {/* Oversized image (110%) bleeding off the card's right and
-                  bottom edges; nudges up 8px on hover (Prismic's affordance —
-                  no wash, no zoom). */}
-              <div className="relative w-[110%] flex-1 transition-transform duration-300 group-hover:-translate-y-2">
-                {/* Ink hairline around the image, like Prismic's
-                    border-gray-15 frame on the bleeding screenshot. */}
+              {/* Image centred inside the card (deliberate divergence from
+                  Prismic's off-edge bleed) — fully inset, ink hairline frame
+                  visible on all four sides; nudges up 8px on hover. */}
+              <div className="relative w-full flex-1 pb-5 transition-transform duration-300 group-hover:-translate-y-2">
                 <div className="relative h-full w-full overflow-hidden rounded-sm border border-textDefault bg-[var(--ds-gray-100)]">
                   {featured.image && (
                     <Image
@@ -192,7 +190,7 @@ export default function MegaMenuPanel({
                       alt=""
                       fill
                       sizes="480px"
-                      className="object-cover object-left-top"
+                      className="object-cover"
                     />
                   )}
                 </div>
