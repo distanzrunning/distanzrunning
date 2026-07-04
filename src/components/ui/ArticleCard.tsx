@@ -11,10 +11,19 @@
 //   image · badge · category name · published date · title ·
 //   subtitle/excerpt · author avatar · author name
 //
-// Content order follows Quartr's card anatomy:
-//   category · date  (meta line, smallest label slot)
-//   title            (semibold, clamped to 2 lines)
+// Content order follows Quartr's card anatomy, with 404 Media's editorial
+// title scale and byline:
+//   category · date  (meta line, smallest label slot — Quartr)
+//   title            (semibold, clamped; sized by the card `size` — 404's
+//                     card title is ~25px, so md=heading-20 / lg=heading-24
+//                     rather than a UI-sized 16)
 //   subtitle/excerpt (muted, clamped to 2 lines)
+//   author byline    (20px avatar + name — 404; the date stays in the meta
+//                     line so it isn't doubled)
+// Chrome stays Prismic-style (surface + hairline card) per the DS elevation
+// model; deliberately NOT adopted from 404: title hover-underline (the DS
+// card affordance is the image settle-zoom) and their mono uppercase kicker
+// (outside our two-typeface system).
 //
 // Anatomy (all DS-established patterns):
 //   - surface + hairline border, 12px radius (elevation = border, no shadow)
@@ -47,9 +56,21 @@ export interface ArticleCardCategory {
   href?: string;
 }
 
+// Editorial size scale — drives the title slot (and excerpt on lg).
+// sm: dense grids/sidebars · md: the standard card · lg: leads/features.
+export type ArticleCardSize = "sm" | "md" | "lg";
+
+const titleSizeStyles: Record<ArticleCardSize, string> = {
+  sm: "text-heading-16",
+  md: "text-heading-20",
+  lg: "text-heading-24",
+};
+
 export interface ArticleCardProps {
   title: string;
   href: string;
+  /** Editorial size (default "md"). */
+  size?: ArticleCardSize;
   /** Pre-resolved image URL (urlFor(...).url() at the data layer). */
   imageUrl?: string | null;
   imageAlt?: string;
@@ -71,6 +92,7 @@ export interface ArticleCardProps {
 export default function ArticleCard({
   title,
   href,
+  size = "md",
   imageUrl,
   imageAlt = "",
   imageSizes = "480px",
@@ -146,7 +168,12 @@ export default function ArticleCard({
         )}
 
         {/* Title — its overlay makes the whole card the click target. */}
-        <h3 className="text-heading-16 text-balance text-textDefault line-clamp-2">
+        <h3
+          className={cn(
+            titleSizeStyles[size],
+            "text-balance text-textDefault line-clamp-2",
+          )}
+        >
           <Link
             href={href}
             className="after:absolute after:inset-0 focus-visible:outline-none"
@@ -157,7 +184,14 @@ export default function ArticleCard({
 
         {/* Subtitle/excerpt. */}
         {excerpt && (
-          <p className="text-copy-14 text-textSubtle line-clamp-2">{excerpt}</p>
+          <p
+            className={cn(
+              size === "lg" ? "text-copy-16" : "text-copy-14",
+              "text-textSubtle line-clamp-2",
+            )}
+          >
+            {excerpt}
+          </p>
         )}
 
         {/* Author (avatar + name) — date lives in the meta line above. */}
