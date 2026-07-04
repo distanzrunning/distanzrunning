@@ -137,7 +137,7 @@ const MEGA_SECTIONS: ReadonlyArray<MegaSection> = [
     key: "gear",
     label: "Gear",
     href: "/gear",
-    heading: "Gear up your running game",
+    heading: "Gearing up",
     tagline:
       "From smartwatches and headphones to apparel, explore our reviews and articles on the latest running tech and gear.",
     ctaLabel: "Browse all gear",
