@@ -28,6 +28,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
@@ -124,7 +125,7 @@ export default function MegaMenuPanel({
       </div>
 
       {/* ---------------------------------------------------------- */}
-      {/* Middle column — outlined link cards (Prismic anatomy)      */}
+      {/* Middle column — link rows (Prismic "Features" anatomy)     */}
       {/* ---------------------------------------------------------- */}
       <div className="h-full border-l border-borderSubtle px-10">
         <ColumnHeading>Explore</ColumnHeading>
@@ -133,16 +134,23 @@ export default function MegaMenuPanel({
             <NavigationMenuPrimitive.Link asChild key={item.href}>
               <Link
                 href={item.href}
-                // Full invert on hover: ink fill + border, text flips to the
-                // surface tone (theme-aware — near-black text on the white
-                // pill in dark mode). Both lines inherit the link colour so
-                // they flip together.
-                className="flex flex-col gap-0.5 rounded-sm border border-borderSubtle px-6 py-4 text-textDefault transition-colors hover:border-textDefault hover:bg-textDefault hover:text-[color:hsl(var(--color-surface))] focus-visible:border-textDefault focus-visible:bg-textDefault focus-visible:text-[color:hsl(var(--color-surface))] focus-visible:outline-none"
+                // Slim row: muted 24px section icon + bold label on the left,
+                // a trailing arrow at 30% opacity on the right. Hover (or
+                // keyboard focus) inks the icon and fades the arrow to full —
+                // Prismic's Features-row affordance, no background block.
+                className="group/item flex items-center justify-between leading-6 text-textDefault focus-visible:outline-none"
               >
-                <span className="text-heading-16">{item.label}</span>
-                <span className="text-copy-14 font-normal">
-                  {item.description}
+                <span className="flex items-center text-heading-16">
+                  <item.Icon
+                    className="mr-2.5 h-6 w-6 text-textSubtler transition-colors group-hover/item:text-textDefault group-focus-visible/item:text-textDefault"
+                    aria-hidden
+                  />
+                  {item.label}
                 </span>
+                <ArrowRight
+                  className="h-6 w-6 opacity-30 transition-opacity group-hover/item:opacity-100 group-focus-visible/item:opacity-100"
+                  aria-hidden
+                />
               </Link>
             </NavigationMenuPrimitive.Link>
           ))}
