@@ -404,11 +404,12 @@ export default function Masthead({
                       {section.label}
                       <ChevronDown className={CHEVRON_CLASS} aria-hidden />
                     </NavigationMenuPrimitive.Trigger>
-                    {/* absolute + p-4: outgoing and incoming Content overlap in
-                        the Viewport during a section switch, and Radix measures
-                        this box for the Viewport height (padding lives here, not
-                        on the Viewport). */}
-                    <NavigationMenuPrimitive.Content className="absolute left-0 top-0 w-full p-4">
+                    {/* absolute: outgoing and incoming Content overlap in the
+                        Viewport during a section switch. No padding here — the
+                        panel carries its own py, and horizontal alignment comes
+                        from the viewport's max-w-[1400px] px-6 wrapper so the
+                        columns sit on the site grid. */}
+                    <NavigationMenuPrimitive.Content className="absolute left-0 top-0 w-full">
                       <MegaMenuPanel
                         sectionKey={section.key}
                         eyebrow={section.eyebrow}

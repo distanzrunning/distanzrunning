@@ -4,19 +4,24 @@
 // MegaMenuPanel
 // ============================================================================
 //
-// Frontify-style 3-column mega-menu panel rendered inside a Radix
-// NavigationMenu.Content. Pure presentational shell — takes one
-// section's config (intro copy + CTA + link grid + featured item) and
-// renders the layout. The parent (SiteNavigationMenu) owns the section
-// taxonomy and forwards the right slice for each Content slot.
+// Premium three-column mega-menu panel rendered inside a Radix
+// NavigationMenu.Content (the Masthead's canvas expand-down viewport).
+// Pure presentational shell — takes one section's config (intro copy +
+// CTA + link grid + featured item) and renders the layout. The parent
+// owns the section taxonomy and forwards the right slice per Content slot.
 //
-// Layout: 376 / 752 / 376 columns separated by a 32 px gap, fixed at
-// 468 px tall so the Viewport's --radix-navigation-menu-viewport-height
-// stays uniform across sections (no jumpy resize between hovers).
+// Design (AngelList / Frontify / Parallel-style, on Stride tokens):
+//   - uppercase micro-label eyebrow on every column
+//   - full-height hairline dividers (borderSubtle) between columns
+//   - link rows: icon tile (surface + hairline, 6px) + title + muted
+//     description, flush gray-100 hover
+//   - featured: image (6px radius + hairline, settle-zoom on hover) with
+//     the caption below it — no filled card
+//   - generous vertical padding; columns align to the 1400px site grid
 // ----------------------------------------------------------------------------
-// Left column   — section intro (eyebrow + serif heading + lede + CTA)
-// Middle column — eyebrow + 2-col link grid (title + description per item)
-// Right column  — eyebrow + featured card (image + title + excerpt)
+// Left column   — section intro (eyebrow + heading + lede + CTA)
+// Middle column — "Explore" link grid (icon + title + description)
+// Right column  — "Featured" image card
 
 import Link from "next/link";
 import Image from "next/image";
@@ -29,11 +34,10 @@ import { cn } from "@/lib/utils";
 import type { CategoryItem } from "@/components/ui/SiteNavigationMenu";
 
 // ----------------------------------------------------------------------------
-// Featured item shape (union of product / race) — the panel doesn't
-// care which kind of featured object it got, it just needs an image, a
-// title, a description string, and a destination href. The parent
-// builds those values from the raw Sanity object before passing them
-// in.
+// Featured item shape (union of product / race) — the panel doesn't care
+// which kind of featured object it got, it just needs an image, a title,
+// a description string, and a destination href. The parent builds those
+// values from the raw Sanity object before passing them in.
 // ----------------------------------------------------------------------------
 
 export interface MegaMenuFeatured {
@@ -46,13 +50,13 @@ export interface MegaMenuFeatured {
 export interface MegaMenuPanelProps {
   /** Section taxonomy key — used as a stable id for the eyebrows. */
   sectionKey: string;
-  /** Eyebrow label above the section heading, e.g. "News". */
+  /** Eyebrow label above the section heading, e.g. "Shoes". */
   eyebrow: string;
-  /** Serif headline, e.g. "The latest in running". */
+  /** Section headline, e.g. "Shoes that work". */
   heading: string;
   /** Lede beneath the heading. */
   tagline: string;
-  /** CTA label, e.g. "View all news". */
+  /** CTA label, e.g. "Browse all shoes". */
   ctaLabel: string;
   /** CTA destination. */
   ctaHref: string;
@@ -61,6 +65,28 @@ export interface MegaMenuPanelProps {
   /** Featured item rendered in the right column, or null/undefined. */
   featured?: MegaMenuFeatured | null;
   className?: string;
+}
+
+// Uppercase micro-label used as the column eyebrow (the AngelList
+// "BY PRODUCT SUITE" / Planhat "CAPABILITIES" pattern). textSubtle keeps
+// it AA-readable at 13px; the tracking does the "premium" work.
+function Eyebrow({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <p
+      className={cn(
+        "text-copy-13 font-medium uppercase tracking-[0.08em] text-textSubtle",
+        className,
+      )}
+    >
+      {children}
+    </p>
+  );
 }
 
 export default function MegaMenuPanel({
@@ -74,25 +100,20 @@ export default function MegaMenuPanel({
   featured,
   className,
 }: MegaMenuPanelProps) {
+  // Column-major fill over two columns: ceil(n/2) rows, so 5 links pack
+  // 3 + 2 and 3 links pack 2 + 1 — the first column always carries more,
+  // which reads deliberate rather than lopsided.
+  const rows = Math.max(1, Math.ceil(links.length / 2));
+
   return (
     <div
-      // 3-col grid in the Frontify 1:2:1 ratio (left : middle : right).
-      // Fluid minmax(0,Nfr) instead of fixed px so the same panel fits
-      // both hosts: the production SiteHeader Viewport (1600 px → resolves
-      // to exactly 376/752/376, identical to the old fixed spec) and the
-      // homepage Masthead Viewport (1400 px → scales the columns down
-      // proportionally). minmax(0,…) lets the tracks shrink below their
-      // content's intrinsic width so nothing overflows the narrower host.
-      // Height is content-driven — Radix reads
+      // 1:2:1 fluid columns on the 1400px site grid (the viewport wrapper
+      // carries the container + px). Height is content-driven — Radix reads
       // --radix-navigation-menu-viewport-height from the active Content's
-      // measured box, so a taller section (longer heading, more links)
-      // gets a taller panel without clipping against the Viewport's
-      // overflow-hidden. Grid's default align-items:stretch keeps all
-      // three columns the same height as the tallest within a section, so
-      // the CTA's mt-auto and the left-column divider still anchor to the
-      // bottom of the panel.
+      // measured box. align-items:stretch keeps the hairline dividers and
+      // the left column's bottom-anchored CTA spanning the full panel.
       className={cn(
-        "grid w-full grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] gap-x-8",
+        "grid w-full grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] py-10",
         className,
       )}
       data-mega-menu-panel={sectionKey}
@@ -100,27 +121,20 @@ export default function MegaMenuPanel({
       {/* ---------------------------------------------------------- */}
       {/* Left column — section intro                                */}
       {/* ---------------------------------------------------------- */}
-      <div className="flex h-full flex-col border-r border-borderSubtle pr-8">
-        <p className="text-heading-14 text-textSubtle">
-          {eyebrow}
-        </p>
-        <h3 className="mt-3 text-heading-32 text-balance text-textDefault">
+      <div className="flex h-full flex-col pr-10">
+        <Eyebrow>{eyebrow}</Eyebrow>
+        <h3 className="mt-4 text-heading-32 text-balance text-textDefault">
           {heading}
         </h3>
-        <p className="mt-3 text-copy-14 text-textSubtle">
+        <p className="mt-3 max-w-[36ch] text-copy-14 text-textSubtle">
           {tagline}
         </p>
-        <div className="mt-auto">
-          {/* ButtonLink renders as an <a> so we can let Radix's
-              NavigationMenu.Link forward its data-state / focus
-              wiring to the same anchor — no illegal <button>
-              inside-<a> nesting. We pass href directly here; this
-              isn't a Next <Link> so client-side navigation stays a
-              standard browser link. The CTA destinations are top-
-              level section indices (/articles, /shoes, etc) so the
-              full-page navigation is fine. */}
+        <div className="mt-auto pt-8">
+          {/* ButtonLink renders as an <a> so Radix's NavigationMenu.Link can
+              forward its focus/dismiss wiring to the same anchor — no illegal
+              <button>-inside-<a> nesting. */}
           <NavigationMenuPrimitive.Link asChild>
-            <ButtonLink href={ctaHref} size="medium">
+            <ButtonLink href={ctaHref} size="small">
               {ctaLabel}
             </ButtonLink>
           </NavigationMenuPrimitive.Link>
@@ -128,32 +142,32 @@ export default function MegaMenuPanel({
       </div>
 
       {/* ---------------------------------------------------------- */}
-      {/* Middle column — category link grid                         */}
+      {/* Middle column — link grid                                  */}
       {/* ---------------------------------------------------------- */}
-      <div className="flex h-full flex-col">
-        <p className="pl-2 text-heading-14 text-textSubtle">
-          Categories
-        </p>
-        {/* grid-flow-col + grid-rows-4 fills column-by-column: the
-            first column packs up to 4 links before any spill into
-            column 2. Default row-major flow would interleave the
-            two columns (1,2,3,4,5 → col1 col2 col1 col2 col1), which
-            looks lopsided for sections like News with only 3 links.
-            Caps at 8 items per panel — beyond that, auto-flow would
-            create a 3rd column we haven't sized for. Largest section
-            today is shoes with 5 links, well under the cap. */}
-        <div className="mt-3 grid grid-cols-2 grid-rows-4 grid-flow-col gap-x-4 gap-y-2">
+      <div className="h-full border-l border-borderSubtle px-10">
+        <Eyebrow className="pl-3">Explore</Eyebrow>
+        <div
+          className="mt-4 grid grid-flow-col grid-cols-2 gap-x-6 gap-y-1"
+          style={{ gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))` }}
+        >
           {links.map((item) => (
             <NavigationMenuPrimitive.Link asChild key={item.href}>
               <Link
                 href={item.href}
-                className="rounded-[8px] p-2 transition-colors hover:bg-[var(--ds-gray-100)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:outline-none"
+                className="group/item flex items-start gap-3 rounded-sm p-3 transition-colors hover:bg-[var(--ds-gray-100)] focus-visible:bg-[var(--ds-gray-100)] focus-visible:outline-none"
               >
-                <span className="block text-heading-20 text-textDefault">
-                  {item.label}
+                {/* Icon tile — surface + hairline control chrome (Parallel
+                    style); ink follows the row's hover via currentColor. */}
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-sm border border-borderSubtle bg-surface text-textSubtle transition-colors group-hover/item:text-textDefault">
+                  <item.Icon className="size-5" />
                 </span>
-                <span className="mt-1 block text-copy-14 text-textSubtle">
-                  {item.description}
+                <span className="min-w-0">
+                  <span className="block text-heading-16 text-textDefault">
+                    {item.label}
+                  </span>
+                  <span className="mt-0.5 block text-copy-14 text-textSubtle">
+                    {item.description}
+                  </span>
                 </span>
               </Link>
             </NavigationMenuPrimitive.Link>
@@ -164,36 +178,32 @@ export default function MegaMenuPanel({
       {/* ---------------------------------------------------------- */}
       {/* Right column — featured card                               */}
       {/* ---------------------------------------------------------- */}
-      <div className="flex h-full flex-col">
-        <p className="text-heading-14 text-textSubtle">
-          Featured
-        </p>
+      <div className="flex h-full flex-col border-l border-borderSubtle pl-10">
+        <Eyebrow>Featured</Eyebrow>
         {featured ? (
           <NavigationMenuPrimitive.Link asChild>
             <Link
               href={featured.href}
-              className="mt-3 block rounded-[8px] bg-textDefault px-2 pt-2 pb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--ds-focus-color)]"
+              className="group mt-4 block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--ds-focus-color)]"
             >
-              <FeaturedImage
-                image={featured.image}
-                alt={featured.title}
-              />
-              <h4 className="mt-2 px-2 text-button-14 font-bold text-[var(--ds-gray-100)]">
+              <FeaturedImage image={featured.image} alt={featured.title} />
+              {/* Caption below the image (no filled card) — per the DS card
+                  convention, no hover underline on the title. */}
+              <h4 className="mt-3 text-heading-16 text-textDefault">
                 {featured.title}
               </h4>
               {featured.description && (
-                <p className="mt-1 px-2 text-copy-14 text-[var(--ds-gray-100)] line-clamp-3">
+                <p className="mt-1 text-copy-14 text-textSubtle line-clamp-2">
                   {featured.description}
                 </p>
               )}
             </Link>
           </NavigationMenuPrimitive.Link>
         ) : (
-          // Stable layout: when there's no featured item we still
-          // render a placeholder at the same 4/3 aspect as the image
-          // slot so the right column keeps the same footprint and
-          // the panel doesn't shrink for unfeatured sections.
-          <div            className="mt-3 flex aspect-[4/3] w-full items-center justify-center rounded-[8px] border border-dashed border-borderSubtle bg-[var(--ds-gray-100)] p-4 text-copy-14 text-textSubtle">
+          // Stable layout: no featured item still renders a placeholder at
+          // the image slot's aspect so the column keeps its footprint and the
+          // panel doesn't shrink for unfeatured sections.
+          <div className="mt-4 flex aspect-[4/3] w-full items-center justify-center rounded-sm border border-dashed border-borderSubtle bg-[var(--ds-gray-100)] p-4 text-copy-14 text-textSubtle">
             No featured item yet
           </div>
         )}
@@ -206,10 +216,10 @@ export default function MegaMenuPanel({
 // FeaturedImage
 // ----------------------------------------------------------------------------
 //
-// Inline helper: resolves the Sanity image URL with urlFor (matching
-// the convention used in MobileNavDrawer + ArticleCard callers) and
-// renders the card image at the spec's 4/3 aspect ratio. Falls back
-// to a gray placeholder if the section has no image.
+// Resolves the Sanity image URL with urlFor (matching the ArticleCard
+// convention) and renders it at 4/3 inside a hairline-bordered 6px frame.
+// Hover uses the DS settle-zoom: the image rests at scale-[1.04] and
+// settles to scale-100 on group-hover.
 
 function FeaturedImage({
   image,
@@ -218,20 +228,17 @@ function FeaturedImage({
   image: SanityImageSource | null | undefined;
   alt: string;
 }) {
-  if (!image) {
-    return (
-      <div className="aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-[var(--ds-gray-700)]" />
-    );
-  }
   return (
-    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-[var(--ds-gray-700)]">
-      <Image
-        src={urlFor(image).width(720).height(540).auto("format").url()}
-        alt={alt}
-        fill
-        sizes="376px"
-        className="object-cover"
-      />
+    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-sm border border-borderSubtle bg-[var(--ds-gray-100)]">
+      {image && (
+        <Image
+          src={urlFor(image).width(720).height(540).auto("format").url()}
+          alt={alt}
+          fill
+          sizes="360px"
+          className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100"
+        />
+      )}
     </div>
   );
 }
