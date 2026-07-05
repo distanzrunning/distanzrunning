@@ -17,10 +17,11 @@ import type { SVGProps } from "react";
 
 export interface WordmarkProps extends SVGProps<SVGSVGElement> {
   /** Hover flourish on the Z glyph (the swoosh + two rings): "spin"
-      rotates it 360° once about its own centre, "shake" tilts it
-      clockwise and swings it back. Keyframes + reduced-motion opt-out
-      live in globals.css (.wordmark-z--*). Omit for a static wordmark. */
-  zHover?: "spin" | "shake";
+      rotates it 360° once about its own centre; "tilt" holds it at 14°
+      clockwise while hovered and transitions back on release. Styles +
+      reduced-motion opt-out live in globals.css (.wordmark-z--*).
+      Omit for a static wordmark. */
+  zHover?: "spin" | "tilt";
 }
 
 export default function Wordmark({
@@ -45,7 +46,7 @@ export default function Wordmark({
         className={[
           "wordmark-z",
           zHover === "spin" && "wordmark-z--spin",
-          zHover === "shake" && "wordmark-z--shake",
+          zHover === "tilt" && "wordmark-z--tilt",
         ]
           .filter(Boolean)
           .join(" ")}

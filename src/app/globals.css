@@ -193,21 +193,6 @@
     transform: rotate(360deg);
   }
 }
-/* Rotational shake: a clockwise tilt that swings back with a small
-   counter-overshoot before settling — the glyph pivots in place about
-   its own centre rather than the whole mark sliding left/right. */
-@keyframes wordmark-z-shake {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-  40% {
-    transform: rotate(14deg);
-  }
-  75% {
-    transform: rotate(-4deg);
-  }
-}
 /* The Z sits flush with the viewBox's right edge, so a mid-spin corner
    can swing past it — let the svg overflow rather than clip the glyph. */
 .wordmark {
@@ -220,13 +205,22 @@
 .wordmark:hover .wordmark-z--spin {
   animation: wordmark-z-spin 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.wordmark:hover .wordmark-z--shake {
-  animation: wordmark-z-shake 0.45s ease-in-out;
+/* Tilt is state-driven (transition, not keyframes): hover holds the
+   glyph at 14° clockwise; releasing transitions it back. Reversible
+   mid-motion — pointer-out returns it from wherever it got to. */
+.wordmark-z--tilt {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.wordmark:hover .wordmark-z--tilt {
+  transform: rotate(14deg);
 }
 @media (prefers-reduced-motion: reduce) {
-  .wordmark:hover .wordmark-z--spin,
-  .wordmark:hover .wordmark-z--shake {
+  .wordmark:hover .wordmark-z--spin {
     animation: none;
+  }
+  .wordmark:hover .wordmark-z--tilt {
+    transition: none;
+    transform: none;
   }
 }
 
