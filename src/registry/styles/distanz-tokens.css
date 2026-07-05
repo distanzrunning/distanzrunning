@@ -21,14 +21,16 @@
   :root,
   .light {
     color-scheme: light;
-    /* Light-mode scrollbar — gray-600 thumb on a transparent track
-       (gray-400 was ~1.1:1 against the canvas, near-invisible; 600
-       matches the native macOS thumb weight and the dark theme's
-       gray-500 perceptually). color-scheme alone covers most
-       browsers, but explicit scrollbar-color guarantees the look in
-       Chromium 121+ and Firefox where color-scheme defaults are
-       sometimes overridden by user prefs. */
-    scrollbar-color: var(--ds-gray-600) transparent;
+    /* Light-mode scrollbar — TRANSLUCENT thumb (gray-alpha-600 =
+       rgba(0,0,0,.34)) on a transparent track. Over the canvas it
+       reads like the native macOS thumb (~#ABABAB); over dark content
+       it melts away — with no reserved gutter the overlay thumb floats
+       over the announcement banner, and an opaque thumb would sit on
+       it as a visible pill (404 Media's thumb is the unstyled native
+       translucent one; this reproduces that). color-scheme alone
+       covers most browsers, but explicit scrollbar-color guarantees
+       the look in Chromium 121+ and Firefox. */
+    scrollbar-color: var(--ds-gray-alpha-600) transparent;
 
     /* Distanz Typography System
        Body/UI: Inter Variable (complete weight spectrum)
@@ -643,10 +645,11 @@
      ═══════════════════════════════════════════════════════════════════════ */
   .dark {
     color-scheme: dark;
-    /* Dark-mode scrollbar — gray-500 thumb on a transparent track.
-       Sits a notch lighter than the panel surface so the scrollbar
-       reads against the dark canvas. */
-    scrollbar-color: var(--ds-gray-500) transparent;
+    /* Dark-mode scrollbar — translucent white thumb (gray-alpha-500 =
+       rgba(255,255,255,.24)) on a transparent track: ~#3D3D3D over the
+       black canvas (the old gray-500's weight), melting into light
+       content it floats across. Mirrors the light theme's alpha thumb. */
+    scrollbar-color: var(--ds-gray-alpha-500) transparent;
 
     /* ─────────────────────────────────────────────────────────────────────────
        DARK MODE COLOR SCALES - Geist exact values
