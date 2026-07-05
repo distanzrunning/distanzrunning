@@ -55,7 +55,10 @@ export default function PromoUnit() {
           </Link>
           .
         </p>
-        <p className="text-copy-18 !font-medium">
+        {/* 404's CTA h6 is ~13.4px against their 18.5px description
+            (~0.7×) — ours steps down to 14px against the heading-20
+            lead. !important: copy slots hardcode fontWeight 400. */}
+        <p className="text-copy-14 !font-medium">
           Support independent running journalism.{" "}
           <Link href="/signup" className={bandLink}>
             Subscribe
