@@ -43,6 +43,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Dot } from "lucide-react";
 
+import { Avatar } from "@/components/ui/Avatar";
 import {
   Badge,
   type BadgeSize,
@@ -197,19 +198,18 @@ export default function ArticleCard({
           </p>
         )}
 
-        {/* Author byline (avatar + name) — date lives in the meta line
-            above, so this row only exists when there's an author. */}
+        {/* Author byline (DS Avatar + name) — date lives in the meta
+            line above, so this row only exists when there's an author.
+            Avatar carries the hairline ring and falls back to initials
+            when the author has no photo. */}
         {author && (
           <div className="mt-auto flex items-center gap-2 pt-2">
-            {author.avatarUrl && (
-              <Image
-                src={author.avatarUrl}
-                alt=""
-                width={20}
-                height={20}
-                className="size-5 rounded-full object-cover"
-              />
-            )}
+            <Avatar
+              src={author.avatarUrl ?? undefined}
+              alt=""
+              size={20}
+              fallback={author.name}
+            />
             <span className="text-copy-13 text-textSubtle">{author.name}</span>
           </div>
         )}

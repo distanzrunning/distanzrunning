@@ -24,6 +24,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Dot } from "lucide-react";
 
+import { Avatar } from "@/components/ui/Avatar";
 import { sanityFetch } from "@/sanity/lib/live";
 import { heroArticleQuery } from "@/sanity/queries/heroArticleQuery";
 import { urlFor } from "@/sanity/lib/image";
@@ -93,19 +94,18 @@ export default async function HomepageHero() {
             </p>
           )}
 
-          {/* Author byline — avatar + name (404-style); the date lives
-              in the meta line above. */}
+          {/* Author byline — DS Avatar + name (404-style); the date
+              lives in the meta line above. Avatar carries the hairline
+              ring and falls back to initials when the author has no
+              photo. */}
           {hero.author?.name && (
             <div className="flex items-center gap-2 pt-1">
-              {avatarUrl && (
-                <Image
-                  src={avatarUrl}
-                  alt=""
-                  width={24}
-                  height={24}
-                  className="size-6 rounded-full object-cover"
-                />
-              )}
+              <Avatar
+                src={avatarUrl ?? undefined}
+                alt=""
+                size={24}
+                fallback={hero.author.name}
+              />
               <span className="text-copy-14 text-textSubtle">
                 {hero.author.name}
               </span>
