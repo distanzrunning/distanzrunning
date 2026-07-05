@@ -1,4 +1,9 @@
 // src/sanity/queries/featuredRaceQuery.ts
+//
+// "location" is composed from the doc's city/stateRegion/country parts —
+// the same string RaceGrid's formatLocation builds for the /races index
+// (there is no bare location field on raceGuide). Empty parts drop out;
+// no parts at all yields "" (falsy, so consumers skip the line).
 export const featuredRaceQuery = `
 *[_type == "raceGuide" && featuredRace == true][0] {
   title,
@@ -6,7 +11,7 @@ export const featuredRaceQuery = `
   mainImage,
   publishedAt,
   eventDate,
-  location,
+  "location": array::join(array::compact([city, stateRegion, country]), ", "),
   "category": raceCategory->title
 }
 `

@@ -3,7 +3,11 @@
 import Link from "next/link";
 import { format } from "date-fns";
 
-import { Badge } from "@/components/ui/Badge";
+import {
+  Badge,
+  type BadgeSize,
+  type BadgeVariant,
+} from "@/components/ui/Badge";
 import CardImage from "@/components/ui/CardImage";
 import {
   convertCurrencySync,
@@ -42,6 +46,12 @@ export interface RaceCardProps {
    *  rendered as the inverted Badge in the image's top-right
    *  corner. */
   category?: string;
+  /** Placement label rendered as a DS Badge over the image's top-LEFT
+      corner, e.g. "Featured" — mirrors ArticleCard's badge slot. The
+      category badge keeps the top-right corner, so both can coexist. */
+  badge?: string | null;
+  badgeVariant?: BadgeVariant;
+  badgeSize?: BadgeSize;
   /** Pre-resolved image URL. */
   imageUrl?: string;
   /** Defaults to the title — override if the image conveys something different. */
@@ -106,6 +116,9 @@ export default function RaceCard({
   eventDate,
   location,
   category,
+  badge,
+  badgeVariant = "gray",
+  badgeSize = "md",
   imageUrl,
   imageAlt,
   priority = false,
@@ -168,6 +181,16 @@ export default function RaceCard({
               sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 25vw"
               priority={priority}
             />
+          </div>
+        )}
+
+        {/* Top-left pill — placement badge (e.g. "Featured"), same
+            treatment as ArticleCard's badge slot. */}
+        {badge && (
+          <div className="absolute left-3 top-3 z-20">
+            <Badge variant={badgeVariant} size={badgeSize}>
+              {badge}
+            </Badge>
           </div>
         )}
 

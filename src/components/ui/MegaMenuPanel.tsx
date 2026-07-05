@@ -190,6 +190,9 @@ export default function MegaMenuPanel({
             className="w-full max-w-[480px]"
             href={featured.href}
             title={featured.title}
+            badge="Featured"
+            badgeVariant="gray"
+            badgeSize="md"
             eventDate={featured.race.eventDate}
             location={featured.race.location}
             category={featured.race.category}
