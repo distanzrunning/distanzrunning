@@ -6,6 +6,7 @@
 
 import HomepageHero from "@/components/home/HomepageHero";
 import AdPlacement from "@/components/ads/AdPlacement";
+import PromoUnit from "@/components/home/PromoUnit";
 
 export default function HomePage() {
   return (
@@ -19,6 +20,10 @@ export default function HomePage() {
         name="home-below-hero"
         className="mx-auto w-full max-w-[1400px] px-6 pb-10 lg:pb-16"
       />
+
+      {/* Full-bleed ink promo band (404's promo-unit) — who we are,
+          about link, subscribe CTA. */}
+      <PromoUnit />
     </>
   );
 }
