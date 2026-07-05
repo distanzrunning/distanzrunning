@@ -65,7 +65,6 @@ function buildFeaturedFromProduct(
   if (!item) return null;
   return {
     title: item.title,
-    description: item.excerpt,
     href: `/${section}/${item.slug.current}`,
     image: item.mainImage,
     publishedAt: formatDisplayDate(item.publishedAt),
@@ -82,39 +81,16 @@ function buildFeaturedFromRace(race: FeaturedRace): MegaMenuFeatured | null {
   if (!race) return null;
   return {
     title: race.title,
-    description: buildRaceDescription(race.location, race.eventDate),
     href: `/races/${race.slug.current}`,
     image: race.mainImage,
-    // Publication date of the guide (the event date lives in the guide
-    // itself — the meta line is about the article).
-    publishedAt: formatDisplayDate(race.publishedAt),
-    // Race guides have no product category — the meta line shows the Races
-    // section itself.
-    category: { label: "Races", href: "/races" },
+    // The race sub-shape switches the panel to the canonical RaceCard —
+    // event date + location + race category, matching the /races index.
+    race: {
+      eventDate: race.eventDate,
+      location: race.location,
+      category: race.category,
+    },
   };
-}
-
-// "Location · DD Mon YYYY" line under the race featured card. Both pieces are
-// optional in the source, so filter nulls before joining.
-function buildRaceDescription(
-  location?: string,
-  eventDate?: string,
-): string | undefined {
-  const parts: string[] = [];
-  if (location) parts.push(location);
-  if (eventDate) {
-    const d = new Date(eventDate);
-    if (!Number.isNaN(d.getTime())) {
-      parts.push(
-        d.toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
-      );
-    }
-  }
-  return parts.length > 0 ? parts.join(" · ") : undefined;
 }
 
 // ============================================================================

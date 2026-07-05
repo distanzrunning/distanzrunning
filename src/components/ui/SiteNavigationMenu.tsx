@@ -52,6 +52,9 @@ export type FeaturedRace = {
   publishedAt?: string;
   eventDate?: string;
   location?: string;
+  /** Race category title (Marathon / Half Marathon / …) — the RaceCard's
+      inverted image badge in the mega-menu featured slot. */
+  category?: string;
 } | null;
 
 // ============================================================================
@@ -591,9 +594,8 @@ export default function SiteNavigationMenu(props: SiteNavigationMenuProps) {
 
 // ============================================================================
 // Helpers — build the MegaMenuFeatured shape from the raw Sanity
-// fetch result. The mega-menu doesn't care which content type the
-// featured item came from; it just needs an href + image + title +
-// short description.
+// fetch result. Products carry href + image + title; race guides add
+// the `race` sub-shape that switches the panel to the RaceCard.
 // ============================================================================
 
 function buildFeaturedFromProduct(
@@ -611,7 +613,6 @@ function buildFeaturedFromProduct(
       : `/${section}/${item.slug.current}`;
   return {
     title: item.title,
-    description: item.excerpt,
     href,
     image: item.mainImage,
   };
@@ -623,32 +624,12 @@ function buildFeaturedFromRace(
   if (!race) return null;
   return {
     title: race.title,
-    description: buildRaceDescription(race.location, race.eventDate),
     href: `/races/${race.slug.current}`,
     image: race.mainImage,
+    race: {
+      eventDate: race.eventDate,
+      location: race.location,
+      category: race.category,
+    },
   };
-}
-
-// Builds the "Location · DD Mon YYYY" line shown under the race
-// featured card title. Both pieces are optional in the source data,
-// so we filter out nulls before joining.
-function buildRaceDescription(
-  location?: string,
-  eventDate?: string,
-): string | undefined {
-  const parts: string[] = [];
-  if (location) parts.push(location);
-  if (eventDate) {
-    const d = new Date(eventDate);
-    if (!Number.isNaN(d.getTime())) {
-      parts.push(
-        d.toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
-      );
-    }
-  }
-  return parts.length > 0 ? parts.join(" · ") : undefined;
 }

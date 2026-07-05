@@ -16,9 +16,11 @@
 //   - 18px-ish semibold column headings (text-heading-16), sentence case
 //   - link cards: hairline-outlined blocks (title + description) that fully
 //     INVERT on hover — ink fill, surface-coloured text
-//   - featured: the canonical ArticleCard (lg) — image + "Featured" badge,
-//     category · date meta line, title; whole card clickable via the DS
-//     overlay-link pattern, image settle-zoom on hover
+//   - featured: products render the canonical ArticleCard (lg) — image +
+//     "Featured" badge, category · date meta line, title; race guides
+//     render the canonical RaceCard (category badge, location, event-date
+//     pill) matching the /races index. Both are whole-card clickable via
+//     the DS overlay-link pattern with image settle-zoom on hover
 //   - full-height hairline dividers between columns; py-12; columns align
 //     to the 1400px site grid
 // ----------------------------------------------------------------------------
@@ -34,6 +36,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import ArticleCard, {
   type ArticleCardCategory,
 } from "@/components/ui/ArticleCard";
+import RaceCard from "@/components/RaceCard";
 import { urlFor } from "@/sanity/lib/image";
 import { cn } from "@/lib/utils";
 import type { CategoryItem } from "@/components/ui/SiteNavigationMenu";
@@ -47,13 +50,22 @@ import type { CategoryItem } from "@/components/ui/SiteNavigationMenu";
 
 export interface MegaMenuFeatured {
   title: string;
-  description?: string;
   href: string;
   image?: SanityImageSource | null;
   /** Article-card meta line: the item's category (label + href). */
   category?: ArticleCardCategory | null;
   /** Pre-formatted display date for the meta line, e.g. "29 May 2026". */
   publishedAt?: string;
+  /** Race-guide variant — when set the panel renders the canonical
+      RaceCard (category badge, location, event-date pill) instead of
+      the ArticleCard, matching the /races index presentation. */
+  race?: {
+    /** ISO event date — RaceCard formats its own date pill. */
+    eventDate?: string;
+    location?: string;
+    /** Race category title (Marathon / Half Marathon / …). */
+    category?: string;
+  };
 }
 
 export interface MegaMenuPanelProps {
@@ -169,7 +181,29 @@ export default function MegaMenuPanel({
       {/* Right column — featured media card (Prismic "Popular")     */}
       {/* ---------------------------------------------------------- */}
       <div className="flex h-full flex-col border-l border-borderSubtle pl-10">
-        {featured ? (
+        {featured?.race ? (
+          // Race guides render the canonical RaceCard — the same anatomy
+          // as the /races index: inverted category badge over the image,
+          // title + location, event-date pill. Image URL resolved at the
+          // data boundary per the DS convention (16/8.75 crop).
+          <RaceCard
+            className="w-full max-w-[480px]"
+            href={featured.href}
+            title={featured.title}
+            eventDate={featured.race.eventDate}
+            location={featured.race.location}
+            category={featured.race.category}
+            imageUrl={
+              featured.image
+                ? urlFor(featured.image)
+                    .width(960)
+                    .height(525)
+                    .auto("format")
+                    .url()
+                : undefined
+            }
+          />
+        ) : featured ? (
           // The canonical ArticleCard, mega-menu subset: image + badge +
           // meta line (category · date) + title. No excerpt — the menu
           // card stays scannable; the excerpt slot is for page placements.
