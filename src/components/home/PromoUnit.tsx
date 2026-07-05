@@ -42,12 +42,11 @@ export default function PromoUnit() {
     >
       <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-5 px-6 py-14 text-center lg:py-20">
         <BrandIcon className="h-8 w-8" />
-        {/* The description leads at heading-20; the subscribe line sits
-            under it one step down at copy-18 medium (!important because
-            text-copy-18 hardcodes fontWeight 400 and out-emits
-            font-medium — no medium body slot in the scale). Width +
-            text-balance follow 404's description spec. */}
-        <p className="max-w-[800px] text-balance text-heading-20">
+        {/* 404-verbatim type: description = ~18.5px REGULAR weight on a
+            relaxed line-height (their .promo-unit__description is
+            calc(base*1.1)/1.6, weight 400 — the heft on their site is
+            white-on-black, not a bold face), max-w 800px, text-balance. */}
+        <p className="max-w-[800px] text-balance text-copy-18">
           Distanz Running is an independent publication covering the sport of
           distance running — road, track, and trail. Read more about us{" "}
           <Link href="/about" className={bandLink}>
@@ -55,10 +54,9 @@ export default function PromoUnit() {
           </Link>
           .
         </p>
-        {/* 404's CTA h6 is ~13.4px against their 18.5px description
-            (~0.7×) — ours steps down to 14px against the heading-20
-            lead. !important: copy slots hardcode fontWeight 400. */}
-        <p className="text-copy-14 !font-medium">
+        {/* 404-verbatim CTA: their h6 accent style — ~13.4px mono
+            uppercase, weight 400. */}
+        <p className="text-label-13-mono uppercase">
           Support independent running journalism.{" "}
           <Link href="/signup" className={bandLink}>
             Subscribe
