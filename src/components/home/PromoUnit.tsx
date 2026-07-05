@@ -42,21 +42,21 @@ export default function PromoUnit() {
     >
       <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-5 px-6 py-14 text-center lg:py-20">
         <BrandIcon className="h-8 w-8" />
-        {/* 404-verbatim type: description = ~18.5px REGULAR weight on a
-            relaxed line-height (their .promo-unit__description is
-            calc(base*1.1)/1.6, weight 400 — the heft on their site is
-            white-on-black, not a bold face), max-w 800px, text-balance. */}
-        <p className="max-w-[800px] text-balance text-copy-18">
-          Distanz Running is an independent publication covering the sport of
-          distance running — road, track, and trail. Read more about us{" "}
+        {/* 404-verbatim type. Their html{font-size:1.05rem} compounds
+            every rem: description = 1.155rem × 16.8px root = 19.4px
+            regular (≈ copy-20), CTA h6 = .84rem = 14.1px mono uppercase
+            (≈ label-14-mono). Copy runs long enough to fill the 800px
+            box — text-balance shrinks short copy into narrow lines. */}
+        <p className="max-w-[800px] text-balance text-copy-20">
+          Distanz Running is an independent publication covering distance
+          running — racing, shoes, nutrition, and the culture of road, track,
+          and trail. Read more about us{" "}
           <Link href="/about" className={bandLink}>
             here
           </Link>
           .
         </p>
-        {/* 404-verbatim CTA: their h6 accent style — ~13.4px mono
-            uppercase, weight 400. */}
-        <p className="text-label-13-mono uppercase">
+        <p className="text-label-14-mono uppercase">
           Support independent running journalism.{" "}
           <Link href="/signup" className={bandLink}>
             Subscribe
