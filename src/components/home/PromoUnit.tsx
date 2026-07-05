@@ -42,12 +42,12 @@ export default function PromoUnit() {
     >
       <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-5 px-6 py-14 text-center lg:py-20">
         <BrandIcon className="h-8 w-8" />
-        {/* 404's description spec: ~18.5px on max-w 800px, text-balance.
-            Medium weight on top — their regular weight reads heavier than
-            it is because it's white-on-black in a chunkier system stack.
-            !important because text-copy-18 hardcodes fontWeight 400 and
-            out-emits font-medium (no medium body slot in the scale). */}
-        <p className="max-w-[800px] text-balance text-copy-18 !font-medium">
+        {/* The description leads at heading-20; the subscribe line sits
+            under it one step down at copy-18 medium (!important because
+            text-copy-18 hardcodes fontWeight 400 and out-emits
+            font-medium — no medium body slot in the scale). Width +
+            text-balance follow 404's description spec. */}
+        <p className="max-w-[800px] text-balance text-heading-20">
           Distanz Running is an independent publication covering the sport of
           distance running — road, track, and trail. Read more about us{" "}
           <Link href="/about" className={bandLink}>
@@ -55,7 +55,7 @@ export default function PromoUnit() {
           </Link>
           .
         </p>
-        <p className="text-heading-20">
+        <p className="text-copy-18 !font-medium">
           Support independent running journalism.{" "}
           <Link href="/signup" className={bandLink}>
             Subscribe
