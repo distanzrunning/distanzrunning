@@ -43,11 +43,14 @@ export default async function SiteLayout({
     <>
       {/* Skip link — the page's FIRST focusable element (before the
           banner's links and the header controls), so one Tab + Enter
-          jumps keyboard users past the chrome. Visually hidden until
-          focused, then a surface chip pinned over the header. */}
+          jumps keyboard users past the chrome. Revealed on
+          focus-VISIBLE only: the App Router programmatically focuses
+          the page's first focusable element after a soft navigation,
+          which matches :focus but not :focus-visible — plain focus:
+          variants made the chip flash on every mouse click-through. */}
       <a
         href="#content"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:inline-flex focus:items-center focus:rounded-md focus:border focus:border-borderSubtle focus:bg-surface focus:px-4 focus:py-2 focus:text-copy-14 focus:text-textDefault focus:outline-none focus:ring-2 focus:ring-[var(--ds-focus-color)]"
+        className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:left-4 focus-visible:top-4 focus-visible:z-[60] focus-visible:inline-flex focus-visible:items-center focus-visible:rounded-md focus-visible:border focus-visible:border-borderSubtle focus-visible:bg-surface focus-visible:px-4 focus-visible:py-2 focus-visible:text-copy-14 focus-visible:text-textDefault focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)]"
       >
         Skip to content
       </a>

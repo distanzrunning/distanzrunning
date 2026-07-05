@@ -97,20 +97,35 @@ export default async function HomepageHero() {
           {/* Author byline — DS Avatar + name (404-style); the date
               lives in the meta line above. Avatar carries the hairline
               ring and falls back to initials when the author has no
-              photo. */}
-          {hero.author?.name && (
-            <div className="flex items-center gap-2 pt-1">
-              <Avatar
-                src={avatarUrl ?? undefined}
-                alt=""
-                size={24}
-                fallback={hero.author.name}
-              />
-              <span className="text-copy-14 text-textSubtle">
+              photo. Links to the author page, punched above the hero
+              overlay like the kicker. */}
+          {hero.author?.name &&
+            (hero.author.slug ? (
+              <Link
+                href={`/authors/${hero.author.slug}`}
+                className="relative z-10 flex items-center gap-2 self-start rounded-sm pt-1 text-copy-14 text-textSubtle transition-colors hover:text-textDefault focus-visible:text-textDefault focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--ds-focus-color)]"
+              >
+                <Avatar
+                  src={avatarUrl ?? undefined}
+                  alt=""
+                  size={24}
+                  fallback={hero.author.name}
+                />
                 {hero.author.name}
-              </span>
-            </div>
-          )}
+              </Link>
+            ) : (
+              <div className="flex items-center gap-2 pt-1">
+                <Avatar
+                  src={avatarUrl ?? undefined}
+                  alt=""
+                  size={24}
+                  fallback={hero.author.name}
+                />
+                <span className="text-copy-14 text-textSubtle">
+                  {hero.author.name}
+                </span>
+              </div>
+            ))}
         </div>
 
         {/* Image — 16/10, 12px radius, settle-zoom on hero hover. The

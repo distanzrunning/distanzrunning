@@ -89,7 +89,9 @@ export interface ArticleCardProps {
   badgeSize?: BadgeSize;
   category?: ArticleCardCategory | null;
   excerpt?: string | null;
-  author?: { name: string; avatarUrl?: string | null } | null;
+  /** Byline author; `href` (the author page) makes the byline its own
+      link punched above the card overlay, like the category. */
+  author?: { name: string; avatarUrl?: string | null; href?: string } | null;
   /** Pre-formatted display date, e.g. "04 Jul 2026". */
   publishedAt?: string | null;
   className?: string;
@@ -201,18 +203,35 @@ export default function ArticleCard({
         {/* Author byline (DS Avatar + name) — date lives in the meta
             line above, so this row only exists when there's an author.
             Avatar carries the hairline ring and falls back to initials
-            when the author has no photo. */}
-        {author && (
-          <div className="mt-auto flex items-center gap-2 pt-2">
-            <Avatar
-              src={author.avatarUrl ?? undefined}
-              alt=""
-              size={20}
-              fallback={author.name}
-            />
-            <span className="text-copy-13 text-textSubtle">{author.name}</span>
-          </div>
-        )}
+            when the author has no photo. With an href the byline is its
+            own link, punched above the card overlay like the category. */}
+        {author &&
+          (author.href ? (
+            <Link
+              href={author.href}
+              className="relative z-10 mt-auto flex items-center gap-2 self-start rounded-sm pt-2 text-copy-13 text-textSubtle transition-colors hover:text-textDefault focus-visible:text-textDefault focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--ds-focus-color)]"
+            >
+              <Avatar
+                src={author.avatarUrl ?? undefined}
+                alt=""
+                size={20}
+                fallback={author.name}
+              />
+              {author.name}
+            </Link>
+          ) : (
+            <div className="mt-auto flex items-center gap-2 pt-2">
+              <Avatar
+                src={author.avatarUrl ?? undefined}
+                alt=""
+                size={20}
+                fallback={author.name}
+              />
+              <span className="text-copy-13 text-textSubtle">
+                {author.name}
+              </span>
+            </div>
+          ))}
       </div>
     </article>
   );

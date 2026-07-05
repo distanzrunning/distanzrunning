@@ -34,7 +34,7 @@ const heroProjection = `
     _type == "raceGuide" => "/races/" + slug.current,
     "#"
   ),
-  "author": author->{ name, image }
+  "author": author->{ name, image, "slug": slug.current }
 `;
 
 export const heroArticleQuery = groq`
