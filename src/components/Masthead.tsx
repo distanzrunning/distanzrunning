@@ -293,7 +293,7 @@ export default function Masthead({
               aria-label="Distanz — home"
               className="flex items-center justify-center text-textDefault"
             >
-              <Wordmark className="h-12 w-auto" />
+              <Wordmark className="h-12 w-auto" zHover="spin" />
             </Link>
 
             {/* right — auth + hamburger */}

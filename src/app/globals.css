@@ -183,6 +183,56 @@
   }
 }
 
+/* Wordmark Z hover flourish — the Z glyph group (swoosh + two rings,
+   see ui/Wordmark.tsx) animates ONCE about its own bbox centre when the
+   wordmark is hovered. Variants are opt-in via Wordmark's zHover prop.
+   Translate values are SVG user units (viewBox is 1579 wide, rendered
+   ~10:1, so 30 units ≈ 3px on screen). */
+@keyframes wordmark-z-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes wordmark-z-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-30px);
+  }
+  40% {
+    transform: translateX(24px);
+  }
+  60% {
+    transform: translateX(-14px);
+  }
+  80% {
+    transform: translateX(8px);
+  }
+}
+/* The Z sits flush with the viewBox's right edge, so a mid-spin corner
+   can swing past it — let the svg overflow rather than clip the glyph. */
+.wordmark {
+  overflow: visible;
+}
+.wordmark-z {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.wordmark:hover .wordmark-z--spin {
+  animation: wordmark-z-spin 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.wordmark:hover .wordmark-z--shake {
+  animation: wordmark-z-shake 0.45s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wordmark:hover .wordmark-z--spin,
+  .wordmark:hover .wordmark-z--shake {
+    animation: none;
+  }
+}
+
 @layer base {
   /* Reserve the scrollbar gutter on <html> so the page width
      stays constant whether the scrollbar is showing or not.
