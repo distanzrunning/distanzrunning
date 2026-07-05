@@ -1,0 +1,133 @@
+// src/components/home/HomepageHero.tsx
+//
+// Homepage hero — the main featured article. Server component: fetches
+// the first curated homepage slide (falling back to the latest post),
+// resolves images at the data boundary, and renders a chrome-less
+// text-left / image-right feature.
+//
+// Design: Quartr's hero frame with 404 Media's editorial anatomy, on
+// Stride tokens —
+//   - text column (~5/12) · image (~7/12), vertically centred; mobile
+//     stacks image on top
+//   - text stack follows the ArticleCard grammar so the hero reads as
+//     the same system as the mega-menu featured cards: meta line
+//     (category · date) → title → excerpt → author byline (avatar +
+//     name, 404-style)
+//   - NO card chrome — the hero is a section, not a card in a grid;
+//     the image carries the 12px radius + settle-zoom, and the whole
+//     hero is clickable via the DS overlay-link pattern (the category
+//     kicker punches through at z-10)
+//   - title is the page's <h1>: sans heading scale (serif is reserved
+//     for article-page titles + pull quotes), text-pretty
+
+import Link from "next/link";
+import Image from "next/image";
+import { Dot } from "lucide-react";
+
+import { sanityFetch } from "@/sanity/lib/live";
+import { heroArticleQuery } from "@/sanity/queries/heroArticleQuery";
+import { urlFor } from "@/sanity/lib/image";
+import { formatDisplayDate } from "@/lib/dates";
+
+export default async function HomepageHero() {
+  const { data: hero } = await sanityFetch({ query: heroArticleQuery });
+  if (!hero) return null;
+
+  const imageUrl = hero.mainImage
+    ? urlFor(hero.mainImage).width(1600).height(1000).auto("format").url()
+    : null;
+  const avatarUrl = hero.author?.image
+    ? urlFor(hero.author.image).width(48).height(48).auto("format").url()
+    : null;
+  const date = formatDisplayDate(hero.publishedAt);
+
+  return (
+    <section className="mx-auto w-full max-w-[1400px] px-6">
+      <article className="group relative flex flex-col-reverse gap-8 py-10 lg:flex-row lg:items-center lg:gap-12 lg:py-16">
+        {/* Text column */}
+        <div className="flex flex-col justify-center gap-4 lg:basis-5/12">
+          {/* Meta line — category · date, the ArticleCard grammar one
+              size up (copy-14). The kicker is its own link above the
+              hero overlay. */}
+          {(hero.kicker || date) && (
+            <div className="flex items-center gap-1">
+              {hero.kicker &&
+                (hero.kickerHref ? (
+                  <Link
+                    href={hero.kickerHref}
+                    className="relative z-10 rounded-sm text-copy-14 text-textSubtle transition-colors hover:text-textDefault focus-visible:text-textDefault focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--ds-focus-color)]"
+                  >
+                    {hero.kicker}
+                  </Link>
+                ) : (
+                  <span className="text-copy-14 text-textSubtle">
+                    {hero.kicker}
+                  </span>
+                ))}
+              {hero.kicker && date && (
+                <span aria-hidden className="flex h-4 items-center">
+                  <Dot className="w-5 text-textSubtler opacity-75" />
+                </span>
+              )}
+              {date && (
+                <span className="text-copy-14 text-textSubtle">{date}</span>
+              )}
+            </div>
+          )}
+
+          {/* Title — the homepage h1; its overlay makes the whole hero
+              the click target. */}
+          <h1 className="text-heading-32 md:text-heading-48 text-pretty text-textDefault">
+            <Link
+              href={hero.href}
+              className="outline-none after:absolute after:inset-0 focus-visible:after:rounded-lg focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-[color:var(--ds-focus-color)]"
+            >
+              {hero.title}
+            </Link>
+          </h1>
+
+          {/* Excerpt */}
+          {hero.excerpt && (
+            <p className="text-copy-16 md:text-copy-18 text-pretty text-textSubtle line-clamp-3">
+              {hero.excerpt}
+            </p>
+          )}
+
+          {/* Author byline — avatar + name (404-style); the date lives
+              in the meta line above. */}
+          {hero.author?.name && (
+            <div className="flex items-center gap-2 pt-1">
+              {avatarUrl && (
+                <Image
+                  src={avatarUrl}
+                  alt=""
+                  width={24}
+                  height={24}
+                  className="size-6 rounded-full object-cover"
+                />
+              )}
+              <span className="text-copy-14 text-textSubtle">
+                {hero.author.name}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Image — 16/10, 12px radius, settle-zoom on hero hover. The
+            homepage LCP, so priority. */}
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-[var(--ds-gray-100)] lg:basis-7/12">
+          {imageUrl && (
+            <Image
+              src={imageUrl}
+              alt={hero.title}
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 60vw"
+              className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100"
+            />
+          )}
+        </div>
+      </article>
+    </section>
+  );
+}

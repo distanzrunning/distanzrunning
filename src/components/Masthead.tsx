@@ -9,6 +9,7 @@ import { DarkModeContext } from "@/components/DarkModeProvider";
 import { useSearch } from "@/contexts/SearchContext";
 import { Button } from "@/components/ui/Button";
 import Wordmark from "@/components/ui/Wordmark";
+import { formatDisplayDate } from "@/lib/dates";
 import MegaMenuPanel, {
   type MegaMenuFeatured,
 } from "@/components/ui/MegaMenuPanel";
@@ -47,17 +48,6 @@ export interface MastheadProps {
   featuredRace: FeaturedRace;
 }
 
-// "29 May 2026" — the article-card meta-line display format.
-function formatDisplayDate(iso?: string): string | undefined {
-  if (!iso) return undefined;
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return undefined;
-  return d.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
 
 function buildFeaturedFromProduct(
   item: FeaturedProduct,
