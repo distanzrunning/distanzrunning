@@ -203,7 +203,7 @@ function AdDisclaimer({
 
 function MockCreative({ width, height }: Dimensions) {
   return (
-    <div className="flex h-full w-full items-center justify-center rounded-md bg-canvas">
+    <div className="flex h-full w-full items-center justify-center rounded-md bg-[var(--ds-gray-100)]">
       <span className="text-[12px] font-medium tabular-nums text-textSubtle">
         {width} &times; {height}
       </span>
@@ -214,6 +214,9 @@ function MockCreative({ width, height }: Dimensions) {
 // ============================================================================
 // House fallback — the Shakeout newsletter ad. Shown when no ad fills.
 // Borderless (the frame provides the border); adapts to the slot's shape.
+// Creative fill is gray-100 (the component-background tone) so the unit
+// reads as a filled ad box even on the canvas page background — bg-canvas
+// made it vanish into the page.
 // ============================================================================
 
 function ShakeoutAd({ width, height }: Dimensions) {
@@ -232,7 +235,7 @@ function ShakeoutAd({ width, height }: Dimensions) {
     return (
       <a
         href={SIGNUP_HREF}
-        className="flex h-full w-full items-center justify-center gap-2 rounded-md bg-canvas px-4 no-underline"
+        className="flex h-full w-full items-center justify-center gap-2 rounded-md bg-[var(--ds-gray-100)] px-4 no-underline"
       >
         <span className="text-[12px] font-semibold text-textDefault">
           The Shakeout &mdash; our weekly running newsletter
@@ -245,7 +248,7 @@ function ShakeoutAd({ width, height }: Dimensions) {
   // Short + wide (leaderboard 728×90) — kicker + line + CTA in a row.
   if (height < 100) {
     return (
-      <div className="flex h-full w-full items-center justify-center gap-4 rounded-md bg-canvas px-6 text-center">
+      <div className="flex h-full w-full items-center justify-center gap-4 rounded-md bg-[var(--ds-gray-100)] px-6 text-center">
         <div className="flex flex-col items-start gap-0.5 text-left">
           {kicker}
           <span className="text-[13px] font-medium text-textDefault">
@@ -267,7 +270,7 @@ function ShakeoutAd({ width, height }: Dimensions) {
   // Tall + narrow (skyscraper / half-page) — stacked.
   if (width < 320 && height > 400) {
     return (
-      <div className="flex h-full w-full flex-col items-center justify-between rounded-md bg-canvas p-5 text-center">
+      <div className="flex h-full w-full flex-col items-center justify-between rounded-md bg-[var(--ds-gray-100)] p-5 text-center">
         <div className="flex flex-1 flex-col items-center justify-center gap-3">
           {kicker}
           <h4 className="text-[16px] font-semibold leading-tight text-textDefault">
@@ -292,7 +295,7 @@ function ShakeoutAd({ width, height }: Dimensions) {
 
   // Default — square / MPU / billboard.
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-md bg-canvas p-6 text-center">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-md bg-[var(--ds-gray-100)] p-6 text-center">
       {kicker}
       <h4 className="text-heading-16 text-textDefault">Get the Shakeout</h4>
       <p className="max-w-[85%] text-[13px] leading-snug text-textSubtle">
