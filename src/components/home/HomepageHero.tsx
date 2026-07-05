@@ -77,11 +77,14 @@ export default async function HomepageHero() {
           )}
 
           {/* Title — the homepage h1; its overlay makes the whole hero
-              the click target. */}
+              (image included) the click target. after:z-[1] lifts the
+              overlay above the image column, which comes LATER in the
+              DOM and would otherwise paint over it and swallow clicks;
+              the kicker/byline links sit at z-10, still above. */}
           <h1 className="text-heading-32 md:text-heading-48 text-pretty text-textDefault">
             <Link
               href={hero.href}
-              className="outline-none after:absolute after:inset-0 focus-visible:after:rounded-lg focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-[color:var(--ds-focus-color)]"
+              className="outline-none after:absolute after:inset-0 after:z-[1] focus-visible:after:rounded-lg focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-[color:var(--ds-focus-color)]"
             >
               {hero.title}
             </Link>
