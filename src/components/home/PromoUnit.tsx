@@ -42,20 +42,20 @@ export default function PromoUnit() {
     >
       <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-5 px-6 py-14 text-center lg:py-20">
         <BrandIcon className="h-8 w-8" />
-        <div className="max-w-[640px] text-balance text-copy-16">
-          <p>
-            Distanz Running is an independent publication covering the sport
-            of distance running — road, track, and trail.
-          </p>
-          <p className="mt-1">
-            Read more about us{" "}
-            <Link href="/about" className={bandLink}>
-              here
-            </Link>
-            .
-          </p>
-        </div>
-        <p className="text-heading-16">
+        {/* 404's description spec: ~18.5px on max-w 800px, text-balance.
+            Medium weight on top — their regular weight reads heavier than
+            it is because it's white-on-black in a chunkier system stack.
+            !important because text-copy-18 hardcodes fontWeight 400 and
+            out-emits font-medium (no medium body slot in the scale). */}
+        <p className="max-w-[800px] text-balance text-copy-18 !font-medium">
+          Distanz Running is an independent publication covering the sport of
+          distance running — road, track, and trail. Read more about us{" "}
+          <Link href="/about" className={bandLink}>
+            here
+          </Link>
+          .
+        </p>
+        <p className="text-heading-20">
           Support independent running journalism.{" "}
           <Link href="/signup" className={bandLink}>
             Subscribe
