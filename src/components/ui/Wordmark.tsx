@@ -8,7 +8,10 @@
 // flash, no cumulative layout shift — the browser knows the
 // intrinsic aspect ratio from the viewBox.
 //
-// Source: public/brand/wordmark-black.svg (paths copied verbatim).
+// Source: public/brand/wordmark-black.svg (paths + viewBox copied
+// verbatim — the file's canvas carries ~60 units of space below the
+// glyphs, so keeping its viewBox makes this a pixel-for-pixel drop-in
+// for an <img> of the same height).
 
 import type { SVGProps } from "react";
 
@@ -19,7 +22,7 @@ export default function Wordmark({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 1579.12 425"
+      viewBox="0 0 1579.12 484.75"
       fill="currentColor"
       aria-hidden="true"
       focusable="false"

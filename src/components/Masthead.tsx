@@ -8,6 +8,7 @@ import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { useSearch } from "@/contexts/SearchContext";
 import { Button } from "@/components/ui/Button";
+import Wordmark from "@/components/ui/Wordmark";
 import MegaMenuPanel, {
   type MegaMenuFeatured,
 } from "@/components/ui/MegaMenuPanel";
@@ -282,24 +283,17 @@ export default function Masthead({
               </Button>
             </div>
 
-            {/* center — wordmark */}
+            {/* center — wordmark. Inline SVG (not <img>): it ships in the
+                SSR HTML so it paints with the first frame — no network
+                fetch, no pop-in flicker. currentColor + text-textDefault
+                is the brand ink and flips with the theme (no second
+                asset, no dark: image swap). */}
             <Link
               href="/"
               aria-label="Distanz — home"
-              className="flex items-center justify-center"
+              className="flex items-center justify-center text-textDefault"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/brand/wordmark-black.svg"
-                alt="Distanz"
-                className="block h-12 w-auto dark:hidden"
-              />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/brand/wordmark-white.svg"
-                alt="Distanz"
-                className="hidden h-12 w-auto dark:block"
-              />
+              <Wordmark className="h-12 w-auto" />
             </Link>
 
             {/* right — auth + hamburger */}
