@@ -83,6 +83,16 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
       document.documentElement.classList.remove("dark");
     }
 
+    // The pre-paint boot script (layout.tsx) pinned background-color +
+    // color-scheme INLINE on <html> so the first frame matched the theme
+    // before the stylesheet loaded. From here the stylesheet must own
+    // both (html carries bg-canvas; the tokens flip color-scheme per
+    // theme) — clear the inline copies, or they shadow the class-driven
+    // flip forever and the overscroll reveal area / native scrollbars
+    // keep the load-time theme after a switch.
+    document.documentElement.style.backgroundColor = "";
+    document.documentElement.style.colorScheme = "";
+
     setIsInitialized(true);
 
     // Re-enable transitions after two animation frames so the
