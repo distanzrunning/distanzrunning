@@ -11,7 +11,6 @@ export const featuredRaceQuery = `
   mainImage,
   publishedAt,
   eventDate,
-  "location": array::join(array::compact([city, stateRegion, country]), ", "),
-  "category": raceCategory->title
+  "location": array::join(array::compact([city, stateRegion, country]), ", ")
 }
 `

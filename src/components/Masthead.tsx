@@ -84,11 +84,10 @@ function buildFeaturedFromRace(race: FeaturedRace): MegaMenuFeatured | null {
     href: `/races/${race.slug.current}`,
     image: race.mainImage,
     // The race sub-shape switches the panel to the canonical RaceCard —
-    // event date + location + race category, matching the /races index.
+    // event date + location (no category/distance badge in the menu).
     race: {
       eventDate: race.eventDate,
       location: race.location,
-      category: race.category,
     },
   };
 }

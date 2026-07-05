@@ -52,9 +52,6 @@ export type FeaturedRace = {
   publishedAt?: string;
   eventDate?: string;
   location?: string;
-  /** Race category title (Marathon / Half Marathon / …) — the RaceCard's
-      inverted image badge in the mega-menu featured slot. */
-  category?: string;
 } | null;
 
 // ============================================================================
@@ -629,7 +626,6 @@ function buildFeaturedFromRace(
     race: {
       eventDate: race.eventDate,
       location: race.location,
-      category: race.category,
     },
   };
 }
