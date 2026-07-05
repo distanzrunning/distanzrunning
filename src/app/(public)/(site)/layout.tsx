@@ -41,10 +41,29 @@ export default async function SiteLayout({
   // canvas column.
   return (
     <>
+      {/* Skip link — the page's FIRST focusable element (before the
+          banner's links and the header controls), so one Tab + Enter
+          jumps keyboard users past the chrome. Visually hidden until
+          focused, then a surface chip pinned over the header. */}
+      <a
+        href="#content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:inline-flex focus:items-center focus:rounded-md focus:border focus:border-borderSubtle focus:bg-surface focus:px-4 focus:py-2 focus:text-copy-14 focus:text-textDefault focus:outline-none focus:ring-2 focus:ring-[var(--ds-focus-color)]"
+      >
+        Skip to content
+      </a>
       {banner}
       <div className="flex min-h-screen flex-col bg-canvas">
         <MastheadWrapper />
-        <main className="flex flex-1 flex-col">{children}</main>
+        {/* tabIndex={-1} so activating the skip link truly moves focus
+            here in every browser (Safari won't otherwise); outline-none
+            suppresses the focus ring this would paint on click. */}
+        <main
+          id="content"
+          tabIndex={-1}
+          className="flex flex-1 flex-col outline-none"
+        >
+          {children}
+        </main>
       </div>
     </>
   );
