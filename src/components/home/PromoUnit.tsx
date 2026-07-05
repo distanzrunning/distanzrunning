@@ -49,7 +49,7 @@ export default function PromoUnit() {
             copy balances onto two lines (needs ~1000px; measured). */}
         <p className="max-w-[1040px] text-balance text-copy-20">
           Distanz Running is an independent sport publication — our aim is
-          to provide high quality curated running stories, gear reviews and
+          to provide curated quality running stories, gear reviews and
           interactive race guides. Read more about us{" "}
           <Link href="/about" className={bandLink}>
             here
