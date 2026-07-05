@@ -79,6 +79,7 @@ Token namespace: `--ds-{hue}-{shade}`.
 | **Canvas** (down) | `bg-canvas` (= `bg-200`) | `#FAFAFA` | `#000000` | the page / `PageFrame` / app-shell wrappers, **and** recessed sub-areas *within* a surface: modal & drawer footers/sections |
 | **Surface** (up) | `bg-surface` (= `bg-100`) | `#FFFFFF` | `#0A0A0A` | **everything raised, including all form controls**: cards, menus, popovers, dialogs, drawers, sheets, panels, toasts, badges, chips, filled/secondary buttons, **inputs, textareas, selects, date pickers**, checkbox/radio/switch boxes, the header pill |
 | **Interaction** (on a surface) | `--ds-gray-100/200/300` (`bg-[var(--ds-gray-100)]` …) | `#F2F2F2 / #EBEBEB / #E6E6E6` | `#1A1A1A / #1F1F1F / #292929` | **hover / active / selected** states *on* a surface — one+ step above it so they read |
+| **Inverted canvas** | `bg-canvasInverted` (the *opposite* theme's canvas) | `#000000` | `#FAFAFA` | full-bleed **inverted brand bands** (homepage promo unit) — 404's `bg-reverse` move. Pair with `text-textInverted`. Not for cards/controls. |
 
 **The rule:** *Is it the page/shell, or a footer/section inside a surface? → `bg-canvas`. Otherwise (cards, menus, **and every control** — inputs, buttons, selects…) → `bg-surface`.* Controls are `surface` + a hairline border, so they sit flush-with-border inside a panel and lift off the page in a filter bar — and a filter row of inputs + dropdowns + buttons all share one tone. Floating things (menus/modals/popovers) add a `material-*` shadow — **extra depth = shadow, never more tones.**
 
