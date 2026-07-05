@@ -48,10 +48,9 @@ export default function PromoUnit() {
             (≈ label-14-mono). Box is wider than 404's 800px so this
             copy balances onto two lines (needs ~1000px; measured). */}
         <p className="max-w-[1040px] text-balance text-copy-20">
-          Distanz Running is an independent sport publication — we aim to
-          curate a fresh take on running content including long form stories,
-          news articles, gear reviews and interactive race guides. Read more
-          about us{" "}
+          Distanz Running is an independent sport publication — our aim is
+          to provide high quality curated running stories, gear reviews and
+          interactive race guides. Read more about us{" "}
           <Link href="/about" className={bandLink}>
             here
           </Link>
