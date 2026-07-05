@@ -16,6 +16,8 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
+import { lockDocumentScroll } from "@/lib/scroll-lock";
+
 interface PopoverBackdropProps {
   open: boolean;
   /** z-index of the backdrop. Should sit just below the popover
@@ -27,21 +29,13 @@ export default function PopoverBackdrop({
   open,
   zIndex = 2000,
 }: PopoverBackdropProps) {
-  // Lock document scroll while open. We set overflow: hidden on the
-  // <html> element (not body) because `scrollbar-gutter: stable` in
-  // globals.css applies to <html> — combining overflow: hidden with
-  // scrollbar-gutter: stable on the same element is the spec-defined
-  // way to reserve a gutter while suppressing the scrollbar, with
-  // zero layout shift. Locking on <body> instead lets the scrollbar
-  // gutter collapse and the page jumps right by ~15 px.
+  // Lock document scroll while open. lockDocumentScroll pads <html> by
+  // the freed scrollbar width — there is no reserved scrollbar-gutter
+  // (full-bleed chrome, see globals.css), so suppressing the scrollbar
+  // without compensation would shift the page right by ~15 px.
   useEffect(() => {
     if (!open) return;
-    const html = document.documentElement;
-    const prevOverflow = html.style.overflow;
-    html.style.overflow = "hidden";
-    return () => {
-      html.style.overflow = prevOverflow;
-    };
+    return lockDocumentScroll();
   }, [open]);
 
   if (!open || typeof document === "undefined") return null;

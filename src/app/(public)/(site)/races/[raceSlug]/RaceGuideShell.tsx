@@ -25,6 +25,7 @@ import type {
   RouteEndpoint,
   RoutePoi,
 } from "@/lib/gpxUtils";
+import { lockDocumentScroll } from "@/lib/scroll-lock";
 
 import { MAP_STICKY_TOP } from "./_constants";
 import RaceMap, { StatusOverlay, type ExpoLocation } from "./RaceMap";
@@ -177,13 +178,14 @@ export default function RaceGuideShell({
   const shellRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!mapExpanded) return;
-    const prevBodyOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    // lockDocumentScroll compensates the freed scrollbar width — no
+    // reserved gutter any more (see globals.css).
+    const unlock = lockDocumentScroll();
     const main = shellRef.current?.closest("main") as HTMLElement | null;
     const prevContainerType = main?.style.containerType ?? "";
     if (main) main.style.containerType = "normal";
     return () => {
-      document.body.style.overflow = prevBodyOverflow;
+      unlock();
       if (main) main.style.containerType = prevContainerType;
     };
   }, [mapExpanded]);

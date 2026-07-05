@@ -12,6 +12,8 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 
+import { lockDocumentScroll } from "@/lib/scroll-lock";
+
 const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -311,21 +313,13 @@ export function Modal({
     };
   }, [open]);
 
-  // Body scroll lock. We don't compensate for the freed
-  // scrollbar width because globals.css sets
-  // `scrollbar-gutter: stable` on <html>, which reserves the
-  // gutter unconditionally — there's nothing to compensate
-  // for, and adding padding-right here on top of that
-  // *causes* a layout shift (pushes content inward by the
-  // gutter width since clientWidth always reads as
-  // viewport-width − gutter).
+  // Document scroll lock. lockDocumentScroll pads <html> by the freed
+  // scrollbar width for the duration — there is no reserved
+  // scrollbar-gutter (full-bleed chrome, see globals.css), so without
+  // compensation the page would reflow on open/close.
   useEffect(() => {
     if (!mounted) return;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prevOverflow;
-    };
+    return lockDocumentScroll();
   }, [mounted]);
 
   // Capture the element that was focused when the modal opened so we can
