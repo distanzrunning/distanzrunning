@@ -45,9 +45,9 @@ export default function PromoUnit() {
         {/* 404-verbatim type. Their html{font-size:1.05rem} compounds
             every rem: description = 1.155rem × 16.8px root = 19.4px
             regular (≈ copy-20), CTA h6 = .84rem = 14.1px mono uppercase
-            (≈ label-14-mono). Copy runs long enough to fill the 800px
-            box — text-balance shrinks short copy into narrow lines. */}
-        <p className="max-w-[800px] text-balance text-copy-20">
+            (≈ label-14-mono). Box is wider than 404's 800px so this
+            copy balances onto two lines (needs ~1000px; measured). */}
+        <p className="max-w-[1040px] text-balance text-copy-20">
           Distanz Running is an independent sport publication — we aim to
           curate a fresh take on running content including long form stories,
           news articles, gear reviews and interactive race guides. Read more
