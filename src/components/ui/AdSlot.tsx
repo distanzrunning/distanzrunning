@@ -17,12 +17,12 @@ export type AdSize =
   | "mobile-banner"
   | "square";
 
-interface Dimensions {
+export interface Dimensions {
   width: number;
   height: number;
 }
 
-const SIZE_PRESETS: Record<AdSize, Dimensions> = {
+export const SIZE_PRESETS: Record<AdSize, Dimensions> = {
   mpu: { width: 300, height: 250 },
   leaderboard: { width: 728, height: 90 },
   "super-leaderboard": { width: 970, height: 90 }, // 404's fixed-footer size
@@ -219,7 +219,7 @@ function MockCreative({ width, height }: Dimensions) {
 // made it vanish into the page.
 // ============================================================================
 
-function ShakeoutAd({ width, height }: Dimensions) {
+export function ShakeoutAd({ width, height }: Dimensions) {
   const kicker = (
     <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-link">
       The Shakeout
