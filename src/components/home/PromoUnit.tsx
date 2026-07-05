@@ -48,16 +48,17 @@ export default function PromoUnit() {
             (≈ label-14-mono). Copy runs long enough to fill the 800px
             box — text-balance shrinks short copy into narrow lines. */}
         <p className="max-w-[800px] text-balance text-copy-20">
-          Distanz Running is an independent publication covering distance
-          running — racing, shoes, nutrition, and the culture of road, track,
-          and trail. Read more about us{" "}
+          Distanz Running is an independent sport publication — we aim to
+          curate a fresh take on running content including long form stories,
+          news articles, gear reviews and interactive race guides. Read more
+          about us{" "}
           <Link href="/about" className={bandLink}>
             here
           </Link>
           .
         </p>
         <p className="text-label-14-mono uppercase">
-          Support independent running journalism.{" "}
+          Support our journalism.{" "}
           <Link href="/signup" className={bandLink}>
             Subscribe
           </Link>
