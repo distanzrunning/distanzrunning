@@ -62,6 +62,12 @@ export interface RaceCardProps {
   /** Visual variant. "default" matches the homepage Races row;
    *  "index" is the /races index page treatment. */
   variant?: "default" | "index";
+  /** Block chrome. "filled" (default) is the established homepage/index
+      look — gray-100 body, 6px corners. "outline" adopts the ArticleCard
+      chrome (bg-surface + hairline border, 12px radius, p-5 body) so the
+      card sits consistently next to ArticleCards — e.g. the mega-menu
+      featured slot. Content structure is identical in both. */
+  chrome?: "filled" | "outline";
   /** Index-variant only — populates the glassy hover stat columns. */
   surface?: string;
   surfaceBreakdown?: string;
@@ -124,6 +130,7 @@ export default function RaceCard({
   priority = false,
   className = "",
   variant = "default",
+  chrome = "filled",
   surface,
   surfaceBreakdown,
   profile,
@@ -158,11 +165,18 @@ export default function RaceCard({
     surface || profileLabel || elevationGainLabel || priceLabel,
   );
 
-  // Outer rounding — index variant uses overflow-hidden +
-  // rounded-md so the single radius matches the homepage cards'
-  // 6 px corners (where the image + body each carry rounded-t-md
-  // / rounded-b-md separately for the same visual result).
-  const articleRadius = isIndex ? "overflow-hidden rounded-md" : "";
+  // Outer chrome — outline adopts the ArticleCard block (surface +
+  // hairline, 12px radius, container clips the image). Filled: index
+  // variant uses overflow-hidden + rounded-md so the single radius
+  // matches the homepage cards' 6 px corners (where the image + body
+  // each carry rounded-t-md / rounded-b-md separately for the same
+  // visual result).
+  const isOutline = chrome === "outline";
+  const articleRadius = isOutline
+    ? "overflow-hidden rounded-lg border border-borderSubtle bg-surface"
+    : isIndex
+      ? "overflow-hidden rounded-md"
+      : "";
 
   return (
     <article
@@ -170,7 +184,7 @@ export default function RaceCard({
     >
       <div
         className={`relative aspect-[16/8.75] w-full overflow-hidden bg-[color:var(--ds-gray-100)] ${
-          isIndex ? "" : "rounded-t-md"
+          isIndex || isOutline ? "" : "rounded-t-md"
         }`}
       >
         {imageUrl && (
@@ -248,7 +262,13 @@ export default function RaceCard({
           the right vertically centered against the whole stack
           (so it sits midway between title and location rather
           than top-aligned with the title's first line). */}
-      <div className="flex items-center justify-between gap-3 rounded-b-md bg-[color:var(--ds-gray-100)] p-6">
+      <div
+        className={`flex items-center justify-between gap-3 ${
+          isOutline
+            ? "p-5"
+            : "rounded-b-md bg-[color:var(--ds-gray-100)] p-6"
+        }`}
+      >
         <div className="flex min-w-0 flex-1 flex-col gap-1">
           <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
             <Link

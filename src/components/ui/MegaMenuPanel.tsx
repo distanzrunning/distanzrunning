@@ -187,6 +187,7 @@ export default function MegaMenuPanel({
           // boundary per the DS convention (16/8.75 crop).
           <RaceCard
             className="w-full max-w-[480px]"
+            chrome="outline"
             href={featured.href}
             title={featured.title}
             badge="Featured"
