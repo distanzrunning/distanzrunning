@@ -193,22 +193,19 @@
     transform: rotate(360deg);
   }
 }
+/* Rotational shake: a clockwise tilt that swings back with a small
+   counter-overshoot before settling — the glyph pivots in place about
+   its own centre rather than the whole mark sliding left/right. */
 @keyframes wordmark-z-shake {
   0%,
   100% {
-    transform: translateX(0);
-  }
-  20% {
-    transform: translateX(-30px);
+    transform: rotate(0deg);
   }
   40% {
-    transform: translateX(24px);
+    transform: rotate(14deg);
   }
-  60% {
-    transform: translateX(-14px);
-  }
-  80% {
-    transform: translateX(8px);
+  75% {
+    transform: rotate(-4deg);
   }
 }
 /* The Z sits flush with the viewBox's right edge, so a mid-spin corner
