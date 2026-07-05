@@ -535,6 +535,10 @@
     --color-surfaceSubtle: var(--ds-gray-100-value); /* subtle component fill */
     --color-surfaceWarm: var(--ds-gray-200-value); /* Warm-tinted surface */
     --color-canvas: var(--ds-background-200-value); /* page — #FAFAFA */
+    /* The OPPOSITE theme's canvas — full-bleed inverted bands (homepage
+       promo unit). Literal triplet: mirrors the dark theme's
+       --ds-background-200-value, which can't be var-referenced here. */
+    --color-canvasInverted: 0, 0%, 0%; /* dark canvas — #000 */
 
     /* Analytics-panel tone — Vercel's web-analytics dashboard panel.
        THEME-AWARE: the panel takes the MUTED tone in each mode, which makes
@@ -989,6 +993,9 @@
     --color-surfaceSubtle: var(--ds-gray-100-value); /* subtle component fill */
     --color-surfaceWarm: var(--ds-gray-200-value); /* Warm-tinted surface */
     --color-canvas: var(--ds-background-200-value); /* page — #000 */
+    /* The OPPOSITE theme's canvas — full-bleed inverted bands (homepage
+       promo unit). Mirrors the light theme's bg-200. */
+    --color-canvasInverted: 0, 0%, 98%; /* light canvas — #FAFAFA */
 
     /* Analytics-panel tone — bg-100 (#0A0A0A) in DARK: the panel sits raised
        above the #000 page, the active tab is flush with it, and the inactive

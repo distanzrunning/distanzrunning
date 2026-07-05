@@ -184,6 +184,7 @@ module.exports = {
         surfaceSubtle: "hsl(var(--color-surfaceSubtle))",
         surfaceWarm: "hsl(var(--color-surfaceWarm))",
         canvas: "hsl(var(--color-canvas))",
+        canvasInverted: "hsl(var(--color-canvasInverted))",
         analyticsPanel: "hsl(var(--color-analyticsPanel))",
         neutralBgSubtle: "hsl(var(--color-neutralBgSubtle))",
 
@@ -226,6 +227,7 @@ module.exports = {
         surfaceSubtle: "hsl(var(--color-surfaceSubtle))",
         surfaceWarm: "hsl(var(--color-surfaceWarm))",
         canvas: "hsl(var(--color-canvas))",
+        canvasInverted: "hsl(var(--color-canvasInverted))",
         analyticsPanel: "hsl(var(--color-analyticsPanel))",
         neutralBgSubtle: "hsl(var(--color-neutralBgSubtle))",
         // Elevated surfaces

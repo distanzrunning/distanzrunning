@@ -1,10 +1,11 @@
 // src/components/home/PromoUnit.tsx
 //
 // Full-bleed brand promo band (404 Media's .promo-unit): who we are, a
-// link to /about, and a subscribe CTA. Ink surface — bg-textDefault /
-// text-textInverted — so it's black-on-light / white-on-dark and flips
-// with the theme automatically, mirroring the logo. Straight edges
-// (404's diagonal clip is their brand flourish, not ours).
+// link to /about, and a subscribe CTA. The fill is the OPPOSITE theme's
+// canvas — bg-canvasInverted (#000 in light / #FAFAFA in dark, the same
+// move as 404's --color-bg-reverse) with text-textInverted on top — so
+// the band is a true theme inversion and flips automatically. Straight
+// edges (404's diagonal clip is their brand flourish, not ours).
 //
 // The icon is inlined with fill="currentColor" (same treatment as
 // Wordmark.tsx) so it follows the band's text colour — one asset, no
@@ -38,7 +39,7 @@ export default function PromoUnit() {
   return (
     <section
       aria-label="About Distanz Running"
-      className="bg-textDefault text-textInverted"
+      className="bg-canvasInverted text-textInverted"
     >
       <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-5 px-6 py-14 text-center lg:py-20">
         <BrandIcon className="h-8 w-8" />
