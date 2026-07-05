@@ -277,6 +277,16 @@
     scroll-padding-top: 112px; /* Header height */
   }
 
+  /* Admin is an app shell under a fixed admin bar — the root
+     rubber-band reads wrong there, so suppress it on admin routes
+     only (keyed off the admin layout's <main data-admin-shell>;
+     route groups can't put a class on <html>). Public pages keep
+     the native stretch. */
+  html:has([data-admin-shell]),
+  html:has([data-admin-shell]) body {
+    overscroll-behavior: none;
+  }
+
   body {
     font-family: var(--body-font);
     font-synthesis: none;

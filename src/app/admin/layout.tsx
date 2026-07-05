@@ -10,7 +10,13 @@ import { DarkModeProvider } from "@/components/DarkModeProvider";
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <DarkModeProvider>
-      <main className="min-h-screen">{children}</main>
+      {/* data-admin-shell keys the html:has() rule in globals.css that
+          suppresses root overscroll bounce on admin only — it's an app
+          shell under a fixed admin bar, unlike the public content pages
+          which keep the native stretch. */}
+      <main data-admin-shell className="min-h-screen">
+        {children}
+      </main>
     </DarkModeProvider>
   );
 }
