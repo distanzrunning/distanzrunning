@@ -21,12 +21,14 @@
   :root,
   .light {
     color-scheme: light;
-    /* Light-mode scrollbar — gray-400 thumb on a transparent
-       track. color-scheme alone covers most browsers, but explicit
-       scrollbar-color guarantees the look in Chromium 121+ and
-       Firefox where color-scheme defaults are sometimes
-       overridden by user prefs. */
-    scrollbar-color: var(--ds-gray-400) transparent;
+    /* Light-mode scrollbar — gray-600 thumb on a transparent track
+       (gray-400 was ~1.1:1 against the canvas, near-invisible; 600
+       matches the native macOS thumb weight and the dark theme's
+       gray-500 perceptually). color-scheme alone covers most
+       browsers, but explicit scrollbar-color guarantees the look in
+       Chromium 121+ and Firefox where color-scheme defaults are
+       sometimes overridden by user prefs. */
+    scrollbar-color: var(--ds-gray-600) transparent;
 
     /* Distanz Typography System
        Body/UI: Inter Variable (complete weight spectrum)
