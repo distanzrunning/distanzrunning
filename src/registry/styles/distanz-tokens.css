@@ -645,11 +645,12 @@
      ═══════════════════════════════════════════════════════════════════════ */
   .dark {
     color-scheme: dark;
-    /* Dark-mode scrollbar — translucent white thumb (gray-alpha-500 =
-       rgba(255,255,255,.24)) on a transparent track: ~#3D3D3D over the
-       black canvas (the old gray-500's weight), melting into light
-       content it floats across. Mirrors the light theme's alpha thumb. */
-    scrollbar-color: var(--ds-gray-alpha-500) transparent;
+    /* Dark-mode scrollbar — translucent white thumb (gray-alpha-600 =
+       rgba(255,255,255,.51)) on a transparent track: ~#828282 over the
+       black canvas, matching the native macOS dark thumb (~50% white),
+       melting into light content it floats across. Mirrors the light
+       theme's alpha thumb. */
+    scrollbar-color: var(--ds-gray-alpha-600) transparent;
 
     /* ─────────────────────────────────────────────────────────────────────────
        DARK MODE COLOR SCALES - Geist exact values
