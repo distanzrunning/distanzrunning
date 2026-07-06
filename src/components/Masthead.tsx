@@ -231,7 +231,7 @@ export default function Masthead({
   const cursorInBridgeRef = useRef(false);
 
   // ---- Scroll behaviours (404's .is-scrolled pair) ----------------------
-  // condensed: past 64px of scroll the bottom links tier folds away;
+  // condensed: past 96px of scroll the bottom links tier folds away;
   //   back under, it returns. CRITICAL: the fold is an OVERLAY animation
   //   — the row lives in a constant-height slot (see the spacer below),
   //   so the header's LAYOUT height never changes. Animating the in-flow
@@ -249,7 +249,7 @@ export default function Masthead({
   const [overInverted, setOverInverted] = useState(false);
 
   useEffect(() => {
-    const CONDENSE_Y = 64;
+    const CONDENSE_Y = 96;
     const NAV_TIER_H = 40; // the h-10 nav slot — empty while condensed
     let raf = 0;
     const update = () => {
