@@ -231,10 +231,13 @@ export default function Masthead({
   const cursorInBridgeRef = useRef(false);
 
   // ---- Scroll behaviours (404's .is-scrolled pair) ----------------------
-  // condensed: past ~96px of scroll the bottom links tier collapses under
-  //   the top tier (height → 0, eased); it returns once back under ~32px.
-  //   The 64px hysteresis gap exceeds the 40px the header sheds when it
-  //   condenses, so the collapse can't re-trigger its own expand.
+  // condensed: past ~160px of scroll the bottom links tier collapses under
+  //   the top tier (height → 0, eased); it returns once back under ~96px.
+  //   The expand threshold sits well above the announcement banner's
+  //   height (~40px): the unfold must START before the banner's sliver
+  //   enters the viewport, or scrolling to the top shows banner-with-no-
+  //   links for a beat and the links pop in late (the flicker). The 64px
+  //   hysteresis gap still absorbs trackpad jitter around the boundary.
   // overInverted: a section that declares data-nav-surface="inverted"
   //   (e.g. the homepage promo band) is passing under the header's bottom
   //   edge — the hairline rule goes transparent so the header reads as a
@@ -248,7 +251,7 @@ export default function Masthead({
     const update = () => {
       raf = 0;
       const y = window.scrollY;
-      setCondensed((prev) => (prev ? y > 32 : y > 96));
+      setCondensed((prev) => (prev ? y > 96 : y > 160));
       const header = headerRef.current;
       if (header) {
         const edge = header.getBoundingClientRect().bottom;
