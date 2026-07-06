@@ -38,6 +38,8 @@ export type FeaturedProduct = {
   title: string;
   slug: SanitySlug;
   mainImage?: SanityImageSource | null;
+  /** Inline LQIP (asset->metadata.lqip) for the blur placeholder. */
+  lqip?: string | null;
   excerpt?: string;
   publishedAt?: string;
   /** The post's product category (title + slug) — drives the article-card
@@ -49,6 +51,8 @@ export type FeaturedRace = {
   title: string;
   slug: SanitySlug;
   mainImage?: SanityImageSource | null;
+  /** Inline LQIP (asset->metadata.lqip) for the blur placeholder. */
+  lqip?: string | null;
   publishedAt?: string;
   eventDate?: string;
   location?: string;

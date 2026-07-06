@@ -27,6 +27,10 @@ export interface CardImageProps {
   sizes?: string;
   /** Mark above-the-fold images as priority — disables lazy load. */
   priority?: boolean;
+  /** Inline LQIP (Sanity asset->metadata.lqip) — rendered as the blur
+      placeholder, so the slot shows the image's own preview instead of
+      the bare skeleton while bytes arrive. */
+  blurDataURL?: string | null;
   /** Extra classes appended to the <Image>. */
   className?: string;
 }
@@ -36,6 +40,7 @@ export default function CardImage({
   alt,
   sizes,
   priority = false,
+  blurDataURL,
   className = "",
 }: CardImageProps) {
   return (
@@ -51,6 +56,8 @@ export default function CardImage({
         sizes={sizes}
         priority={priority}
         decoding="async"
+        placeholder={blurDataURL ? "blur" : "empty"}
+        blurDataURL={blurDataURL ?? undefined}
         className={`object-cover ${className}`.trim()}
       />
     </>

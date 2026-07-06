@@ -54,6 +54,8 @@ export interface RaceCardProps {
   badgeSize?: BadgeSize;
   /** Pre-resolved image URL. */
   imageUrl?: string;
+  /** Inline LQIP (Sanity asset->metadata.lqip) for the blur placeholder. */
+  blurDataURL?: string | null;
   /** Defaults to the title — override if the image conveys something different. */
   imageAlt?: string;
   /** Mark above-the-fold cards as priority — disables lazy load. */
@@ -126,6 +128,7 @@ export default function RaceCard({
   badgeVariant = "gray",
   badgeSize = "md",
   imageUrl,
+  blurDataURL,
   imageAlt,
   priority = false,
   className = "",
@@ -194,6 +197,7 @@ export default function RaceCard({
               alt={imageAlt ?? title}
               sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 25vw"
               priority={priority}
+              blurDataURL={blurDataURL}
             />
           </div>
         )}

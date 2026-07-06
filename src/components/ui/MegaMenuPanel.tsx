@@ -53,6 +53,8 @@ export interface MegaMenuFeatured {
   title: string;
   href: string;
   image?: SanityImageSource | null;
+  /** Inline LQIP (asset->metadata.lqip) for the blur placeholder. */
+  lqip?: string | null;
   /** Article-card meta line: the item's category (label + href). */
   category?: ArticleCardCategory | null;
   /** Pre-formatted display date for the meta line, e.g. "29 May 2026". */
@@ -204,6 +206,7 @@ export default function MegaMenuPanel({
                     .url()
                 : undefined
             }
+            blurDataURL={featured.lqip}
           />
         ) : featured ? (
           // The canonical ArticleCard, mega-menu subset: image + badge +
@@ -228,6 +231,7 @@ export default function MegaMenuPanel({
                     .url()
                 : null
             }
+            blurDataURL={featured.lqip}
             imageSizes="480px"
             category={featured.category ?? undefined}
             publishedAt={featured.publishedAt}

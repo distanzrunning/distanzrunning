@@ -9,6 +9,7 @@ export const featuredRaceQuery = `
   title,
   slug,
   mainImage,
+  "lqip": mainImage.asset->metadata.lqip,
   publishedAt,
   eventDate,
   "location": array::join(array::compact([city, stateRegion, country]), ", ")

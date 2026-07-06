@@ -10,6 +10,7 @@ const featuredProductFragment = groq`
   title,
   slug,
   mainImage,
+  "lqip": mainImage.asset->metadata.lqip,
   excerpt,
   publishedAt,
   "category": productCategory->{title, "slug": slug.current}

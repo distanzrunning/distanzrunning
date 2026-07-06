@@ -58,6 +58,7 @@ function buildFeaturedFromProduct(
     title: item.title,
     href: `/${section}/${item.slug.current}`,
     image: item.mainImage,
+    lqip: item.lqip,
     publishedAt: formatDisplayDate(item.publishedAt),
     category: item.category
       ? {
@@ -74,6 +75,7 @@ function buildFeaturedFromRace(race: FeaturedRace): MegaMenuFeatured | null {
     title: race.title,
     href: `/races/${race.slug.current}`,
     image: race.mainImage,
+    lqip: race.lqip,
     // The race sub-shape switches the panel to the canonical RaceCard —
     // event date + location (no category/distance badge in the menu).
     race: {

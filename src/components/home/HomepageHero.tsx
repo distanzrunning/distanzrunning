@@ -35,7 +35,7 @@ export default async function HomepageHero() {
   if (!hero) return null;
 
   const imageUrl = hero.mainImage
-    ? urlFor(hero.mainImage).width(1600).height(1000).auto("format").url()
+    ? urlFor(hero.mainImage).width(1600).height(1067).auto("format").url()
     : null;
   const avatarUrl = hero.author?.image
     ? urlFor(hero.author.image).width(48).height(48).auto("format").url()
@@ -131,8 +131,11 @@ export default async function HomepageHero() {
             ))}
         </div>
 
-        {/* Image — 16/10, 12px radius, settle-zoom on hero hover. The
-            homepage LCP, so priority. */}
+        {/* Image — 3/2, 12px radius, settle-zoom on hero hover. The
+            homepage LCP, so priority. The Sanity LQIP ships inline in
+            the SSR HTML as the blur placeholder — the box is never
+            empty, and the full image resolves over its own preview
+            instead of popping in over flat gray (the load flicker). */}
         <div className="relative aspect-[3/2] w-full overflow-hidden rounded-lg bg-[var(--ds-gray-100)] lg:basis-7/12">
           {imageUrl && (
             <Image
@@ -141,6 +144,8 @@ export default async function HomepageHero() {
               fill
               priority
               sizes="(max-width: 1024px) 100vw, 60vw"
+              placeholder={hero.lqip ? "blur" : "empty"}
+              blurDataURL={hero.lqip ?? undefined}
               className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100"
             />
           )}

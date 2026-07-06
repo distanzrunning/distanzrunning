@@ -82,6 +82,10 @@ export interface ArticleCardProps {
   imageAlt?: string;
   /** next/image `sizes` for the slot the card is placed in. */
   imageSizes?: string;
+  /** Inline LQIP (Sanity asset->metadata.lqip) — renders as the blur
+      placeholder so the image resolves over its own preview instead of
+      popping in over flat gray. */
+  blurDataURL?: string | null;
   /** Placement label rendered as a DS Badge over the image's top-left
       corner, e.g. "Featured". */
   badge?: string | null;
@@ -104,6 +108,7 @@ export default function ArticleCard({
   imageUrl,
   imageAlt = "",
   imageSizes = "480px",
+  blurDataURL,
   badge,
   badgeVariant = "gray",
   badgeSize = "sm",
@@ -129,6 +134,8 @@ export default function ArticleCard({
             alt={imageAlt}
             fill
             sizes={imageSizes}
+            placeholder={blurDataURL ? "blur" : "empty"}
+            blurDataURL={blurDataURL ?? undefined}
             className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100"
           />
         )}

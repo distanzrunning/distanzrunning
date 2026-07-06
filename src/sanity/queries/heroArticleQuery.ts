@@ -16,6 +16,7 @@ const heroProjection = `
   excerpt,
   "publishedAt": coalesce(publishedAt, _createdAt),
   mainImage,
+  "lqip": mainImage.asset->metadata.lqip,
   "kicker": select(
     _type == "post" => category->title,
     _type == "productPost" => productCategory->title,
