@@ -231,14 +231,15 @@ export default function Masthead({
   const cursorInBridgeRef = useRef(false);
 
   // ---- Scroll behaviours (404's .is-scrolled pair) ----------------------
-  // condensed: past 96px of scroll the bottom links tier collapses under
-  //   the top tier (height → 0, eased); back under 96px it returns. One
-  //   threshold, no hysteresis: the height transition is reversible, so
-  //   boundary jitter just nudges the fold mid-flight (no flash). The
-  //   96px sits well above the announcement banner's ~40px height — the
-  //   unfold must START before the banner's sliver enters the viewport,
-  //   or scrolling to the top shows banner-with-no-links for a beat and
-  //   the links pop in late (the flicker this replaces).
+  // condensed: past 64px of scroll the bottom links tier folds away;
+  //   back under, it returns. CRITICAL: the fold is an OVERLAY animation
+  //   — the row lives in a constant-height slot (see the spacer below),
+  //   so the header's LAYOUT height never changes. Animating the in-flow
+  //   height (the first implementation) reflowed the whole page by 40px
+  //   at the boundary, and the browser's scroll anchoring compensated by
+  //   adjusting scrollY — re-crossing the threshold and ping-ponging the
+  //   state (the flicker). With zero layout shift, one tight threshold
+  //   is safe: boundary jitter just reverses the animation mid-flight.
   // overInverted: a section that declares data-nav-surface="inverted"
   //   (e.g. the homepage promo band) is passing under the header's bottom
   //   edge — the hairline rule goes transparent so the header reads as a
@@ -248,14 +249,21 @@ export default function Masthead({
   const [overInverted, setOverInverted] = useState(false);
 
   useEffect(() => {
+    const CONDENSE_Y = 64;
+    const NAV_TIER_H = 40; // the h-10 nav slot — empty while condensed
     let raf = 0;
     const update = () => {
       raf = 0;
       const y = window.scrollY;
-      setCondensed(y > 96);
+      const condensedNow = y > CONDENSE_Y;
+      setCondensed(condensedNow);
       const header = headerRef.current;
       if (header) {
-        const edge = header.getBoundingClientRect().bottom;
+        // The header's rect includes the constant nav slot; while condensed
+        // the slot is empty, so the VISIBLE chrome ends one tier higher.
+        const edge =
+          header.getBoundingClientRect().bottom -
+          (condensedNow ? NAV_TIER_H : 0);
         let over = false;
         for (const band of document.querySelectorAll(
           '[data-nav-surface="inverted"]',
@@ -295,13 +303,19 @@ export default function Masthead({
 
   return (
     <>
-      <header ref={headerRef} className="sticky top-0 z-50 bg-canvas">
+      {/* The header shell is TRANSPARENT and pointer-inert — each tier
+          paints its own canvas and re-enables pointer events. That lets the
+          nav slot below read as truly empty while the row is folded: content
+          scrolls visibly through it AND stays clickable (a transparent shell
+          would still swallow clicks over the strip). */}
+      <header ref={headerRef} className="pointer-events-none sticky top-0 z-50">
         {/* top tier — divider spans the content (button to button). When the
             nav is condensed this rule is the header's bottom edge, and it
             goes transparent while an inverted band passes beneath (the
             colour-aware border: solid block over contrast, inset rule over
             matching canvas). */}
-        <div className="mx-auto max-w-[1400px] px-6">
+        <div className="pointer-events-auto bg-canvas">
+          <div className="mx-auto max-w-[1400px] px-6">
           <div
             className={cn(
               "grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b py-3",
@@ -382,11 +396,18 @@ export default function Masthead({
             </div>
           </div>
         </div>
+        </div>
 
-        {/* bottom tier — nav (desktop). The Root wraps the row AND the
-            fold-down Viewport so Radix can wire them together; `relative`
-            anchors the absolutely-positioned Viewport below the row. Hidden
-            on mobile — the hamburger menu handles small screens. */}
+        {/* bottom tier — nav (desktop). The row lives in a CONSTANT-HEIGHT
+            slot and overlays it (absolute): folding the row animates only
+            the overlay, so the header's layout height never changes — no
+            page reflow at the threshold, no scroll-anchoring feedback loop
+            (the old flicker). The slot is transparent + pointer-inert while
+            empty, so content scrolls visibly through it when condensed.
+            The Root wraps the row AND the fold-down Viewport so Radix can
+            wire them together. Hidden on mobile — the hamburger menu
+            handles small screens. */}
+        <div className="pointer-events-none relative hidden h-10 sm:block">
         <NavigationMenuPrimitive.Root
           aria-label="Primary"
           delayDuration={0}
@@ -398,7 +419,7 @@ export default function Masthead({
             // is the sole close trigger for pointer users).
             if (next !== "" || !cursorInBridgeRef.current) setValue(next);
           }}
-          className="relative hidden sm:block"
+          className="pointer-events-auto absolute inset-x-0 top-0 bg-canvas"
         >
           {/* Bridge wrapper — spans the trigger row + the flush panel beneath
               it so the cursor never leaves the "menu" while traversing from a
@@ -506,10 +527,12 @@ export default function Masthead({
             </div>
           </div>
         </NavigationMenuPrimitive.Root>
+        </div>
 
-        {/* mobile menu — flat top-level links. */}
+        {/* mobile menu — flat top-level links. bg-canvas + pointer-events
+            are its own (the header shell is transparent + inert). */}
         {mobileOpen && (
-          <div className="border-b border-borderSubtle sm:hidden">
+          <div className="pointer-events-auto border-b border-borderSubtle bg-canvas sm:hidden">
             <div className="mx-auto flex max-w-[1400px] flex-col gap-3 px-6 py-4">
               {[
                 ...EDITORIAL_LINKS,
