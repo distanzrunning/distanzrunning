@@ -46,7 +46,7 @@ export default function PromoUnit() {
       data-nav-surface="inverted"
       className="bg-canvasInverted text-textInverted"
     >
-      <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-5 px-6 py-14 text-center lg:py-20">
+      <div className="mx-auto flex max-w-content flex-col items-center gap-5 px-6 py-14 text-center lg:py-20">
         <BrandIcon className="h-8 w-8" />
         {/* 404-verbatim type. Their html{font-size:1.05rem} compounds
             every rem: description = 1.155rem × 16.8px root = 19.4px

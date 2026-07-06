@@ -43,7 +43,7 @@ export default async function HomepageHero() {
   const date = formatDisplayDate(hero.publishedAt);
 
   return (
-    <section className="mx-auto w-full max-w-[1400px] px-6">
+    <section className="mx-auto w-full max-w-content px-6">
       <article className="group relative flex flex-col-reverse gap-8 py-10 lg:flex-row lg:items-center lg:gap-12 lg:py-16">
         {/* Text column */}
         <div className="flex flex-col justify-center gap-4 lg:basis-5/12">

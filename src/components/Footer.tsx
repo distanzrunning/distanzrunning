@@ -89,7 +89,7 @@ export default function Footer() {
     >
       {/* Outer wrapper sized to v0: 1400 px max width, 40 px L/R
           padding, 48 px vertical margin, asymmetric pt-6 pb-10. */}
-      <div className="mx-auto my-12 w-full max-w-[1400px] px-10 pt-6 pb-10">
+      <div className="mx-auto my-12 w-full max-w-content px-10 pt-6 pb-10">
         {/* Content row: stacked on mobile inside a 672 px (max-w-2xl)
             column with a generous 64 px gap between logo and link
             grid. On md+ it expands to the xl breakpoint and goes

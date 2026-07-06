@@ -20,7 +20,7 @@ import { urlFor } from "@/sanity/lib/image";
 // review hold the visitor's attention while related items pass by.
 //
 // Sits inside a contrast-toned panel (bg-gray-100, rounded-xl,
-// no border) at the same max-w-[1400px] / p-6 md:p-10 lg:p-12
+// no border) at the same max-w-content / p-6 md:p-10 lg:p-12
 // rhythm as Breaking News and Races above and below. Surface
 // tone differs by design — gray-100 sits one notch off the
 // canvas in both themes so the row reads as its own editorial
@@ -146,7 +146,7 @@ export default function HomepageGear({ items }: HomepageGearProps) {
 
   return (
     <section className="flex w-full justify-center px-4 py-12 md:py-16 lg:py-20">
-      <div className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl bg-[color:var(--ds-gray-100)] p-6 md:gap-11 md:p-10 lg:p-12">
+      <div className="flex w-full max-w-content flex-col gap-8 rounded-xl bg-[color:var(--ds-gray-100)] p-6 md:gap-11 md:p-10 lg:p-12">
         <header className="flex flex-col-reverse items-start justify-end gap-2 md:flex-row md:items-end md:justify-between md:gap-8">
           <div className="flex flex-col gap-2">
             {/* text-heading-40 — one DS step above the heading-32

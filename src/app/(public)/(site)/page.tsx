@@ -18,7 +18,7 @@ export default function HomePage() {
           placement registry, house creatives until AdSense goes live. */}
       <AdPlacement
         name="home-below-hero"
-        className="mx-auto w-full max-w-[1400px] px-6 pb-10 lg:pb-16"
+        className="mx-auto w-full max-w-content px-6 pb-10 lg:pb-16"
       />
 
       {/* Full-bleed ink promo band (404's promo-unit) — who we are,

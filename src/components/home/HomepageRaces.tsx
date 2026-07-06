@@ -114,7 +114,7 @@ export default function HomepageRaces({
   return (
     <section className="flex w-full justify-center px-4 py-12 md:py-16 lg:py-20">
       <div
-        className="flex w-full max-w-[1400px] flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-6 md:gap-11 md:p-10 lg:p-12"
+        className="flex w-full max-w-content flex-col gap-8 rounded-xl border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-6 md:gap-11 md:p-10 lg:p-12"
         style={newsprintBg}
       >
         <header className="flex items-end justify-between gap-8">

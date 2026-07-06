@@ -31,8 +31,8 @@ import { cn } from "@/lib/utils";
 //                (single article categories, no children). Shoes/Gear/
 //                Nutrition/Races are mega-menu TRIGGERS that fold down a
 //                full-width panel (the production MegaMenuPanel, adapted to
-//                the 1400 px navbar) with subcategory links + a featured
-//                Sanity card.
+//                the max-w-content navbar) with subcategory links + a
+//                featured Sanity card.
 // Sticky (flat, no scroll shadow). Wires the real DarkModeContext (theme)
 // and SearchContext (⌘K search). Featured items are fetched server-side in
 // page.tsx and passed down.
@@ -315,7 +315,7 @@ export default function Masthead({
             colour-aware border: solid block over contrast, inset rule over
             matching canvas). */}
         <div className="pointer-events-auto bg-canvas">
-          <div className="mx-auto max-w-[1400px] px-6">
+          <div className="mx-auto max-w-content px-6">
           <div
             className={cn(
               "grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b py-3",
@@ -446,7 +446,7 @@ export default function Masthead({
               if ((e.target as HTMLElement).closest("a")) setValue("");
             }}
           >
-            <div className="mx-auto max-w-[1400px] px-6">
+            <div className="mx-auto max-w-content px-6">
               {/* Persistent navbar bottom rule — stays under the links whether
                   the menu is open or closed; the panel then expands downward
                   below it with its own matching bottom border. */}
@@ -499,7 +499,7 @@ export default function Masthead({
                     {/* absolute: outgoing and incoming Content overlap in the
                         Viewport during a section switch. No padding here — the
                         panel carries its own py, and horizontal alignment comes
-                        from the viewport's max-w-[1400px] px-6 wrapper so the
+                        from the viewport's max-w-content px-6 wrapper so the
                         columns sit on the site grid. */}
                     <NavigationMenuPrimitive.Content className="absolute left-0 top-0 w-full">
                       <MegaMenuPanel
@@ -521,7 +521,7 @@ export default function Masthead({
                 no gap) so there's no dead zone between the row and the panel.
                 Full navbar width, centered. */}
             <div className="absolute left-0 right-0 top-full">
-              <div className="mx-auto max-w-[1400px] px-6">
+              <div className="mx-auto max-w-content px-6">
                 <NavigationMenuPrimitive.Viewport className={VIEWPORT_CLASS} />
               </div>
             </div>
@@ -533,7 +533,7 @@ export default function Masthead({
             are its own (the header shell is transparent + inert). */}
         {mobileOpen && (
           <div className="pointer-events-auto border-b border-borderSubtle bg-canvas sm:hidden">
-            <div className="mx-auto flex max-w-[1400px] flex-col gap-3 px-6 py-4">
+            <div className="mx-auto flex max-w-content flex-col gap-3 px-6 py-4">
               {[
                 ...EDITORIAL_LINKS,
                 ...MEGA_SECTIONS.map((s) => ({ label: s.label, href: s.href })),

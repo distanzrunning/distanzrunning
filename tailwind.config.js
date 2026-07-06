@@ -701,11 +701,11 @@ module.exports = {
         18: "repeat(18, minmax(0, 1fr))",
       },
       maxWidth: {
-        distanz: "95%", // Wide container width for consistent layouts
-        distanz: "95%", // Legacy - updated to match new width
-        text: "720px", // Optimal reading width for articles (unchanged)
-        content: "95%", // Standard content width
-        wide: "95%", // Wide layouts
+        // THE site content column — masthead tiers, mega-menu, homepage
+        // sections all share it (404's --global-max-width is 1280 too).
+        // Change here, not per-component.
+        content: "1280px",
+        text: "720px", // Optimal reading width for articles
       },
       // ═══════════════════════════════════════════════════════════════════
       // BORDER RADIUS SYSTEM - Named semantic tokens

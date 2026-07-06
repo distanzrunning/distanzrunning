@@ -36,7 +36,7 @@ export default function FullPageSkeleton() {
       aria-hidden
       className="flex w-full flex-col items-center px-4 py-12 md:py-16 lg:py-20"
     >
-      <div className="flex w-full max-w-[1400px] flex-col gap-12">
+      <div className="flex w-full max-w-content flex-col gap-12">
         {/* Header — title block + unit controls slot.
             Both title and subtitle render the actual real-page
             text with `text-transparent` + a pulsing gray bg.
