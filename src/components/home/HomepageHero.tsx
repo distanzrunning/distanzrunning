@@ -133,7 +133,7 @@ export default async function HomepageHero() {
 
         {/* Image — 16/10, 12px radius, settle-zoom on hero hover. The
             homepage LCP, so priority. */}
-        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-[var(--ds-gray-100)] lg:basis-7/12">
+        <div className="relative aspect-[3/2] w-full overflow-hidden rounded-lg bg-[var(--ds-gray-100)] lg:basis-7/12">
           {imageUrl && (
             <Image
               src={imageUrl}
