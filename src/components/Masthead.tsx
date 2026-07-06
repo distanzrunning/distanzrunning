@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Search, Moon, Sun, Menu, X, ChevronDown } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 
@@ -230,6 +230,58 @@ export default function Masthead({
   // the keydown handler so keyboard dismissal still works.
   const cursorInBridgeRef = useRef(false);
 
+  // ---- Scroll behaviours (404's .is-scrolled pair) ----------------------
+  // condensed: past ~96px of scroll the bottom links tier collapses under
+  //   the top tier (height → 0, eased); it returns once back under ~32px.
+  //   The 64px hysteresis gap exceeds the 40px the header sheds when it
+  //   condenses, so the collapse can't re-trigger its own expand.
+  // overInverted: a section that declares data-nav-surface="inverted"
+  //   (e.g. the homepage promo band) is passing under the header's bottom
+  //   edge — the hairline rule goes transparent so the header reads as a
+  //   solid block against the contrasting band, 404-style.
+  const headerRef = useRef<HTMLElement>(null);
+  const [condensed, setCondensed] = useState(false);
+  const [overInverted, setOverInverted] = useState(false);
+
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const y = window.scrollY;
+      setCondensed((prev) => (prev ? y > 32 : y > 96));
+      const header = headerRef.current;
+      if (header) {
+        const edge = header.getBoundingClientRect().bottom;
+        let over = false;
+        for (const band of document.querySelectorAll(
+          '[data-nav-surface="inverted"]',
+        )) {
+          const r = band.getBoundingClientRect();
+          if (r.top <= edge && r.bottom >= edge) {
+            over = true;
+            break;
+          }
+        }
+        setOverInverted(over);
+      }
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  // Never condense while a mega-menu is open — the panel is anchored to the
+  // trigger row and would lose its anchor mid-interaction.
+  const navCondensed = condensed && !isOpen;
+
   const featuredBySection: Record<MegaKey, MegaMenuFeatured | null> = {
     shoes: buildFeaturedFromProduct(featuredShoe, "shoes"),
     gear: buildFeaturedFromProduct(featuredGear, "gear"),
@@ -239,10 +291,22 @@ export default function Masthead({
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-canvas">
-        {/* top tier — divider spans the content (button to button) */}
+      <header ref={headerRef} className="sticky top-0 z-50 bg-canvas">
+        {/* top tier — divider spans the content (button to button). When the
+            nav is condensed this rule is the header's bottom edge, and it
+            goes transparent while an inverted band passes beneath (the
+            colour-aware border: solid block over contrast, inset rule over
+            matching canvas). */}
         <div className="mx-auto max-w-[1400px] px-6">
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-borderSubtle py-3">
+          <div
+            className={cn(
+              "grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b py-3",
+              "transition-colors duration-200",
+              navCondensed && overInverted
+                ? "border-transparent"
+                : "border-borderSubtle",
+            )}
+          >
             {/* left — search + single theme toggle */}
             <div className="flex items-center gap-1">
               <Button
@@ -361,7 +425,19 @@ export default function Masthead({
               {/* Persistent navbar bottom rule — stays under the links whether
                   the menu is open or closed; the panel then expands downward
                   below it with its own matching bottom border. */}
-              <NavigationMenuPrimitive.List className="flex h-10 items-stretch justify-center gap-1 border-b border-borderSubtle">
+              <NavigationMenuPrimitive.List
+                className={cn(
+                  "flex items-stretch justify-center gap-1 overflow-hidden border-b",
+                  // 404's .is-scrolled collapse: height → 0 + border off,
+                  // eased. visibility rides the same transition (interpolated
+                  // as visible until the end), so the links stay drawn while
+                  // the row folds, then leave the tab order once hidden.
+                  "transition-[height,visibility] duration-200 ease-out motion-reduce:transition-none",
+                  navCondensed
+                    ? "invisible h-0 border-transparent"
+                    : "h-10 border-borderSubtle",
+                )}
+              >
                 {/* Editorial disciplines — plain links, no panel. Entering one
                     closes any open mega-menu: the bridge suppresses Radix's
                     close while the cursor is still in the row, so a plain link

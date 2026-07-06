@@ -39,6 +39,11 @@ export default function PromoUnit() {
   return (
     <section
       aria-label="About Distanz Running"
+      // data-nav-surface: tells the sticky Masthead a contrasting band is
+      // passing under it — its hairline rule goes transparent (the
+      // colour-aware border). Any future non-canvas full-bleed section
+      // should declare this too.
+      data-nav-surface="inverted"
       className="bg-canvasInverted text-textInverted"
     >
       <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-5 px-6 py-14 text-center lg:py-20">
