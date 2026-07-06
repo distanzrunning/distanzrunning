@@ -57,11 +57,11 @@ export default function PromoUnit() {
           </Link>
           .
         </p>
-        {/* CTA in OUR caps register (the ad marker's: sans, uppercase,
-            0.08em tracking) at 404's CTA size — not their mono, which we
-            reserve for code/data labels. !important: the label slot
-            hardcodes letterSpacing 0 and out-emits core tracking-*. */}
-        <p className="text-label-14 uppercase !tracking-[0.08em]">
+        {/* CTA in mono caps — a DELIBERATE register choice (user call,
+            July 2026): the mono contrast against the sans description is
+            the point. Documented as a sanctioned use on the DS Typography
+            page (label-14-mono: "…uppercase brand accents"). */}
+        <p className="text-label-14-mono uppercase">
           Support our journalism.{" "}
           <Link href="/signup" className={bandLink}>
             Subscribe

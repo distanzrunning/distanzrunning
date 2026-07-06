@@ -466,7 +466,7 @@ export default function Typography() {
               <TypographyRow
                 example={<p className="text-label-14-mono">Label Mono</p>}
                 className="text-label-14-mono"
-                usage="Code, technical labels"
+                usage="Code, technical labels, uppercase brand accents"
                 onCopy={handleCopy}
               />
               <TypographyRow
