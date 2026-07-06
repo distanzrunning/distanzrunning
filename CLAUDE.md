@@ -218,7 +218,7 @@ The following live in `src/components/` (some in `src/components/ui/`). When int
 - **Theme**: dark mode is via the `.dark` class on `<html>`. Token namespaces flip automatically; prefer relying on token semantics over `dark:` overrides where a token already does the right thing.
 - **`text-balance`**: use on multi-line headings/leads so wraps don't orphan the last word.
 - **Card-with-overlay-link**: where an entire card is clickable but the kicker / category needs its own link, the title's `<a>` carries `after:absolute after:inset-0` to span the card; the kicker's `<a>` sits with `relative z-10` to punch through. See `ArticleCard.tsx` for the canonical pattern.
-- **Sanity image URLs**: resolve at the data layer with `urlFor(image).width(...).auto("format").url()`. Components like `ArticleCard` / `RaceCard` accept a pre-resolved `imageUrl` string + optional `blurDataURL`, not a raw `SanityImageSource`.
+- **Sanity image URLs**: resolve at the data layer with `urlFor(image).width(...).auto("format").url()`. Components like `ArticleCard` / `RaceCard` accept a pre-resolved `imageUrl` string + optional `blurDataURL`, not a raw `SanityImageSource`. For the `blurDataURL`, select `"lqip": mainImage.asset->metadata.lqip` in the GROQ query — an inline base64 preview (zero extra requests), NOT a tiny `urlFor(...).blur(20)` URL (that's still a network fetch and can itself flicker).
 - **Hover affordances on cards**: image `scale-[1.04]` → `scale-100` on `group-hover` (settle-zoom) is the established pattern. Don't add hover underline to titles inside cards.
 
 ---
