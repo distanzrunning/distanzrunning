@@ -27,8 +27,12 @@ export const ANNOUNCEMENT_COLORS = {
     bg: "hsl(var(--color-textDefault))",
     fg: "hsl(var(--color-surface))",
   },
-  white: { label: "White", bg: "#ffffff", fg: "#0a0a0a" },
-  black: { label: "Black", bg: "#0a0a0a", fg: "#ffffff" },
+  // The fixed pair are the TWO CANVAS TONES (bg-200 light/dark) with their
+  // textInverted pairings — the same values canvasInverted resolves to, so a
+  // Black banner matches the promo band's black exactly (and merges with the
+  // dark theme's page) instead of sitting 4% lighter at the surface black.
+  white: { label: "White", bg: "#fafafa", fg: "#1a1a1a" },
+  black: { label: "Black", bg: "#000000", fg: "#ebebeb" },
   blue: { label: "Blue", bg: "var(--ds-blue-700)", fg: "#ffffff" },
   green: { label: "Green", bg: "var(--ds-green-700)", fg: "#ffffff" },
   amber: { label: "Amber", bg: "var(--ds-amber-800)", fg: "#0a0a0a" },
