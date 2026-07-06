@@ -57,7 +57,11 @@ export default function PromoUnit() {
           </Link>
           .
         </p>
-        <p className="text-label-14-mono uppercase">
+        {/* CTA in OUR caps register (the ad marker's: sans, uppercase,
+            0.08em tracking) at 404's CTA size — not their mono, which we
+            reserve for code/data labels. !important: the label slot
+            hardcodes letterSpacing 0 and out-emits core tracking-*. */}
+        <p className="text-label-14 uppercase !tracking-[0.08em]">
           Support our journalism.{" "}
           <Link href="/signup" className={bandLink}>
             Subscribe
