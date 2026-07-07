@@ -184,21 +184,23 @@ export default function ArticleCard({
           isPlain ? "px-1 pt-4" : "p-5",
         )}
       >
-        {/* Meta line (Quartr anatomy): category · date, in the smallest
-            label slot. The category is its own link (z-10 above the title
-            overlay) when it has an href. */}
+        {/* Meta line (Quartr anatomy): category · date, in the tiny
+            metadata slot (label-12 — Quartr runs 11px against a 19px
+            title; 12 is our nearest step and widens the hierarchy the
+            same way). The category is its own link (z-10 above the
+            title overlay) when it has an href. */}
         {(category || publishedAt) && (
           <div className="flex shrink-0 items-center gap-1">
             {category &&
               (category.href ? (
                 <Link
                   href={category.href}
-                  className="relative z-10 rounded-sm text-copy-13 text-textSubtle transition-colors hover:text-textDefault focus-visible:text-textDefault focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--ds-focus-color)]"
+                  className="relative z-10 rounded-sm text-label-12 text-textSubtle transition-colors hover:text-textDefault focus-visible:text-textDefault focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--ds-focus-color)]"
                 >
                   {category.label}
                 </Link>
               ) : (
-                <span className="text-copy-13 text-textSubtle">
+                <span className="text-label-12 text-textSubtle">
                   {category.label}
                 </span>
               ))}
@@ -208,7 +210,7 @@ export default function ArticleCard({
               </span>
             )}
             {publishedAt && (
-              <span className="text-copy-13 text-textSubtle">
+              <span className="text-label-12 text-textSubtle">
                 {publishedAt}
               </span>
             )}
