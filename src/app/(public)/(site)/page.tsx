@@ -7,6 +7,7 @@
 import HomepageHero from "@/components/home/HomepageHero";
 import AdPlacement from "@/components/ads/AdPlacement";
 import PromoUnit from "@/components/home/PromoUnit";
+import HomepageLatestNews from "@/components/home/HomepageLatestNews";
 
 export default function HomePage() {
   return (
@@ -24,6 +25,9 @@ export default function HomePage() {
       {/* Full-bleed ink promo band (404's promo-unit) — who we are,
           about link, subscribe CTA. */}
       <PromoUnit />
+
+      {/* Latest News — Quartr's section structure, our ArticleCards. */}
+      <HomepageLatestNews />
     </>
   );
 }
