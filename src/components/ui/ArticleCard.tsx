@@ -103,8 +103,20 @@ export interface ArticleCardProps {
       image, text straight on the canvas — for editorial grids (Quartr's
       card style). */
   chrome?: "card" | "plain";
+  /** Image crop. "16/10" (default) is the editorial card crop;
+      "16/8.75" is the wider grid crop (Quartr's 54.6875% — also
+      RaceCard's ratio). */
+  imageRatio?: "16/10" | "16/8.75";
   className?: string;
 }
+
+const imageRatioStyles: Record<
+  NonNullable<ArticleCardProps["imageRatio"]>,
+  string
+> = {
+  "16/10": "aspect-[16/10]",
+  "16/8.75": "aspect-[16/8.75]",
+};
 
 export default function ArticleCard({
   title,
@@ -122,6 +134,7 @@ export default function ArticleCard({
   author,
   publishedAt,
   chrome = "card",
+  imageRatio = "16/10",
   className,
 }: ArticleCardProps) {
   const isPlain = chrome === "plain";
@@ -139,7 +152,8 @@ export default function ArticleCard({
           chrome: the image carries the radius itself (hero anatomy). */}
       <div
         className={cn(
-          "relative aspect-[16/10] w-full overflow-hidden bg-[var(--ds-gray-100)]",
+          "relative w-full overflow-hidden bg-[var(--ds-gray-100)]",
+          imageRatioStyles[imageRatio],
           isPlain && "rounded-lg",
         )}
       >

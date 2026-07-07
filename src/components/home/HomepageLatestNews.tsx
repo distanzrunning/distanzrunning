@@ -71,10 +71,13 @@ export default async function HomepageLatestNews() {
               category?: { title: string; slug: string } | null;
               href: string;
             }) => (
+              // Quartr's card proportions: 16/8.75 image (their 54.6875%
+              // wrapper), title at 20px (size md), copy-14 excerpt.
               <ArticleCard
                 key={post._id}
-                size="lg"
+                size="md"
                 chrome="plain"
+                imageRatio="16/8.75"
                 href={post.href}
                 title={post.title}
                 excerpt={post.excerpt}
@@ -82,7 +85,7 @@ export default async function HomepageLatestNews() {
                   post.mainImage
                     ? urlFor(post.mainImage as Parameters<typeof urlFor>[0])
                         .width(1240)
-                        .height(775)
+                        .height(678)
                         .auto("format")
                         .url()
                     : null
