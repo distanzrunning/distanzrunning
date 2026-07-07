@@ -98,6 +98,11 @@ export interface ArticleCardProps {
   author?: { name: string; avatarUrl?: string | null; href?: string } | null;
   /** Pre-formatted display date, e.g. "04 Jul 2026". */
   publishedAt?: string | null;
+  /** Block chrome. "card" (default) is the bordered surface box (mega-menu
+      featured slot). "plain" is the hero's chromeless anatomy — rounded
+      image, text straight on the canvas — for editorial grids (Quartr's
+      card style). */
+  chrome?: "card" | "plain";
   className?: string;
 }
 
@@ -116,18 +121,28 @@ export default function ArticleCard({
   excerpt,
   author,
   publishedAt,
+  chrome = "card",
   className,
 }: ArticleCardProps) {
+  const isPlain = chrome === "plain";
 
   return (
     <article
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-lg border border-borderSubtle bg-surface",
+        "group relative flex flex-col",
+        !isPlain &&
+          "overflow-hidden rounded-lg border border-borderSubtle bg-surface",
         className,
       )}
     >
-      {/* Image — 16/10 editorial crop, settle-zoom on card hover. */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-[var(--ds-gray-100)]">
+      {/* Image — 16/10 editorial crop, settle-zoom on card hover. Plain
+          chrome: the image carries the radius itself (hero anatomy). */}
+      <div
+        className={cn(
+          "relative aspect-[16/10] w-full overflow-hidden bg-[var(--ds-gray-100)]",
+          isPlain && "rounded-lg",
+        )}
+      >
         {imageUrl && (
           <Image
             src={imageUrl}
@@ -149,7 +164,12 @@ export default function ArticleCard({
         )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 p-5">
+      <div
+        className={cn(
+          "flex flex-1 flex-col gap-2",
+          isPlain ? "px-1 pt-4" : "p-5",
+        )}
+      >
         {/* Meta line (Quartr anatomy): category · date, in the smallest
             label slot. The category is its own link (z-10 above the title
             overlay) when it has an href. */}
@@ -186,10 +206,16 @@ export default function ArticleCard({
           className={cn(titleSizeStyles[size], "text-pretty text-textDefault")}
         >
           {/* Keyboard focus draws the DS focus outline via the overlay —
-              inset 2px so the card's overflow-hidden doesn't clip it. */}
+              card chrome insets it 2px so overflow-hidden doesn't clip;
+              plain chrome (no clipping) breathes outward like the hero. */}
           <Link
             href={href}
-            className="outline-none after:absolute after:inset-0 focus-visible:after:rounded-lg focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
+            className={cn(
+              "outline-none after:absolute after:inset-0 focus-visible:after:rounded-lg focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]",
+              isPlain
+                ? "focus-visible:after:outline-offset-4"
+                : "focus-visible:after:-outline-offset-2",
+            )}
           >
             {title}
           </Link>

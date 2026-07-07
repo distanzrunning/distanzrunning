@@ -74,6 +74,7 @@ export default async function HomepageLatestNews() {
               <ArticleCard
                 key={post._id}
                 size="lg"
+                chrome="plain"
                 href={post.href}
                 title={post.title}
                 excerpt={post.excerpt}
