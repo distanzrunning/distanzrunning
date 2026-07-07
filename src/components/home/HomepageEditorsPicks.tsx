@@ -44,7 +44,7 @@ function SeeAllButton() {
       size="medium"
       suffixIcon={<ChevronRight />}
     >
-      See all articles
+      All articles
     </ButtonLink>
   );
 }
@@ -126,7 +126,7 @@ export default async function HomepageEditorsPicks() {
             {rail.map((pick) => (
               <ArticleCard
                 key={pick._id}
-                size="sm"
+                size="md"
                 chrome="plain"
                 imageRatio="16/8.75"
                 mobileLayout="row"
