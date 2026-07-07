@@ -1,18 +1,27 @@
 // src/components/home/HomepageLatestNews.tsx
 //
-// Homepage Latest News — Quartr's "Latest from Edge" section structure
-// on our primitives: header row (section title + subtle tagline left,
-// tertiary view-all button right — the button drops below the grid on
-// mobile), then a two-column grid of the canonical ArticleCard.
+// Homepage Latest News — Quartr's section anatomy (header row: title +
+// subtle tagline left; view-all + slider arrows right) over ONE row of
+// compact plain-chrome ArticleCards in the shared Embla Carousel:
+// three in view on desktop, more sliding in from the right (trackpad
+// horizontal swipes work via the carousel's wheel-gestures plugin).
 //
-// Server component: fetches the four newest posts (minus the hero's
+// Server component: fetches the six newest posts (minus the hero's
 // article — see latestNewsQuery) and resolves image URLs + LQIPs at
-// the data boundary per the DS convention.
+// the data boundary per the DS convention. The Carousel primitives are
+// client components receiving these server-rendered cards as children.
 
 import { ChevronRight } from "lucide-react";
 
 import ArticleCard from "@/components/ui/ArticleCard";
 import { ButtonLink } from "@/components/ui/Button";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/Carousel";
 import { sanityFetch } from "@/sanity/lib/live";
 import { latestNewsQuery } from "@/sanity/queries/latestNewsQuery";
 import { urlFor } from "@/sanity/lib/image";
@@ -33,6 +42,11 @@ function AllArticlesButton() {
   );
 }
 
+// The header-row arrow chips reuse CarouselPrevious/Next but sit in
+// flow (the primitives default to floating chips at the content edges,
+// which would overhang the page column here).
+const ARROW_CLASS = "static translate-y-0";
+
 export default async function HomepageLatestNews() {
   const { data: posts } = await sanityFetch({ query: latestNewsQuery });
   if (!posts?.length) return null;
@@ -42,8 +56,9 @@ export default async function HomepageLatestNews() {
       aria-label="Latest news"
       className="mx-auto w-full max-w-content px-6 py-16 lg:py-20"
     >
-      <div className="flex w-full flex-col gap-8 md:gap-11">
-        {/* Header row — title + tagline left, view-all right (desktop). */}
+      <Carousel opts={{ align: "start" }} className="flex w-full flex-col gap-8 md:gap-11">
+        {/* Header row — title + tagline left; view-all + arrows right
+            (desktop). */}
         <div className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
             <h2 className="text-heading-24 md:text-heading-32 text-balance text-textDefault">
@@ -53,13 +68,18 @@ export default async function HomepageLatestNews() {
               The latest stories from road, track, and trail.
             </p>
           </div>
-          <div className="hidden md:block">
+          <div className="hidden items-center gap-3 md:flex">
             <AllArticlesButton />
+            <div className="flex items-center gap-2">
+              <CarouselPrevious className={ARROW_CLASS} />
+              <CarouselNext className={ARROW_CLASS} />
+            </div>
           </div>
         </div>
 
-        {/* Card grid — Quartr's rhythm (tight columns, roomy rows). */}
-        <div className="grid w-full grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 md:gap-y-12">
+        {/* One row — three cards in view on desktop (Quartr's 3-col card
+            proportions), a peek of the next on mobile. */}
+        <CarouselContent>
           {posts.map(
             (post: {
               _id: string;
@@ -71,46 +91,50 @@ export default async function HomepageLatestNews() {
               category?: { title: string; slug: string } | null;
               href: string;
             }) => (
-              // Quartr's card proportions: 16/8.75 image (their 54.6875%
-              // wrapper), title at 20px (size md), copy-14 excerpt.
-              <ArticleCard
+              <CarouselItem
                 key={post._id}
-                size="md"
-                chrome="plain"
-                imageRatio="16/8.75"
-                href={post.href}
-                title={post.title}
-                excerpt={post.excerpt}
-                imageUrl={
-                  post.mainImage
-                    ? urlFor(post.mainImage as Parameters<typeof urlFor>[0])
-                        .width(1240)
-                        .height(678)
-                        .auto("format")
-                        .url()
-                    : null
-                }
-                blurDataURL={post.lqip}
-                imageSizes="(max-width: 768px) 100vw, 620px"
-                category={
-                  post.category
-                    ? {
-                        label: post.category.title,
-                        href: `/articles/${post.category.slug}`,
-                      }
-                    : null
-                }
-                publishedAt={post.publishedAt ? formatDisplayDate(post.publishedAt) : null}
-              />
+                className="basis-[85%] sm:basis-1/2 md:basis-1/3"
+              >
+                <ArticleCard
+                  size="md"
+                  chrome="plain"
+                  imageRatio="16/8.75"
+                  href={post.href}
+                  title={post.title}
+                  excerpt={post.excerpt}
+                  imageUrl={
+                    post.mainImage
+                      ? urlFor(post.mainImage as Parameters<typeof urlFor>[0])
+                          .width(960)
+                          .height(525)
+                          .auto("format")
+                          .url()
+                      : null
+                  }
+                  blurDataURL={post.lqip}
+                  imageSizes="(max-width: 640px) 85vw, (max-width: 768px) 50vw, 405px"
+                  category={
+                    post.category
+                      ? {
+                          label: post.category.title,
+                          href: `/articles/${post.category.slug}`,
+                        }
+                      : null
+                  }
+                  publishedAt={
+                    post.publishedAt ? formatDisplayDate(post.publishedAt) : null
+                  }
+                />
+              </CarouselItem>
             ),
           )}
-        </div>
+        </CarouselContent>
 
-        {/* Mobile view-all — below the grid, as Quartr does. */}
+        {/* Mobile view-all — below the row, as Quartr does. */}
         <div className="md:hidden">
           <AllArticlesButton />
         </div>
-      </div>
+      </Carousel>
     </section>
   );
 }
