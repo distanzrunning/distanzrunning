@@ -43,11 +43,19 @@ function AllArticlesButton() {
   );
 }
 
-// Floating arrow chips over the row's outer cards — revealed on row
+// Floating arrow chips straddling the row's edges — revealed on row
 // hover (and on keyboard focus); a disabled chip stays hidden even
 // while hovering. Touch devices never hover, so they swipe the peek.
 const ARROW_CLASS =
   "opacity-0 transition-opacity duration-200 group-hover/row:opacity-100 focus-visible:opacity-100 disabled:opacity-0";
+
+// Vertical centre of the IMAGE band (not the whole card): the image
+// height is a pure function of the row width — card = (row − gaps) / n,
+// image = card × 35/64 (the 16/8.75 crop) — so cq units place the chip
+// exactly at half image height at any size. Factors: ÷2-up = 35/256,
+// 3-up = 35/384, each halved.
+const ARROW_Y =
+  "top-[calc((100cqw-16px)*0.1367)] md:top-[calc((100cqw-32px)*0.0911)]";
 
 export default async function HomepageLatestNews() {
   const { data: posts } = await sanityFetch({ query: latestNewsQuery });
@@ -78,7 +86,7 @@ export default async function HomepageLatestNews() {
         {/* One row — three cards in view on desktop (Quartr's 3-col card
             proportions), a peek of the next on mobile. The group/row
             wrapper scopes the arrows' hover reveal to the row itself. */}
-        <div className="group/row relative">
+        <div className="group/row relative @container">
           <CarouselContent>
           {posts.map(
             (post: {
@@ -129,8 +137,12 @@ export default async function HomepageLatestNews() {
             ),
           )}
           </CarouselContent>
-          <CarouselPrevious className={cn("left-3", ARROW_CLASS)} />
-          <CarouselNext className={cn("right-3", ARROW_CLASS)} />
+          <CarouselPrevious
+            className={cn("left-0 -translate-x-1/2", ARROW_Y, ARROW_CLASS)}
+          />
+          <CarouselNext
+            className={cn("right-0 translate-x-1/2", ARROW_Y, ARROW_CLASS)}
+          />
         </div>
 
         {/* Mobile view-all — below the row, as Quartr does. */}
