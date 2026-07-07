@@ -90,7 +90,11 @@ export default async function HomepageEditorsPicks() {
   return (
     <section
       aria-label="Editor's picks"
-      className="mx-auto w-full max-w-content px-6 py-16 lg:py-20"
+      // Quartr's section rhythm: generous bottom padding (their pb-48).
+      // It's also functional — the sticky main pick needs scroll room
+      // BELOW the section to travel; until the footer/next section
+      // lands, this padding is most of that room.
+      className="mx-auto w-full max-w-content px-6 pb-32 pt-16 lg:pb-48 lg:pt-20"
     >
       <div className="flex w-full flex-col gap-8 md:gap-11">
         {/* Header row — same anatomy as Latest News. */}
@@ -122,7 +126,9 @@ export default async function HomepageEditorsPicks() {
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-4 lg:grid-cols-1 lg:gap-6">
+          {/* md:pb-10 is Quartr's — it stretches the grid below the rail,
+              buying the sticky main pick extra travel. */}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-4 md:pb-10 lg:grid-cols-1 lg:gap-6">
             {rail.map((pick) => (
               <ArticleCard
                 key={pick._id}
