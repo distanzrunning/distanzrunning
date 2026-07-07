@@ -57,19 +57,29 @@ export interface ArticleCardCategory {
   href?: string;
 }
 
-// Editorial size scale — drives the title slot (and excerpt on lg).
-// sm: dense grids/sidebars · md: the standard card · lg: leads/features.
-export type ArticleCardSize = "sm" | "md" | "lg";
+// Editorial size scale — drives the title slot (and the excerpt size).
+// sm: dense grids/sidebars · md: the standard card · lg: leads/features ·
+// xl: the section-dominating main pick (Quartr's headlineLarge slot — our
+// UI scale tops out at heading-32).
+export type ArticleCardSize = "sm" | "md" | "lg" | "xl";
 
 // Titles use text-pretty (not text-balance): balance equalises line lengths,
 // which wraps titles early and makes the type read smaller than it is —
 // pretty only prevents orphans, so lines fill the measure (Quartr/404 both
-// let card titles run full-measure). lg titles get a third line before
+// let card titles run full-measure). lg/xl titles get a third line before
 // clamping, matching their larger presence.
 const titleSizeStyles: Record<ArticleCardSize, string> = {
   sm: "text-heading-16 line-clamp-2",
   md: "text-heading-20 line-clamp-2",
   lg: "text-heading-24 line-clamp-3",
+  xl: "text-heading-24 md:text-heading-32 line-clamp-3",
+};
+
+const excerptSizeStyles: Record<ArticleCardSize, string> = {
+  sm: "text-copy-14",
+  md: "text-copy-14",
+  lg: "text-copy-16",
+  xl: "text-copy-16 md:text-copy-18",
 };
 
 export interface ArticleCardProps {
@@ -107,6 +117,11 @@ export interface ArticleCardProps {
       "16/8.75" is the wider grid crop (Quartr's 54.6875% — also
       RaceCard's ratio). */
   imageRatio?: "16/10" | "16/8.75";
+  /** Below-md anatomy. "row" lays the card out horizontally on mobile
+      (thumbnail left, text right — Quartr's list-row treatment for
+      rails) and returns to the column anatomy from md up. Plain chrome
+      only. */
+  mobileLayout?: "column" | "row";
   className?: string;
 }
 
@@ -135,26 +150,33 @@ export default function ArticleCard({
   publishedAt,
   chrome = "card",
   imageRatio = "16/10",
+  mobileLayout = "column",
   className,
 }: ArticleCardProps) {
   const isPlain = chrome === "plain";
+  const isRow = mobileLayout === "row";
 
   return (
     <article
       className={cn(
-        "group relative flex flex-col",
+        "group relative flex",
+        isRow
+          ? "flex-row items-center gap-4 md:flex-col md:items-stretch md:gap-0"
+          : "flex-col",
         !isPlain &&
           "overflow-hidden rounded-lg border border-borderSubtle bg-surface",
         className,
       )}
     >
       {/* Image — 16/10 editorial crop, settle-zoom on card hover. Plain
-          chrome: the image carries the radius itself (hero anatomy). */}
+          chrome: the image carries the radius itself (hero anatomy).
+          Row anatomy: a fixed thumbnail on the left below md. */}
       <div
         className={cn(
           "relative w-full overflow-hidden bg-[var(--ds-gray-100)]",
           imageRatioStyles[imageRatio],
           isPlain && "rounded-lg",
+          isRow && "w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none",
         )}
       >
         {imageUrl && (
@@ -182,6 +204,7 @@ export default function ArticleCard({
         className={cn(
           "flex flex-1 flex-col gap-2",
           isPlain ? "px-1 pt-4" : "p-5",
+          isRow && isPlain && "px-0 pt-0 md:px-1 md:pt-4",
         )}
       >
         {/* Meta line (Quartr anatomy): category · date, in the tiny
@@ -241,7 +264,7 @@ export default function ArticleCard({
         {excerpt && (
           <p
             className={cn(
-              size === "lg" ? "text-copy-16" : "text-copy-14",
+              excerptSizeStyles[size],
               "text-pretty text-textSubtle line-clamp-2",
             )}
           >

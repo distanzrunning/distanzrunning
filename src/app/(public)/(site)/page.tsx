@@ -8,6 +8,7 @@ import HomepageHero from "@/components/home/HomepageHero";
 import AdPlacement from "@/components/ads/AdPlacement";
 import PromoUnit from "@/components/home/PromoUnit";
 import HomepageLatestNews from "@/components/home/HomepageLatestNews";
+import HomepageEditorsPicks from "@/components/home/HomepageEditorsPicks";
 
 export default function HomePage() {
   return (
@@ -28,6 +29,9 @@ export default function HomePage() {
 
       {/* Latest News — Quartr's section structure, our ArticleCards. */}
       <HomepageLatestNews />
+
+      {/* Editor's Picks — sticky main pick + scrolling rail of three. */}
+      <HomepageEditorsPicks />
     </>
   );
 }
