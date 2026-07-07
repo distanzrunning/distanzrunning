@@ -22,6 +22,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/Carousel";
+import { cn } from "@/lib/utils";
 import { sanityFetch } from "@/sanity/lib/live";
 import { latestNewsQuery } from "@/sanity/queries/latestNewsQuery";
 import { urlFor } from "@/sanity/lib/image";
@@ -42,10 +43,11 @@ function AllArticlesButton() {
   );
 }
 
-// The header-row arrow chips reuse CarouselPrevious/Next but sit in
-// flow (the primitives default to floating chips at the content edges,
-// which would overhang the page column here).
-const ARROW_CLASS = "static translate-y-0";
+// Floating arrow chips over the row's outer cards — revealed on row
+// hover (and on keyboard focus); a disabled chip stays hidden even
+// while hovering. Touch devices never hover, so they swipe the peek.
+const ARROW_CLASS =
+  "opacity-0 transition-opacity duration-200 group-hover/row:opacity-100 focus-visible:opacity-100 disabled:opacity-0";
 
 export default async function HomepageLatestNews() {
   const { data: posts } = await sanityFetch({ query: latestNewsQuery });
@@ -68,18 +70,16 @@ export default async function HomepageLatestNews() {
               The latest stories from road, track, and trail.
             </p>
           </div>
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden md:block">
             <AllArticlesButton />
-            <div className="flex items-center gap-2">
-              <CarouselPrevious className={ARROW_CLASS} />
-              <CarouselNext className={ARROW_CLASS} />
-            </div>
           </div>
         </div>
 
         {/* One row — three cards in view on desktop (Quartr's 3-col card
-            proportions), a peek of the next on mobile. */}
-        <CarouselContent>
+            proportions), a peek of the next on mobile. The group/row
+            wrapper scopes the arrows' hover reveal to the row itself. */}
+        <div className="group/row relative">
+          <CarouselContent>
           {posts.map(
             (post: {
               _id: string;
@@ -128,7 +128,10 @@ export default async function HomepageLatestNews() {
               </CarouselItem>
             ),
           )}
-        </CarouselContent>
+          </CarouselContent>
+          <CarouselPrevious className={cn("left-3", ARROW_CLASS)} />
+          <CarouselNext className={cn("right-3", ARROW_CLASS)} />
+        </div>
 
         {/* Mobile view-all — below the row, as Quartr does. */}
         <div className="md:hidden">
