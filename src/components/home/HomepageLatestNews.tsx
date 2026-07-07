@@ -21,6 +21,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  CarouselWheelStep,
 } from "@/components/ui/Carousel";
 import { cn } from "@/lib/utils";
 import { sanityFetch } from "@/sanity/lib/live";
@@ -66,7 +67,13 @@ export default async function HomepageLatestNews() {
       aria-label="Latest news"
       className="mx-auto w-full max-w-content px-6 py-16 lg:py-20"
     >
-      <Carousel opts={{ align: "start" }} className="flex w-full flex-col gap-8 md:gap-11">
+      <Carousel
+        opts={{ align: "start" }}
+        // Free-glide wheel gestures off — CarouselWheelStep below steps
+        // one card per gesture instead, so the row always lands in place.
+        wheelGestures={false}
+        className="flex w-full flex-col gap-8 md:gap-11"
+      >
         {/* Header row — title + tagline left; view-all + arrows right
             (desktop). */}
         <div className="flex items-center justify-between gap-8 md:items-end">
@@ -86,7 +93,7 @@ export default async function HomepageLatestNews() {
         {/* One row — three cards in view on desktop (Quartr's 3-col card
             proportions), a peek of the next on mobile. The group/row
             wrapper scopes the arrows' hover reveal to the row itself. */}
-        <div className="group/row relative @container">
+        <CarouselWheelStep className="group/row relative @container">
           <CarouselContent>
           {posts.map(
             (post: {
@@ -143,7 +150,7 @@ export default async function HomepageLatestNews() {
           <CarouselNext
             className={cn("right-0 translate-x-1/2", ARROW_Y, ARROW_CLASS)}
           />
-        </div>
+        </CarouselWheelStep>
 
         {/* Mobile view-all — below the row, as Quartr does. */}
         <div className="md:hidden">

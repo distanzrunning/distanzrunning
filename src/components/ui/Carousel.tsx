@@ -30,6 +30,10 @@ type CarouselProps = {
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
   setApi?: (api: CarouselApi) => void;
+  /** Turn off the wheel-gestures plugin (free trackpad glide). Pair with
+      CarouselWheelStep for discrete card-by-card wheel stepping that
+      always settles on a snap point. */
+  wheelGestures?: boolean;
 };
 
 type CarouselContextProps = {
@@ -56,6 +60,7 @@ function Carousel({
   opts,
   setApi,
   plugins,
+  wheelGestures = true,
   className,
   children,
   ...props
@@ -65,8 +70,11 @@ function Carousel({
   // Only attached on horizontal carousels — on vertical ones the
   // plugin would watch deltaY and risk hijacking page scroll.
   const wheelPlugins = React.useMemo(
-    () => (orientation === "horizontal" ? [WheelGesturesPlugin()] : []),
-    [orientation],
+    () =>
+      orientation === "horizontal" && wheelGestures
+        ? [WheelGesturesPlugin()]
+        : [],
+    [orientation, wheelGestures],
   );
 
   const [carouselRef, api] = useEmblaCarousel(
@@ -244,6 +252,51 @@ function CarouselNext({
   );
 }
 
+// Discrete wheel stepping — a horizontal trackpad/wheel gesture advances
+// exactly one snap per cooldown window, so the row always scrolls INTO
+// PLACE instead of free-gliding on the momentum tail. Wrap the content
+// area (arrows included) with this and pass wheelGestures={false} to the
+// Carousel so the free-glide plugin doesn't fight it. Vertical deltas
+// pass through untouched (page keeps scrolling); handled horizontal
+// deltas are prevented so they can't trigger the browser's history
+// swipe. Drag and touch keep Embla's native snap behaviour.
+function CarouselWheelStep({
+  stepCooldown = 500,
+  threshold = 12,
+  ...props
+}: React.ComponentProps<"div"> & {
+  /** Minimum ms between steps — swallows the momentum tail. */
+  stepCooldown?: number;
+  /** Minimum |deltaX| that counts as an intentional gesture. */
+  threshold?: number;
+}) {
+  const { api } = useCarousel();
+  const ref = React.useRef<HTMLDivElement>(null);
+  const lockRef = React.useRef(0);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el || !api) return;
+    const onWheel = (event: WheelEvent) => {
+      // Dominantly-vertical scrolling belongs to the page.
+      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+      event.preventDefault();
+      const now = Date.now();
+      if (now - lockRef.current < stepCooldown) return;
+      if (Math.abs(event.deltaX) < threshold) return;
+      lockRef.current = now;
+      if (event.deltaX > 0) api.scrollNext();
+      else api.scrollPrev();
+    };
+    // React attaches wheel passively — a native non-passive listener is
+    // required for the preventDefault above.
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [api, stepCooldown, threshold]);
+
+  return <div ref={ref} data-slot="carousel-wheel-step" {...props} />;
+}
+
 export {
   type CarouselApi,
   Carousel,
@@ -251,5 +304,6 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  CarouselWheelStep,
   useCarousel,
 };
