@@ -100,10 +100,12 @@ export default async function HomepageEditorsPicks() {
         {/* Header row — same anatomy as Latest News. */}
         <div className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
-            <h2 className="text-heading-24 md:text-heading-32 text-balance text-textDefault">
+            {/* Quartr escalates the curated section a step above Latest
+                (headlineLarge→displaySmall, 38→48px): heading-32→48. */}
+            <h2 className="text-heading-32 md:text-heading-48 text-balance text-textDefault">
               Editor&rsquo;s Picks
             </h2>
-            <p className="text-copy-14 md:text-copy-16 text-balance text-textSubtle">
+            <p className="text-copy-16 md:text-copy-18 text-balance text-textSubtle">
               Hand-picked stories from our editors.
             </p>
           </div>

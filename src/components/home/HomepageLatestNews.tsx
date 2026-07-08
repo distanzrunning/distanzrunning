@@ -78,7 +78,9 @@ export default async function HomepageLatestNews() {
             (desktop). */}
         <div className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
-            <h2 className="flex items-center gap-3 text-heading-24 md:text-heading-32 text-balance text-textDefault">
+            {/* Quartr's section-header scale: headlineSmall→Large
+                (24→38px); ours lands on heading-24→40. */}
+            <h2 className="flex items-center gap-3 text-heading-24 md:text-heading-40 text-balance text-textDefault">
               {/* Live mark — BBC-style pulsing red dot. Reuses the DS
                   status-dot pulse keyframes (globals.css, reduced-motion
                   aware) on the semantic red hue token; decorative, so
@@ -89,7 +91,7 @@ export default async function HomepageLatestNews() {
               />
               Latest News
             </h2>
-            <p className="text-copy-14 md:text-copy-16 text-balance text-textSubtle">
+            <p className="text-copy-16 md:text-copy-18 text-balance text-textSubtle">
               The latest stories from road, track, and trail.
             </p>
           </div>
