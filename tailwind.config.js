@@ -847,13 +847,15 @@ module.exports = {
           "& strong": { color: "var(--ds-gray-900)", fontWeight: "500" },
         },
         // ── Editorial display register ──────────────────────────────────
-        // Large editorial headings (hero, homepage section headers, future
-        // article h2/h3 moments). Same sizes as the heading slots but the
-        // weight softens to 450 with tight ~1.1 leading — the treatment
-        // Vercel's own editorial surfaces apply over Geist's UI headings
-        // (their blog h1 = heading-40/48 + font-[450], h2/h3 = font-normal
-        // + leading-[1.1]). At 32px+ the UI 600 reads inky; 450 reads
-        // elegant. Keep heading-* (600) for card- and UI-sized headings.
+        // Editorial headings (hero, homepage section headers, article card
+        // titles, future article h2/h3 moments) — the treatment Vercel's
+        // own editorial surfaces apply over Geist's UI headings (their
+        // blog h1 AND blog-index card titles all run font-[450]; Quartr's
+        // 19px card titles run 500). Optical sizing: 32px+ softens to 450
+        // with tight ~1.1 leading; below 32px the register carries 500
+        // (a small size needs the weight back for scanability) at the
+        // heading siblings' metrics. Keep heading-* (600) for genuine UI
+        // chrome — admin, menus, section labels, DS pages.
         ".text-display-64": {
           fontSize: "64px",
           lineHeight: "68px",
@@ -880,6 +882,28 @@ module.exports = {
           lineHeight: "36px",
           letterSpacing: "-0.03em",
           fontWeight: "450",
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "600" },
+        },
+        // Below 32px: weight 500, metrics mirror the heading siblings.
+        ".text-display-24": {
+          fontSize: "24px",
+          lineHeight: "32px",
+          letterSpacing: "-0.04em",
+          fontWeight: "500",
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "600" },
+        },
+        ".text-display-20": {
+          fontSize: "20px",
+          lineHeight: "26px",
+          letterSpacing: "-0.02em",
+          fontWeight: "500",
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "600" },
+        },
+        ".text-display-16": {
+          fontSize: "16px",
+          lineHeight: "24px",
+          letterSpacing: "-0.02em",
+          fontWeight: "500",
           "& strong": { color: "var(--ds-gray-900)", fontWeight: "600" },
         },
         ".text-heading-24": {

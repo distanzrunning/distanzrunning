@@ -317,6 +317,26 @@ export default function Typography() {
                 usage="Editorial headers, mobile display sizes"
                 onCopy={handleCopy}
               />
+              {/* Below 32px the register carries 500 (optical sizing) —
+                  editorial card titles. */}
+              <TypographyRow
+                example={<p className="text-display-24">Display</p>}
+                className="text-display-24"
+                usage="Feature card titles (editorial)"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-display-20">Display</p>}
+                className="text-display-20"
+                usage="Standard card titles (editorial)"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-display-16">Display</p>}
+                className="text-display-16"
+                usage="Compact card titles (editorial)"
+                onCopy={handleCopy}
+              />
               {/* UI headings - Geist Sans */}
               <TypographyRow
                 example={<p className="text-heading-32">Heading</p>}
@@ -749,6 +769,27 @@ export default function Typography() {
                 <td className="py-2 px-4">36px</td>
                 <td className="py-2 px-4">-0.03em</td>
                 <td className="py-2 px-4">450</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-2 pr-4">text-display-24</td>
+                <td className="py-2 px-4">24px</td>
+                <td className="py-2 px-4">32px</td>
+                <td className="py-2 px-4">-0.04em</td>
+                <td className="py-2 px-4">500</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-2 pr-4">text-display-20</td>
+                <td className="py-2 px-4">20px</td>
+                <td className="py-2 px-4">26px</td>
+                <td className="py-2 px-4">-0.02em</td>
+                <td className="py-2 px-4">500</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-2 pr-4">text-display-16</td>
+                <td className="py-2 px-4">16px</td>
+                <td className="py-2 px-4">24px</td>
+                <td className="py-2 px-4">-0.02em</td>
+                <td className="py-2 px-4">500</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-24</td>

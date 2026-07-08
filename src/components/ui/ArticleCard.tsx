@@ -68,14 +68,13 @@ export type ArticleCardSize = "sm" | "md" | "lg" | "xl";
 // pretty only prevents orphans, so lines fill the measure (Quartr/404 both
 // let card titles run full-measure). lg/xl titles get a third line before
 // clamping, matching their larger presence.
+// Card titles live on the editorial display register (Vercel's blog cards
+// run 450, Quartr's 500 — never the UI 600): 500 below 32px, 450 from 32.
 const titleSizeStyles: Record<ArticleCardSize, string> = {
-  sm: "text-heading-16 line-clamp-2",
-  md: "text-heading-20 line-clamp-2",
-  lg: "text-heading-24 line-clamp-3",
-  // xl crosses the display threshold at md: 32px+ editorial headings run
-  // the 450 display register (heading 600 reads inky there); the 24px
-  // mobile size stays card-weight per the rule.
-  xl: "text-heading-24 md:text-display-32 line-clamp-3",
+  sm: "text-display-16 line-clamp-2",
+  md: "text-display-20 line-clamp-2",
+  lg: "text-display-24 line-clamp-3",
+  xl: "text-display-24 md:text-display-32 line-clamp-3",
 };
 
 const excerptSizeStyles: Record<ArticleCardSize, string> = {
