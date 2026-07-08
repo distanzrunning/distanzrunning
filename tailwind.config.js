@@ -884,21 +884,26 @@ module.exports = {
           fontWeight: "450",
           "& strong": { color: "var(--ds-gray-900)", fontWeight: "600" },
         },
-        // Below 32px: weight 500, metrics mirror the heading siblings.
+        // 20-24px: still 450 (Vercel's standard blog-list card titles are
+        // 22px font-[450] — one editorial weight from 96px down to 22px),
+        // metrics mirror the heading siblings.
         ".text-display-24": {
           fontSize: "24px",
           lineHeight: "32px",
           letterSpacing: "-0.04em",
-          fontWeight: "500",
+          fontWeight: "450",
           "& strong": { color: "var(--ds-gray-900)", fontWeight: "600" },
         },
         ".text-display-20": {
           fontSize: "20px",
           lineHeight: "26px",
           letterSpacing: "-0.02em",
-          fontWeight: "500",
+          fontWeight: "450",
           "& strong": { color: "var(--ds-gray-900)", fontWeight: "600" },
         },
+        // 16px: weight 500 — below Vercel's smallest editorial title (22px;
+        // under that they switch to label-14 font-MEDIUM), and 450 at 16px
+        // would sit too close to the 400 body copy beside it.
         ".text-display-16": {
           fontSize: "16px",
           lineHeight: "24px",

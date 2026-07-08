@@ -775,14 +775,14 @@ export default function Typography() {
                 <td className="py-2 px-4">24px</td>
                 <td className="py-2 px-4">32px</td>
                 <td className="py-2 px-4">-0.04em</td>
-                <td className="py-2 px-4">500</td>
+                <td className="py-2 px-4">450</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-display-20</td>
                 <td className="py-2 px-4">20px</td>
                 <td className="py-2 px-4">26px</td>
                 <td className="py-2 px-4">-0.02em</td>
-                <td className="py-2 px-4">500</td>
+                <td className="py-2 px-4">450</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-display-16</td>
