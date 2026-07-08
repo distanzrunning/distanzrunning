@@ -100,9 +100,9 @@ export default async function HomepageEditorsPicks() {
         {/* Header row — same anatomy as Latest News. */}
         <div className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
-            {/* Quartr escalates the curated section a step above Latest
-                (headlineLarge→displaySmall, 38→48px): heading-32→48. */}
-            <h2 className="text-heading-32 md:text-heading-48 text-balance text-textDefault">
+            {/* Editorial display register (450 weight); the curated
+                section keeps its step above Latest (Quartr's escalation). */}
+            <h2 className="text-display-32 md:text-display-48 text-balance text-textDefault">
               Editor&rsquo;s Picks
             </h2>
             <p className="text-copy-16 md:text-copy-18 text-balance text-textSubtle">

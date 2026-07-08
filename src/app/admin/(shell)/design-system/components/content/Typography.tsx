@@ -295,6 +295,28 @@ export default function Typography() {
                 usage="Pull quotes"
                 onCopy={handleCopy}
               />
+              {/* Editorial display register — Geist Sans at weight 450,
+                  ~1.1 leading. Large editorial headings (homepage hero,
+                  section headers, article h2/h3 moments); Vercel's own
+                  editorial treatment over Geist's UI headings. */}
+              <TypographyRow
+                example={<p className="text-display-48">Display</p>}
+                className="text-display-48"
+                usage="Hero titles, lead section headers"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-display-40">Display</p>}
+                className="text-display-40"
+                usage="Section headers (editorial)"
+                onCopy={handleCopy}
+              />
+              <TypographyRow
+                example={<p className="text-display-32">Display</p>}
+                className="text-display-32"
+                usage="Editorial headers, mobile display sizes"
+                onCopy={handleCopy}
+              />
               {/* UI headings - Geist Sans */}
               <TypographyRow
                 example={<p className="text-heading-32">Heading</p>}
@@ -699,6 +721,34 @@ export default function Typography() {
                 <td className="py-2 px-4">40px</td>
                 <td className="py-2 px-4">-0.04em</td>
                 <td className="py-2 px-4">600</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-2 pr-4">text-display-64</td>
+                <td className="py-2 px-4">64px</td>
+                <td className="py-2 px-4">68px</td>
+                <td className="py-2 px-4">-0.045em</td>
+                <td className="py-2 px-4">450</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-2 pr-4">text-display-48</td>
+                <td className="py-2 px-4">48px</td>
+                <td className="py-2 px-4">53px</td>
+                <td className="py-2 px-4">-0.04em</td>
+                <td className="py-2 px-4">450</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-2 pr-4">text-display-40</td>
+                <td className="py-2 px-4">40px</td>
+                <td className="py-2 px-4">44px</td>
+                <td className="py-2 px-4">-0.035em</td>
+                <td className="py-2 px-4">450</td>
+              </tr>
+              <tr className="border-b border-borderSubtle">
+                <td className="py-2 pr-4">text-display-32</td>
+                <td className="py-2 px-4">32px</td>
+                <td className="py-2 px-4">36px</td>
+                <td className="py-2 px-4">-0.03em</td>
+                <td className="py-2 px-4">450</td>
               </tr>
               <tr className="border-b border-borderSubtle">
                 <td className="py-2 pr-4">text-heading-24</td>

@@ -48,6 +48,15 @@ The `text-heading-*` classes (defined in `tailwind.config.js`) carry size + line
 | `text-heading-16` | 16 / 24 / -0.01em / 600 | Small card titles, sidebar headers |
 | `text-heading-14` | 14 / 20 / -0.006em / 600 | Mini headers, metadata labels |
 
+**Editorial display register** (`text-display-*`, sans) — large editorial headings soften to **weight 450 + ~1.1 leading** (Vercel's own editorial treatment over Geist's UI headings: their blog h1 is `heading-40/48 + font-[450]`, article h2/h3 `font-normal`). At 32px+ the UI 600 reads inky; 450 reads elegant. Used by the homepage hero title + section headers; future article h2/h3 moments. Keep `heading-*` (600) for card- and UI-sized headings.
+
+| Class | Size / lh / tracking / weight | Use for |
+|---|---|---|
+| `text-display-64` | 64 / 68 / -0.045em / 450 | Reserve (pre-footer-style display moments) |
+| `text-display-48` | 48 / 53 / -0.04em / 450 | Hero titles, lead section headers |
+| `text-display-40` | 40 / 44 / -0.035em / 450 | Section headers (editorial) |
+| `text-display-32` | 32 / 36 / -0.03em / 450 | Editorial headers, mobile display sizes |
+
 **Editorial serif scale** — `font-serif` pairs with **only these two** slots; everything else (incl. featured headlines, subheadings, blockquotes) stays sans:
 
 | Class | Size / lh | Use for |

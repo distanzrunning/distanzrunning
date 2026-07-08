@@ -846,6 +846,42 @@ module.exports = {
           fontWeight: "600",
           "& strong": { color: "var(--ds-gray-900)", fontWeight: "500" },
         },
+        // ── Editorial display register ──────────────────────────────────
+        // Large editorial headings (hero, homepage section headers, future
+        // article h2/h3 moments). Same sizes as the heading slots but the
+        // weight softens to 450 with tight ~1.1 leading — the treatment
+        // Vercel's own editorial surfaces apply over Geist's UI headings
+        // (their blog h1 = heading-40/48 + font-[450], h2/h3 = font-normal
+        // + leading-[1.1]). At 32px+ the UI 600 reads inky; 450 reads
+        // elegant. Keep heading-* (600) for card- and UI-sized headings.
+        ".text-display-64": {
+          fontSize: "64px",
+          lineHeight: "68px",
+          letterSpacing: "-0.045em",
+          fontWeight: "450",
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "600" },
+        },
+        ".text-display-48": {
+          fontSize: "48px",
+          lineHeight: "53px",
+          letterSpacing: "-0.04em",
+          fontWeight: "450",
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "600" },
+        },
+        ".text-display-40": {
+          fontSize: "40px",
+          lineHeight: "44px",
+          letterSpacing: "-0.035em",
+          fontWeight: "450",
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "600" },
+        },
+        ".text-display-32": {
+          fontSize: "32px",
+          lineHeight: "36px",
+          letterSpacing: "-0.03em",
+          fontWeight: "450",
+          "& strong": { color: "var(--ds-gray-900)", fontWeight: "600" },
+        },
         ".text-heading-24": {
           fontSize: "24px",
           lineHeight: "32px",

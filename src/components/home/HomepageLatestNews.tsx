@@ -78,9 +78,9 @@ export default async function HomepageLatestNews() {
             (desktop). */}
         <div className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
-            {/* Quartr's section-header scale: headlineSmall→Large
-                (24→38px); ours lands on heading-24→40. */}
-            <h2 className="flex items-center gap-3 text-heading-24 md:text-heading-40 text-balance text-textDefault">
+            {/* Editorial display register (450 weight) at Quartr's
+                section-header scale. */}
+            <h2 className="flex items-center gap-3 text-display-32 md:text-display-40 text-balance text-textDefault">
               {/* Live mark — BBC-style pulsing red dot. Reuses the DS
                   status-dot pulse keyframes (globals.css, reduced-motion
                   aware) on the semantic red hue token; decorative, so
