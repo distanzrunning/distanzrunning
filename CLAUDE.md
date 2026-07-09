@@ -205,9 +205,11 @@ Each `material-*` is **Geist-verbatim**: `background: --ds-background-100` + `bo
 
 | Style | Tailwind | Use |
 |---|---|---|
-| Default | `border-t border-borderSubtle` | Subtle separation, list/table rows |
-| Emphasised | `border-t border-textDefault` | After headings, distinct sections |
-| Heavy | `border-t-4 border-textDefault` | Major page sections, page titles, featured content |
+| Default | `border-t border-borderSubtle` | Structural boundaries: list/table rows, **page-section boundaries** (homepage sections), layout hairlines |
+| Emphasised | `border-t border-textDefault` | Ink accents after headings, distinct editorial breaks |
+| Heavy | `border-t-4 border-textDefault` | Editorial statement moments: page titles, featured content, pull-quote rules |
+
+**Method (Vercel-KB model, decided 2026-07):** structure stays quiet and grayscale — *typography carries the rank* (section headers run `heading-*` 600), so section boundaries take the Default hairline, not ink. The ink rules (Emphasised/Heavy) are an **editorial statement register**, not a structural one — reserve them for content moments. Vercel's own grid: solid hairline guides = primary structure, dashed = interior subdivision only (if we ever adopt dashed, that's its slot).
 
 ---
 
