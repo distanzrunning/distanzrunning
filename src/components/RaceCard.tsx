@@ -68,14 +68,16 @@ export interface RaceCardProps {
       look — gray-100 body, 6px corners. "outline" adopts the ArticleCard
       chrome (bg-surface + hairline border, 12px radius, p-5 body) so the
       card sits consistently next to ArticleCards — e.g. the mega-menu
-      featured slot. "card" is Runna's race-card grammar on Stride
-      tokens (the homepage row): ONE clipped container — image full-bleed
-      on top with a glass date pill floating top-right over the photo,
-      and a filled gray-100 footer (Runna's raised-footer move, our
-      established filled-body tone) holding the display-register title,
-      location, and the category as a MetaPill chip. Pass the stat
-      fields to get the glassy hover overlay (same treatment as the
-      index variant). */
+      featured slot. "card" is the Vercel-KB topic-card grammar on
+      Stride tokens (the homepage row): surface + hairline container,
+      hover = soft shadow lift (no card zoom). The top half is an
+      ILLUSTRATION PANEL on the recessed canvas tone — dashed-grid
+      backdrop (the dashed register: interior subdivision), the race
+      photo composed inside a mini browser frame (we sell interactive
+      race GUIDES — the frame says "this opens"), and the date +
+      category floating as bordered surface pills. Footer: heading-20
+      title (KB product voice, Vercel's card h3 verbatim) + location.
+      The stat hover overlay stays an index-variant feature. */
   chrome?: "filled" | "outline" | "card";
   /** Index-variant only — populates the glassy hover stat columns. */
   surface?: string;
@@ -180,29 +182,77 @@ export default function RaceCard({
   // variant uses overflow-hidden + rounded-sm so the single radius
   // matches the homepage cards' 6 px corners (where the image + body
   // each carry rounded-t-sm / rounded-b-sm separately for the same
-  // visual result). Card: one clipped block at the card-surface radius
-  // (12px) — image + footer read as a single container, Runna-style;
-  // no border (the filled footer carries the elevation, like "filled").
+  // visual result). Card: Vercel-KB chrome — surface + hairline at the
+  // card-surface radius (12px), hover lifts with a soft gray shadow
+  // (Geist's hover:shadow move; elevation stays border-based at rest).
   const isOutline = chrome === "outline";
   const isCard = chrome === "card";
   const articleRadius = isOutline
     ? "overflow-hidden rounded-lg border border-borderSubtle bg-surface"
     : isCard
-      ? "overflow-hidden rounded-lg"
+      ? "overflow-hidden rounded-lg border border-borderSubtle bg-surface transition-shadow duration-200 ease-in-out hover:shadow-[0_12px_24px_-8px_hsla(var(--ds-gray-1000-value),0.12)]"
       : isIndex
         ? "overflow-hidden rounded-sm"
         : "";
-  // The hover stat overlay renders on the index variant (its original
-  // home) and on card chrome whenever stats were passed.
-  const showHoverStats = (isIndex || isCard) && hasAnyHoverContent;
+  // The hover stat overlay is an index-variant feature.
+  const showHoverStats = isIndex && hasAnyHoverContent;
 
   return (
     <article
       className={`group relative flex w-full flex-col ${articleRadius} ${className}`.trim()}
     >
+      {/* Card chrome: the Vercel-KB illustration panel — recessed
+          canvas tone under a dashed grid (interior-subdivision
+          register), the photo composed in a mini browser frame (the
+          "interactive guide" metaphor; its shadow deepens on card
+          hover, Geist's centre-tile move), and the date + category
+          floating as bordered surface pills in opposite corners. Same
+          16/8.75 ratio as the photo block so the carousel arrow
+          geometry holds. */}
+      {isCard && (
+        <div className="ds-dashed-grid relative aspect-[16/8.75] w-full overflow-hidden border-b border-borderSubtle bg-canvas">
+          {fullDate && (
+            <div className="absolute right-3 top-3 z-10">
+              <span className="inline-flex h-6 items-center rounded-full border border-borderSubtle bg-surface px-3 text-label-12 text-textDefault">
+                {fullDate}
+              </span>
+            </div>
+          )}
+          {category && (
+            <div className="absolute bottom-3 left-3 z-10">
+              <span className="inline-flex h-6 items-center rounded-full border border-borderSubtle bg-surface px-3 text-label-12 text-textSubtle">
+                {category}
+              </span>
+            </div>
+          )}
+          <div className="absolute left-1/2 top-1/2 w-[64%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-lg border border-borderSubtle bg-surface shadow-[0_8px_16px_-6px_hsla(var(--ds-gray-1000-value),0.16)] transition-shadow duration-200 group-hover:shadow-[0_12px_24px_-6px_hsla(var(--ds-gray-1000-value),0.24)]">
+            {/* Browser chrome — three dots, Geist's mini-window mock. */}
+            <div className="flex gap-1 p-2">
+              <span className="size-2 rounded-full bg-[color:var(--ds-gray-300)]" />
+              <span className="size-2 rounded-full bg-[color:var(--ds-gray-300)]" />
+              <span className="size-2 rounded-full bg-[color:var(--ds-gray-300)]" />
+            </div>
+            <div className="relative aspect-[16/9] w-full overflow-hidden bg-[color:var(--ds-gray-100)]">
+              {imageUrl && (
+                <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100">
+                  <CardImage
+                    src={imageUrl}
+                    alt={imageAlt ?? title}
+                    sizes="(max-width: 640px) 55vw, (max-width: 768px) 32vw, 260px"
+                    priority={priority}
+                    blurDataURL={blurDataURL}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!isCard && (
       <div
         className={`relative aspect-[16/8.75] w-full overflow-hidden bg-[color:var(--ds-gray-100)] ${
-          isCard || isIndex || isOutline ? "" : "rounded-t-sm"
+          isIndex || isOutline ? "" : "rounded-t-sm"
         }`}
       >
         {imageUrl && (
@@ -227,26 +277,14 @@ export default function RaceCard({
           </div>
         )}
 
-        {/* Top-right pill. Filled/outline: category Badge (inverted
-            variant so the dark bg + white text reads against any photo);
-            the date pill sits inline with the title in the body. Card
-            (Runna anatomy): the DATE takes this corner as a glass pill —
-            white translucent + blur with fixed dark ink, a deliberate
-            glass effect (like the index overlay's stat pills) so it
-            reads on any photo in both themes; the category moves to the
-            footer's chip row. */}
-        {!isCard && category && (
+        {/* Top-right pill — category Badge (inverted variant so the
+            dark bg + white text reads against any photo); the date
+            pill sits inline with the title in the body. */}
+        {category && (
           <div className="absolute right-3 top-3 z-20">
             <Badge variant="inverted" size="md">
               {category}
             </Badge>
-          </div>
-        )}
-        {isCard && fullDate && (
-          <div className="absolute right-3 top-3 z-20">
-            <span className="inline-flex h-6 items-center rounded-full bg-white/60 px-3 text-label-12 text-black backdrop-blur-md">
-              {fullDate}
-            </span>
           </div>
         )}
 
@@ -287,19 +325,18 @@ export default function RaceCard({
           </div>
         )}
       </div>
+      )}
 
-      {/* Body. Card (Runna anatomy): a filled gray-100 FOOTER inside
-          the clipped container — title on the editorial display
-          register (matches the homepage ArticleCards), location below,
-          then the category as a chip in the bottom row (Runna's
-          distance-chip slot); the date already lives on the image.
-          MetaPill's gray-300 was designed for exactly this gray-100
-          body. Filled/outline: title + location stacked left, date
+      {/* Body. Card (Vercel-KB anatomy): clean surface footer under
+          the panel's border-b — heading-20 title (the KB product
+          voice; a race guide card is a utility card, not editorial
+          content) + location. Date + category live on the panel as
+          pills. Filled/outline: title + location stacked left, date
           pill on the right vertically centered against the whole
           stack. */}
       {isCard ? (
-        <div className="flex flex-1 flex-col gap-1 bg-[color:var(--ds-gray-100)] p-5">
-          <h3 className="line-clamp-2 text-display-20 text-pretty text-textDefault">
+        <div className="flex flex-1 flex-col gap-1 p-5">
+          <h3 className="line-clamp-1 text-heading-20 text-pretty text-textDefault">
             {/* The container clips (overflow-hidden), so the focus
                 ring insets at the card's 12px corner, like the card
                 ArticleCard chrome. */}
@@ -312,11 +349,6 @@ export default function RaceCard({
           </h3>
           {location && (
             <p className="truncate text-copy-14 text-textSubtle">{location}</p>
-          )}
-          {category && (
-            <div className="pt-2">
-              <MetaPill>{category}</MetaPill>
-            </div>
           )}
         </div>
       ) : (

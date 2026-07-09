@@ -533,6 +533,23 @@
     }
   }
 
+  /* Dashed grid backdrop (Vercel KB illustration panels) — the DASHED
+     rule register: interior subdivision, never a primary boundary.
+     Strokes: gray-300 light (#E6E6E6), gray-200 dark (#1F1F1F — one
+     step quieter than the mirror token; light-on-dark dashes read
+     stronger than dark-on-light, so the symmetric #292929 was too
+     loud on the black canvas). Vercel's own tiles are the equivalent
+     #EAEAEA / #2E2E2E. Data URIs because CSS vars can't reach inside
+     background-image SVGs. */
+  .ds-dashed-grid {
+    background-size: 36px 36px;
+    background-position: -1px -1px;
+    background-image: url("data:image/svg+xml,%3Csvg width='36' height='36' viewBox='0 0 36 36' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0.5' y1='0' x2='0.5' y2='36' stroke='%23E6E6E6' stroke-dasharray='2 2'/%3E%3Cline x1='0' y1='0.5' x2='36' y2='0.5' stroke='%23E6E6E6' stroke-dasharray='2 2'/%3E%3C/svg%3E");
+  }
+  .dark .ds-dashed-grid {
+    background-image: url("data:image/svg+xml,%3Csvg width='36' height='36' viewBox='0 0 36 36' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0.5' y1='0' x2='0.5' y2='36' stroke='%231F1F1F' stroke-dasharray='2 2'/%3E%3Cline x1='0' y1='0.5' x2='36' y2='0.5' stroke='%231F1F1F' stroke-dasharray='2 2'/%3E%3C/svg%3E");
+  }
+
   /* Split Button: blue focus ring on either half (Geist focus:shadow-focus-ring
      focus:z-[2]); !important to beat the inline box-shadow:none. The divider is
      a hairline whose colour is theme-aware for the filled default and gray-300
