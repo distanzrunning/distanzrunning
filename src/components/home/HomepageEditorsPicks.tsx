@@ -90,12 +90,15 @@ export default async function HomepageEditorsPicks() {
   return (
     <section
       aria-label="Editor's picks"
-      // Shared homepage section rhythm (Latest News / Upcoming Races).
-      // The oversized pb-48 scroll-room hack is gone: the sticky main
-      // pick now gets its travel from the Upcoming Races section below.
-      className="mx-auto w-full max-w-content px-6 py-16 lg:py-20"
+      // Tight homepage rhythm — the inner wrapper carries the section
+      // rule (HEAVY, the DS Rules slot for major page sections) so it
+      // spans exactly the content width, centred in the gap by the
+      // symmetric pb below / pt after the rule. (The old pb-48
+      // scroll-room hack is gone: the sticky main pick gets its travel
+      // from the Upcoming Races section below.)
+      className="mx-auto w-full max-w-content px-6 pb-10 lg:pb-12"
     >
-      <div className="flex w-full flex-col gap-8 md:gap-11">
+      <div className="flex w-full flex-col gap-8 border-t-4 border-textDefault pt-10 md:gap-11 lg:pt-12">
         {/* Header row — same anatomy as Latest News. */}
         <div className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">

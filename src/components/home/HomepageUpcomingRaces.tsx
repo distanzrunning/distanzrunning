@@ -87,14 +87,17 @@ export default async function HomepageUpcomingRaces() {
   return (
     <section
       aria-label="Upcoming races"
-      className="mx-auto w-full max-w-content px-6 py-16 lg:py-20"
+      // Tight homepage rhythm — the Carousel wrapper carries the
+      // section rule (HEAVY, major page sections) at exact content
+      // width, like Editor's Picks.
+      className="mx-auto w-full max-w-content px-6 pb-10 lg:pb-12"
     >
       <Carousel
         opts={{ align: "start" }}
         // Free-glide wheel gestures off — CarouselWheelStep below steps
         // one card per gesture instead, so the row always lands in place.
         wheelGestures={false}
-        className="flex w-full flex-col gap-8 md:gap-11"
+        className="flex w-full flex-col gap-8 border-t-4 border-textDefault pt-10 md:gap-11 lg:pt-12"
       >
         {/* Header row — title + tagline left; view-all right (desktop). */}
         <div className="flex items-center justify-between gap-8 md:items-end">

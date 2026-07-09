@@ -65,7 +65,10 @@ export default async function HomepageLatestNews() {
   return (
     <section
       aria-label="Latest news"
-      className="mx-auto w-full max-w-content px-6 py-16 lg:py-20"
+      // Tight homepage rhythm — sections sit close, separated by ink
+      // rules. This one follows the full-bleed promo band, which does
+      // the separating itself, so no rule here.
+      className="mx-auto w-full max-w-content px-6 py-10 lg:py-12"
     >
       <Carousel
         opts={{ align: "start" }}
