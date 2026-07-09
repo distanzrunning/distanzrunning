@@ -1,9 +1,10 @@
 // src/components/home/HomepageUpcomingRaces.tsx
 //
 // Homepage Upcoming Races — the Latest News section anatomy (header
-// row: title + tagline left, view-all right; ONE row of plain-chrome
-// cards in the shared wheel-stepping carousel, three in view on
-// desktop) over Runna's race-card grammar via RaceCard chrome="plain".
+// row: title + tagline left, view-all right; ONE row of cards in the
+// shared wheel-stepping carousel, three in view on desktop) over
+// Runna's race-card grammar via RaceCard chrome="card": one clipped
+// container per card — image + filled footer.
 //
 // Items are auto-selected — the next 10 race guides by event date
 // (see upcomingRacesQuery), so the row stays current as races pass.
@@ -121,7 +122,7 @@ export default async function HomepageUpcomingRaces() {
                 className="basis-[85%] sm:basis-1/2 md:basis-1/3"
               >
                 <RaceCard
-                  chrome="plain"
+                  chrome="card"
                   href={race.href}
                   title={race.title}
                   eventDate={race.eventDate}
