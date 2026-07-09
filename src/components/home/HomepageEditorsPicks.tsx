@@ -90,19 +90,18 @@ export default async function HomepageEditorsPicks() {
   return (
     <section
       aria-label="Editor's picks"
-      // Quartr's section rhythm: generous bottom padding (their pb-48).
-      // It's also functional — the sticky main pick needs scroll room
-      // BELOW the section to travel; until the footer/next section
-      // lands, this padding is most of that room.
-      className="mx-auto w-full max-w-content px-6 pb-32 pt-16 lg:pb-48 lg:pt-20"
+      // Shared homepage section rhythm (Latest News / Upcoming Races).
+      // The oversized pb-48 scroll-room hack is gone: the sticky main
+      // pick now gets its travel from the Upcoming Races section below.
+      className="mx-auto w-full max-w-content px-6 py-16 lg:py-20"
     >
       <div className="flex w-full flex-col gap-8 md:gap-11">
         {/* Header row — same anatomy as Latest News. */}
         <div className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
-            {/* Editorial display register (450 weight); the curated
-                section keeps its step above Latest (Quartr's escalation). */}
-            <h2 className="text-display-32 md:text-display-48 text-balance text-textDefault">
+            {/* Editorial display register (450 weight) — the shared
+                homepage section-header scale. */}
+            <h2 className="text-display-32 md:text-display-40 text-balance text-textDefault">
               Editor&rsquo;s Picks
             </h2>
             <p className="text-copy-16 md:text-copy-18 text-balance text-textSubtle">
