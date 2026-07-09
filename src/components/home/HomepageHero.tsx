@@ -84,7 +84,7 @@ export default async function HomepageHero() {
           <h1 className="text-display-32 md:text-display-48 text-pretty text-textDefault">
             <Link
               href={hero.href}
-              className="outline-none after:absolute after:inset-0 after:z-[1] focus-visible:after:rounded-lg focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-[color:var(--ds-focus-color)]"
+              className="outline-none after:absolute after:inset-0 after:z-[1] focus-visible:after:rounded focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-[color:var(--ds-focus-color)]"
             >
               {hero.title}
             </Link>

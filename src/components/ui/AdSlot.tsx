@@ -203,7 +203,7 @@ function AdDisclaimer({
 
 function MockCreative({ width, height }: Dimensions) {
   return (
-    <div className="flex h-full w-full items-center justify-center rounded-md bg-[var(--ds-gray-100)]">
+    <div className="flex h-full w-full items-center justify-center rounded-sm bg-[var(--ds-gray-100)]">
       <span className="text-[12px] font-medium tabular-nums text-textSubtle">
         {width} &times; {height}
       </span>
@@ -235,7 +235,7 @@ export function ShakeoutAd({ width, height }: Dimensions) {
     return (
       <a
         href={SIGNUP_HREF}
-        className="flex h-full w-full items-center justify-center gap-2 rounded-md bg-[var(--ds-gray-100)] px-4 no-underline"
+        className="flex h-full w-full items-center justify-center gap-2 rounded-sm bg-[var(--ds-gray-100)] px-4 no-underline"
       >
         <span className="text-[12px] font-semibold text-textDefault">
           The Shakeout &mdash; our weekly running newsletter
@@ -248,7 +248,7 @@ export function ShakeoutAd({ width, height }: Dimensions) {
   // Short + wide (leaderboard 728×90) — kicker + line + CTA in a row.
   if (height < 100) {
     return (
-      <div className="flex h-full w-full items-center justify-center gap-4 rounded-md bg-[var(--ds-gray-100)] px-6 text-center">
+      <div className="flex h-full w-full items-center justify-center gap-4 rounded-sm bg-[var(--ds-gray-100)] px-6 text-center">
         <div className="flex flex-col items-start gap-0.5 text-left">
           {kicker}
           <span className="text-[13px] font-medium text-textDefault">
@@ -257,7 +257,7 @@ export function ShakeoutAd({ width, height }: Dimensions) {
         </div>
         <a
           href={SIGNUP_HREF}
-          className="inline-flex h-9 shrink-0 items-center gap-1 rounded-md px-3.5 font-sans text-[13px] font-semibold no-underline"
+          className="inline-flex h-9 shrink-0 items-center gap-1 rounded-sm px-3.5 font-sans text-[13px] font-semibold no-underline"
           style={ctaStyle}
         >
           Subscribe
@@ -270,7 +270,7 @@ export function ShakeoutAd({ width, height }: Dimensions) {
   // Tall + narrow (skyscraper / half-page) — stacked.
   if (width < 320 && height > 400) {
     return (
-      <div className="flex h-full w-full flex-col items-center justify-between rounded-md bg-[var(--ds-gray-100)] p-5 text-center">
+      <div className="flex h-full w-full flex-col items-center justify-between rounded-sm bg-[var(--ds-gray-100)] p-5 text-center">
         <div className="flex flex-1 flex-col items-center justify-center gap-3">
           {kicker}
           <h4 className="text-[16px] font-semibold leading-tight text-textDefault">
@@ -283,7 +283,7 @@ export function ShakeoutAd({ width, height }: Dimensions) {
         </div>
         <a
           href={SIGNUP_HREF}
-          className="inline-flex h-9 w-full items-center justify-center gap-1 rounded-md font-sans text-[12px] font-semibold no-underline"
+          className="inline-flex h-9 w-full items-center justify-center gap-1 rounded-sm font-sans text-[12px] font-semibold no-underline"
           style={ctaStyle}
         >
           Subscribe
@@ -295,7 +295,7 @@ export function ShakeoutAd({ width, height }: Dimensions) {
 
   // Default — square / MPU / billboard.
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-md bg-[var(--ds-gray-100)] p-6 text-center">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-sm bg-[var(--ds-gray-100)] p-6 text-center">
       {kicker}
       <h4 className="text-heading-16 text-textDefault">Get the Shakeout</h4>
       <p className="max-w-[85%] text-[13px] leading-snug text-textSubtle">
@@ -303,7 +303,7 @@ export function ShakeoutAd({ width, height }: Dimensions) {
       </p>
       <a
         href={SIGNUP_HREF}
-        className="mt-1 inline-flex h-9 items-center gap-1.5 rounded-md px-3.5 font-sans text-[13px] font-semibold no-underline transition-colors"
+        className="mt-1 inline-flex h-9 items-center gap-1.5 rounded-sm px-3.5 font-sans text-[13px] font-semibold no-underline transition-colors"
         style={ctaStyle}
       >
         Subscribe

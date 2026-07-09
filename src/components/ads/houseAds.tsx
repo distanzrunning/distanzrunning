@@ -50,7 +50,7 @@ function HouseCreativeFrame({
     return (
       <a
         href={href}
-        className="flex h-full w-full items-center justify-center gap-2 rounded-md bg-[var(--ds-gray-100)] px-4 no-underline"
+        className="flex h-full w-full items-center justify-center gap-2 rounded-sm bg-[var(--ds-gray-100)] px-4 no-underline"
       >
         <span className="text-[12px] font-semibold text-textDefault">
           {line}
@@ -63,7 +63,7 @@ function HouseCreativeFrame({
   // Short + wide (leaderboard) — kicker + line + CTA in a row.
   if (height < 100) {
     return (
-      <div className="flex h-full w-full items-center justify-center gap-4 rounded-md bg-[var(--ds-gray-100)] px-6 text-center">
+      <div className="flex h-full w-full items-center justify-center gap-4 rounded-sm bg-[var(--ds-gray-100)] px-6 text-center">
         <div className="flex flex-col items-start gap-0.5 text-left">
           {kickerEl}
           <span className="text-[13px] font-medium text-textDefault">
@@ -72,7 +72,7 @@ function HouseCreativeFrame({
         </div>
         <a
           href={href}
-          className="inline-flex h-9 shrink-0 items-center gap-1 rounded-md px-3.5 font-sans text-[13px] font-semibold no-underline"
+          className="inline-flex h-9 shrink-0 items-center gap-1 rounded-sm px-3.5 font-sans text-[13px] font-semibold no-underline"
           style={ctaStyle}
         >
           {cta}
@@ -84,7 +84,7 @@ function HouseCreativeFrame({
 
   // Default — square / MPU / billboard / tall units: stacked box.
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-md bg-[var(--ds-gray-100)] p-6 text-center">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-sm bg-[var(--ds-gray-100)] p-6 text-center">
       {kickerEl}
       <h4 className="text-heading-16 text-textDefault">{boxTitle}</h4>
       <p className="max-w-[85%] text-[13px] leading-snug text-textSubtle">
@@ -92,7 +92,7 @@ function HouseCreativeFrame({
       </p>
       <a
         href={href}
-        className="mt-1 inline-flex h-9 items-center gap-1.5 rounded-md px-3.5 font-sans text-[13px] font-semibold no-underline transition-colors"
+        className="mt-1 inline-flex h-9 items-center gap-1.5 rounded-sm px-3.5 font-sans text-[13px] font-semibold no-underline transition-colors"
         style={ctaStyle}
       >
         {cta}

@@ -255,10 +255,12 @@ export default function ArticleCard({
           <Link
             href={href}
             className={cn(
-              "outline-none after:absolute after:inset-0 focus-visible:after:rounded-lg focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]",
+              "outline-none after:absolute after:inset-0 focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]",
+              // Ring radius matches the chrome's visual corner: 8px
+              // editorial image on plain, 12px surface box on card.
               isPlain
-                ? "focus-visible:after:outline-offset-4"
-                : "focus-visible:after:-outline-offset-2",
+                ? "focus-visible:after:rounded focus-visible:after:outline-offset-4"
+                : "focus-visible:after:rounded-lg focus-visible:after:-outline-offset-2",
             )}
           >
             {title}

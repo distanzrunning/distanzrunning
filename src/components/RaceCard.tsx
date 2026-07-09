@@ -170,15 +170,15 @@ export default function RaceCard({
 
   // Outer chrome — outline adopts the ArticleCard block (surface +
   // hairline, 12px radius, container clips the image). Filled: index
-  // variant uses overflow-hidden + rounded-md so the single radius
+  // variant uses overflow-hidden + rounded-sm so the single radius
   // matches the homepage cards' 6 px corners (where the image + body
-  // each carry rounded-t-md / rounded-b-md separately for the same
+  // each carry rounded-t-sm / rounded-b-sm separately for the same
   // visual result).
   const isOutline = chrome === "outline";
   const articleRadius = isOutline
     ? "overflow-hidden rounded-lg border border-borderSubtle bg-surface"
     : isIndex
-      ? "overflow-hidden rounded-md"
+      ? "overflow-hidden rounded-sm"
       : "";
 
   return (
@@ -187,7 +187,7 @@ export default function RaceCard({
     >
       <div
         className={`relative aspect-[16/8.75] w-full overflow-hidden bg-[color:var(--ds-gray-100)] ${
-          isIndex || isOutline ? "" : "rounded-t-md"
+          isIndex || isOutline ? "" : "rounded-t-sm"
         }`}
       >
         {imageUrl && (
@@ -270,7 +270,7 @@ export default function RaceCard({
         className={`flex items-center justify-between gap-3 ${
           isOutline
             ? "p-5"
-            : "rounded-b-md bg-[color:var(--ds-gray-100)] p-6"
+            : "rounded-b-sm bg-[color:var(--ds-gray-100)] p-6"
         }`}
       >
         <div className="flex min-w-0 flex-1 flex-col gap-1">
