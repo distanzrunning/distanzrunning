@@ -136,7 +136,11 @@ export default async function HomepageHero() {
             the SSR HTML as the blur placeholder — the box is never
             empty, and the full image resolves over its own preview
             instead of popping in over flat gray (the load flicker). */}
-        <div className="relative aspect-[3/2] w-full overflow-hidden rounded-lg bg-[var(--ds-gray-100)] lg:basis-7/12">
+        {/* rounded = 8px (our DEFAULT) — the editorial image radius
+            (Vercel's article figures + Quartr's cards are stock
+            rounded-lg = 8px; our remapped rounded-lg is 12px, the
+            SURFACE/material radius). */}
+        <div className="relative aspect-[3/2] w-full overflow-hidden rounded bg-[var(--ds-gray-100)] lg:basis-7/12">
           {imageUrl && (
             <Image
               src={imageUrl}

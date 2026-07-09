@@ -232,6 +232,7 @@ The following live in `src/components/` (some in `src/components/ui/`). When int
 - **Card-with-overlay-link**: where an entire card is clickable but the kicker / category needs its own link, the title's `<a>` carries `after:absolute after:inset-0` to span the card; the kicker's `<a>` sits with `relative z-10` to punch through. See `ArticleCard.tsx` for the canonical pattern.
 - **Sanity image URLs**: resolve at the data layer with `urlFor(image).width(...).auto("format").url()`. Components like `ArticleCard` / `RaceCard` accept a pre-resolved `imageUrl` string + optional `blurDataURL`, not a raw `SanityImageSource`. For the `blurDataURL`, select `"lqip": mainImage.asset->metadata.lqip` in the GROQ query — an inline base64 preview (zero extra requests), NOT a tiny `urlFor(...).blur(20)` URL (that's still a network fetch and can itself flicker).
 - **Hover affordances on cards**: image `scale-[1.04]` → `scale-100` on `group-hover` (settle-zoom) is the established pattern. Don't add hover underline to titles inside cards.
+- **Editorial image radius = 8px** (`rounded`, our DEFAULT — Vercel article figures and Quartr card images are stock `rounded-lg` = 8px). Our remapped `rounded-lg` (12px) is the **surface/material** radius (cards, menus, modals) — don't use it on bare editorial images. For future article-body images, Vercel also frames them: `border gray-alpha-400` + `--ds-shadow-small` + surface bg.
 
 ---
 

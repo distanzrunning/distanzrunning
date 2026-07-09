@@ -177,7 +177,10 @@ export default function ArticleCard({
         className={cn(
           "relative w-full overflow-hidden bg-[var(--ds-gray-100)]",
           imageRatioStyles[imageRatio],
-          isPlain && "rounded-lg",
+          // rounded = 8px (our DEFAULT) — the editorial IMAGE radius
+          // (Vercel/Quartr images are stock rounded-lg = 8px; our
+          // remapped rounded-lg 12px is the surface/material radius).
+          isPlain && "rounded",
           isRow && "w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none",
         )}
       >
