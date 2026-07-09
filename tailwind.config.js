@@ -1087,9 +1087,22 @@ module.exports = {
           fontWeight: "400",
           "& strong": { color: "var(--ds-gray-1000)", fontWeight: "500" },
         },
+        // Geist addition (2026-07 vercel_css_update dump): inline code
+        // mentions paired with copy-14 body.
+        ".text-copy-14-mono": {
+          fontSize: "14px",
+          lineHeight: "20px",
+          letterSpacing: "0",
+          fontWeight: "400",
+          fontFamily:
+            'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
+          "& strong": { color: "var(--ds-gray-1000)", fontWeight: "500" },
+        },
+        // Geist-verbatim 13/18 (was 20 — drift caught against the 2026-07
+        // vercel_css_update dump).
         ".text-copy-13-mono": {
           fontSize: "13px",
-          lineHeight: "20px",
+          lineHeight: "18px",
           letterSpacing: "0",
           fontWeight: "400",
           fontFamily:
