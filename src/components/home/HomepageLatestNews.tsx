@@ -78,9 +78,11 @@ export default async function HomepageLatestNews() {
             (desktop). */}
         <div className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
-            {/* Editorial display register (450 weight) at Quartr's
-                section-header scale. */}
-            <h2 className="flex items-center gap-3 text-display-32 md:text-display-40 text-balance text-textDefault">
+            {/* Section headers are wayfinding chrome, not editorial
+                content — they run the UI heading register (600), the
+                Vercel-KB section-h2 voice. Content (hero, card titles)
+                stays on the 450 display register. */}
+            <h2 className="flex items-center gap-3 text-heading-24 md:text-heading-32 text-balance text-textDefault">
               {/* Live mark — BBC's ring-and-disc anatomy, pulsing as ONE:
                   the opacity pulse sits on the whole mark, so the ring
                   stays a solid drawn circle and breathes together with the

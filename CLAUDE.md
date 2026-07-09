@@ -42,19 +42,19 @@ The `text-heading-*` classes (defined in `tailwind.config.js`) carry size + line
 
 | Class | Size / lh | Use for |
 |---|---|---|
-| `text-heading-32` | 32 / 40 / -0.02em / 600 | Page section titles |
+| `text-heading-32` | 32 / 40 / -0.02em / 600 | Page section titles, homepage section headers (md+) |
 | `text-heading-24` | 24 / 32 / -0.015em / 600 | Card titles, section headers |
 | `text-heading-20` | 20 / 28 / -0.01em / 600 | Breaking news headings, subsections |
 | `text-heading-16` | 16 / 24 / -0.01em / 600 | Small card titles, sidebar headers |
 | `text-heading-14` | 14 / 20 / -0.006em / 600 | Mini headers, metadata labels |
 
-**Editorial display register** (`text-display-*`, sans) — ALL editorial headings run here, never the UI 600 (Vercel's editorial surfaces do exactly this over Geist: blog h1, blog-index featured cards, AND their standard 22px list-card titles all `font-[450]`). **Weight 450 from 20px up** (32px+ also gets tight ~1.1 leading; 20–24 keep heading-sibling metrics); **500 only at 16px** — below Vercel's smallest editorial title (22px; under that they themselves switch to `label-14 font-medium`), and 450 at 16px would sit too close to 400 body copy. Used by the hero title, homepage section headers, ArticleCard titles; future article h2/h3 moments. Keep `heading-*` (600) for genuine UI chrome (admin, menus, section labels, DS pages).
+**Editorial display register** (`text-display-*`, sans) — ALL editorial **content** headings run here, never the UI 600 (Vercel's editorial surfaces do exactly this over Geist: blog h1, blog-index featured cards, AND their standard 22px list-card titles all `font-[450]`). **Weight 450 from 20px up** (32px+ also gets tight ~1.1 leading; 20–24 keep heading-sibling metrics); **500 only at 16px** — below Vercel's smallest editorial title (22px; under that they themselves switch to `label-14 font-medium`), and 450 at 16px would sit too close to 400 body copy. Used by the hero title, ArticleCard titles; future article h2/h3 moments. Keep `heading-*` (600) for UI chrome (admin, menus, section labels, DS pages) — **including homepage section headers** ("Latest News" etc. run `text-heading-24 md:text-heading-32`). Section labels are *wayfinding chrome, not content*; Vercel makes the same split (Knowledge Base section h2s = `heading-24 lg:heading-32` 600 while blog content = 450). Content = display, big-and-light; chrome = heading, smaller-and-heavy; **never big-and-heavy**.
 
 | Class | Size / lh / tracking / weight | Use for |
 |---|---|---|
 | `text-display-64` | 64 / 68 / -0.045em / 450 | Reserve (pre-footer-style display moments) |
-| `text-display-48` | 48 / 53 / -0.04em / 450 | Hero titles, lead section headers |
-| `text-display-40` | 40 / 44 / -0.035em / 450 | Section headers (editorial) |
+| `text-display-48` | 48 / 53 / -0.04em / 450 | Hero titles, lead editorial headings |
+| `text-display-40` | 40 / 44 / -0.035em / 450 | Large editorial headings, article display moments |
 | `text-display-32` | 32 / 36 / -0.03em / 450 | Editorial headers, mobile display sizes |
 | `text-display-24` | 24 / 32 / -0.04em / 450 | Feature card titles (editorial) |
 | `text-display-20` | 20 / 26 / -0.02em / 450 | Standard card titles (editorial) |

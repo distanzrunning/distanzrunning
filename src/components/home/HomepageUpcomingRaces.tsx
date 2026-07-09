@@ -99,7 +99,9 @@ export default async function HomepageUpcomingRaces() {
         {/* Header row — title + tagline left; view-all right (desktop). */}
         <div className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
-            <h2 className="text-display-32 md:text-display-40 text-balance text-textDefault">
+            {/* Section headers are wayfinding chrome — UI heading
+                register (600), shared across the homepage sections. */}
+            <h2 className="text-heading-24 md:text-heading-32 text-balance text-textDefault">
               Upcoming Races
             </h2>
             <p className="text-copy-16 md:text-copy-18 text-balance text-textSubtle">

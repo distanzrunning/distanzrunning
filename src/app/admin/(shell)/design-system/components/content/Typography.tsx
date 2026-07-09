@@ -296,19 +296,21 @@ export default function Typography() {
                 onCopy={handleCopy}
               />
               {/* Editorial display register — Geist Sans at weight 450,
-                  ~1.1 leading. Large editorial headings (homepage hero,
-                  section headers, article h2/h3 moments); Vercel's own
-                  editorial treatment over Geist's UI headings. */}
+                  ~1.1 leading. Large editorial CONTENT headings (homepage
+                  hero, card titles, article h2/h3 moments); Vercel's own
+                  editorial treatment over Geist's UI headings. Section
+                  LABELS ("Latest News") are wayfinding chrome, not
+                  content — they run heading-* (600), Vercel-KB style. */}
               <TypographyRow
                 example={<p className="text-display-48">Display</p>}
                 className="text-display-48"
-                usage="Hero titles, lead section headers"
+                usage="Hero titles, lead editorial headings"
                 onCopy={handleCopy}
               />
               <TypographyRow
                 example={<p className="text-display-40">Display</p>}
                 className="text-display-40"
-                usage="Section headers (editorial)"
+                usage="Large editorial headings, article display moments"
                 onCopy={handleCopy}
               />
               <TypographyRow
@@ -341,7 +343,7 @@ export default function Typography() {
               <TypographyRow
                 example={<p className="text-heading-32">Heading</p>}
                 className="text-heading-32"
-                usage="Page section titles"
+                usage="Page section titles, homepage section headers"
                 onCopy={handleCopy}
               />
               <TypographyRow
