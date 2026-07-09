@@ -533,6 +533,34 @@
     }
   }
 
+  /* Live ring: radiates outward from a live dot and fades — the classic
+     live-indicator ping. Same 1.4s period as the status-dot pulse so a
+     paired dot + ring breathe together. Reduced motion: the ring holds
+     static at full size (the BBC outer-ring look). */
+  @keyframes ds-live-ring {
+    0% {
+      transform: scale(0.55);
+      opacity: 0;
+    }
+    35% {
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.15);
+      opacity: 0;
+    }
+  }
+  .ds-live-ring {
+    animation: ds-live-ring 1.4s ease-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-live-ring {
+      animation: none;
+      transform: none;
+      opacity: 1;
+    }
+  }
+
   /* Split Button: blue focus ring on either half (Geist focus:shadow-focus-ring
      focus:z-[2]); !important to beat the inline box-shadow:none. The divider is
      a hairline whose colour is theme-aware for the filled default and gray-300

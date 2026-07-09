@@ -81,16 +81,17 @@ export default async function HomepageLatestNews() {
             {/* Editorial display register (450 weight) at Quartr's
                 section-header scale. */}
             <h2 className="flex items-center gap-3 text-display-32 md:text-display-40 text-balance text-textDefault">
-              {/* Live mark — BBC-style: a static red ring around a pulsing
-                  red dot (their live icon's outer-ring + inner-disc
-                  anatomy, ~0.5 disc/ring ratio). The dot reuses the DS
-                  status-dot pulse keyframes (globals.css, reduced-motion
-                  aware) on the semantic red hue token; decorative, so
-                  hidden from screen readers. */}
+              {/* Live mark — pulsing red dot with a RADIATING ring (the
+                  classic live-indicator ping): the ring emanates from the
+                  dot and fades on the same 1.4s period as the dot's pulse.
+                  Both keyframes live in globals.css and are reduced-motion
+                  aware (ring falls back to the static BBC outer-ring).
+                  Semantic red token; decorative, hidden from readers. */}
               <span
                 aria-hidden
-                className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-[1.5px] border-[var(--ds-red-700)]"
+                className="relative flex h-4 w-4 shrink-0 items-center justify-center"
               >
+                <span className="ds-live-ring absolute inset-0 rounded-full border-[1.5px] border-[var(--ds-red-700)]" />
                 <span className="ds-status-dot--pulse block h-2 w-2 rounded-full bg-[var(--ds-red-700)]" />
               </span>
               Latest News
