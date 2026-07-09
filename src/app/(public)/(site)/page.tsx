@@ -9,6 +9,7 @@ import AdPlacement from "@/components/ads/AdPlacement";
 import PromoUnit from "@/components/home/PromoUnit";
 import HomepageLatestNews from "@/components/home/HomepageLatestNews";
 import HomepageEditorsPicks from "@/components/home/HomepageEditorsPicks";
+import HomepageUpcomingRaces from "@/components/home/HomepageUpcomingRaces";
 
 export default function HomePage() {
   return (
@@ -32,6 +33,10 @@ export default function HomePage() {
 
       {/* Editor's Picks — sticky main pick + scrolling rail of three. */}
       <HomepageEditorsPicks />
+
+      {/* Upcoming Races — next 10 by event date, Runna's card grammar
+          in the Latest News carousel anatomy. */}
+      <HomepageUpcomingRaces />
     </>
   );
 }

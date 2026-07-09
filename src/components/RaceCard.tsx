@@ -68,8 +68,13 @@ export interface RaceCardProps {
       look — gray-100 body, 6px corners. "outline" adopts the ArticleCard
       chrome (bg-surface + hairline border, 12px radius, p-5 body) so the
       card sits consistently next to ArticleCards — e.g. the mega-menu
-      featured slot. Content structure is identical in both. */
-  chrome?: "filled" | "outline";
+      featured slot. "plain" is the chromeless editorial anatomy (Runna's
+      race card on Stride tokens): rounded image with a glass date pill
+      floating top-right over the photo, body text straight on the
+      canvas — title on the editorial display register, location, and
+      the category as a MetaPill chip. Pass the stat fields to get the
+      glassy hover overlay (same treatment as the index variant). */
+  chrome?: "filled" | "outline" | "plain";
   /** Index-variant only — populates the glassy hover stat columns. */
   surface?: string;
   surfaceBreakdown?: string;
@@ -173,21 +178,27 @@ export default function RaceCard({
   // variant uses overflow-hidden + rounded-sm so the single radius
   // matches the homepage cards' 6 px corners (where the image + body
   // each carry rounded-t-sm / rounded-b-sm separately for the same
-  // visual result).
+  // visual result). Plain: no box — the image wrapper clips itself.
   const isOutline = chrome === "outline";
+  const isPlain = chrome === "plain";
   const articleRadius = isOutline
     ? "overflow-hidden rounded-lg border border-borderSubtle bg-surface"
-    : isIndex
+    : isIndex && !isPlain
       ? "overflow-hidden rounded-sm"
       : "";
+  // The hover stat overlay renders on the index variant (its original
+  // home) and on plain chrome whenever stats were passed.
+  const showHoverStats = (isIndex || isPlain) && hasAnyHoverContent;
 
   return (
     <article
       className={`group relative flex w-full flex-col ${articleRadius} ${className}`.trim()}
     >
+      {/* Plain chrome: the image carries `rounded` (8px, our DEFAULT —
+          the editorial image radius) itself, hero/ArticleCard-style. */}
       <div
         className={`relative aspect-[16/8.75] w-full overflow-hidden bg-[color:var(--ds-gray-100)] ${
-          isIndex || isOutline ? "" : "rounded-t-sm"
+          isPlain ? "rounded" : isIndex || isOutline ? "" : "rounded-t-sm"
         }`}
       >
         {imageUrl && (
@@ -212,23 +223,34 @@ export default function RaceCard({
           </div>
         )}
 
-        {/* Top-right pill — category Badge (inverted variant
-            so the dark bg + white text reads against any photo).
-            Date pill sits inline with the title in the body. */}
-        {category && (
+        {/* Top-right pill. Filled/outline: category Badge (inverted
+            variant so the dark bg + white text reads against any photo);
+            the date pill sits inline with the title in the body. Plain
+            (Runna anatomy): the DATE takes this corner as a glass pill —
+            white translucent + blur with fixed dark ink, a deliberate
+            glass effect (like the index overlay's stat pills) so it
+            reads on any photo in both themes; the category moves to the
+            body's chip row. */}
+        {!isPlain && category && (
           <div className="absolute right-3 top-3 z-20">
             <Badge variant="inverted" size="md">
               {category}
             </Badge>
           </div>
         )}
+        {isPlain && fullDate && (
+          <div className="absolute right-3 top-3 z-20">
+            <span className="inline-flex h-6 items-center rounded-full bg-white/60 px-3 text-label-12 text-black backdrop-blur-md">
+              {fullDate}
+            </span>
+          </div>
+        )}
 
-        {/* Hover overlay (index variant only). Single absolutely-
-            positioned layer that darkens the image via
-            backdrop-filter brightness/contrast (no blur — keeps
-            the photography readable underneath) and renders the
+        {/* Hover overlay (index variant + plain chrome with stats).
+            Single absolutely-positioned layer that darkens the image
+            via backdrop-filter brightness/contrast and renders the
             three stat columns on top. Fades in on group hover. */}
-        {isIndex && hasAnyHoverContent && (
+        {showHoverStats && (
           <div
             className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-6 px-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             style={{
@@ -262,34 +284,61 @@ export default function RaceCard({
         )}
       </div>
 
-      {/* Body — title + location stacked left, date pill on
-          the right vertically centered against the whole stack
-          (so it sits midway between title and location rather
-          than top-aligned with the title's first line). */}
-      <div
-        className={`flex items-center justify-between gap-3 ${
-          isOutline
-            ? "p-5"
-            : "rounded-b-sm bg-[color:var(--ds-gray-100)] p-6"
-        }`}
-      >
-        <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
+      {/* Body. Plain (Runna anatomy): text straight on the canvas —
+          title on the editorial display register (matches the homepage
+          ArticleCards), location below, then the category as a chip in
+          the bottom row (Runna's distance-chip slot); the date already
+          lives on the image. Filled/outline: title + location stacked
+          left, date pill on the right vertically centered against the
+          whole stack. */}
+      {isPlain ? (
+        <div className="flex flex-1 flex-col gap-2 px-1 pt-4">
+          <h3 className="line-clamp-2 text-display-20 text-pretty text-textDefault">
+            {/* Plain chrome has no clipping box, so the focus ring
+                breathes outward at the image's 8px radius, like the
+                hero / plain ArticleCard. */}
             <Link
               href={href}
-              className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
+              className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-[color:var(--ds-focus-color)]"
             >
               {title}
             </Link>
           </h3>
           {location && (
-            <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
-              {location}
-            </p>
+            <p className="truncate text-copy-14 text-textSubtle">{location}</p>
+          )}
+          {category && (
+            <div className="pt-1">
+              <MetaPill>{category}</MetaPill>
+            </div>
           )}
         </div>
-        {fullDate && <MetaPill>{fullDate}</MetaPill>}
-      </div>
+      ) : (
+        <div
+          className={`flex items-center justify-between gap-3 ${
+            isOutline
+              ? "p-5"
+              : "rounded-b-sm bg-[color:var(--ds-gray-100)] p-6"
+          }`}
+        >
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
+              <Link
+                href={href}
+                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
+              >
+                {title}
+              </Link>
+            </h3>
+            {location && (
+              <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
+                {location}
+              </p>
+            )}
+          </div>
+          {fullDate && <MetaPill>{fullDate}</MetaPill>}
+        </div>
+      )}
     </article>
   );
 }
