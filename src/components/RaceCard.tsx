@@ -201,54 +201,32 @@ export default function RaceCard({
     <article
       className={`group relative flex w-full flex-col ${articleRadius} ${className}`.trim()}
     >
-      {/* Card chrome: the Vercel-KB illustration panel — recessed
-          canvas tone under a dashed grid (interior-subdivision
-          register), the photo composed in a mini browser frame (the
-          "interactive guide" metaphor; its shadow deepens on card
-          hover, Geist's centre-tile move), and the date + category
-          floating as bordered surface pills in opposite corners. The
-          panel runs the TALLER 16/10 ratio (our editorial crop token;
-          Vercel's KB panels are ~1.56) so the composition breathes —
-          the cinematic 16/8.75 belongs to full-bleed photo cards.
-          Carousel arrow maths in HomepageUpcomingRaces matches this
-          ratio. */}
+      {/* Card chrome: Vercel-KB card anatomy with a full-bleed photo
+          panel — the image fills the 16/10 area edge to edge under
+          the panel's border-b, with the category ("distance") as a
+          bordered surface pill top-right. The date lives in the
+          footer's right slot. Carousel arrow maths in
+          HomepageUpcomingRaces matches the 16/10 ratio. */}
       {isCard && (
-        <div className="ds-dashed-grid relative aspect-[16/10] w-full overflow-hidden border-b border-borderSubtle bg-canvas">
-          {fullDate && (
-            <div className="absolute right-3 top-3 z-10">
-              <span className="inline-flex h-6 items-center rounded-full border border-borderSubtle bg-surface px-3 text-label-12 text-textDefault">
-                {fullDate}
-              </span>
+        <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-borderSubtle bg-[color:var(--ds-gray-100)]">
+          {imageUrl && (
+            <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100">
+              <CardImage
+                src={imageUrl}
+                alt={imageAlt ?? title}
+                sizes="(max-width: 640px) 85vw, (max-width: 768px) 50vw, 405px"
+                priority={priority}
+                blurDataURL={blurDataURL}
+              />
             </div>
           )}
           {category && (
-            <div className="absolute bottom-3 left-3 z-10">
-              <span className="inline-flex h-6 items-center rounded-full border border-borderSubtle bg-surface px-3 text-label-12 text-textSubtle">
+            <div className="absolute right-3 top-3 z-10">
+              <span className="inline-flex h-6 items-center rounded-full border border-borderSubtle bg-surface px-3 text-label-12 text-textDefault">
                 {category}
               </span>
             </div>
           )}
-          <div className="absolute left-1/2 top-1/2 w-[66%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-lg border border-borderSubtle bg-surface shadow-[0_8px_16px_-6px_hsla(var(--ds-gray-1000-value),0.16)] transition-shadow duration-200 group-hover:shadow-[0_12px_24px_-6px_hsla(var(--ds-gray-1000-value),0.24)]">
-            {/* Browser chrome — three dots, Geist's mini-window mock. */}
-            <div className="flex gap-1 p-2">
-              <span className="size-2 rounded-full bg-[color:var(--ds-gray-300)]" />
-              <span className="size-2 rounded-full bg-[color:var(--ds-gray-300)]" />
-              <span className="size-2 rounded-full bg-[color:var(--ds-gray-300)]" />
-            </div>
-            <div className="relative aspect-[16/9] w-full overflow-hidden bg-[color:var(--ds-gray-100)]">
-              {imageUrl && (
-                <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100">
-                  <CardImage
-                    src={imageUrl}
-                    alt={imageAlt ?? title}
-                    sizes="(max-width: 640px) 55vw, (max-width: 768px) 32vw, 260px"
-                    priority={priority}
-                    blurDataURL={blurDataURL}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       )}
 
@@ -333,25 +311,34 @@ export default function RaceCard({
       {/* Body. Card (Vercel-KB anatomy): clean surface footer under
           the panel's border-b — heading-20 title (the KB product
           voice; a race guide card is a utility card, not editorial
-          content) + location. Date + category live on the panel as
-          pills. Filled/outline: title + location stacked left, date
-          pill on the right vertically centered against the whole
-          stack. */}
+          content) + location stacked left, DATE as a bordered pill on
+          the right, vertically centered against the stack. Category
+          lives on the image. Filled/outline: title + location stacked
+          left, date MetaPill right. */}
       {isCard ? (
-        <div className="flex flex-1 flex-col gap-1 p-5">
-          <h3 className="line-clamp-1 text-heading-20 text-pretty text-textDefault">
-            {/* The container clips (overflow-hidden), so the focus
-                ring insets at the card's 12px corner, like the card
-                ArticleCard chrome. */}
-            <Link
-              href={href}
-              className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-lg focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
-            >
-              {title}
-            </Link>
-          </h3>
-          {location && (
-            <p className="truncate text-copy-14 text-textSubtle">{location}</p>
+        <div className="flex flex-1 items-center justify-between gap-3 p-5">
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <h3 className="line-clamp-1 text-heading-20 text-pretty text-textDefault">
+              {/* The container clips (overflow-hidden), so the focus
+                  ring insets at the card's 12px corner, like the card
+                  ArticleCard chrome. */}
+              <Link
+                href={href}
+                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-lg focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
+              >
+                {title}
+              </Link>
+            </h3>
+            {location && (
+              <p className="truncate text-copy-14 text-textSubtle">
+                {location}
+              </p>
+            )}
+          </div>
+          {fullDate && (
+            <span className="inline-flex h-6 shrink-0 items-center rounded-full border border-borderSubtle bg-surface px-3 text-label-12 text-textSubtle">
+              {fullDate}
+            </span>
           )}
         </div>
       ) : (
