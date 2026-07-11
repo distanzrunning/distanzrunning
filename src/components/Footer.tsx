@@ -101,10 +101,9 @@ export default function Footer() {
           <LogoIcon className="h-6 w-6" />
         </Link>
 
-        {/* Link grid — 2-col packing on mobile; on md+ five
-            fit-content columns centred as a block on the page, echoing
-            the centred lockup below. */}
-        <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:mx-auto md:w-fit md:grid-cols-5 md:gap-12 lg:gap-20">
+        {/* Link grid — 2-col packing on mobile, five spread columns
+            across the content width on md+ (Quartr's columns row). */}
+        <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-5 md:gap-10 lg:gap-16">
           <FooterColumn heading="Stories" items={storiesLinks} />
           <FooterColumn heading="Gear" items={gearColumnLinks} />
           <FooterColumn heading="Races" items={racesColumnLinks} />
