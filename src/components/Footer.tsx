@@ -118,16 +118,16 @@ export default function Footer() {
       </div>
 
       {/* Giant lockup bookend — the full Distanz Running lockup blown
-          up to the content width, with the page edge cutting through
-          the middle of "RUNNING" (Quartr's cropped-wordmark move).
+          up, centred, with the page edge cutting through "RUNNING"
+          (Quartr's cropped-wordmark move; theirs caps at 825px too).
           The wrapper's aspect ratio is the SVG's 1579.12-wide viewBox
-          over y=447.6 — the measured midline of the RUNNING glyphs
-          (they span y 410.5–484.7) — so overflow-hidden clips the
-          word exactly in half at any width; no bottom padding below,
-          the cut IS the page bottom. Decorative: the Masthead carries
-          the home link. currentColor keeps it theme-aware. */}
-      <div className="mx-auto w-full max-w-content px-6" aria-hidden>
-        <div className="aspect-[1579.12/447.6] overflow-hidden text-textDefault">
+          over y=460 — the RUNNING glyphs span y 410.5–484.7, so
+          exactly the bottom third of the word is cropped at any
+          width; no bottom padding below, the cut IS the page bottom.
+          Decorative: the Masthead carries the home link. currentColor
+          keeps it theme-aware. */}
+      <div className="mx-auto w-full max-w-4xl px-6" aria-hidden>
+        <div className="aspect-[1579.12/460] overflow-hidden text-textDefault">
           <Logo className="h-auto w-full" />
         </div>
       </div>
