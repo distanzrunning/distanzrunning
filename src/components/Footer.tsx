@@ -16,12 +16,12 @@
 
 "use client";
 
-import { type ComponentType } from "react";
 import Link from "next/link";
-import { SiInstagram, SiX, SiStrava, SiLinkedin } from "react-icons/si";
+import { ArrowUpRight } from "lucide-react";
 import { useConsentSettings } from "@/components/consent/useConsentSettings";
 import Logo from "@/components/ui/Logo";
 import LogoIcon from "@/components/ui/LogoIcon";
+import { cn } from "@/lib/utils";
 
 // ============================================================================
 // Link / action union — Cookies opens the consent settings dialog, so
@@ -56,30 +56,13 @@ const racesColumnLinks: ReadonlyArray<FooterItem> = [
 type SocialLink = {
   label: string;
   href: string;
-  Icon: ComponentType<{ size?: number | string; className?: string }>;
 };
 
 const socialLinks: ReadonlyArray<SocialLink> = [
-  {
-    label: "Instagram",
-    href: "https://instagram.com/distanzrunning",
-    Icon: SiInstagram,
-  },
-  {
-    label: "Twitter",
-    href: "https://x.com/distanzrunning",
-    Icon: SiX,
-  },
-  {
-    label: "Strava",
-    href: "https://strava.com/clubs/distanzrunning",
-    Icon: SiStrava,
-  },
-  {
-    label: "LinkedIn",
-    href: "https://linkedin.com/company/distanzrunning",
-    Icon: SiLinkedin,
-  },
+  { label: "Instagram", href: "https://instagram.com/distanzrunning" },
+  { label: "X (Twitter)", href: "https://x.com/distanzrunning" },
+  { label: "Strava", href: "https://strava.com/clubs/distanzrunning" },
+  { label: "LinkedIn", href: "https://linkedin.com/company/distanzrunning" },
 ];
 
 // gap-x-0.5 (2px) is v0's link-internal spacing — invisible on
@@ -118,9 +101,10 @@ export default function Footer() {
           <LogoIcon className="h-6 w-6" />
         </Link>
 
-        {/* Link grid — 2-col packing on mobile, five spread columns
-            across the content width on md+ (Quartr's columns row). */}
-        <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-5 md:gap-10 lg:gap-16">
+        {/* Link grid — 2-col packing on mobile; on md+ five
+            fit-content columns centred as a block on the page, echoing
+            the centred lockup below. */}
+        <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:mx-auto md:w-fit md:grid-cols-5 md:gap-12 lg:gap-20">
           <FooterColumn heading="Stories" items={storiesLinks} />
           <FooterColumn heading="Gear" items={gearColumnLinks} />
           <FooterColumn heading="Races" items={racesColumnLinks} />
@@ -189,18 +173,24 @@ function SocialColumn() {
     <div className="space-y-4">
       <h2 className="text-heading-14 text-textDefault">Social</h2>
       <ul className="flex flex-col gap-y-2.5">
-        {socialLinks.map(({ label, href, Icon }) => (
+        {socialLinks.map(({ label, href }) => (
           <li key={href} className="w-fit">
+            {/* Quartr's external-link anatomy: label + trailing
+                arrow-up-right that nudges 2px up-and-right on hover
+                (the group-hover translate below). */}
             <a
               href={href}
               rel="noopener"
               target="_blank"
-              className={linkClasses}
+              className={cn(linkClasses, "group gap-x-1")}
             >
-              {/* mr-1 (not the gap) matches v0's icon-to-label spacing;
-                  16px = the DS small inline icon size. */}
-              <Icon size={16} className="mr-1 shrink-0" />
               {label}
+              <span
+                aria-hidden
+                className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              >
+                <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
+              </span>
             </a>
           </li>
         ))}
