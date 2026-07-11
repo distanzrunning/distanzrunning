@@ -126,7 +126,7 @@ export default function Footer() {
           width; no bottom padding below, the cut IS the page bottom.
           Decorative: the Masthead carries the home link. currentColor
           keeps it theme-aware. */}
-      <div className="mx-auto w-full max-w-4xl px-6" aria-hidden>
+      <div className="mx-auto w-full max-w-3xl px-6" aria-hidden>
         <div className="aspect-[1579.12/460] overflow-hidden text-textDefault">
           <Logo className="h-auto w-full" />
         </div>
