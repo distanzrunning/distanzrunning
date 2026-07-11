@@ -31,16 +31,25 @@ type FooterItem =
   | { kind: "link"; label: string; href: string }
   | { kind: "action"; label: string; onClick: () => void };
 
-// Mirrors the Masthead's navigation order: the three editorial
-// sections, then the mega-menu categories.
-const categoryLinks: ReadonlyArray<FooterItem> = [
+// Mirrors the Masthead's navigation, split by register: the three
+// editorial sections, the product categories, then races. Hrefs match
+// the mega-menu's canonical links (SiteNavigationMenu.tsx).
+const storiesLinks: ReadonlyArray<FooterItem> = [
   { kind: "link", label: "Road", href: "/articles/road" },
   { kind: "link", label: "Track", href: "/articles/track" },
   { kind: "link", label: "Trail", href: "/articles/trail" },
+];
+
+const gearColumnLinks: ReadonlyArray<FooterItem> = [
   { kind: "link", label: "Shoes", href: "/shoes" },
-  { kind: "link", label: "Gear", href: "/gear" },
+  { kind: "link", label: "Watches", href: "/gear/watches" },
+  { kind: "link", label: "Apparel", href: "/gear/apparel" },
   { kind: "link", label: "Nutrition", href: "/nutrition" },
+];
+
+const racesColumnLinks: ReadonlyArray<FooterItem> = [
   { kind: "link", label: "Races", href: "/races" },
+  { kind: "link", label: "Race Calendar", href: "/races/calendar" },
 ];
 
 type SocialLink = {
@@ -113,10 +122,12 @@ export default function Footer() {
             <Logo className="h-12 w-auto" />
           </Link>
 
-          {/* Link grid — 2-col packing on mobile (Social wraps below),
-              three spread columns on md+. */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-3 md:gap-16 lg:gap-24">
-            <FooterColumn heading="Category" items={categoryLinks} />
+          {/* Link grid — 2-col packing on mobile, five spread columns
+              on md+ (v0's grid, one column wider). */}
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-5 md:gap-10 lg:gap-16">
+            <FooterColumn heading="Stories" items={storiesLinks} />
+            <FooterColumn heading="Gear" items={gearColumnLinks} />
+            <FooterColumn heading="Races" items={racesColumnLinks} />
             <FooterColumn heading="About" items={aboutLinks} />
             <SocialColumn />
           </div>
