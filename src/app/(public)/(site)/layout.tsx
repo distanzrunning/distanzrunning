@@ -13,6 +13,7 @@
 import { ReactNode } from "react";
 
 import MastheadWrapper from "@/components/MastheadWrapper";
+import Footer from "@/components/Footer";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
 import { getAnnouncement } from "@/lib/announcement";
 
@@ -67,6 +68,9 @@ export default async function SiteLayout({
         >
           {children}
         </main>
+        {/* Footer bookends the canvas column — main's flex-1 pins it
+            to the viewport bottom on short pages. */}
+        <Footer />
       </div>
     </>
   );

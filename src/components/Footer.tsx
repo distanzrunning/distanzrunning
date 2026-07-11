@@ -1,14 +1,16 @@
 // src/components/Footer.tsx
 //
-// Site footer — v0-style three-column layout: wordmark on the left,
-// Category / Company / Social columns on the right. Theme-aware
-// (uses --ds-* tokens), so it adapts to light and dark mode.
+// Site footer — v0.app's anatomy on Stride tokens: full lockup on the
+// left, Category / About / Social link columns on the right, theme
+// switcher tucked bottom-left. One structural hairline on top (the
+// same Default rule the homepage sections use), everything on the
+// page canvas.
 //
-// Anatomy modelled on v0.app's footer: outer relative footer, max-w
-// container, flex row that stacks on mobile and goes side-by-side on
-// md+. Three columns inside the right cluster (2-col grid on mobile,
-// 3-col on md+). Wordmark uses the same inline <Wordmark /> as the
-// header so colour follows currentColor / text-gray-1000.
+// Typography: column headings run text-heading-14 (the DS mini-header
+// slot — v0's `label-14 font-medium` analogue; a stacked font-medium
+// would lose to the slot's own weight, see the Masthead LINK_CLASS
+// note). Links are text-label-14, textSubtle stepping up to
+// textDefault on hover/focus — v0's gray-900 → gray-1000 move.
 
 "use client";
 
@@ -21,17 +23,20 @@ import Logo from "@/components/ui/Logo";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 
 // ============================================================================
-// Link / action union — Cookies needs to fire openSettings on the
-// consent context, so a column can mix internal Next links with
-// button actions. External social links live in their own column.
+// Link / action union — Cookies opens the consent settings dialog, so
+// a column can mix internal Next links with button actions.
 // ============================================================================
 
 type FooterItem =
   | { kind: "link"; label: string; href: string }
   | { kind: "action"; label: string; onClick: () => void };
 
+// Mirrors the Masthead's navigation order: the three editorial
+// sections, then the mega-menu categories.
 const categoryLinks: ReadonlyArray<FooterItem> = [
-  { kind: "link", label: "News", href: "/articles" },
+  { kind: "link", label: "Road", href: "/articles/road" },
+  { kind: "link", label: "Track", href: "/articles/track" },
+  { kind: "link", label: "Trail", href: "/articles/trail" },
   { kind: "link", label: "Shoes", href: "/shoes" },
   { kind: "link", label: "Gear", href: "/gear" },
   { kind: "link", label: "Nutrition", href: "/nutrition" },
@@ -67,6 +72,11 @@ const socialLinks: ReadonlyArray<SocialLink> = [
   },
 ];
 
+// gap-x-0.5 (2px) is v0's link-internal spacing — invisible on
+// text-only links, correct if one ever gains a trailing glyph.
+const linkClasses =
+  "inline-flex items-center gap-x-0.5 rounded-sm text-label-14 text-textSubtle transition-colors hover:text-textDefault focus-visible:text-textDefault focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)]";
+
 // ============================================================================
 // Main
 // ============================================================================
@@ -75,9 +85,9 @@ export default function Footer() {
   const { openSettings } = useConsentSettings();
   const { theme, setTheme } = useContext(DarkModeContext);
 
-  const companyLinks: ReadonlyArray<FooterItem> = [
+  const aboutLinks: ReadonlyArray<FooterItem> = [
     { kind: "link", label: "About", href: "/about" },
-    { kind: "link", label: "Work with us", href: "/careers" },
+    { kind: "link", label: "Contact", href: "/contact-us" },
     { kind: "link", label: "Privacy", href: "/privacy" },
     { kind: "action", label: "Cookies", onClick: openSettings },
   ];
@@ -85,46 +95,37 @@ export default function Footer() {
   return (
     <footer
       aria-label="Site footer"
-      className="relative z-50 w-full text-[color:var(--ds-gray-900)]"
+      className="w-full border-t border-borderSubtle"
     >
-      {/* Outer wrapper sized to v0: 1400 px max width, 40 px L/R
-          padding, 48 px vertical margin, asymmetric pt-6 pb-10. */}
-      <div className="mx-auto my-12 w-full max-w-content px-10 pt-6 pb-10">
-        {/* Content row: stacked on mobile inside a 672 px (max-w-2xl)
-            column with a generous 64 px gap between logo and link
-            grid. On md+ it expands to the xl breakpoint and goes
-            side-by-side. */}
-        <div className="relative flex w-full max-w-2xl flex-col justify-between gap-x-12 gap-y-16 md:mx-auto md:max-w-7xl md:flex-row md:items-start">
-          {/* Full Distanz Running lockup (icon + Distanz + Running).
-              Same inline-SVG approach as the header wordmark so the
-              colour follows currentColor / text-gray-1000 in both
-              modes. */}
+      <div className="mx-auto w-full max-w-content px-6 py-12 lg:py-16">
+        {/* Content row — stacked on mobile, logo left / link grid right
+            on md+. `relative` anchors the theme switcher's absolute
+            position on desktop. */}
+        <div className="relative flex w-full flex-col justify-between gap-x-12 gap-y-16 md:flex-row md:items-start">
+          {/* Full Distanz Running lockup — inline SVG on currentColor,
+              same approach as the header wordmark, so dark mode is a
+              text-* flip. */}
           <Link
             href="/"
             aria-label="Distanz Running — home"
-            className="inline-flex h-fit shrink-0 text-[color:var(--ds-gray-1000)]"
+            className="inline-flex h-fit shrink-0 text-textDefault"
           >
             <Logo className="h-12 w-auto" />
           </Link>
 
-          {/* Link grid. Mobile: 2-col, no x-gap, 16 px y-gap (tight
-              packing inside the 672 px column). md: 3 cols / 64 px
-              gap. lg: 108 px gap. */}
-          <div className="grid grid-cols-2 gap-x-0 gap-y-4 md:grid-cols-3 md:gap-16 lg:gap-[108px]">
+          {/* Link grid — 2-col packing on mobile (Social wraps below),
+              three spread columns on md+. */}
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-3 md:gap-16 lg:gap-24">
             <FooterColumn heading="Category" items={categoryLinks} />
-            <FooterColumn heading="Company" items={companyLinks} />
+            <FooterColumn heading="About" items={aboutLinks} />
             <SocialColumn />
           </div>
 
           {/* Theme switcher.
-              Mobile (parent flex-col): renders in flow as the last
-              item, stacking below the link grid.
-              Desktop (parent flex-row + relative): absolutely
-              positioned at the bottom-left of the flex container so
-              it sits flush with the bottom of the link grid (the
-              tallest column drives row height) and aligned with the
-              wordmark's left edge. No label — the segmented
-              sun/moon/system glyphs are self-labelling. */}
+              Mobile: last item in the stacked flow, below the grid.
+              Desktop: pinned to the bottom-left of the row, flush with
+              the bottom of the link grid and the wordmark's left edge.
+              No label — the segmented glyphs are self-labelling. */}
           <div className="md:absolute md:bottom-0 md:left-0">
             <ThemeSwitcher value={theme} onChange={setTheme} />
           </div>
@@ -147,9 +148,7 @@ function FooterColumn({
 }) {
   return (
     <div className="space-y-4">
-      <h2 className="text-[14px] leading-5 font-medium text-[color:var(--ds-gray-1000)]">
-        {heading}
-      </h2>
+      <h2 className="text-heading-14 text-textDefault">{heading}</h2>
       <ul className="flex flex-col gap-y-2.5">
         {items.map((item) => (
           <li key={item.label} className="w-fit">
@@ -176,9 +175,7 @@ function FooterColumn({
 function SocialColumn() {
   return (
     <div className="space-y-4">
-      <h2 className="text-[14px] leading-5 font-medium text-[color:var(--ds-gray-1000)]">
-        Social
-      </h2>
+      <h2 className="text-heading-14 text-textDefault">Social</h2>
       <ul className="flex flex-col gap-y-2.5">
         {socialLinks.map(({ label, href, Icon }) => (
           <li key={href} className="w-fit">
@@ -188,9 +185,9 @@ function SocialColumn() {
               target="_blank"
               className={linkClasses}
             >
-              {/* mr-1 (not gap-x-) matches v0's social spacing —
-                  4 px between icon and label. */}
-              <Icon size={14} className="mr-1 shrink-0" />
+              {/* mr-1 (not the gap) matches v0's icon-to-label spacing;
+                  16px = the DS small inline icon size. */}
+              <Icon size={16} className="mr-1 shrink-0" />
               {label}
             </a>
           </li>
@@ -199,9 +196,3 @@ function SocialColumn() {
     </div>
   );
 }
-
-// gap-x-0.5 (2 px) matches v0's link-internal spacing — used by
-// links that have a trailing arrow icon. With text-only links the
-// gap is invisible.
-const linkClasses =
-  "inline-flex items-center gap-x-0.5 rounded-sm text-[14px] leading-5 text-[color:var(--ds-gray-900)] transition-colors hover:text-[color:var(--ds-gray-1000)] focus-visible:text-[color:var(--ds-gray-1000)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--ds-focus-color)]";
