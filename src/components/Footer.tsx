@@ -21,6 +21,7 @@ import Link from "next/link";
 import { SiInstagram, SiX, SiStrava, SiLinkedin } from "react-icons/si";
 import { useConsentSettings } from "@/components/consent/useConsentSettings";
 import Logo from "@/components/ui/Logo";
+import LogoIcon from "@/components/ui/LogoIcon";
 
 // ============================================================================
 // Link / action union — Cookies opens the consent settings dialog, so
@@ -105,9 +106,20 @@ export default function Footer() {
       aria-label="Site footer"
       className="w-full border-t border-borderSubtle"
     >
-      {/* Link grid — 2-col packing on mobile, five spread columns
-          across the content width on md+ (Quartr's columns row). */}
       <div className="mx-auto w-full max-w-content px-6 pb-16 pt-12 md:pb-24 lg:pt-16">
+        {/* Icon mark above the columns, top-left (Quartr's logomark
+            slot) — doubles as the footer's home link now that the
+            small lockup is gone. */}
+        <Link
+          href="/"
+          aria-label="Distanz Running — home"
+          className="mb-10 inline-flex text-textDefault"
+        >
+          <LogoIcon className="h-6 w-6" />
+        </Link>
+
+        {/* Link grid — 2-col packing on mobile, five spread columns
+            across the content width on md+ (Quartr's columns row). */}
         <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-5 md:gap-10 lg:gap-16">
           <FooterColumn heading="Stories" items={storiesLinks} />
           <FooterColumn heading="Gear" items={gearColumnLinks} />
