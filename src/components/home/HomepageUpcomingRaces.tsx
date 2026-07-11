@@ -44,13 +44,13 @@ function AllRacesButton() {
   );
 }
 
-// Floating arrow chips straddling the row's edges — revealed on row
-// hover (and on keyboard focus); a disabled chip stays hidden even
-// while hovering. Same cq-unit maths as Latest News but for the race
-// card's 16/10 panel: panel height = card width × 10/16, so half is
-// card × 0.3125 — ÷2-up = 0.15625, ÷3-up = 0.10417.
+// Bare chevrons OUTSIDE the content edge, over the canvas (see the
+// Latest News notes — deterministic background, ≥1360px only). Same
+// cq-unit maths as Latest News but for the race card's 16/10 panel:
+// panel height = card width × 10/16, so half is card × 0.3125 —
+// ÷2-up = 0.15625, ÷3-up = 0.10417.
 const ARROW_CLASS =
-  "opacity-0 transition-opacity duration-200 group-hover/row:opacity-100 focus-visible:opacity-100 disabled:opacity-0";
+  "hidden min-[1360px]:grid opacity-0 transition-opacity duration-200 group-hover/row:opacity-100 focus-visible:opacity-100 disabled:opacity-0 [&_svg]:size-8";
 const ARROW_Y =
   "top-[calc((100cqw-16px)*0.15625)] md:top-[calc((100cqw-32px)*0.10417)]";
 
@@ -154,10 +154,20 @@ export default async function HomepageUpcomingRaces() {
             ))}
           </CarouselContent>
           <CarouselPrevious
-            className={cn("left-0 -translate-x-1/2", ARROW_Y, ARROW_CLASS)}
+            variant="ghost"
+            className={cn(
+              "left-0 -translate-x-[calc(100%+8px)]",
+              ARROW_Y,
+              ARROW_CLASS,
+            )}
           />
           <CarouselNext
-            className={cn("right-0 translate-x-1/2", ARROW_Y, ARROW_CLASS)}
+            variant="ghost"
+            className={cn(
+              "right-0 translate-x-[calc(100%+8px)]",
+              ARROW_Y,
+              ARROW_CLASS,
+            )}
           />
         </CarouselWheelStep>
 

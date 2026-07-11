@@ -44,11 +44,14 @@ function AllArticlesButton() {
   );
 }
 
-// Floating arrow chips straddling the row's edges — revealed on row
-// hover (and on keyboard focus); a disabled chip stays hidden even
-// while hovering. Touch devices never hover, so they swipe the peek.
+// Bare chevrons OUTSIDE the content edge, over the canvas — the
+// deterministic background is what makes the chipless glyph legible in
+// both themes (over photos it depends on the pixels behind it).
+// Revealed on row hover / keyboard focus; disabled stays hidden. Only
+// rendered from 1360px up, where the viewport gutter fits them —
+// below that, wheel-step / drag / swipe / arrow keys carry the row.
 const ARROW_CLASS =
-  "opacity-0 transition-opacity duration-200 group-hover/row:opacity-100 focus-visible:opacity-100 disabled:opacity-0";
+  "hidden min-[1360px]:grid opacity-0 transition-opacity duration-200 group-hover/row:opacity-100 focus-visible:opacity-100 disabled:opacity-0 [&_svg]:size-8";
 
 // Vertical centre of the IMAGE band (not the whole card): the image
 // height is a pure function of the row width — card = (row − gaps) / n,
@@ -163,10 +166,20 @@ export default async function HomepageLatestNews() {
           )}
           </CarouselContent>
           <CarouselPrevious
-            className={cn("left-0 -translate-x-1/2", ARROW_Y, ARROW_CLASS)}
+            variant="ghost"
+            className={cn(
+              "left-0 -translate-x-[calc(100%+8px)]",
+              ARROW_Y,
+              ARROW_CLASS,
+            )}
           />
           <CarouselNext
-            className={cn("right-0 translate-x-1/2", ARROW_Y, ARROW_CLASS)}
+            variant="ghost"
+            className={cn(
+              "right-0 translate-x-[calc(100%+8px)]",
+              ARROW_Y,
+              ARROW_CLASS,
+            )}
           />
         </CarouselWheelStep>
 
