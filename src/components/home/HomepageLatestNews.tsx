@@ -47,11 +47,12 @@ function AllArticlesButton() {
 // Bare chevrons OUTSIDE the content edge, over the canvas — the
 // deterministic background is what makes the chipless glyph legible in
 // both themes (over photos it depends on the pixels behind it).
-// Revealed on row hover / keyboard focus; disabled stays hidden. Only
+// ALWAYS visible while there are cards in that direction (disabled
+// direction fades out); hover = colour step-up only, no fill. Only
 // rendered from 1360px up, where the viewport gutter fits them —
 // below that, wheel-step / drag / swipe / arrow keys carry the row.
 const ARROW_CLASS =
-  "hidden min-[1360px]:grid opacity-0 transition-opacity duration-200 group-hover/row:opacity-100 focus-visible:opacity-100 disabled:opacity-0 [&_svg]:size-8";
+  "hidden min-[1360px]:grid text-textSubtle transition-[color,opacity] duration-200 hover:bg-transparent hover:text-textDefault disabled:opacity-0 dark:hover:bg-transparent [&_svg]:size-8";
 
 // Vertical centre of the IMAGE band (not the whole card): the image
 // height is a pure function of the row width — card = (row − gaps) / n,

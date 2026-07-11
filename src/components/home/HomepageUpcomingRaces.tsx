@@ -45,14 +45,13 @@ function AllRacesButton() {
 }
 
 // Bare chevrons OUTSIDE the content edge, over the canvas (see the
-// Latest News notes — deterministic background, ≥1360px only). Same
-// cq-unit maths as Latest News but for the race card's 16/10 panel:
-// panel height = card width × 10/16, so half is card × 0.3125 —
-// ÷2-up = 0.15625, ÷3-up = 0.10417.
+// Latest News notes — deterministic background, ≥1360px only; always
+// visible while scrollable, hover = colour step-up, no fill). Unlike
+// Latest News (photo-centred cq maths), these centre on the WHOLE
+// card: the buttons keep the Carousel default top-1/2 translate
+// against the row, which is exactly card height.
 const ARROW_CLASS =
-  "hidden min-[1360px]:grid opacity-0 transition-opacity duration-200 group-hover/row:opacity-100 focus-visible:opacity-100 disabled:opacity-0 [&_svg]:size-8";
-const ARROW_Y =
-  "top-[calc((100cqw-16px)*0.15625)] md:top-[calc((100cqw-32px)*0.10417)]";
+  "hidden min-[1360px]:grid text-textSubtle transition-[color,opacity] duration-200 hover:bg-transparent hover:text-textDefault disabled:opacity-0 dark:hover:bg-transparent [&_svg]:size-8";
 
 type UpcomingRace = {
   _id: string;
@@ -155,19 +154,11 @@ export default async function HomepageUpcomingRaces() {
           </CarouselContent>
           <CarouselPrevious
             variant="ghost"
-            className={cn(
-              "left-0 -translate-x-[calc(100%+8px)]",
-              ARROW_Y,
-              ARROW_CLASS,
-            )}
+            className={cn("left-0 -translate-x-[calc(100%+8px)]", ARROW_CLASS)}
           />
           <CarouselNext
             variant="ghost"
-            className={cn(
-              "right-0 translate-x-[calc(100%+8px)]",
-              ARROW_Y,
-              ARROW_CLASS,
-            )}
+            className={cn("right-0 translate-x-[calc(100%+8px)]", ARROW_CLASS)}
           />
         </CarouselWheelStep>
 
