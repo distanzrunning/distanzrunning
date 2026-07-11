@@ -46,13 +46,13 @@ function AllRacesButton() {
 
 // Floating arrow chips straddling the row's edges — revealed on row
 // hover (and on keyboard focus); a disabled chip stays hidden even
-// while hovering. Same geometry as Latest News: the cards share the
-// 16/8.75 image crop and column bases, so the cq-unit maths that
-// centres the chip on the image band holds unchanged.
+// while hovering. Same cq-unit maths as Latest News but for the race
+// card's 16/10 panel: panel height = card width × 10/16, so half is
+// card × 0.3125 — ÷2-up = 0.15625, ÷3-up = 0.10417.
 const ARROW_CLASS =
   "opacity-0 transition-opacity duration-200 group-hover/row:opacity-100 focus-visible:opacity-100 disabled:opacity-0";
 const ARROW_Y =
-  "top-[calc((100cqw-16px)*0.1367)] md:top-[calc((100cqw-32px)*0.0911)]";
+  "top-[calc((100cqw-16px)*0.15625)] md:top-[calc((100cqw-32px)*0.10417)]";
 
 type UpcomingRace = {
   _id: string;

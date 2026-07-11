@@ -206,11 +206,14 @@ export default function RaceCard({
           register), the photo composed in a mini browser frame (the
           "interactive guide" metaphor; its shadow deepens on card
           hover, Geist's centre-tile move), and the date + category
-          floating as bordered surface pills in opposite corners. Same
-          16/8.75 ratio as the photo block so the carousel arrow
-          geometry holds. */}
+          floating as bordered surface pills in opposite corners. The
+          panel runs the TALLER 16/10 ratio (our editorial crop token;
+          Vercel's KB panels are ~1.56) so the composition breathes —
+          the cinematic 16/8.75 belongs to full-bleed photo cards.
+          Carousel arrow maths in HomepageUpcomingRaces matches this
+          ratio. */}
       {isCard && (
-        <div className="ds-dashed-grid relative aspect-[16/8.75] w-full overflow-hidden border-b border-borderSubtle bg-canvas">
+        <div className="ds-dashed-grid relative aspect-[16/10] w-full overflow-hidden border-b border-borderSubtle bg-canvas">
           {fullDate && (
             <div className="absolute right-3 top-3 z-10">
               <span className="inline-flex h-6 items-center rounded-full border border-borderSubtle bg-surface px-3 text-label-12 text-textDefault">
@@ -225,7 +228,7 @@ export default function RaceCard({
               </span>
             </div>
           )}
-          <div className="absolute left-1/2 top-1/2 w-[64%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-lg border border-borderSubtle bg-surface shadow-[0_8px_16px_-6px_hsla(var(--ds-gray-1000-value),0.16)] transition-shadow duration-200 group-hover:shadow-[0_12px_24px_-6px_hsla(var(--ds-gray-1000-value),0.24)]">
+          <div className="absolute left-1/2 top-1/2 w-[66%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-lg border border-borderSubtle bg-surface shadow-[0_8px_16px_-6px_hsla(var(--ds-gray-1000-value),0.16)] transition-shadow duration-200 group-hover:shadow-[0_12px_24px_-6px_hsla(var(--ds-gray-1000-value),0.24)]">
             {/* Browser chrome — three dots, Geist's mini-window mock. */}
             <div className="flex gap-1 p-2">
               <span className="size-2 rounded-full bg-[color:var(--ds-gray-300)]" />
