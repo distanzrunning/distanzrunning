@@ -16,7 +16,7 @@ import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -219,7 +219,9 @@ function CarouselPrevious({
       onClick={scrollPrev}
       {...props}
     >
-      <ArrowLeft className="size-4" aria-hidden />
+      {/* Chevron (not the tailed arrow) — lighter glyph in the chip;
+          size-5 because chevrons read optically smaller than arrows. */}
+      <ChevronLeft className="size-5" aria-hidden />
     </button>
   );
 }
@@ -247,7 +249,7 @@ function CarouselNext({
       onClick={scrollNext}
       {...props}
     >
-      <ArrowRight className="size-4" aria-hidden />
+      <ChevronRight className="size-5" aria-hidden />
     </button>
   );
 }
