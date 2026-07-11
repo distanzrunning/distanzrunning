@@ -1,10 +1,12 @@
 // src/components/Footer.tsx
 //
-// Site footer — v0.app's anatomy on Stride tokens: full lockup on the
-// left, Category / About / Social link columns on the right, theme
-// switcher tucked bottom-left. One structural hairline on top (the
-// same Default rule the homepage sections use), everything on the
-// page canvas.
+// Site footer — v0.app's link-column anatomy over Quartr's giant-
+// wordmark bookend, on Stride tokens: five link columns across the
+// content width, then the full Distanz Running lockup blown up to
+// full width at the very bottom, clipped mid-"RUNNING" by the page
+// edge (Quartr's cropped-logomark move). One structural hairline on
+// top (the same Default rule the homepage sections use), everything
+// on the page canvas.
 //
 // Typography: column headings run text-heading-14 (the DS mini-header
 // slot — v0's `label-14 font-medium` analogue; a stacked font-medium
@@ -14,13 +16,11 @@
 
 "use client";
 
-import { useContext, type ComponentType } from "react";
+import { type ComponentType } from "react";
 import Link from "next/link";
 import { SiInstagram, SiX, SiStrava, SiLinkedin } from "react-icons/si";
-import { DarkModeContext } from "@/components/DarkModeProvider";
 import { useConsentSettings } from "@/components/consent/useConsentSettings";
 import Logo from "@/components/ui/Logo";
-import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 
 // ============================================================================
 // Link / action union — Cookies opens the consent settings dialog, so
@@ -92,7 +92,6 @@ const linkClasses =
 
 export default function Footer() {
   const { openSettings } = useConsentSettings();
-  const { theme, setTheme } = useContext(DarkModeContext);
 
   const aboutLinks: ReadonlyArray<FooterItem> = [
     { kind: "link", label: "About", href: "/about" },
@@ -106,40 +105,30 @@ export default function Footer() {
       aria-label="Site footer"
       className="w-full border-t border-borderSubtle"
     >
-      <div className="mx-auto w-full max-w-content px-6 py-12 lg:py-16">
-        {/* Content row — stacked on mobile, logo left / link grid right
-            on md+. `relative` anchors the theme switcher's absolute
-            position on desktop. */}
-        <div className="relative flex w-full flex-col justify-between gap-x-12 gap-y-16 md:flex-row md:items-start">
-          {/* Full Distanz Running lockup — inline SVG on currentColor,
-              same approach as the header wordmark, so dark mode is a
-              text-* flip. */}
-          <Link
-            href="/"
-            aria-label="Distanz Running — home"
-            className="inline-flex h-fit shrink-0 text-textDefault"
-          >
-            <Logo className="h-12 w-auto" />
-          </Link>
+      {/* Link grid — 2-col packing on mobile, five spread columns
+          across the content width on md+ (Quartr's columns row). */}
+      <div className="mx-auto w-full max-w-content px-6 pb-16 pt-12 md:pb-24 lg:pt-16">
+        <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-5 md:gap-10 lg:gap-16">
+          <FooterColumn heading="Stories" items={storiesLinks} />
+          <FooterColumn heading="Gear" items={gearColumnLinks} />
+          <FooterColumn heading="Races" items={racesColumnLinks} />
+          <FooterColumn heading="About" items={aboutLinks} />
+          <SocialColumn />
+        </div>
+      </div>
 
-          {/* Link grid — 2-col packing on mobile, five spread columns
-              on md+ (v0's grid, one column wider). */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-5 md:gap-10 lg:gap-16">
-            <FooterColumn heading="Stories" items={storiesLinks} />
-            <FooterColumn heading="Gear" items={gearColumnLinks} />
-            <FooterColumn heading="Races" items={racesColumnLinks} />
-            <FooterColumn heading="About" items={aboutLinks} />
-            <SocialColumn />
-          </div>
-
-          {/* Theme switcher.
-              Mobile: last item in the stacked flow, below the grid.
-              Desktop: pinned to the bottom-left of the row, flush with
-              the bottom of the link grid and the wordmark's left edge.
-              No label — the segmented glyphs are self-labelling. */}
-          <div className="md:absolute md:bottom-0 md:left-0">
-            <ThemeSwitcher value={theme} onChange={setTheme} />
-          </div>
+      {/* Giant lockup bookend — the full Distanz Running lockup blown
+          up to the content width, with the page edge cutting through
+          the middle of "RUNNING" (Quartr's cropped-wordmark move).
+          The wrapper's aspect ratio is the SVG's 1579.12-wide viewBox
+          over y=447.6 — the measured midline of the RUNNING glyphs
+          (they span y 410.5–484.7) — so overflow-hidden clips the
+          word exactly in half at any width; no bottom padding below,
+          the cut IS the page bottom. Decorative: the Masthead carries
+          the home link. currentColor keeps it theme-aware. */}
+      <div className="mx-auto w-full max-w-content px-6" aria-hidden>
+        <div className="aspect-[1579.12/447.6] overflow-hidden text-textDefault">
+          <Logo className="h-auto w-full" />
         </div>
       </div>
     </footer>
