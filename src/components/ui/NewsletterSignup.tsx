@@ -159,8 +159,9 @@ export default function NewsletterSignup({
               : "flex flex-col justify-between gap-8 p-6 sm:p-12 md:flex-row md:items-center md:gap-20 md:p-16"
           }
         >
-          {/* Left: heading + description */}
-          <div className="flex max-w-md flex-col gap-2">
+          {/* Left: heading + description — no width cap, so the
+              description runs on one line at desktop widths. */}
+          <div className="flex flex-col gap-2">
             {/* Newsletter nameplate — EB Garamond with the title in
                 italics (Quartr's "Sign up for <i>Edge</i>" move), on
                 the DS serif pull-quote slot. A deliberate, user-
@@ -169,17 +170,9 @@ export default function NewsletterSignup({
             <h2 className="text-heading-32 font-serif text-balance text-textDefault">
               Join the <i>Shakeout</i>
             </h2>
-            <p
-              className="text-balance"
-              style={{
-                margin: 0,
-                fontSize: 15,
-                lineHeight: 1.4,
-                fontWeight: 500,
-                color: "hsl(var(--color-textDefault))",
-                maxWidth: 448,
-              }}
-            >
+            {/* Secondary text — textSubtle, the DS tagline register
+                (the old inline 15px/500 full-ink styles predate it). */}
+            <p className="text-copy-16 text-balance text-textSubtle">
               A curated set of running stories, gear reviews, and race
               guides every other week.
             </p>
