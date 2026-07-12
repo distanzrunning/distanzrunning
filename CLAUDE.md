@@ -33,7 +33,7 @@ Two typefaces, two roles. **Don't mix them up.**
 
 | Family | Token | Tailwind | Use for |
 |---|---|---|---|
-| EB Garamond | `--font-family-serif` | `font-serif` | **Editorial only — exactly two uses**: article page titles and pull quotes. Nothing else (not featured headlines, subheadings, blockquotes, or any UI). |
+| EB Garamond | `--font-family-serif` | `font-serif` | **Editorial only — exactly three uses**: article page titles, pull quotes, and the Shakeout newsletter nameplate ("Join the *Shakeout*" in NewsletterSignup — Quartr's italic-nameplate move, user-sanctioned 2026-07). Nothing else (not featured headlines, subheadings, blockquotes, or any UI). |
 | Inter / Geist | `--font-family-sans` | `font-sans` | **UI**: section titles, card headings, navigation, body text |
 
 The `text-heading-*` classes (defined in `tailwind.config.js`) carry size + line-height + letter-spacing + weight. They **don't set a font-family** — that's done separately. Default inheritance is Geist Sans, so omitting `font-serif` gives you UI styling.
@@ -65,7 +65,7 @@ The `text-heading-*` classes (defined in `tailwind.config.js`) carry size + line
 | Class | Size / lh | Use for |
 |---|---|---|
 | `text-heading-40 font-serif` | 40 / 48 | Article page titles |
-| `text-heading-32 font-serif` | 32 / 40 | Pull quotes |
+| `text-heading-32 font-serif` | 32 / 40 | Pull quotes, Shakeout newsletter nameplate |
 
 The typography classes deliberately carry **no `font-family`** (they inherit Geist Sans) — unlike Geist, which hardcodes `font-sans` on each. That omission is intentional: it's what lets `font-serif` cleanly override these two editorial slots. Hardcoding `font-sans` would make the heading class win the cascade over `font-serif` (our `addUtilities` classes are emitted *after* `font-serif`), forcing `!font-serif` everywhere. The bleed Geist guards against (a heading inheriting serif) can't occur here — headings are never nested inside the serif elements.
 
