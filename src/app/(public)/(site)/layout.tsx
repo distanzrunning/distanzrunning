@@ -77,10 +77,9 @@ export default async function SiteLayout({
           aria-label="Newsletter signup"
           className="border-t border-borderSubtle"
         >
-          {/* max-w-5xl, not the content grid — the band shares the
-              footer's centred 1024px block so the two read as one
-              end-of-page unit with a common left edge. */}
-          <div className="mx-auto w-full max-w-5xl px-6 py-12 lg:py-16">
+          {/* Content grid — the band, the footer below and the page
+              sections above all share one left edge. */}
+          <div className="mx-auto w-full max-w-content px-6 py-12 lg:py-16">
             <NewsletterSignup chrome="band" source="pre_footer" />
           </div>
         </section>

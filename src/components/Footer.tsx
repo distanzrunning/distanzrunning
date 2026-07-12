@@ -91,10 +91,10 @@ export default function Footer() {
       aria-label="Site footer"
       className="w-full border-t border-borderSubtle"
     >
-      {/* The whole block (icon + columns) centres at a 1024px cap —
-          equal-track columns keep the full-width spread's rhythm, just
-          pulled in from the page edges. */}
-      <div className="mx-auto w-full max-w-5xl px-6 pb-16 pt-12 md:pb-24 lg:pt-16">
+      {/* Content grid — the icon + columns align with the newsletter
+          band above and the page sections, not a narrower centred
+          block (tried, read as adrift against the page edge). */}
+      <div className="mx-auto w-full max-w-content px-6 pb-16 pt-12 md:pb-24 lg:pt-16">
         {/* Icon mark above the columns (Quartr's logomark slot),
             flush with the leftmost list's edge — doubles as the
             footer's home link now that the small lockup is gone. */}
