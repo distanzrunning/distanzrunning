@@ -14,6 +14,7 @@ import { ReactNode } from "react";
 
 import MastheadWrapper from "@/components/MastheadWrapper";
 import Footer from "@/components/Footer";
+import NewsletterSignup from "@/components/ui/NewsletterSignup";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
 import { getAnnouncement } from "@/lib/announcement";
 
@@ -68,6 +69,18 @@ export default async function SiteLayout({
         >
           {children}
         </main>
+        {/* Pre-footer newsletter band — full-bleed with hairline
+            edges, flush against the footer: this section carries the
+            TOP border only; the footer's own border-t is the band's
+            bottom edge (a border-b here would double it). */}
+        <section
+          aria-label="Newsletter signup"
+          className="border-t border-borderSubtle"
+        >
+          <div className="mx-auto w-full max-w-content px-6 py-12 lg:py-16">
+            <NewsletterSignup chrome="band" source="pre_footer" />
+          </div>
+        </section>
         {/* Footer bookends the canvas column — main's flex-1 pins it
             to the viewport bottom on short pages. */}
         <Footer />

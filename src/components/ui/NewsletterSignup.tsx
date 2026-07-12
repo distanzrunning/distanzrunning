@@ -21,8 +21,20 @@ export interface NewsletterSignupProps {
    * - "grey": solid mid-grey card with no gradient. Uses light DS
    *   tokens; useful as a quieter band that sits between fully
    *   white sections.
+   *
+   * Ignored when chrome="band" — the band inherits the page theme.
    */
   theme?: NewsletterSignupTheme;
+  /**
+   * Shell variant.
+   * - "card" (default): self-contained rounded card — border, radius,
+   *   forced theme surface, internal padding.
+   * - "band": chromeless — just the heading/form row, transparent on
+   *   the page canvas, no padding. For full-bleed placements where the
+   *   surrounding section owns the borders and spacing (the pre-footer
+   *   band).
+   */
+  chrome?: "card" | "band";
   /**
    * Attribution tag passed to the PostHog signup event. Use this to
    * distinguish placements (footer vs sidebar vs in-article CTA, etc.).
@@ -32,6 +44,7 @@ export interface NewsletterSignupProps {
 
 export default function NewsletterSignup({
   theme = "white",
+  chrome = "card",
   source = "newsletter_footer",
 }: NewsletterSignupProps = {}) {
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -122,13 +135,27 @@ export default function NewsletterSignup({
       ? "var(--ds-gray-200)"
       : "hsl(var(--color-surface))";
 
+  const isBand = chrome === "band";
+
   return (
-    <div className={themeClass}>
+    // Band: no theme wrapper (inherits the page's), no card shell, no
+    // internal padding — the placement's section owns all of that.
+    <div className={isBand ? undefined : themeClass}>
       <div
-        className="mx-auto w-full max-w-content overflow-hidden rounded-xl border border-borderSubtle"
-        style={{ background: cardBackground }}
+        className={
+          isBand
+            ? undefined
+            : "mx-auto w-full max-w-content overflow-hidden rounded-xl border border-borderSubtle"
+        }
+        style={isBand ? undefined : { background: cardBackground }}
       >
-        <div className="flex flex-col justify-between gap-8 p-6 sm:p-12 md:flex-row md:items-center md:gap-20 md:p-16">
+        <div
+          className={
+            isBand
+              ? "flex flex-col justify-between gap-8 md:flex-row md:items-center md:gap-20"
+              : "flex flex-col justify-between gap-8 p-6 sm:p-12 md:flex-row md:items-center md:gap-20 md:p-16"
+          }
+        >
           {/* Left: heading + description */}
           <div className="flex max-w-md flex-col gap-2">
             <h2
