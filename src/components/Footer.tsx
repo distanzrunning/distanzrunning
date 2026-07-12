@@ -89,10 +89,13 @@ export default function Footer() {
       aria-label="Site footer"
       className="w-full border-t border-borderSubtle"
     >
-      <div className="mx-auto w-full max-w-content px-6 pb-16 pt-12 md:pb-24 lg:pt-16">
-        {/* Icon mark above the columns, top-left (Quartr's logomark
-            slot) — doubles as the footer's home link now that the
-            small lockup is gone. */}
+      {/* The whole block (icon + columns) centres at a 1024px cap —
+          equal-track columns keep the full-width spread's rhythm, just
+          pulled in from the page edges. */}
+      <div className="mx-auto w-full max-w-5xl px-6 pb-16 pt-12 md:pb-24 lg:pt-16">
+        {/* Icon mark above the columns (Quartr's logomark slot),
+            flush with the leftmost list's edge — doubles as the
+            footer's home link now that the small lockup is gone. */}
         <Link
           href="/"
           aria-label="Distanz Running — home"
@@ -101,8 +104,8 @@ export default function Footer() {
           <LogoIcon className="h-6 w-6" />
         </Link>
 
-        {/* Link grid — 2-col packing on mobile, five spread columns
-            across the content width on md+ (Quartr's columns row). */}
+        {/* Link grid — 2-col packing on mobile, five equal columns
+            on md+ (Quartr's columns row). */}
         <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-5 md:gap-10 lg:gap-16">
           <FooterColumn heading="Stories" items={storiesLinks} />
           <FooterColumn heading="Gear" items={gearColumnLinks} />
