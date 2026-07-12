@@ -1,7 +1,7 @@
 // src/app/admin/layout.tsx
 //
 // Lean admin tree — DarkModeProvider (theme) + the admin SPA. None of
-// the public visitor machinery (consent, analytics, AdSense, reCAPTCHA,
+// the public visitor machinery (consent, analytics, AdSense, Turnstile,
 // site chrome) loads here; that all lives in the (public) route group.
 import { ReactNode } from "react";
 

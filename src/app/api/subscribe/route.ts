@@ -16,7 +16,7 @@ const WORDMARK_GRAY_BUFFER = fs.readFileSync(path.join(BRAND_DIR, 'wordmark-gray
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, recaptchaToken } = await request.json()
+    const { email, turnstileToken } = await request.json()
 
     if (!email) {
       return NextResponse.json(
@@ -34,33 +34,36 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Verify reCAPTCHA token
-    if (recaptchaToken) {
-      const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY
-
-      if (recaptchaSecretKey) {
-        const recaptchaResponse = await fetch(
-          `https://www.google.com/recaptcha/api/siteverify`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-              secret: recaptchaSecretKey,
-              response: recaptchaToken,
-            }),
-          }
-        )
-
-        const recaptchaData = await recaptchaResponse.json()
-
-        if (!recaptchaData.success || recaptchaData.score < 0.5) {
-          return NextResponse.json(
-            { error: 'reCAPTCHA verification failed. Please try again.' },
-            { status: 400 }
-          )
+    // Verify the Cloudflare Turnstile token. Verification is REQUIRED
+    // whenever the secret is configured — a tokenless submit is
+    // rejected (the old reCAPTCHA flow only verified when a token
+    // happened to arrive, which bots could simply omit). Without the
+    // secret (dev, pre-key deploys) the check is skipped entirely.
+    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY
+    if (turnstileSecret) {
+      const failed = NextResponse.json(
+        { error: 'Verification failed. Please try again.' },
+        { status: 400 }
+      )
+      if (!turnstileToken || typeof turnstileToken !== 'string') {
+        return failed
+      }
+      const verifyResponse = await fetch(
+        'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            secret: turnstileSecret,
+            response: turnstileToken,
+          }),
         }
+      )
+      const verifyData = await verifyResponse.json()
+      if (!verifyData.success) {
+        return failed
       }
     }
 

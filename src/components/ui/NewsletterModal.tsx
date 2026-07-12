@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import posthog from "posthog-js";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import Button from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
+import {
+  TurnstileWidget,
+  waitForToken,
+  type TurnstileHandle,
+} from "@/components/ui/Turnstile";
 
 // ============================================================================
 // Types
@@ -151,11 +155,14 @@ export function NewsletterModal({
   onClose,
   source = "newsletter_modal",
 }: NewsletterModalProps) {
-  const { executeRecaptcha } = useGoogleReCaptcha();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  // Turnstile delivers tokens via callback into a ref (no re-render
+  // needed); tokens are single-use, so every submit ends with reset().
+  const turnstileTokenRef = useRef<string | null>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
 
   // Reset state every time the modal opens so re-opens don't leak
   // previous input.
@@ -182,26 +189,18 @@ export function NewsletterModal({
     setSubmitting(true);
     setError("");
     try {
-      // Pull a reCAPTCHA v3 token if the provider is mounted (i.e.
-      // NEXT_PUBLIC_RECAPTCHA_SITE_KEY is configured). Gracefully falls
-      // back to a no-token submit in dev or if the script fails to
-      // load — the API still verifies server-side when a token is
-      // present and no-ops otherwise.
-      let recaptchaToken: string | undefined;
-      if (executeRecaptcha) {
-        try {
-          recaptchaToken = await executeRecaptcha("newsletter_modal");
-        } catch {
-          // non-fatal; submit goes through without verification
-        }
-      }
+      // Wait briefly for the Turnstile token if the user beat it to
+      // the button (the invisible widget usually issues within ~1s of
+      // mount). Null when unconfigured (dev) — the API only enforces
+      // verification when its secret is set.
+      const turnstileToken = await waitForToken(turnstileTokenRef);
 
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: trimmed,
-          ...(recaptchaToken ? { recaptchaToken } : {}),
+          ...(turnstileToken ? { turnstileToken } : {}),
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {
@@ -238,6 +237,8 @@ export function NewsletterModal({
     } catch {
       setError("Network error. Please check your connection and try again.");
     } finally {
+      // Tokens are single-use — refresh so a retry can verify again.
+      turnstileRef.current?.reset();
       setSubmitting(false);
     }
   };
@@ -359,44 +360,16 @@ export function NewsletterModal({
               >
                 {submitting ? "Subscribing…" : "Subscribe"}
               </Button>
+              {/* Invisible bot check (no attribution requirement,
+                  unlike the reCAPTCHA notice this replaced) — only
+                  materialises as a challenge box for suspicious
+                  traffic. */}
+              <TurnstileWidget
+                ref={turnstileRef}
+                action={source}
+                onToken={(t) => (turnstileTokenRef.current = t)}
+              />
             </form>
-
-            <p
-              style={{
-                marginTop: 16,
-                marginBottom: 0,
-                fontSize: 12,
-                lineHeight: 1.5,
-                color: "var(--ds-gray-700)",
-                textAlign: "center",
-              }}
-            >
-              This site is protected by reCAPTCHA and the Google{" "}
-              <a
-                href="https://policies.google.com/privacy"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  color: "var(--ds-gray-900)",
-                  textDecoration: "underline",
-                }}
-              >
-                Privacy Policy
-              </a>{" "}
-              and{" "}
-              <a
-                href="https://policies.google.com/terms"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  color: "var(--ds-gray-900)",
-                  textDecoration: "underline",
-                }}
-              >
-                Terms of Service
-              </a>{" "}
-              apply.
-            </p>
 
             <p
               style={{

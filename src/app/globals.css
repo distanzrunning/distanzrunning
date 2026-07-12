@@ -3623,11 +3623,6 @@
   }
 }
 
-/* Hide reCAPTCHA badge */
-.grecaptcha-badge {
-  visibility: hidden;
-}
-
 /* Hide scrollbar for horizontal scrolling sections */
 .scrollbar-hide {
   -ms-overflow-style: none; /* IE and Edge */

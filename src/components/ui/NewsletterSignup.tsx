@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useRef, useState } from "react";
 import posthog from "posthog-js";
 import Button from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import {
+  TurnstileWidget,
+  waitForToken,
+  type TurnstileHandle,
+} from "@/components/ui/Turnstile";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -47,11 +51,14 @@ export default function NewsletterSignup({
   chrome = "card",
   source = "newsletter_footer",
 }: NewsletterSignupProps = {}) {
-  const { executeRecaptcha } = useGoogleReCaptcha();
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  // Turnstile delivers tokens via callback into a ref (no re-render
+  // needed); tokens are single-use, so every submit ends with reset().
+  const turnstileTokenRef = useRef<string | null>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,23 +75,17 @@ export default function NewsletterSignup({
     setSubmitting(true);
     setError("");
     try {
-      // reCAPTCHA token is best-effort: skip silently if the provider
-      // isn't mounted (dev) or the script fails. The API still verifies
-      // server-side when a token is present and no-ops otherwise.
-      let recaptchaToken: string | undefined;
-      if (executeRecaptcha) {
-        try {
-          recaptchaToken = await executeRecaptcha("newsletter_signup");
-        } catch {
-          // non-fatal
-        }
-      }
+      // Wait briefly for the Turnstile token if the user beat it to
+      // the button (the invisible widget usually issues within ~1s of
+      // mount). Null when unconfigured (dev) — the API only enforces
+      // verification when its secret is set.
+      const turnstileToken = await waitForToken(turnstileTokenRef);
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: trimmed,
-          ...(recaptchaToken ? { recaptchaToken } : {}),
+          ...(turnstileToken ? { turnstileToken } : {}),
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {
@@ -120,6 +121,8 @@ export default function NewsletterSignup({
     } catch {
       setError("Network error. Please check your connection and try again.");
     } finally {
+      // Tokens are single-use — refresh so a retry can verify again.
+      turnstileRef.current?.reset();
       setSubmitting(false);
     }
   };
@@ -250,36 +253,15 @@ export default function NewsletterSignup({
                     {submitting ? "Subscribing…" : "Subscribe"}
                   </Button>
                 </div>
-                <p
-                  className="text-xs text-balance"
-                  style={{
-                    margin: 0,
-                    lineHeight: 1.5,
-                    color: "hsl(var(--color-textSubtler))",
-                  }}
-                >
-                  This site is protected by reCAPTCHA and the Google{" "}
-                  <a
-                    href="https://policies.google.com/privacy"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline"
-                    style={{ color: "hsl(var(--color-textSubtle))" }}
-                  >
-                    Privacy Policy
-                  </a>{" "}
-                  and{" "}
-                  <a
-                    href="https://policies.google.com/terms"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline"
-                    style={{ color: "hsl(var(--color-textSubtle))" }}
-                  >
-                    Terms of Service
-                  </a>{" "}
-                  apply.
-                </p>
+                {/* Invisible bot check (no attribution requirement,
+                    unlike the reCAPTCHA notice this replaced) — only
+                    materialises as a challenge box for suspicious
+                    traffic. */}
+                <TurnstileWidget
+                  ref={turnstileRef}
+                  action={source}
+                  onToken={(t) => (turnstileTokenRef.current = t)}
+                />
               </form>
             )}
           </div>

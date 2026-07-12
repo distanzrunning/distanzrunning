@@ -2,15 +2,16 @@
 //
 // Public-visitor machinery — everything a visitor-facing page needs and
 // the admin SPA must never load (dead third-party JS + network that
-// pushes out FCP/LCP there): c15t consent + prefetch + GCM, reCAPTCHA,
-// analytics, Speed Insights, AdSense. Wraps both the chrome'd content
-// pages ((site)) and the bare gate pages ((bare): /login, /coming-soon).
+// pushes out FCP/LCP there): c15t consent + prefetch + GCM, analytics,
+// Speed Insights, AdSense. Wraps both the chrome'd content pages
+// ((site)) and the bare gate pages ((bare): /login, /coming-soon).
+// (Bot checks are Cloudflare Turnstile, mounted per-form — no global
+// provider; see components/ui/Turnstile.tsx.)
 import { ReactNode } from "react";
 import { C15tPrefetch } from "@c15t/nextjs";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { DarkModeProvider } from "@/components/DarkModeProvider";
-import ReCaptchaProvider from "@/components/ReCaptchaProvider";
 import { ConsentManagerClient } from "@/components/consent/ConsentManagerClient";
 import { UnitsProvider } from "@/contexts/UnitsContext";
 import { SearchProvider } from "@/contexts/SearchContext";
@@ -40,23 +41,21 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
           client /init waterfall. c15t's recommended init flow for static
           routes. */}
       <C15tPrefetch backendURL="/api/c15t" />
-      <ReCaptchaProvider>
-        <DarkModeProvider>
-          <UnitsProvider>
-            <ConsentManagerClient>
-              <SearchProvider>
-                <ConsentModeSync />
-                <PostHogConsentSync />
-                {children}
-                <ConsentBanner />
+      <DarkModeProvider>
+        <UnitsProvider>
+          <ConsentManagerClient>
+            <SearchProvider>
+              <ConsentModeSync />
+              <PostHogConsentSync />
+              {children}
+              <ConsentBanner />
 
-                <ConsentedAnalytics />
-                <SpeedInsights />
-              </SearchProvider>
-            </ConsentManagerClient>
-          </UnitsProvider>
-        </DarkModeProvider>
-      </ReCaptchaProvider>
+              <ConsentedAnalytics />
+              <SpeedInsights />
+            </SearchProvider>
+          </ConsentManagerClient>
+        </UnitsProvider>
+      </DarkModeProvider>
       {/* Google AdSense — loads once for the whole public site. Individual
           ad units live in <AdSlot /> and push themselves to `adsbygoogle`
           once visible. Rendered as a raw <script> (rather than

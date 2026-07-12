@@ -65,7 +65,7 @@ function handleHoldingPage(request: NextRequest): NextResponse | null {
   const { pathname } = request.nextUrl;
   // Allowlist — the holding page itself, framework internals, public
   // brand / image assets, and /api/* (newsletter signup, consent,
-  // recaptcha, anything the holding page or its providers call).
+  // anything the holding page or its providers call).
   if (
     pathname === HOLDING_PAGE_PATH ||
     pathname.startsWith("/api/") ||
