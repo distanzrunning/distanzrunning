@@ -217,10 +217,13 @@ export default function NewsletterSignup({
                 </span>
               </div>
             ) : (
-              <form
-                onSubmit={handleSubmit}
-                className="flex w-full flex-col gap-4"
-              >
+              <form onSubmit={handleSubmit} className="flex w-full flex-col">
+                {/* No column gap on this form: the Turnstile container
+                    below is zero-height while invisible (the common
+                    case), and a flex gap would still reserve space
+                    under the row — pushing the input off the vertical
+                    centre line the wrapper's md:items-center
+                    establishes against the title/description block. */}
                 <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-start">
                   <div className="flex-1">
                     <Input
