@@ -158,19 +158,13 @@ export default function NewsletterSignup({
         >
           {/* Left: heading + description */}
           <div className="flex max-w-md flex-col gap-2">
-            <h2
-              className="text-balance"
-              style={{
-                margin: 0,
-                fontSize: 38,
-                lineHeight: 1.1,
-                fontWeight: 400,
-                letterSpacing: "-0.04em",
-                color: "hsl(var(--color-textDefault))",
-              }}
-            >
-              Subscribe to the{" "}
-              <i style={{ fontStyle: "italic" }}>Shakeout</i>
+            {/* Newsletter nameplate — EB Garamond with the title in
+                italics (Quartr's "Sign up for <i>Edge</i>" move), on
+                the DS serif pull-quote slot. A deliberate, user-
+                sanctioned third serif use: the Shakeout nameplate is
+                an editorial brand mark, not UI. */}
+            <h2 className="text-heading-32 font-serif text-balance text-textDefault">
+              Join the <i>Shakeout</i>
             </h2>
             <p
               className="text-balance"
