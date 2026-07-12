@@ -170,11 +170,13 @@ export default function NewsletterSignup({
             <h2 className="text-heading-32 font-serif text-balance text-textDefault">
               Join the <i>Shakeout</i>
             </h2>
-            {/* Secondary text — textSubtle, the DS tagline register
-                (the old inline 15px/500 full-ink styles predate it). */}
-            <p className="text-copy-16 text-balance text-textSubtle">
-              A curated set of running stories, gear reviews, and race
-              guides every other week.
+            {/* Secondary text — textSubtle at copy-14 (Quartr's
+                bodySmall slot). Copy is deliberately compact: the
+                one-line fit beside the form inside the shared 1024px
+                end-of-page block allows ~448px, so no windup. */}
+            <p className="text-copy-14 text-balance text-textSubtle">
+              Running stories, gear reviews, and race guides every
+              other week.
             </p>
           </div>
 

@@ -49,8 +49,10 @@ const gearColumnLinks: ReadonlyArray<FooterItem> = [
 ];
 
 const racesColumnLinks: ReadonlyArray<FooterItem> = [
-  { kind: "link", label: "Races", href: "/races" },
-  { kind: "link", label: "Race Calendar", href: "/races/calendar" },
+  // "Race guides", not "Races" — the column heading is already Races,
+  // and the stacked repeat read as a stutter.
+  { kind: "link", label: "Race guides", href: "/races" },
+  { kind: "link", label: "Race calendar", href: "/races/calendar" },
 ];
 
 type SocialLink = {
