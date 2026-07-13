@@ -24,7 +24,7 @@ import {
   CarouselWheelStep,
 } from "@/components/ui/Carousel";
 import { cn } from "@/lib/utils";
-import { sanityFetch } from "@/sanity/lib/live";
+import { safeSanityFetch } from "@/sanity/lib/safeFetch";
 import { latestNewsQuery } from "@/sanity/queries/latestNewsQuery";
 import { urlFor } from "@/sanity/lib/image";
 import { formatDisplayDate } from "@/lib/dates";
@@ -63,7 +63,7 @@ const ARROW_Y =
   "top-[calc((100cqw-16px)*0.1367)] md:top-[calc((100cqw-32px)*0.0911)]";
 
 export default async function HomepageLatestNews() {
-  const { data: posts } = await sanityFetch({ query: latestNewsQuery });
+  const { data: posts } = await safeSanityFetch({ query: latestNewsQuery });
   if (!posts?.length) return null;
 
   return (

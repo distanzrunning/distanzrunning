@@ -15,7 +15,7 @@ import { ChevronRight } from "lucide-react";
 
 import ArticleCard from "@/components/ui/ArticleCard";
 import { ButtonLink } from "@/components/ui/Button";
-import { sanityFetch } from "@/sanity/lib/live";
+import { safeSanityFetch } from "@/sanity/lib/safeFetch";
 import {
   editorsPicksQuery,
   editorsPicksBackfillQuery,
@@ -70,14 +70,14 @@ function cardProps(pick: Pick, width: number, height: number) {
 
 export default async function HomepageEditorsPicks() {
   const [{ data: curated }, { data: hero }] = await Promise.all([
-    sanityFetch({ query: editorsPicksQuery }),
-    sanityFetch({ query: heroArticleQuery }),
+    safeSanityFetch({ query: editorsPicksQuery }),
+    safeSanityFetch({ query: heroArticleQuery }),
   ]);
 
   let picks: Pick[] = curated ?? [];
   if (picks.length < 4) {
     const usedIds = [hero?._id, ...picks.map((p) => p._id)].filter(Boolean);
-    const { data: backfill } = await sanityFetch({
+    const { data: backfill } = await safeSanityFetch({
       query: editorsPicksBackfillQuery,
       params: { usedIds },
     });

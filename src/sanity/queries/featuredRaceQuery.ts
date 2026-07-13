@@ -5,7 +5,7 @@
 // (there is no bare location field on raceGuide). Empty parts drop out;
 // no parts at all yields "" (falsy, so consumers skip the line).
 export const featuredRaceQuery = `
-*[_type == "raceGuide" && featuredRace == true][0] {
+*[_type == "raceGuide" && featuredRace == true && defined(slug.current)][0] {
   title,
   slug,
   mainImage,

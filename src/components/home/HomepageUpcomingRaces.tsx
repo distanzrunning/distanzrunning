@@ -25,7 +25,7 @@ import {
   CarouselWheelStep,
 } from "@/components/ui/Carousel";
 import { cn } from "@/lib/utils";
-import { sanityFetch } from "@/sanity/lib/live";
+import { safeSanityFetch } from "@/sanity/lib/safeFetch";
 import { upcomingRacesQuery } from "@/sanity/queries/upcomingRacesQuery";
 import { urlFor } from "@/sanity/lib/image";
 
@@ -80,7 +80,7 @@ function formatLocation(race: UpcomingRace): string | undefined {
 }
 
 export default async function HomepageUpcomingRaces() {
-  const { data: races } = await sanityFetch({ query: upcomingRacesQuery });
+  const { data: races } = await safeSanityFetch({ query: upcomingRacesQuery });
   if (!races?.length) return null;
 
   return (

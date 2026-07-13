@@ -19,6 +19,7 @@ const featuredProductFragment = groq`
 export const featuredShoeProductQuery = groq`
   *[_type == "productPost"
     && featuredInSection == true
+    && defined(slug.current)
     && productCategory->section == "shoes"][0] {
     ${featuredProductFragment}
   }
@@ -27,6 +28,7 @@ export const featuredShoeProductQuery = groq`
 export const featuredGearProductQuery = groq`
   *[_type == "productPost"
     && featuredInSection == true
+    && defined(slug.current)
     && productCategory->section == "gear"][0] {
     ${featuredProductFragment}
   }
@@ -35,6 +37,7 @@ export const featuredGearProductQuery = groq`
 export const featuredNutritionProductQuery = groq`
   *[_type == "productPost"
     && featuredInSection == true
+    && defined(slug.current)
     && productCategory->section == "nutrition"][0] {
     ${featuredProductFragment}
   }

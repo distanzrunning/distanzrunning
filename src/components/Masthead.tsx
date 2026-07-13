@@ -53,7 +53,7 @@ function buildFeaturedFromProduct(
   item: FeaturedProduct,
   section: "shoes" | "gear" | "nutrition",
 ): MegaMenuFeatured | null {
-  if (!item) return null;
+  if (!item?.slug?.current) return null;
   return {
     title: item.title,
     href: `/${section}/${item.slug.current}`,
@@ -70,7 +70,7 @@ function buildFeaturedFromProduct(
 }
 
 function buildFeaturedFromRace(race: FeaturedRace): MegaMenuFeatured | null {
-  if (!race) return null;
+  if (!race?.slug?.current) return null;
   return {
     title: race.title,
     href: `/races/${race.slug.current}`,

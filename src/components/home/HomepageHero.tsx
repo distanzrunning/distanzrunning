@@ -25,13 +25,13 @@ import Image from "next/image";
 import { Dot } from "lucide-react";
 
 import { Avatar } from "@/components/ui/Avatar";
-import { sanityFetch } from "@/sanity/lib/live";
+import { safeSanityFetch } from "@/sanity/lib/safeFetch";
 import { heroArticleQuery } from "@/sanity/queries/heroArticleQuery";
 import { urlFor } from "@/sanity/lib/image";
 import { formatDisplayDate } from "@/lib/dates";
 
 export default async function HomepageHero() {
-  const { data: hero } = await sanityFetch({ query: heroArticleQuery });
+  const { data: hero } = await safeSanityFetch({ query: heroArticleQuery });
   if (!hero) return null;
 
   const imageUrl = hero.mainImage

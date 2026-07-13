@@ -5,7 +5,7 @@
 // Mounted exactly once, in the (site) route-group layout — pages must not
 // mount it themselves (a second mount double-stacks the header on soft nav).
 
-import { sanityFetch } from "@/sanity/lib/live";
+import { safeSanityFetch } from "@/sanity/lib/safeFetch";
 import {
   featuredShoeProductQuery,
   featuredGearProductQuery,
@@ -16,10 +16,10 @@ import Masthead from "./Masthead";
 
 export default async function MastheadWrapper() {
   const [shoe, gear, nutrition, race] = await Promise.all([
-    sanityFetch({ query: featuredShoeProductQuery }),
-    sanityFetch({ query: featuredGearProductQuery }),
-    sanityFetch({ query: featuredNutritionProductQuery }),
-    sanityFetch({ query: featuredRaceQuery }),
+    safeSanityFetch({ query: featuredShoeProductQuery }),
+    safeSanityFetch({ query: featuredGearProductQuery }),
+    safeSanityFetch({ query: featuredNutritionProductQuery }),
+    safeSanityFetch({ query: featuredRaceQuery }),
   ]);
 
   return (
