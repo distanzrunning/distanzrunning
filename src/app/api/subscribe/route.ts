@@ -1,8 +1,8 @@
 // app/api/subscribe/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import crypto from 'crypto'
 import fs from 'fs'
 import path from 'path'
+import { createConfirmToken } from '@/lib/newsletterConfirmToken'
 
 // Brand assets ride inside each confirmation email as inline (cid:)
 // attachments rather than externally hosted images, so they render
@@ -67,52 +67,29 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Generate confirmation token
-    const confirmationToken = crypto.randomBytes(32).toString('hex')
-
-    // Step 1: Add subscriber to Mailgun mailing list (unconfirmed)
-    const listResponse = await fetch(
-      `${process.env.MAILGUN_API_BASE_URL}/lists/newsletter@${process.env.MAILGUN_DOMAIN}/members`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Basic ${Buffer.from(`api:${process.env.MAILGUN_API_KEY}`).toString('base64')}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          address: email,
-          subscribed: 'no', // Start as unconfirmed
-          upsert: 'yes', // Update if already exists
-          vars: JSON.stringify({
-            confirmation_token: confirmationToken,
-            signup_date: new Date().toISOString(),
-            source: 'website'
-          })
-        })
-      }
-    )
-
-    const listData = await listResponse.json()
-
-    if (!listResponse.ok) {
-      // Handle Mailgun list errors
-      let errorMessage = 'Something went wrong. Please try again.'
-      
-      if (listData.message && listData.message.includes('already exists')) {
-        errorMessage = 'You are already subscribed to our newsletter.'
-      } else if (listData.message) {
-        errorMessage = listData.message
-      }
-
+    // Stateless double opt-in (Resend). No contact is read or written
+    // here — the email travels inside a signed, expiring token, and a
+    // Resend contact only comes into existence when /api/confirm
+    // verifies it. Re-subscribing an existing (even confirmed) address
+    // therefore only ever re-sends a confirmation email, which makes
+    // the old Mailgun bug — the update-if-exists write flipping
+    // confirmed members back to unconfirmed — structurally impossible.
+    const resendKey = process.env.RESEND_API_KEY
+    const confirmSecret = process.env.NEWSLETTER_CONFIRM_SECRET
+    if (!resendKey || !confirmSecret) {
+      console.error('Subscribe: RESEND_API_KEY / NEWSLETTER_CONFIRM_SECRET not set')
       return NextResponse.json(
-        { error: errorMessage },
-        { status: 400 }
+        { error: 'Newsletter signups are temporarily unavailable.' },
+        { status: 503 }
       )
     }
 
-    // Step 2: Send confirmation email
+    // One canonical address for the token and the send — the token
+    // helper normalises identically, so the confirmed contact matches.
+    const normalised = email.trim().toLowerCase()
+
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://distanzrunning.vercel.app'
-    const confirmationUrl = `${baseUrl}/api/confirm?token=${confirmationToken}&email=${encodeURIComponent(email)}`
+    const confirmationUrl = `${baseUrl}/api/confirm?token=${createConfirmToken(normalised, confirmSecret)}`
     const currentYear = new Date().getFullYear()
 
     // Tokens are resolved to hex because email clients don't support
@@ -246,54 +223,56 @@ export async function POST(request: NextRequest) {
     </html>
     `
 
-    // Multipart form so we can attach the inline brand assets. Each
-    // `inline` part becomes a cid: reference matching the filename.
-    const emailForm = new FormData()
-    emailForm.append('from', `Distanz Running <newsletter@${process.env.MAILGUN_DOMAIN}>`)
-    emailForm.append('to', email)
-    emailForm.append('subject', 'Please confirm your subscription to Distanz Running')
-    emailForm.append('html', confirmationHtml)
-    emailForm.append('o:tag', 'confirmation-email')
-    emailForm.append('o:tracking', 'yes')
-    emailForm.append('o:tracking-clicks', 'no')
-    emailForm.append(
-      'inline',
-      new Blob([new Uint8Array(ICON_BUFFER)], { type: 'image/png' }),
-      'icon-badge.png',
-    )
-    emailForm.append(
-      'inline',
-      new Blob([new Uint8Array(WORDMARK_GRAY_BUFFER)], { type: 'image/png' }),
-      'wordmark-gray.png',
-    )
+    // Resend send — raw fetch, no SDK (repo convention). Inline brand
+    // assets go as base64 attachments whose content_id matches the
+    // cid: references in the template.
+    const emailResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${resendKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Distanz Running <newsletter@distanzrunning.com>',
+        to: normalised,
+        subject: 'Please confirm your subscription to Distanz Running',
+        html: confirmationHtml,
+        tags: [{ name: 'type', value: 'confirmation-email' }],
+        attachments: [
+          {
+            filename: 'icon-badge.png',
+            content: ICON_BUFFER.toString('base64'),
+            content_type: 'image/png',
+            content_id: 'icon-badge.png',
+          },
+          {
+            filename: 'wordmark-gray.png',
+            content: WORDMARK_GRAY_BUFFER.toString('base64'),
+            content_type: 'image/png',
+            content_id: 'wordmark-gray.png',
+          },
+        ],
+      }),
+    })
 
-    const emailResponse = await fetch(
-      `${process.env.MAILGUN_API_BASE_URL}/${process.env.MAILGUN_DOMAIN}/messages`,
-      {
-        method: 'POST',
-        headers: {
-          // No Content-Type — fetch sets multipart/form-data with the
-          // correct boundary automatically when the body is a FormData.
-          'Authorization': `Basic ${Buffer.from(`api:${process.env.MAILGUN_API_KEY}`).toString('base64')}`,
-        },
-        body: emailForm,
-      }
-    )
-
-    const emailData = await emailResponse.json()
-
-    if (emailResponse.ok) {
-      return NextResponse.json({ 
-        success: true, 
-        message: 'Please check your email to confirm your subscription!' 
-      })
-    } else {
-      console.error('Email send error:', emailData)
+    if (!emailResponse.ok) {
+      // Log the provider body server-side only — reflecting it into the
+      // JSON error was the old information-leak bug.
+      console.error(
+        'Resend send error:',
+        emailResponse.status,
+        await emailResponse.text().catch(() => '')
+      )
       return NextResponse.json(
-        { error: 'Subscription added but confirmation email failed. Please try again.' },
-        { status: 500 }
+        { error: 'We could not send the confirmation email. Please try again.' },
+        { status: 502 }
       )
     }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Please check your email to confirm your subscription!'
+    })
 
   } catch (error) {
     console.error('Subscription error:', error)

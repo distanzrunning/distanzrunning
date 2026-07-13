@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
 import {
   TurnstileWidget,
+  turnstileEnabled,
   waitForToken,
   type TurnstileHandle,
 } from "@/components/ui/Turnstile";
@@ -194,6 +195,13 @@ export function NewsletterModal({
       // mount). Null when unconfigured (dev) — the API only enforces
       // verification when its secret is set.
       const turnstileToken = await waitForToken(turnstileTokenRef);
+      if (turnstileEnabled && !turnstileToken) {
+        // Token never arrived (slow network / blocked script / unfinished
+        // challenge) — a token-less POST is guaranteed a 400 when the server
+        // has the secret, so fail fast with a retryable message instead.
+        setError("We couldn't verify your browser. Please try again.");
+        return;
+      }
 
       const res = await fetch("/api/subscribe", {
         method: "POST",

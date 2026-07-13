@@ -1,5 +1,6 @@
 // app/api/contact/route.ts
 import { NextRequest, NextResponse } from 'next/server'
+import { escapeHtml } from '@/lib/escapeHtml'
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,9 +23,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const resendKey = process.env.RESEND_API_KEY
+    if (!resendKey) {
+      console.error('Contact: RESEND_API_KEY not set')
+      return NextResponse.json(
+        { error: 'The contact form is temporarily unavailable.' },
+        { status: 503 }
+      )
+    }
+
     // Format interests as a bulleted list
     const interestsList = interests.map((interest: string) => `• ${interest}`).join('\n')
 
+    // Every user value interpolated into the HTML is escaped — the
+    // submitter controls these strings, and unescaped interpolation
+    // let them inject arbitrary HTML into the email the site owner
+    // opens. The plain-text version needs no escaping.
     // Create email HTML
     const emailHtml = `
     <!DOCTYPE html>
@@ -148,18 +162,18 @@ export async function POST(request: NextRequest) {
             <div class="content-section">
               <div class="field">
                 <div class="field-label">Name</div>
-                <div class="field-value">${name}</div>
+                <div class="field-value">${escapeHtml(name)}</div>
               </div>
 
               <div class="field">
                 <div class="field-label">Email</div>
-                <div class="field-value"><a href="mailto:${email}" style="color: #0070F3; text-decoration: none;">${email}</a></div>
+                <div class="field-value"><a href="mailto:${escapeHtml(email)}" style="color: #0070F3; text-decoration: none;">${escapeHtml(email)}</a></div>
               </div>
 
               <div class="field">
                 <div class="field-label">Interests</div>
                 <ul class="interests-list">
-                  ${interests.map((interest: string) => `<li>• ${interest}</li>`).join('')}
+                  ${interests.map((interest: string) => `<li>• ${escapeHtml(interest)}</li>`).join('')}
                 </ul>
               </div>
 
@@ -167,7 +181,7 @@ export async function POST(request: NextRequest) {
               <div class="field">
                 <div class="field-label">Message</div>
                 <div class="message-box">
-                  <div class="field-value">${message.replace(/\n/g, '<br>')}</div>
+                  <div class="field-value">${escapeHtml(message).replace(/\n/g, '<br>')}</div>
                 </div>
               </div>
               ` : ''}
@@ -205,29 +219,24 @@ Sent via Distanz Running contact form
 ${new Date().toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'short', timeZone: 'Europe/London' })}
     `
 
-    // Send email via Mailgun
-    const emailResponse = await fetch(
-      `${process.env.MAILGUN_API_BASE_URL}/${process.env.MAILGUN_DOMAIN}/messages`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Basic ${Buffer.from(`api:${process.env.MAILGUN_API_KEY}`).toString('base64')}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          from: `Distanz Running Contact Form <contact@${process.env.MAILGUN_DOMAIN}>`,
-          to: 'info@distanzrunning.com',
-          'h:Reply-To': email, // Allow direct reply to the submitter
-          subject: `Contact Form: ${name} - ${interests[0]}`,
-          html: emailHtml,
-          text: emailText,
-          'o:tag': 'contact-form',
-          'o:tracking': 'no',
-        })
-      }
-    )
-
-    const emailData = await emailResponse.json()
+    // Send email via Resend — raw fetch, no SDK (repo convention).
+    // Subject headers are not an HTML context, so no escaping there.
+    const emailResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${resendKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Distanz Running Contact Form <contact@distanzrunning.com>',
+        to: 'info@distanzrunning.com',
+        reply_to: email, // Allow direct reply to the submitter
+        subject: `Contact Form: ${name} - ${interests[0]}`,
+        html: emailHtml,
+        text: emailText,
+        tags: [{ name: 'type', value: 'contact-form' }],
+      }),
+    })
 
     if (emailResponse.ok) {
       return NextResponse.json({
@@ -235,7 +244,13 @@ ${new Date().toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'short', ti
         message: 'Thank you for getting in touch! We\'ll respond within 48 hours.'
       })
     } else {
-      console.error('Email send error:', emailData)
+      // Provider body is logged server-side only — never reflected to
+      // the submitter.
+      console.error(
+        'Email send error:',
+        emailResponse.status,
+        await emailResponse.text().catch(() => '')
+      )
       return NextResponse.json(
         { error: 'Failed to send message. Please try again or email us directly at info@distanzrunning.com' },
         { status: 500 }
