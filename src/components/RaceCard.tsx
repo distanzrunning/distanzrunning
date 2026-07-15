@@ -337,9 +337,12 @@ export default function RaceCard({
           left, date MetaPill right. */}
       {isCard ? (
         // Two-line clamp matches the filled/outline variants' truncation
-        // rule; pill top-aligns so long titles wrap under it.
-        <div className="flex flex-1 items-start justify-between gap-3 p-5">
-          <div className="flex min-w-0 flex-1 flex-col gap-1">
+        // rule; pill top-aligns so long titles wrap under it. The row
+        // wraps so narrow cards give the title full width (the pill
+        // drops below); min-w-[10rem] is the wrap trigger — min-w-0
+        // would let the title shrink to nothing and never wrap.
+        <div className="flex flex-1 flex-wrap items-start justify-between gap-3 p-5">
+          <div className="flex min-w-[10rem] flex-1 flex-col gap-1">
             <h3 className="line-clamp-2 text-heading-20 text-pretty text-textDefault">
               {/* The container clips (overflow-hidden), so the focus
                   ring insets at the card's 12px corner, like the card
