@@ -79,6 +79,7 @@ export default async function HomepageLatestNews() {
         // Free-glide wheel gestures off — CarouselWheelStep below steps
         // one card per gesture instead, so the row always lands in place.
         wheelGestures={false}
+        aria-label="Latest news stories"
         className="flex w-full flex-col gap-8 md:gap-11"
       >
         {/* Header row — title + tagline left; view-all + arrows right

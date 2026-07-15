@@ -250,6 +250,25 @@ export default function Masthead({
   const [condensed, setCondensed] = useState(false);
   const [overInverted, setOverInverted] = useState(false);
 
+  // Mobile menu focus management: focus enters the panel on open so the
+  // next Tab lands on its first link; Escape closes and returns focus to
+  // the trigger. Disclosure panel, not a modal — no focus trap.
+  const mobileTriggerRef = useRef<HTMLButtonElement>(null);
+  const mobileNavRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    mobileNavRef.current?.focus();
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileOpen(false);
+        mobileTriggerRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [mobileOpen]);
+
   useEffect(() => {
     const CONDENSE_Y = 96;
     const NAV_TIER_H = 40; // the h-10 nav slot — empty while condensed
@@ -381,12 +400,13 @@ export default function Masthead({
                 </Button>
               </div>
               <Button
+                ref={mobileTriggerRef}
                 shape="square"
                 size="large"
                 variant="tertiary"
                 onClick={() => setMobileOpen((v) => !v)}
                 className="sm:hidden"
-                aria-label="Menu"
+                aria-label={mobileOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileOpen}
               >
                 {mobileOpen ? (
@@ -534,7 +554,11 @@ export default function Masthead({
         {/* mobile menu — flat top-level links. bg-canvas + pointer-events
             are its own (the header shell is transparent + inert). */}
         {mobileOpen && (
-          <div className="pointer-events-auto border-b border-borderSubtle bg-canvas sm:hidden">
+          <nav aria-label="Menu"
+            tabIndex={-1}
+            ref={mobileNavRef}
+            className="pointer-events-auto border-b border-borderSubtle bg-canvas outline-none sm:hidden"
+          >
             <div className="mx-auto flex max-w-content flex-col gap-3 px-6 py-4">
               {[
                 ...EDITORIAL_LINKS,
@@ -558,7 +582,7 @@ export default function Masthead({
                 </Button>
               </div>
             </div>
-          </div>
+          </nav>
         )}
       </header>
     </>

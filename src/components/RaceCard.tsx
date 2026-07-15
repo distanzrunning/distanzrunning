@@ -210,7 +210,7 @@ export default function RaceCard({
       {isCard && (
         <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-borderSubtle bg-[color:var(--ds-gray-100)]">
           {imageUrl && (
-            <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100">
+            <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100 motion-reduce:scale-100 motion-reduce:transition-none">
               <CardImage
                 src={imageUrl}
                 alt={imageAlt ?? title}
@@ -237,7 +237,7 @@ export default function RaceCard({
         }`}
       >
         {imageUrl && (
-          <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100">
+          <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100 motion-reduce:scale-100 motion-reduce:transition-none">
             <CardImage
               src={imageUrl}
               alt={imageAlt ?? title}

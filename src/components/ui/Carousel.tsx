@@ -126,8 +126,25 @@ function Carousel({
     api.on("select", onSelect);
     return () => {
       api?.off("select", onSelect);
+      api?.off("reInit", onSelect);
     };
   }, [api, onSelect]);
+
+  // Tab-focus a slide that's transform-scrolled out of view — Embla
+  // translates the track, so native focus-scroll can't bring it into
+  // view on its own. Bring the focused slide's index into the viewport.
+  React.useEffect(() => {
+    if (!api) return;
+    const viewport = api.containerNode().parentElement;
+    if (!viewport) return;
+    const onFocusIn = (event: FocusEvent) => {
+      const slides = api.slideNodes();
+      const idx = slides.findIndex((s) => s.contains(event.target as Node));
+      if (idx !== -1) api.scrollTo(idx);
+    };
+    viewport.addEventListener("focusin", onFocusIn);
+    return () => viewport.removeEventListener("focusin", onFocusIn);
+  }, [api]);
 
   return (
     <CarouselContext.Provider
@@ -144,7 +161,16 @@ function Carousel({
     >
       <div
         onKeyDownCapture={handleKeyDown}
-        className={cn("relative", className)}
+        // Below 1360px the prev/next buttons are display:none by design,
+        // so the region itself must be tabbable for the ArrowLeft/ArrowRight
+        // handler above to be keyboard-reachable at all widths. The ring is
+        // focus-visible-only (never plain :focus) per the repo's
+        // selection-vs-focus convention.
+        tabIndex={0}
+        className={cn(
+          "relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)]",
+          className,
+        )}
         role="region"
         aria-roledescription="carousel"
         data-slot="carousel"

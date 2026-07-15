@@ -96,6 +96,7 @@ export default async function HomepageUpcomingRaces() {
         // Free-glide wheel gestures off — CarouselWheelStep below steps
         // one card per gesture instead, so the row always lands in place.
         wheelGestures={false}
+        aria-label="Upcoming races"
         className="flex w-full flex-col gap-8 border-t border-borderSubtle pt-10 md:gap-11 lg:pt-12"
       >
         {/* Header row — title + tagline left; view-all right (desktop). */}

@@ -192,7 +192,7 @@ export default function ArticleCard({
             sizes={imageSizes}
             placeholder={blurDataURL ? "blur" : "empty"}
             blurDataURL={blurDataURL ?? undefined}
-            className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100"
+            className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100 motion-reduce:scale-100 motion-reduce:transition-none"
           />
         )}
         {/* Placement badge over the image's top-left corner. */}

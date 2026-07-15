@@ -150,7 +150,7 @@ export default async function HomepageHero() {
               sizes="(max-width: 1024px) 100vw, 60vw"
               placeholder={hero.lqip ? "blur" : "empty"}
               blurDataURL={hero.lqip ?? undefined}
-              className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100"
+              className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100 motion-reduce:scale-100 motion-reduce:transition-none"
             />
           )}
         </div>

@@ -234,6 +234,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       {error && errorMessage && (
         <div
           id={errorMessageId}
+          role="alert"
           className="ds-input-error"
           style={{
             display: "flex",
