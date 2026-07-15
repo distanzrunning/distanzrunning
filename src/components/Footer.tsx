@@ -14,23 +14,24 @@
 // note). Links are text-label-14, textSubtle stepping up to
 // textDefault on hover/focus — v0's gray-900 → gray-1000 move.
 
-"use client";
-
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { useConsentSettings } from "@/components/consent/useConsentSettings";
+import FooterCookiesButton from "@/components/FooterCookiesButton";
 import Logo from "@/components/ui/Logo";
 import LogoIcon from "@/components/ui/LogoIcon";
 import { cn } from "@/lib/utils";
 
 // ============================================================================
-// Link / action union — Cookies opens the consent settings dialog, so
-// a column can mix internal Next links with button actions.
+// Link / action union — Cookies opens the consent settings dialog via a
+// client child (FooterCookiesButton), so a column can mix internal Next
+// links with the cookies action. Functions can't cross the server→client
+// boundary, so the action carries no onClick — FooterColumn renders the
+// client component for the "cookies" kind instead.
 // ============================================================================
 
 type FooterItem =
   | { kind: "link"; label: string; href: string }
-  | { kind: "action"; label: string; onClick: () => void };
+  | { kind: "cookies"; label: string };
 
 // Mirrors the Masthead's navigation, split by register: the three
 // editorial sections, the product categories, then races. Hrefs match
@@ -55,6 +56,13 @@ const racesColumnLinks: ReadonlyArray<FooterItem> = [
   { kind: "link", label: "Race calendar", href: "/races/calendar" },
 ];
 
+const aboutLinks: ReadonlyArray<FooterItem> = [
+  { kind: "link", label: "About", href: "/about" },
+  { kind: "link", label: "Contact", href: "/contact-us" },
+  { kind: "link", label: "Privacy", href: "/privacy" },
+  { kind: "cookies", label: "Cookies" },
+];
+
 type SocialLink = {
   label: string;
   href: string;
@@ -70,22 +78,13 @@ const socialLinks: ReadonlyArray<SocialLink> = [
 // gap-x-0.5 (2px) is v0's link-internal spacing — invisible on
 // text-only links, correct if one ever gains a trailing glyph.
 const linkClasses =
-  "inline-flex items-center gap-x-0.5 rounded-sm text-label-14 text-textSubtle transition-colors hover:text-textDefault focus-visible:text-textDefault focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)]";
+  "inline-flex min-h-[32px] items-center gap-x-0.5 rounded-sm text-label-14 text-textSubtle transition-colors hover:text-textDefault focus-visible:text-textDefault focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)]";
 
 // ============================================================================
 // Main
 // ============================================================================
 
 export default function Footer() {
-  const { openSettings } = useConsentSettings();
-
-  const aboutLinks: ReadonlyArray<FooterItem> = [
-    { kind: "link", label: "About", href: "/about" },
-    { kind: "link", label: "Contact", href: "/contact-us" },
-    { kind: "link", label: "Privacy", href: "/privacy" },
-    { kind: "action", label: "Cookies", onClick: openSettings },
-  ];
-
   return (
     <footer
       aria-label="Site footer"
@@ -149,7 +148,7 @@ function FooterColumn({
   return (
     <div className="space-y-4">
       <h2 className="text-heading-14 text-textDefault">{heading}</h2>
-      <ul className="flex flex-col gap-y-2.5">
+      <ul className="flex flex-col gap-y-1">
         {items.map((item) => (
           <li key={item.label} className="w-fit">
             {item.kind === "link" ? (
@@ -157,13 +156,7 @@ function FooterColumn({
                 {item.label}
               </Link>
             ) : (
-              <button
-                type="button"
-                onClick={item.onClick}
-                className={linkClasses}
-              >
-                {item.label}
-              </button>
+              <FooterCookiesButton className={linkClasses} />
             )}
           </li>
         ))}
@@ -174,9 +167,9 @@ function FooterColumn({
 
 function SocialColumn() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 col-span-2 md:col-span-1">
       <h2 className="text-heading-14 text-textDefault">Social</h2>
-      <ul className="flex flex-col gap-y-2.5">
+      <ul className="flex flex-col gap-y-1">
         {socialLinks.map(({ label, href }) => (
           <li key={href} className="w-fit">
             {/* Quartr's external-link anatomy: label + trailing

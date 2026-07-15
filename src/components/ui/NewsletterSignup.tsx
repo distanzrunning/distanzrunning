@@ -156,7 +156,7 @@ export default function NewsletterSignup({
         className={
           isBand
             ? undefined
-            : "mx-auto w-full max-w-content overflow-hidden rounded-xl border border-borderSubtle"
+            : "mx-auto w-full max-w-content overflow-hidden rounded-lg border border-borderSubtle"
         }
         style={isBand ? undefined : { background: cardBackground }}
       >
@@ -213,7 +213,7 @@ export default function NewsletterSignup({
                     fill="currentColor"
                   />
                 </svg>
-                <span className="text-sm font-medium">
+                <span className="text-label-14">
                   Check your email to confirm!
                 </span>
               </div>
