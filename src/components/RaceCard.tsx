@@ -156,26 +156,44 @@ export default function RaceCard({
   // Date pill — abbreviated month, full year always shown.
   const fullDate = safeFormat(eventDate, "d MMM, yyyy");
 
-  // Format profile as title-case ("rolling" → "Rolling").
-  const profileLabel = profile
-    ? profile.charAt(0).toUpperCase() + profile.slice(1)
-    : undefined;
-  const elevationGainLabel =
-    elevationGain != null ? formatElevation(elevationGain, units) : undefined;
-  const isLocalCurrency = displayCurrency === "local";
-  const targetCurrency = isLocalCurrency ? currency ?? "USD" : displayCurrency;
-  const priceLabel =
-    price != null && currency
-      ? formatPrice(
-          isLocalCurrency
-            ? price
-            : convertCurrencySync(price, currency, displayCurrency),
+  // Stat-overlay compute (profile/elevation/price labels) is an
+  // index-variant-only feature — gate it so non-index chromes (the
+  // homepage "card" chrome, "filled", "outline") skip the work.
+  const stats = isIndex
+    ? (() => {
+        // Format profile as title-case ("rolling" → "Rolling").
+        const profileLabel = profile
+          ? profile.charAt(0).toUpperCase() + profile.slice(1)
+          : undefined;
+        const elevationGainLabel =
+          elevationGain != null
+            ? formatElevation(elevationGain, units)
+            : undefined;
+        const isLocalCurrency = displayCurrency === "local";
+        const targetCurrency = isLocalCurrency
+          ? currency ?? "USD"
+          : displayCurrency;
+        const priceLabel =
+          price != null && currency
+            ? formatPrice(
+                isLocalCurrency
+                  ? price
+                  : convertCurrencySync(price, currency, displayCurrency),
+                targetCurrency,
+              )
+            : undefined;
+        const hasAnyHoverContent = Boolean(
+          surface || profileLabel || elevationGainLabel || priceLabel,
+        );
+        return {
+          profileLabel,
+          elevationGainLabel,
           targetCurrency,
-        )
-      : undefined;
-  const hasAnyHoverContent = Boolean(
-    surface || profileLabel || elevationGainLabel || priceLabel,
-  );
+          priceLabel,
+          hasAnyHoverContent,
+        };
+      })()
+    : null;
 
   // Outer chrome — outline adopts the ArticleCard block (surface +
   // hairline, 12px radius, container clips the image). Filled: index
@@ -195,7 +213,7 @@ export default function RaceCard({
         ? "overflow-hidden rounded-sm"
         : "";
   // The hover stat overlay is an index-variant feature.
-  const showHoverStats = isIndex && hasAnyHoverContent;
+  const showHoverStats = isIndex && Boolean(stats?.hasAnyHoverContent);
 
   return (
     <article
@@ -289,18 +307,20 @@ export default function RaceCard({
                 detail={surfaceBreakdown}
               />
             )}
-            {(profileLabel || elevationGainLabel) && (
+            {(stats?.profileLabel || stats?.elevationGainLabel) && (
               <StatColumn
                 label="Elevation"
-                value={profileLabel ?? elevationGainLabel ?? ""}
-                detail={profileLabel ? elevationGainLabel : undefined}
+                value={stats?.profileLabel ?? stats?.elevationGainLabel ?? ""}
+                detail={
+                  stats?.profileLabel ? stats?.elevationGainLabel : undefined
+                }
               />
             )}
-            {priceLabel && (
+            {stats?.priceLabel && (
               <StatColumn
                 label="Price"
-                value={priceLabel}
-                detail={targetCurrency}
+                value={stats.priceLabel}
+                detail={stats.targetCurrency}
               />
             )}
           </div>
@@ -316,9 +336,11 @@ export default function RaceCard({
           lives on the image. Filled/outline: title + location stacked
           left, date MetaPill right. */}
       {isCard ? (
-        <div className="flex flex-1 items-center justify-between gap-3 p-5">
+        // Two-line clamp matches the filled/outline variants' truncation
+        // rule; pill top-aligns so long titles wrap under it.
+        <div className="flex flex-1 items-start justify-between gap-3 p-5">
           <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <h3 className="line-clamp-1 text-heading-20 text-pretty text-textDefault">
+            <h3 className="line-clamp-2 text-heading-20 text-pretty text-textDefault">
               {/* The container clips (overflow-hidden), so the focus
                   ring insets at the card's 12px corner, like the card
                   ArticleCard chrome. */}
@@ -336,8 +358,8 @@ export default function RaceCard({
             )}
           </div>
           {fullDate && (
-            <span className="inline-flex h-6 shrink-0 items-center rounded-full border border-borderSubtle bg-surface px-3 text-label-12 text-textSubtle">
-              {fullDate}
+            <span className="mt-0.5 inline-flex h-6 shrink-0 items-center rounded-full border border-borderSubtle bg-surface px-3 text-label-12 text-textSubtle">
+              <time dateTime={eventDate}>{fullDate}</time>
             </span>
           )}
         </div>
@@ -350,7 +372,7 @@ export default function RaceCard({
           }`}
         >
           <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <h3 className="line-clamp-2 text-heading-20 text-[color:var(--ds-gray-1000)]">
+            <h3 className="line-clamp-2 text-heading-20 text-textDefault">
               <Link
                 href={href}
                 className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
@@ -359,12 +381,16 @@ export default function RaceCard({
               </Link>
             </h3>
             {location && (
-              <p className="truncate text-copy-14 text-[color:var(--ds-gray-900)]">
+              <p className="truncate text-copy-14 text-textSubtle">
                 {location}
               </p>
             )}
           </div>
-          {fullDate && <MetaPill>{fullDate}</MetaPill>}
+          {fullDate && (
+            <MetaPill>
+              <time dateTime={eventDate}>{fullDate}</time>
+            </MetaPill>
+          )}
         </div>
       )}
     </article>

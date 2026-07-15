@@ -2,9 +2,11 @@
 //
 // Homepage "Upcoming Races" row — the next 10 race guides by event
 // date. No editorial curation: the row stays current as races pass.
-// Carries the stat fields (surface / elevation / price) so the card's
-// glassy hover overlay can render, and the LQIP for the blur
-// placeholder per the DS image convention.
+// The card variant used here (chrome="card", default/non-index
+// variant) never renders the stat-overlay fields (surface/profile/
+// elevation/price/currency), so the projection skips them — trims
+// the payload to what the card actually renders. Carries the LQIP
+// for the blur placeholder per the DS image convention.
 
 import { groq } from "next-sanity";
 
@@ -24,12 +26,6 @@ export const upcomingRacesQuery = groq`
     city,
     stateRegion,
     country,
-    "category": raceCategory->title,
-    surface,
-    surfaceBreakdown,
-    profile,
-    elevationGain,
-    price,
-    currency
+    "category": raceCategory->title
   }
 `;
