@@ -25,7 +25,7 @@ export default async function SiteLayout({
 }) {
   // Design-preview deploys render pages bare — no chrome, no banner.
   if (process.env.NEXT_PUBLIC_PREVIEW_MODE === "true") {
-    return <main className="min-h-screen">{children}</main>;
+    return <main className="min-h-[100dvh]">{children}</main>;
   }
 
   // Site-wide announcement bar (admin-managed) sits above everything on
@@ -57,7 +57,7 @@ export default async function SiteLayout({
         Skip to content
       </a>
       {banner}
-      <div className="flex min-h-screen flex-col bg-canvas">
+      <div className="flex min-h-[100dvh] flex-col bg-canvas">
         <MastheadWrapper />
         {/* tabIndex={-1} so activating the skip link truly moves focus
             here in every browser (Safari won't otherwise); outline-none

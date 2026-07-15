@@ -71,7 +71,12 @@ export default async function HomepageHero() {
                 </span>
               )}
               {date && (
-                <span className="text-copy-14 text-textSubtle">{date}</span>
+                <time
+                  dateTime={hero.publishedAt}
+                  className="text-copy-14 text-textSubtle"
+                >
+                  {date}
+                </time>
               )}
             </div>
           )}
@@ -140,7 +145,11 @@ export default async function HomepageHero() {
             (Vercel's article figures + Quartr's cards are stock
             rounded-lg = 8px; our remapped rounded-lg is 12px, the
             SURFACE/material radius). */}
-        <div className="relative aspect-[3/2] w-full overflow-hidden rounded bg-[var(--ds-gray-100)] lg:basis-7/12">
+        <div className="relative aspect-[3/2] w-full overflow-hidden rounded lg:basis-7/12">
+          <div
+            aria-hidden
+            className="absolute inset-0 animate-pulse bg-[color:var(--ds-gray-100)]"
+          />
           {imageUrl && (
             <Image
               src={imageUrl}
