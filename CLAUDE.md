@@ -235,6 +235,11 @@ The following live in `src/components/` (some in `src/components/ui/`). When int
 - **Sanity image URLs**: resolve at the data layer with `urlFor(image).width(...).auto("format").url()`. Components like `ArticleCard` / `RaceCard` accept a pre-resolved `imageUrl` string + optional `blurDataURL`, not a raw `SanityImageSource`. For the `blurDataURL`, select `"lqip": mainImage.asset->metadata.lqip` in the GROQ query — an inline base64 preview (zero extra requests), NOT a tiny `urlFor(...).blur(20)` URL (that's still a network fetch and can itself flicker).
 - **Hover affordances on cards**: image `scale-[1.04]` → `scale-100` on `group-hover` (settle-zoom) is the established pattern. Don't add hover underline to titles inside cards.
 - **Editorial image radius = 8px** (`rounded`, our DEFAULT — Vercel article figures and Quartr card images are stock `rounded-lg` = 8px). Our remapped `rounded-lg` (12px) is the **surface/material** radius (cards, menus, modals) — don't use it on bare editorial images. For future article-body images, Vercel also frames them: `border gray-alpha-400` + `--ds-shadow-small` + surface bg.
+- **Copy register (user call, 2026-07)**: named sections and nav labels are
+  **Title Case** ("Latest News", "Editor's Picks", "Upcoming Races" — the
+  editorial-masthead register); ALL descriptive copy is sentence case
+  (taglines, buttons, CTAs, mega-menu intros like "Shoes for every run").
+  Don't sweep section headers to sentence case.
 
 ---
 

@@ -80,7 +80,7 @@ export default async function HomepageLatestNews() {
         // one card per gesture instead, so the row always lands in place.
         wheelGestures={false}
         aria-label="Latest news stories"
-        className="flex w-full flex-col gap-8 md:gap-11"
+        className="flex w-full flex-col gap-8 md:gap-10"
       >
         {/* Header row — title + tagline left; view-all + arrows right
             (desktop). */}
@@ -162,6 +162,7 @@ export default async function HomepageLatestNews() {
                   publishedAt={
                     post.publishedAt ? formatDisplayDate(post.publishedAt) : null
                   }
+                  publishedAtISO={post.publishedAt ?? null}
                 />
               </CarouselItem>
             ),

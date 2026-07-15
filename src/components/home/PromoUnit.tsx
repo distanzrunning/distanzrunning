@@ -33,7 +33,7 @@ function BrandIcon(props: SVGProps<SVGSVGElement>) {
 }
 
 const bandLink =
-  "underline underline-offset-[3px] decoration-1 hover:decoration-2";
+  "underline underline-offset-[3px] decoration-1 hover:decoration-2 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)]";
 
 export default function PromoUnit() {
   return (

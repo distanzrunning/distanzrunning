@@ -65,6 +65,7 @@ function cardProps(pick: Pick, width: number, height: number) {
       ? { label: pick.kicker, href: pick.kickerHref ?? undefined }
       : null,
     publishedAt: pick.publishedAt ? formatDisplayDate(pick.publishedAt) : null,
+    publishedAtISO: pick.publishedAt ?? null,
   };
 }
 
@@ -98,7 +99,7 @@ export default async function HomepageEditorsPicks() {
       // Upcoming Races section below.)
       className="mx-auto w-full max-w-content px-6 pb-10 lg:pb-12"
     >
-      <div className="flex w-full flex-col gap-8 border-t border-borderSubtle pt-10 md:gap-11 lg:pt-12">
+      <div className="flex w-full flex-col gap-8 border-t border-borderSubtle pt-10 md:gap-10 lg:pt-12">
         {/* Header row — same anatomy as Latest News. */}
         <div className="flex items-center justify-between gap-8 md:items-end">
           <div className="flex flex-col gap-3">
@@ -140,7 +141,7 @@ export default async function HomepageEditorsPicks() {
                 chrome="plain"
                 imageRatio="16/8.75"
                 mobileLayout="row"
-                imageSizes="(max-width: 768px) 33vw, (max-width: 1024px) 33vw, 300px"
+                imageSizes="(max-width: 768px) 144px, (max-width: 1024px) 33vw, 300px"
                 {...cardProps(pick, 720, 394)}
               />
             ))}

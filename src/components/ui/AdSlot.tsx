@@ -506,6 +506,10 @@ export function AdSlot({
       style={{
         display: "block",
         width: dimensions.width,
+        // Fixed-size units (e.g. 320×50 mobile-banner) must never exceed
+        // the content box — the homepage gutter leaves ~272px at 320px
+        // viewports.
+        maxWidth: "100%",
         height: dimensions.height,
       }}
       data-ad-client={ADSENSE_CLIENT}

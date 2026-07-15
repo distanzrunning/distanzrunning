@@ -1,5 +1,3 @@
-"use client";
-
 // ============================================================================
 // ArticleCard — the canonical editorial card for the rebuilt site
 // ============================================================================
@@ -110,6 +108,10 @@ export interface ArticleCardProps {
   author?: { name: string; avatarUrl?: string | null; href?: string } | null;
   /** Pre-formatted display date, e.g. "04 Jul 2026". */
   publishedAt?: string | null;
+  /** Raw ISO date for the time element's dateTime attribute (machine-
+      readable semantics); the display string (publishedAt) stays
+      pre-formatted per the data-layer convention. */
+  publishedAtISO?: string | null;
   /** Block chrome. "card" (default) is the bordered surface box (mega-menu
       featured slot). "plain" is the hero's chromeless anatomy — rounded
       image, text straight on the canvas — for editorial grids (Quartr's
@@ -150,6 +152,7 @@ export default function ArticleCard({
   excerpt,
   author,
   publishedAt,
+  publishedAtISO,
   chrome = "card",
   imageRatio = "16/10",
   mobileLayout = "column",
@@ -175,7 +178,7 @@ export default function ArticleCard({
           Row anatomy: a fixed thumbnail on the left below md. */}
       <div
         className={cn(
-          "relative w-full overflow-hidden bg-[var(--ds-gray-100)]",
+          "relative w-full overflow-hidden",
           imageRatioStyles[imageRatio],
           // rounded = 8px (our DEFAULT) — the editorial IMAGE radius
           // (Vercel/Quartr images are stock rounded-lg = 8px; our
@@ -184,6 +187,10 @@ export default function ArticleCard({
           isRow && "w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none",
         )}
       >
+        <div
+          aria-hidden
+          className="absolute inset-0 animate-pulse bg-[color:var(--ds-gray-100)]"
+        />
         {imageUrl && (
           <Image
             src={imageUrl}
@@ -237,11 +244,19 @@ export default function ArticleCard({
                 <Dot className="w-5 text-textSubtler opacity-75" />
               </span>
             )}
-            {publishedAt && (
-              <span className="text-label-12 text-textSubtle">
-                {publishedAt}
-              </span>
-            )}
+            {publishedAt &&
+              (publishedAtISO ? (
+                <time
+                  dateTime={publishedAtISO}
+                  className="text-label-12 text-textSubtle"
+                >
+                  {publishedAt}
+                </time>
+              ) : (
+                <span className="text-label-12 text-textSubtle">
+                  {publishedAt}
+                </span>
+              ))}
           </div>
         )}
 

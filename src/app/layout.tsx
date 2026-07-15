@@ -9,7 +9,7 @@
 //   admin/            — lean authenticated tree (theme only)
 // No headers()/pathname sniffing here — route groups pick the chrome
 // statically, so pages stay eligible for static rendering.
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
@@ -26,6 +26,14 @@ const ebGaramond = EB_Garamond({
   variable: "--font-eb-garamond",
   display: "swap",
 });
+
+// Explicit foundation (matches the Next default) — the place for
+// viewportFit/theme-color later; any future fixed-to-edge element must
+// pair viewport-fit=cover with env(safe-area-inset-*) padding.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   title: "Distanz Running",
@@ -114,7 +122,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans antialiased bg-canvas text-textDefault min-h-screen flex flex-col distanz-font-features">
+      <body className="font-sans antialiased bg-canvas text-textDefault min-h-[100dvh] flex flex-col distanz-font-features">
         {children}
       </body>
     </html>
