@@ -171,11 +171,12 @@ const LINK_CLASS = cn(
   // width; the hover block is a flush rectangle spanning both dividers — no
   // rounding, no gap. Text vertically centred.
   "flex h-full items-center px-3",
-  "text-copy-14 font-medium tracking-[0.02em]",
+  "text-copy-14 font-medium",
   "text-textSubtle no-underline transition-colors",
   // Hover reveals a subtle gray-100 block behind the label instead of shifting
   // the text colour; reads on the canvas nav in both themes.
   "hover:bg-[var(--ds-gray-100)]",
+  "focus-visible:bg-[var(--ds-gray-100)] focus-visible:outline-none",
 );
 
 const TRIGGER_CLASS = cn(
@@ -195,6 +196,14 @@ const CHEVRON_CLASS = cn(
   "size-3.5 transition-transform duration-200 ease-out",
   "group-hover/trigger:rotate-180 group-focus-visible/trigger:rotate-180",
   "group-data-[state=open]/trigger:rotate-180",
+);
+
+// Mobile menu row — ≥40px tap target (WCAG 2.5.8 comfort); hover/focus is
+// Footer's linkClasses verbatim (Footer.tsx:72-73).
+const MOBILE_LINK_CLASS = cn(
+  "flex min-h-[40px] items-center text-copy-14 font-medium text-textSubtle no-underline transition-colors",
+  "hover:text-textDefault",
+  "focus-visible:text-textDefault focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ds-focus-color)]",
 );
 
 // Viewport chrome — the panel reads as the header itself expanding downward:
@@ -559,25 +568,38 @@ export default function Masthead({
             ref={mobileNavRef}
             className="pointer-events-auto border-b border-borderSubtle bg-canvas outline-none sm:hidden"
           >
-            <div className="mx-auto flex max-w-content flex-col gap-3 px-6 py-4">
-              {[
-                ...EDITORIAL_LINKS,
-                ...MEGA_SECTIONS.map((s) => ({ label: s.label, href: s.href })),
-              ].map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="text-copy-14 font-medium text-textSubtle no-underline hover:text-textDefault"
-                >
-                  {item.label}
-                </Link>
-              ))}
+            <div className="mx-auto flex max-w-content flex-col px-6 py-4">
+              <div className="flex flex-col">
+                <p className="mb-1 text-heading-14 text-textDefault">Stories</p>
+                {EDITORIAL_LINKS.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={MOBILE_LINK_CLASS}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+              <div className="mt-4 flex flex-col">
+                <p className="mb-1 text-heading-14 text-textDefault">Browse</p>
+                {MEGA_SECTIONS.map((section) => (
+                  <Link
+                    key={section.href}
+                    href={section.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={MOBILE_LINK_CLASS}
+                  >
+                    {section.label}
+                  </Link>
+                ))}
+              </div>
               <div className="flex gap-2 pt-2">
-                <Button variant="tertiary" size="small">
+                <Button variant="tertiary" size="medium">
                   Sign in
                 </Button>
-                <Button variant="default" size="small">
+                <Button variant="default" size="medium">
                   Subscribe
                 </Button>
               </div>

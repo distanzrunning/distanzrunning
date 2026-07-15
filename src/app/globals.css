@@ -274,7 +274,13 @@
        end-of-page affordance. Inner scrollers that must not chain
        (menus, drawers) set `contain` locally. */
     -webkit-overflow-scrolling: touch;
-    scroll-padding-top: 112px; /* Header height */
+    scroll-padding-top: 72px; /* mobile sticky chrome: top tier only */
+  }
+
+  @media (min-width: 640px) {
+    html {
+      scroll-padding-top: 112px; /* two-tier header from sm */
+    }
   }
 
   /* Admin is an app shell under a fixed admin bar — the root
