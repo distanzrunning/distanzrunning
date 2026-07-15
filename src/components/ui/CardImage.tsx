@@ -4,8 +4,8 @@ import Image from "next/image";
 // CardImage
 // ============================================================================
 //
-// Uniform image used by every card primitive (ArticleCard, RaceCard,
-// HomepageGear featured slot). Two layers, both absolutely positioned
+// Uniform image used by every card primitive (ArticleCard, RaceCard).
+// Two layers, both absolutely positioned
 // inside the container:
 //   1. A pulsing --ds-gray-100 skeleton — always rendered.
 //   2. The Next.js <Image> on top.
