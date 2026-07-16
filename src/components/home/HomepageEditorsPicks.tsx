@@ -112,7 +112,7 @@ export default async function HomepageEditorsPicks() {
               Hand-picked stories from our editors.
             </p>
           </div>
-          <div className="hidden md:block">
+          <div className="shrink-0">
             <SeeAllButton />
           </div>
         </div>
@@ -146,11 +146,6 @@ export default async function HomepageEditorsPicks() {
               />
             ))}
           </div>
-        </div>
-
-        {/* Mobile view-all — below the grid. */}
-        <div className="md:hidden">
-          <SeeAllButton />
         </div>
       </div>
     </section>

@@ -108,7 +108,7 @@ export default async function HomepageLatestNews() {
               The latest stories from road, track, and trail.
             </p>
           </div>
-          <div className="hidden md:block">
+          <div className="shrink-0">
             <AllArticlesButton />
           </div>
         </div>
@@ -185,11 +185,6 @@ export default async function HomepageLatestNews() {
             )}
           />
         </CarouselWheelStep>
-
-        {/* Mobile view-all — below the row, as Quartr does. */}
-        <div className="md:hidden">
-          <AllArticlesButton />
-        </div>
       </Carousel>
     </section>
   );

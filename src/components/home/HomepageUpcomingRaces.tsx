@@ -111,7 +111,7 @@ export default async function HomepageUpcomingRaces() {
               Interactive guides for the next races on the calendar.
             </p>
           </div>
-          <div className="hidden md:block">
+          <div className="shrink-0">
             <AllRacesButton />
           </div>
         </div>
@@ -162,11 +162,6 @@ export default async function HomepageUpcomingRaces() {
             className={cn("right-0 translate-x-[calc(100%+8px)]", ARROW_CLASS)}
           />
         </CarouselWheelStep>
-
-        {/* Mobile view-all — below the row, as the other sections do. */}
-        <div className="md:hidden">
-          <AllRacesButton />
-        </div>
       </Carousel>
     </section>
   );
