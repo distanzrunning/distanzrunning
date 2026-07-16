@@ -15,6 +15,7 @@ export type AdSize =
   | "skyscraper"
   | "half-page"
   | "mobile-banner"
+  | "native-strip"
   | "square";
 
 export interface Dimensions {
@@ -30,6 +31,10 @@ export const SIZE_PRESETS: Record<AdSize, Dimensions> = {
   skyscraper: { width: 160, height: 600 },
   "half-page": { width: 300, height: 600 }, // 404-style sidebar unit
   "mobile-banner": { width: 320, height: 50 },
+  // 404-style fluid native strip — width is the CAP; the slot renders w-full
+  // up to it (see the fluid handling below). At AdSense go-live this slot
+  // wants a RESPONSIVE horizontal unit, not a fixed-size one.
+  "native-strip": { width: 720, height: 64 },
   square: { width: 300, height: 300 },
 };
 
@@ -230,6 +235,32 @@ export function ShakeoutAd({ width, height }: Dimensions) {
     color: "hsl(var(--color-textInverted))",
   };
 
+  // 404-style native strip (fluid × 64) — full-width row; the CTA hides
+  // below sm exactly as 404 hides theirs on small screens.
+  if (height <= 72 && width >= 600) {
+    return (
+      <a
+        href={SIGNUP_HREF}
+        className="flex h-full w-full items-center justify-between gap-4 rounded-sm bg-[var(--ds-gray-100)] px-4 no-underline sm:px-6"
+      >
+        <div className="flex min-w-0 flex-col items-start gap-0.5 text-left">
+          {kicker}
+          <span className="truncate text-[13px] font-medium text-textDefault">
+            Weekly running stories, gear, and race news.
+          </span>
+        </div>
+        <span
+          className="hidden h-9 shrink-0 items-center gap-1 rounded-sm px-3.5 font-sans text-[13px] font-semibold sm:inline-flex"
+          style={ctaStyle}
+        >
+          Subscribe
+          <ChevronRight className="h-3.5 w-3.5" />
+        </span>
+        <ChevronRight className="h-4 w-4 shrink-0 text-textSubtle sm:hidden" />
+      </a>
+    );
+  }
+
   // Very small mobile banner (≤ 60px tall) — single inline line.
   if (height <= 60) {
     return (
@@ -351,6 +382,10 @@ export function AdSlot({
 }: AdSlotProps) {
   const dimensions: Dimensions =
     typeof size === "string" ? SIZE_PRESETS[size] : size;
+  // 404-style fluid native strip — renders full width up to the preset's
+  // width as a cap, instead of reserving a fixed pixel width. Height stays
+  // fixed for CLS safety.
+  const fluid = size === "native-strip";
 
   // Stack the disclaimer on narrow units so it never exceeds the creative.
   const stacked = disclaimerStacked ?? dimensions.width < 260;
@@ -505,11 +540,12 @@ export function AdSlot({
       className="adsbygoogle"
       style={{
         display: "block",
-        width: dimensions.width,
+        width: fluid ? "100%" : dimensions.width,
         // Fixed-size units (e.g. 320×50 mobile-banner) must never exceed
         // the content box — the homepage gutter leaves ~272px at 320px
-        // viewports.
-        maxWidth: "100%",
+        // viewports. Fluid units (native-strip) cap at the preset width
+        // instead of reserving it.
+        maxWidth: fluid ? dimensions.width : "100%",
         height: dimensions.height,
       }}
       data-ad-client={ADSENSE_CLIENT}
@@ -560,9 +596,9 @@ export function AdSlot({
       <div
         className="relative mx-auto"
         style={{
-          width: dimensions.width,
+          width: fluid ? "100%" : dimensions.width,
           height: dimensions.height,
-          maxWidth: "100%",
+          maxWidth: fluid ? dimensions.width : "100%",
           minHeight: dimensions.height,
         }}
       >

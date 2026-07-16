@@ -29,8 +29,11 @@ export interface PlacementDef {
 }
 
 export const AD_PLACEMENTS: Record<PlacementName, PlacementDef> = {
-  // Homepage — leaderboard under the hero (404's latest-post__ad).
-  "home-below-hero": { desktop: "leaderboard", mobile: "mobile-banner" },
+  // Homepage — leaderboard under the hero (404's latest-post__ad). Mobile =
+  // 404-style full-width native strip (fluid × 64, capped ~720px), not a
+  // fixed 320×50 island. Go-live: create this slot's AdSense unit as
+  // RESPONSIVE horizontal, not fixed-size.
+  "home-below-hero": { desktop: "leaderboard", mobile: "native-strip" },
   // Race guide side panel (currently unmounted; re-wire on the race
   // detail rebuild).
   "race-detail-panel": { desktop: "mpu", mobile: "mobile-banner" },
