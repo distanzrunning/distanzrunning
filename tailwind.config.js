@@ -704,7 +704,10 @@ module.exports = {
         // THE site content column — masthead tiers, mega-menu, homepage
         // sections all share it (404's --global-max-width is 1280 too).
         // Change here, not per-component.
-        content: "1280px",
+        // Quartr-verbatim container model (user call 2026-07-16): cap =
+        // 1280px inner content + 2×16px (px-4) gutters; pair max-w-content
+        // with px-4, never px-6.
+        content: "calc(1280px + 2rem)",
         text: "720px", // Optimal reading width for articles
       },
       // ═══════════════════════════════════════════════════════════════════

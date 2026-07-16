@@ -79,7 +79,7 @@ export default async function SiteLayout({
         >
           {/* Content grid — the band, the footer below and the page
               sections above all share one left edge. */}
-          <div className="mx-auto w-full max-w-content px-6 py-12 lg:py-16">
+          <div className="mx-auto w-full max-w-content px-4 py-12 lg:py-16">
             <NewsletterSignup chrome="band" source="pre_footer" />
           </div>
         </section>

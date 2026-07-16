@@ -93,7 +93,7 @@ export default function Footer() {
       {/* Content grid — the icon + columns align with the newsletter
           band above and the page sections, not a narrower centred
           block (tried, read as adrift against the page edge). */}
-      <div className="mx-auto w-full max-w-content px-6 pb-16 pt-12 md:pb-24 lg:pt-16">
+      <div className="mx-auto w-full max-w-content px-4 pb-16 pt-12 md:pb-24 lg:pt-16">
         {/* Icon mark above the columns (Quartr's logomark slot),
             flush with the leftmost list's edge — doubles as the
             footer's home link now that the small lockup is gone. */}

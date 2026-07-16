@@ -154,13 +154,14 @@ So: borders = `var(--ds-gray-400)`, primary text = `var(--ds-gray-1000)`, subtle
 | `20` | 80 | Major section spacing |
 | `24` | 96 | Page section spacing |
 
-**Grid system**:
-
-| Variable | <960 px | ≥960 px |
-|---|---|---|
-| `--grid-gap` | 12 | 16 |
-| `--grid-gutter` (2× gap) | 24 | 32 |
-| `--grid-outside-gutter` | 24 | 32 |
+**Container model (Quartr-verbatim, user call 2026-07-16):** the page
+container is `mx-auto w-full max-w-content px-4` — `max-w-content` =
+`calc(1280px + 2rem)`, i.e. a true **1280px inner content column** with
+**constant 16px outside gutters** at every width. Never pair
+`max-w-content` with `px-6` (the old 24px-gutter model, retired
+2026-07-16); component-internal padding is unaffected. The homepage
+carousel arrows live OUTSIDE the content edge and reveal at
+`min-[1400px]` (recomputed for this geometry).
 
 Columns: 6 at ≥600 px, 12 at ≥960 px.
 

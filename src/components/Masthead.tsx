@@ -354,7 +354,7 @@ export default function Masthead({
               : "border-borderSubtle",
           )}
         >
-          <div className="mx-auto max-w-content px-6">
+          <div className="mx-auto max-w-content px-4">
           <div
             className={cn(
               "grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b-0 sm:border-b py-3",
@@ -486,7 +486,7 @@ export default function Masthead({
               if ((e.target as HTMLElement).closest("a")) setValue("");
             }}
           >
-            <div className="mx-auto max-w-content px-6">
+            <div className="mx-auto max-w-content px-4">
               {/* Persistent navbar bottom rule — stays under the links whether
                   the menu is open or closed; the panel then expands downward
                   below it with its own matching bottom border. */}
@@ -539,7 +539,7 @@ export default function Masthead({
                     {/* absolute: outgoing and incoming Content overlap in the
                         Viewport during a section switch. No padding here — the
                         panel carries its own py, and horizontal alignment comes
-                        from the viewport's max-w-content px-6 wrapper so the
+                        from the viewport's max-w-content px-4 wrapper so the
                         columns sit on the site grid. */}
                     <NavigationMenuPrimitive.Content className="absolute left-0 top-0 w-full">
                       <MegaMenuPanel
@@ -561,7 +561,7 @@ export default function Masthead({
                 no gap) so there's no dead zone between the row and the panel.
                 Full navbar width, centered. */}
             <div className="absolute left-0 right-0 top-full">
-              <div className="mx-auto max-w-content px-6">
+              <div className="mx-auto max-w-content px-4">
                 <NavigationMenuPrimitive.Viewport className={VIEWPORT_CLASS} />
               </div>
             </div>
@@ -577,7 +577,7 @@ export default function Masthead({
             ref={mobileNavRef}
             className="pointer-events-auto border-b border-borderSubtle bg-canvas outline-none sm:hidden"
           >
-            <div className="mx-auto flex max-w-content flex-col px-6 py-4">
+            <div className="mx-auto flex max-w-content flex-col px-4 py-4">
               <div className="flex flex-col">
                 <p className="mb-1 text-heading-14 text-textDefault">Stories</p>
                 {EDITORIAL_LINKS.map((item) => (

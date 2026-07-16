@@ -50,10 +50,13 @@ function AllArticlesButton({ className }: { className?: string }) {
 // both themes (over photos it depends on the pixels behind it).
 // ALWAYS visible while there are cards in that direction (disabled
 // direction fades out); hover = colour step-up only, no fill. Only
-// rendered from 1360px up, where the viewport gutter fits them —
+// rendered from 1400px up, where the viewport gutter fits them —
 // below that, wheel-step / drag / swipe / arrow keys carry the row.
+// Threshold recomputed for the 16px-gutter geometry (at 1360 the arrow
+// sits flush against the viewport edge; 1400 restores the ~20px
+// breathing room the original 1360 gave under the old 24px gutters).
 const ARROW_CLASS =
-  "hidden min-[1360px]:grid text-textSubtle transition-[color,opacity] duration-200 hover:bg-transparent hover:text-textDefault disabled:opacity-0 dark:hover:bg-transparent [&_svg]:size-8";
+  "hidden min-[1400px]:grid text-textSubtle transition-[color,opacity] duration-200 hover:bg-transparent hover:text-textDefault disabled:opacity-0 dark:hover:bg-transparent [&_svg]:size-8";
 
 // Vertical centre of the IMAGE band (not the whole card): the image
 // height is a pure function of the row width — card = (row − gaps) / n,
@@ -73,7 +76,7 @@ export default async function HomepageLatestNews() {
       // Tight homepage rhythm — sections sit close, separated by ink
       // rules. This one follows the full-bleed promo band, which does
       // the separating itself, so no rule here.
-      className="mx-auto w-full max-w-content px-6 py-10 lg:py-12"
+      className="mx-auto w-full max-w-content px-4 py-10 lg:py-12"
     >
       <Carousel
         opts={{ align: "start" }}

@@ -46,13 +46,16 @@ function AllRacesButton({ className }: { className?: string }) {
 }
 
 // Bare chevrons OUTSIDE the content edge, over the canvas (see the
-// Latest News notes — deterministic background, ≥1360px only; always
+// Latest News notes — deterministic background, ≥1400px only; always
 // visible while scrollable, hover = colour step-up, no fill). Unlike
 // Latest News (photo-centred cq maths), these centre on the WHOLE
 // card: the buttons keep the Carousel default top-1/2 translate
-// against the row, which is exactly card height.
+// against the row, which is exactly card height. Threshold recomputed
+// for the 16px-gutter geometry (at 1360 the arrow sits flush against
+// the viewport edge; 1400 restores the ~20px breathing room the
+// original 1360 gave under the old 24px gutters).
 const ARROW_CLASS =
-  "hidden min-[1360px]:grid text-textSubtle transition-[color,opacity] duration-200 hover:bg-transparent hover:text-textDefault disabled:opacity-0 dark:hover:bg-transparent [&_svg]:size-8";
+  "hidden min-[1400px]:grid text-textSubtle transition-[color,opacity] duration-200 hover:bg-transparent hover:text-textDefault disabled:opacity-0 dark:hover:bg-transparent [&_svg]:size-8";
 
 type UpcomingRace = {
   _id: string;
@@ -90,7 +93,7 @@ export default async function HomepageUpcomingRaces() {
       // Tight homepage rhythm — the Carousel wrapper carries the
       // section rule (DEFAULT, subtle grayscale hairline) at exact
       // content width, like Editor's Picks.
-      className="mx-auto w-full max-w-content px-6 pb-10 lg:pb-12"
+      className="mx-auto w-full max-w-content px-4 pb-10 lg:pb-12"
     >
       <Carousel
         opts={{ align: "start" }}

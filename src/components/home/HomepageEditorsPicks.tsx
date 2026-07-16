@@ -98,7 +98,7 @@ export default async function HomepageEditorsPicks() {
       // pb below / pt after the rule. (The old pb-48 scroll-room hack
       // is gone: the sticky main pick gets its travel from the
       // Upcoming Races section below.)
-      className="mx-auto w-full max-w-content px-6 pb-10 lg:pb-12"
+      className="mx-auto w-full max-w-content px-4 pb-10 lg:pb-12"
     >
       <div className="flex w-full flex-col gap-8 border-t border-borderSubtle pt-10 md:gap-10 lg:pt-12">
         {/* Header row — same anatomy as Latest News. */}
