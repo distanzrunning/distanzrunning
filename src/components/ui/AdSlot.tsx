@@ -32,8 +32,11 @@ export const SIZE_PRESETS: Record<AdSize, Dimensions> = {
   "half-page": { width: 300, height: 600 }, // 404-style sidebar unit
   "mobile-banner": { width: 320, height: 50 },
   // 404-style fluid native strip — width is the CAP; the slot renders w-full
-  // up to it (see the fluid handling below). At AdSense go-live this slot
-  // wants a RESPONSIVE horizontal unit, not a fixed-size one.
+  // up to it (see the fluid handling below). Live = official AdSense
+  // responsive horizontal unit (data-full-width-responsive), dynamically
+  // served — the height reserve is a MIN (small CLS possible when a taller
+  // ad serves; accepted tradeoff, user call 2026-07-16). Preview keeps the
+  // fixed 64px house strip.
   "native-strip": { width: 720, height: 64 },
   square: { width: 300, height: 300 },
 };
@@ -538,18 +541,29 @@ export function AdSlot({
     <ins
       ref={insRef}
       className="adsbygoogle"
-      style={{
-        display: "block",
-        width: fluid ? "100%" : dimensions.width,
-        // Fixed-size units (e.g. 320×50 mobile-banner) must never exceed
-        // the content box — the homepage gutter leaves ~272px at 320px
-        // viewports. Fluid units (native-strip) cap at the preset width
-        // instead of reserving it.
-        maxWidth: fluid ? dimensions.width : "100%",
-        height: dimensions.height,
-      }}
+      style={
+        fluid
+          ? // Responsive unit — fluid width up to the preset cap, NO height:
+            // AdSense sizes the served creative itself.
+            { display: "block", width: "100%", maxWidth: dimensions.width }
+          : {
+              display: "block",
+              width: dimensions.width,
+              // Fixed-size units (e.g. 320×50 mobile-banner) must never exceed
+              // the content box — the homepage gutter leaves ~272px at 320px
+              // viewports.
+              maxWidth: "100%",
+              height: dimensions.height,
+            }
+      }
       data-ad-client={ADSENSE_CLIENT}
       data-ad-slot={slot}
+      {...(fluid
+        ? {
+            "data-ad-format": "horizontal",
+            "data-full-width-responsive": "true",
+          }
+        : {})}
     />
   );
 
@@ -597,7 +611,11 @@ export function AdSlot({
         className="relative mx-auto"
         style={{
           width: fluid ? "100%" : dimensions.width,
-          height: dimensions.height,
+          // Fluid live unit: the responsive ad sizes itself, so the reserve
+          // is a floor (minHeight), not a fixed box. Preview/house keeps the
+          // fixed height — the house strip is exactly the preset height.
+          height:
+            fluid && !mockAd && !showFallback ? "auto" : dimensions.height,
           maxWidth: fluid ? dimensions.width : "100%",
           minHeight: dimensions.height,
         }}
