@@ -44,10 +44,12 @@ export default async function HomepageHero() {
 
   return (
     <section className="mx-auto w-full max-w-content px-4">
-      {/* Hero top padding on Quartr's scale (48/64/144 — the top-of-page
-          breathing room, user call 2026-07-16); bottom keeps the site
-          rhythm. */}
-      <article className="group relative flex flex-col-reverse gap-8 pt-12 md:pt-16 lg:pt-36 pb-10 lg:pb-16 lg:flex-row lg:items-center lg:gap-12">
+      {/* Hero top padding tuned so the TOTAL viewport-top→hero distance
+          matches Quartr's (their 56px header + 48/64/144 padding =
+          104/…/200 totals; our taller masthead means 32/48/80 here lands
+          the same optical position — user call 2026-07-16). Bottom
+          (pb-10 lg:pb-16) keeps the site rhythm. */}
+      <article className="group relative flex flex-col-reverse gap-8 pt-8 md:pt-12 lg:pt-20 pb-10 lg:pb-16 lg:flex-row lg:items-center lg:gap-12">
         {/* Text column */}
         <div className="flex flex-col justify-center gap-4 lg:basis-5/12">
           {/* Meta line — category · date, the ArticleCard grammar one
