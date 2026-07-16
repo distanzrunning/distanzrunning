@@ -339,16 +339,25 @@ export default function Masthead({
           scrolls visibly through it AND stays clickable (a transparent shell
           would still swallow clicks over the strip). */}
       <header ref={headerRef} className="pointer-events-none sticky top-0 z-50">
-        {/* top tier — divider spans the content (button to button). When the
-            nav is condensed this rule is the header's bottom edge, and it
-            goes transparent while an inverted band passes beneath (the
-            colour-aware border: solid block over contrast, inset rule over
+        {/* top tier — divider is full-bleed on mobile (404's header model),
+            inset button-to-button from sm. When the nav is condensed this
+            rule is the header's bottom edge, and it goes transparent while
+            an inverted band passes beneath (the colour-aware border, applied
+            at both breakpoints: solid block over contrast, inset rule over
             matching canvas). */}
-        <div className="pointer-events-auto bg-canvas">
+        <div
+          className={cn(
+            "pointer-events-auto bg-canvas border-b sm:border-b-0",
+            "transition-colors duration-200",
+            navCondensed && overInverted
+              ? "border-transparent"
+              : "border-borderSubtle",
+          )}
+        >
           <div className="mx-auto max-w-content px-6">
           <div
             className={cn(
-              "grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b py-3",
+              "grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b-0 sm:border-b py-3",
               "transition-colors duration-200",
               navCondensed && overInverted
                 ? "border-transparent"
