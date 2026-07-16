@@ -45,6 +45,32 @@ function HouseCreativeFrame({
     </span>
   );
 
+  // 404-style native strip (fluid × 64) — full-width row; whole strip is
+  // the link; the CTA hides below sm exactly as 404 hides theirs.
+  if (height <= 72 && width >= 600) {
+    return (
+      <a
+        href={href}
+        className="flex h-full w-full items-center justify-between gap-4 rounded-sm bg-[var(--ds-gray-100)] px-4 no-underline sm:px-6"
+      >
+        <div className="flex min-w-0 flex-col items-start gap-0.5 text-left">
+          {kickerEl}
+          <span className="truncate text-[13px] font-medium text-textDefault">
+            {line}
+          </span>
+        </div>
+        <span
+          className="hidden h-9 shrink-0 items-center gap-1 rounded-sm px-3.5 font-sans text-[13px] font-semibold sm:inline-flex"
+          style={ctaStyle}
+        >
+          {cta}
+          <ChevronRight className="h-3.5 w-3.5" />
+        </span>
+        <ChevronRight className="h-4 w-4 shrink-0 text-textSubtle sm:hidden" />
+      </a>
+    );
+  }
+
   // Very small mobile banner (≤ 60px tall) — single inline line.
   if (height <= 60) {
     return (
