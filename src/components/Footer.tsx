@@ -105,9 +105,9 @@ export default function Footer() {
           <LogoIcon className="h-6 w-6" />
         </Link>
 
-        {/* Link grid — 2-col packing on mobile, five equal columns
-            on md+ (Quartr's columns row). */}
-        <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-5 md:gap-10 lg:gap-16">
+        {/* Link grid — single column on mobile (Quartr's stacked
+            footer groups), five equal columns from md. */}
+        <div className="grid grid-cols-1 gap-y-10 md:grid-cols-5 md:gap-10 lg:gap-16">
           <FooterColumn heading="Stories" items={storiesLinks} />
           <FooterColumn heading="Gear" items={gearColumnLinks} />
           <FooterColumn heading="Races" items={racesColumnLinks} />
@@ -167,7 +167,7 @@ function FooterColumn({
 
 function SocialColumn() {
   return (
-    <div className="space-y-4 col-span-2 md:col-span-1">
+    <div className="space-y-4">
       <h2 className="text-heading-14 text-textDefault">Social</h2>
       <ul className="flex flex-col gap-y-1">
         {socialLinks.map(({ label, href }) => (
