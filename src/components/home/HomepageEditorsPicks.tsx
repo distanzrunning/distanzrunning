@@ -135,16 +135,29 @@ export default async function HomepageEditorsPicks() {
           {/* md:pb-10 is Quartr's — it stretches the grid below the rail,
               buying the sticky main pick extra travel. */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-4 md:pb-10 lg:grid-cols-1 lg:gap-6">
-            {rail.map((pick) => (
-              <ArticleCard
+            {/* Quartr's mobile rail anatomy — hairline (DS Default rule,
+                border-borderSubtle) mid-gap between list rows, none after
+                the last, hidden from md up where the rail becomes cards;
+                divider gated by index in JS because stacked
+                `last-of-type:before:` variants mis-compile here. */}
+            {rail.map((pick, i) => (
+              <div
                 key={pick._id}
-                size="md"
-                chrome="plain"
-                imageRatio="16/8.75"
-                mobileLayout="row"
-                imageSizes="(max-width: 768px) 144px, (max-width: 1024px) 33vw, 300px"
-                {...cardProps(pick, 720, 394)}
-              />
+                className={`relative${
+                  i < rail.length - 1
+                    ? " before:absolute before:-bottom-3 before:left-0 before:right-0 before:border-b before:border-borderSubtle before:content-[''] md:before:hidden"
+                    : ""
+                }`}
+              >
+                <ArticleCard
+                  size="md"
+                  chrome="plain"
+                  imageRatio="16/8.75"
+                  mobileLayout="row"
+                  imageSizes="(max-width: 768px) 144px, (max-width: 1024px) 33vw, 300px"
+                  {...cardProps(pick, 720, 394)}
+                />
+              </div>
             ))}
           </div>
         </div>
