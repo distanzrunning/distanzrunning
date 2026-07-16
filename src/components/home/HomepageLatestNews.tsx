@@ -31,13 +31,14 @@ import { formatDisplayDate } from "@/lib/dates";
 
 const ALL_ARTICLES_HREF = "/articles";
 
-function AllArticlesButton() {
+function AllArticlesButton({ className }: { className?: string }) {
   return (
     <ButtonLink
       href={ALL_ARTICLES_HREF}
       variant="tertiary"
       size="medium"
       suffixIcon={<ChevronRight />}
+      className={className}
     >
       All articles
     </ButtonLink>
@@ -108,7 +109,7 @@ export default async function HomepageLatestNews() {
               The latest stories from road, track, and trail.
             </p>
           </div>
-          <div className="shrink-0">
+          <div className="hidden shrink-0 md:block">
             <AllArticlesButton />
           </div>
         </div>
@@ -185,6 +186,12 @@ export default async function HomepageLatestNews() {
             )}
           />
         </CarouselWheelStep>
+
+        {/* Mobile view-all — full-width row below the content (user call
+            2026-07-16; header keeps it from md up). */}
+        <div className="md:hidden">
+          <AllArticlesButton className="w-full" />
+        </div>
       </Carousel>
     </section>
   );

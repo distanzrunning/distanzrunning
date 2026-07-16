@@ -31,13 +31,14 @@ import { urlFor } from "@/sanity/lib/image";
 
 const ALL_RACES_HREF = "/races";
 
-function AllRacesButton() {
+function AllRacesButton({ className }: { className?: string }) {
   return (
     <ButtonLink
       href={ALL_RACES_HREF}
       variant="tertiary"
       size="medium"
       suffixIcon={<ChevronRight />}
+      className={className}
     >
       All races
     </ButtonLink>
@@ -111,7 +112,7 @@ export default async function HomepageUpcomingRaces() {
               Interactive guides for the next races on the calendar.
             </p>
           </div>
-          <div className="shrink-0">
+          <div className="hidden shrink-0 md:block">
             <AllRacesButton />
           </div>
         </div>
@@ -162,6 +163,12 @@ export default async function HomepageUpcomingRaces() {
             className={cn("right-0 translate-x-[calc(100%+8px)]", ARROW_CLASS)}
           />
         </CarouselWheelStep>
+
+        {/* Mobile view-all — full-width row below the content (user call
+            2026-07-16; header keeps it from md up). */}
+        <div className="md:hidden">
+          <AllRacesButton className="w-full" />
+        </div>
       </Carousel>
     </section>
   );

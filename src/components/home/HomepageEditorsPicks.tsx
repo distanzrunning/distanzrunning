@@ -36,13 +36,14 @@ interface Pick {
   href: string;
 }
 
-function SeeAllButton() {
+function SeeAllButton({ className }: { className?: string }) {
   return (
     <ButtonLink
       href="/articles"
       variant="tertiary"
       size="medium"
       suffixIcon={<ChevronRight />}
+      className={className}
     >
       All articles
     </ButtonLink>
@@ -112,7 +113,7 @@ export default async function HomepageEditorsPicks() {
               Hand-picked stories from our editors.
             </p>
           </div>
-          <div className="shrink-0">
+          <div className="hidden shrink-0 md:block">
             <SeeAllButton />
           </div>
         </div>
@@ -146,6 +147,12 @@ export default async function HomepageEditorsPicks() {
               />
             ))}
           </div>
+        </div>
+
+        {/* Mobile view-all — full-width row below the content (user call
+            2026-07-16; header keeps it from md up). */}
+        <div className="md:hidden">
+          <SeeAllButton className="w-full" />
         </div>
       </div>
     </section>
