@@ -3,7 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
-import { Search, Moon, Sun, Menu, X, ChevronDown } from "lucide-react";
+import {
+  Search,
+  Moon,
+  Sun,
+  Menu,
+  X,
+  ChevronDown,
+  ArrowUpRight,
+} from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
@@ -24,6 +32,7 @@ import {
   type FeaturedProduct,
   type FeaturedRace,
 } from "@/components/ui/SiteNavigationMenu";
+import { socialLinks } from "@/lib/social-links";
 import { cn } from "@/lib/utils";
 
 // Distanz masthead — our take on the 404 Media two-tier header:
@@ -681,8 +690,13 @@ export default function Masthead({
                   Subscribe
                 </button>
               </div>
+              {/* One flat Discover group — editorial disciplines then the
+                  mega-menu sections, the whole nav taxonomy in a single
+                  list (404 keeps its menu to one Navigation list too). */}
               <div className="mt-6 flex flex-col">
-                <p className="mb-1 text-heading-14 text-textDefault">Stories</p>
+                <p className="mb-1 text-heading-14 text-textDefault">
+                  Discover
+                </p>
                 {EDITORIAL_LINKS.map((item) => (
                   <Link
                     key={item.href}
@@ -693,9 +707,6 @@ export default function Masthead({
                     {item.label}
                   </Link>
                 ))}
-              </div>
-              <div className="mt-6 flex flex-col">
-                <p className="mb-1 text-heading-14 text-textDefault">Browse</p>
                 {MEGA_SECTIONS.map((section) => (
                   <Link
                     key={section.href}
@@ -705,6 +716,32 @@ export default function Masthead({
                   >
                     {section.label}
                   </Link>
+                ))}
+              </div>
+              {/* Social profiles — mobile menu only (the desktop chrome
+                  leaves socials to the Footer). Same shared list and
+                  external-link anatomy as the Footer's Social column:
+                  trailing arrow-up-right, 2px hover nudge. */}
+              <div className="mt-6 flex flex-col">
+                <p className="mb-1 text-heading-14 text-textDefault">
+                  Follow us
+                </p>
+                {socialLinks.map(({ label, href }) => (
+                  <a
+                    key={href}
+                    href={href}
+                    rel="noopener"
+                    target="_blank"
+                    className={cn(MOBILE_LINK_CLASS, "group gap-x-1")}
+                  >
+                    {label}
+                    <span
+                      aria-hidden
+                      className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    >
+                      <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
+                    </span>
+                  </a>
                 ))}
               </div>
             </div>

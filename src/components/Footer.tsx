@@ -19,6 +19,7 @@ import { ArrowUpRight } from "lucide-react";
 import FooterCookiesButton from "@/components/FooterCookiesButton";
 import Logo from "@/components/ui/Logo";
 import LogoIcon from "@/components/ui/LogoIcon";
+import { socialLinks } from "@/lib/social-links";
 import { cn } from "@/lib/utils";
 
 // ============================================================================
@@ -63,17 +64,8 @@ const aboutLinks: ReadonlyArray<FooterItem> = [
   { kind: "cookies", label: "Cookies" },
 ];
 
-type SocialLink = {
-  label: string;
-  href: string;
-};
-
-const socialLinks: ReadonlyArray<SocialLink> = [
-  { label: "Instagram", href: "https://instagram.com/distanzrunning" },
-  { label: "X (Twitter)", href: "https://x.com/distanzrunning" },
-  { label: "Strava", href: "https://strava.com/clubs/distanzrunning" },
-  { label: "LinkedIn", href: "https://linkedin.com/company/distanzrunning" },
-];
+// Social profiles come from the shared src/lib/social-links.ts — the
+// mobile menu's "Follow us" group renders the same list.
 
 // gap-x-0.5 (2px) is v0's link-internal spacing — invisible on
 // text-only links, correct if one ever gains a trailing glyph.
