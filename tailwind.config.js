@@ -292,6 +292,23 @@ module.exports = {
           "0%": { opacity: "1", transform: "translateY(0) scaleY(1)" },
           "100%": { opacity: "0", transform: "translateY(-20px) scaleY(0.95)" },
         },
+        menuSheetIn: {
+          "0%": { opacity: "0", transform: "scale(0.95)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        menuSheetOut: {
+          "0%": { opacity: "1", transform: "scale(1)" },
+          "100%": { opacity: "0", transform: "scale(0.95)" },
+        },
+        rotate: {
+          to: {
+            transform: "rotate(90deg)",
+            content: "var(--tw-content)",
+          },
+        },
+        flip: {
+          to: { transform: "rotate(1turn)" },
+        },
         megaMenuOpen: {
           "0%": { opacity: "0", transform: "scaleY(0)" },
           "100%": { opacity: "1", transform: "scaleY(1)" },
@@ -330,6 +347,19 @@ module.exports = {
           "megaMenuOpen 300ms cubic-bezier(.16,1,.3,1) forwards",
         "mega-menu-close":
           "megaMenuClose 300ms cubic-bezier(.16,1,.3,1) forwards",
+        // Mobile menu sheet — Quartr's dialog motion verbatim: scale .95 ↔ 1
+        // + fade, 350ms in / 200ms out on cubic-bezier(.22,1,.36,1); the
+        // transform-origin (top-right, from the hamburger corner) lives on
+        // the element.
+        "menu-sheet-in":
+          "menuSheetIn 350ms cubic-bezier(.22,1,.36,1) both",
+        "menu-sheet-out":
+          "menuSheetOut 200ms cubic-bezier(.22,1,.36,1) both",
+        // ExploreButton's conic spinner pair (moved from a later duplicate
+        // animation/keyframes block — duplicate object keys silently
+        // overwrote THIS whole block, disabling every animate-* above).
+        rotate: "rotate 3s linear infinite both",
+        flip: "flip 6s steps(2) infinite",
       },
       textColor: {
         // Semantic text colors (dynamic via CSS vars)
@@ -750,21 +780,6 @@ module.exports = {
         "elevated-1": "var(--shadow-elevated1)",
         "elevated-2": "var(--shadow-elevated2)",
         "elevated-3": "var(--shadow-elevated3)",
-      },
-      animation: {
-        rotate: "rotate 3s linear infinite both",
-        flip: "flip 6s steps(2) infinite",
-      },
-      keyframes: {
-        rotate: {
-          to: {
-            transform: "rotate(90deg)",
-            content: "var(--tw-content)",
-          },
-        },
-        flip: {
-          to: { transform: "rotate(1turn)" },
-        },
       },
     },
   },

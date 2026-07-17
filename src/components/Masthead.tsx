@@ -59,7 +59,6 @@ export interface MastheadProps {
   featuredRace: FeaturedRace;
 }
 
-
 function buildFeaturedFromProduct(
   item: FeaturedProduct,
   section: "shoes" | "gear" | "nutrition",
@@ -279,9 +278,27 @@ export default function Masthead({
   // shouldn't receive focus while it can't be seen.
   const mobileTriggerRef = useRef<HTMLButtonElement>(null);
   const mobileNavRef = useRef<HTMLElement>(null);
-  // The sheet's top edge = the header's live bottom edge (measured, not a
-  // constant: the announcement bar above the header offsets it at page top).
+  // The sheet content's top edge = the header's live bottom edge (measured,
+  // not a constant: the announcement bar above the header offsets it at
+  // page top). The sheet itself covers the full viewport.
   const [mobileTop, setMobileTop] = useState(0);
+
+  // Exit animation (Quartr's ending-style): the sheet stays mounted through
+  // the 200ms out animation. Driven by the open→closed transition so every
+  // close path (✕, Escape, link click, route change, sm crossing) animates
+  // without touching each call site.
+  const [mobileClosing, setMobileClosing] = useState(false);
+  const prevMobileOpenRef = useRef(false);
+  useEffect(() => {
+    if (prevMobileOpenRef.current && !mobileOpen) setMobileClosing(true);
+    prevMobileOpenRef.current = mobileOpen;
+    if (mobileOpen) setMobileClosing(false);
+  }, [mobileOpen]);
+  useEffect(() => {
+    if (!mobileClosing) return;
+    const t = setTimeout(() => setMobileClosing(false), 200);
+    return () => clearTimeout(t);
+  }, [mobileClosing]);
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -306,7 +323,9 @@ export default function Masthead({
         header.querySelectorAll<HTMLElement>(
           'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
         ),
-      ).filter((el) => el.getClientRects().length > 0);
+      ).filter(
+        (el) => el.getClientRects().length > 0 && !el.closest("[inert]"),
+      );
       if (focusables.length === 0) return;
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
@@ -427,98 +446,103 @@ export default function Masthead({
           )}
         >
           <div className="mx-auto max-w-content px-4">
-          <div
-            className={cn(
-              "grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b-0 sm:border-b py-3",
-              "transition-colors duration-200",
-              navCondensed && overInverted
-                ? "border-transparent"
-                : "border-borderSubtle",
-            )}
-          >
-            {/* left — search + single theme toggle */}
-            <div className="flex items-center gap-1">
-              <Button
-                shape="square"
-                size="large"
-                variant="tertiary"
-                onClick={openSearch}
-                aria-label="Search"
-                title="Search (⌘K)"
+            <div
+              className={cn(
+                "grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b-0 sm:border-b py-3",
+                "transition-colors duration-200",
+                navCondensed && overInverted
+                  ? "border-transparent"
+                  : "border-borderSubtle",
+              )}
+            >
+              {/* left — search + single theme toggle. inert while the mobile
+                sheet covers them: out of the tab order and AT tree, since
+                only the wordmark and the ✕ stay visible over the sheet. */}
+              <div
+                className="flex items-center gap-1"
+                inert={mobileOpen || undefined}
               >
-                <Search className="h-5 w-5" />
-              </Button>
-              <Button
-                shape="square"
-                size="large"
-                variant="tertiary"
-                onClick={toggleDarkMode}
-                aria-label={
-                  isDark ? "Switch to light theme" : "Switch to dark theme"
-                }
-                title={isDark ? "Light theme" : "Dark theme"}
-              >
-                {isDark ? (
-                  <Sun className="h-5 w-5" />
-                ) : (
-                  <Moon className="h-5 w-5" />
-                )}
-              </Button>
-            </div>
+                <Button
+                  shape="square"
+                  size="large"
+                  variant="tertiary"
+                  onClick={openSearch}
+                  aria-label="Search"
+                  title="Search (⌘K)"
+                >
+                  <Search className="h-5 w-5" />
+                </Button>
+                <Button
+                  shape="square"
+                  size="large"
+                  variant="tertiary"
+                  onClick={toggleDarkMode}
+                  aria-label={
+                    isDark ? "Switch to light theme" : "Switch to dark theme"
+                  }
+                  title={isDark ? "Light theme" : "Dark theme"}
+                >
+                  {isDark ? (
+                    <Sun className="h-5 w-5" />
+                  ) : (
+                    <Moon className="h-5 w-5" />
+                  )}
+                </Button>
+              </div>
 
-            {/* center — wordmark. Inline SVG (not <img>): it ships in the
+              {/* center — wordmark. Inline SVG (not <img>): it ships in the
                 SSR HTML so it paints with the first frame — no network
                 fetch, no pop-in flicker. currentColor + text-textDefault
                 is the brand ink and flips with the theme (no second
                 asset, no dark: image swap). */}
-            <Link
-              href="/"
-              aria-label="Distanz — home"
-              className="flex items-center justify-center text-textDefault"
-            >
-              <Wordmark className="h-12 w-auto" zHover="tilt" />
-            </Link>
+              <Link
+                href="/"
+                aria-label="Distanz — home"
+                className="relative z-[2] flex items-center justify-center text-textDefault"
+              >
+                <Wordmark className="h-12 w-auto" zHover="tilt" />
+              </Link>
 
-            {/* right — auth + hamburger */}
-            <div className="flex items-center justify-end gap-2">
-              <div className="hidden items-center gap-2 sm:flex">
-                <Button variant="tertiary" size="large">
-                  Sign in
-                </Button>
-                <Button variant="default" size="large">
-                  Subscribe
+              {/* right — auth + hamburger */}
+              <div className="flex items-center justify-end gap-2">
+                <div className="hidden items-center gap-2 sm:flex">
+                  <Button variant="tertiary" size="large">
+                    Sign in
+                  </Button>
+                  <Button variant="default" size="large">
+                    Subscribe
+                  </Button>
+                </div>
+                <Button
+                  ref={mobileTriggerRef}
+                  shape="square"
+                  size="large"
+                  variant="tertiary"
+                  onClick={() => {
+                    // Measure in the same event so the sheet's first frame
+                    // already sits at the header edge (the effect's measure
+                    // runs after paint).
+                    if (!mobileOpen) {
+                      const header = headerRef.current;
+                      if (header) {
+                        setMobileTop(header.getBoundingClientRect().bottom);
+                      }
+                    }
+                    setMobileOpen(!mobileOpen);
+                  }}
+                  className="relative z-[2] sm:hidden"
+                  aria-label={mobileOpen ? "Close menu" : "Open menu"}
+                  aria-expanded={mobileOpen}
+                >
+                  {mobileOpen ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <Menu className="h-5 w-5" />
+                  )}
                 </Button>
               </div>
-              <Button
-                ref={mobileTriggerRef}
-                shape="square"
-                size="large"
-                variant="tertiary"
-                onClick={() => {
-                  // Measure in the same event so the sheet's first frame
-                  // already sits at the header edge (the effect's measure
-                  // runs after paint).
-                  if (!mobileOpen) {
-                    const header = headerRef.current;
-                    if (header) {
-                      setMobileTop(header.getBoundingClientRect().bottom);
-                    }
-                  }
-                  setMobileOpen(!mobileOpen);
-                }}
-                className="sm:hidden"
-                aria-label={mobileOpen ? "Close menu" : "Open menu"}
-                aria-expanded={mobileOpen}
-              >
-                {mobileOpen ? (
-                  <X className="h-5 w-5" />
-                ) : (
-                  <Menu className="h-5 w-5" />
-                )}
-              </Button>
             </div>
           </div>
-        </div>
         </div>
 
         {/* bottom tier — nav (desktop). The row lives in a CONSTANT-HEIGHT
@@ -531,218 +555,243 @@ export default function Masthead({
             wire them together. Hidden on mobile — the hamburger menu
             handles small screens. */}
         <div className="pointer-events-none relative hidden h-10 sm:block">
-        <NavigationMenuPrimitive.Root
-          aria-label="Primary"
-          delayDuration={0}
-          skipDelayDuration={250}
-          value={value}
-          onValueChange={(next) => {
-            // Honor open requests immediately; suppress close requests while
-            // the cursor is still in the bridge (the bridge's onPointerLeave
-            // is the sole close trigger for pointer users).
-            if (next !== "" || !cursorInBridgeRef.current) setValue(next);
-          }}
-          className="pointer-events-auto absolute inset-x-0 top-0 bg-canvas"
-        >
-          {/* Bridge wrapper — spans the trigger row + the flush panel beneath
+          <NavigationMenuPrimitive.Root
+            aria-label="Primary"
+            delayDuration={0}
+            skipDelayDuration={250}
+            value={value}
+            onValueChange={(next) => {
+              // Honor open requests immediately; suppress close requests while
+              // the cursor is still in the bridge (the bridge's onPointerLeave
+              // is the sole close trigger for pointer users).
+              if (next !== "" || !cursorInBridgeRef.current) setValue(next);
+            }}
+            className="pointer-events-auto absolute inset-x-0 top-0 bg-canvas"
+          >
+            {/* Bridge wrapper — spans the trigger row + the flush panel beneath
               it so the cursor never leaves the "menu" while traversing from a
               trigger down into its panel. */}
-          <div
-            className="group/menu"
-            data-state={isOpen ? "open" : "closed"}
-            onPointerEnter={() => {
-              cursorInBridgeRef.current = true;
-            }}
-            onPointerLeave={() => {
-              cursorInBridgeRef.current = false;
-              setValue("");
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") setValue("");
-            }}
-            onClick={(e) => {
-              // Close on any link activation inside the panel. Radix only
-              // auto-dismisses its own NavigationMenu.Link elements — the
-              // ArticleCard's internal links (title overlay, category kicker)
-              // aren't wrapped, and a soft nav would otherwise leave the
-              // panel hanging open on the next page.
-              if ((e.target as HTMLElement).closest("a")) setValue("");
-            }}
-          >
-            <div data-masthead-chrome className="mx-auto max-w-content px-4">
-              {/* Persistent navbar bottom rule — stays under the links whether
+            <div
+              className="group/menu"
+              data-state={isOpen ? "open" : "closed"}
+              onPointerEnter={() => {
+                cursorInBridgeRef.current = true;
+              }}
+              onPointerLeave={() => {
+                cursorInBridgeRef.current = false;
+                setValue("");
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setValue("");
+              }}
+              onClick={(e) => {
+                // Close on any link activation inside the panel. Radix only
+                // auto-dismisses its own NavigationMenu.Link elements — the
+                // ArticleCard's internal links (title overlay, category kicker)
+                // aren't wrapped, and a soft nav would otherwise leave the
+                // panel hanging open on the next page.
+                if ((e.target as HTMLElement).closest("a")) setValue("");
+              }}
+            >
+              <div data-masthead-chrome className="mx-auto max-w-content px-4">
+                {/* Persistent navbar bottom rule — stays under the links whether
                   the menu is open or closed; the panel then expands downward
                   below it with its own matching bottom border. */}
-              <NavigationMenuPrimitive.List
-                className={cn(
-                  "flex items-stretch justify-center gap-1 overflow-hidden border-b",
-                  // 404's .is-scrolled collapse: height → 0 + border off,
-                  // eased. visibility rides the same transition (interpolated
-                  // as visible until the end), so the links stay drawn while
-                  // the row folds, then leave the tab order once hidden.
-                  "transition-[height,visibility] duration-200 ease-out motion-reduce:transition-none",
-                  navCondensed
-                    ? "invisible h-0 border-transparent"
-                    : "h-10 border-borderSubtle",
-                )}
-              >
-                {/* Editorial disciplines — plain links, no panel. Entering one
+                <NavigationMenuPrimitive.List
+                  className={cn(
+                    "flex items-stretch justify-center gap-1 overflow-hidden border-b",
+                    // 404's .is-scrolled collapse: height → 0 + border off,
+                    // eased. visibility rides the same transition (interpolated
+                    // as visible until the end), so the links stay drawn while
+                    // the row folds, then leave the tab order once hidden.
+                    "transition-[height,visibility] duration-200 ease-out motion-reduce:transition-none",
+                    navCondensed
+                      ? "invisible h-0 border-transparent"
+                      : "h-10 border-borderSubtle",
+                  )}
+                >
+                  {/* Editorial disciplines — plain links, no panel. Entering one
                     closes any open mega-menu: the bridge suppresses Radix's
                     close while the cursor is still in the row, so a plain link
                     (which has no Radix value to switch to) would otherwise leave
                     the previous trigger stuck open. */}
-                {EDITORIAL_LINKS.map((item) => (
-                  <NavigationMenuPrimitive.Item key={item.href} className="flex">
-                    <NavigationMenuPrimitive.Link asChild>
-                      <Link
-                        href={item.href}
-                        className={LINK_CLASS}
-                        onPointerEnter={() => setValue("")}
-                      >
-                        {item.label}
-                      </Link>
-                    </NavigationMenuPrimitive.Link>
-                  </NavigationMenuPrimitive.Item>
-                ))}
-
-                {/* Product + races — mega-menu triggers. */}
-                {MEGA_SECTIONS.map((section) => (
-                  <NavigationMenuPrimitive.Item
-                    key={section.key}
-                    value={section.key}
-                    className="flex"
-                  >
-                    <NavigationMenuPrimitive.Trigger
-                      data-nav-trigger
-                      className={TRIGGER_CLASS}
+                  {EDITORIAL_LINKS.map((item) => (
+                    <NavigationMenuPrimitive.Item
+                      key={item.href}
+                      className="flex"
                     >
-                      {section.label}
-                      <ChevronDown className={CHEVRON_CLASS} aria-hidden />
-                    </NavigationMenuPrimitive.Trigger>
-                    {/* absolute: outgoing and incoming Content overlap in the
+                      <NavigationMenuPrimitive.Link asChild>
+                        <Link
+                          href={item.href}
+                          className={LINK_CLASS}
+                          onPointerEnter={() => setValue("")}
+                        >
+                          {item.label}
+                        </Link>
+                      </NavigationMenuPrimitive.Link>
+                    </NavigationMenuPrimitive.Item>
+                  ))}
+
+                  {/* Product + races — mega-menu triggers. */}
+                  {MEGA_SECTIONS.map((section) => (
+                    <NavigationMenuPrimitive.Item
+                      key={section.key}
+                      value={section.key}
+                      className="flex"
+                    >
+                      <NavigationMenuPrimitive.Trigger
+                        data-nav-trigger
+                        className={TRIGGER_CLASS}
+                      >
+                        {section.label}
+                        <ChevronDown className={CHEVRON_CLASS} aria-hidden />
+                      </NavigationMenuPrimitive.Trigger>
+                      {/* absolute: outgoing and incoming Content overlap in the
                         Viewport during a section switch. No padding here — the
                         panel carries its own py, and horizontal alignment comes
                         from the viewport's max-w-content px-4 wrapper so the
                         columns sit on the site grid. */}
-                    <NavigationMenuPrimitive.Content className="absolute left-0 top-0 w-full">
-                      <MegaMenuPanel
-                        sectionKey={section.key}
-                        heading={section.heading}
-                        tagline={section.tagline}
-                        ctaLabel={section.ctaLabel}
-                        ctaHref={section.ctaHref}
-                        links={section.links}
-                        featured={featuredBySection[section.key]}
-                      />
-                    </NavigationMenuPrimitive.Content>
-                  </NavigationMenuPrimitive.Item>
-                ))}
-              </NavigationMenuPrimitive.List>
-            </div>
+                      <NavigationMenuPrimitive.Content className="absolute left-0 top-0 w-full">
+                        <MegaMenuPanel
+                          sectionKey={section.key}
+                          heading={section.heading}
+                          tagline={section.tagline}
+                          ctaLabel={section.ctaLabel}
+                          ctaHref={section.ctaHref}
+                          links={section.links}
+                          featured={featuredBySection[section.key]}
+                        />
+                      </NavigationMenuPrimitive.Content>
+                    </NavigationMenuPrimitive.Item>
+                  ))}
+                </NavigationMenuPrimitive.List>
+              </div>
 
-            {/* Viewport drop — flush below the bottom-tier border (top-full,
+              {/* Viewport drop — flush below the bottom-tier border (top-full,
                 no gap) so there's no dead zone between the row and the panel.
                 Full navbar width, centered. */}
-            <div className="absolute left-0 right-0 top-full">
-              <div className="mx-auto max-w-content px-4">
-                <NavigationMenuPrimitive.Viewport className={VIEWPORT_CLASS} />
+              <div className="absolute left-0 right-0 top-full">
+                <div className="mx-auto max-w-content px-4">
+                  <NavigationMenuPrimitive.Viewport
+                    className={VIEWPORT_CLASS}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </NavigationMenuPrimitive.Root>
+          </NavigationMenuPrimitive.Root>
         </div>
 
-        {/* mobile menu — Quartr's overlay model: a fixed bg-canvas sheet
-            from the header's bottom edge (measured — see mobileTop) to the
-            viewport bottom, scrolling internally over the locked page.
+        {/* mobile menu — Quartr's full-page dialog verbatim: fixed inset-0
+            OVER the header (z-[1] within the header's stacking context;
+            the wordmark and the hamburger/✕ carry z-[2] so only they stay
+            visible — the covered left controls go inert). Motion is
+            Quartr's exactly: scale .95 ↔ 1 + fade from origin-top-right
+            (the hamburger corner), 350ms in / 200ms out on
+            cubic-bezier(.22,1,.36,1); the sheet stays mounted through the
+            exit (mobileClosing). Content scrolls in an inner region inset
+            below the header line (their top-[var(--header-height)] —
+            ours is measured, see mobileTop), over the locked page.
             `fixed` works from inside the sticky header because sticky
-            doesn't create a containing block for fixed descendants. The
-            top tier's full-bleed border-b is the seam above the sheet
-            (404's header rule). Entrance reuses the mega-menu's
-            animate-nav-content-in so both menus share one motion register.
-            bg-canvas + pointer-events are its own (the header shell is
-            transparent + inert). */}
-        {mobileOpen && (
+            doesn't create a containing block for fixed descendants. */}
+        {(mobileOpen || mobileClosing) && (
           <nav
             aria-label="Menu"
             tabIndex={-1}
             ref={mobileNavRef}
-            style={{ top: mobileTop }}
-            className="pointer-events-auto fixed inset-x-0 bottom-0 overflow-y-auto overscroll-contain bg-canvas outline-none animate-nav-content-in sm:hidden"
+            className={cn(
+              "fixed inset-0 z-[1] origin-top-right bg-canvas outline-none sm:hidden",
+              "motion-reduce:animate-none",
+              mobileOpen
+                ? "pointer-events-auto animate-menu-sheet-in"
+                : "pointer-events-none animate-menu-sheet-out",
+            )}
           >
-            <div className="mx-auto flex max-w-content flex-col px-4 py-6">
-              {/* Account group leads the sheet (404's menu model: auth as
+            <div
+              className="absolute inset-x-0 bottom-0 overflow-y-auto overscroll-contain"
+              style={{ top: mobileTop }}
+            >
+              <div className="mx-auto flex max-w-content flex-col px-4 py-6">
+                {/* Account group leads the sheet (404's menu model: auth as
                   list rows under an "Account" heading, not a button pair).
                   Rows are buttons — the auth flows aren't wired yet, same
                   as the desktop tier's Sign in / Subscribe. */}
-              <div className="flex flex-col">
-                <p className="mb-1 text-heading-14 text-textDefault">Account</p>
-                <button
-                  type="button"
-                  className={cn(MOBILE_LINK_CLASS, "cursor-pointer text-left")}
-                >
-                  Sign in
-                </button>
-                <button
-                  type="button"
-                  className={cn(MOBILE_LINK_CLASS, "cursor-pointer text-left")}
-                >
-                  Subscribe
-                </button>
-              </div>
-              {/* One flat Discover group — editorial disciplines then the
+                <div className="flex flex-col">
+                  <p className="mb-1 text-heading-14 text-textDefault">
+                    Account
+                  </p>
+                  <button
+                    type="button"
+                    className={cn(
+                      MOBILE_LINK_CLASS,
+                      "cursor-pointer text-left",
+                    )}
+                  >
+                    Sign in
+                  </button>
+                  <button
+                    type="button"
+                    className={cn(
+                      MOBILE_LINK_CLASS,
+                      "cursor-pointer text-left",
+                    )}
+                  >
+                    Subscribe
+                  </button>
+                </div>
+                {/* One flat Discover group — editorial disciplines then the
                   mega-menu sections, the whole nav taxonomy in a single
                   list (404 keeps its menu to one Navigation list too). */}
-              <div className="mt-6 flex flex-col">
-                <p className="mb-1 text-heading-14 text-textDefault">
-                  Discover
-                </p>
-                {EDITORIAL_LINKS.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={MOBILE_LINK_CLASS}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-                {MEGA_SECTIONS.map((section) => (
-                  <Link
-                    key={section.href}
-                    href={section.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={MOBILE_LINK_CLASS}
-                  >
-                    {section.label}
-                  </Link>
-                ))}
-              </div>
-              {/* Social profiles — mobile menu only (the desktop chrome
+                <div className="mt-6 flex flex-col">
+                  <p className="mb-1 text-heading-14 text-textDefault">
+                    Discover
+                  </p>
+                  {EDITORIAL_LINKS.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={MOBILE_LINK_CLASS}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                  {MEGA_SECTIONS.map((section) => (
+                    <Link
+                      key={section.href}
+                      href={section.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={MOBILE_LINK_CLASS}
+                    >
+                      {section.label}
+                    </Link>
+                  ))}
+                </div>
+                {/* Social profiles — mobile menu only (the desktop chrome
                   leaves socials to the Footer). Same shared list and
                   external-link anatomy as the Footer's Social column:
                   trailing arrow-up-right, 2px hover nudge. */}
-              <div className="mt-6 flex flex-col">
-                <p className="mb-1 text-heading-14 text-textDefault">
-                  Follow us
-                </p>
-                {socialLinks.map(({ label, href }) => (
-                  <a
-                    key={href}
-                    href={href}
-                    rel="noopener"
-                    target="_blank"
-                    className={cn(MOBILE_LINK_CLASS, "group gap-x-1")}
-                  >
-                    {label}
-                    <span
-                      aria-hidden
-                      className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                <div className="mt-6 flex flex-col">
+                  <p className="mb-1 text-heading-14 text-textDefault">
+                    Follow us
+                  </p>
+                  {socialLinks.map(({ label, href }) => (
+                    <a
+                      key={href}
+                      href={href}
+                      rel="noopener"
+                      target="_blank"
+                      className={cn(MOBILE_LINK_CLASS, "group gap-x-1")}
                     >
-                      <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
-                    </span>
-                  </a>
-                ))}
+                      {label}
+                      <span
+                        aria-hidden
+                        className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                      >
+                        <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
+                      </span>
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </nav>
