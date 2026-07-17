@@ -662,7 +662,26 @@ export default function Masthead({
             className="pointer-events-auto fixed inset-x-0 bottom-0 overflow-y-auto overscroll-contain bg-canvas outline-none animate-nav-content-in sm:hidden"
           >
             <div className="mx-auto flex max-w-content flex-col px-4 py-6">
+              {/* Account group leads the sheet (404's menu model: auth as
+                  list rows under an "Account" heading, not a button pair).
+                  Rows are buttons — the auth flows aren't wired yet, same
+                  as the desktop tier's Sign in / Subscribe. */}
               <div className="flex flex-col">
+                <p className="mb-1 text-heading-14 text-textDefault">Account</p>
+                <button
+                  type="button"
+                  className={cn(MOBILE_LINK_CLASS, "cursor-pointer text-left")}
+                >
+                  Sign in
+                </button>
+                <button
+                  type="button"
+                  className={cn(MOBILE_LINK_CLASS, "cursor-pointer text-left")}
+                >
+                  Subscribe
+                </button>
+              </div>
+              <div className="mt-6 flex flex-col">
                 <p className="mb-1 text-heading-14 text-textDefault">Stories</p>
                 {EDITORIAL_LINKS.map((item) => (
                   <Link
@@ -687,14 +706,6 @@ export default function Masthead({
                     {section.label}
                   </Link>
                 ))}
-              </div>
-              <div className="flex gap-2 pt-6">
-                <Button variant="tertiary" size="medium">
-                  Sign in
-                </Button>
-                <Button variant="default" size="medium">
-                  Subscribe
-                </Button>
               </div>
             </div>
           </nav>
