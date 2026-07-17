@@ -283,6 +283,21 @@
     }
   }
 
+  /* Chromium applies scroll-padding-top to focus-reveal of elements
+     INSIDE the very sticky chrome the padding describes: a masthead
+     control sits pinned within the top 72/112px, so focusing it while
+     scrolled makes Chrome "reveal" an element that can never move —
+     jumping the page by half a viewport on every header click. The
+     compensating negative scroll-margin drops the controls' reveal
+     rect below the padding line so the reveal is always a no-op.
+     Scoped to the two pinned chrome rows via data-masthead-chrome
+     (Masthead.tsx) — NOT the mega-menu panel or the mobile menu sheet,
+     whose focusables sit below the padding zone and (for the sheet)
+     inside their own scroller that must keep natural reveal margins. */
+  [data-masthead-chrome] :is(a, button) {
+    scroll-margin-top: -112px;
+  }
+
   /* Admin is an app shell under a fixed admin bar — the root
      rubber-band reads wrong there, so suppress it on admin routes
      only (keyed off the admin layout's <main data-admin-shell>;

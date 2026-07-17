@@ -408,6 +408,7 @@ export default function Masthead({
             at both breakpoints: solid block over contrast, inset rule over
             matching canvas). */}
         <div
+          data-masthead-chrome
           className={cn(
             "pointer-events-auto bg-canvas border-b sm:border-b-0",
             "transition-colors duration-200",
@@ -559,7 +560,7 @@ export default function Masthead({
               if ((e.target as HTMLElement).closest("a")) setValue("");
             }}
           >
-            <div className="mx-auto max-w-content px-4">
+            <div data-masthead-chrome className="mx-auto max-w-content px-4">
               {/* Persistent navbar bottom rule — stays under the links whether
                   the menu is open or closed; the panel then expands downward
                   below it with its own matching bottom border. */}
