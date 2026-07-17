@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Search, Moon, Sun, Menu, X, ChevronDown } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import { lockDocumentScroll } from "@/lib/scroll-lock";
 import { useSearch } from "@/contexts/SearchContext";
 import { Button } from "@/components/ui/Button";
 import Wordmark from "@/components/ui/Wordmark";
@@ -259,24 +261,84 @@ export default function Masthead({
   const [condensed, setCondensed] = useState(false);
   const [overInverted, setOverInverted] = useState(false);
 
-  // Mobile menu focus management: focus enters the panel on open so the
-  // next Tab lands on its first link; Escape closes and returns focus to
-  // the trigger. Disclosure panel, not a modal — no focus trap.
+  // Mobile menu (Quartr's overlay model, user call 2026-07-17): a fixed
+  // sheet from the header's bottom edge to the viewport bottom — not a
+  // dropdown. The page behind is scroll-locked; the sheet scrolls
+  // internally. Focus enters the panel on open; Escape closes and returns
+  // focus to the trigger; Tab is contained within the header (top tier +
+  // panel — the ✕ toggle must stay reachable) since the covered page
+  // shouldn't receive focus while it can't be seen.
   const mobileTriggerRef = useRef<HTMLButtonElement>(null);
   const mobileNavRef = useRef<HTMLElement>(null);
+  // The sheet's top edge = the header's live bottom edge (measured, not a
+  // constant: the announcement bar above the header offsets it at page top).
+  const [mobileTop, setMobileTop] = useState(0);
 
   useEffect(() => {
     if (!mobileOpen) return;
     mobileNavRef.current?.focus();
+
+    const measure = () => {
+      const header = headerRef.current;
+      if (header) setMobileTop(header.getBoundingClientRect().bottom);
+    };
+    measure();
+
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setMobileOpen(false);
         mobileTriggerRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const header = headerRef.current;
+      if (!header) return;
+      const focusables = Array.from(
+        header.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => el.getClientRects().length > 0);
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      const inside = active !== null && header.contains(active);
+      if (e.shiftKey && (!inside || active === first)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (!inside || active === last)) {
+        e.preventDefault();
+        first.focus();
       }
     };
+
+    // Crossing into the sm layout hides the sheet via CSS — release the
+    // open state (and with it the scroll lock) rather than leaving the
+    // page locked under a menu that no longer renders.
+    const mq = window.matchMedia("(min-width: 640px)");
+    const onMq = (e: MediaQueryListEvent) => {
+      if (e.matches) setMobileOpen(false);
+    };
+
+    const unlock = lockDocumentScroll();
     document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    window.addEventListener("resize", measure);
+    mq.addEventListener("change", onMq);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("resize", measure);
+      mq.removeEventListener("change", onMq);
+      unlock();
+    };
   }, [mobileOpen]);
+
+  // The sheet covers the page, so a navigation initiated from the header
+  // itself (wordmark, search result) must also dismiss it — per-link
+  // onClick handlers can't cover those paths.
+  const pathname = usePathname();
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     const CONDENSE_Y = 96;
@@ -422,7 +484,18 @@ export default function Masthead({
                 shape="square"
                 size="large"
                 variant="tertiary"
-                onClick={() => setMobileOpen((v) => !v)}
+                onClick={() => {
+                  // Measure in the same event so the sheet's first frame
+                  // already sits at the header edge (the effect's measure
+                  // runs after paint).
+                  if (!mobileOpen) {
+                    const header = headerRef.current;
+                    if (header) {
+                      setMobileTop(header.getBoundingClientRect().bottom);
+                    }
+                  }
+                  setMobileOpen(!mobileOpen);
+                }}
                 className="sm:hidden"
                 aria-label={mobileOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileOpen}
@@ -569,15 +642,25 @@ export default function Masthead({
         </NavigationMenuPrimitive.Root>
         </div>
 
-        {/* mobile menu — flat top-level links. bg-canvas + pointer-events
-            are its own (the header shell is transparent + inert). */}
+        {/* mobile menu — Quartr's overlay model: a fixed bg-canvas sheet
+            from the header's bottom edge (measured — see mobileTop) to the
+            viewport bottom, scrolling internally over the locked page.
+            `fixed` works from inside the sticky header because sticky
+            doesn't create a containing block for fixed descendants. The
+            top tier's full-bleed border-b is the seam above the sheet
+            (404's header rule). Entrance reuses the mega-menu's
+            animate-nav-content-in so both menus share one motion register.
+            bg-canvas + pointer-events are its own (the header shell is
+            transparent + inert). */}
         {mobileOpen && (
-          <nav aria-label="Menu"
+          <nav
+            aria-label="Menu"
             tabIndex={-1}
             ref={mobileNavRef}
-            className="pointer-events-auto border-b border-borderSubtle bg-canvas outline-none sm:hidden"
+            style={{ top: mobileTop }}
+            className="pointer-events-auto fixed inset-x-0 bottom-0 overflow-y-auto overscroll-contain bg-canvas outline-none animate-nav-content-in sm:hidden"
           >
-            <div className="mx-auto flex max-w-content flex-col px-4 py-4">
+            <div className="mx-auto flex max-w-content flex-col px-4 py-6">
               <div className="flex flex-col">
                 <p className="mb-1 text-heading-14 text-textDefault">Stories</p>
                 {EDITORIAL_LINKS.map((item) => (
@@ -591,7 +674,7 @@ export default function Masthead({
                   </Link>
                 ))}
               </div>
-              <div className="mt-4 flex flex-col">
+              <div className="mt-6 flex flex-col">
                 <p className="mb-1 text-heading-14 text-textDefault">Browse</p>
                 {MEGA_SECTIONS.map((section) => (
                   <Link
@@ -604,7 +687,7 @@ export default function Masthead({
                   </Link>
                 ))}
               </div>
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-2 pt-6">
                 <Button variant="tertiary" size="medium">
                   Sign in
                 </Button>
