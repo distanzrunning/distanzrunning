@@ -60,6 +60,16 @@ export default function NewsletterSignup({
   // needed); tokens are single-use, so every submit ends with reset().
   const turnstileTokenRef = useRef<string | null>(null);
   const turnstileRef = useRef<TurnstileHandle>(null);
+  // The widget mounts only once the visitor engages the form (any
+  // focus inside it — typing, or clicking Subscribe). This band is on
+  // every public page, so an eager mount ran the bot check on every
+  // page load — and if Cloudflare (or a visible test site key) decided
+  // to challenge, the checkbox popped up under the form unprompted.
+  // Armed on engagement, the widget still issues its token invisibly
+  // (~1s) long before a typed email reaches submit, and waitForToken
+  // covers the paste-and-click race. Bonus: the third-party script no
+  // longer loads at all for visitors who never touch the form.
+  const [turnstileArmed, setTurnstileArmed] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -218,7 +228,14 @@ export default function NewsletterSignup({
                 </span>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex w-full flex-col">
+              <form
+                onSubmit={handleSubmit}
+                // focusin bubbles: any focus inside the form (input OR
+                // the Subscribe button) arms the widget, so a submit
+                // can never race an unmounted widget.
+                onFocus={() => setTurnstileArmed(true)}
+                className="flex w-full flex-col"
+              >
                 {/* No column gap on this form: the Turnstile container
                     below is zero-height while invisible (the common
                     case), and a flex gap would still reserve space
@@ -258,14 +275,16 @@ export default function NewsletterSignup({
                   </Button>
                 </div>
                 {/* Invisible bot check (no attribution requirement,
-                    unlike the reCAPTCHA notice this replaced) — only
-                    materialises as a challenge box for suspicious
-                    traffic. */}
-                <TurnstileWidget
-                  ref={turnstileRef}
-                  action={source}
-                  onToken={(t) => (turnstileTokenRef.current = t)}
-                />
+                    unlike the reCAPTCHA notice this replaced) — mounts
+                    on first form engagement, and only materialises as
+                    a challenge box for suspicious traffic. */}
+                {turnstileArmed && (
+                  <TurnstileWidget
+                    ref={turnstileRef}
+                    action={source}
+                    onToken={(t) => (turnstileTokenRef.current = t)}
+                  />
+                )}
               </form>
             )}
           </div>
