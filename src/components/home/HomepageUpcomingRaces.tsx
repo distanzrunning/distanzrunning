@@ -173,12 +173,12 @@ export default async function HomepageUpcomingRaces() {
             variant="ghost"
             className={cn("right-0 translate-x-[calc(100%+8px)]", ARROW_CLASS)}
           />
-          {/* Mobile pair (<sm) — default surface chips at the viewport
-              edges, centred on the whole card (the races convention; the
-              primitive's own top-1/2). See Latest News for the chip
-              rationale. */}
-          <CarouselPrevious className="left-2 sm:hidden" />
-          <CarouselNext className="right-2 sm:hidden" />
+          {/* Mobile pair (<sm) — centred row of square chips below the
+              content, matching Latest News. */}
+          <div className="mt-6 flex justify-center gap-3 sm:hidden">
+            <CarouselPrevious className="static translate-y-0 rounded-sm" />
+            <CarouselNext className="static translate-y-0 rounded-sm" />
+          </div>
         </CarouselWheelStep>
 
         {/* Mobile view-all — full-width row below the content (user call

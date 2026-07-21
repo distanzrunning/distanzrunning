@@ -197,14 +197,14 @@ export default async function HomepageLatestNews() {
               ARROW_CLASS,
             )}
           />
-          {/* Mobile pair (<sm) — the primitive's default surface chips
-              overlaying the viewport edges: the bare desktop glyphs need
-              the deterministic canvas behind them, but here they sit over
-              photo peeks, so the chip carries legibility. Vertical centre
-              of the 1-up image band: card ≈ 85cqw, image = card × 35/64
-              → half ≈ 23.2cqw. */}
-          <CarouselPrevious className="left-2 top-[23.2cqw] sm:hidden" />
-          <CarouselNext className="right-2 top-[23.2cqw] sm:hidden" />
+          {/* Mobile pair (<sm) — a centred row of SQUARE surface chips
+              below the content (user call 2026-07-21; 6px radius =
+              the DS medium-button square). `static` + translate-y-0
+              neutralise the primitive's absolute overlay defaults. */}
+          <div className="mt-6 flex justify-center gap-3 sm:hidden">
+            <CarouselPrevious className="static translate-y-0 rounded-sm" />
+            <CarouselNext className="static translate-y-0 rounded-sm" />
+          </div>
         </CarouselWheelStep>
 
         {/* Mobile view-all — full-width row below the content (user call
