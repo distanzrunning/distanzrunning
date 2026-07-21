@@ -621,8 +621,13 @@ export default function Masthead({
                     // as visible until the end), so the links stay drawn while
                     // the row folds, then leave the tab order once hidden.
                     "transition-[height,visibility] duration-200 ease-out motion-reduce:transition-none",
+                    // border-b-0 (not just transparent) while folded: a 1px
+                    // border can't compress inside h-0 border-box, so the
+                    // "empty" row still rendered 1px tall and the Root's
+                    // bg-canvas painted a hairline of page-white hanging
+                    // under the header — visible over darker content.
                     navCondensed
-                      ? "invisible h-0 border-transparent"
+                      ? "invisible h-0 border-b-0"
                       : "h-10 border-borderSubtle",
                   )}
                 >
