@@ -3,15 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
-import {
-  Search,
-  Moon,
-  Sun,
-  Menu,
-  X,
-  ChevronDown,
-  ArrowUpRight,
-} from "lucide-react";
+import { Search, Moon, Sun, ChevronDown, ArrowUpRight } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
@@ -534,11 +526,29 @@ export default function Masthead({
                   aria-label={mobileOpen ? "Close menu" : "Open menu"}
                   aria-expanded={mobileOpen}
                 >
-                  {mobileOpen ? (
-                    <X className="h-5 w-5" />
-                  ) : (
-                    <Menu className="h-5 w-5" />
-                  )}
+                  {/* Two-bar burger that MORPHS into the ✕ (no icon
+                      swap): each bar translates to the glyph's centre
+                      and counter-rotates 45°, on the same
+                      cubic-bezier(.22,1,.36,1) curve as the sheet so
+                      button and overlay read as one gesture. bg-current
+                      inherits the Button ink; geometry — 20px box, 16px
+                      bars at thirds (centres y 7 / 13 → ±3px to meet). */}
+                  <span aria-hidden className="relative block h-5 w-5">
+                    <span
+                      className={cn(
+                        "absolute left-[2px] top-[6.25px] h-[1.5px] w-4 rounded-full bg-current",
+                        "transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none",
+                        mobileOpen && "translate-y-[3px] rotate-45",
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        "absolute bottom-[6.25px] left-[2px] h-[1.5px] w-4 rounded-full bg-current",
+                        "transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none",
+                        mobileOpen && "-translate-y-[3px] -rotate-45",
+                      )}
+                    />
+                  </span>
                 </Button>
               </div>
             </div>
