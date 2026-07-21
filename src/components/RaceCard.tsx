@@ -337,11 +337,12 @@ export default function RaceCard({
           left, date MetaPill right. */}
       {isCard ? (
         // Two-line clamp matches the filled/outline variants' truncation
-        // rule; pill top-aligns so long titles wrap under it. The row
+        // rule; the pill centres against the title+location block (user
+        // call 2026-07-21 — matches the filled/outline footers). The row
         // wraps so narrow cards give the title full width (the pill
         // drops below); min-w-[10rem] is the wrap trigger — min-w-0
         // would let the title shrink to nothing and never wrap.
-        <div className="flex flex-1 flex-wrap items-start justify-between gap-3 p-5">
+        <div className="flex flex-1 flex-wrap items-center justify-between gap-3 p-5">
           <div className="flex min-w-[10rem] flex-1 flex-col gap-1">
             {/* display-20, not heading-20: race guides are editorial
                 content cards, so the title runs the display register
@@ -365,7 +366,7 @@ export default function RaceCard({
             )}
           </div>
           {fullDate && (
-            <span className="mt-0.5 inline-flex h-6 shrink-0 items-center rounded-full border border-borderSubtle bg-surface px-3 text-label-12 text-textSubtle">
+            <span className="inline-flex h-6 shrink-0 items-center rounded-full border border-borderSubtle bg-surface px-3 text-label-12 text-textSubtle">
               <time dateTime={eventDate}>{fullDate}</time>
             </span>
           )}
