@@ -372,10 +372,16 @@ export default function Masthead({
       const header = headerRef.current;
       if (header) {
         // The header's rect includes the constant nav slot; while condensed
-        // the slot is empty, so the VISIBLE chrome ends one tier higher.
+        // the slot is empty, so the VISIBLE chrome ends one tier higher —
+        // but ONLY where the slot renders at all (it is display:none below
+        // sm). Subtracting it on mobile put the edge 40px above the real
+        // chrome bottom, leaving a 40px scroll window where the band was
+        // visibly under the header yet the border stayed painted — the
+        // pale hairline over the inverted band the user spotted.
+        const navTierRendered = window.matchMedia("(min-width: 640px)").matches;
         const edge =
           header.getBoundingClientRect().bottom -
-          (condensedNow ? NAV_TIER_H : 0);
+          (condensedNow && navTierRendered ? NAV_TIER_H : 0);
         let over = false;
         for (const band of document.querySelectorAll(
           '[data-nav-surface="inverted"]',
