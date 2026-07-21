@@ -79,7 +79,16 @@ export default async function HomepageLatestNews() {
       className="mx-auto w-full max-w-content px-4 py-10 lg:py-12"
     >
       <Carousel
-        opts={{ align: "start" }}
+        opts={{
+          align: "start",
+          // Mobile single-card view (user call 2026-07-21): the active
+          // card centres in the viewport with equal peeks either side.
+          // containScroll off so the first/last snaps centre too instead
+          // of trimming flush to the edges.
+          breakpoints: {
+            "(max-width: 639px)": { align: "center", containScroll: false },
+          },
+        }}
         // Free-glide wheel gestures off — CarouselWheelStep below steps
         // one card per gesture instead, so the row always lands in place.
         wheelGestures={false}
@@ -188,6 +197,14 @@ export default async function HomepageLatestNews() {
               ARROW_CLASS,
             )}
           />
+          {/* Mobile pair (<sm) — the primitive's default surface chips
+              overlaying the viewport edges: the bare desktop glyphs need
+              the deterministic canvas behind them, but here they sit over
+              photo peeks, so the chip carries legibility. Vertical centre
+              of the 1-up image band: card ≈ 85cqw, image = card × 35/64
+              → half ≈ 23.2cqw. */}
+          <CarouselPrevious className="left-2 top-[23.2cqw] sm:hidden" />
+          <CarouselNext className="right-2 top-[23.2cqw] sm:hidden" />
         </CarouselWheelStep>
 
         {/* Mobile view-all — full-width row below the content (user call

@@ -96,7 +96,15 @@ export default async function HomepageUpcomingRaces() {
       className="mx-auto w-full max-w-content px-4 pb-10 lg:pb-12"
     >
       <Carousel
-        opts={{ align: "start" }}
+        opts={{
+          align: "start",
+          // Mobile single-card view (user call 2026-07-21): the active
+          // card centres with equal peeks; containScroll off so first/last
+          // snaps centre too (see Latest News).
+          breakpoints: {
+            "(max-width: 639px)": { align: "center", containScroll: false },
+          },
+        }}
         // Free-glide wheel gestures off — CarouselWheelStep below steps
         // one card per gesture instead, so the row always lands in place.
         wheelGestures={false}
@@ -165,6 +173,12 @@ export default async function HomepageUpcomingRaces() {
             variant="ghost"
             className={cn("right-0 translate-x-[calc(100%+8px)]", ARROW_CLASS)}
           />
+          {/* Mobile pair (<sm) — default surface chips at the viewport
+              edges, centred on the whole card (the races convention; the
+              primitive's own top-1/2). See Latest News for the chip
+              rationale. */}
+          <CarouselPrevious className="left-2 sm:hidden" />
+          <CarouselNext className="right-2 sm:hidden" />
         </CarouselWheelStep>
 
         {/* Mobile view-all — full-width row below the content (user call
