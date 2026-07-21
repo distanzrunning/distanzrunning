@@ -343,7 +343,11 @@ export default function RaceCard({
         // would let the title shrink to nothing and never wrap.
         <div className="flex flex-1 flex-wrap items-start justify-between gap-3 p-5">
           <div className="flex min-w-[10rem] flex-1 flex-col gap-1">
-            <h3 className="line-clamp-2 text-heading-20 text-pretty text-textDefault">
+            {/* display-20, not heading-20: race guides are editorial
+                content cards, so the title runs the display register
+                (450) like ArticleCard — heading 600 is chrome-only.
+                The photo's stat overlay keeps heading-20 (data display). */}
+            <h3 className="line-clamp-2 text-display-20 text-pretty text-textDefault">
               {/* The container clips (overflow-hidden), so the focus
                   ring insets at the card's 12px corner, like the card
                   ArticleCard chrome. */}
@@ -375,7 +379,7 @@ export default function RaceCard({
           }`}
         >
           <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <h3 className="line-clamp-2 text-heading-20 text-textDefault">
+            <h3 className="line-clamp-2 text-display-20 text-textDefault">
               <Link
                 href={href}
                 className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"

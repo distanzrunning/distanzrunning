@@ -91,7 +91,10 @@ export default async function HomepageHero() {
               overlay above the image column, which comes LATER in the
               DOM and would otherwise paint over it and swallow clicks;
               the kicker/byline links sit at z-10, still above. */}
-          <h1 className="text-display-32 md:text-display-48 text-pretty text-textDefault">
+          {/* display-40 mobile (was 32): Quartr's featured title measures
+              38px at 375 — one DS step hotter closes the gap; md+ stays on
+              the display-48 hero slot (user call 2026-07-17). */}
+          <h1 className="text-display-40 md:text-display-48 text-pretty text-textDefault">
             <Link
               href={hero.href}
               className="outline-none after:absolute after:inset-0 after:z-[1] focus-visible:after:rounded focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-[color:var(--ds-focus-color)]"
