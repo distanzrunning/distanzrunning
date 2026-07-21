@@ -136,7 +136,9 @@ export default async function HomepageUpcomingRaces() {
             {races.map((race: UpcomingRace) => (
               <CarouselItem
                 key={race._id}
-                className="basis-[85%] sm:basis-1/2 md:basis-1/3"
+                // Full content-column width on mobile — matches Latest
+                // News (the chevron pager below carries navigation).
+                className="basis-full sm:basis-1/2 md:basis-1/3"
               >
                 <RaceCard
                   chrome="card"

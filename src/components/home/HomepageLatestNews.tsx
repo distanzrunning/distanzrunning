@@ -144,7 +144,12 @@ export default async function HomepageLatestNews() {
             }) => (
               <CarouselItem
                 key={post._id}
-                className="basis-[85%] sm:basis-1/2 md:basis-1/3"
+                // Full content-column width on mobile (user call
+                // 2026-07-21): the centred card lines up with every
+                // other section's content edges; the chevron pager
+                // below carries the navigation affordance the old
+                // 85% peek used to.
+                className="basis-full sm:basis-1/2 md:basis-1/3"
               >
                 <ArticleCard
                   size="md"
@@ -163,7 +168,7 @@ export default async function HomepageLatestNews() {
                       : null
                   }
                   blurDataURL={post.lqip}
-                  imageSizes="(max-width: 640px) 85vw, (max-width: 768px) 50vw, 405px"
+                  imageSizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 405px"
                   category={
                     post.category
                       ? {
