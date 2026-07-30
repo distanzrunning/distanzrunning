@@ -427,16 +427,16 @@ export default function Masthead({
           scrolls visibly through it AND stays clickable (a transparent shell
           would still swallow clicks over the strip). */}
       <header ref={headerRef} className="pointer-events-none sticky top-0 z-50">
-        {/* top tier — divider is full-bleed on mobile (404's header model),
-            inset button-to-button from sm. When the nav is condensed this
-            rule is the header's bottom edge, and it goes transparent while
-            an inverted band passes beneath (the colour-aware border, applied
-            at both breakpoints: solid block over contrast, inset rule over
-            matching canvas). */}
+        {/* top tier — divider is full-bleed at every breakpoint (404's
+            header model; user call 2026-07-29: header rules span the
+            viewport, content stays on the max-w-content column). When
+            the nav is condensed this rule is the header's bottom edge,
+            and it goes transparent while an inverted band passes
+            beneath (the colour-aware border). */}
         <div
           data-masthead-chrome
           className={cn(
-            "pointer-events-auto bg-canvas border-b sm:border-b-0",
+            "pointer-events-auto bg-canvas border-b",
             "transition-colors duration-200",
             navCondensed && overInverted
               ? "border-transparent"
@@ -444,15 +444,7 @@ export default function Masthead({
           )}
         >
           <div className="mx-auto max-w-content px-4">
-            <div
-              className={cn(
-                "grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b-0 sm:border-b py-3",
-                "transition-colors duration-200",
-                navCondensed && overInverted
-                  ? "border-transparent"
-                  : "border-borderSubtle",
-              )}
-            >
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-3">
               {/* left — search + single theme toggle. inert while the mobile
                 sheet covers them: out of the tab order and AT tree, since
                 only the wordmark and the ✕ stay visible over the sheet. */}
@@ -609,83 +601,89 @@ export default function Masthead({
                 if ((e.target as HTMLElement).closest("a")) setValue("");
               }}
             >
-              <div data-masthead-chrome className="mx-auto max-w-content px-4">
-                {/* Persistent navbar bottom rule — stays under the links whether
-                  the menu is open or closed; the panel then expands downward
-                  below it with its own matching bottom border. */}
-                <NavigationMenuPrimitive.List
-                  className={cn(
-                    "flex items-stretch justify-center gap-1 overflow-hidden border-b",
-                    // 404's .is-scrolled collapse: height → 0 + border off,
-                    // eased. visibility rides the same transition (interpolated
-                    // as visible until the end), so the links stay drawn while
-                    // the row folds, then leave the tab order once hidden.
-                    "transition-[height,visibility] duration-200 ease-out motion-reduce:transition-none",
-                    // border-b-0 (not just transparent) while folded: a 1px
-                    // border can't compress inside h-0 border-box, so the
-                    // "empty" row still rendered 1px tall and the Root's
-                    // bg-canvas painted a hairline of page-white hanging
-                    // under the header — visible over darker content.
-                    navCondensed
-                      ? "invisible h-0 border-b-0"
-                      : "h-10 border-borderSubtle",
-                  )}
-                >
-                  {/* Editorial disciplines — plain links, no panel. Entering one
+              {/* Persistent navbar bottom rule — full-bleed across the
+                  viewport (user call 2026-07-29) while the links stay on
+                  the max-w-content column inside; the rule lives on this
+                  folding wrapper so it spans past the content edge. The
+                  panel then expands downward below it with its own
+                  matching bottom border. */}
+              <div
+                data-masthead-chrome
+                className={cn(
+                  "overflow-hidden border-b",
+                  // 404's .is-scrolled collapse: height → 0 + border off,
+                  // eased. visibility rides the same transition (interpolated
+                  // as visible until the end), so the links stay drawn while
+                  // the row folds, then leave the tab order once hidden.
+                  "transition-[height,visibility] duration-200 ease-out motion-reduce:transition-none",
+                  // border-b-0 (not just transparent) while folded: a 1px
+                  // border can't compress inside h-0 border-box, so the
+                  // "empty" row still rendered 1px tall and the Root's
+                  // bg-canvas painted a hairline of page-white hanging
+                  // under the header — visible over darker content.
+                  navCondensed
+                    ? "invisible h-0 border-b-0"
+                    : "h-10 border-borderSubtle",
+                )}
+              >
+                <div className="mx-auto h-full max-w-content px-4">
+                  <NavigationMenuPrimitive.List className="flex h-full items-stretch justify-center gap-1">
+                    {/* Editorial disciplines — plain links, no panel. Entering one
                     closes any open mega-menu: the bridge suppresses Radix's
                     close while the cursor is still in the row, so a plain link
                     (which has no Radix value to switch to) would otherwise leave
                     the previous trigger stuck open. */}
-                  {EDITORIAL_LINKS.map((item) => (
-                    <NavigationMenuPrimitive.Item
-                      key={item.href}
-                      className="flex"
-                    >
-                      <NavigationMenuPrimitive.Link asChild>
-                        <Link
-                          href={item.href}
-                          className={LINK_CLASS}
-                          onPointerEnter={() => setValue("")}
-                        >
-                          {item.label}
-                        </Link>
-                      </NavigationMenuPrimitive.Link>
-                    </NavigationMenuPrimitive.Item>
-                  ))}
-
-                  {/* Product + races — mega-menu triggers. */}
-                  {MEGA_SECTIONS.map((section) => (
-                    <NavigationMenuPrimitive.Item
-                      key={section.key}
-                      value={section.key}
-                      className="flex"
-                    >
-                      <NavigationMenuPrimitive.Trigger
-                        data-nav-trigger
-                        className={TRIGGER_CLASS}
+                    {EDITORIAL_LINKS.map((item) => (
+                      <NavigationMenuPrimitive.Item
+                        key={item.href}
+                        className="flex"
                       >
-                        {section.label}
-                        <ChevronDown className={CHEVRON_CLASS} aria-hidden />
-                      </NavigationMenuPrimitive.Trigger>
-                      {/* absolute: outgoing and incoming Content overlap in the
+                        <NavigationMenuPrimitive.Link asChild>
+                          <Link
+                            href={item.href}
+                            className={LINK_CLASS}
+                            onPointerEnter={() => setValue("")}
+                          >
+                            {item.label}
+                          </Link>
+                        </NavigationMenuPrimitive.Link>
+                      </NavigationMenuPrimitive.Item>
+                    ))}
+
+                    {/* Product + races — mega-menu triggers. */}
+                    {MEGA_SECTIONS.map((section) => (
+                      <NavigationMenuPrimitive.Item
+                        key={section.key}
+                        value={section.key}
+                        className="flex"
+                      >
+                        <NavigationMenuPrimitive.Trigger
+                          data-nav-trigger
+                          className={TRIGGER_CLASS}
+                        >
+                          {section.label}
+                          <ChevronDown className={CHEVRON_CLASS} aria-hidden />
+                        </NavigationMenuPrimitive.Trigger>
+                        {/* absolute: outgoing and incoming Content overlap in the
                         Viewport during a section switch. No padding here — the
                         panel carries its own py, and horizontal alignment comes
                         from the viewport's max-w-content px-4 wrapper so the
                         columns sit on the site grid. */}
-                      <NavigationMenuPrimitive.Content className="absolute left-0 top-0 w-full">
-                        <MegaMenuPanel
-                          sectionKey={section.key}
-                          heading={section.heading}
-                          tagline={section.tagline}
-                          ctaLabel={section.ctaLabel}
-                          ctaHref={section.ctaHref}
-                          links={section.links}
-                          featured={featuredBySection[section.key]}
-                        />
-                      </NavigationMenuPrimitive.Content>
-                    </NavigationMenuPrimitive.Item>
-                  ))}
-                </NavigationMenuPrimitive.List>
+                        <NavigationMenuPrimitive.Content className="absolute left-0 top-0 w-full">
+                          <MegaMenuPanel
+                            sectionKey={section.key}
+                            heading={section.heading}
+                            tagline={section.tagline}
+                            ctaLabel={section.ctaLabel}
+                            ctaHref={section.ctaHref}
+                            links={section.links}
+                            featured={featuredBySection[section.key]}
+                          />
+                        </NavigationMenuPrimitive.Content>
+                      </NavigationMenuPrimitive.Item>
+                    ))}
+                  </NavigationMenuPrimitive.List>
+                </div>
               </div>
 
               {/* Viewport drop — flush below the bottom-tier border (top-full,
