@@ -97,7 +97,7 @@ export default async function HomepageHero() {
           <h1 className="text-display-40 md:text-display-48 text-pretty text-textDefault">
             <Link
               href={hero.href}
-              className="outline-none after:absolute after:inset-0 after:z-[1] focus-visible:after:rounded focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-[color:var(--ds-focus-color)]"
+              className="outline-none after:absolute after:inset-0 after:z-[1] focus-visible:after:rounded-xs focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-[color:var(--ds-focus-color)]"
             >
               {hero.title}
             </Link>
@@ -144,16 +144,15 @@ export default async function HomepageHero() {
             ))}
         </div>
 
-        {/* Image — 3/2, 12px radius, settle-zoom on hero hover. The
+        {/* Image — 3/2, settle-zoom on hero hover. The
             homepage LCP, so priority. The Sanity LQIP ships inline in
             the SSR HTML as the blur placeholder — the box is never
             empty, and the full image resolves over its own preview
             instead of popping in over flat gray (the load flicker). */}
-        {/* rounded = 8px (our DEFAULT) — the editorial image radius
-            (Vercel's article figures + Quartr's cards are stock
-            rounded-lg = 8px; our remapped rounded-lg is 12px, the
-            SURFACE/material radius). */}
-        <div className="relative aspect-[3/2] w-full overflow-hidden rounded lg:basis-7/12">
+        {/* rounded-xs = 4px — the editorial radius (user call
+            2026-07-29: squarer than Vercel/Quartr's stock 8px; one
+            radius for editorial images AND card surfaces). */}
+        <div className="relative aspect-[3/2] w-full overflow-hidden rounded-xs lg:basis-7/12">
           <div
             aria-hidden
             className="absolute inset-0 animate-pulse bg-[color:var(--ds-gray-100)]"

@@ -240,7 +240,7 @@ export default function MegaMenuPanel({
           // Stable layout: no featured item still renders a placeholder at
           // roughly the card's footprint so the panel doesn't shrink for
           // unfeatured sections.
-          <div className="flex aspect-[10/7] w-full max-w-[480px] items-center justify-center rounded-lg border border-dashed border-borderSubtle bg-[var(--ds-gray-100)] p-4 text-copy-14 text-textSubtle">
+          <div className="flex aspect-[10/7] w-full max-w-[480px] items-center justify-center rounded-xs border border-dashed border-borderSubtle bg-[var(--ds-gray-100)] p-4 text-copy-14 text-textSubtle">
             No featured item yet
           </div>
         )}

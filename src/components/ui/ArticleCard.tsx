@@ -169,7 +169,7 @@ export default function ArticleCard({
           ? "flex-row items-center gap-4 md:flex-col md:items-stretch md:gap-0"
           : "flex-col",
         !isPlain &&
-          "overflow-hidden rounded-lg border border-borderSubtle bg-surface",
+          "overflow-hidden rounded-xs border border-borderSubtle bg-surface",
         className,
       )}
     >
@@ -180,10 +180,10 @@ export default function ArticleCard({
         className={cn(
           "relative w-full overflow-hidden",
           imageRatioStyles[imageRatio],
-          // rounded = 8px (our DEFAULT) — the editorial IMAGE radius
-          // (Vercel/Quartr images are stock rounded-lg = 8px; our
-          // remapped rounded-lg 12px is the surface/material radius).
-          isPlain && "rounded",
+          // rounded-xs = 4px — the editorial radius (user call
+          // 2026-07-29: squarer than Vercel/Quartr's stock 8px; one
+          // radius for editorial images AND card surfaces).
+          isPlain && "rounded-xs",
           isRow && "w-1/3 max-w-36 shrink-0 md:w-full md:max-w-none",
         )}
       >
@@ -271,11 +271,11 @@ export default function ArticleCard({
             href={href}
             className={cn(
               "outline-none after:absolute after:inset-0 focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]",
-              // Ring radius matches the chrome's visual corner: 8px
-              // editorial image on plain, 12px surface box on card.
+              // Ring radius matches the chrome's visual corner — the
+              // 4px editorial radius on both anatomies.
               isPlain
-                ? "focus-visible:after:rounded focus-visible:after:outline-offset-4"
-                : "focus-visible:after:rounded-lg focus-visible:after:-outline-offset-2",
+                ? "focus-visible:after:rounded-xs focus-visible:after:outline-offset-4"
+                : "focus-visible:after:rounded-xs focus-visible:after:-outline-offset-2",
             )}
           >
             {title}

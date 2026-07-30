@@ -65,8 +65,8 @@ export interface RaceCardProps {
    *  "index" is the /races index page treatment. */
   variant?: "default" | "index";
   /** Block chrome. "filled" (default) is the established homepage/index
-      look — gray-100 body, 6px corners. "outline" adopts the ArticleCard
-      chrome (bg-surface + hairline border, 12px radius, p-5 body) so the
+      look — gray-100 body, 4px corners. "outline" adopts the ArticleCard
+      chrome (bg-surface + hairline border, 4px radius, p-5 body) so the
       card sits consistently next to ArticleCards — e.g. the mega-menu
       featured slot. "card" is the Vercel-KB topic-card grammar on
       Stride tokens (the homepage row): surface + hairline container,
@@ -171,7 +171,7 @@ export default function RaceCard({
             : undefined;
         const isLocalCurrency = displayCurrency === "local";
         const targetCurrency = isLocalCurrency
-          ? currency ?? "USD"
+          ? (currency ?? "USD")
           : displayCurrency;
         const priceLabel =
           price != null && currency
@@ -196,21 +196,21 @@ export default function RaceCard({
     : null;
 
   // Outer chrome — outline adopts the ArticleCard block (surface +
-  // hairline, 12px radius, container clips the image). Filled: index
-  // variant uses overflow-hidden + rounded-sm so the single radius
-  // matches the homepage cards' 6 px corners (where the image + body
-  // each carry rounded-t-sm / rounded-b-sm separately for the same
-  // visual result). Card: Vercel-KB chrome — surface + hairline at the
-  // card-surface radius (12px), hover lifts with a soft gray shadow
-  // (Geist's hover:shadow move; elevation stays border-based at rest).
+  // hairline, container clips the image). Filled: index variant uses
+  // overflow-hidden so the single radius matches the homepage cards
+  // (where the image + body each carry rounded-t-xs / rounded-b-xs
+  // separately for the same visual result). Card: Vercel-KB chrome —
+  // surface + hairline, hover lifts with a soft gray shadow (Geist's
+  // hover:shadow move; elevation stays border-based at rest). All
+  // variants run the 4px editorial radius (user call 2026-07-29).
   const isOutline = chrome === "outline";
   const isCard = chrome === "card";
   const articleRadius = isOutline
-    ? "overflow-hidden rounded-lg border border-borderSubtle bg-surface"
+    ? "overflow-hidden rounded-xs border border-borderSubtle bg-surface"
     : isCard
-      ? "overflow-hidden rounded-lg border border-borderSubtle bg-surface transition-shadow duration-200 ease-in-out hover:shadow-[0_12px_24px_-8px_hsla(var(--ds-gray-1000-value),0.12)]"
+      ? "overflow-hidden rounded-xs border border-borderSubtle bg-surface transition-shadow duration-200 ease-in-out hover:shadow-[0_12px_24px_-8px_hsla(var(--ds-gray-1000-value),0.12)]"
       : isIndex
-        ? "overflow-hidden rounded-sm"
+        ? "overflow-hidden rounded-xs"
         : "";
   // The hover stat overlay is an index-variant feature.
   const showHoverStats = isIndex && Boolean(stats?.hasAnyHoverContent);
@@ -249,83 +249,83 @@ export default function RaceCard({
       )}
 
       {!isCard && (
-      <div
-        className={`relative aspect-[16/8.75] w-full overflow-hidden bg-[color:var(--ds-gray-100)] ${
-          isIndex || isOutline ? "" : "rounded-t-sm"
-        }`}
-      >
-        {imageUrl && (
-          <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100 motion-reduce:scale-100 motion-reduce:transition-none">
-            <CardImage
-              src={imageUrl}
-              alt={imageAlt ?? title}
-              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 25vw"
-              priority={priority}
-              blurDataURL={blurDataURL}
-            />
-          </div>
-        )}
+        <div
+          className={`relative aspect-[16/8.75] w-full overflow-hidden bg-[color:var(--ds-gray-100)] ${
+            isIndex || isOutline ? "" : "rounded-t-xs"
+          }`}
+        >
+          {imageUrl && (
+            <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100 motion-reduce:scale-100 motion-reduce:transition-none">
+              <CardImage
+                src={imageUrl}
+                alt={imageAlt ?? title}
+                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 25vw"
+                priority={priority}
+                blurDataURL={blurDataURL}
+              />
+            </div>
+          )}
 
-        {/* Top-left pill — placement badge (e.g. "Featured"), same
+          {/* Top-left pill — placement badge (e.g. "Featured"), same
             treatment as ArticleCard's badge slot. */}
-        {badge && (
-          <div className="absolute left-3 top-3 z-20">
-            <Badge variant={badgeVariant} size={badgeSize}>
-              {badge}
-            </Badge>
-          </div>
-        )}
+          {badge && (
+            <div className="absolute left-3 top-3 z-20">
+              <Badge variant={badgeVariant} size={badgeSize}>
+                {badge}
+              </Badge>
+            </div>
+          )}
 
-        {/* Top-right pill — category Badge (inverted variant so the
+          {/* Top-right pill — category Badge (inverted variant so the
             dark bg + white text reads against any photo); the date
             pill sits inline with the title in the body. */}
-        {category && (
-          <div className="absolute right-3 top-3 z-20">
-            <Badge variant="inverted" size="md">
-              {category}
-            </Badge>
-          </div>
-        )}
+          {category && (
+            <div className="absolute right-3 top-3 z-20">
+              <Badge variant="inverted" size="md">
+                {category}
+              </Badge>
+            </div>
+          )}
 
-        {/* Hover overlay (index variant + plain chrome with stats).
+          {/* Hover overlay (index variant + plain chrome with stats).
             Single absolutely-positioned layer that darkens the image
             via backdrop-filter brightness/contrast and renders the
             three stat columns on top. Fades in on group hover. */}
-        {showHoverStats && (
-          <div
-            className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-6 px-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-            style={{
-              backdropFilter: "blur(12px) brightness(0.8) contrast(1.1)",
-              WebkitBackdropFilter:
-                "blur(12px) brightness(0.8) contrast(1.1)",
-            }}
-          >
-            {surface && (
-              <StatColumn
-                label="Surface"
-                value={surface}
-                detail={surfaceBreakdown}
-              />
-            )}
-            {(stats?.profileLabel || stats?.elevationGainLabel) && (
-              <StatColumn
-                label="Elevation"
-                value={stats?.profileLabel ?? stats?.elevationGainLabel ?? ""}
-                detail={
-                  stats?.profileLabel ? stats?.elevationGainLabel : undefined
-                }
-              />
-            )}
-            {stats?.priceLabel && (
-              <StatColumn
-                label="Price"
-                value={stats.priceLabel}
-                detail={stats.targetCurrency}
-              />
-            )}
-          </div>
-        )}
-      </div>
+          {showHoverStats && (
+            <div
+              className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-6 px-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              style={{
+                backdropFilter: "blur(12px) brightness(0.8) contrast(1.1)",
+                WebkitBackdropFilter:
+                  "blur(12px) brightness(0.8) contrast(1.1)",
+              }}
+            >
+              {surface && (
+                <StatColumn
+                  label="Surface"
+                  value={surface}
+                  detail={surfaceBreakdown}
+                />
+              )}
+              {(stats?.profileLabel || stats?.elevationGainLabel) && (
+                <StatColumn
+                  label="Elevation"
+                  value={stats?.profileLabel ?? stats?.elevationGainLabel ?? ""}
+                  detail={
+                    stats?.profileLabel ? stats?.elevationGainLabel : undefined
+                  }
+                />
+              )}
+              {stats?.priceLabel && (
+                <StatColumn
+                  label="Price"
+                  value={stats.priceLabel}
+                  detail={stats.targetCurrency}
+                />
+              )}
+            </div>
+          )}
+        </div>
       )}
 
       {/* Body. Card (Vercel-KB anatomy): clean surface footer under
@@ -350,11 +350,11 @@ export default function RaceCard({
                 The photo's stat overlay keeps heading-20 (data display). */}
             <h3 className="line-clamp-2 text-display-20 text-pretty text-textDefault">
               {/* The container clips (overflow-hidden), so the focus
-                  ring insets at the card's 12px corner, like the card
+                  ring insets at the card's 4px corner, like the card
                   ArticleCard chrome. */}
               <Link
                 href={href}
-                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-lg focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
+                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-xs focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
               >
                 {title}
               </Link>
@@ -374,16 +374,14 @@ export default function RaceCard({
       ) : (
         <div
           className={`flex items-center justify-between gap-3 ${
-            isOutline
-              ? "p-5"
-              : "rounded-b-sm bg-[color:var(--ds-gray-100)] p-6"
+            isOutline ? "p-5" : "rounded-b-xs bg-[color:var(--ds-gray-100)] p-6"
           }`}
         >
           <div className="flex min-w-0 flex-1 flex-col gap-1">
             <h3 className="line-clamp-2 text-display-20 text-textDefault">
               <Link
                 href={href}
-                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-md focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
+                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-xs focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
               >
                 {title}
               </Link>

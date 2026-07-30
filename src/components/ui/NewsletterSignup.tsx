@@ -152,9 +152,7 @@ export default function NewsletterSignup({
   // pinned to a specific gray-scale step.
   const themeClass = theme === "black" ? "dark" : "light";
   const cardBackground =
-    theme === "grey"
-      ? "var(--ds-gray-200)"
-      : "hsl(var(--color-surface))";
+    theme === "grey" ? "var(--ds-gray-200)" : "hsl(var(--color-surface))";
 
   const isBand = chrome === "band";
 
@@ -166,7 +164,7 @@ export default function NewsletterSignup({
         className={
           isBand
             ? undefined
-            : "mx-auto w-full max-w-content overflow-hidden rounded-lg border border-borderSubtle"
+            : "mx-auto w-full max-w-content overflow-hidden rounded-xs border border-borderSubtle"
         }
         style={isBand ? undefined : { background: cardBackground }}
       >
@@ -191,8 +189,8 @@ export default function NewsletterSignup({
             {/* Secondary text — textSubtle, the DS tagline register;
                 runs on one line beside the form at content width. */}
             <p className="text-copy-16 text-balance text-textSubtle">
-              A curated set of running stories, gear reviews, and race
-              guides every other week.
+              A curated set of running stories, gear reviews, and race guides
+              every other week.
             </p>
           </div>
 
