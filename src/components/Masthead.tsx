@@ -626,7 +626,13 @@ export default function Masthead({
                     : "h-10 border-borderSubtle",
                 )}
               >
-                <div className="mx-auto h-full max-w-content px-4">
+                {/* grid, not block: Radix wraps the List in a classless
+                    indicator-track div we can't style, and a percentage
+                    h-full can't resolve through its auto height — the
+                    links would top-align in the band. A grid cell
+                    stretches that div to the full band height, giving
+                    the List's h-full something definite to fill. */}
+                <div className="mx-auto grid h-full max-w-content px-4">
                   <NavigationMenuPrimitive.List className="flex h-full items-stretch justify-center gap-1">
                     {/* Editorial disciplines — plain links, no panel. Entering one
                     closes any open mega-menu: the bridge suppresses Radix's
