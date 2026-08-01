@@ -100,12 +100,15 @@ export default function MegaMenuPanel({
 }: MegaMenuPanelProps) {
   return (
     <div
-      // Equal thirds on the 1400px site grid (the viewport wrapper carries
-      // the container + px), Prismic-style. Height is content-driven;
-      // align-items:stretch keeps the hairline dividers and the intro
-      // column's bottom-anchored CTA spanning the full panel.
+      // Equal thirds on the site grid, Prismic-style. The Viewport is
+      // full-bleed (its canvas + bottom rule span the viewport, like the
+      // header rules), so the panel carries its own max-w-content px-4
+      // container to keep the columns on the content column. Height is
+      // content-driven; align-items:stretch keeps the hairline dividers
+      // and the intro column's bottom-anchored CTA spanning the full
+      // panel.
       className={cn(
-        "grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] py-12",
+        "mx-auto grid w-full max-w-content grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] px-4 py-12",
         className,
       )}
       data-mega-menu-panel={sectionKey}

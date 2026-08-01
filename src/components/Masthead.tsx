@@ -672,9 +672,9 @@ export default function Masthead({
                         </NavigationMenuPrimitive.Trigger>
                         {/* absolute: outgoing and incoming Content overlap in the
                         Viewport during a section switch. No padding here — the
-                        panel carries its own py, and horizontal alignment comes
-                        from the viewport's max-w-content px-4 wrapper so the
-                        columns sit on the site grid. */}
+                        panel carries its own py AND its own max-w-content px-4
+                        container (the Viewport is full-bleed), so the columns
+                        sit on the site grid. */}
                         <NavigationMenuPrimitive.Content className="absolute left-0 top-0 w-full">
                           <MegaMenuPanel
                             sectionKey={section.key}
@@ -694,13 +694,12 @@ export default function Masthead({
 
               {/* Viewport drop — flush below the bottom-tier border (top-full,
                 no gap) so there's no dead zone between the row and the panel.
-                Full navbar width, centered. */}
+                Full-bleed like the header rules (user call 2026-08-01): the
+                Viewport's canvas + bottom border span the viewport width;
+                the panel content centres itself on the max-w-content
+                column inside (MegaMenuPanel owns the container + px). */}
               <div className="absolute left-0 right-0 top-full">
-                <div className="mx-auto max-w-content px-4">
-                  <NavigationMenuPrimitive.Viewport
-                    className={VIEWPORT_CLASS}
-                  />
-                </div>
+                <NavigationMenuPrimitive.Viewport className={VIEWPORT_CLASS} />
               </div>
             </div>
           </NavigationMenuPrimitive.Root>
