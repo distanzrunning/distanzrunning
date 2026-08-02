@@ -162,7 +162,9 @@ export const nutritionLinks: ReadonlyArray<CategoryItem> = [
 
 export const raceLinks: ReadonlyArray<CategoryItem> = [
   {
-    label: "Races",
+    // "Race guides", not "Races" — matches the Footer's label (the
+    // section trigger above is already "Races").
+    label: "Race guides",
     href: "/races",
     description: "Browse race guides",
     Icon: TbFlag,
