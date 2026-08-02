@@ -445,7 +445,14 @@ export default function Masthead({
             cursor level — close stays driven by the bridge's pointerLeave,
             not by capturing clicks. hidden below sm: the nav tier (and so
             isOpen) is desktop-only; the mobile sheet brings its own
-            full-page canvas. */}
+            full-page canvas.
+
+            absolute + h-screen, NOT fixed inset-0 (user call 2026-08-02):
+            anchored to the header's top edge so the announcement banner
+            above the masthead stays out of the wash — while the banner is
+            visible the header (and so the scrim) starts below it; once
+            scrolled, the header pins to the viewport top and the scrim
+            covers the full viewport as before. */}
         <div
           aria-hidden
           data-mega-menu-overlay
@@ -453,7 +460,7 @@ export default function Masthead({
             opacity: isOpen ? "var(--ds-overlay-backdrop-opacity)" : 0,
           }}
           className={cn(
-            "pointer-events-none fixed inset-0 -z-10 hidden sm:block",
+            "pointer-events-none absolute inset-x-0 top-0 -z-10 hidden h-screen sm:block",
             "bg-[var(--ds-overlay-backdrop-color)]",
             "[backdrop-filter:blur(8px)] [-webkit-backdrop-filter:blur(8px)]",
             "transition-opacity duration-200 ease-out",
