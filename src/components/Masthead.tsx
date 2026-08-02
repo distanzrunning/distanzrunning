@@ -427,6 +427,38 @@ export default function Masthead({
           scrolls visibly through it AND stays clickable (a transparent shell
           would still swallow clicks over the strip). */}
       <header ref={headerRef} className="pointer-events-none sticky top-0 z-50">
+        {/* Page scrim while a mega-menu section is open — ported from the
+            previous nav iteration. Reads the shared --ds-overlay-backdrop-*
+            tokens so it matches the Modal / Sheet / Search scrims 1:1
+            (bg-200 frost at 0.8, always paired with 8px backdrop blur —
+            near-white in light, near-black in dark). Always mounted;
+            opacity is the only thing that toggles, so open/close is a
+            smooth fade on the panel's own 200ms curve.
+
+            -z-10: the scrim is a positioned box, so without an explicit
+            negative z it would paint OVER the header's static top tier
+            (positioned > in-flow within the header's stacking context).
+            Below zero it sits under both tiers and the panel, while the
+            header's own z-50 keeps it above all page content.
+
+            pointer-events-none keeps the page beneath interactive at the
+            cursor level — close stays driven by the bridge's pointerLeave,
+            not by capturing clicks. hidden below sm: the nav tier (and so
+            isOpen) is desktop-only; the mobile sheet brings its own
+            full-page canvas. */}
+        <div
+          aria-hidden
+          data-mega-menu-overlay
+          style={{
+            opacity: isOpen ? "var(--ds-overlay-backdrop-opacity)" : 0,
+          }}
+          className={cn(
+            "pointer-events-none fixed inset-0 -z-10 hidden sm:block",
+            "bg-[var(--ds-overlay-backdrop-color)]",
+            "[backdrop-filter:blur(8px)] [-webkit-backdrop-filter:blur(8px)]",
+            "transition-opacity duration-200 ease-out",
+          )}
+        />
         {/* top tier — divider is full-bleed at every breakpoint (404's
             header model; user call 2026-07-29: header rules span the
             viewport, content stays on the max-w-content column). When
