@@ -211,7 +211,7 @@ function AdDisclaimer({
 
 function MockCreative({ width, height }: Dimensions) {
   return (
-    <div className="flex h-full w-full items-center justify-center rounded-sm bg-[var(--ds-gray-100)]">
+    <div className="flex h-full w-full items-center justify-center rounded-xs bg-[var(--ds-gray-100)]">
       <span className="text-[12px] font-medium tabular-nums text-textSubtle">
         {width} &times; {height}
       </span>
@@ -244,7 +244,7 @@ export function ShakeoutAd({ width, height }: Dimensions) {
     return (
       <a
         href={SIGNUP_HREF}
-        className="flex h-full w-full items-center justify-between gap-4 rounded-sm bg-[var(--ds-gray-100)] px-4 no-underline sm:px-6"
+        className="flex h-full w-full items-center justify-between gap-4 rounded-xs bg-[var(--ds-gray-100)] px-4 no-underline sm:px-6"
       >
         <div className="flex min-w-0 flex-col items-start gap-0.5 text-left">
           {kicker}
@@ -269,7 +269,7 @@ export function ShakeoutAd({ width, height }: Dimensions) {
     return (
       <a
         href={SIGNUP_HREF}
-        className="flex h-full w-full items-center justify-center gap-2 rounded-sm bg-[var(--ds-gray-100)] px-4 no-underline"
+        className="flex h-full w-full items-center justify-center gap-2 rounded-xs bg-[var(--ds-gray-100)] px-4 no-underline"
       >
         <span className="text-[12px] font-semibold text-textDefault">
           The Shakeout &mdash; our weekly running newsletter
@@ -282,7 +282,7 @@ export function ShakeoutAd({ width, height }: Dimensions) {
   // Short + wide (leaderboard 728×90) — kicker + line + CTA in a row.
   if (height < 100) {
     return (
-      <div className="flex h-full w-full items-center justify-center gap-4 rounded-sm bg-[var(--ds-gray-100)] px-6 text-center">
+      <div className="flex h-full w-full items-center justify-center gap-4 rounded-xs bg-[var(--ds-gray-100)] px-6 text-center">
         <div className="flex flex-col items-start gap-0.5 text-left">
           {kicker}
           <span className="text-[13px] font-medium text-textDefault">
@@ -304,7 +304,7 @@ export function ShakeoutAd({ width, height }: Dimensions) {
   // Tall + narrow (skyscraper / half-page) — stacked.
   if (width < 320 && height > 400) {
     return (
-      <div className="flex h-full w-full flex-col items-center justify-between rounded-sm bg-[var(--ds-gray-100)] p-5 text-center">
+      <div className="flex h-full w-full flex-col items-center justify-between rounded-xs bg-[var(--ds-gray-100)] p-5 text-center">
         <div className="flex flex-1 flex-col items-center justify-center gap-3">
           {kicker}
           <h4 className="text-[16px] font-semibold leading-tight text-textDefault">
@@ -329,7 +329,7 @@ export function ShakeoutAd({ width, height }: Dimensions) {
 
   // Default — square / MPU / billboard.
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-sm bg-[var(--ds-gray-100)] p-6 text-center">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-xs bg-[var(--ds-gray-100)] p-6 text-center">
       {kicker}
       <h4 className="text-heading-16 text-textDefault">Get the Shakeout</h4>
       <p className="max-w-[85%] text-[13px] leading-snug text-textSubtle">
@@ -412,7 +412,9 @@ export function AdSlot({
   useEffect(() => {
     if (!dismissible || !dismissKey || typeof window === "undefined") return;
     try {
-      if (window.localStorage.getItem(`ds-ad-dismissed:${dismissKey}`) === "1") {
+      if (
+        window.localStorage.getItem(`ds-ad-dismissed:${dismissKey}`) === "1"
+      ) {
         setDismissed(true);
       }
     } catch {
@@ -576,7 +578,7 @@ export function AdSlot({
       aria-label={ariaLabel}
       className={[
         "ds-ad mx-auto",
-        framed ? "rounded-lg border border-borderSubtle px-4 pb-4 pt-2.5" : "",
+        framed ? "rounded-xs border border-borderSubtle px-4 pb-4 pt-2.5" : "",
         !sticky && breathingRoom ? "my-8" : "",
         className,
       ]
@@ -637,7 +639,10 @@ export function AdSlot({
       <div
         ref={stickyRef}
         className="fixed inset-x-0 bottom-0 z-50 bg-surface transition-transform duration-300 ease-out"
-        style={{ transform: shown ? "translateY(0)" : "translateY(100%)", paddingTop: 14 }}
+        style={{
+          transform: shown ? "translateY(0)" : "translateY(100%)",
+          paddingTop: 14,
+        }}
         role="region"
         aria-label={ariaLabel}
       >
@@ -669,7 +674,11 @@ export function AdSlot({
                 creatives; the ad sits at the top. */}
             <div
               className="mx-auto"
-              style={{ width: dimensions.width, minHeight: 127, maxWidth: "100%" }}
+              style={{
+                width: dimensions.width,
+                minHeight: 127,
+                maxWidth: "100%",
+              }}
             >
               <div
                 className="relative"

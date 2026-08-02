@@ -50,19 +50,21 @@ export default function ArticlePostLayout({
 
   const readTime = Array.isArray(post.body)
     ? Math.ceil(
-        (post.body as Array<{ _type?: string; children?: Array<{ text?: string }> }>).reduce(
-          (acc, block) => {
-            if (block._type === "block" && block.children) {
-              const words = block.children
-                .map((c) => c.text ?? "")
-                .join(" ")
-                .split(" ").length;
-              return acc + words;
-            }
-            return acc;
-          },
-          0,
-        ) / 200,
+        (
+          post.body as Array<{
+            _type?: string;
+            children?: Array<{ text?: string }>;
+          }>
+        ).reduce((acc, block) => {
+          if (block._type === "block" && block.children) {
+            const words = block.children
+              .map((c) => c.text ?? "")
+              .join(" ")
+              .split(" ").length;
+            return acc + words;
+          }
+          return acc;
+        }, 0) / 200,
       )
     : 1;
 
@@ -211,7 +213,10 @@ export default function ArticlePostLayout({
       image: ({
         value,
       }: {
-        value: { alt?: string; caption?: string; credit?: string } & Record<string, unknown>;
+        value: { alt?: string; caption?: string; credit?: string } & Record<
+          string,
+          unknown
+        >;
       }) => (
         <div className="my-8">
           <a
@@ -225,7 +230,7 @@ export default function ArticlePostLayout({
               alt={value.alt || ""}
               width={1600}
               height={1067}
-              className="h-auto w-full rounded-lg"
+              className="h-auto w-full rounded-xs"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
               priority={false}
               quality={90}
@@ -260,7 +265,7 @@ export default function ArticlePostLayout({
           <div className="distanz-full-col grid grid-cols-1">
             {post.mainImage != null && (
               <div className="w-full">
-                <div className="relative aspect-video w-full overflow-hidden rounded-lg">
+                <div className="relative aspect-video w-full overflow-hidden rounded-xs">
                   <Image
                     src={urlFor(post.mainImage).width(1400).url()}
                     alt={post.title}
@@ -411,7 +416,6 @@ export default function ArticlePostLayout({
         currentArticleId={post._id}
         maxArticles={4}
       />
-
     </div>
   );
 }

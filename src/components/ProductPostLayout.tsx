@@ -38,26 +38,31 @@ interface ProductPostLayoutProps {
   sectionPath: "/shoes" | "/gear" | "/nutrition";
 }
 
-export default function ProductPostLayout({ post, sectionPath }: ProductPostLayoutProps) {
+export default function ProductPostLayout({
+  post,
+  sectionPath,
+}: ProductPostLayoutProps) {
   const publishedDate = post.publishedAt
     ? format(new Date(post.publishedAt), "d MMM yyyy")
     : "Unknown Date";
 
   const readTime = Array.isArray(post.body)
     ? Math.ceil(
-        (post.body as Array<{ _type?: string; children?: Array<{ text?: string }> }>).reduce(
-          (acc, block) => {
-            if (block._type === "block" && block.children) {
-              const words = block.children
-                .map((child) => child.text ?? "")
-                .join(" ")
-                .split(" ").length;
-              return acc + words;
-            }
-            return acc;
-          },
-          0,
-        ) / 200,
+        (
+          post.body as Array<{
+            _type?: string;
+            children?: Array<{ text?: string }>;
+          }>
+        ).reduce((acc, block) => {
+          if (block._type === "block" && block.children) {
+            const words = block.children
+              .map((child) => child.text ?? "")
+              .join(" ")
+              .split(" ").length;
+            return acc + words;
+          }
+          return acc;
+        }, 0) / 200,
       )
     : 1;
 
@@ -68,7 +73,7 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
           <div className="distanz-full-col grid grid-cols-1">
             {post.mainImage != null && (
               <div className="w-full">
-                <div className="relative aspect-video w-full rounded-lg overflow-hidden">
+                <div className="relative aspect-video w-full rounded-xs overflow-hidden">
                   <Image
                     src={urlFor(post.mainImage).width(1400).url()}
                     alt={post.title}
@@ -153,7 +158,10 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                       <div className="h-12 w-12">
                         <div className="rounded-full border border-gray-200 p-0.5">
                           <Image
-                            src={urlFor(post.author.image).width(64).height(64).url()}
+                            src={urlFor(post.author.image)
+                              .width(64)
+                              .height(64)
+                              .url()}
                             alt={post.author.name}
                             width={48}
                             height={48}
@@ -330,14 +338,21 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
                     ),
                   },
                   types: {
-                    image: ({ value }: { value: { alt?: string; caption?: string } & SanityImageSource }) => (
+                    image: ({
+                      value,
+                    }: {
+                      value: {
+                        alt?: string;
+                        caption?: string;
+                      } & SanityImageSource;
+                    }) => (
                       <div className="my-8">
                         <Image
                           src={urlFor(value).width(800).url()}
                           alt={value?.alt || ""}
                           width={800}
                           height={600}
-                          className="rounded-lg w-full h-auto"
+                          className="rounded-xs w-full h-auto"
                         />
                         {value?.caption && (
                           <p className="font-sans text-textSubtle text-copy-16 capsize text-center mt-2">
@@ -353,7 +368,6 @@ export default function ProductPostLayout({ post, sectionPath }: ProductPostLayo
           </div>
         </div>
       </div>
-
     </div>
   );
 }

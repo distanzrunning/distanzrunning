@@ -22,7 +22,10 @@ type Props = {
 
 const ARTICLES_PER_BATCH = 16;
 
-export default function TagFilterGrid({ articles, basePath = "/articles/" }: Props) {
+export default function TagFilterGrid({
+  articles,
+  basePath = "/articles/",
+}: Props) {
   const [activeTag, setActiveTag] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [visibleCount, setVisibleCount] = useState<number>(ARTICLES_PER_BATCH);
@@ -33,7 +36,8 @@ export default function TagFilterGrid({ articles, basePath = "/articles/" }: Pro
 
   const filteredArticles = useMemo(() => {
     return articles.filter((article) => {
-      const matchesTag = activeTag === "All" || article.tags?.includes(activeTag);
+      const matchesTag =
+        activeTag === "All" || article.tags?.includes(activeTag);
       const matchesSearch =
         article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         article.excerpt?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -49,17 +53,17 @@ export default function TagFilterGrid({ articles, basePath = "/articles/" }: Pro
       {/* Search */}
       <div className="w-full lg:max-w-xl lg:mx-auto">
         <div className="relative">
-          <svg 
+          <svg
             className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-textDefault"
-            fill="none" 
-            stroke="currentColor" 
+            fill="none"
+            stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" 
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
             />
           </svg>
           <input
@@ -117,17 +121,25 @@ export default function TagFilterGrid({ articles, basePath = "/articles/" }: Pro
             className="group flex flex-col h-full w-full transition"
           >
             {/* Image - Keeping original 16:9 ratio but making it wider */}
-            <div className="relative w-full aspect-[16/9] overflow-hidden rounded-lg bg-gray-100">
+            <div className="relative w-full aspect-[16/9] overflow-hidden rounded-xs bg-gray-100">
               {article.mainImage && (
                 <Image
-                  src={urlFor(article.mainImage).width(1000).auto("format").url()}
+                  src={urlFor(article.mainImage)
+                    .width(1000)
+                    .auto("format")
+                    .url()}
                   alt={article.title}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 25vw"
                   loading="lazy"
                   placeholder="blur"
-                  blurDataURL={urlFor(article.mainImage).width(10).height(7).blur(20).auto("format").url()}
+                  blurDataURL={urlFor(article.mainImage)
+                    .width(10)
+                    .height(7)
+                    .blur(20)
+                    .auto("format")
+                    .url()}
                 />
               )}
             </div>
@@ -142,7 +154,7 @@ export default function TagFilterGrid({ articles, basePath = "/articles/" }: Pro
                   {article.excerpt}
                 </p>
               )}
-              
+
               {/* Tags and Date - Pinned to bottom with mt-auto */}
               <div className="flex items-center gap-3 mt-auto text-[10px] font-medium leading-[14px] text-gray-500">
                 {article.tags?.[0] && (

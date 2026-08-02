@@ -1,9 +1,9 @@
 // src/components/SimilarArticles.tsx
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { urlFor } from '@/sanity/lib/image';
-import { format } from 'date-fns';
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { urlFor } from "@/sanity/lib/image";
+import { format } from "date-fns";
 
 type Post = {
   _id: string;
@@ -25,14 +25,18 @@ interface SimilarArticlesProps {
   maxArticles?: number;
 }
 
-const SimilarArticleCard = React.memo(function SimilarArticleCard({ post }: { post: Post }) {
+const SimilarArticleCard = React.memo(function SimilarArticleCard({
+  post,
+}: {
+  post: Post;
+}) {
   return (
     <Link
       href={`/articles/post/${post.slug.current}`}
       className="group flex flex-col h-full w-full transition"
     >
       {/* Image - Exact same styling as TagFilterGrid */}
-      <div className="relative w-full aspect-[16/9] overflow-hidden rounded-lg bg-gray-100">
+      <div className="relative w-full aspect-[16/9] overflow-hidden rounded-xs bg-gray-100">
         {post.mainImage && (
           <Image
             src={urlFor(post.mainImage).width(1000).auto("format").url()}
@@ -42,7 +46,12 @@ const SimilarArticleCard = React.memo(function SimilarArticleCard({ post }: { po
             sizes="(max-width: 768px) 100vw, 33vw"
             loading="lazy"
             placeholder="blur"
-            blurDataURL={urlFor(post.mainImage).width(10).height(7).blur(20).auto("format").url()}
+            blurDataURL={urlFor(post.mainImage)
+              .width(10)
+              .height(7)
+              .blur(20)
+              .auto("format")
+              .url()}
           />
         )}
       </div>
@@ -57,7 +66,7 @@ const SimilarArticleCard = React.memo(function SimilarArticleCard({ post }: { po
             {post.excerpt}
           </p>
         )}
-        
+
         {/* Tags and Date - Exact same styling as TagFilterGrid */}
         <div className="flex items-center gap-3 mt-auto text-[10px] font-medium leading-[14px] text-gray-500">
           {post.tags?.[0] && (
@@ -74,14 +83,14 @@ const SimilarArticleCard = React.memo(function SimilarArticleCard({ post }: { po
   );
 });
 
-const SimilarArticles: React.FC<SimilarArticlesProps> = ({ 
-  articles, 
-  currentArticleId, 
-  maxArticles = 4 
+const SimilarArticles: React.FC<SimilarArticlesProps> = ({
+  articles,
+  currentArticleId,
+  maxArticles = 4,
 }) => {
   // Filter out the current article and limit the number of articles
   const filteredArticles = articles
-    .filter(article => article._id !== currentArticleId)
+    .filter((article) => article._id !== currentArticleId)
     .slice(0, maxArticles);
 
   if (filteredArticles.length === 0) {
@@ -96,7 +105,7 @@ const SimilarArticles: React.FC<SimilarArticlesProps> = ({
             Related articles
           </h2>
         </div>
-        
+
         {/* Grid - 4 column layout for related articles */}
         <div className="w-[95%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-8">
           {filteredArticles.map((article) => (
