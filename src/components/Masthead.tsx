@@ -472,18 +472,38 @@ export default function Masthead({
             the nav is condensed this rule is the header's bottom edge,
             and it goes transparent while an inverted band passes
             beneath (the colour-aware border). */}
+        {/* Condensed shrink (sm+, user call 2026-08-09): past the fold
+            threshold the whole tier translates 16px up — the visible
+            band drops 73 → 57px with ZERO layout change (the same
+            overlay principle as the nav fold: sticky-chrome layout
+            height never animates, so no scroll-anchoring feedback at
+            the threshold). The vacated strip under the risen rule is
+            just the pointer-inert shell — content scrolls through it
+            and stays clickable. The inner row counter-shifts +8px and
+            scales to .8, so the wordmark and buttons shrink and
+            re-centre in the shorter band, all on the compositor. */}
         <div
           data-masthead-chrome
           className={cn(
             "pointer-events-auto bg-canvas border-b",
-            "transition-colors duration-200",
+            "transition-[border-color,translate] duration-300 ease-[cubic-bezier(.22,1,.36,1)] will-change-[translate] motion-reduce:transition-none",
+            navCondensed && "sm:-translate-y-4",
             navCondensed && overInverted
               ? "border-transparent"
               : "border-borderSubtle",
           )}
         >
           <div className="mx-auto max-w-content px-4">
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-3">
+            <div
+              className={cn(
+                "grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-3",
+                // v4 scale/translate are independent properties — both
+                // must be NAMED in the transition list (the transform
+                // gotcha from the fold rework).
+                "transition-[translate,scale] duration-300 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none",
+                navCondensed && "sm:translate-y-2 sm:scale-[0.8]",
+              )}
+            >
               {/* left — search + single theme toggle. inert while the mobile
                 sheet covers them: out of the tab order and AT tree, since
                 only the wordmark and the ✕ stay visible over the sheet. */}
