@@ -708,7 +708,21 @@ export default function Masthead({
                   visible until the end) so the links stay drawn while
                   the row departs, then leave the tab order once
                   hidden. */}
-              <div data-masthead-chrome className="h-10 overflow-hidden">
+              {/* The clip wrapper RIDES THE TIER's condensed translate
+                  (same -16px, same timeline) so its top edge — where the
+                  links get clipped — is always exactly the tier's risen
+                  rule. Without this the row vanished at an invisible
+                  line 16px below the shrinking header (user call
+                  2026-08-09: the fold should read as the band rolling
+                  up INTO the main navigation). */}
+              <div
+                data-masthead-chrome
+                className={cn(
+                  "h-10 overflow-hidden",
+                  "transition-[translate] duration-300 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none",
+                  navCondensed && "sm:-translate-y-4",
+                )}
+              >
                 <div
                   className={cn(
                     "h-full border-b border-borderSubtle bg-canvas",
