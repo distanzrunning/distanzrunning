@@ -675,7 +675,11 @@ export default function Masthead({
                     // the independent `translate` PROPERTY (transform
                     // stays `none`) — with only `transform` listed the
                     // slide snaps instead of easing.
-                    "transition-[translate,visibility] duration-200 ease-out will-change-[translate] motion-reduce:transition-none",
+                    // 300ms on the mobile sheet's cubic-bezier(.22,1,.36,1)
+                    // (user call 2026-08-09: "a tad softer" than
+                    // 200ms ease-out) — the strong-deceleration house
+                    // curve, so masthead motion reads as one family.
+                    "transition-[translate,visibility] duration-300 ease-[cubic-bezier(.22,1,.36,1)] will-change-[translate] motion-reduce:transition-none",
                     navCondensed
                       ? "invisible -translate-y-full"
                       : "translate-y-0",
