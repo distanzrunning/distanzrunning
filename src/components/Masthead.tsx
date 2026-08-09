@@ -200,6 +200,14 @@ const CHEVRON_CLASS = cn(
   "group-data-[state=open]/trigger:rotate-180",
 );
 
+// Condensed-shrink treatment for the top tier's three content groups.
+// v4 scale/translate are independent properties — both must be NAMED in
+// the transition list (the transform gotcha from the fold rework). The
+// per-group transform-origin lives on each group's own class.
+const SHRINK_TRANSITION =
+  "transition-[translate,scale] duration-300 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none";
+const SHRINK_CONDENSED = "sm:translate-y-2 sm:scale-[0.8]";
+
 // Mobile menu row — ≥40px tap target (WCAG 2.5.8 comfort); hover/focus is
 // Footer's linkClasses verbatim (Footer.tsx:72-73).
 const MOBILE_LINK_CLASS = cn(
@@ -494,21 +502,25 @@ export default function Masthead({
           )}
         >
           <div className="mx-auto max-w-content px-4">
-            <div
-              className={cn(
-                "grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-3",
-                // v4 scale/translate are independent properties — both
-                // must be NAMED in the transition list (the transform
-                // gotcha from the fold rework).
-                "transition-[translate,scale] duration-300 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none",
-                navCondensed && "sm:translate-y-2 sm:scale-[0.8]",
-              )}
-            >
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-3">
               {/* left — search + single theme toggle. inert while the mobile
                 sheet covers them: out of the tab order and AT tree, since
                 only the wordmark and the ✕ stay visible over the sheet. */}
+              {/* Condensed shrink is applied PER GROUP, each scaling about
+                  its own anchor (left cluster from its left edge, wordmark
+                  from centre, right cluster from its right edge) — scaling
+                  the whole row about its centre dragged the outer clusters
+                  ~130px toward the middle (user call 2026-08-09: contents
+                  stay in place, one seamless motion). +8px recentres each
+                  group vertically in the 57px condensed band (the tier
+                  itself rises 16); everything shares the fold's 300ms
+                  house curve. */}
               <div
-                className="flex items-center gap-1"
+                className={cn(
+                  "flex origin-left items-center gap-1",
+                  SHRINK_TRANSITION,
+                  navCondensed && SHRINK_CONDENSED,
+                )}
                 inert={mobileOpen || undefined}
               >
                 <Button
@@ -547,13 +559,23 @@ export default function Masthead({
               <Link
                 href="/"
                 aria-label="Distanz — home"
-                className="relative z-[2] flex items-center justify-center text-textDefault"
+                className={cn(
+                  "relative z-[2] flex origin-center items-center justify-center text-textDefault",
+                  SHRINK_TRANSITION,
+                  navCondensed && SHRINK_CONDENSED,
+                )}
               >
                 <Wordmark className="h-12 w-auto" zHover="tilt" />
               </Link>
 
               {/* right — auth + hamburger */}
-              <div className="flex items-center justify-end gap-2">
+              <div
+                className={cn(
+                  "flex origin-right items-center justify-end gap-2",
+                  SHRINK_TRANSITION,
+                  navCondensed && SHRINK_CONDENSED,
+                )}
+              >
                 <div className="hidden items-center gap-2 sm:flex">
                   <Button variant="tertiary" size="large">
                     Sign in
