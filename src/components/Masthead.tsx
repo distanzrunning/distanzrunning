@@ -613,7 +613,17 @@ export default function Masthead({
               // is the sole close trigger for pointer users).
               if (next !== "" || !cursorInBridgeRef.current) setValue(next);
             }}
-            className="pointer-events-auto absolute inset-x-0 top-0 bg-canvas"
+            className={cn(
+              "absolute inset-x-0 top-0",
+              // No bg here — the canvas rides the SLIDING ROW (and the
+              // Viewport paints its own): the Root now keeps a constant
+              // 40px footprint, so a Root-level canvas would paint a
+              // white strip over content while the row is folded away.
+              // Pointer events follow the row for the same reason —
+              // while condensed the strip is empty, and clicks/hovers
+              // must fall through to the page scrolling beneath it.
+              navCondensed ? "pointer-events-none" : "pointer-events-auto",
+            )}
           >
             {/* Bridge wrapper — spans the trigger row + the flush panel beneath
               it so the cursor never leaves the "menu" while traversing from a
@@ -642,92 +652,102 @@ export default function Masthead({
             >
               {/* Persistent navbar bottom rule — full-bleed across the
                   viewport (user call 2026-07-29) while the links stay on
-                  the max-w-content column inside; the rule lives on this
-                  folding wrapper so it spans past the content edge. The
+                  the max-w-content column inside; the rule rides the
+                  sliding row so it spans past the content edge. The
                   panel then expands downward below it with its own
                   matching bottom border. */}
-              <div
-                data-masthead-chrome
-                className={cn(
-                  "overflow-hidden border-b",
-                  // 404's .is-scrolled collapse: height → 0 + border off,
-                  // eased. visibility rides the same transition (interpolated
-                  // as visible until the end), so the links stay drawn while
-                  // the row folds, then leave the tab order once hidden.
-                  "transition-[height,visibility] duration-200 ease-out motion-reduce:transition-none",
-                  // border-b-0 (not just transparent) while folded: a 1px
-                  // border can't compress inside h-0 border-box, so the
-                  // "empty" row still rendered 1px tall and the Root's
-                  // bg-canvas painted a hairline of page-white hanging
-                  // under the header — visible over darker content.
-                  navCondensed
-                    ? "invisible h-0 border-b-0"
-                    : "h-10 border-borderSubtle",
-                )}
-              >
-                {/* grid, not block: Radix wraps the List in a classless
+              {/* The fold is a composited SLIDE, not a height animation
+                  (user call 2026-08-09: the height transition ran
+                  main-thread layout every frame and stuttered against
+                  live scrolling). The clip wrapper keeps a constant
+                  40px box; the row translates up behind the top tier
+                  on the compositor, canvas + rule riding along.
+                  visibility shares the transition (interpolated as
+                  visible until the end) so the links stay drawn while
+                  the row departs, then leave the tab order once
+                  hidden. */}
+              <div data-masthead-chrome className="h-10 overflow-hidden">
+                <div
+                  className={cn(
+                    "h-full border-b border-borderSubtle bg-canvas",
+                    // `translate` in the transition list, not just
+                    // `transform`: Tailwind v4's translate utilities set
+                    // the independent `translate` PROPERTY (transform
+                    // stays `none`) — with only `transform` listed the
+                    // slide snaps instead of easing.
+                    "transition-[translate,visibility] duration-200 ease-out will-change-[translate] motion-reduce:transition-none",
+                    navCondensed
+                      ? "invisible -translate-y-full"
+                      : "translate-y-0",
+                  )}
+                >
+                  {/* grid, not block: Radix wraps the List in a classless
                     indicator-track div we can't style, and a percentage
                     h-full can't resolve through its auto height — the
                     links would top-align in the band. A grid cell
                     stretches that div to the full band height, giving
                     the List's h-full something definite to fill. */}
-                <div className="mx-auto grid h-full max-w-content px-4">
-                  <NavigationMenuPrimitive.List className="flex h-full items-stretch justify-center gap-1">
-                    {/* Editorial disciplines — plain links, no panel. Entering one
+                  <div className="mx-auto grid h-full max-w-content px-4">
+                    <NavigationMenuPrimitive.List className="flex h-full items-stretch justify-center gap-1">
+                      {/* Editorial disciplines — plain links, no panel. Entering one
                     closes any open mega-menu: the bridge suppresses Radix's
                     close while the cursor is still in the row, so a plain link
                     (which has no Radix value to switch to) would otherwise leave
                     the previous trigger stuck open. */}
-                    {EDITORIAL_LINKS.map((item) => (
-                      <NavigationMenuPrimitive.Item
-                        key={item.href}
-                        className="flex"
-                      >
-                        <NavigationMenuPrimitive.Link asChild>
-                          <Link
-                            href={item.href}
-                            className={LINK_CLASS}
-                            onPointerEnter={() => setValue("")}
-                          >
-                            {item.label}
-                          </Link>
-                        </NavigationMenuPrimitive.Link>
-                      </NavigationMenuPrimitive.Item>
-                    ))}
-
-                    {/* Product + races — mega-menu triggers. */}
-                    {MEGA_SECTIONS.map((section) => (
-                      <NavigationMenuPrimitive.Item
-                        key={section.key}
-                        value={section.key}
-                        className="flex"
-                      >
-                        <NavigationMenuPrimitive.Trigger
-                          data-nav-trigger
-                          className={TRIGGER_CLASS}
+                      {EDITORIAL_LINKS.map((item) => (
+                        <NavigationMenuPrimitive.Item
+                          key={item.href}
+                          className="flex"
                         >
-                          {section.label}
-                          <ChevronDown className={CHEVRON_CLASS} aria-hidden />
-                        </NavigationMenuPrimitive.Trigger>
-                        {/* absolute: outgoing and incoming Content overlap in the
+                          <NavigationMenuPrimitive.Link asChild>
+                            <Link
+                              href={item.href}
+                              className={LINK_CLASS}
+                              onPointerEnter={() => setValue("")}
+                            >
+                              {item.label}
+                            </Link>
+                          </NavigationMenuPrimitive.Link>
+                        </NavigationMenuPrimitive.Item>
+                      ))}
+
+                      {/* Product + races — mega-menu triggers. */}
+                      {MEGA_SECTIONS.map((section) => (
+                        <NavigationMenuPrimitive.Item
+                          key={section.key}
+                          value={section.key}
+                          className="flex"
+                        >
+                          <NavigationMenuPrimitive.Trigger
+                            data-nav-trigger
+                            className={TRIGGER_CLASS}
+                          >
+                            {section.label}
+                            <ChevronDown
+                              className={CHEVRON_CLASS}
+                              aria-hidden
+                            />
+                          </NavigationMenuPrimitive.Trigger>
+                          {/* absolute: outgoing and incoming Content overlap in the
                         Viewport during a section switch. No padding here — the
                         panel carries its own py AND its own max-w-content px-4
                         container (the Viewport is full-bleed), so the columns
                         sit on the site grid. */}
-                        <NavigationMenuPrimitive.Content className="absolute left-0 top-0 w-full">
-                          <MegaMenuPanel
-                            sectionKey={section.key}
-                            heading={section.heading}
-                            tagline={section.tagline}
-                            ctaLabel={section.ctaLabel}
-                            ctaHref={section.ctaHref}
-                            links={section.links}
-                            featured={featuredBySection[section.key]}
-                          />
-                        </NavigationMenuPrimitive.Content>
-                      </NavigationMenuPrimitive.Item>
-                    ))}
-                  </NavigationMenuPrimitive.List>
+                          <NavigationMenuPrimitive.Content className="absolute left-0 top-0 w-full">
+                            <MegaMenuPanel
+                              sectionKey={section.key}
+                              heading={section.heading}
+                              tagline={section.tagline}
+                              ctaLabel={section.ctaLabel}
+                              ctaHref={section.ctaHref}
+                              links={section.links}
+                              featured={featuredBySection[section.key]}
+                            />
+                          </NavigationMenuPrimitive.Content>
+                        </NavigationMenuPrimitive.Item>
+                      ))}
+                    </NavigationMenuPrimitive.List>
+                  </div>
                 </div>
               </div>
 
