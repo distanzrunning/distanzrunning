@@ -227,8 +227,11 @@ export default function RaceCard({
           HomepageUpcomingRaces matches the 16/10 ratio. */}
       {isCard && (
         <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-borderSubtle bg-[color:var(--ds-gray-100)]">
+          {/* EXPERIMENT (2026-08-10): BBC card-hover grammar on trial —
+              instant 80% image dim replacing the settle-zoom. Revert
+              this commit to restore the house pattern. */}
           {imageUrl && (
-            <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100 motion-reduce:scale-100 motion-reduce:transition-none">
+            <div className="absolute inset-0 group-hover:opacity-80">
               <CardImage
                 src={imageUrl}
                 alt={imageAlt ?? title}
@@ -254,8 +257,11 @@ export default function RaceCard({
             isIndex || isOutline ? "" : "rounded-t-xs"
           }`}
         >
+          {/* EXPERIMENT (2026-08-10): BBC card-hover grammar on trial —
+              instant 80% image dim replacing the settle-zoom. Revert
+              this commit to restore the house pattern. */}
           {imageUrl && (
-            <div className="absolute inset-0 scale-[1.04] transition-transform duration-300 ease-out will-change-transform group-hover:scale-100 motion-reduce:scale-100 motion-reduce:transition-none">
+            <div className="absolute inset-0 group-hover:opacity-80">
               <CardImage
                 src={imageUrl}
                 alt={imageAlt ?? title}
@@ -354,7 +360,7 @@ export default function RaceCard({
                   ArticleCard chrome. */}
               <Link
                 href={href}
-                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-xs focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
+                className="outline-none after:absolute after:inset-0 after:content-[''] group-hover:underline focus-visible:after:rounded-xs focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
               >
                 {title}
               </Link>
@@ -381,7 +387,7 @@ export default function RaceCard({
             <h3 className="line-clamp-2 text-display-20 text-textDefault">
               <Link
                 href={href}
-                className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:rounded-xs focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
+                className="outline-none after:absolute after:inset-0 after:content-[''] group-hover:underline focus-visible:after:rounded-xs focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]"
               >
                 {title}
               </Link>

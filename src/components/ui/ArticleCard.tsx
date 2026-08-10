@@ -199,7 +199,10 @@ export default function ArticleCard({
             sizes={imageSizes}
             placeholder={blurDataURL ? "blur" : "empty"}
             blurDataURL={blurDataURL ?? undefined}
-            className="scale-[1.04] object-cover transition-transform duration-300 ease-out group-hover:scale-100 motion-reduce:scale-100 motion-reduce:transition-none"
+            // EXPERIMENT (2026-08-10): BBC card-hover grammar on trial —
+            // instant 80% image dim + headline underline, replacing the
+            // settle-zoom. Revert this commit to restore the house pattern.
+            className="object-cover group-hover:opacity-80"
           />
         )}
         {/* Placement badge over the image's top-left corner. */}
@@ -271,6 +274,9 @@ export default function ArticleCard({
             href={href}
             className={cn(
               "outline-none after:absolute after:inset-0 focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[color:var(--ds-focus-color)]",
+              // EXPERIMENT (2026-08-10): BBC headline underline on card
+              // hover — on trial against the DS no-underline convention.
+              "group-hover:underline",
               // Ring radius matches the chrome's visual corner — the
               // 4px editorial radius on both anatomies.
               isPlain
