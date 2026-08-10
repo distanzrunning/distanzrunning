@@ -205,7 +205,7 @@ const CHEVRON_CLASS = cn(
 // the transition list (the transform gotcha from the fold rework). The
 // per-group transform-origin lives on each group's own class.
 const SHRINK_TRANSITION =
-  "transition-[translate,scale] duration-400 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none";
+  "transition-[translate,scale] duration-500 ease-[ease] motion-reduce:transition-none";
 const SHRINK_CONDENSED = "sm:translate-y-2 sm:scale-[0.8]";
 
 // Mobile menu row — ≥40px tap target (WCAG 2.5.8 comfort); hover/focus is
@@ -494,7 +494,7 @@ export default function Masthead({
           data-masthead-chrome
           className={cn(
             "pointer-events-auto bg-canvas border-b",
-            "transition-[border-color,translate] duration-400 ease-[cubic-bezier(.22,1,.36,1)] will-change-[translate] motion-reduce:transition-none",
+            "transition-[border-color,translate] duration-500 ease-[ease] will-change-[translate] motion-reduce:transition-none",
             navCondensed && "sm:-translate-y-4",
             navCondensed && overInverted
               ? "border-transparent"
@@ -513,7 +513,7 @@ export default function Masthead({
                   ~130px toward the middle (user call 2026-08-09: contents
                   stay in place, one seamless motion). +8px recentres each
                   group vertically in the 57px condensed band (the tier
-                  itself rises 16); everything shares the fold's 400ms
+                  itself rises 16); everything shares the fold's 500ms
                   house curve. */}
               <div
                 className={cn(
@@ -719,7 +719,7 @@ export default function Masthead({
                 data-masthead-chrome
                 className={cn(
                   "h-10 overflow-hidden",
-                  "transition-[translate] duration-400 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none",
+                  "transition-[translate] duration-500 ease-[ease] motion-reduce:transition-none",
                   navCondensed && "sm:-translate-y-4",
                 )}
               >
@@ -731,14 +731,14 @@ export default function Masthead({
                     // the independent `translate` PROPERTY (transform
                     // stays `none`) — with only `transform` listed the
                     // slide snaps instead of easing.
-                    // 400ms on the mobile sheet's cubic-bezier(.22,1,.36,1)
-                    // (user calls 2026-08-09/10: softened from 200ms
-                    // ease-out, then paced toward the BBC header's
-                    // 0.5s ease) — the strong-deceleration house curve,
-                    // so masthead motion reads as one family. The whole
-                    // condense family (tier, groups, clip, row) shares
-                    // this duration.
-                    "transition-[translate,visibility] duration-400 ease-[cubic-bezier(.22,1,.36,1)] will-change-[translate] motion-reduce:transition-none",
+                    // 500ms plain `ease` — the BBC header's condensation
+                    // timing verbatim (user calls 2026-08-09/10: softened
+                    // stepwise from 200ms ease-out; the house bezier's
+                    // front-loaded attack still read fast at 400ms). The
+                    // whole condense family (tier, groups, clip, row)
+                    // shares this; the sheet/burger keep the house curve
+                    // (user-initiated gesture vs ambient chrome motion).
+                    "transition-[translate,visibility] duration-500 ease-[ease] will-change-[translate] motion-reduce:transition-none",
                     navCondensed
                       ? "invisible -translate-y-full"
                       : "translate-y-0",
