@@ -21,8 +21,6 @@ import { raceTagsQuery } from "@/sanity/queries/raceTagsQuery";
 import RaceGrid, { type RaceIndexItem } from "./RaceGrid";
 import RaceUnitControls from "./RaceUnitControls";
 import FiltersShell from "./FiltersShell";
-import FullPageSkeleton from "./FullPageSkeleton";
-import InitialLoadShell from "./InitialLoadShell";
 import { buildQueryParams, getSort, parseFilters } from "./filters";
 
 export const metadata = {
@@ -77,35 +75,39 @@ export default async function RacesPage({
     }))
     .sort((a, b) => a.city.localeCompare(b.city));
 
+  // No cold-load skeleton gate: the grid is server-rendered with LQIP
+  // blur placeholders, so the real page IS the first paint (the old
+  // InitialLoadShell predates LQIP — its skeleton flashed for a few
+  // frames on warm reloads while guarding against an image pop-in
+  // that no longer happens). FiltersShell keeps its own 250ms-delayed
+  // skeleton for filter round-trips.
   return (
-    <InitialLoadShell skeleton={<FullPageSkeleton />}>
-      <div className="mx-auto flex w-full max-w-content flex-col gap-12 px-4 py-12 md:py-16 lg:py-20">
-        <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-8">
-          <div className="flex flex-col gap-3">
-            {/* Page title is wayfinding chrome — UI heading register
+    <div className="mx-auto flex w-full max-w-content flex-col gap-12 px-4 py-12 md:py-16 lg:py-20">
+      <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-8">
+        <div className="flex flex-col gap-3">
+          {/* Page title is wayfinding chrome — UI heading register
                 (600), like the homepage section headers one size up. */}
-            <h1 className="m-0 text-balance text-heading-40 text-textDefault md:text-heading-48">
-              Races
-            </h1>
-            <p className="max-w-2xl text-copy-16 text-textSubtle md:text-copy-18">
-              Find your next race. Explore thousands of the world&apos;s
-              greatest races with detailed race guides, course analysis, local
-              tips and recommendations.
-            </p>
-          </div>
-          <RaceUnitControls />
-        </header>
+          <h1 className="m-0 text-balance text-heading-40 text-textDefault md:text-heading-48">
+            Races
+          </h1>
+          <p className="max-w-2xl text-copy-16 text-textSubtle md:text-copy-18">
+            Find your next race. Explore thousands of the world&apos;s greatest
+            races with detailed race guides, course analysis, local tips and
+            recommendations.
+          </p>
+        </div>
+        <RaceUnitControls />
+      </header>
 
-        <FiltersShell
-          initialFilters={filters}
-          countries={countries}
-          cities={cities}
-          tags={tags}
-        >
-          <RaceGrid races={races} />
-        </FiltersShell>
-      </div>
-    </InitialLoadShell>
+      <FiltersShell
+        initialFilters={filters}
+        countries={countries}
+        cities={cities}
+        tags={tags}
+      >
+        <RaceGrid races={races} />
+      </FiltersShell>
+    </div>
   );
 }
 
