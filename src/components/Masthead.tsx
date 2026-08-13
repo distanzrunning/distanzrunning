@@ -494,7 +494,12 @@ export default function Masthead({
           data-masthead-chrome
           className={cn(
             "pointer-events-auto bg-canvas border-b",
-            "transition-[border-color,translate] duration-500 ease-[ease] will-change-[translate] motion-reduce:transition-none",
+            // sm:-scoped will-change: below sm the hint would create a
+            // stacking context on the tier for nothing (the shrink is
+            // desktop-only) — and that context TRAPS the wordmark's and
+            // hamburger's z-[2], dropping them under the mobile sheet's
+            // z-[1] (the open-menu logo/✕ vanish, fixed 2026-08-13).
+            "transition-[border-color,translate] duration-500 ease-[ease] sm:will-change-[translate] motion-reduce:transition-none",
             navCondensed && "sm:-translate-y-4",
             navCondensed && overInverted
               ? "border-transparent"
