@@ -26,7 +26,9 @@ import { FALLBACK_RATES } from "@/lib/raceUtils";
 // "Under $50".
 const PRICE_TO_USD = `select(${[
   ...Object.entries(FALLBACK_RATES).map(([cur, rate]) =>
-    cur === "USD" ? `currency == "USD" => price` : `currency == "${cur}" => price / ${rate}`,
+    cur === "USD"
+      ? `currency == "USD" => price`
+      : `currency == "${cur}" => price / ${rate}`,
   ),
   // Default: assume the value is already in USD if the currency
   // string isn't one we know about.
@@ -95,6 +97,7 @@ export function buildRaceIndexQuery(sort: RaceSortKey = DEFAULT_SORT): string {
       "slug": slug.current,
       "href": "/races/" + slug.current,
       mainImage,
+      "lqip": mainImage.asset->metadata.lqip,
       eventDate,
       city,
       stateRegion,

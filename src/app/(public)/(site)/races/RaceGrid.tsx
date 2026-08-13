@@ -1,8 +1,11 @@
 // src/app/races/RaceGrid.tsx
 //
 // Server component. Takes the already-filtered, already-sorted
-// race list from page.tsx and renders the responsive RaceCard grid.
-// No client logic — first paint is the final layout.
+// race list from page.tsx and renders the responsive RaceCard grid
+// — three per row on desktop, the homepage's chrome="card"
+// treatment (Vercel-KB anatomy: clipped surface container, 16/10
+// photo, footer with title/location + date pill). No client logic
+// — first paint is the final layout.
 
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import RaceCard from "@/components/RaceCard";
@@ -14,6 +17,8 @@ export type RaceIndexItem = {
   slug?: string;
   href: string;
   mainImage?: SanityImageSource | null;
+  /** Inline LQIP (asset->metadata.lqip) for the blur placeholder. */
+  lqip?: string | null;
   eventDate?: string;
   city?: string;
   stateRegion?: string;
@@ -37,14 +42,16 @@ function formatLocation(item: RaceIndexItem): string | undefined {
 
 function resolveImage(item: RaceIndexItem): string | undefined {
   if (!item.mainImage) return undefined;
-  return urlFor(item.mainImage).width(1200).auto("format").url();
+  // Crop at the data layer to the card chrome's 16/10 panel so the
+  // client never over-fetches or re-crops.
+  return urlFor(item.mainImage).width(960).height(600).auto("format").url();
 }
 
 export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
   if (races.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-[color:var(--ds-gray-400)] p-12 text-center">
-        <p className="text-copy-16 text-[color:var(--ds-gray-900)]">
+      <div className="rounded-sm border border-dashed border-[color:var(--ds-gray-400)] p-12 text-center">
+        <p className="text-copy-16 text-textSubtle">
           No races match these filters.
         </p>
       </div>
@@ -68,20 +75,15 @@ export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
       {races.map((race, i) => (
         <li key={race._id}>
           <RaceCard
-            variant="index"
+            chrome="card"
             href={race.href}
             title={race.title}
             eventDate={race.eventDate}
             location={formatLocation(race)}
             category={race.category}
             imageUrl={resolveImage(race)}
+            blurDataURL={race.lqip}
             priority={i < 6}
-            surface={race.surface}
-            surfaceBreakdown={race.surfaceBreakdown}
-            profile={race.profile}
-            elevationGain={race.elevationGain}
-            price={race.price}
-            currency={race.currency}
           />
         </li>
       ))}
