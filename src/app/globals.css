@@ -3976,6 +3976,17 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
    wherever the user happens to be looking. max(0px, …) clamps
    the insets so they stay non-negative for at-top viewers
    whose slit is already near the element's top. */
+/* PopoverBackdrop fade-in — from transparent to the element's own
+   inline opacity (the animation omits `to`, so it eases toward the
+   computed value: half the shared backdrop token for popover-scale
+   surfaces). A keyframe, not a transition: the layer mounts
+   conditionally, so a transition would have no from-state. */
+@keyframes popover-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
 @keyframes guide-panel-crt-on {
   0% {
     clip-path: inset(

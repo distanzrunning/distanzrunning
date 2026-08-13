@@ -20,14 +20,17 @@ import { lockDocumentScroll } from "@/lib/scroll-lock";
 
 interface PopoverBackdropProps {
   open: boolean;
-  /** z-index of the backdrop. Should sit just below the popover
-   *  content's z-index. Defaults to 2000. */
+  /** z-index of the backdrop. Defaults to 40 — UNDER the sticky
+   *  masthead (z-50) so the chrome stays sharp at any header height
+   *  (the mega-menu scrim's layering model), while everything in the
+   *  page flow recedes. The popover content itself portals at
+   *  z-[2001], far above. */
   zIndex?: number;
 }
 
 export default function PopoverBackdrop({
   open,
-  zIndex = 2000,
+  zIndex = 40,
 }: PopoverBackdropProps) {
   // Lock document scroll while open. lockDocumentScroll pads <html> by
   // the freed scrollbar width — there is no reserved scrollbar-gutter
@@ -43,17 +46,27 @@ export default function PopoverBackdrop({
   return createPortal(
     <div
       aria-hidden
-      className="fixed inset-x-0 bottom-0 top-[50px] transition-opacity duration-150"
+      // Keyframe animation, not transition-opacity: the layer mounts
+      // conditionally, so a transition has no from-state and the scrim
+      // used to POP in at full strength.
+      // inset-0, not the old top-[50px]: that offset was the previous
+      // site header's height and sliced the veil through the taller
+      // masthead — z-40 under the header now keeps the chrome sharp
+      // instead of a magic pixel offset.
+      className="fixed inset-0 motion-reduce:animate-none"
       style={{
         zIndex,
-        // Shared scrim, matching Modal/Sheet/CommandMenu/Mega-menu: the
-        // --ds-overlay-backdrop-* token (rgb(0,0,0) @ 0.2) + blur(8px).
-        // Was a hand-rolled opacity:0.5 / blur(12px).
+        // HALF the modal treatment (user call 2026-08-13 — the full
+        // 0.8-frost + 8px blur read abrasive under a popover-scale
+        // surface): same token colour, half opacity, half blur, eased
+        // in. Modal/Sheet/CommandMenu/Mega-menu keep the full-strength
+        // pair — a popover recedes the page, it doesn't replace it.
         backgroundColor: "var(--ds-overlay-backdrop-color)",
-        opacity: "var(--ds-overlay-backdrop-opacity)",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
+        opacity: "calc(var(--ds-overlay-backdrop-opacity) / 2)",
+        backdropFilter: "blur(4px)",
+        WebkitBackdropFilter: "blur(4px)",
         pointerEvents: "none",
+        animation: "popover-backdrop-in 150ms ease-out",
       }}
     />,
     document.body,
