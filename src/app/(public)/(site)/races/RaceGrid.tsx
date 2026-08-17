@@ -74,8 +74,12 @@ export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
     >
       {races.map((race, i) => (
         <li key={race._id}>
+          {/* variant="index" on the card chrome: the glassy hover
+              overlay with the Surface / Elevation / Price stat pills
+              — the index page's extra-information layer. */}
           <RaceCard
             chrome="card"
+            variant="index"
             href={race.href}
             title={race.title}
             eventDate={race.eventDate}
@@ -84,6 +88,12 @@ export default function RaceGrid({ races }: { races: RaceIndexItem[] }) {
             imageUrl={resolveImage(race)}
             blurDataURL={race.lqip}
             priority={i < 6}
+            surface={race.surface}
+            surfaceBreakdown={race.surfaceBreakdown}
+            profile={race.profile}
+            elevationGain={race.elevationGain}
+            price={race.price}
+            currency={race.currency}
           />
         </li>
       ))}

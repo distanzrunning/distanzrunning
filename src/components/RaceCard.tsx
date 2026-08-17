@@ -215,6 +215,42 @@ export default function RaceCard({
   // The hover stat overlay is an index-variant feature.
   const showHoverStats = isIndex && Boolean(stats?.hasAnyHoverContent);
 
+  // Glassy hover stat overlay (index variant, any chrome) — a single
+  // absolutely-positioned layer that recedes the photo via
+  // backdrop-filter brightness/contrast and floats the Surface /
+  // Elevation / Price columns, fading in on group hover. Shared by
+  // the legacy filled anatomy AND the card chrome (the /races grid
+  // runs chrome="card" variant="index"; user call 2026-08-13 — the
+  // extra info pills return on hover). Pills over the image keep
+  // z-20 so they stay legible above the glass.
+  const statOverlay = showHoverStats ? (
+    <div
+      className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-6 px-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      style={{
+        backdropFilter: "blur(12px) brightness(0.8) contrast(1.1)",
+        WebkitBackdropFilter: "blur(12px) brightness(0.8) contrast(1.1)",
+      }}
+    >
+      {surface && (
+        <StatColumn label="Surface" value={surface} detail={surfaceBreakdown} />
+      )}
+      {(stats?.profileLabel || stats?.elevationGainLabel) && (
+        <StatColumn
+          label="Elevation"
+          value={stats?.profileLabel ?? stats?.elevationGainLabel ?? ""}
+          detail={stats?.profileLabel ? stats?.elevationGainLabel : undefined}
+        />
+      )}
+      {stats?.priceLabel && (
+        <StatColumn
+          label="Price"
+          value={stats.priceLabel}
+          detail={stats.targetCurrency}
+        />
+      )}
+    </div>
+  ) : null;
+
   return (
     <article
       className={`group relative flex w-full flex-col ${articleRadius} ${className}`.trim()}
@@ -242,12 +278,13 @@ export default function RaceCard({
             </div>
           )}
           {category && (
-            <div className="absolute right-3 top-3 z-10">
+            <div className="absolute right-3 top-3 z-20">
               <span className="inline-flex h-6 items-center rounded-full border border-borderSubtle bg-surface px-3 text-label-12 text-textDefault">
                 {category}
               </span>
             </div>
           )}
+          {statOverlay}
         </div>
       )}
 
@@ -293,44 +330,7 @@ export default function RaceCard({
             </div>
           )}
 
-          {/* Hover overlay (index variant + plain chrome with stats).
-            Single absolutely-positioned layer that darkens the image
-            via backdrop-filter brightness/contrast and renders the
-            three stat columns on top. Fades in on group hover. */}
-          {showHoverStats && (
-            <div
-              className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-6 px-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              style={{
-                backdropFilter: "blur(12px) brightness(0.8) contrast(1.1)",
-                WebkitBackdropFilter:
-                  "blur(12px) brightness(0.8) contrast(1.1)",
-              }}
-            >
-              {surface && (
-                <StatColumn
-                  label="Surface"
-                  value={surface}
-                  detail={surfaceBreakdown}
-                />
-              )}
-              {(stats?.profileLabel || stats?.elevationGainLabel) && (
-                <StatColumn
-                  label="Elevation"
-                  value={stats?.profileLabel ?? stats?.elevationGainLabel ?? ""}
-                  detail={
-                    stats?.profileLabel ? stats?.elevationGainLabel : undefined
-                  }
-                />
-              )}
-              {stats?.priceLabel && (
-                <StatColumn
-                  label="Price"
-                  value={stats.priceLabel}
-                  detail={stats.targetCurrency}
-                />
-              )}
-            </div>
-          )}
+          {statOverlay}
         </div>
       )}
 
