@@ -24,6 +24,7 @@ export type RaceIndexItem = {
   stateRegion?: string;
   country?: string;
   category?: string;
+  tags?: string[];
   surface?: string;
   surfaceBreakdown?: string;
   profile?: string;

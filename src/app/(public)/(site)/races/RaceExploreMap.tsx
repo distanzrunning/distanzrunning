@@ -33,16 +33,29 @@ export interface MapRace {
   dateLabel?: string;
   location?: string;
   category?: string;
+  /** Abbott World Marathon Major — gets the gold-star marker. */
+  major?: boolean;
 }
 
 const LIGHT_STYLE = "mapbox://styles/mapbox/light-v11";
 const DARK_STYLE = "mapbox://styles/mapbox/dark-v11";
 
 /** Ink dot marker — theme-aware via the DS custom properties, which
- *  resolve inside the map container like anywhere else on the page. */
-function buildMarkerEl(): HTMLDivElement {
+ *  resolve inside the map container like anywhere else on the page.
+ *  Abbott World Marathon Majors get a gold star instead (user call
+ *  2026-08-21): amber fill with the same surface-tone outline the dot
+ *  wears, so both markers read as one family. */
+function buildMarkerEl(major: boolean): HTMLDivElement {
   const el = document.createElement("div");
-  el.className = "races-map-marker";
+  el.className = major
+    ? "races-map-marker races-map-marker--major"
+    : "races-map-marker";
+  if (major) {
+    el.innerHTML = `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 1.8l3.05 6.18 6.82.99-4.94 4.81 1.17 6.8L12 17.37l-6.1 3.21 1.17-6.8-4.94-4.81 6.82-.99L12 1.8z" />
+      </svg>`;
+  }
   return el;
 }
 
@@ -199,7 +212,9 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
         closeButton: false,
         maxWidth: "280px",
       }).setDOMContent(buildPopupEl(race));
-      return new mapboxgl.Marker({ element: buildMarkerEl() })
+      return new mapboxgl.Marker({
+        element: buildMarkerEl(Boolean(race.major)),
+      })
         .setLngLat([race.lng, race.lat])
         .setPopup(popup)
         .addTo(map);

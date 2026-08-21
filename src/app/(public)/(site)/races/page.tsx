@@ -235,6 +235,13 @@ async function geocodeRaces(races: RaceIndexItem[]): Promise<MapRace[]> {
           : undefined,
         location: location || undefined,
         category: race.category,
+        // EXACT tag match (case-insensitive): the dataset also holds
+        // "AbbottWMM Candidate" / "AbbottWMM MTT Age Group
+        // Qualifiers", which must NOT get the gold star.
+        major:
+          race.tags?.some(
+            (t) => t.trim().toLowerCase() === "abbott world marathon major",
+          ) ?? false,
       };
     }),
   );

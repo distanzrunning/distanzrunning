@@ -103,6 +103,7 @@ export function buildRaceIndexQuery(sort: RaceSortKey = DEFAULT_SORT): string {
       stateRegion,
       country,
       "category": raceCategory->title,
+      tags,
       surface,
       surfaceBreakdown,
       profile,
