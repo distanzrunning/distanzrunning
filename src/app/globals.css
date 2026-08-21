@@ -4019,6 +4019,42 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   }
 }
 
+/* /races indeterminate loading bar — the 2/5-width bar sweeps its
+   container edge to edge (translate is in % of the BAR's own width:
+   -100% parks it fully left of the box, 250% lands its left edge at
+   the container's right edge). Kept animating under reduced-motion:
+   it's a functional progress indicator, not decoration. */
+@keyframes races-loading-sweep {
+  from {
+    translate: -100% 0;
+  }
+  to {
+    translate: 250% 0;
+  }
+}
+.races-loading-sweep {
+  animation: races-loading-sweep 1.1s ease-in-out infinite;
+}
+
+/* /races map-view floating panel entrance — a settle-down from the
+   grid header's direction on the house sheet curve; paired with the
+   view-switch LoadingBar + map fade so the whole swap reads as one
+   motion (user call 2026-08-21). */
+@keyframes races-panel-in {
+  from {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+.races-panel-in {
+  animation: races-panel-in 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .races-panel-in {
+    animation: none;
+  }
+}
+
 @keyframes guide-panel-crt-on {
   0% {
     clip-path: inset(

@@ -19,6 +19,9 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import { cn } from "@/lib/utils";
+
+import LoadingBar from "./LoadingBar";
 
 export interface MapRace {
   _id: string;
@@ -76,6 +79,11 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
   // headless shells) — that must degrade to the fallback panel, not
   // take the whole route down through the error boundary.
   const [initFailed, setInitFailed] = useState(false);
+  // First-load gate: the canvas holds at opacity 0 over the recessed
+  // gray tone (with the slim LoadingBar running) until Mapbox's
+  // `load` fires, then fades up — tiles arrive as one settled frame
+  // instead of popping in piecemeal (user call 2026-08-21).
+  const [loaded, setLoaded] = useState(false);
 
   // Init once.
   useEffect(() => {
@@ -97,6 +105,7 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
       setInitFailed(true);
       return;
     }
+    map.on("load", () => setLoaded(true));
     map.addControl(
       new mapboxgl.NavigationControl({ showCompass: false }),
       "bottom-right",
@@ -168,5 +177,20 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
     );
   }
 
-  return <div ref={containerRef} className="races-map h-full w-full" />;
+  return (
+    <div className="relative h-full w-full bg-[color:var(--ds-gray-100)]">
+      {!loaded && (
+        <div className="absolute inset-x-0 top-0 z-10">
+          <LoadingBar />
+        </div>
+      )}
+      <div
+        ref={containerRef}
+        className={cn(
+          "races-map h-full w-full transition-opacity duration-500 ease-out motion-reduce:transition-none",
+          loaded ? "opacity-100" : "opacity-0",
+        )}
+      />
+    </div>
+  );
 }
