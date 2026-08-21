@@ -3933,6 +3933,38 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   display: none;
 }
 
+/* /races explore map (RaceExploreMap). Marker: an ink dot with a
+   surface ring — both tokens theme-flip, so one rule covers light
+   and dark tiles. Popup: DS surface card on the menu shadow (the
+   floating-material register), no tip — same modern-tooltip call
+   as the race-detail map above. */
+.races-map-marker {
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: var(--ds-gray-1000);
+  border: 2.5px solid var(--ds-background-100);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: transform 120ms ease-out;
+}
+.races-map-marker:hover {
+  transform: scale(1.25);
+}
+.races-map .mapboxgl-popup-content {
+  background: var(--ds-background-100);
+  box-shadow: var(--ds-shadow-menu);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.races-map .mapboxgl-popup-tip {
+  display: none;
+}
+/* Wordmark inverts on dark tiles, same as the race-detail map. */
+:is(.dark, [data-theme="dark"]) .races-map .mapboxgl-ctrl-logo {
+  filter: invert(1);
+}
+
 /* Race detail guide panel — CRT-on reveal. The panel column
    sits in the grid cell starting near the top of the page; the
    slit is anchored at 50vh in element-coords so it lands

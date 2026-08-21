@@ -55,6 +55,11 @@ interface FiltersShellProps {
   /** Every unique tag we have race data for, alphabetised.
    *  Powers the Tag filter's option list. */
   tags: string[];
+  /** Swap children for the grid skeleton during slow filter
+   *  round-trips. Default true (the grid view). The map view turns
+   *  this off — the map island stays mounted and its markers update
+   *  when the new props land, so a skeleton would be noise. */
+  skeletonOnPending?: boolean;
   children: ReactNode;
 }
 
@@ -63,6 +68,7 @@ export default function FiltersShell({
   countries,
   cities,
   tags,
+  skeletonOnPending = true,
   children,
 }: FiltersShellProps) {
   const router = useRouter();
@@ -126,8 +132,7 @@ export default function FiltersShell({
   const isPriceActive =
     initialFilters.priceMin != null || initialFilters.priceMax != null;
   const isElevationActive =
-    initialFilters.elevationMin != null ||
-    initialFilters.elevationMax != null;
+    initialFilters.elevationMin != null || initialFilters.elevationMax != null;
   const isTemperatureActive =
     initialFilters.temperatureMin != null ||
     initialFilters.temperatureMax != null;
@@ -140,10 +145,7 @@ export default function FiltersShell({
   // (overflow-x-auto on the chip strip). Without shrink-0,
   // chips would compress and their text would wrap.
   const slot = (active: boolean, chip: ReactNode) => (
-    <div
-      className="inline-flex shrink-0"
-      style={{ order: active ? -1 : 0 }}
-    >
+    <div className="inline-flex shrink-0" style={{ order: active ? -1 : 0 }}>
       {chip}
     </div>
   );
@@ -395,7 +397,7 @@ export default function FiltersShell({
         </div>
       </div>
 
-      {showSkeleton ? <RaceGridSkeleton /> : children}
+      {showSkeleton && skeletonOnPending ? <RaceGridSkeleton /> : children}
     </div>
   );
 }
