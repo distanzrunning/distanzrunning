@@ -60,6 +60,18 @@ interface FiltersShellProps {
    *  this off — the map island stays mounted and its markers update
    *  when the new props land, so a skeleton would be noise. */
   skeletonOnPending?: boolean;
+  /** Which /races view hosts this shell. "map" (user call
+   *  2026-08-21):
+   *    - every URL the shell writes carries `view=map` — without it,
+   *      any filter change (or Reset all) bounced back to the grid;
+   *    - the City / State / Sort chips are dropped — the map itself
+   *      is the fine-grained geography (pan/zoom replaces the
+   *      dropdowns) and markers have no sort order. Country stays:
+   *      with the camera refitting to the filtered set, it doubles
+   *      as fly-to-country. Any city/state/sort carried in from the
+   *      grid is stripped on the next write so no invisible filter
+   *      state survives. */
+  view?: "grid" | "map";
   children: ReactNode;
 }
 
@@ -69,8 +81,10 @@ export default function FiltersShell({
   cities,
   tags,
   skeletonOnPending = true,
+  view = "grid",
   children,
 }: FiltersShellProps) {
+  const isMap = view === "map";
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
@@ -94,6 +108,13 @@ export default function FiltersShell({
 
   const setFilter = (patch: Partial<RaceFilters>) => {
     const next: RaceFilters = { ...initialFilters, ...patch };
+    // Map view has no City / State / Sort — strip any values carried
+    // in via the URL so they don't apply invisibly.
+    if (isMap) {
+      delete next.city;
+      delete next.state;
+      delete next.sort;
+    }
     // Strip empty strings / undefined so they don't pollute the URL.
     // Explicit checks rather than `!v` so a meaningful 0 (e.g.,
     // distanceMin = 0) survives.
@@ -102,6 +123,9 @@ export default function FiltersShell({
       if (v === undefined || v === null || v === "") delete next[key];
     });
     const params = buildFilterParams(next);
+    // The view param is NOT filter state (buildFilterParams doesn't
+    // know it) — re-carry it or every filter change exits the map.
+    if (isMap) params.set("view", "map");
     const qs = params.toString();
     startTransition(() => {
       router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
@@ -110,7 +134,9 @@ export default function FiltersShell({
 
   const resetAll = () => {
     startTransition(() => {
-      router.replace(pathname, { scroll: false });
+      router.replace(isMap ? `${pathname}?view=map` : pathname, {
+        scroll: false,
+      });
     });
   };
 
@@ -248,31 +274,34 @@ export default function FiltersShell({
             }}
           />,
         )}
-        {slot(
-          isCityActive,
-          <CityFilter
-            options={cities}
-            value={initialFilters.city}
-            countryScope={initialFilters.country}
-            stateScope={initialFilters.state}
-            onChange={(picked) => {
-              if (!picked) {
-                setFilter({ city: undefined });
-                return;
-              }
-              // Auto-sync country to the picked city's country so
-              // filters stay coherent. Also auto-fill state when
-              // the picked city carries one (US cities only) so
-              // the State chip reflects the implied region —
-              // picking NYC sets state="New York" too.
-              setFilter({
-                city: picked.city,
-                country: picked.country,
-                state: picked.state,
-              });
-            }}
-          />,
-        )}
+        {/* City + State are grid-only — on the map, pan/zoom IS the
+            fine-grained location filter (Country stays as fly-to). */}
+        {!isMap &&
+          slot(
+            isCityActive,
+            <CityFilter
+              options={cities}
+              value={initialFilters.city}
+              countryScope={initialFilters.country}
+              stateScope={initialFilters.state}
+              onChange={(picked) => {
+                if (!picked) {
+                  setFilter({ city: undefined });
+                  return;
+                }
+                // Auto-sync country to the picked city's country so
+                // filters stay coherent. Also auto-fill state when
+                // the picked city carries one (US cities only) so
+                // the State chip reflects the implied region —
+                // picking NYC sets state="New York" too.
+                setFilter({
+                  city: picked.city,
+                  country: picked.country,
+                  state: picked.state,
+                });
+              }}
+            />,
+          )}
         {/* State chip hides in two cases:
             - Country is set to anything other than USA (states
               are US-only).
@@ -280,8 +309,9 @@ export default function FiltersShell({
               dropdown already filters to a single location, and
               the auto-filled state value still applies in the
               URL silently). */}
-        {(!initialFilters.country ||
-          initialFilters.country === US_COUNTRY_NAME) &&
+        {!isMap &&
+          (!initialFilters.country ||
+            initialFilters.country === US_COUNTRY_NAME) &&
           !initialFilters.city &&
           slot(
             isStateActive,
@@ -388,12 +418,15 @@ export default function FiltersShell({
           >
             Hide past races
           </Toggle>
-          <SortFilter
-            value={initialFilters.sort ?? DEFAULT_SORT}
-            onChange={(sort) =>
-              setFilter({ sort: sort === DEFAULT_SORT ? undefined : sort })
-            }
-          />
+          {/* Sort is grid-only — markers have no order. */}
+          {!isMap && (
+            <SortFilter
+              value={initialFilters.sort ?? DEFAULT_SORT}
+              onChange={(sort) =>
+                setFilter({ sort: sort === DEFAULT_SORT ? undefined : sort })
+              }
+            />
+          )}
         </div>
       </div>
 

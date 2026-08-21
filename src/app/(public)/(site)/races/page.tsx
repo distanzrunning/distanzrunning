@@ -93,9 +93,18 @@ export default async function RacesPage({
 
   // View-switch hrefs — current filters preserved, view toggled.
   // Built server-side so the ViewSwitch island stays Suspense-free.
+  // The map href drops City / State / Sort (those filters don't
+  // exist on the map — see FiltersShell's view prop), so switching
+  // never carries invisible filter state.
   const filterQs = buildFilterParams(filters).toString();
+  const mapFilterQs = buildFilterParams({
+    ...filters,
+    city: undefined,
+    state: undefined,
+    sort: undefined,
+  }).toString();
   const gridHref = filterQs ? `/races?${filterQs}` : "/races";
-  const mapHref = `/races?${filterQs ? `${filterQs}&` : ""}view=map`;
+  const mapHref = `/races?${mapFilterQs ? `${mapFilterQs}&` : ""}view=map`;
 
   const filtersShell = (
     skeletonOnPending: boolean,
@@ -107,6 +116,7 @@ export default async function RacesPage({
       cities={cities}
       tags={tags}
       skeletonOnPending={skeletonOnPending}
+      view={view}
     >
       {children}
     </FiltersShell>
