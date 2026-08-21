@@ -70,8 +70,9 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
-  // Skip the very first fitBounds animation — the map initialises
-  // with the right bounds; animating on mount reads as a glitch.
+  // First markers render must NOT refit the camera — the landing
+  // view is the whole-earth globe (fitGlobe in the init effect);
+  // only later filter round-trips zoom to their result set.
   const firstFitDoneRef = useRef(false);
 
   const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -94,10 +95,12 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
       map = new mapboxgl.Map({
         container: containerRef.current,
         style: isDark ? DARK_STYLE : LIGHT_STYLE,
-        // World view fallback; fitBounds below takes over as soon as
-        // markers exist.
-        center: [4, 30],
-        zoom: 1.4,
+        // The earth as a GLOBE (user call 2026-08-21) — fitGlobe
+        // below sizes and centres the sphere in the strip of map
+        // visible under the floating panel.
+        projection: "globe",
+        center: [10, 22],
+        zoom: 1,
         attributionControl: false,
       });
     } catch (err) {
@@ -105,7 +108,40 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
       setInitFailed(true);
       return;
     }
-    map.on("load", () => setLoaded(true));
+
+    // Initial camera: the WHOLE earth sphere fits between the
+    // floating panel's bottom edge and the section bottom. In globe
+    // projection the sphere's pixel diameter is worldSize/π =
+    // 512·2^zoom/π, so zoom = log2(d·π/512) for a target diameter d.
+    // Top padding = the measured panel bottom, so the sphere centres
+    // in the VISIBLE strip, not the full container. Runs pre-load —
+    // the canvas is still faded out, so the jump is invisible.
+    const fitGlobe = () => {
+      const el = containerRef.current;
+      if (!el) return;
+      const box = el.getBoundingClientRect();
+      const panel = document.querySelector("[data-races-panel]");
+      const panelBottom = panel
+        ? Math.max(0, panel.getBoundingClientRect().bottom - box.top)
+        : 0;
+      const availW = box.width - 48;
+      const availH = box.height - panelBottom - 48;
+      const d = Math.max(240, Math.min(availW, availH) * 0.92);
+      const zoom = Math.min(2.5, Math.max(0.2, Math.log2((d * Math.PI) / 512)));
+      map.jumpTo({
+        center: [10, 22],
+        zoom,
+        padding: { top: panelBottom, bottom: 0, left: 0, right: 0 },
+      });
+    };
+    fitGlobe();
+
+    map.on("load", () => {
+      // Default atmosphere — the subtle halo that makes the sphere
+      // read as the earth in space (classic v11 styles ship none).
+      map.setFog({});
+      setLoaded(true);
+    });
     map.addControl(
       new mapboxgl.NavigationControl({ showCompass: false }),
       "bottom-right",
@@ -150,15 +186,18 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
         .addTo(map);
     });
 
-    if (races.length > 0) {
+    // First render keeps the whole-earth globe (the landing moment);
+    // only FILTER round-trips refit the camera to the result set.
+    if (!firstFitDoneRef.current) {
+      firstFitDoneRef.current = true;
+    } else if (races.length > 0) {
       const bounds = new mapboxgl.LngLatBounds();
       races.forEach((r) => bounds.extend([r.lng, r.lat]));
       map.fitBounds(bounds, {
         padding: { top: 220, bottom: 80, left: 80, right: 80 },
         maxZoom: 10,
-        duration: firstFitDoneRef.current ? 600 : 0,
+        duration: 600,
       });
-      firstFitDoneRef.current = true;
     }
   }, [races]);
 

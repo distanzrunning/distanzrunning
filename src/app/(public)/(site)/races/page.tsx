@@ -134,7 +134,13 @@ export default async function RacesPage({
             swap reads as one motion. */}
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10">
           <div className="mx-auto w-full max-w-content px-4 pt-4 md:pt-6">
-            <div className="races-panel-in material-menu pointer-events-auto flex flex-col gap-4 p-4 md:p-5">
+            {/* data-races-panel: RaceExploreMap measures this panel's
+                bottom edge to centre the initial globe in the strip of
+                map visible BELOW it. */}
+            <div
+              data-races-panel
+              className="races-panel-in material-menu pointer-events-auto flex flex-col gap-4 p-4 md:p-5"
+            >
               <header className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
                 <div className="flex min-w-0 flex-col gap-1">
                   <h1 className="m-0 text-heading-24 text-textDefault">
@@ -145,7 +151,11 @@ export default async function RacesPage({
                     with detailed race guides.
                   </p>
                 </div>
-                <div className="flex shrink-0 items-center gap-3">
+                {/* min-w-0 + wrap, not shrink-0: the row must be able
+                    to shrink for flex-wrap to engage — with shrink-0
+                    the view switch overflowed the panel edge on
+                    mobile instead of wrapping. */}
+                <div className="flex min-w-0 flex-wrap items-center gap-3">
                   <RaceUnitControls />
                   <ViewSwitch
                     view="map"
