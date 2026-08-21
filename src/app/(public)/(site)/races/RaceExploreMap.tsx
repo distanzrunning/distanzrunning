@@ -19,6 +19,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import type { CountryBounds } from "@/lib/geocode";
 import { cn } from "@/lib/utils";
 
 import LoadingBar from "./LoadingBar";
@@ -78,7 +79,15 @@ function escapeHtml(s: string): string {
     .replaceAll('"', "&quot;");
 }
 
-export default function RaceExploreMap({ races }: { races: MapRace[] }) {
+export default function RaceExploreMap({
+  races,
+  countryBounds,
+}: {
+  races: MapRace[];
+  /** Active country filter's bbox — when set, the camera frames the
+   *  whole country instead of the pin cluster. */
+  countryBounds?: CountryBounds | null;
+}) {
   const { isDark } = useContext(DarkModeContext);
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -220,20 +229,44 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
         .addTo(map);
     });
 
-    // First render keeps the whole-earth globe (the landing moment);
-    // only FILTER round-trips refit the camera to the result set.
-    if (!firstFitDoneRef.current) {
+    // Camera. Padding keeps the frame clear of the floating panel
+    // (measured, like fitGlobe — the static 220 undershot it).
+    const box = containerRef.current?.getBoundingClientRect();
+    const panelEl = document.querySelector("[data-races-panel]");
+    const fitPadding = {
+      top:
+        panelEl && box
+          ? Math.max(0, panelEl.getBoundingClientRect().bottom - box.top) + 24
+          : 220,
+      bottom: 80,
+      left: 80,
+      right: 80,
+    };
+
+    if (countryBounds) {
+      // Country filter active → frame the WHOLE country, not the pin
+      // cluster (user call 2026-08-21). Also applies on a deep-linked
+      // first render (instant, no animation), replacing the globe
+      // landing — arriving at ?country=X&view=map should show X.
+      map.fitBounds(countryBounds, {
+        padding: fitPadding,
+        maxZoom: 10,
+        duration: firstFitDoneRef.current ? 600 : 0,
+      });
+      firstFitDoneRef.current = true;
+    } else if (!firstFitDoneRef.current) {
+      // First render, no country — keep the whole-earth globe landing.
       firstFitDoneRef.current = true;
     } else if (races.length > 0) {
       const bounds = new mapboxgl.LngLatBounds();
       races.forEach((r) => bounds.extend([r.lng, r.lat]));
       map.fitBounds(bounds, {
-        padding: { top: 220, bottom: 80, left: 80, right: 80 },
+        padding: fitPadding,
         maxZoom: 10,
         duration: 600,
       });
     }
-  }, [races]);
+  }, [races, countryBounds]);
 
   if (!token || initFailed) {
     // Graceful fallback (dev without the key, misconfigured deploy,

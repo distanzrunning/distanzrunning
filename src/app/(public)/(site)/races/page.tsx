@@ -24,7 +24,7 @@ import { buildRaceIndexQuery } from "@/sanity/queries/raceIndexQuery";
 import { raceCountriesQuery } from "@/sanity/queries/raceCountriesQuery";
 import { raceCitiesQuery } from "@/sanity/queries/raceCitiesQuery";
 import { raceTagsQuery } from "@/sanity/queries/raceTagsQuery";
-import { geocodeAddress } from "@/lib/geocode";
+import { geocodeAddress, geocodeCountryBounds } from "@/lib/geocode";
 import RaceGrid, { type RaceIndexItem } from "./RaceGrid";
 import RaceExploreMap, { type MapRace } from "./RaceExploreMap";
 import MapViewport from "./MapViewport";
@@ -124,7 +124,14 @@ export default async function RacesPage({
 
   // ---- Map view — full-bleed canvas + floating control panel ------------
   if (view === "map") {
-    const mapRaces = await geocodeRaces(races);
+    // Country filter active → the camera frames the WHOLE country,
+    // not just the pin cluster (user call 2026-08-21). Fetched in
+    // parallel with the per-race geocoding; null (no filter, unknown
+    // country, antimeridian-wrapping bbox) falls back to pin-fit.
+    const [mapRaces, countryBounds] = await Promise.all([
+      geocodeRaces(races),
+      filters.country ? geocodeCountryBounds(filters.country) : null,
+    ]);
 
     // Floating chrome — header + subheader + controls on one material
     // surface above the map (menu register: surface + shadow + 12px,
@@ -174,7 +181,7 @@ export default async function RacesPage({
       // (with-newsletter) group).
       <MapViewport panel={panel}>
         <div className="absolute inset-0">
-          <RaceExploreMap races={mapRaces} />
+          <RaceExploreMap races={mapRaces} countryBounds={countryBounds} />
         </div>
       </MapViewport>
     );
