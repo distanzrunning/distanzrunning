@@ -110,12 +110,16 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
     }
 
     // Initial camera: the WHOLE earth sphere fits between the
-    // floating panel's bottom edge and the section bottom. In globe
-    // projection the sphere's pixel diameter is worldSize/π =
-    // 512·2^zoom/π, so zoom = log2(d·π/512) for a target diameter d.
-    // Top padding = the measured panel bottom, so the sphere centres
-    // in the VISIBLE strip, not the full container. Runs pre-load —
-    // the canvas is still faded out, so the jump is invisible.
+    // floating panel's bottom edge and the section bottom (which
+    // MapViewport has already sized to end at the viewport edge, so
+    // the corner controls are in view too). Mapbox's own
+    // cameraForBounds does the globe maths — an analytic
+    // zoom-from-diameter formula undershot because the sphere is a
+    // perspective render, not a flat projection. No fog override:
+    // the basemap keeps the house light/dark scheme (user call
+    // 2026-08-21 — the space-and-stars atmosphere clashed with the
+    // page). Runs pre-load — the canvas is still faded out, so the
+    // jump is invisible.
     const fitGlobe = () => {
       const el = containerRef.current;
       if (!el) return;
@@ -124,24 +128,25 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
       const panelBottom = panel
         ? Math.max(0, panel.getBoundingClientRect().bottom - box.top)
         : 0;
-      const availW = box.width - 48;
-      const availH = box.height - panelBottom - 48;
-      const d = Math.max(240, Math.min(availW, availH) * 0.92);
-      const zoom = Math.min(2.5, Math.max(0.2, Math.log2((d * Math.PI) / 512)));
-      map.jumpTo({
-        center: [10, 22],
-        zoom,
-        padding: { top: panelBottom, bottom: 0, left: 0, right: 0 },
-      });
+      map.fitBounds(
+        [
+          [-180, -75],
+          [180, 75],
+        ],
+        {
+          padding: {
+            top: panelBottom + 12,
+            bottom: 24,
+            left: 24,
+            right: 24,
+          },
+          duration: 0,
+        },
+      );
     };
     fitGlobe();
 
-    map.on("load", () => {
-      // Default atmosphere — the subtle halo that makes the sphere
-      // read as the earth in space (classic v11 styles ship none).
-      map.setFog({});
-      setLoaded(true);
-    });
+    map.on("load", () => setLoaded(true));
     map.addControl(
       new mapboxgl.NavigationControl({ showCompass: false }),
       "bottom-right",
@@ -163,9 +168,23 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
   }, [token]);
 
   // Theme flip — swap basemap style in place (DOM markers survive
-  // setStyle; only canvas layers reset).
+  // setStyle; only canvas layers reset). Guarded by the last-set
+  // style (RaceMap.tsx's lastStyleUrlRef move): the effect also runs
+  // on mount, and re-setting the SAME style mid-load forced a full
+  // style rebuild ("Unable to perform style diff" console noise).
+  const lastStyleRef = useRef<string | null>(null);
   useEffect(() => {
-    mapRef.current?.setStyle(isDark ? DARK_STYLE : LIGHT_STYLE);
+    const map = mapRef.current;
+    if (!map) return;
+    const next = isDark ? DARK_STYLE : LIGHT_STYLE;
+    if (lastStyleRef.current === null) {
+      // First run — the constructor already applied this style.
+      lastStyleRef.current = next;
+      return;
+    }
+    if (lastStyleRef.current === next) return;
+    lastStyleRef.current = next;
+    map.setStyle(next);
   }, [isDark]);
 
   // Markers — rebuild on data change (filter round-trips), then fit

@@ -27,6 +27,7 @@ import { raceTagsQuery } from "@/sanity/queries/raceTagsQuery";
 import { geocodeAddress } from "@/lib/geocode";
 import RaceGrid, { type RaceIndexItem } from "./RaceGrid";
 import RaceExploreMap, { type MapRace } from "./RaceExploreMap";
+import MapViewport from "./MapViewport";
 import RaceUnitControls from "./RaceUnitControls";
 import FiltersShell from "./FiltersShell";
 import ViewSwitch from "./ViewSwitch";
@@ -114,61 +115,58 @@ export default async function RacesPage({
   // ---- Map view — full-bleed canvas + floating control panel ------------
   if (view === "map") {
     const mapRaces = await geocodeRaces(races);
-    return (
-      // Viewport-height section between the sticky masthead (73px
-      // mobile tier / 113px with the desktop nav row) and the
-      // below-the-fold footer (no newsletter band on this route —
-      // it lives in the (with-newsletter) group). min-h keeps the
-      // map usable on short landscape viewports.
-      <div className="relative h-[calc(100dvh-73px)] min-h-[520px] w-full sm:h-[calc(100dvh-113px)]">
-        <div className="absolute inset-0">
-          <RaceExploreMap races={mapRaces} />
-        </div>
 
-        {/* Floating chrome — header + subheader + controls on one
-            material surface above the map (menu register: surface +
-            shadow + 12px, no border). pointer-events split so the map
-            stays draggable everywhere outside the panel itself.
-            races-panel-in: settle-down entrance on the house curve —
-            with the switch's LoadingBar and the map fade, the grid→map
-            swap reads as one motion. */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10">
-          <div className="mx-auto w-full max-w-content px-4 pt-4 md:pt-6">
-            {/* data-races-panel: RaceExploreMap measures this panel's
-                bottom edge to centre the initial globe in the strip of
-                map visible BELOW it. */}
-            <div
-              data-races-panel
-              className="races-panel-in material-menu pointer-events-auto flex flex-col gap-4 p-4 md:p-5"
-            >
-              <header className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
-                <div className="flex min-w-0 flex-col gap-1">
-                  <h1 className="m-0 text-heading-24 text-textDefault">
-                    Races
-                  </h1>
-                  <p className="hidden text-copy-14 text-textSubtle md:block">
-                    Find your next race. Explore the world&apos;s greatest races
-                    with detailed race guides.
-                  </p>
-                </div>
-                {/* min-w-0 + wrap, not shrink-0: the row must be able
-                    to shrink for flex-wrap to engage — with shrink-0
-                    the view switch overflowed the panel edge on
-                    mobile instead of wrapping. */}
-                <div className="flex min-w-0 flex-wrap items-center gap-3">
-                  <RaceUnitControls />
-                  <ViewSwitch
-                    view="map"
-                    gridHref={gridHref}
-                    mapHref={mapHref}
-                  />
-                </div>
-              </header>
-              {filtersShell(false, null)}
-            </div>
+    // Floating chrome — header + subheader + controls on one material
+    // surface above the map (menu register: surface + shadow + 12px,
+    // no border). pointer-events split so the map stays draggable
+    // everywhere outside the panel itself. races-panel-in:
+    // settle-down entrance on the house curve — with the switch's
+    // LoadingBar and the map fade, the grid→map swap reads as one
+    // motion. data-races-panel: RaceExploreMap measures this panel's
+    // bottom edge to fit the initial globe in the strip of map
+    // visible BELOW it.
+    const panel = (
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10">
+        <div className="mx-auto w-full max-w-content px-4 pt-4 md:pt-6">
+          <div
+            data-races-panel
+            className="races-panel-in material-menu pointer-events-auto flex flex-col gap-4 p-4 md:p-5"
+          >
+            <header className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
+              <div className="flex min-w-0 flex-col gap-1">
+                <h1 className="m-0 text-heading-24 text-textDefault">Races</h1>
+                <p className="hidden text-copy-14 text-textSubtle md:block">
+                  Find your next race. Explore the world&apos;s greatest races
+                  with detailed race guides.
+                </p>
+              </div>
+              {/* min-w-0 + wrap, not shrink-0: the row must be able
+                  to shrink for flex-wrap to engage — with shrink-0
+                  the view switch overflowed the panel edge on
+                  mobile instead of wrapping. */}
+              <div className="flex min-w-0 flex-wrap items-center gap-3">
+                <RaceUnitControls />
+                <ViewSwitch view="map" gridHref={gridHref} mapHref={mapHref} />
+              </div>
+            </header>
+            {filtersShell(false, null)}
           </div>
         </div>
       </div>
+    );
+
+    return (
+      // MapViewport measures the real viewport remainder (the
+      // dismissible announcement banner makes any static calc wrong)
+      // so the section — and the map's corner zoom controls — end
+      // exactly at the viewport bottom. Footer stays below the fold
+      // (no newsletter band on this route — it lives in the
+      // (with-newsletter) group).
+      <MapViewport panel={panel}>
+        <div className="absolute inset-0">
+          <RaceExploreMap races={mapRaces} />
+        </div>
+      </MapViewport>
     );
   }
 
