@@ -99,6 +99,7 @@ export default async function RacesPage({
   const filtersShell = (
     skeletonOnPending: boolean,
     children: React.ReactNode,
+    railChips = false,
   ) => (
     <FiltersShell
       initialFilters={filters}
@@ -106,6 +107,7 @@ export default async function RacesPage({
       cities={cities}
       tags={tags}
       skeletonOnPending={skeletonOnPending}
+      railChips={railChips}
     >
       {children}
     </FiltersShell>
@@ -131,11 +133,19 @@ export default async function RacesPage({
             stays draggable everywhere outside the panel itself.
             races-panel-in: settle-down entrance on the house curve —
             with the switch's LoadingBar and the map fade, the grid→map
-            swap reads as one motion. */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10">
-          <div className="mx-auto w-full max-w-content px-4 pt-4 md:pt-6">
-            <div className="races-panel-in material-menu pointer-events-auto flex flex-col gap-4 p-4 md:p-5">
-              <header className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
+            swap reads as one motion.
+
+            Two anatomies, ONE mount (a lg:hidden twin would double-mount
+            FiltersShell): below lg the panel is the top band; from lg it
+            becomes a full-height LEFT RAIL (the AllTrails/Airbnb explore
+            anatomy, user call 2026-08-21) — the map keeps its full
+            height, filters stack in wrapped rows, and the rail is where
+            a future in-panel results list can live. Internal scroll for
+            short viewports. */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 lg:bottom-0 lg:right-auto lg:w-auto">
+          <div className="mx-auto w-full max-w-content px-4 pt-4 md:pt-6 lg:mx-0 lg:h-full lg:w-auto lg:max-w-none lg:p-4 lg:pt-4">
+            <div className="races-panel-in material-menu pointer-events-auto flex flex-col gap-4 p-4 md:p-5 lg:h-full lg:w-[368px] lg:overflow-y-auto">
+              <header className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3 lg:flex-col lg:items-stretch lg:gap-y-4">
                 <div className="flex min-w-0 flex-col gap-1">
                   <h1 className="m-0 text-heading-24 text-textDefault">
                     Races
@@ -145,7 +155,12 @@ export default async function RacesPage({
                     with detailed race guides.
                   </p>
                 </div>
-                <div className="flex shrink-0 items-center gap-3">
+                {/* min-w-0 (not the grid header's shrink-0): the
+                    panel is narrow, so the row must be allowed to
+                    shrink for its flex-wrap to engage — with
+                    shrink-0 the switch overflowed the panel edge
+                    on mobile instead of wrapping. */}
+                <div className="flex min-w-0 flex-wrap items-center gap-3">
                   <RaceUnitControls />
                   <ViewSwitch
                     view="map"
@@ -154,7 +169,7 @@ export default async function RacesPage({
                   />
                 </div>
               </header>
-              {filtersShell(false, null)}
+              {filtersShell(false, null, true)}
             </div>
           </div>
         </div>

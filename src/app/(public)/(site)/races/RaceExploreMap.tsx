@@ -110,9 +110,12 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
       new mapboxgl.NavigationControl({ showCompass: false }),
       "bottom-right",
     );
+    // bottom-right with the nav control (Mapbox stacks same-corner
+    // controls): from lg the full-height left rail covers the
+    // bottom-LEFT corner.
     map.addControl(
       new mapboxgl.AttributionControl({ compact: true }),
-      "bottom-left",
+      "bottom-right",
     );
     mapRef.current = map;
     return () => {
@@ -153,8 +156,15 @@ export default function RaceExploreMap({ races }: { races: MapRace[] }) {
     if (races.length > 0) {
       const bounds = new mapboxgl.LngLatBounds();
       races.forEach((r) => bounds.extend([r.lng, r.lat]));
+      // Keep markers clear of the floating panel: below lg it's the
+      // top band (pad the top), from lg the full-height left rail
+      // (pad the left: 16px inset + 368px rail + breathing room).
+      // 1024 mirrors the layout's lg: breakpoint.
+      const rail = window.matchMedia("(min-width: 1024px)").matches;
       map.fitBounds(bounds, {
-        padding: { top: 220, bottom: 80, left: 80, right: 80 },
+        padding: rail
+          ? { top: 80, bottom: 80, left: 448, right: 80 }
+          : { top: 220, bottom: 80, left: 48, right: 48 },
         maxZoom: 10,
         duration: firstFitDoneRef.current ? 600 : 0,
       });

@@ -60,6 +60,14 @@ interface FiltersShellProps {
    *  this off — the map island stays mounted and its markers update
    *  when the new props land, so a skeleton would be noise. */
   skeletonOnPending?: boolean;
+  /** Map-view rail layout: from lg the chips WRAP into rows instead
+   *  of the single scroll strip — inside the fixed-width side panel
+   *  a scroll strip would hide most filters, and the grid view's
+   *  reason for never wrapping (chip wrap above the cards caused
+   *  race-card flicker on narrow Safari) doesn't apply when nothing
+   *  reflows below the panel. Below lg the map view uses the
+   *  top-band layout, where the scroll strip stays. */
+  railChips?: boolean;
   children: ReactNode;
 }
 
@@ -69,6 +77,7 @@ export default function FiltersShell({
   cities,
   tags,
   skeletonOnPending = true,
+  railChips = false,
   children,
 }: FiltersShellProps) {
   const router = useRouter();
@@ -173,7 +182,9 @@ export default function FiltersShell({
         // Anything smaller clipped the focus ring on the search
         // when expanded. Scrollbar hidden across browsers;
         // controls scroll via wheel/swipe.
-        className="flex items-center gap-2 overflow-x-auto p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className={`flex items-center gap-2 overflow-x-auto p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden${
+          railChips ? " lg:flex-wrap lg:overflow-x-visible" : ""
+        }`}
       >
         {/* Search wrapped in its own order:-2 slot so it always
             wins the leftmost spot, even against active filter
