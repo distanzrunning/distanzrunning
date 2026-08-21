@@ -3951,15 +3951,13 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
 .races-map-marker:hover {
   transform: scale(1.25);
 }
-/* Abbott World Marathon Major — gold star. Overrides the dot's
-   circle chrome; the amber fill + surface-tone outline keep it in
-   the same marker family (outline = the dot's border colour), and
-   the drop-shadow mirrors the dot's box-shadow, which can't wrap a
-   star silhouette. Slightly larger than the dot: majors are the
-   headline markers. */
+/* Abbott World Marathon Major — gold star, MINIMAL cut (user call
+   2026-08-21: barely larger than the dot, hairline outline). Overrides
+   the dot's circle chrome; the drop-shadow mirrors the dot's
+   box-shadow, which can't wrap a star silhouette. */
 .races-map-marker--major {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   border-radius: 0;
   background: transparent;
   border: none;
@@ -3971,7 +3969,7 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
   height: 100%;
   fill: var(--ds-amber-600);
   stroke: var(--ds-background-100);
-  stroke-width: 1.5;
+  stroke-width: 1;
   stroke-linejoin: round;
   paint-order: stroke;
 }
