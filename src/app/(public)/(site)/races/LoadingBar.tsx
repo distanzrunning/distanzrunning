@@ -1,10 +1,12 @@
 // src/app/races/LoadingBar.tsx
 //
-// Slim indeterminate loading bar — a 2px blue sweep for work of
+// Slim indeterminate loading bar — a 2px blue block growing from the
+// left, decelerating to hold near-complete until the work lands and
+// the bar unmounts (the NProgress/YouTube convention), for work of
 // unknown duration (view-switch round-trips, map tile loading). The
 // DS Progress component is determinate-only, and a made-up percent
-// would lie; the sweep is the honest affordance. Blue-700 per the
-// colour system's functional-accent rule.
+// would lie; the asymptotic fill is the honest affordance. Blue-700
+// per the colour system's functional-accent rule.
 //
 // `fixed`: pinned to the very top of the viewport OVER the masthead
 // (z above the header's 50 — the GitHub/YouTube top-bar convention,
@@ -24,7 +26,7 @@ export default function LoadingBar({ fixed = false }: { fixed?: boolean }) {
         fixed && "fixed inset-x-0 top-0 z-[60]",
       )}
     >
-      <div className="races-loading-sweep h-full w-2/5 bg-[var(--ds-blue-700)]" />
+      <div className="races-loading-fill h-full w-full bg-[var(--ds-blue-700)]" />
     </div>
   );
 }
