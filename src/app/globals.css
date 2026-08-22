@@ -3938,45 +3938,10 @@ html.dark [data-code-block] span[style*="--shiki-dark"] {
    and dark tiles. Popup: DS surface card on the menu shadow (the
    floating-material register), no tip — same modern-tooltip call
    as the race-detail map above. */
-.races-map-marker {
-  width: 14px;
-  height: 14px;
-  border-radius: 9999px;
-  background: var(--ds-gray-1000);
-  border: 2.5px solid var(--ds-background-100);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
-  cursor: pointer;
-  transition: transform 120ms ease-out;
-}
-.races-map-marker:hover {
-  transform: scale(1.25);
-}
-/* Abbott World Marathon Major — gold star, MINIMAL cut (user call
-   2026-08-21: barely larger than the dot, hairline outline). Overrides
-   the dot's circle chrome; the drop-shadow mirrors the dot's
-   box-shadow, which can't wrap a star silhouette. */
-.races-map-marker--major {
-  width: 20px;
-  height: 20px;
-  border-radius: 0;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.35));
-}
-.races-map-marker--major svg {
-  width: 100%;
-  height: 100%;
-  fill: var(--ds-amber-600);
-  stroke: var(--ds-background-100);
-  /* paint-order: stroke draws the stroke UNDER the fill, so the
-     visible white margin is stroke/2 — 6 units at 20px display
-     (24-unit viewBox → 0.833px/unit) = 2.5px, matching the ink
-     dot's 2.5px border ring exactly. */
-  stroke-width: 6;
-  stroke-linejoin: round;
-  paint-order: stroke;
-}
+/* /races map pins render as GPU layers (clustering scales to 1000s of
+   races) — the ink dot / gold star / cluster chrome live in the layer
+   paint config in RaceExploreMap.tsx, with colours resolved from the
+   DS tokens at layer-build time. Only the popup needs CSS. */
 .races-map .mapboxgl-popup-content {
   background: var(--ds-background-100);
   box-shadow: var(--ds-shadow-menu);

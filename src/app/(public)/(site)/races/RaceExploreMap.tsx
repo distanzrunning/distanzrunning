@@ -2,17 +2,27 @@
 
 // src/app/races/RaceExploreMap.tsx
 //
-// Full-bleed Mapbox island for the /races map view. Renders one
-// marker per (geocoded) race with a click popup linking to the race
-// guide. Follows RaceMap.tsx's conventions: mapbox-gl from npm, the
-// house basemap pair (light-v11 / dark-v11) keyed to DarkModeContext,
-// token from NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN.
+// Full-bleed Mapbox island for the /races map view. Built for a
+// 1000s-of-races dataset (user call 2026-08-22): pins are GPU-rendered
+// GeoJSON LAYERS with Mapbox's native clustering, not DOM markers —
+// thousands of DOM elements would jank the map, and clustering is the
+// scalable answer to overlapping pins.
 //
-// The server geocodes (city, state, country) per race — 24h-cached
-// via lib/geocode — so this island receives plain {lng, lat} props
-// and does zero client-side geocoding. Filter changes round-trip
-// through the server (URL-driven, like the grid) and arrive as a new
-// `races` prop: markers rebuild and the camera refits.
+//   - clusters render as ink circles with a count; clicking one zooms
+//     to its expansion zoom;
+//   - SAME-COORDINATE stacks (city-level geocoding gives every race in
+//     a city identical lng/lat) can never split by zooming — their
+//     expansion zoom exceeds clusterMaxZoom, and clicking opens a
+//     GROUPED POPUP listing every race at the location instead;
+//   - single races keep the ink-dot look; Abbott World Marathon
+//     Majors keep the gold star (now a symbol-layer image).
+//
+// Theme: layer colours resolve from the DS custom properties at
+// (re)build time; a light/dark style swap wipes sources, so the
+// `style.load` handler re-adds everything with freshly resolved
+// colours. The server geocodes (city, state, country) per race —
+// 24h-cached via lib/geocode — so this island receives plain
+// {lng, lat} props and does zero client-side geocoding.
 
 import { useContext, useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
@@ -41,33 +51,111 @@ export interface MapRace {
 const LIGHT_STYLE = "mapbox://styles/mapbox/light-v11";
 const DARK_STYLE = "mapbox://styles/mapbox/dark-v11";
 
-/** Ink dot marker — theme-aware via the DS custom properties, which
- *  resolve inside the map container like anywhere else on the page.
- *  Abbott World Marathon Majors get a gold star instead (user call
- *  2026-08-21): amber fill with the same surface-tone outline the dot
- *  wears, so both markers read as one family. */
-function buildMarkerEl(major: boolean): HTMLDivElement {
+const SOURCE_ID = "races";
+const CLUSTER_LAYER = "races-clusters";
+const CLUSTER_COUNT_LAYER = "races-cluster-count";
+const DOT_LAYER = "races-dots";
+const STAR_LAYER = "races-stars";
+const STAR_IMAGE = "races-major-star";
+
+// Beyond this zoom, points render unclustered unless they share
+// coordinates — a cluster whose expansion zoom exceeds it IS a
+// same-spot stack, and clicking it opens the grouped popup.
+const CLUSTER_MAX_ZOOM = 14;
+
+// The gold star (24-unit viewBox path, same glyph the DOM marker
+// used). Drawn onto a canvas for the symbol layer.
+const STAR_PATH =
+  "M12 1.8l3.05 6.18 6.82.99-4.94 4.81 1.17 6.8L12 17.37l-6.1 3.21 1.17-6.8-4.94-4.81 6.82-.99L12 1.8z";
+
+type RaceProps = Pick<
+  MapRace,
+  "title" | "href" | "dateLabel" | "location" | "category" | "major"
+>;
+
+/** Resolve a DS custom property to a concrete CSS colour, relative to
+ *  an element inside the themed DOM (custom properties flip with the
+ *  .dark class like everywhere else on the page). */
+function resolveToken(el: HTMLElement, name: string): string {
+  return getComputedStyle(el).getPropertyValue(name).trim() || "#000";
+}
+
+function toFeatureCollection(
+  races: MapRace[],
+): GeoJSON.FeatureCollection<GeoJSON.Point, RaceProps> {
+  return {
+    type: "FeatureCollection",
+    features: races.map((race) => ({
+      type: "Feature",
+      geometry: { type: "Point", coordinates: [race.lng, race.lat] },
+      properties: {
+        title: race.title,
+        href: race.href,
+        dateLabel: race.dateLabel,
+        location: race.location,
+        category: race.category,
+        major: Boolean(race.major),
+      },
+    })),
+  };
+}
+
+/** Rasterise the gold star for the symbol layer — amber fill under a
+ *  surface-tone outline (stroke first, fill over = the DOM version's
+ *  paint-order: stroke), drawn at 2x for retina. */
+function buildStarImage(fill: string, ring: string): ImageData {
+  const SIZE = 20; // display px — matches the retired DOM star
+  const SCALE = 2;
+  const canvas = document.createElement("canvas");
+  canvas.width = SIZE * SCALE;
+  canvas.height = SIZE * SCALE;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new ImageData(SIZE * SCALE, SIZE * SCALE);
+  const path = new Path2D(STAR_PATH);
+  ctx.scale((SIZE * SCALE) / 24, (SIZE * SCALE) / 24);
+  ctx.lineJoin = "round";
+  // 6 viewBox units, half visible outside the fill = the ink dot's
+  // 2.5px ring at display size.
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = ring;
+  ctx.stroke(path);
+  ctx.fillStyle = fill;
+  ctx.fill(path);
+  return ctx.getImageData(0, 0, SIZE * SCALE, SIZE * SCALE);
+}
+
+function buildSinglePopupEl(props: RaceProps): HTMLDivElement {
   const el = document.createElement("div");
-  el.className = major
-    ? "races-map-marker races-map-marker--major"
-    : "races-map-marker";
-  if (major) {
-    el.innerHTML = `
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M12 1.8l3.05 6.18 6.82.99-4.94 4.81 1.17 6.8L12 17.37l-6.1 3.21 1.17-6.8-4.94-4.81 6.82-.99L12 1.8z" />
-      </svg>`;
-  }
+  el.className = "flex flex-col gap-1";
+  const meta = [props.dateLabel, props.location].filter(Boolean).join(" · ");
+  el.innerHTML = `
+    <a href="${props.href}" class="text-copy-14 font-medium text-textDefault no-underline hover:underline">${escapeHtml(props.title)}</a>
+    ${meta ? `<span class="text-copy-13 text-textSubtle">${escapeHtml(meta)}</span>` : ""}
+  `;
   return el;
 }
 
-function buildPopupEl(race: MapRace): HTMLDivElement {
+/** Grouped popup for a same-coordinate stack — every race at the
+ *  location as its own linked row. Scrolls past ~5 rows. */
+function buildClusterPopupEl(
+  leaves: RaceProps[],
+  location?: string,
+): HTMLDivElement {
   const el = document.createElement("div");
-  el.className = "flex flex-col gap-1";
-  const meta = [race.dateLabel, race.location].filter(Boolean).join(" · ");
-  el.innerHTML = `
-    <a href="${race.href}" class="text-copy-14 font-medium text-textDefault no-underline hover:underline">${escapeHtml(race.title)}</a>
-    ${meta ? `<span class="text-copy-13 text-textSubtle">${escapeHtml(meta)}</span>` : ""}
-  `;
+  el.className = "flex flex-col gap-2";
+  const heading = location
+    ? `<span class="text-label-12 text-textSubtle">${escapeHtml(location)} · ${leaves.length} races</span>`
+    : `<span class="text-label-12 text-textSubtle">${leaves.length} races</span>`;
+  const rows = leaves
+    .map(
+      (p) => `
+        <a href="${p.href}" class="flex flex-col gap-0.5 no-underline">
+          <span class="text-copy-14 font-medium text-textDefault hover:underline">${escapeHtml(p.title)}</span>
+          ${p.dateLabel ? `<span class="text-copy-13 text-textSubtle">${escapeHtml(p.dateLabel)}</span>` : ""}
+        </a>`,
+    )
+    .join("");
+  el.innerHTML = `${heading}<div class="flex max-h-56 flex-col gap-2.5 overflow-y-auto pr-1">${rows}</div>`;
   return el;
 }
 
@@ -91,10 +179,12 @@ export default function RaceExploreMap({
   const { isDark } = useContext(DarkModeContext);
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
-  const markersRef = useRef<mapboxgl.Marker[]>([]);
-  // First markers render must NOT refit the camera — the landing
-  // view is the whole-earth globe (fitGlobe in the init effect);
-  // only later filter round-trips zoom to their result set.
+  // Latest data — style.load re-adds the source from here after a
+  // theme swap wipes it.
+  const dataRef = useRef(toFeatureCollection(races));
+  // First data render must NOT refit the camera — the landing view is
+  // the whole-earth globe (fitGlobe in the init effect); only later
+  // filter round-trips zoom to their result set.
   const firstFitDoneRef = useRef(false);
 
   const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -105,21 +195,21 @@ export default function RaceExploreMap({
   // First-load gate: the canvas holds at opacity 0 over the recessed
   // gray tone (with the slim LoadingBar running) until Mapbox's
   // `load` fires, then fades up — tiles arrive as one settled frame
-  // instead of popping in piecemeal (user call 2026-08-21).
+  // instead of popping in piecemeal.
   const [loaded, setLoaded] = useState(false);
 
   // Init once.
   useEffect(() => {
-    if (!token || !containerRef.current || mapRef.current) return;
+    const container = containerRef.current;
+    if (!token || !container || mapRef.current) return;
     mapboxgl.accessToken = token;
     let map: mapboxgl.Map;
     try {
       map = new mapboxgl.Map({
-        container: containerRef.current,
+        container,
         style: isDark ? DARK_STYLE : LIGHT_STYLE,
-        // The earth as a GLOBE (user call 2026-08-21) — fitGlobe
-        // below sizes and centres the sphere in the strip of map
-        // visible under the floating panel.
+        // The earth as a GLOBE — fitGlobe below sizes and centres the
+        // sphere in the strip of map visible under the floating panel.
         projection: "globe",
         center: [10, 22],
         zoom: 1,
@@ -131,17 +221,108 @@ export default function RaceExploreMap({
       return;
     }
 
-    // Initial camera: the WHOLE earth sphere fits between the
-    // floating panel's bottom edge and the section bottom (which
-    // MapViewport has already sized to end at the viewport edge, so
-    // the corner controls are in view too). Mapbox's own
-    // cameraForBounds does the globe maths — an analytic
-    // zoom-from-diameter formula undershot because the sphere is a
-    // perspective render, not a flat projection. No fog override:
-    // the basemap keeps the house light/dark scheme (user call
-    // 2026-08-21 — the space-and-stars atmosphere clashed with the
-    // page). Runs pre-load — the canvas is still faded out, so the
-    // jump is invisible.
+    // Source + layers, (re)added on every style load — the initial
+    // one AND after each theme setStyle (which wipes sources). Colours
+    // resolve from the DS tokens at build time so each theme's pass
+    // picks up its own values.
+    const ensureLayers = () => {
+      if (map.getSource(SOURCE_ID)) return;
+      const ink = resolveToken(container, "--ds-gray-1000");
+      const surface = resolveToken(container, "--ds-background-100");
+      const gold = resolveToken(container, "--ds-amber-600");
+
+      if (map.hasImage(STAR_IMAGE)) map.removeImage(STAR_IMAGE);
+      map.addImage(STAR_IMAGE, buildStarImage(gold, surface), {
+        pixelRatio: 2,
+      });
+
+      map.addSource(SOURCE_ID, {
+        type: "geojson",
+        data: dataRef.current,
+        cluster: true,
+        clusterMaxZoom: CLUSTER_MAX_ZOOM,
+        clusterRadius: 50,
+      });
+
+      // Cluster bubble — ink circle with the dot family's surface
+      // ring, radius stepped by member count.
+      map.addLayer({
+        id: CLUSTER_LAYER,
+        type: "circle",
+        source: SOURCE_ID,
+        filter: ["has", "point_count"],
+        paint: {
+          "circle-color": ink,
+          "circle-radius": [
+            "step",
+            ["get", "point_count"],
+            14,
+            25,
+            18,
+            100,
+            22,
+          ],
+          "circle-stroke-width": 2.5,
+          "circle-stroke-color": surface,
+        },
+      });
+      map.addLayer({
+        id: CLUSTER_COUNT_LAYER,
+        type: "symbol",
+        source: SOURCE_ID,
+        filter: ["has", "point_count"],
+        layout: {
+          "text-field": ["get", "point_count_abbreviated"],
+          "text-font": ["DIN Pro Medium", "Arial Unicode MS Regular"],
+          "text-size": 12,
+          "text-allow-overlap": true,
+        },
+        paint: { "text-color": surface },
+      });
+
+      // Single races — the ink dot (circle 4.5 + 2.5 ring = the
+      // retired 14px DOM marker).
+      map.addLayer({
+        id: DOT_LAYER,
+        type: "circle",
+        source: SOURCE_ID,
+        filter: [
+          "all",
+          ["!", ["has", "point_count"]],
+          ["!=", ["get", "major"], true],
+        ],
+        paint: {
+          "circle-color": ink,
+          "circle-radius": 4.5,
+          "circle-stroke-width": 2.5,
+          "circle-stroke-color": surface,
+        },
+      });
+
+      // Abbott World Marathon Majors — the gold star.
+      map.addLayer({
+        id: STAR_LAYER,
+        type: "symbol",
+        source: SOURCE_ID,
+        filter: [
+          "all",
+          ["!", ["has", "point_count"]],
+          ["==", ["get", "major"], true],
+        ],
+        layout: {
+          "icon-image": STAR_IMAGE,
+          "icon-allow-overlap": true,
+        },
+      });
+    };
+
+    map.on("style.load", ensureLayers);
+
+    // Initial camera: the WHOLE earth sphere fits between the floating
+    // panel's bottom edge and the section bottom (MapViewport already
+    // sized the section to end at the viewport edge, so the corner
+    // controls are in view too). Mapbox's cameraForBounds does the
+    // globe maths. Runs pre-load — the canvas is still faded out.
     const fitGlobe = () => {
       const el = containerRef.current;
       if (!el) return;
@@ -156,12 +337,7 @@ export default function RaceExploreMap({
           [180, 75],
         ],
         {
-          padding: {
-            top: panelBottom + 12,
-            bottom: 24,
-            left: 24,
-            right: 24,
-          },
+          padding: { top: panelBottom + 12, bottom: 24, left: 24, right: 24 },
           duration: 0,
         },
       );
@@ -169,6 +345,70 @@ export default function RaceExploreMap({
     fitGlobe();
 
     map.on("load", () => setLoaded(true));
+
+    // ---- Interactions (registered once; layer-scoped listeners are
+    // resolved at event time, so they survive style swaps). ----------
+    const popupOpts = { offset: 14, closeButton: false };
+
+    map.on("click", CLUSTER_LAYER, (e) => {
+      const feature = e.features?.[0];
+      const clusterId = feature?.properties?.cluster_id as number | undefined;
+      const source = map.getSource(SOURCE_ID) as mapboxgl.GeoJSONSource;
+      if (!feature || clusterId === undefined || !source) return;
+      const coords = (feature.geometry as GeoJSON.Point).coordinates as [
+        number,
+        number,
+      ];
+      source.getClusterExpansionZoom(clusterId, (err, zoom) => {
+        if (err || zoom == null) return;
+        if (zoom > CLUSTER_MAX_ZOOM) {
+          // Same-coordinate stack — zooming can never split it (the
+          // city-level geocode gives co-located races identical
+          // coords). Grouped popup instead.
+          const count = (feature.properties?.point_count as number) ?? 10;
+          source.getClusterLeaves(clusterId, count, 0, (leafErr, leaves) => {
+            if (leafErr || !leaves) return;
+            const props = leaves.map((l) => l.properties as RaceProps);
+            const location = (
+              leaves[0]?.properties as RaceProps & {
+                location?: string;
+              }
+            )?.location;
+            new mapboxgl.Popup({ ...popupOpts, maxWidth: "320px" })
+              .setLngLat(coords)
+              .setDOMContent(buildClusterPopupEl(props, location))
+              .addTo(map);
+          });
+        } else {
+          map.easeTo({ center: coords, zoom: zoom + 0.25, duration: 500 });
+        }
+      });
+    });
+
+    const openSinglePopup = (e: mapboxgl.MapLayerMouseEvent) => {
+      const feature = e.features?.[0];
+      if (!feature) return;
+      const coords = (feature.geometry as GeoJSON.Point).coordinates as [
+        number,
+        number,
+      ];
+      new mapboxgl.Popup({ ...popupOpts, maxWidth: "280px" })
+        .setLngLat(coords)
+        .setDOMContent(buildSinglePopupEl(feature.properties as RaceProps))
+        .addTo(map);
+    };
+    map.on("click", DOT_LAYER, openSinglePopup);
+    map.on("click", STAR_LAYER, openSinglePopup);
+
+    for (const layer of [CLUSTER_LAYER, DOT_LAYER, STAR_LAYER]) {
+      map.on("mouseenter", layer, () => {
+        map.getCanvas().style.cursor = "pointer";
+      });
+      map.on("mouseleave", layer, () => {
+        map.getCanvas().style.cursor = "";
+      });
+    }
+
     map.addControl(
       new mapboxgl.NavigationControl({ showCompass: false }),
       "bottom-right",
@@ -179,8 +419,6 @@ export default function RaceExploreMap({
     );
     mapRef.current = map;
     return () => {
-      markersRef.current.forEach((m) => m.remove());
-      markersRef.current = [];
       map.remove();
       mapRef.current = null;
     };
@@ -189,11 +427,10 @@ export default function RaceExploreMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  // Theme flip — swap basemap style in place (DOM markers survive
-  // setStyle; only canvas layers reset). Guarded by the last-set
-  // style (RaceMap.tsx's lastStyleUrlRef move): the effect also runs
-  // on mount, and re-setting the SAME style mid-load forced a full
-  // style rebuild ("Unable to perform style diff" console noise).
+  // Theme flip — swap basemap style in place. Guarded by the last-set
+  // style: the effect also runs on mount, and re-setting the SAME
+  // style mid-load forced a full style rebuild. The style.load
+  // handler above re-adds source + layers with re-resolved colours.
   const lastStyleRef = useRef<string | null>(null);
   useEffect(() => {
     const map = mapRef.current;
@@ -209,28 +446,18 @@ export default function RaceExploreMap({
     map.setStyle(next);
   }, [isDark]);
 
-  // Markers — rebuild on data change (filter round-trips), then fit
-  // the camera to the result set.
+  // Data — push filter round-trip results into the source, then fit
+  // the camera.
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    markersRef.current.forEach((m) => m.remove());
-    markersRef.current = races.map((race) => {
-      const popup = new mapboxgl.Popup({
-        offset: 14,
-        closeButton: false,
-        maxWidth: "280px",
-      }).setDOMContent(buildPopupEl(race));
-      return new mapboxgl.Marker({
-        element: buildMarkerEl(Boolean(race.major)),
-      })
-        .setLngLat([race.lng, race.lat])
-        .setPopup(popup)
-        .addTo(map);
-    });
+    dataRef.current = toFeatureCollection(races);
+    (map.getSource(SOURCE_ID) as mapboxgl.GeoJSONSource | undefined)?.setData(
+      dataRef.current,
+    );
 
     // Camera. Padding keeps the frame clear of the floating panel
-    // (measured, like fitGlobe — the static 220 undershot it).
+    // (measured, like fitGlobe — a static constant undershot it).
     const box = containerRef.current?.getBoundingClientRect();
     const panelEl = document.querySelector("[data-races-panel]");
     const fitPadding = {
@@ -245,9 +472,9 @@ export default function RaceExploreMap({
 
     if (countryBounds) {
       // Country filter active → frame the WHOLE country, not the pin
-      // cluster (user call 2026-08-21). Also applies on a deep-linked
-      // first render (instant, no animation), replacing the globe
-      // landing — arriving at ?country=X&view=map should show X.
+      // cluster. Also applies on a deep-linked first render (instant),
+      // replacing the globe landing — arriving at ?country=X&view=map
+      // should show X.
       map.fitBounds(countryBounds, {
         padding: fitPadding,
         maxZoom: 10,
