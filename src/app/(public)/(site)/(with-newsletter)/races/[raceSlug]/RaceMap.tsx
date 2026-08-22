@@ -9,6 +9,7 @@
 // its sticky map cell; everything Mapbox-flavoured lives here.
 
 import {
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -251,27 +252,46 @@ export default function RaceMap({
     return () => mql.removeEventListener("change", handler);
   }, []);
 
-  // We need fitBoundsPadding both inside the load handler (for
-  // the constructor) and outside (for the React MapControls'
-  // recenter handler). Memoised so the controls don't see a
-  // new identity per render and re-trigger their effects. The
-  // panel-side breathing room (left padding) is only applied
-  // on desktop in normal mode — when the map is fullscreen, or
-  // the page is below the lg breakpoint where the panel stacks
-  // below the map instead of overlaying it, the route uses
-  // the full canvas.
+  // Fit padding, needed by the constructor, the fullscreen refit
+  // and the MapControls recenter handler. A callback (stable per
+  // mode) rather than a memoised value because the TOP padding is
+  // measured at fit time: the sticky map cell tucks up UNDER the
+  // masthead (and the announcement banner when present), so the
+  // usable canvas starts below the chrome, not at the container's
+  // top edge — without the measured extra, northern route bends
+  // framed into that strip landed under the header (user call
+  // 2026-08-22). Skipped when fullscreen: the map covers the
+  // chrome (z-60 over it), so the whole canvas is usable. The
+  // panel-side breathing room (left padding) is only applied on
+  // desktop in normal mode — when the map is fullscreen, or the
+  // page is below the lg breakpoint where the panel stacks below
+  // the map instead of overlaying it, the route uses the full
+  // canvas.
   const skipPanelPadding = expanded || !isLgBreakpoint;
-  const fitBoundsPadding = useMemo<mapboxgl.PaddingOptions>(
-    () => ({
-      top: ROUTE_BREATHING,
+  const getFitPadding = useCallback((): mapboxgl.PaddingOptions => {
+    let top = ROUTE_BREATHING;
+    if (!expanded && typeof document !== "undefined") {
+      const container = containerRef.current;
+      const header = document.querySelector("header");
+      if (container && header) {
+        top += Math.max(
+          0,
+          Math.round(
+            header.getBoundingClientRect().bottom -
+              container.getBoundingClientRect().top,
+          ),
+        );
+      }
+    }
+    return {
+      top,
       bottom: ROUTE_BREATHING,
       left: skipPanelPadding
         ? ROUTE_BREATHING
         : PANEL_INSET + PANEL_WIDTH + ROUTE_BREATHING,
       right: ROUTE_BREATHING,
-    }),
-    [skipPanelPadding],
-  );
+    };
+  }, [expanded, skipPanelPadding]);
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
   // Canvas gate — the /races index map's loading sequence, shared
@@ -349,7 +369,7 @@ export default function RaceMap({
         ? {
             bounds: initialBounds,
             fitBoundsOptions: {
-              padding: fitBoundsPadding,
+              padding: getFitPadding(),
               duration: 0,
             },
           }
@@ -440,7 +460,7 @@ export default function RaceMap({
         // Only fit post-load when we didn't get server-side
         // bounds — the constructor already framed it otherwise.
         if (!initialBounds) {
-          const fitted = fitToRoute(map, routeGeoJson, expo);
+          const fitted = fitToRoute(map, routeGeoJson, expo, getFitPadding());
           if (!fitted) {
             setStatus({
               kind: "error",
@@ -563,11 +583,11 @@ export default function RaceMap({
     if (!map || !initialBounds) return;
     map.resize();
     map.fitBounds(initialBounds, {
-      padding: fitBoundsPadding,
+      padding: getFitPadding(),
       duration: 600,
       pitch: map.getPitch(),
     });
-  }, [expanded, fitBoundsPadding, initialBounds]);
+  }, [expanded, getFitPadding, initialBounds]);
 
   // Notify the shell once the route is drawn so the panel can
   // animate in. Reactive to status.kind only — onReady is an
@@ -720,7 +740,7 @@ export default function RaceMap({
         <MapControls
           mapRef={mapRef}
           initialBounds={initialBounds}
-          fitBoundsPadding={fitBoundsPadding}
+          getFitPadding={getFitPadding}
           hasDistanceMarkers={!!elevationSeries}
           hasPoiMarkers={(pois?.length ?? 0) > 0}
           showDistanceMarkers={showDistanceMarkers}
@@ -781,7 +801,7 @@ export function StatusOverlay({ text }: { text: string }) {
 interface MapControlsProps {
   mapRef: React.MutableRefObject<mapboxgl.Map | null>;
   initialBounds: RouteBounds | null;
-  fitBoundsPadding: mapboxgl.PaddingOptions;
+  getFitPadding: () => mapboxgl.PaddingOptions;
   hasDistanceMarkers: boolean;
   hasPoiMarkers: boolean;
   showDistanceMarkers: boolean;
@@ -800,7 +820,7 @@ interface MapControlsProps {
 function MapControls({
   mapRef,
   initialBounds,
-  fitBoundsPadding,
+  getFitPadding,
   hasDistanceMarkers,
   hasPoiMarkers,
   showDistanceMarkers,
@@ -872,7 +892,7 @@ function MapControls({
     // route — Recenter is "show me the whole route again", not
     // "drop me back to the default camera".
     map.fitBounds(initialBounds, {
-      padding: fitBoundsPadding,
+      padding: getFitPadding(),
       duration: 600,
       pitch: map.getPitch(),
     });
@@ -1556,6 +1576,7 @@ function fitToRoute(
   map: mapboxgl.Map,
   data: GeoJSON.FeatureCollection,
   expo: ExpoLocation | null,
+  padding: mapboxgl.PaddingOptions,
 ): boolean {
   let minLng = Infinity;
   let minLat = Infinity;
@@ -1594,12 +1615,7 @@ function fitToRoute(
       [maxLng, maxLat],
     ],
     {
-      padding: {
-        top: ROUTE_BREATHING,
-        bottom: ROUTE_BREATHING,
-        left: PANEL_INSET + PANEL_WIDTH + ROUTE_BREATHING,
-        right: ROUTE_BREATHING,
-      },
+      padding,
       duration: 0,
     },
   );
