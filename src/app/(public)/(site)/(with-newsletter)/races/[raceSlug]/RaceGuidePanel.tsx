@@ -14,7 +14,7 @@
 // visuals, body-section splitter, Portable Text component
 // maps, …) live here too.
 
-import { Fragment, useMemo, useRef, useState } from "react";
+import { Fragment, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -51,7 +51,7 @@ import type { ElevationPoint } from "@/lib/gpxUtils";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
-import { PANEL_WIDTH } from "./_constants";
+import { PANEL_INSET, PANEL_WIDTH } from "./_constants";
 import { getRouteLineColor } from "./RaceMap";
 import type { RaceGuideMeta } from "./_types";
 
@@ -154,16 +154,45 @@ function HeroCard({
   imageUrl: string | null;
 }) {
   const pills = useHeroPills(race);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // At lg+ the hero card is sized to fit ENTIRELY inside the
+  // initial viewport (user call 2026-08-22): fixed height =
+  // viewport bottom − the card's document-space top − one panel
+  // inset of breathing room. Measured, not a static calc — the
+  // dismissible announcement banner above the masthead moves the
+  // panel top. The image is the flex slack that absorbs the cap
+  // (text blocks are shrink-0), so title, pills and lede always
+  // stay in view; without an image there's nothing to absorb it,
+  // so the card keeps its natural height.
+  useLayoutEffect(() => {
+    const el = cardRef.current;
+    if (!el || !imageUrl) return;
+    const compute = () => {
+      const docTop = el.getBoundingClientRect().top + window.scrollY;
+      const h = Math.max(480, window.innerHeight - docTop - PANEL_INSET);
+      el.style.setProperty("--hero-card-h", `${h}px`);
+    };
+    compute();
+    window.addEventListener("resize", compute);
+    return () => window.removeEventListener("resize", compute);
+  }, [imageUrl]);
+
   return (
     <div
-      className={CARD_CLASS}
+      ref={cardRef}
+      className={`${CARD_CLASS} ${
+        imageUrl ? "lg:flex lg:h-[var(--hero-card-h,auto)] lg:flex-col" : ""
+      }`}
     >
       {imageUrl && (
         // Image sits inset within the card surface — the card's
         // bg shows around it as a frame, at the 4px editorial
         // radius (rounded-xs — the ONE radius for editorial
-        // imagery). 3:4 portrait so the hero leans editorial.
-        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xs">
+        // imagery). 3:4 portrait below lg; at lg+ it flexes to
+        // whatever height the viewport-fitted card leaves after
+        // the text blocks.
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xs lg:aspect-auto lg:min-h-0 lg:flex-1">
           <Image
             src={imageUrl}
             alt={race.title}
@@ -177,7 +206,7 @@ function HeroCard({
       {/* Editorial content title — display register (big-and-
           light), not the UI 600. */}
       <h1
-        className={`m-0 text-balance text-display-40 text-[color:var(--ds-gray-1000)] ${
+        className={`m-0 text-balance text-display-40 text-[color:var(--ds-gray-1000)] lg:shrink-0 ${
           imageUrl ? "mt-5" : ""
         }`}
       >
@@ -186,13 +215,13 @@ function HeroCard({
       {(() => {
         const location = formatLocation(race);
         return location ? (
-          <p className="mt-1 text-copy-18 text-[color:var(--ds-gray-900)]">
+          <p className="mt-1 text-copy-18 text-[color:var(--ds-gray-900)] lg:shrink-0">
             {location}
           </p>
         ) : null;
       })()}
       {pills.length > 0 && (
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-wrap gap-2 lg:shrink-0">
           {pills.map((p) => (
             <MetaPill
               key={p.key}
@@ -205,7 +234,7 @@ function HeroCard({
         </div>
       )}
       {race.introduction && race.introduction.length > 0 && (
-        <div className="mt-5">
+        <div className="mt-5 lg:shrink-0">
           <PortableText
             value={race.introduction}
             components={INTRODUCTION_PT_COMPONENTS}
@@ -364,8 +393,8 @@ const STATS_SECTION_ID = "key-stats";
 const ELEVATION_SECTION_ID = "elevation";
 const RECORDS_SECTION_ID = "course-records";
 // Anchored sections land clear of the condensed masthead chrome
-// (73px) with a little breathing room.
-const SCROLL_MARGIN_TOP = 89;
+// (57px painted bottom) with a little breathing room.
+const SCROLL_MARGIN_TOP = 73;
 
 function smoothScrollToAnchor(
   e: React.MouseEvent<HTMLAnchorElement>,

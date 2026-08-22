@@ -27,7 +27,7 @@ import type {
 } from "@/lib/gpxUtils";
 import { lockDocumentScroll } from "@/lib/scroll-lock";
 
-import { MAP_STICKY_TOP, MAP_VIEWPORT_HEIGHT } from "./_constants";
+import { MAP_PULL_UP, MAP_STICKY_TOP, MAP_VIEWPORT_HEIGHT } from "./_constants";
 import RaceMap, { StatusOverlay, type ExpoLocation } from "./RaceMap";
 import GuidePanel from "./RaceGuidePanel";
 import type { RaceGuideMeta } from "./_types";
@@ -231,8 +231,11 @@ export default function RaceGuideShell({
         style={
           mapExpanded
             ? {
+                // True fullscreen — covers the masthead too
+                // (z-60 over the header's z-50), so the frame
+                // doesn't depend on the condense state.
                 position: "fixed",
-                top: MAP_STICKY_TOP,
+                top: 0,
                 left: 0,
                 right: 0,
                 bottom: 0,
@@ -282,34 +285,35 @@ export default function RaceGuideShell({
           gridRow: 1,
           ...(mapExpanded
             ? {
+                // True fullscreen — covers the masthead too
+                // (z-60 over the header's z-50 AND the global
+                // Footer's z-50; a tie would let the later-in-
+                // DOM footer paint its columns through the map).
                 position: "fixed",
-                top: MAP_STICKY_TOP,
+                top: 0,
                 left: 0,
                 right: 0,
                 bottom: 0,
-                // Above the global Footer (z-50) — same
-                // stacking index would tie and the later-in-DOM
-                // footer would win, painting its columns
-                // through the map.
                 zIndex: 60,
               }
             : {
                 position: "sticky",
                 top: MAP_STICKY_TOP,
                 height: MAP_VIEWPORT_HEIGHT,
+                // Pull the cell up under the masthead so the
+                // map's in-flow top sits AT the sticky offset in
+                // document space — pinned and viewport-flush
+                // from scroll 0 (corner controls in view), and
+                // no canvas strip appears when the chrome
+                // condenses. The opaque header tiers simply
+                // cover the map's top strip until they fold.
+                marginTop: -MAP_PULL_UP,
                 // Below the panel's z-index: 1 so the loading
                 // cover (which lives inside this sticky
                 // container) can never paint over the panel
                 // cards' borders.
                 zIndex: 0,
               }),
-          // 6 px radius on top corners matches PageFrame; flat
-          // bottom because the map deliberately extends past
-          // PageFrame's bottom margin to fill the viewport.
-          // Dropped in expanded mode for a clean edge-to-edge
-          // rectangle.
-          borderTopLeftRadius: mapExpanded ? 0 : 6,
-          borderTopRightRadius: mapExpanded ? 0 : 6,
         }}
       >
         {mapNode}
