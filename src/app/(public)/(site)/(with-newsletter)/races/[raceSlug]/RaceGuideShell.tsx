@@ -358,7 +358,7 @@ export default function RaceGuideShell({
       {(!mapExpanded || panelClosing) && (
         <div
           ref={panelRef}
-          className={`relative z-[1] p-8 pointer-events-none ${
+          className={`relative z-[1] pointer-events-none ${
             panelClosing
               ? "guide-panel-crt is-closing"
               : `guide-panel-crt${panelRevealed ? " is-revealed" : ""}`
@@ -373,12 +373,20 @@ export default function RaceGuideShell({
             } as React.CSSProperties
           }
         >
-          <GuidePanel
-            race={race}
-            heroImageUrl={heroImageUrl}
-            elevationSeries={elevationSeries}
-            onHoverDistance={setHoverDistance}
-          />
+          {/* Content-on-maps sits within the grid (user call
+              2026-08-22): the map is full-bleed CANVAS, but the
+              floating panel hangs on the same max-w-content
+              column as the masthead content and every other
+              page — the header and panel share left edges at any
+              viewport width, like the /races index map view. */}
+          <div className="mx-auto w-full max-w-content px-4 py-8">
+            <GuidePanel
+              race={race}
+              heroImageUrl={heroImageUrl}
+              elevationSeries={elevationSeries}
+              onHoverDistance={setHoverDistance}
+            />
+          </div>
         </div>
       )}
     </div>

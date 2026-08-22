@@ -95,6 +95,11 @@ export default function GuidePanel({
   );
   return (
     <div
+      // data-race-guide-panel: RaceMap measures this element's
+      // right edge for the route-fit's panel-avoidance padding —
+      // the panel rides the max-w-content column, so its offset
+      // varies with viewport width.
+      data-race-guide-panel
       className="flex flex-col gap-10 lg:gap-6 lg:[width:var(--panel-width)]"
       style={
         {

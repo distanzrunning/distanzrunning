@@ -270,17 +270,35 @@ export default function RaceMap({
   const skipPanelPadding = expanded || !isLgBreakpoint;
   const getFitPadding = useCallback((): mapboxgl.PaddingOptions => {
     let top = ROUTE_BREATHING;
-    if (!expanded && typeof document !== "undefined") {
+    // Static fallback for the panel-avoidance padding — the panel
+    // rides the max-w-content column, so its measured right edge
+    // is the real value; this only fires pre-mount.
+    let panelClearance = PANEL_INSET + PANEL_WIDTH;
+    if (typeof document !== "undefined") {
       const container = containerRef.current;
-      const header = document.querySelector("header");
-      if (container && header) {
-        top += Math.max(
-          0,
-          Math.round(
-            header.getBoundingClientRect().bottom -
-              container.getBoundingClientRect().top,
-          ),
-        );
+      if (!expanded && container) {
+        const header = document.querySelector("header");
+        if (header) {
+          top += Math.max(
+            0,
+            Math.round(
+              header.getBoundingClientRect().bottom -
+                container.getBoundingClientRect().top,
+            ),
+          );
+        }
+      }
+      if (!skipPanelPadding && container) {
+        const panel = document.querySelector("[data-race-guide-panel]");
+        if (panel) {
+          panelClearance = Math.max(
+            0,
+            Math.round(
+              panel.getBoundingClientRect().right -
+                container.getBoundingClientRect().left,
+            ),
+          );
+        }
       }
     }
     return {
@@ -288,7 +306,7 @@ export default function RaceMap({
       bottom: ROUTE_BREATHING,
       left: skipPanelPadding
         ? ROUTE_BREATHING
-        : PANEL_INSET + PANEL_WIDTH + ROUTE_BREATHING,
+        : panelClearance + ROUTE_BREATHING,
       right: ROUTE_BREATHING,
     };
   }, [expanded, skipPanelPadding]);
