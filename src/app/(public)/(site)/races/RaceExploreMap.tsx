@@ -167,6 +167,60 @@ function escapeHtml(s: string): string {
     .replaceAll('"', "&quot;");
 }
 
+/** Camera padding that keeps fitted content clear of the floating
+ *  panel — measured, since the panel's height varies with wrapped
+ *  filters. Shared by the filter/country fits and the reset control. */
+function measureFitPadding(container: HTMLElement): {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+} {
+  const box = container.getBoundingClientRect();
+  const panel = document.querySelector("[data-races-panel]");
+  const panelBottom = panel
+    ? Math.max(0, panel.getBoundingClientRect().bottom - box.top)
+    : 0;
+  return { top: panelBottom + 24, bottom: 80, left: 80, right: 80 };
+}
+
+/** Reset-view control — one click flies back out to the landing frame
+ *  (whole-earth globe, or the framed country while a Country filter
+ *  is active). Lives in the bottom-right ctrl stack under the zoom
+ *  buttons, styled as a native Mapbox control (lucide Globe glyph). */
+class ResetViewControl implements mapboxgl.IControl {
+  private container: HTMLDivElement | null = null;
+
+  constructor(private readonly onReset: () => void) {}
+
+  onAdd(): HTMLElement {
+    const container = document.createElement("div");
+    container.className = "mapboxgl-ctrl mapboxgl-ctrl-group";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.setAttribute("aria-label", "Reset map view");
+    button.title = "Reset map view";
+    button.style.display = "flex";
+    button.style.alignItems = "center";
+    button.style.justifyContent = "center";
+    button.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+        <path d="M2 12h20" />
+      </svg>`;
+    button.addEventListener("click", this.onReset);
+    container.appendChild(button);
+    this.container = container;
+    return container;
+  }
+
+  onRemove(): void {
+    this.container?.remove();
+    this.container = null;
+  }
+}
+
 export default function RaceExploreMap({
   races,
   countryBounds,
@@ -182,6 +236,9 @@ export default function RaceExploreMap({
   // Latest data — style.load re-adds the source from here after a
   // theme swap wipes it.
   const dataRef = useRef(toFeatureCollection(races));
+  // Latest country frame for the reset control (created once at init,
+  // so it reads through a ref).
+  const countryBoundsRef = useRef(countryBounds ?? null);
   // First data render must NOT refit the camera — the landing view is
   // the whole-earth globe (fitGlobe in the init effect); only later
   // filter round-trips zoom to their result set.
@@ -323,7 +380,7 @@ export default function RaceExploreMap({
     // sized the section to end at the viewport edge, so the corner
     // controls are in view too). Mapbox's cameraForBounds does the
     // globe maths. Runs pre-load — the canvas is still faded out.
-    const fitGlobe = () => {
+    const fitGlobe = (duration = 0) => {
       const el = containerRef.current;
       if (!el) return;
       const box = el.getBoundingClientRect();
@@ -338,7 +395,7 @@ export default function RaceExploreMap({
         ],
         {
           padding: { top: panelBottom + 12, bottom: 24, left: 24, right: 24 },
-          duration: 0,
+          duration,
         },
       );
     };
@@ -413,6 +470,25 @@ export default function RaceExploreMap({
       new mapboxgl.NavigationControl({ showCompass: false }),
       "bottom-right",
     );
+    // Under the zoom buttons: fly back out to the landing frame
+    // (globe, or the framed country while that filter is active) —
+    // the zoom-fully-out affordance (user call 2026-08-22).
+    map.addControl(
+      new ResetViewControl(() => {
+        const el = containerRef.current;
+        const bounds = countryBoundsRef.current;
+        if (bounds && el) {
+          map.fitBounds(bounds, {
+            padding: measureFitPadding(el),
+            maxZoom: 10,
+            duration: 800,
+          });
+        } else {
+          fitGlobe(800);
+        }
+      }),
+      "bottom-right",
+    );
     map.addControl(
       new mapboxgl.AttributionControl({ compact: true }),
       "bottom-left",
@@ -456,19 +532,13 @@ export default function RaceExploreMap({
       dataRef.current,
     );
 
+    countryBoundsRef.current = countryBounds ?? null;
+
     // Camera. Padding keeps the frame clear of the floating panel
     // (measured, like fitGlobe — a static constant undershot it).
-    const box = containerRef.current?.getBoundingClientRect();
-    const panelEl = document.querySelector("[data-races-panel]");
-    const fitPadding = {
-      top:
-        panelEl && box
-          ? Math.max(0, panelEl.getBoundingClientRect().bottom - box.top) + 24
-          : 220,
-      bottom: 80,
-      left: 80,
-      right: 80,
-    };
+    const fitPadding = containerRef.current
+      ? measureFitPadding(containerRef.current)
+      : { top: 220, bottom: 80, left: 80, right: 80 };
 
     if (countryBounds) {
       // Country filter active → frame the WHOLE country, not the pin
