@@ -176,6 +176,32 @@ export default function RaceGuideShell({
   //      on cleanup keeps the @container queries working
   //      everywhere else.
   const shellRef = useRef<HTMLDivElement>(null);
+
+  // Measured pull-up for the sticky map cell. The static
+  // MAP_PULL_UP constant assumes the masthead alone sits above
+  // the shell — but the dismissible announcement banner (client
+  // state, so unknowable server-side) adds its own height, and
+  // with the constant the map's bottom edge (and the corner
+  // controls) overflowed the fold by exactly the banner height
+  // until the user scrolled (user call 2026-08-22). Measure the
+  // shell's document-space top instead — same recipe as the
+  // /races index MapViewport — so the cell's top always lands AT
+  // the sticky offset: pinned and viewport-flush from scroll 0
+  // whatever chrome sits above. Remeasures on resize; a
+  // mid-session banner dismiss corrects on the next resize.
+  const [pullUp, setPullUp] = useState(MAP_PULL_UP);
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = shellRef.current;
+      if (!el) return;
+      const docTop = el.getBoundingClientRect().top + window.scrollY;
+      setPullUp(Math.max(0, docTop - MAP_STICKY_TOP));
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
   useEffect(() => {
     if (!mapExpanded) return;
     // lockDocumentScroll compensates the freed scrollbar width — no
@@ -300,14 +326,16 @@ export default function RaceGuideShell({
                 position: "sticky",
                 top: MAP_STICKY_TOP,
                 height: MAP_VIEWPORT_HEIGHT,
-                // Pull the cell up under the masthead so the
-                // map's in-flow top sits AT the sticky offset in
-                // document space — pinned and viewport-flush
-                // from scroll 0 (corner controls in view), and
-                // no canvas strip appears when the chrome
-                // condenses. The opaque header tiers simply
-                // cover the map's top strip until they fold.
-                marginTop: -MAP_PULL_UP,
+                // Pull the cell up under the masthead (and the
+                // announcement banner when present — pullUp is
+                // measured) so the map's in-flow top sits AT the
+                // sticky offset in document space — pinned and
+                // viewport-flush from scroll 0 (corner controls
+                // in view), and no canvas strip appears when the
+                // chrome condenses. The opaque chrome simply
+                // covers the map's top strip until it folds /
+                // scrolls away.
+                marginTop: -pullUp,
                 // Below the panel's z-index: 1 so the loading
                 // cover (which lives inside this sticky
                 // container) can never paint over the panel
