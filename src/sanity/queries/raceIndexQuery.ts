@@ -68,10 +68,9 @@ const SORT_GROQ: Record<RaceSortKey, string> = {
   "price-desc": "price desc",
 };
 
-export function buildRaceIndexQuery(sort: RaceSortKey = DEFAULT_SORT): string {
-  const order = SORT_GROQ[sort] ?? SORT_GROQ[DEFAULT_SORT];
-  return groq`
-    *[
+// Shared predicate block — the list query and the count query MUST
+// filter identically or the page count lies.
+const RACE_FILTER_PREDICATES = `
       _type == "raceGuide"
       && defined(slug.current)
       && (!defined($qWild) || title match $qWild || city match $qWild || country match $qWild)
@@ -91,7 +90,27 @@ export function buildRaceIndexQuery(sort: RaceSortKey = DEFAULT_SORT): string {
       && (!defined($temperatureMax) || (defined(averageTemperature) && averageTemperature <= $temperatureMax))
       && (!defined($raceTag) || $raceTag in tags)
       && (!defined($hidePastBefore) || eventDate >= $hidePastBefore)
-    ] | order(${order}) {
+`;
+
+/** Total matching races for the current filter set — drives the
+ *  grid's page count. Takes the same params object as the list
+ *  query. */
+export const raceCountQuery = groq`count(*[${RACE_FILTER_PREDICATES}])`;
+
+export function buildRaceIndexQuery(
+  sort: RaceSortKey = DEFAULT_SORT,
+  /** When set, slice the ordered result (grid pagination). The
+   *  bounds are embedded as literals — like the order clause, GROQ
+   *  can't take them as params in this position. Omit for the full
+   *  set (the map view needs every marker). */
+  slice?: { offset: number; limit: number },
+): string {
+  const order = SORT_GROQ[sort] ?? SORT_GROQ[DEFAULT_SORT];
+  const sliceClause = slice
+    ? `[${Math.max(0, Math.floor(slice.offset))}...${Math.max(0, Math.floor(slice.offset + slice.limit))}]`
+    : "";
+  return groq`
+    *[${RACE_FILTER_PREDICATES}] | order(${order}) ${sliceClause} {
       _id,
       title,
       "slug": slug.current,

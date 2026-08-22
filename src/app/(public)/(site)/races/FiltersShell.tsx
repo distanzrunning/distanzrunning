@@ -108,6 +108,9 @@ export default function FiltersShell({
 
   const setFilter = (patch: Partial<RaceFilters>) => {
     const next: RaceFilters = { ...initialFilters, ...patch };
+    // Any filter change restarts the result set — page 2 of the OLD
+    // results is meaningless against the new ones.
+    delete next.page;
     // Map view has no City / State / Sort — strip any values carried
     // in via the URL so they don't apply invisibly.
     if (isMap) {

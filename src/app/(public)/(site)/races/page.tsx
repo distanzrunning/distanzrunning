@@ -20,7 +20,10 @@
 import { format } from "date-fns";
 
 import { sanityFetch } from "@/sanity/lib/live";
-import { buildRaceIndexQuery } from "@/sanity/queries/raceIndexQuery";
+import {
+  buildRaceIndexQuery,
+  raceCountQuery,
+} from "@/sanity/queries/raceIndexQuery";
 import { raceCountriesQuery } from "@/sanity/queries/raceCountriesQuery";
 import { raceCitiesQuery } from "@/sanity/queries/raceCitiesQuery";
 import { raceTagsQuery } from "@/sanity/queries/raceTagsQuery";
@@ -28,6 +31,7 @@ import { geocodeAddress, geocodeCountryBounds } from "@/lib/geocode";
 import RaceGrid, { type RaceIndexItem } from "./RaceGrid";
 import RaceExploreMap, { type MapRace } from "./RaceExploreMap";
 import MapViewport from "./MapViewport";
+import RacePagination from "./RacePagination";
 import RaceUnitControls from "./RaceUnitControls";
 import FiltersShell from "./FiltersShell";
 import ViewSwitch from "./ViewSwitch";
@@ -46,6 +50,10 @@ export const metadata = {
 
 export const revalidate = 60;
 
+// Grid page size — eight rows of the 3-up desktop grid (user call
+// 2026-08-22). The map view is never paginated.
+const PAGE_SIZE = 24;
+
 export default async function RacesPage({
   searchParams,
 }: {
@@ -54,22 +62,34 @@ export default async function RacesPage({
   const sp = await searchParams;
   const filters = parseFilters(sp);
   const queryParams = buildQueryParams(filters);
-  const raceIndexQuery = buildRaceIndexQuery(getSort(filters));
   const view: "grid" | "map" = sp.view === "map" ? "map" : "grid";
 
-  // Run the filtered race fetch + unfiltered country / city / tag
-  // option lists in parallel — the option lists need every choice
-  // regardless of which filters are applied. State doesn't need a
-  // data fetch — it uses a hardcoded canonical US states list
-  // from src/lib/usStates.ts.
-  const [raceResult, countriesResult, citiesResult, tagsResult] =
+  // Pagination (grid only — the map always renders the full filtered
+  // set for its markers). Page size 24 = eight rows of the 3-up grid.
+  const page = view === "grid" ? (filters.page ?? 1) : 1;
+  const raceIndexQuery = buildRaceIndexQuery(
+    getSort(filters),
+    view === "grid"
+      ? { offset: (page - 1) * PAGE_SIZE, limit: PAGE_SIZE }
+      : undefined,
+  );
+
+  // Run the filtered race fetch + total count + unfiltered country /
+  // city / tag option lists in parallel — the option lists need
+  // every choice regardless of which filters are applied. State
+  // doesn't need a data fetch — it uses a hardcoded canonical US
+  // states list from src/lib/usStates.ts.
+  const [raceResult, countResult, countriesResult, citiesResult, tagsResult] =
     await Promise.all([
       sanityFetch({ query: raceIndexQuery, params: queryParams }),
+      sanityFetch({ query: raceCountQuery, params: queryParams }),
       sanityFetch({ query: raceCountriesQuery }),
       sanityFetch({ query: raceCitiesQuery }),
       sanityFetch({ query: raceTagsQuery }),
     ]);
   const races = (raceResult.data ?? []) as RaceIndexItem[];
+  const totalRaces = (countResult.data ?? 0) as number;
+  const totalPages = Math.max(1, Math.ceil(totalRaces / PAGE_SIZE));
   const countries = (countriesResult.data ?? []) as string[];
   const tags = (tagsResult.data ?? []) as string[];
 
@@ -102,9 +122,20 @@ export default async function RacesPage({
     city: undefined,
     state: undefined,
     sort: undefined,
+    page: undefined,
   }).toString();
   const gridHref = filterQs ? `/races?${filterQs}` : "/races";
   const mapHref = `/races?${mapFilterQs ? `${mapFilterQs}&` : ""}view=map`;
+
+  // Page hrefs — current filters preserved, page normalised (absent
+  // for page 1, so the canonical first page stays /races).
+  const hrefForPage = (n: number) => {
+    const qs = buildFilterParams({
+      ...filters,
+      page: n >= 2 ? n : undefined,
+    }).toString();
+    return qs ? `/races?${qs}` : "/races";
+  };
 
   const filtersShell = (
     skeletonOnPending: boolean,
@@ -214,6 +245,15 @@ export default async function RacesPage({
       </header>
 
       {filtersShell(true, <RaceGrid races={races} />)}
+
+      {/* Outside FiltersShell so the 250ms pending-skeleton swap
+          doesn't tear it down; a filter change lands on page 1 via
+          setFilter dropping the page param. */}
+      <RacePagination
+        page={page}
+        totalPages={totalPages}
+        hrefForPage={hrefForPage}
+      />
     </div>
   );
 }

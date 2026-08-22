@@ -67,6 +67,12 @@ export interface RaceFilters {
    *  eventDate is before today. URL emits `showPast=1` only
    *  when the user has explicitly opted in via the toggle. */
   showPast?: boolean;
+  /** Grid page (1-based). Stored only when ≥2 so page-1 URLs stay
+   *  clean. Like sort, NOT a filter: hasActiveFilters ignores it,
+   *  every real filter change resets it (FiltersShell drops it on
+   *  patch), and the map view strips it entirely — the map always
+   *  renders the full filtered set. */
+  page?: number;
 }
 
 type SearchParamsLike =
@@ -83,10 +89,7 @@ function getParam(sp: SearchParamsLike, key: string): string | undefined {
   return undefined;
 }
 
-function getNumberParam(
-  sp: SearchParamsLike,
-  key: string,
-): number | undefined {
+function getNumberParam(sp: SearchParamsLike, key: string): number | undefined {
   const raw = getParam(sp, key);
   if (raw == null) return undefined;
   const n = Number(raw);
@@ -140,6 +143,8 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
     filters.sort = sort as RaceSortKey;
   }
   if (getParam(sp, "showPast") === "1") filters.showPast = true;
+  const page = getNumberParam(sp, "page");
+  if (page != null && Number.isInteger(page) && page >= 2) filters.page = page;
   return filters;
 }
 
@@ -181,6 +186,9 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
   // off). Default behaviour hides past races and stays out of
   // the URL.
   if (filters.showPast) params.set("showPast", "1");
+  // Page 1 is the clean default URL; only deeper pages are emitted.
+  if (filters.page != null && filters.page >= 2)
+    params.set("page", String(filters.page));
   return params;
 }
 
