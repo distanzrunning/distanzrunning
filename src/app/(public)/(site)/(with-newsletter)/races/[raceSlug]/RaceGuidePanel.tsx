@@ -561,7 +561,12 @@ function AdsCard() {
   // mappings if / when we migrate.
   return (
     <div
-      className={`${CARD_CLASS} rounded-xs border border-[color:var(--ds-gray-400)] p-3 lg:rounded-none lg:p-5 lg:border-0`}
+      // Below lg: its own bordered 4px frame so the sponsored block
+      // doesn't blend into the flat editorial flow. At lg+ it must
+      // match the other floating cards EXACTLY — material-menu's 12px
+      // radius (rounded-lg re-asserts it over the mobile rounded-xs)
+      // and no border (the hairline lives in the menu shadow).
+      className={`${CARD_CLASS} rounded-xs border border-[color:var(--ds-gray-400)] p-3 lg:rounded-lg lg:border-0 lg:p-5`}
     >
       <div className="lg:hidden">
         <AdSlot
