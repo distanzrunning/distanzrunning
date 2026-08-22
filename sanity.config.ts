@@ -8,7 +8,6 @@
  * own login still runs inside the Studio component for API access.
  */
 
-import { googleMapsInput } from "@sanity/google-maps-input";
 import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
@@ -41,20 +40,11 @@ export default defineConfig({
     // Vision is for querying with GROQ from inside the Studio
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({ defaultApiVersion: apiVersion }),
-    // Map widget with Google Places address autocomplete for every
-    // geopoint field (the race "Map location"): search a city or
-    // address, the pin drops and stores lat/lng; drag to fine-tune.
-    // Needs NEXT_PUBLIC_GOOGLE_MAPS_API_KEY (embedded Studio ⇒ the
-    // key must be NEXT_PUBLIC to reach the browser) with the Maps
-    // JavaScript API + Places API enabled. Included conditionally:
-    // without the key, geopoint falls back to Sanity's plain
-    // lat/lng number inputs instead of a broken map.
-    ...(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-      ? [
-          googleMapsInput({
-            apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-          }),
-        ]
-      : []),
+    // NOTE: @sanity/google-maps-input is deliberately NOT registered
+    // as a plugin. Its form middleware intercepts every geopoint
+    // WITHOUT calling renderDefault, which sat above field-level
+    // components and swallowed the race field's inline search box.
+    // LocationSearchInput imports the plugin's GeopointInput directly
+    // instead — search on top, the same Google map + dialog below.
   ],
 });

@@ -10,11 +10,19 @@
  * public token) feeding Sanity UI's Autocomplete. Picking a
  * suggestion writes the geopoint immediately.
  *
- * The stock input renders BELOW via renderDefault — the Google map
- * preview stays as the visual receipt, and its dialog remains the
- * drag-to-fine-tune path (e.g. nudging the pin onto the start line).
+ * Below the search sits the Google map preview as the visual
+ * receipt, with its dialog as the drag-to-fine-tune path (e.g.
+ * nudging the pin onto the start line). The plugin's GeopointInput
+ * is rendered DIRECTLY here rather than registered as a plugin: its
+ * form middleware intercepts every geopoint without calling
+ * renderDefault, which sat above field-level components and
+ * swallowed this search box (found the hard way, 2026-08-22).
  */
 
+import {
+  GeopointInput,
+  type GeopointInputProps,
+} from "@sanity/google-maps-input";
 import { SearchIcon } from "@sanity/icons";
 import { Autocomplete, Card, Stack, Text } from "@sanity/ui";
 import { useCallback, useRef, useState } from "react";
@@ -109,9 +117,21 @@ export default function LocationSearchInput(
     [onChange],
   );
 
+  const googleKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  // The Google map preview + drag dialog when the key exists; the
+  // stock lat/lng inputs otherwise.
+  const mapInput = googleKey ? (
+    <GeopointInput
+      {...(props as unknown as Omit<GeopointInputProps, "geoConfig">)}
+      geoConfig={{ apiKey: googleKey }}
+    />
+  ) : (
+    props.renderDefault(props)
+  );
+
   // Without the Mapbox token there is nothing to search with — fall
-  // back to the stock input alone.
-  if (!token) return props.renderDefault(props);
+  // back to the map input alone.
+  if (!token) return mapInput;
 
   return (
     <Stack space={3}>
@@ -144,7 +164,7 @@ export default function LocationSearchInput(
           suggestionsRef.current.find((s) => s.id === value)?.label ?? value
         }
       />
-      {props.renderDefault(props)}
+      {mapInput}
     </Stack>
   );
 }
