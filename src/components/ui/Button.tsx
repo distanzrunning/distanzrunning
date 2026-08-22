@@ -6,6 +6,7 @@ import {
   AnchorHTMLAttributes,
   ReactNode,
 } from "react";
+import Link from "next/link";
 
 // ============================================================================
 // Types
@@ -78,6 +79,11 @@ export interface ButtonLinkProps
   extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "prefix"> {
   /** Button content */
   children?: ReactNode;
+  /** next/link prefetch behaviour — only applies to internal hrefs
+   *  (which render through next/link). Set true to eagerly prefetch
+   *  a dynamic route's payload so the click swaps instantly (e.g.
+   *  pagination numbers). */
+  prefetch?: boolean;
   /** Size variant */
   size?: ButtonSize;
   /** Visual style variant */
@@ -483,6 +489,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       customColors,
       className = "",
       style: styleProp,
+      prefetch,
       ...props
     },
     ref,
@@ -513,19 +520,14 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
 
     const iconSize = getIconSize(size);
 
-    return (
-      <a
-        ref={ref}
-        className={combinedClasses}
-        style={
-          {
-            "--ds-icon-size": iconSize,
-            ...(customColors ? getCustomColorStyle(customColors) : null),
-            ...styleProp,
-          } as React.CSSProperties
-        }
-        {...props}
-      >
+    const style = {
+      "--ds-icon-size": iconSize,
+      ...(customColors ? getCustomColorStyle(customColors) : null),
+      ...styleProp,
+    } as React.CSSProperties;
+
+    const inner = (
+      <>
         {prefixIcon && <span className="prefix">{prefixIcon}</span>}
         {children && (
           <span className="content px-[var(--ds-button-content-padding)]">
@@ -533,6 +535,38 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
           </span>
         )}
         {suffixIcon && <span className="suffix">{suffixIcon}</span>}
+      </>
+    );
+
+    // Internal hrefs soft-navigate via next/link — a plain <a> forced
+    // a FULL document reload on every in-app ButtonLink (pagination,
+    // "All races", …), which read as sluggish transitions (user call
+    // 2026-08-22). External / hash / protocol links keep the plain
+    // anchor.
+    const { href } = props;
+    const isInternal =
+      typeof href === "string" &&
+      href.startsWith("/") &&
+      !href.startsWith("//");
+
+    if (isInternal) {
+      return (
+        <Link
+          ref={ref}
+          className={combinedClasses}
+          style={style}
+          prefetch={prefetch}
+          {...props}
+          href={href}
+        >
+          {inner}
+        </Link>
+      );
+    }
+
+    return (
+      <a ref={ref} className={combinedClasses} style={style} {...props}>
+        {inner}
       </a>
     );
   },

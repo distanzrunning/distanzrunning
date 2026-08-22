@@ -67,6 +67,7 @@ export default function RacePagination({
       {page > 1 && (
         <ButtonLink
           href={hrefForPage(page - 1)}
+          prefetch
           variant="tertiary"
           size="small"
           shape="square"
@@ -88,6 +89,7 @@ export default function RacePagination({
           <ButtonLink
             key={item}
             href={hrefForPage(item)}
+            prefetch
             variant="tertiary"
             size="small"
             shape="square"
@@ -105,6 +107,7 @@ export default function RacePagination({
       {page < totalPages && (
         <ButtonLink
           href={hrefForPage(page + 1)}
+          prefetch
           variant="tertiary"
           size="small"
           shape="square"

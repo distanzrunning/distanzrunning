@@ -143,7 +143,7 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
     filters.sort = sort as RaceSortKey;
   }
   if (getParam(sp, "showPast") === "1") filters.showPast = true;
-  const page = getNumberParam(sp, "page");
+  const page = getNumberParam(sp, "p");
   if (page != null && Number.isInteger(page) && page >= 2) filters.page = page;
   return filters;
 }
@@ -187,8 +187,9 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
   // the URL.
   if (filters.showPast) params.set("showPast", "1");
   // Page 1 is the clean default URL; only deeper pages are emitted.
+  // Short param name `p` (user call 2026-08-22).
   if (filters.page != null && filters.page >= 2)
-    params.set("page", String(filters.page));
+    params.set("p", String(filters.page));
   return params;
 }
 
