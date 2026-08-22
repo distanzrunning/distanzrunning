@@ -49,7 +49,9 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
 import { ButtonLink } from "@/components/ui/Button";
-import { LoadingDots } from "@/components/ui/LoadingDots";
+import { cn } from "@/lib/utils";
+
+import LoadingBar from "../../../races/LoadingBar";
 import { useUnits } from "@/contexts/UnitsContext";
 import {
   routeAssetsToGpx,
@@ -272,6 +274,14 @@ export default function RaceMap({
   );
   const { isDark } = useContext(DarkModeContext);
   const [status, setStatus] = useState<MapStatus>({ kind: "loading" });
+  // Canvas gate — the /races index map's loading sequence, shared
+  // here (user call 2026-08-22): the canvas holds at opacity 0 over
+  // the recessed gray backdrop (slim LoadingBar on the fixed top
+  // rail) until the map has fully rendered, then fades up as one
+  // settled frame. Also drops on every style swap (theme flip /
+  // basemap pick), which repaints from scratch — hide instantly,
+  // fade back once the restyled map goes idle.
+  const [settled, setSettled] = useState(false);
 
   // User's chosen basemap. Hydrated from localStorage so the
   // choice persists across page navigations / sessions. SSR
@@ -440,6 +450,11 @@ export default function RaceMap({
           }
         }
         setStatus({ kind: "ready" });
+        // Fade the canvas up only once the route layers have
+        // actually painted — `load` fires before our just-added
+        // layers render, and fading on it leaked a route-less
+        // frame into the reveal.
+        map.once("idle", () => setSettled(true));
       } catch (err) {
         const msg =
           err instanceof Error ? err.message : "Failed to load route";
@@ -521,7 +536,13 @@ export default function RaceMap({
     const next = styleForMode(mapStyle, isDark);
     if (next === lastStyleUrlRef.current) return;
     lastStyleUrlRef.current = next;
+    // setStyle repaints from scratch — for a few frames the canvas
+    // shows the bare new-style background, which reads as a flash
+    // (same fix as the index map). Hide instantly, swap, fade back
+    // up once the restyled map has fully rendered.
+    setSettled(false);
     map.setStyle(next);
+    map.once("idle", () => setSettled(true));
   }, [isDark, mapStyle]);
 
   // Refit the route when the user toggles fullscreen — the
@@ -670,10 +691,31 @@ export default function RaceMap({
 
   return (
     <>
+      {/* Recessed gray backdrop — persists behind the canvas so the
+          fade-up blends over the same tone the LoadingBar phase
+          showed (gray-100, the Geist component-background surface,
+          NOT background-100 which would blend with the panel
+          cards). Matches the /races index map treatment. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-[color:var(--ds-gray-100)]"
+      />
       <div
         ref={containerRef}
-        className="race-detail-map h-full w-full"
+        className={cn(
+          // Fade-in only: hiding must be INSTANT (first load and
+          // style-swap restyles — a fade-out would let the setStyle
+          // flash show through it).
+          "race-detail-map relative h-full w-full",
+          settled
+            ? "opacity-100 transition-opacity duration-500 ease-out motion-reduce:transition-none"
+            : "opacity-0",
+        )}
       />
+      {/* Shared top-of-viewport loading rail — same bar as the
+          /races index map load. Not shown on error (the overlay
+          says why instead). */}
+      {!settled && status.kind !== "error" && <LoadingBar />}
       {status.kind === "ready" && (
         <MapControls
           mapRef={mapRef}
@@ -703,7 +745,6 @@ export default function RaceMap({
           onClose={() => setExpoCardOpen(false)}
         />
       )}
-      {status.kind === "loading" && <MapLoadingOverlay />}
       {status.kind === "error" && <StatusOverlay text={status.message} />}
     </>
   );
@@ -712,26 +753,6 @@ export default function RaceMap({
 // ============================================================================
 // Status overlays (loading / error / "no route" fallback)
 // ============================================================================
-
-// Loading state: opaque cover with the shared LoadingDots
-// primitive — text + animated dots, matching the rest of the
-// app's loading affordances. Fully opaque so any blank tile or
-// pre-route-layer frame stays hidden behind it. Surface uses
-// --ds-gray-100 (the Geist "component background" surface)
-// rather than --ds-background-100 so the panel cards above
-// still read with visible edges in both themes — the cards use
-// background-200 / background-100, which would blend.
-//
-// Dots sit dead-centre because the panel doesn't reveal until
-// the map is ready, so there's no left-side panel to compensate
-// for during the load phase.
-export function MapLoadingOverlay() {
-  return (
-    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[color:var(--ds-gray-100)]">
-      <LoadingDots>Loading</LoadingDots>
-    </div>
-  );
-}
 
 // Error state: plain text on the same opaque surface. Distinct
 // from the loading state so the difference reads instantly.
