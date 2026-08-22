@@ -27,7 +27,7 @@ import type {
 } from "@/lib/gpxUtils";
 import { lockDocumentScroll } from "@/lib/scroll-lock";
 
-import { MAP_STICKY_TOP } from "./_constants";
+import { MAP_STICKY_TOP, MAP_VIEWPORT_HEIGHT } from "./_constants";
 import RaceMap, { StatusOverlay, type ExpoLocation } from "./RaceMap";
 import GuidePanel from "./RaceGuidePanel";
 import type { RaceGuideMeta } from "./_types";
@@ -226,7 +226,7 @@ export default function RaceGuideShell({
         className={
           mapExpanded
             ? "overflow-hidden"
-            : "relative h-[60vh] overflow-hidden rounded-md border border-[color:var(--ds-gray-400)]"
+            : "relative h-[60vh] overflow-hidden rounded-xs border border-[color:var(--ds-gray-400)]"
         }
         style={
           mapExpanded
@@ -266,8 +266,8 @@ export default function RaceGuideShell({
   // auto-sizes to the larger of the two children, so when the
   // panel is taller than the viewport the grid (and <main>)
   // grow tall enough to drive page scroll while the map's
-  // `position: sticky; top: 50px` pins it under the
-  // SiteHeader throughout.
+  // `position: sticky; top: MAP_STICKY_TOP` pins it under the
+  // condensed masthead chrome throughout.
   return (
     <div
       ref={shellRef}
@@ -296,7 +296,7 @@ export default function RaceGuideShell({
             : {
                 position: "sticky",
                 top: MAP_STICKY_TOP,
-                height: "calc(100vh - 50px)",
+                height: MAP_VIEWPORT_HEIGHT,
                 // Below the panel's z-index: 1 so the loading
                 // cover (which lives inside this sticky
                 // container) can never paint over the panel

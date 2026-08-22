@@ -48,6 +48,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { DarkModeContext } from "@/components/DarkModeProvider";
+import { ButtonLink } from "@/components/ui/Button";
 import { LoadingDots } from "@/components/ui/LoadingDots";
 import { useUnits } from "@/contexts/UnitsContext";
 import {
@@ -82,17 +83,18 @@ export interface ExpoLocation {
 const ROUTE_BREATHING = 96;
 
 // Resolves the route line / elevation chart color from
-// --ds-pink-800 at runtime via its -rgb companion so the value
-// stays anchored to the DS token (rather than a parallel hex
-// constant). We use the -rgb triplet rather than the named
+// --ds-blue-700 at runtime — the colour system's single
+// functional accent, named explicitly for "race route lines,
+// elevation charts" (the old pink-800 was the retired brand
+// pink). We read the -value HSL triplet rather than the named
 // token directly because Mapbox's style-spec parser and SVG
 // presentation attributes don't accept `var()` or oklch() — but
-// they both accept an rgb(R, G, B) string assembled from the
-// triplet. --ds-pink-800 is theme-stable (same RGB in light and
-// dark modes per globals.css), so resolving once on the client
-// is sufficient. The hex fallback only fires during SSR or if
-// the token isn't loaded yet.
-const ROUTE_LINE_COLOR_FALLBACK = "#DA2D73";
+// they accept an hsl(...) string assembled from the triplet.
+// Resolved at layer-build time (initial load AND every
+// style.load after a theme swap), so each theme's pass picks up
+// its own blue. The hex fallback (#0070F3, light blue-700) only
+// fires during SSR or if the token isn't loaded yet.
+const ROUTE_LINE_COLOR_FALLBACK = "#0070F3";
 
 const EXPO_DOT_SIZE = 18;
 const ENDPOINT_DOT_SIZE = 20;
@@ -978,7 +980,7 @@ function MapStyleSwitcher({ value, onChange }: MapStyleSwitcherProps) {
     <div
       role="radiogroup"
       aria-label="Map style"
-      className="absolute bottom-0 right-full mr-2 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-1"
+      className="absolute bottom-0 right-full mr-2 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[color:var(--ds-gray-400)] bg-surface p-1"
       style={{ boxShadow: "var(--ds-shadow-small)" }}
     >
       {MAP_STYLE_OPTIONS.map((opt) => {
@@ -1034,7 +1036,7 @@ function MarkersMenu({
     <div
       role="group"
       aria-label="Route markers"
-      className="absolute bottom-0 right-full mr-2 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-1"
+      className="absolute bottom-0 right-full mr-2 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-[color:var(--ds-gray-400)] bg-surface p-1"
       style={{ boxShadow: "var(--ds-shadow-small)" }}
     >
       {hasDistanceMarkers && (
@@ -1126,8 +1128,8 @@ function MapControlButton({
     pressed === true
       ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)] hover:bg-[color:var(--ds-gray-900)]"
       : pressed === false
-        ? "bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-700)] hover:bg-[color:var(--ds-gray-200)] hover:text-[color:var(--ds-gray-1000)]"
-        : "bg-[color:var(--ds-background-100)] text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-200)]";
+        ? "bg-surface text-[color:var(--ds-gray-700)] hover:bg-[color:var(--ds-gray-200)] hover:text-[color:var(--ds-gray-1000)]"
+        : "bg-surface text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-200)]";
 
   const isToggle = pressed !== undefined;
 
@@ -1219,7 +1221,9 @@ function ExpoCard({
   return (
     <div
       ref={cardRef}
-      className="pointer-events-auto absolute z-[3] w-[300px] rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] p-4"
+      // material-menu: surface bg + menu shadow (hairline built
+      // in — the old border + shadow-menu combo double-ruled it).
+      className="material-menu pointer-events-auto absolute z-[3] w-[300px] p-4"
       style={{
         left: pos.x,
         top: pos.y,
@@ -1227,7 +1231,6 @@ function ExpoCard({
         // px above the dot's centre so it floats above the
         // marker with breathing room.
         transform: "translate(-50%, calc(-100% - 16px))",
-        boxShadow: "var(--ds-shadow-menu)",
       }}
     >
       <div className="flex items-start justify-between gap-3">
@@ -1256,15 +1259,17 @@ function ExpoCard({
           <X className="size-4" />
         </button>
       </div>
-      <a
+      <ButtonLink
         href={mapsUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-4 flex h-9 items-center justify-center gap-2 rounded-md border border-[color:var(--ds-gray-400)] text-copy-13 font-semibold text-[color:var(--ds-gray-1000)] no-underline transition-colors hover:bg-[color:var(--ds-gray-200)]"
+        variant="secondary"
+        size="small"
+        className="mt-4 w-full"
+        suffixIcon={<ExternalLink />}
       >
         Open in Google Maps
-        <ExternalLink className="size-4" />
-      </a>
+      </ButtonLink>
     </div>
   );
 }
@@ -1325,12 +1330,12 @@ function clearTerrain(map: mapboxgl.Map): void {
 }
 
 // Exported because the panel's elevation chart shares the
-// same brand-pink line colour for visual continuity between
+// same accent-blue line colour for visual continuity between
 // the chart's area-fill and the map's route line.
 export function getRouteLineColor(): string {
   if (typeof document === "undefined") return ROUTE_LINE_COLOR_FALLBACK;
   const triplet = getComputedStyle(document.documentElement)
-    .getPropertyValue("--ds-pink-800-value")
+    .getPropertyValue("--ds-blue-700-value")
     .trim();
   return triplet ? `hsl(${triplet})` : ROUTE_LINE_COLOR_FALLBACK;
 }
@@ -1686,10 +1691,10 @@ function addRoutePoiMarker(
 // Marker helpers — original (expo, endpoints, hover, distance)
 // ============================================================================
 
-// Off-route POI primitive: brand-pink dot + always-visible
+// Off-route POI primitive: accent-blue dot + always-visible
 // label chip in the same DOM (used by the expo marker). Dot
-// picks up --ds-pink-800 (via getRouteLineColor) so the marker
-// + route line read as a single brand gesture. anchor 'left' +
+// picks up --ds-blue-700 (via getRouteLineColor) so the marker
+// + route line read as a single accent gesture. anchor 'left' +
 // offset of half the dot width puts the dot's *centre* on the
 // geographic point with the chip extending rightward.
 function addPoiMarker(

@@ -43,6 +43,7 @@ import {
 } from "recharts";
 
 import { AdSlot } from "@/components/ui/AdSlot";
+import { ButtonLink } from "@/components/ui/Button";
 import { Switch } from "@/components/ui/Switch";
 import { formatDistance, formatElevation } from "@/lib/raceUtils";
 import { useUnits, type UnitSystem } from "@/contexts/UnitsContext";
@@ -127,18 +128,19 @@ export default function GuidePanel({
 // Card surface tokens — shared across every card in the stack.
 // ============================================================================
 //
-// At lg+ the cards carry a floating-surface treatment (rounded
-// corners + secondary background + drop shadow + interior
-// padding) so each section reads as a discrete card stacked
-// over the sticky map. Below lg the panel is a single
-// continuous editorial flow (no map underneath, so no need to
-// distinguish cards from a base canvas) — we drop the card
-// chrome and let sections share the shell's background. Inline
-// style stays minimal: scroll-margin-top for anchored sections
-// is the only thing that varies per-card.
+// At lg+ the cards carry the floating-chrome treatment so each
+// section reads as a discrete card stacked over the sticky map —
+// `material-menu` (Geist-verbatim: surface bg + menu shadow with
+// its built-in hairline + 12px radius), the exact chrome the
+// /races index floating panel wears over ITS map. Below lg the
+// panel is a single continuous editorial flow (no map
+// underneath, so no need to distinguish cards from a base
+// canvas) — we drop the card chrome and let sections share the
+// shell's background. Inline style stays minimal:
+// scroll-margin-top for anchored sections is the only thing
+// that varies per-card.
 
-const CARD_CLASS =
-  "lg:overflow-hidden lg:rounded-md lg:bg-[color:var(--ds-background-200)] dark:lg:bg-[color:var(--ds-background-100)] lg:p-5 lg:[box-shadow:var(--ds-shadow-menu)]";
+const CARD_CLASS = "lg:material-menu lg:overflow-hidden lg:p-5";
 
 // ============================================================================
 // Hero card — image, title, location, meta pills, intro lede.
@@ -158,11 +160,10 @@ function HeroCard({
     >
       {imageUrl && (
         // Image sits inset within the card surface — the card's
-        // bg shows around it as a frame. Inner radius is one
-        // step down from the card's so the visible margin
-        // between the two reads consistently. 3:4 portrait so
-        // the hero leans editorial.
-        <div className="relative aspect-[3/4] w-full overflow-hidden rounded">
+        // bg shows around it as a frame, at the 4px editorial
+        // radius (rounded-xs — the ONE radius for editorial
+        // imagery). 3:4 portrait so the hero leans editorial.
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xs">
           <Image
             src={imageUrl}
             alt={race.title}
@@ -173,8 +174,10 @@ function HeroCard({
           />
         </div>
       )}
+      {/* Editorial content title — display register (big-and-
+          light), not the UI 600. */}
       <h1
-        className={`m-0 text-balance text-heading-40 text-[color:var(--ds-gray-1000)] ${
+        className={`m-0 text-balance text-display-40 text-[color:var(--ds-gray-1000)] ${
           imageUrl ? "mt-5" : ""
         }`}
       >
@@ -360,7 +363,9 @@ interface TocEntry {
 const STATS_SECTION_ID = "key-stats";
 const ELEVATION_SECTION_ID = "elevation";
 const RECORDS_SECTION_ID = "course-records";
-const SCROLL_MARGIN_TOP = 66;
+// Anchored sections land clear of the condensed masthead chrome
+// (73px) with a little breathing room.
+const SCROLL_MARGIN_TOP = 89;
 
 function smoothScrollToAnchor(
   e: React.MouseEvent<HTMLAnchorElement>,
@@ -527,7 +532,7 @@ function AdsCard() {
   // mappings if / when we migrate.
   return (
     <div
-      className={`${CARD_CLASS} rounded-md border border-[color:var(--ds-gray-400)] p-3 lg:p-5 lg:border-0`}
+      className={`${CARD_CLASS} rounded-xs border border-[color:var(--ds-gray-400)] p-3 lg:rounded-none lg:p-5 lg:border-0`}
     >
       <div className="lg:hidden">
         <AdSlot
@@ -568,13 +573,14 @@ function AdsCardFallback({ compact = false }: { compact?: boolean }) {
         <h4 className="m-0 text-heading-14 text-[color:var(--ds-gray-1000)]">
           Reach runners
         </h4>
-        <a
+        <ButtonLink
           href="mailto:brand@distanzrunning.com?subject=Advertising%20on%20Distanz%20Running"
-          className="inline-flex h-8 shrink-0 items-center gap-1 rounded-md bg-[color:var(--ds-gray-1000)] px-3 text-copy-13 font-semibold text-[color:var(--ds-background-100)] no-underline transition-colors hover:bg-[color:var(--ds-gray-900)]"
+          size="small"
+          className="shrink-0"
+          suffixIcon={<ChevronRight />}
         >
           Get in touch
-          <ChevronRight className="size-4" />
-        </a>
+        </ButtonLink>
       </div>
     );
   }
@@ -586,13 +592,13 @@ function AdsCardFallback({ compact = false }: { compact?: boolean }) {
       <p className="m-0 max-w-[80%] text-copy-13 leading-snug text-[color:var(--ds-gray-900)]">
         Feature your brand, product, or story here.
       </p>
-      <a
+      <ButtonLink
         href="mailto:brand@distanzrunning.com?subject=Advertising%20on%20Distanz%20Running"
-        className="inline-flex h-9 items-center gap-1 rounded-md bg-[color:var(--ds-gray-1000)] px-4 text-copy-13 font-semibold text-[color:var(--ds-background-100)] no-underline transition-colors hover:bg-[color:var(--ds-gray-900)]"
+        size="small"
+        suffixIcon={<ChevronRight />}
       >
         Get in touch
-        <ChevronRight className="size-4" />
-      </a>
+      </ButtonLink>
     </div>
   );
 }
@@ -649,7 +655,7 @@ interface Tile {
 function StatTile({ Icon, label, value, subtitle, visual }: Tile) {
   return (
     <div
-      className="relative flex flex-col gap-3 rounded-md p-4"
+      className="relative flex flex-col gap-3 rounded-xs p-4"
       style={{
         background: "var(--ds-gray-1000)",
         color: "var(--ds-background-100)",
@@ -1238,10 +1244,10 @@ function ElevationTooltip({
   const point = payload[0].payload;
   const grade = computeGrade(points, point.distance, useMetric);
   return (
-    <div
-      className="rounded-md border border-[color:var(--ds-gray-400)] bg-[color:var(--ds-background-100)] px-3 py-2"
-      style={{ boxShadow: "var(--ds-shadow-menu)" }}
-    >
+    // material-tooltip: Geist-verbatim floating-tooltip chrome —
+    // the hairline lives inside the shadow token, so no border
+    // (the old border + shadow-menu combo double-ruled it).
+    <div className="material-tooltip px-3 py-2">
       <TooltipRow
         label="Distance"
         value={`${point.distance.toFixed(2)} ${distanceUnit}`}
@@ -1377,7 +1383,10 @@ function BodySectionCard({ section }: { section: BodySection }) {
       className={CARD_CLASS}
       style={{ scrollMarginTop: SCROLL_MARGIN_TOP }}
     >
-      <h2 className="m-0 mb-4 text-heading-20 text-[color:var(--ds-gray-1000)]">
+      {/* Author-written H2s are editorial CONTENT headings —
+          display register, unlike the fixed section labels
+          ("Key stats" etc.) which are wayfinding chrome. */}
+      <h2 className="m-0 mb-4 text-display-20 text-[color:var(--ds-gray-1000)]">
         {section.title}
       </h2>
       <PortableText value={section.blocks} components={BODY_PT_COMPONENTS} />
@@ -1464,7 +1473,7 @@ function BodyImage({ value }: { value: BodyImageValue }) {
   const url = urlFor(value).width(960).auto("format").url();
   return (
     <figure className="my-5">
-      <div className="overflow-hidden rounded">
+      <div className="overflow-hidden rounded-xs">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={url} alt={value.alt ?? ""} className="block w-full" />
       </div>

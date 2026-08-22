@@ -6,11 +6,19 @@
 // padding math) can import without one module reaching into
 // the other for what's really just shared geometry.
 
-/** Sticky map sits just below the 50 px SiteHeader. */
-export const MAP_STICKY_TOP = 50;
+/** Sticky map pins at the CONDENSED masthead's bottom edge (top
+ *  tier: py-3 + h-12 wordmark ≈ 73px; measured, see Masthead).
+ *  The masthead's 40px nav slot below is a constant-height slot
+ *  that empties on scroll-condense, so pinning here lets the map
+ *  slide up beneath the folding nav row exactly the way page
+ *  content scrolls through the empty slot everywhere else. While
+ *  uncondensed the opaque nav row simply covers the map's top
+ *  strip. (Old value 50 was the retired pre-rebuild SiteHeader.) */
+export const MAP_STICKY_TOP = 73;
 
-/** Map fills the viewport from below the SiteHeader to its bottom. */
-export const MAP_VIEWPORT_HEIGHT = "calc(100vh - 50px)";
+/** Map fills the viewport from the condensed chrome's bottom
+ *  edge down. */
+export const MAP_VIEWPORT_HEIGHT = "calc(100vh - 73px)";
 
 /** Editorial panel column width — drives both the panel layout
  *  and the map's left-side fitBounds padding so the route
