@@ -590,11 +590,11 @@ export default function RaceExploreMap({
 
   return (
     <div className="relative h-full w-full bg-[color:var(--ds-gray-100)]">
-      {!loaded && (
-        <div className="absolute inset-x-0 top-0 z-10">
-          <LoadingBar />
-        </div>
-      )}
+      {/* Fixed = the top-of-viewport rail ALL /races loading shares
+          (ViewSwitch uses the same slot for map→grid). One rail, one
+          line — an in-flow bar under the navbar next to the fixed
+          navigation bar read as two loaders. */}
+      {!loaded && <LoadingBar />}
       <div
         ref={containerRef}
         className={cn(

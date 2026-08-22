@@ -14,10 +14,11 @@
 //     render (including the map view's geocoding pass) happens before
 //     the click, not after it;
 //   - the switch flips inside useTransition and a slim indeterminate
-//     LoadingBar renders under the masthead while the round-trip is
-//     in flight — feedback starts the moment the user clicks.
+//     LoadingBar rides the fixed top-of-viewport rail while the
+//     round-trip is in flight — but only when heading to GRID; the
+//     map island owns the bar for the map journey (see pendingView).
 
-import { useEffect, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { LayoutGrid, Map as MapIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -35,6 +36,12 @@ export default function ViewSwitch({
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  // Which view the in-flight switch is heading to. The LoadingBar is
+  // ONE line per journey: switching to MAP hands the bar off to the
+  // map island (its tile-loading bar mounts at the same fixed rail on
+  // commit), so this island only shows a bar when heading to GRID —
+  // two bars at once read as duplicates (user call 2026-08-22).
+  const [pendingView, setPendingView] = useState<"grid" | "map" | null>(null);
 
   // Warm the other view ahead of the click. For the map view this
   // also runs the server-side geocoding pass, filling lib/geocode's
@@ -45,6 +52,7 @@ export default function ViewSwitch({
 
   const setView = (next: string) => {
     if (next === view) return;
+    setPendingView(next === "map" ? "map" : "grid");
     startTransition(() => {
       router.replace(next === "map" ? mapHref : gridHref, { scroll: false });
     });
@@ -71,7 +79,7 @@ export default function ViewSwitch({
           },
         ]}
       />
-      {isPending && <LoadingBar fixed />}
+      {isPending && pendingView === "grid" && <LoadingBar />}
     </>
   );
 }

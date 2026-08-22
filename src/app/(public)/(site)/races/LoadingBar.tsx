@@ -8,23 +8,20 @@
 // would lie; the asymptotic fill is the honest affordance. Blue-700
 // per the colour system's functional-accent rule.
 //
-// `fixed`: pinned to the very top of the viewport OVER the masthead
+// Always pinned to the very top of the viewport OVER the masthead
 // (z above the header's 50 — the GitHub/YouTube top-bar convention,
-// which also sidesteps the header's variable condensed height).
-// Otherwise it renders in flow at the top of its container (the map
-// section).
+// which also sidesteps the header's variable condensed height). One
+// shared rail: every /races loading state (view switch, map tiles,
+// theme restyle) reports here, and callers coordinate so at most one
+// bar is mounted — two lines at once read as duplicate loaders
+// (user call 2026-08-22).
 
-import { cn } from "@/lib/utils";
-
-export default function LoadingBar({ fixed = false }: { fixed?: boolean }) {
+export default function LoadingBar() {
   return (
     <div
       role="progressbar"
       aria-label="Loading"
-      className={cn(
-        "h-0.5 w-full overflow-hidden",
-        fixed && "fixed inset-x-0 top-0 z-[60]",
-      )}
+      className="fixed inset-x-0 top-0 z-[60] h-0.5 w-full overflow-hidden"
     >
       <div className="races-loading-fill h-full w-full bg-[var(--ds-blue-700)]" />
     </div>
