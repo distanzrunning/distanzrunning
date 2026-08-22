@@ -44,6 +44,7 @@
     "@radix-ui/react-scroll-area": "^1.2.10",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@sanity/client": "^6.29.0",
+    "@sanity/google-maps-input": "^4.2.1",
     "@sanity/icons": "^3.7.0",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "^3.85.1",

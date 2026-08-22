@@ -201,7 +201,7 @@ export const raceGuideType = defineType({
       title: "Map location",
       type: "geopoint",
       description:
-        "Drives the pin on the /races map view. Auto-backfilled from City/Country (city-level precision); bulk importers should set it directly. Races without it fall back to a server-side geocode of City/State/Country at render time.",
+        "Drives the pin on the /races map view. Search a city or address and the pin drops with its coordinates (drag to fine-tune — e.g. onto the start line). Bulk importers set it directly; races without it fall back to a server-side geocode of City/State/Country at render time.",
     }),
     defineField({
       name: "eventDate",
