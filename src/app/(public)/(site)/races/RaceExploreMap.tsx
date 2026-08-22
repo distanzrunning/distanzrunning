@@ -519,7 +519,15 @@ export default function RaceExploreMap({
     }
     if (lastStyleRef.current === next) return;
     lastStyleRef.current = next;
+    // setStyle repaints from scratch — for a few frames the canvas
+    // shows the bare new-style background while the page has already
+    // flipped, which reads as a flash. Reuse the first-load treatment:
+    // hide the canvas instantly (the recessed tone behind it is
+    // already in the new theme), swap, fade back up once the restyled
+    // map has fully rendered.
+    setLoaded(false);
     map.setStyle(next);
+    map.once("idle", () => setLoaded(true));
   }, [isDark]);
 
   // Data — push filter round-trip results into the source, then fit
@@ -590,8 +598,13 @@ export default function RaceExploreMap({
       <div
         ref={containerRef}
         className={cn(
-          "races-map h-full w-full transition-opacity duration-500 ease-out motion-reduce:transition-none",
-          loaded ? "opacity-100" : "opacity-0",
+          // Fade-in only: hiding must be INSTANT (first load, and the
+          // theme-swap restyle — a 500ms fade-out would let the
+          // setStyle flash show through it).
+          "races-map h-full w-full",
+          loaded
+            ? "opacity-100 transition-opacity duration-500 ease-out motion-reduce:transition-none"
+            : "opacity-0",
         )}
       />
     </div>
