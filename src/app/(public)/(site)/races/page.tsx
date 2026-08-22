@@ -222,13 +222,22 @@ export default async function RacesPage({
 // coordinates. lib/geocode caches per address for 24h at the fetch
 // layer, so steady-state renders hit no network; races the geocoder
 // can't place are simply left off the map.
+// Coordinates come from the stored `location` geopoint (backfilled
+// 2026-08-22; bulk importers set it directly — at 1000s of races,
+// per-request geocoding is the wrong shape). The Mapbox geocode is
+// only the FALLBACK for races missing the field, so new hand-entered
+// races still pin immediately.
 async function geocodeRaces(races: RaceIndexItem[]): Promise<MapRace[]> {
   const results = await Promise.all(
     races.map(async (race): Promise<MapRace | null> => {
+      const stored =
+        race.lat != null && race.lng != null
+          ? { lat: race.lat, lng: race.lng }
+          : null;
       const address = [race.city, race.stateRegion, race.country]
         .filter(Boolean)
         .join(", ");
-      const coords = await geocodeAddress(address);
+      const coords = stored ?? (await geocodeAddress(address));
       if (!coords) return null;
       const location = [race.city, race.country].filter(Boolean).join(", ");
       return {

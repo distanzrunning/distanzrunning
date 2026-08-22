@@ -19,6 +19,11 @@ export type RaceIndexItem = {
   mainImage?: SanityImageSource | null;
   /** Inline LQIP (asset->metadata.lqip) for the blur placeholder. */
   lqip?: string | null;
+  /** Stored map coordinates (the `location` geopoint) — the map view
+   *  prefers these; races without them fall back to a server-side
+   *  geocode of city/state/country. */
+  lat?: number | null;
+  lng?: number | null;
   eventDate?: string;
   city?: string;
   stateRegion?: string;

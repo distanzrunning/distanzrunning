@@ -98,6 +98,8 @@ export function buildRaceIndexQuery(sort: RaceSortKey = DEFAULT_SORT): string {
       "href": "/races/" + slug.current,
       mainImage,
       "lqip": mainImage.asset->metadata.lqip,
+      "lat": location.lat,
+      "lng": location.lng,
       eventDate,
       city,
       stateRegion,
