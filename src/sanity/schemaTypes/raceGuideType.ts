@@ -3,6 +3,8 @@
 import { defineType, defineField } from "sanity";
 import { PinIcon } from "@sanity/icons";
 
+import LocationSearchInput from "../components/LocationSearchInput";
+
 // IOC / IAAF 3-letter country codes used for course-record
 // athletes. Shared across the four record-country fields
 // (men, women, men's wheelchair, women's wheelchair) so we
@@ -201,7 +203,10 @@ export const raceGuideType = defineType({
       title: "Map location",
       type: "geopoint",
       description:
-        "Drives the pin on the /races map view. Search a city or address and the pin drops with its coordinates (drag to fine-tune — e.g. onto the start line). Bulk importers set it directly; races without it fall back to a server-side geocode of City/State/Country at render time.",
+        "Drives the pin on the /races map view. Start typing a city or address and pick from the dropdown — the coordinates set instantly; the map below confirms the spot (click it to drag the pin, e.g. onto the start line). Bulk importers set it directly; races without it fall back to a server-side geocode of City/State/Country at render time.",
+      // Inline type-ahead (Mapbox geocoding) above the stock map
+      // preview — editors type-and-pick without opening the dialog.
+      components: { input: LocationSearchInput },
     }),
     defineField({
       name: "eventDate",
