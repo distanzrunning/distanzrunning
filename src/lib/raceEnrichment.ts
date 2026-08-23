@@ -274,8 +274,24 @@ function normalizeForMatch(s: string): string {
     .toLowerCase()
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
+    // Split digit/letter boundaries so "20km" tokenizes like
+    // "20 km" — Wikipedia titles space the unit ("20 km of
+    // Brussels") while race titles often don't ("20km of
+    // Brussels"), and without this the tokens never overlap.
+    .replace(/(\d)([a-z])/g, "$1 $2")
+    .replace(/([a-z])(\d)/g, "$1 $2")
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
+}
+
+/** Human-readable digit-split variant of a title ("20km of
+ *  Brussels" → "20 km of Brussels") for a second search pass —
+ *  Wikipedia's search engine itself misses the unspaced form on
+ *  some editions. */
+function digitSplitTitle(s: string): string {
+  return s
+    .replace(/(\d)([A-Za-z])/g, "$1 $2")
+    .replace(/([A-Za-z])(\d)/g, "$1 $2");
 }
 
 /** Token-overlap score between the race title and a page title.
@@ -296,21 +312,37 @@ async function searchLanguage(
   lang: string,
   raceTitle: string,
 ): Promise<PageCandidate[]> {
-  const url =
-    `https://${lang}.wikipedia.org/w/api.php?action=query&list=search` +
-    `&srsearch=${encodeURIComponent(raceTitle)}&srlimit=5&format=json&formatversion=2`;
-  try {
-    const data = (await fetchJson(url)) as {
-      query?: { search?: { title: string }[] };
-    };
-    return (data.query?.search ?? []).map((s) => ({
+  // Query both the raw title and its digit-split variant when they
+  // differ — en.wikipedia's search misses "20km of Brussels" but
+  // finds "20 km of Brussels".
+  const queries = [...new Set([raceTitle, digitSplitTitle(raceTitle)])];
+  const perQuery = await Promise.all(
+    queries.map(async (q) => {
+      const url =
+        `https://${lang}.wikipedia.org/w/api.php?action=query&list=search` +
+        `&srsearch=${encodeURIComponent(q)}&srlimit=5&format=json&formatversion=2`;
+      try {
+        const data = (await fetchJson(url)) as {
+          query?: { search?: { title: string }[] };
+        };
+        return data.query?.search ?? [];
+      } catch {
+        return [];
+      }
+    }),
+  );
+  const seen = new Set<string>();
+  const merged: PageCandidate[] = [];
+  for (const s of perQuery.flat()) {
+    if (seen.has(s.title)) continue;
+    seen.add(s.title);
+    merged.push({
       title: s.title,
       lang,
       score: scoreCandidate(raceTitle, s.title),
-    }));
-  } catch {
-    return [];
+    });
   }
+  return merged;
 }
 
 function pageUrlFor(lang: string, title: string): string {
@@ -610,9 +642,14 @@ async function processRaceEnrichmentInner(
     const perLang = await Promise.all(
       langs.map((lang) => searchLanguage(lang, race.title)),
     );
+    // Minimum score 5 ≈ "at least one strong title-token hit with
+    // little unmatched noise". Real matches score ≥ 6 even across
+    // languages ("20 km de Bruxelles" for "20km of Brussels");
+    // city pages and junk ("Brussels" = 4, "K1 tank" = 2) fall
+    // below, so we never spend a Haiku veto on them.
     const scored = perLang
       .flat()
-      .filter((c) => c.score > 0)
+      .filter((c) => c.score >= 5)
       .sort((a, b) => b.score - a.score);
     log.candidates = scored.slice(0, 10);
     candidates = scored.slice(0, MAX_PAGE_ATTEMPTS);
