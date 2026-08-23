@@ -14,8 +14,14 @@ import { format } from "date-fns";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import Sheet from "@/components/ui/Sheet";
 import { useUnits, type UnitSystem } from "@/contexts/UnitsContext";
-import { formatDistance, formatElevation, formatPrice } from "@/lib/raceUtils";
+import {
+  convertCurrencySync,
+  formatDistance,
+  formatElevation,
+  formatPrice,
+} from "@/lib/raceUtils";
 
+import RaceUnitControls from "../../../races/RaceUnitControls";
 import type { CalendarRace } from "./CalendarGrid";
 
 function formatTemperature(c: number, units: UnitSystem): string {
@@ -40,7 +46,7 @@ export default function RaceSummarySheet({
   race: CalendarRace | null;
   onClose: () => void;
 }) {
-  const { units } = useUnits();
+  const { units, currency: displayCurrency } = useUnits();
 
   const location = race
     ? [race.city, race.country].filter(Boolean).join(", ")
@@ -71,11 +77,24 @@ export default function RaceSummarySheet({
         label: "Avg. temperature",
         value: formatTemperature(race.averageTemperature, units),
       });
-    if (race.price != null && race.currency)
+    if (race.price != null && race.currency) {
+      // Same conversion pattern as RaceCard: "local" keeps the
+      // race's source currency, otherwise convert to the selected
+      // display currency.
+      const isLocalCurrency = displayCurrency === "local";
+      const targetCurrency = isLocalCurrency
+        ? race.currency
+        : displayCurrency;
       rows.push({
         label: "Entry price",
-        value: formatPrice(race.price, race.currency),
+        value: formatPrice(
+          isLocalCurrency
+            ? race.price
+            : convertCurrencySync(race.price, race.currency, displayCurrency),
+          targetCurrency,
+        ),
       });
+    }
   }
 
   return (
@@ -91,7 +110,11 @@ export default function RaceSummarySheet({
         {race && (
           <>
             <Sheet.Header>
-              <Sheet.Title>{race.title}</Sheet.Title>
+              {/* Race title is editorial content — display register,
+                  one step up from the Sheet's default 18px. */}
+              <Sheet.Title className="text-balance text-display-24">
+                {race.title}
+              </Sheet.Title>
               {location && <Sheet.Description>{location}</Sheet.Description>}
             </Sheet.Header>
             <Sheet.Body>
@@ -110,11 +133,17 @@ export default function RaceSummarySheet({
                   </div>
                 )}
                 {rows.length > 0 && (
-                  <div className="divide-y divide-borderSubtle">
-                    {rows.map((row) => (
-                      <SummaryRow key={row.label} {...row} />
-                    ))}
-                  </div>
+                  <>
+                    {/* Same Imperial/Metric + currency controls as
+                        the /races index — they govern the rows below
+                        through the shared UnitsContext. */}
+                    <RaceUnitControls />
+                    <div className="divide-y divide-borderSubtle">
+                      {rows.map((row) => (
+                        <SummaryRow key={row.label} {...row} />
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
             </Sheet.Body>

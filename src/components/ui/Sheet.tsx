@@ -48,6 +48,10 @@ interface SheetHeaderProps {
 
 interface SheetTitleProps {
   children: React.ReactNode;
+  /** Override the default title type (Geist's 18/28 semibold) — e.g.
+   *  an editorial display slot. The default is inline-styled, so
+   *  overriding has to swap it out rather than layer a class on. */
+  className?: string;
 }
 
 interface SheetDescriptionProps {
@@ -256,13 +260,12 @@ function SheetHeader({ children }: SheetHeaderProps) {
   );
 }
 
-function SheetTitle({ children }: SheetTitleProps) {
+function SheetTitle({ children, className }: SheetTitleProps) {
   return (
     <Dialog.Title
-      className="font-semibold"
+      className={className ?? "font-semibold"}
       style={{
-        fontSize: 18,
-        lineHeight: "28px",
+        ...(className ? {} : { fontSize: 18, lineHeight: "28px" }),
         color: "hsl(var(--color-textDefault))",
       }}
     >
