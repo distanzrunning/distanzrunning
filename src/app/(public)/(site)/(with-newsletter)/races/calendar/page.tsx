@@ -15,6 +15,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { sanityFetch } from "@/sanity/lib/live";
 import { urlFor } from "@/sanity/lib/image";
 
+import RaceUnitControls from "../../../races/RaceUnitControls";
 import CalendarGrid, { type CalendarRace } from "./CalendarGrid";
 import { calendarRange, monthFromParam } from "./month";
 
@@ -93,17 +94,24 @@ export default async function RaceCalendarPage({
 
   return (
     <div className="mx-auto flex w-full max-w-content flex-col gap-8 px-4 py-12 md:gap-10 md:py-16 lg:py-20">
-      <header className="flex flex-col gap-3">
-        {/* Page title is wayfinding chrome — UI heading register,
-            like the /races index. The month + nav live INSIDE the
-            calendar unit (its toolbar row). */}
-        <h1 className="m-0 text-balance text-heading-40 text-textDefault md:text-heading-48">
-          Race Calendar
-        </h1>
-        <p className="max-w-2xl text-copy-16 text-textSubtle md:text-copy-18">
-          Explore upcoming races month by month and plan your running
-          schedule.
-        </p>
+      <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-8">
+        <div className="flex flex-col gap-3">
+          {/* Page title is wayfinding chrome — UI heading register,
+              like the /races index. The month + nav live INSIDE the
+              calendar unit (its toolbar row). */}
+          <h1 className="m-0 text-balance text-heading-40 text-textDefault md:text-heading-48">
+            Race Calendar
+          </h1>
+          <p className="max-w-2xl text-copy-16 text-textSubtle md:text-copy-18">
+            Explore upcoming races month by month and plan your running
+            schedule.
+          </p>
+        </div>
+        {/* Imperial/Metric + currency picked ONCE up here (user call
+            2026-08-23) — the shared UnitsContext carries the choice
+            into every summary sheet (and the rest of the site). Same
+            header slot as the /races index. */}
+        <RaceUnitControls />
       </header>
       <CalendarGrid month={month} races={races} />
     </div>

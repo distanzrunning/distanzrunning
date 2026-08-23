@@ -15,7 +15,7 @@ export default function RaceCalendarLoading() {
   return (
     <div className="mx-auto flex w-full max-w-content flex-col gap-8 px-4 py-12 md:gap-10 md:py-16 lg:py-20">
       <LoadingBar />
-      <header className="flex flex-col gap-6">
+      <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-8">
         <div className="flex flex-col gap-3">
           <h1 className="m-0 text-balance text-heading-40 text-textDefault md:text-heading-48">
             Race Calendar
@@ -24,6 +24,12 @@ export default function RaceCalendarLoading() {
             Explore upcoming races month by month and plan your running
             schedule.
           </p>
+        </div>
+        {/* Unit switch + currency select ghosts (RaceUnitControls
+            hides itself until mounted, so ghosts stand in). */}
+        <div className="flex shrink-0 items-center gap-3" aria-hidden>
+          <div className="h-8 w-[157px] animate-pulse rounded-full border border-borderSubtle bg-surface" />
+          <div className="h-8 w-[120px] animate-pulse rounded-sm border border-borderSubtle bg-surface" />
         </div>
       </header>
       {/* Month lattice ghost (md+); agenda rows ghost below. The

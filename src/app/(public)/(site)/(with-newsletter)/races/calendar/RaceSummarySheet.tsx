@@ -27,7 +27,6 @@ import {
   formatPrice,
 } from "@/lib/raceUtils";
 
-import RaceUnitControls from "../../../races/RaceUnitControls";
 import type { CalendarRace } from "./CalendarGrid";
 
 function formatTemperature(c: number, units: UnitSystem): string {
@@ -275,16 +274,13 @@ export default function RaceSummarySheet({
               )}
               {rows.length > 0 && (
                 <>
-                  {/* The panel's StatsCard header verbatim: "Key
-                      stats" (heading-20 chrome) with the unit
-                      controls beside it, governing the rows below
-                      through the shared UnitsContext. */}
-                  <header className="mb-4 mt-6 flex flex-wrap items-center justify-between gap-3">
-                    <h3 className="m-0 text-heading-20 text-[color:var(--ds-gray-1000)]">
-                      Key stats
-                    </h3>
-                    <RaceUnitControls />
-                  </header>
+                  {/* The panel's StatsCard section title. The unit /
+                      currency controls live on the calendar page
+                      header (picked once); the shared UnitsContext
+                      carries the choice into these rows. */}
+                  <h3 className="mb-4 mt-6 text-heading-20 text-[color:var(--ds-gray-1000)]">
+                    Key stats
+                  </h3>
                   <div className="divide-y divide-borderSubtle">
                     {rows.map((row) => (
                       <SummaryRow key={row.label} {...row} />
