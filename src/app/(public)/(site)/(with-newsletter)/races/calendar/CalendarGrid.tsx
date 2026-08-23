@@ -127,12 +127,12 @@ function RaceChip({
           ★
         </span>
       )}
+      <span className="truncate">{race.title}</span>
       {race.startTime && (
         <span className="shrink-0 tabular-nums text-textSubtle">
           {race.startTime}
         </span>
       )}
-      <span className="truncate">{race.title}</span>
     </Link>
   );
 }
