@@ -307,14 +307,64 @@ function digitSplitTitle(s: string): string {
  *  Sponsor prefixes ("Sparkasse …") and suffixes shift tokens but
  *  overlap still ranks the right page first; a small penalty for
  *  unmatched page-title tokens demotes near-miss sibling articles
- *  ("List of winners of the Berlin Marathon"). */
-function scoreCandidate(raceTitle: string, pageTitle: string): number {
+ *  ("List of winners of the Berlin Marathon"). cityForms carries
+ *  the race city in every known spelling (English + localized —
+ *  "geneva"/"geneve") so a local-language title gets city credit
+ *  its raw tokens can't ("20 km de Genève" over "20 km de
+ *  Lausanne"). */
+function scoreCandidate(
+  raceTitle: string,
+  pageTitle: string,
+  cityForms: string[] = [],
+): number {
   const raceTokens = new Set(normalizeForMatch(raceTitle).split(" "));
   const pageTokens = new Set(normalizeForMatch(pageTitle).split(" "));
+  const cityTokens = new Set(
+    cityForms.flatMap((c) => normalizeForMatch(c).split(" ")),
+  );
   let hits = 0;
-  for (const t of raceTokens) if (pageTokens.has(t)) hits += 1;
+  let nonCityHits = 0;
+  for (const t of raceTokens) {
+    if (!pageTokens.has(t)) continue;
+    hits += 1;
+    if (!cityTokens.has(t)) nonCityHits += 1;
+  }
   const misses = pageTokens.size - hits;
-  return hits * 4 - misses;
+  let score = hits * 4 - misses;
+  // City credit (any known spelling — "geneva"/"geneve") ONLY when
+  // the page also matches a non-city race token; without that gate
+  // the bare city article ("Geneva", "Lake Geneva") outscores the
+  // race page and eats the candidate slots.
+  if (
+    nonCityHits > 0 &&
+    [...cityTokens].some((tok) => pageTokens.has(tok))
+  ) {
+    score += 4;
+  }
+  return score;
+}
+
+/** The race city's name on another language edition, via the en
+ *  city article's langlinks ("Geneva" → fr "Genève", de "Genf").
+ *  Null when unknown — search then just runs the English forms. */
+async function localizedCityName(
+  city: string,
+  lang: string,
+): Promise<string | null> {
+  if (lang === "en") return null;
+  const url =
+    `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(city)}` +
+    `&prop=langlinks&lllang=${lang}&redirects=1&format=json&formatversion=2`;
+  try {
+    const data = (await fetchJson(url)) as {
+      query?: { pages?: { langlinks?: { title: string }[] }[] };
+    };
+    const title = data.query?.pages?.[0]?.langlinks?.[0]?.title ?? null;
+    // Strip parenthetical disambiguators ("Genf (Stadt)" → "Genf").
+    return title ? title.replace(/\s*\(.*\)$/, "") : null;
+  } catch {
+    return null;
+  }
 }
 
 /** Raw search: page titles for a query on one language edition. */
@@ -335,13 +385,41 @@ async function rawSearch(lang: string, query: string): Promise<string[]> {
 async function searchLanguage(
   lang: string,
   raceTitle: string,
+  city: string | undefined,
 ): Promise<PageCandidate[]> {
   // Query both the raw title and its digit-split variant when they
   // differ — en.wikipedia's search misses "20km of Brussels" but
   // finds "20 km of Brussels".
-  const queries = [...new Set([raceTitle, digitSplitTitle(raceTitle)])];
+  const queries = new Set([raceTitle, digitSplitTitle(raceTitle)]);
+  const cityForms: string[] = city ? [city] : [];
+
+  // Non-English editions title races with the LOCAL city name —
+  // fr.wikipedia knows "20 km de Genève", and searching it with
+  // the English "Geneva" surfaces only the city article. Resolve
+  // the local name via the en city page's langlinks and query
+  // with it substituted (or appended when the title doesn't
+  // contain the English city).
+  if (city) {
+    const localized = await localizedCityName(city, lang);
+    if (localized && localized.toLowerCase() !== city.toLowerCase()) {
+      cityForms.push(localized);
+      // Bare-token query: title tokens minus the city and minus
+      // connector words, plus the LOCAL city name. fr search finds
+      // "20 km de Genève" for "20 km Genève" but not for
+      // "20 km of Genève" — English connectors poison the query.
+      const cityTokens = new Set(normalizeForMatch(city).split(" "));
+      const connectors = new Set([
+        "of", "the", "de", "der", "des", "du", "la", "le", "van", "di",
+      ]);
+      const bare = normalizeForMatch(raceTitle)
+        .split(" ")
+        .filter((t) => !cityTokens.has(t) && !connectors.has(t));
+      queries.add(`${bare.join(" ")} ${localized}`.trim());
+    }
+  }
+
   const perQuery = await Promise.all(
-    queries.map((q) => rawSearch(lang, q)),
+    [...queries].map((q) => rawSearch(lang, q)),
   );
   const seen = new Set<string>();
   const merged: PageCandidate[] = [];
@@ -351,7 +429,7 @@ async function searchLanguage(
     merged.push({
       title,
       lang,
-      score: scoreCandidate(raceTitle, title),
+      score: scoreCandidate(raceTitle, title, cityForms),
     });
   }
   return merged;
@@ -789,7 +867,7 @@ async function processRaceEnrichmentInner(
     const langs = languagesFor(race.country);
     log.languagesSearched = langs;
     const perLang = await Promise.all(
-      langs.map((lang) => searchLanguage(lang, race.title)),
+      langs.map((lang) => searchLanguage(lang, race.title, race.city)),
     );
     // Minimum score 5 ≈ "at least one strong title-token hit with
     // little unmatched noise". Real matches score ≥ 6 even across
