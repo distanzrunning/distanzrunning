@@ -56,6 +56,10 @@ interface SheetTitleProps {
 
 interface SheetDescriptionProps {
   children: React.ReactNode;
+  /** Override the default description type (14/20 subtle) — same
+   *  swap-out contract as SheetTitle: the default is inline-styled,
+   *  so a class can't layer over it. */
+  className?: string;
 }
 
 interface SheetFooterProps {
@@ -274,14 +278,19 @@ function SheetTitle({ children, className }: SheetTitleProps) {
   );
 }
 
-function SheetDescription({ children }: SheetDescriptionProps) {
+function SheetDescription({ children, className }: SheetDescriptionProps) {
   return (
     <Dialog.Description
-      style={{
-        fontSize: 14,
-        lineHeight: "20px",
-        color: "hsl(var(--color-textSubtle))",
-      }}
+      className={className}
+      style={
+        className
+          ? undefined
+          : {
+              fontSize: 14,
+              lineHeight: "20px",
+              color: "hsl(var(--color-textSubtle))",
+            }
+      }
     >
       {children}
     </Dialog.Description>

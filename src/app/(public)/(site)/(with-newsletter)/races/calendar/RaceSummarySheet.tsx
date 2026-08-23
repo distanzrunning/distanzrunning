@@ -102,12 +102,13 @@ function buildPills(race: CalendarRace) {
   return pills;
 }
 
-// Lede voice — the hero card's introduction register, one size down
-// for the sheet's width.
+// Lede voice — the hero card's introduction register verbatim
+// (copy-16 / gray-900): the sheet is 512px against the panel's 520,
+// so the two read at the same scale.
 const INTRO_PT_COMPONENTS = {
   block: {
     normal: ({ children }: { children?: React.ReactNode }) => (
-      <p className="mb-3 text-copy-14 text-[color:var(--ds-gray-900)] last:mb-0">
+      <p className="mb-3 text-copy-16 text-[color:var(--ds-gray-900)] last:mb-0">
         {children}
       </p>
     ),
@@ -234,21 +235,25 @@ export default function RaceSummarySheet({
                   />
                 </div>
               )}
-              {/* Hero-card order: title under the image, then
-                  location, pills, lede. Title keeps the Radix a11y
-                  wiring; editorial display register. */}
+              {/* Hero-card anatomy at the hero card's own scale
+                  (display-40 title, copy-18 location, mt-5 rhythm) —
+                  the two panels sit at near-identical widths, so
+                  they align visually. Title/Description keep the
+                  Radix a11y wiring. */}
               <Sheet.Title
-                className={`text-balance text-display-24 ${race.imageUrl ? "mt-4" : ""}`}
+                className={`text-balance text-display-40 text-[color:var(--ds-gray-1000)] ${race.imageUrl ? "mt-5" : ""}`}
               >
                 {race.title}
               </Sheet.Title>
               {location && (
                 <div className="mt-1">
-                  <Sheet.Description>{location}</Sheet.Description>
+                  <Sheet.Description className="text-copy-18 text-[color:var(--ds-gray-900)]">
+                    {location}
+                  </Sheet.Description>
                 </div>
               )}
               {pills.length > 0 && (
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="mt-5 flex flex-wrap gap-2">
                   {pills.map((p) => (
                     <MetaPill
                       key={p.key}
@@ -261,7 +266,7 @@ export default function RaceSummarySheet({
                 </div>
               )}
               {race.introduction && race.introduction.length > 0 && (
-                <div className="mt-4">
+                <div className="mt-5">
                   <PortableText
                     value={race.introduction}
                     components={INTRO_PT_COMPONENTS}
@@ -270,13 +275,17 @@ export default function RaceSummarySheet({
               )}
               {rows.length > 0 && (
                 <>
-                  {/* Same Imperial/Metric + currency controls as the
-                      /races index — they govern the rows below
+                  {/* The panel's StatsCard header verbatim: "Key
+                      stats" (heading-20 chrome) with the unit
+                      controls beside it, governing the rows below
                       through the shared UnitsContext. */}
-                  <div className="mt-5">
+                  <header className="mb-4 mt-6 flex flex-wrap items-center justify-between gap-3">
+                    <h3 className="m-0 text-heading-20 text-[color:var(--ds-gray-1000)]">
+                      Key stats
+                    </h3>
                     <RaceUnitControls />
-                  </div>
-                  <div className="mt-4 divide-y divide-borderSubtle">
+                  </header>
+                  <div className="divide-y divide-borderSubtle">
                     {rows.map((row) => (
                       <SummaryRow key={row.label} {...row} />
                     ))}
