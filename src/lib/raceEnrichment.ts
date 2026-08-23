@@ -440,32 +440,77 @@ function significantTokens(title: string): string[] {
     .filter((t) => t.length >= 3);
 }
 
+/** Companion-title filter: carries a list/winners keyword AND every
+ *  significant main-title token. Token comparison is prefix-loose so
+ *  inflected forms still match (de "…des Berlin-Marathons" ↔
+ *  "Berlin-Marathon"). */
+function isCompanionTitle(title: string, canonicalTitle: string): boolean {
+  if (title === canonicalTitle) return false;
+  if (!LIST_KEYWORD_RE.test(title)) return false;
+  const titleTokens = normalizeForMatch(title).split(" ");
+  return significantTokens(canonicalTitle).every((tok) =>
+    titleTokens.some((t) => t.startsWith(tok) || tok.startsWith(t)),
+  );
+}
+
+/** Mine companion-list titles the main article itself links —
+ *  hatnote templates first ({{See also|…}} under Berlin's History
+ *  section is how its winners list is linked; de/fr/nl editions use
+ *  their own template names) plus plain wikilinks. The article's
+ *  own links are the most trustworthy discovery signal. */
+function mineCompanionTitles(
+  wikitext: string,
+  canonicalTitle: string,
+): string[] {
+  const found: string[] = [];
+  const seen = new Set<string>();
+  const add = (raw: string) => {
+    const t = raw.trim();
+    if (!t || t.includes("=") || seen.has(t)) return;
+    seen.add(t);
+    if (isCompanionTitle(t, canonicalTitle)) found.push(t);
+  };
+  // Hatnote templates: {{See also|A|B}}, {{Main|A}}, {{Siehe auch|A}},
+  // {{Article détaillé|A}}, {{Zie ook|A}}, {{Vedi anche|A}} …
+  for (const m of wikitext.matchAll(
+    /\{\{\s*(?:see also|main(?: article)?|further|siehe auch|hauptartikel|article (?:détaillé|connexe)|voir aussi|zie ook|vedi anche|véase también|artículo principal)\s*\|([^}]+)\}\}/gi,
+  )) {
+    for (const part of m[1].split("|")) add(part);
+  }
+  // Plain wikilinks: [[Title]] / [[Title|label]]
+  for (const m of wikitext.matchAll(/\[\[([^\]|#]+)(?:\|[^\]]*)?\]\]/g)) {
+    add(m[1]);
+  }
+  return found;
+}
+
 /** Find and fetch the race's companion winners-list page
  *  ("List of winners of the Berlin Marathon" — full winners tables
  *  with times AND flag-templated nationalities the main article
- *  often omits). Main articles don't reliably wiki-link their list
- *  page (Berlin's doesn't), so discovery is a direct title probe
- *  plus a search, filtered to titles that carry a list/winners
- *  keyword AND every significant main-title token. Returns null
- *  when the race has no such page — the common case. */
+ *  often omits or lets go stale). Discovery, in trust order:
+ *  titles the main article links (hatnotes/wikilinks), an en-style
+ *  direct title probe, then a search. Returns null when the race
+ *  has no such page — the common case. */
 async function fetchCompanionPage(
   lang: string,
   canonicalTitle: string,
+  mainWikitext: string,
 ): Promise<{ title: string; url: string; text: string } | null> {
+  const mined = mineCompanionTitles(mainWikitext, canonicalTitle);
   const probes =
     lang === "en" ? [`List of winners of the ${canonicalTitle}`] : [];
-  const searched = await rawSearch(
-    lang,
-    `list of winners ${canonicalTitle}`,
+  // Only pay for a search when the article's own links + the probe
+  // produced nothing.
+  const searched =
+    mined.length > 0
+      ? []
+      : (await rawSearch(lang, `list of winners ${canonicalTitle}`)).filter(
+          (t) => isCompanionTitle(t, canonicalTitle),
+        );
+  const candidates = [...new Set([...mined, ...probes, ...searched])].slice(
+    0,
+    2,
   );
-  const mainTokens = significantTokens(canonicalTitle);
-  const fromSearch = searched.filter((t) => {
-    if (t === canonicalTitle) return false;
-    if (!LIST_KEYWORD_RE.test(t)) return false;
-    const tokens = new Set(normalizeForMatch(t).split(" "));
-    return mainTokens.every((tok) => tokens.has(tok));
-  });
-  const candidates = [...new Set([...probes, ...fromSearch])].slice(0, 2);
 
   for (const title of candidates) {
     try {
@@ -793,10 +838,13 @@ async function processRaceEnrichmentInner(
     // Companion winners-list page ("List of winners of the Berlin
     // Marathon") — fetched optimistically before the identity check
     // (a wasted Wikipedia fetch on a vetoed candidate is cheap; a
-    // second Haiku pass wouldn't be). Null for most races.
+    // second Haiku pass wouldn't be). Null for most races. Passes
+    // the full (unbudgeted) wikitext so link-mining sees hatnotes
+    // deep in the article.
     const companion = await fetchCompanionPage(
       candidate.lang,
       canonicalTitle,
+      wikitext,
     );
     const pages: ExtractionPage[] = [
       { role: "main", title: canonicalTitle, url, text },
