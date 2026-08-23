@@ -84,6 +84,10 @@ export interface ButtonLinkProps
    *  a dynamic route's payload so the click swaps instantly (e.g.
    *  pagination numbers). */
   prefetch?: boolean;
+  /** next/link scroll behaviour for internal hrefs — pass false to
+   *  keep the user's scroll position on navigation (e.g. month
+   *  paging on the race calendar). Ignored for external links. */
+  scroll?: boolean;
   /** Size variant */
   size?: ButtonSize;
   /** Visual style variant */
@@ -490,6 +494,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       className = "",
       style: styleProp,
       prefetch,
+      scroll,
       ...props
     },
     ref,
@@ -556,6 +561,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
           className={combinedClasses}
           style={style}
           prefetch={prefetch}
+          scroll={scroll}
           {...props}
           href={href}
         >

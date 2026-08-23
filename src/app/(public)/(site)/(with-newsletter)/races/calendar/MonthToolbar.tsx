@@ -44,6 +44,7 @@ export default function MonthToolbar({
           <ButtonLink
             href="/races/calendar"
             prefetch
+          scroll={false}
             variant="secondary"
             size="small"
           >
@@ -53,6 +54,7 @@ export default function MonthToolbar({
         <ButtonLink
           href={hrefForMonth(subMonths(month, 1))}
           prefetch
+          scroll={false}
           variant="secondary"
           size="small"
           shape="square"
@@ -63,6 +65,7 @@ export default function MonthToolbar({
         <ButtonLink
           href={hrefForMonth(addMonths(month, 1))}
           prefetch
+          scroll={false}
           variant="secondary"
           size="small"
           shape="square"
