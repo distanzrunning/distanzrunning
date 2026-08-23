@@ -37,6 +37,7 @@ const calendarQuery = groq`
     title,
     "slug": slug.current,
     eventDate,
+    startTime,
     city,
     country,
     tags

@@ -36,13 +36,14 @@ export interface CalendarRace {
   title: string;
   slug: string;
   eventDate: string;
+  /** Race-local start time as entered ("09:10", "8:00 AM") — the
+   *  schema stores it as a plain string because eventDate's time
+   *  component is UTC-shifted and wrong for races abroad. */
+  startTime?: string;
   city?: string;
   country?: string;
   tags?: string[];
 }
-
-/** Races a day cell lists before collapsing into "+N more". */
-const MAX_CHIPS_PER_DAY = 3;
 
 const WEEKDAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -98,12 +99,21 @@ function raceDay(race: CalendarRace): string {
   return race.eventDate.slice(0, 10);
 }
 
-/** /races index pre-filtered to exactly this day. Past days opt into
- *  showPast so the link never lands on an empty grid. */
-function dayIndexHref(day: Date): string {
-  const iso = format(day, "yyyy-MM-dd");
-  const past = day.getTime() < Date.now() - 24 * 60 * 60 * 1000;
-  return `/races?dateFrom=${iso}&dateTo=${iso}${past ? "&showPast=1" : ""}`;
+/** Parse the free-text race-local startTime ("09:10", "8:00 AM",
+ *  "8 pm") into minutes-since-midnight for same-day ordering.
+ *  Unparseable / absent times return null and sort last. */
+function startTimeMinutes(race: CalendarRace): number | null {
+  const m = race.startTime
+    ?.trim()
+    .match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/i);
+  if (!m) return null;
+  let hours = Number(m[1]);
+  const minutes = Number(m[2] ?? 0);
+  const meridiem = m[3]?.toLowerCase();
+  if (hours > 23 || minutes > 59) return null;
+  if (meridiem === "pm" && hours < 12) hours += 12;
+  if (meridiem === "am" && hours === 12) hours = 0;
+  return hours * 60 + minutes;
 }
 
 // ---------------------------------------------------------------------------
@@ -114,18 +124,22 @@ function RaceChip({ race }: { race: CalendarRace }) {
   return (
     <Link
       href={`/races/${race.slug}`}
-      title={race.title}
-      className="block truncate rounded-xs bg-[color:var(--ds-gray-100)] px-1.5 py-1 text-label-12 text-textDefault no-underline transition-colors hover:bg-[color:var(--ds-gray-200)]"
+      title={
+        race.startTime ? `${race.title} — ${race.startTime}` : race.title
+      }
+      className="flex shrink-0 items-baseline gap-1 rounded-xs bg-[color:var(--ds-gray-100)] px-1.5 py-1 text-label-12 text-textDefault no-underline transition-colors hover:bg-[color:var(--ds-gray-200)]"
     >
       {isMajor(race) && (
-        <span
-          aria-hidden
-          className="mr-1 text-[color:var(--ds-amber-600)]"
-        >
+        <span aria-hidden className="text-[color:var(--ds-amber-600)]">
           ★
         </span>
       )}
-      {race.title}
+      {race.startTime && (
+        <span className="shrink-0 tabular-nums text-textSubtle">
+          {race.startTime}
+        </span>
+      )}
+      <span className="truncate">{race.title}</span>
     </Link>
   );
 }
@@ -153,6 +167,15 @@ export default function CalendarGrid({
     const list = byDay.get(day);
     if (list) list.push(race);
     else byDay.set(day, [race]);
+  }
+  // Same-day races run in start-time order (race-local startTime;
+  // unknown times sort last, keeping the fetch's eventDate order
+  // among themselves — Array.sort is stable).
+  for (const list of byDay.values()) {
+    list.sort(
+      (a, b) =>
+        (startTimeMinutes(a) ?? Infinity) - (startTimeMinutes(b) ?? Infinity),
+    );
   }
 
   const monthDaysWithRaces = gridDays.filter(
@@ -185,18 +208,21 @@ export default function CalendarGrid({
               const dayRaces = byDay.get(iso) ?? [];
               const inMonth = isSameMonth(day, month);
               const today = isToday(day);
-              const overflow = dayRaces.length - MAX_CHIPS_PER_DAY;
               return (
                 <div
                   key={iso}
+                  // FIXED height (not min-h): when a day holds more
+                  // races than fit, the chip stack below scrolls in
+                  // place instead of growing the whole week's row
+                  // (user call 2026-08-23, replacing "+N more").
                   className={cn(
-                    "flex min-h-28 flex-col gap-1 p-2 lg:min-h-32",
+                    "flex h-28 flex-col gap-1 p-2 lg:h-36",
                     inMonth ? "bg-surface" : "bg-canvas",
                   )}
                 >
                   <span
                     className={cn(
-                      "flex h-6 w-6 items-center justify-center rounded-full text-label-12",
+                      "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-label-12",
                       today
                         ? "bg-[color:var(--ds-gray-1000)] font-medium text-[color:var(--ds-background-100)]"
                         : inMonth
@@ -206,16 +232,12 @@ export default function CalendarGrid({
                   >
                     {format(day, "d")}
                   </span>
-                  {dayRaces.slice(0, MAX_CHIPS_PER_DAY).map((race) => (
-                    <RaceChip key={race._id} race={race} />
-                  ))}
-                  {overflow > 0 && (
-                    <Link
-                      href={dayIndexHref(day)}
-                      className="px-1.5 text-label-12 text-textSubtle no-underline hover:text-textDefault hover:underline"
-                    >
-                      +{overflow} more
-                    </Link>
+                  {dayRaces.length > 0 && (
+                    <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto [scrollbar-width:thin]">
+                      {dayRaces.map((race) => (
+                        <RaceChip key={race._id} race={race} />
+                      ))}
+                    </div>
                   )}
                 </div>
               );
@@ -262,6 +284,9 @@ export default function CalendarGrid({
                     const location = [race.city, race.country]
                       .filter(Boolean)
                       .join(", ");
+                    const meta = [race.startTime, location]
+                      .filter(Boolean)
+                      .join(" · ");
                     return (
                       <li key={race._id}>
                         <Link
@@ -279,9 +304,9 @@ export default function CalendarGrid({
                             )}
                             {race.title}
                           </span>
-                          {location && (
+                          {meta && (
                             <span className="text-copy-13 text-textSubtle">
-                              {location}
+                              {meta}
                             </span>
                           )}
                         </Link>

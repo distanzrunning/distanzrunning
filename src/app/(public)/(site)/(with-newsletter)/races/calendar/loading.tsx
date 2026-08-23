@@ -51,7 +51,7 @@ export default function RaceCalendarLoading() {
             {Array.from({ length: 35 }).map((_, i) => (
               <div
                 key={i}
-                className="flex min-h-28 flex-col gap-1 bg-surface p-2 lg:min-h-32"
+                className="flex h-28 flex-col gap-1 bg-surface p-2 lg:h-36"
               >
                 <div className="h-6 w-6 animate-pulse rounded-full bg-[color:var(--ds-gray-100)]" />
               </div>
