@@ -18,7 +18,6 @@ import CalendarGrid, {
   monthFromParam,
   type CalendarRace,
 } from "./CalendarGrid";
-import CalendarHeader from "./CalendarHeader";
 
 export const revalidate = 60;
 
@@ -64,7 +63,18 @@ export default async function RaceCalendarPage({
 
   return (
     <div className="mx-auto flex w-full max-w-content flex-col gap-8 px-4 py-12 md:gap-10 md:py-16 lg:py-20">
-      <CalendarHeader month={month} raceCount={races.length} />
+      <header className="flex flex-col gap-3">
+        {/* Page title is wayfinding chrome — UI heading register,
+            like the /races index. The month + nav live INSIDE the
+            calendar unit (its toolbar row). */}
+        <h1 className="m-0 text-balance text-heading-40 text-textDefault md:text-heading-48">
+          Race Calendar
+        </h1>
+        <p className="max-w-2xl text-copy-16 text-textSubtle md:text-copy-18">
+          Explore upcoming races month by month and plan your running
+          schedule.
+        </p>
+      </header>
       <CalendarGrid month={month} races={races} />
     </div>
   );

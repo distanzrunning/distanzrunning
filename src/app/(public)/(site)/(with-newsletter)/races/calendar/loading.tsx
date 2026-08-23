@@ -25,20 +25,18 @@ export default function RaceCalendarLoading() {
             schedule.
           </p>
         </div>
-        <div
-          className="flex flex-wrap items-center justify-between gap-3"
-          aria-hidden
-        >
-          <div className="h-8 w-44 animate-pulse rounded bg-[color:var(--ds-gray-200)]" />
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 animate-pulse rounded-sm border border-borderSubtle bg-surface" />
-            <div className="h-8 w-8 animate-pulse rounded-sm border border-borderSubtle bg-surface" />
-          </div>
-        </div>
       </header>
-      {/* Month lattice ghost (md+); agenda rows ghost below. */}
+      {/* Month lattice ghost (md+); agenda rows ghost below. The
+          toolbar is the card's own top row, mirroring CalendarGrid. */}
       <div className="hidden md:block" aria-hidden>
         <div className="overflow-hidden rounded-xs border border-borderSubtle bg-surface">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-borderSubtle p-3 md:px-4">
+            <div className="h-7 w-44 animate-pulse rounded bg-[color:var(--ds-gray-200)]" />
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 animate-pulse rounded-sm border border-borderSubtle bg-surface" />
+              <div className="h-8 w-8 animate-pulse rounded-sm border border-borderSubtle bg-surface" />
+            </div>
+          </div>
           <div className="grid grid-cols-7 border-b border-borderSubtle">
             {WEEKDAY_LABELS.map((label) => (
               <div

@@ -29,6 +29,8 @@ import {
 
 import { cn } from "@/lib/utils";
 
+import MonthToolbar from "./MonthToolbar";
+
 export interface CalendarRace {
   _id: string;
   title: string;
@@ -160,9 +162,13 @@ export default function CalendarGrid({
   return (
     <>
       {/* md+: the month grid. Hairline lattice via 1px gaps over the
-          border tone; day surfaces sit on top. */}
+          border tone; day surfaces sit on top. The month toolbar is
+          the card's own top row — the calendar reads as one unit. */}
       <div className="hidden md:block">
         <div className="overflow-hidden rounded-xs border border-borderSubtle bg-surface">
+          <div className="border-b border-borderSubtle p-3 md:px-4">
+            <MonthToolbar month={month} raceCount={races.length} />
+          </div>
           <div className="grid grid-cols-7 border-b border-borderSubtle">
             {WEEKDAY_LABELS.map((label) => (
               <div
@@ -218,14 +224,19 @@ export default function CalendarGrid({
         </div>
       </div>
 
-      {/* Below md: agenda — the same month, one row per race day. */}
-      <div className="flex flex-col md:hidden">
+      {/* Below md: agenda — the same month, one row per race day,
+          under the same toolbar. */}
+      <div className="flex flex-col gap-6 md:hidden">
+        <div className="border-b border-borderSubtle pb-4">
+          <MonthToolbar month={month} raceCount={races.length} />
+        </div>
         {monthDaysWithRaces.length === 0 ? (
           <p className="text-copy-14 text-textSubtle">
             No races this month.
           </p>
         ) : (
-          monthDaysWithRaces.map((day) => {
+          <div className="flex flex-col">
+          {monthDaysWithRaces.map((day) => {
             const iso = format(day, "yyyy-MM-dd");
             const dayRaces = byDay.get(iso) ?? [];
             return (
@@ -280,7 +291,8 @@ export default function CalendarGrid({
                 </ul>
               </div>
             );
-          })
+          })}
+          </div>
         )}
       </div>
     </>
