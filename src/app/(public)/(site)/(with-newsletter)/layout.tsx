@@ -1,10 +1,12 @@
 // src/app/(public)/(site)/(with-newsletter)/layout.tsx
 //
-// Every public page EXCEPT the /races index (which sits outside this
-// group — its full-bleed map view owns the whole viewport below the
-// masthead, and a newsletter band there is dead weight; user call
-// 2026-08-21). Route-group split, not pathname sniffing — the same
-// decision that removed x-pathname from the chrome.
+// Every public page EXCEPT the /races index, which sits outside this
+// group: its full-bleed MAP view owns the whole viewport below the
+// masthead, where a newsletter band is dead weight (user call
+// 2026-08-21). The index's GRID view renders this band's markup
+// itself (user call 2026-08-24) — keep the two in sync. Route-group
+// split, not pathname sniffing — the same decision that removed
+// x-pathname from the chrome.
 //
 // Appends the pre-footer Shakeout band inside <main>'s flex column:
 // children sit in a flex-1 wrapper so the band stays pinned against

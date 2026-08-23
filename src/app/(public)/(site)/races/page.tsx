@@ -32,6 +32,7 @@ import RaceGrid, { type RaceIndexItem } from "./RaceGrid";
 import RaceExploreMap, { type MapRace } from "./RaceExploreMap";
 import MapViewport from "./MapViewport";
 import RacePagination from "./RacePagination";
+import NewsletterSignup from "@/components/ui/NewsletterSignup";
 import RaceUnitControls from "./RaceUnitControls";
 import FiltersShell from "./FiltersShell";
 import ViewSwitch from "./ViewSwitch";
@@ -43,7 +44,7 @@ import {
 } from "./filters";
 
 export const metadata = {
-  title: "Races — Distanz Running",
+  title: "Race Guides — Distanz Running",
   description:
     "Find your next race. Curated race guides with course analysis, insider tips, and editorial coverage.",
 };
@@ -182,7 +183,9 @@ export default async function RacesPage({
           >
             <header className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
               <div className="flex min-w-0 flex-col gap-1">
-                <h1 className="m-0 text-heading-24 text-textDefault">Races</h1>
+                <h1 className="m-0 text-heading-24 text-textDefault">
+                  Race Guides
+                </h1>
                 <p className="hidden text-copy-14 text-textSubtle md:block">
                   Find your next race. Explore the world&apos;s greatest races
                   with detailed race guides.
@@ -224,13 +227,16 @@ export default async function RacesPage({
   // FiltersShell keeps its own 250ms-delayed skeleton for filter
   // round-trips.
   return (
-    <div className="mx-auto flex w-full max-w-content flex-col gap-12 px-4 py-12 md:py-16 lg:py-20">
+    <>
+      <div className="mx-auto flex w-full max-w-content flex-col gap-12 px-4 py-12 md:py-16 lg:py-20">
       <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-8">
         <div className="flex flex-col gap-3">
           {/* Page title is wayfinding chrome — UI heading register
               (600), like the homepage section headers one size up. */}
+          {/* "Race Guides" — matches the mega-menu link and footer
+              label (user call 2026-08-24). */}
           <h1 className="m-0 text-balance text-heading-40 text-textDefault md:text-heading-48">
-            Races
+            Race Guides
           </h1>
           <p className="max-w-2xl text-copy-16 text-textSubtle md:text-copy-18">
             Find your next race. Explore thousands of the world&apos;s greatest
@@ -254,7 +260,21 @@ export default async function RacesPage({
         totalPages={totalPages}
         hrefForPage={hrefForPage}
       />
-    </div>
+      </div>
+
+      {/* Pre-footer Shakeout band, back on the grid view (user call
+          2026-08-24). This route sits OUTSIDE the (with-newsletter)
+          group so the full-bleed MAP view stays band-free — the grid
+          branch renders the group layout's band markup itself. */}
+      <section
+        aria-label="Newsletter signup"
+        className="border-t border-borderSubtle"
+      >
+        <div className="mx-auto w-full max-w-content px-4 py-12 lg:py-16">
+          <NewsletterSignup chrome="band" source="pre_footer" />
+        </div>
+      </section>
+    </>
   );
 }
 

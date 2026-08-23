@@ -52,7 +52,7 @@ export default function RacesLoading() {
       <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-8">
         <div className="flex flex-col gap-3">
           <h1 className="m-0 text-balance text-heading-40 text-textDefault md:text-heading-48">
-            Races
+            Race Guides
           </h1>
           <p className="max-w-2xl text-copy-16 text-textSubtle md:text-copy-18">
             Find your next race. Explore thousands of the world&apos;s greatest
