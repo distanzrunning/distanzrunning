@@ -12,7 +12,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui/Button";
 
-import { monthParam } from "./CalendarGrid";
+import { monthParam } from "./month";
 
 function hrefForMonth(month: Date): string {
   // Current month is the clean default URL.

@@ -1,9 +1,13 @@
+"use client";
+
 // src/app/races/calendar/CalendarGrid.tsx
 //
-// The month grid itself — a SERVER component: the whole calendar is
-// links (race chips → guides, "+N more" → the /races index filtered
-// to that day), so no client JS is needed. Weeks run Monday-first
-// (the running-calendar convention for a Europe-anchored audience).
+// The month grid itself. A client island since 2026-08-23: clicking
+// a race entry opens the RaceSummarySheet (DS Sheet) rather than
+// navigating away — the chip stays a real <a href> underneath, so
+// crawlers, middle-click and cmd-click still reach the guide
+// directly. Weeks run Monday-first (the running-calendar convention
+// for a Europe-anchored audience).
 //
 // Two layouts from one data set:
 //   - md+: the classic 7-column month grid. Days outside the month
@@ -14,6 +18,7 @@
 //     same month renders as an agenda — one row per day that has
 //     races. (The grid's adjacent-month spill days are grid-only.)
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   eachDayOfInterval,
@@ -22,7 +27,6 @@ import {
   format,
   isSameMonth,
   isToday,
-  parse,
   startOfMonth,
   startOfWeek,
 } from "date-fns";
@@ -30,6 +34,7 @@ import {
 import { cn } from "@/lib/utils";
 
 import MonthToolbar from "./MonthToolbar";
+import RaceSummarySheet from "./RaceSummarySheet";
 
 export interface CalendarRace {
   _id: string;
@@ -43,47 +48,20 @@ export interface CalendarRace {
   city?: string;
   country?: string;
   tags?: string[];
+  // Summary-sheet fields (resolved/projected in page.tsx).
+  category?: string;
+  distance?: number;
+  surface?: string;
+  elevationGain?: number;
+  averageTemperature?: number;
+  price?: number;
+  currency?: string;
+  /** CDN URL resolved at the data layer (urlFor), per convention. */
+  imageUrl?: string | null;
+  blurDataURL?: string | null;
 }
 
 const WEEKDAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-// ---------------------------------------------------------------------------
-// Month helpers — shared with page.tsx (URL parsing + fetch window).
-// ---------------------------------------------------------------------------
-
-/** Parse ?m=YYYY-MM (strictly) into that month's first day; anything
- *  else — absent, malformed, out-of-calendar — falls back to the
- *  current month. */
-export function monthFromParam(m: string | undefined): Date {
-  if (m && /^\d{4}-(0[1-9]|1[0-2])$/.test(m)) {
-    const parsed = parse(m, "yyyy-MM", new Date());
-    if (!Number.isNaN(parsed.getTime())) return startOfMonth(parsed);
-  }
-  return startOfMonth(new Date());
-}
-
-export function monthParam(month: Date): string {
-  return format(month, "yyyy-MM");
-}
-
-/** The visible grid's first/last day (Monday-first weeks), as
- *  YYYY-MM-DD — the fetch window includes the adjacent months'
- *  spill days. */
-export function calendarRange(month: Date): {
-  gridStart: string;
-  gridEnd: string;
-} {
-  return {
-    gridStart: format(
-      startOfWeek(startOfMonth(month), { weekStartsOn: 1 }),
-      "yyyy-MM-dd",
-    ),
-    gridEnd: format(
-      endOfWeek(endOfMonth(month), { weekStartsOn: 1 }),
-      "yyyy-MM-dd",
-    ),
-  };
-}
 
 /** True when the race carries the exact Abbott World Marathon Major
  *  tag — same predicate as the /races map's gold star. */
@@ -120,13 +98,26 @@ function startTimeMinutes(race: CalendarRace): number | null {
 // Chips
 // ---------------------------------------------------------------------------
 
-function RaceChip({ race }: { race: CalendarRace }) {
+function RaceChip({
+  race,
+  onSelect,
+}: {
+  race: CalendarRace;
+  onSelect: (race: CalendarRace) => void;
+}) {
   return (
     <Link
       href={`/races/${race.slug}`}
       title={
         race.startTime ? `${race.title} — ${race.startTime}` : race.title
       }
+      onClick={(e) => {
+        // Plain click opens the summary sheet; modified clicks and
+        // middle-click keep the link's native navigation.
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        onSelect(race);
+      }}
       className="flex shrink-0 items-baseline gap-1 rounded-xs bg-[color:var(--ds-gray-100)] px-1.5 py-1 text-label-12 text-textDefault no-underline transition-colors hover:bg-[color:var(--ds-gray-200)]"
     >
       {isMajor(race) && (
@@ -156,6 +147,9 @@ export default function CalendarGrid({
   month: Date;
   races: CalendarRace[];
 }) {
+  // Clicking any calendar entry opens its summary sheet.
+  const [selected, setSelected] = useState<CalendarRace | null>(null);
+
   const gridDays = eachDayOfInterval({
     start: startOfWeek(startOfMonth(month), { weekStartsOn: 1 }),
     end: endOfWeek(endOfMonth(month), { weekStartsOn: 1 }),
@@ -235,7 +229,11 @@ export default function CalendarGrid({
                   {dayRaces.length > 0 && (
                     <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto [scrollbar-width:thin]">
                       {dayRaces.map((race) => (
-                        <RaceChip key={race._id} race={race} />
+                        <RaceChip
+                          key={race._id}
+                          race={race}
+                          onSelect={setSelected}
+                        />
                       ))}
                     </div>
                   )}
@@ -291,6 +289,12 @@ export default function CalendarGrid({
                       <li key={race._id}>
                         <Link
                           href={`/races/${race.slug}`}
+                          onClick={(e) => {
+                            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
+                              return;
+                            e.preventDefault();
+                            setSelected(race);
+                          }}
                           className="flex flex-col gap-0.5 no-underline"
                         >
                           <span className="text-copy-14 font-medium text-textDefault">
@@ -320,6 +324,8 @@ export default function CalendarGrid({
           </div>
         )}
       </div>
+
+      <RaceSummarySheet race={selected} onClose={() => setSelected(null)} />
     </>
   );
 }

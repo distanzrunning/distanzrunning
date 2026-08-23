@@ -10,14 +10,13 @@
 // to that exact day.
 
 import { groq } from "next-sanity";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 import { sanityFetch } from "@/sanity/lib/live";
+import { urlFor } from "@/sanity/lib/image";
 
-import CalendarGrid, {
-  calendarRange,
-  monthFromParam,
-  type CalendarRace,
-} from "./CalendarGrid";
+import CalendarGrid, { type CalendarRace } from "./CalendarGrid";
+import { calendarRange, monthFromParam } from "./month";
 
 export const revalidate = 60;
 
@@ -29,6 +28,9 @@ export const metadata = {
 
 // The grid shows leading/trailing days of the adjacent months, so
 // the fetch window is the full visible grid, not just the month.
+// Beyond the chip fields, the projection carries the summary-sheet
+// details (category, stats, image + inline LQIP per the image
+// convention).
 const calendarQuery = groq`
   *[_type == "raceGuide" && defined(eventDate) && defined(slug.current)
     && eventDate >= $start && eventDate <= $end]
@@ -40,9 +42,26 @@ const calendarQuery = groq`
     startTime,
     city,
     country,
-    tags
+    tags,
+    "category": raceCategory->title,
+    distance,
+    surface,
+    elevationGain,
+    averageTemperature,
+    price,
+    currency,
+    mainImage,
+    "lqip": mainImage.asset->metadata.lqip
   }
 `;
+
+type CalendarQueryRow = CalendarRace & {
+  mainImage?: SanityImageSource | null;
+  lqip?: string | null;
+};
+
+// Sheet panel is 420px — 2x for retina.
+const SHEET_IMAGE_RENDER_WIDTH = 420 * 2;
 
 export default async function RaceCalendarPage({
   searchParams,
@@ -60,7 +79,16 @@ export default async function RaceCalendarPage({
       end: `${gridEnd}T23:59:59.999Z`,
     },
   });
-  const races = (result.data ?? []) as CalendarRace[];
+  const rows = (result.data ?? []) as CalendarQueryRow[];
+  // Resolve image URLs at the data layer (urlFor + inline LQIP) —
+  // the client island receives plain strings, per convention.
+  const races: CalendarRace[] = rows.map(({ mainImage, lqip, ...race }) => ({
+    ...race,
+    imageUrl: mainImage
+      ? urlFor(mainImage).width(SHEET_IMAGE_RENDER_WIDTH).auto("format").url()
+      : null,
+    blurDataURL: lqip ?? null,
+  }));
 
   return (
     <div className="mx-auto flex w-full max-w-content flex-col gap-8 px-4 py-12 md:gap-10 md:py-16 lg:py-20">
