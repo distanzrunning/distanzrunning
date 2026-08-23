@@ -20,6 +20,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import type { PortableTextBlock } from "@portabletext/react";
 import {
   eachDayOfInterval,
   endOfMonth,
@@ -50,6 +51,7 @@ export interface CalendarRace {
   tags?: string[];
   // Summary-sheet fields (resolved/projected in page.tsx).
   category?: string;
+  introduction?: PortableTextBlock[];
   distance?: number;
   surface?: string;
   elevationGain?: number;

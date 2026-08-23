@@ -44,6 +44,7 @@ const calendarQuery = groq`
     country,
     tags,
     "category": raceCategory->title,
+    introduction,
     distance,
     surface,
     elevationGain,

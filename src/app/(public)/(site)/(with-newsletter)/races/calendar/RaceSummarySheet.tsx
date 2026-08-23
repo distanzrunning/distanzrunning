@@ -4,12 +4,18 @@
 //
 // Race summary in a DS Sheet, opened by clicking a calendar entry
 // (user call 2026-08-23) — a quick look at the race without leaving
-// the month: hero image, headline meta, a stat run-down, and the
-// "View race guide" CTA into the full page. Units follow the shared
-// UnitsContext, matching the index and the guide panel.
+// the month. Mirrors the race-detail page's hero-card anatomy (user
+// call 2026-08-23): image, title, location, the meta pill row (date
+// primary + surface + tags, each linking into the filtered /races
+// index) and the introduction lede — then unit/currency controls and
+// the stat rows, with the "View race guide" CTA pinned in the
+// footer. Everything above the footer scrolls. Units follow the
+// shared UnitsContext, matching the index and the guide panel.
 
 import Image from "next/image";
+import Link from "next/link";
 import { format } from "date-fns";
+import { PortableText } from "@portabletext/react";
 
 import { Button, ButtonLink } from "@/components/ui/Button";
 import Sheet from "@/components/ui/Sheet";
@@ -28,6 +34,113 @@ function formatTemperature(c: number, units: UnitSystem): string {
   if (units === "imperial") return `${Math.round((c * 9) / 5 + 32)}°F`;
   return `${Math.round(c)}°C`;
 }
+
+// ---------------------------------------------------------------------------
+// Meta pills — the race-detail hero card's pill recipe: "primary"
+// (dark fill) for the date, "subtle" (gray-300 fill) for the rest;
+// each opens the /races index pre-filtered by its dimension.
+// ---------------------------------------------------------------------------
+
+function MetaPill({
+  children,
+  href,
+  variant = "subtle",
+}: {
+  children: React.ReactNode;
+  href?: string;
+  variant?: "primary" | "subtle";
+}) {
+  const base =
+    "inline-flex h-7 items-center rounded-full px-3 text-copy-13 font-medium transition-colors";
+  const skin =
+    variant === "primary"
+      ? "bg-[color:var(--ds-gray-1000)] text-[color:var(--ds-background-100)] hover:bg-[color:var(--ds-gray-900)]"
+      : "bg-[color:var(--ds-gray-300)] text-[color:var(--ds-gray-1000)] hover:bg-[color:var(--ds-gray-400)]";
+  const className = `${base} ${skin} no-underline`;
+  if (href)
+    return (
+      <Link href={href} className={className}>
+        {children}
+      </Link>
+    );
+  return <span className={className}>{children}</span>;
+}
+
+function buildPills(race: CalendarRace) {
+  const pills: {
+    key: string;
+    value: string;
+    href?: string;
+    variant?: "primary" | "subtle";
+  }[] = [];
+  if (race.eventDate) {
+    const d = new Date(race.eventDate);
+    if (!Number.isNaN(d.getTime())) {
+      const iso = race.eventDate.slice(0, 10);
+      pills.push({
+        key: "date",
+        value: format(d, "d MMM, yyyy"),
+        href: `/races?dateFrom=${iso}&dateTo=${iso}`,
+        variant: "primary",
+      });
+    }
+  }
+  if (race.surface) {
+    pills.push({
+      key: "surface",
+      value: race.surface,
+      href: `/races?surface=${encodeURIComponent(race.surface)}`,
+    });
+  }
+  for (const tag of race.tags ?? []) {
+    pills.push({
+      key: `tag-${tag}`,
+      value: tag,
+      href: `/races?tag=${encodeURIComponent(tag)}`,
+    });
+  }
+  return pills;
+}
+
+// Lede voice — the hero card's introduction register, one size down
+// for the sheet's width.
+const INTRO_PT_COMPONENTS = {
+  block: {
+    normal: ({ children }: { children?: React.ReactNode }) => (
+      <p className="mb-3 text-copy-14 text-[color:var(--ds-gray-900)] last:mb-0">
+        {children}
+      </p>
+    ),
+  },
+  marks: {
+    strong: ({ children }: { children?: React.ReactNode }) => (
+      <strong className="font-semibold text-[color:var(--ds-gray-1000)]">
+        {children}
+      </strong>
+    ),
+    em: ({ children }: { children?: React.ReactNode }) => (
+      <em className="italic">{children}</em>
+    ),
+    link: ({
+      value,
+      children,
+    }: {
+      value?: { href?: string };
+      children?: React.ReactNode;
+    }) => (
+      <a
+        href={value?.href}
+        target={value?.href?.startsWith("http") ? "_blank" : undefined}
+        rel={
+          value?.href?.startsWith("http") ? "noopener noreferrer" : undefined
+        }
+        className="text-[color:var(--ds-gray-1000)] underline underline-offset-2 hover:text-[color:var(--ds-gray-700)]"
+      >
+        {children}
+      </a>
+    ),
+  },
+};
 
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
@@ -51,13 +164,10 @@ export default function RaceSummarySheet({
   const location = race
     ? [race.city, race.country].filter(Boolean).join(", ")
     : "";
-  const date = race?.eventDate
-    ? format(new Date(race.eventDate), "EEEE d MMMM yyyy")
-    : null;
+  const pills = race ? buildPills(race) : [];
 
   const rows: { label: string; value: string }[] = [];
   if (race) {
-    if (date) rows.push({ label: "Date", value: date });
     if (race.startTime)
       rows.push({ label: "Start time", value: race.startTime });
     if (race.category) rows.push({ label: "Category", value: race.category });
@@ -66,7 +176,6 @@ export default function RaceSummarySheet({
         label: "Distance",
         value: formatDistance(race.distance, units),
       });
-    if (race.surface) rows.push({ label: "Surface", value: race.surface });
     if (race.elevationGain != null)
       rows.push({
         label: "Elevation gain",
@@ -101,7 +210,7 @@ export default function RaceSummarySheet({
     <Sheet open={race !== null} onOpenChange={(open) => !open && onClose()}>
       {/* The DS docs' default Sheet recipe — floating above the page:
           12px inset margin, 16px radius, height clear of the inset,
-          p-0 (Header/Body/Footer carry their own padding). Width goes
+          p-0 (sections carry their own padding). Width goes
           responsive where the docs' fixed 512px would overflow phones. */}
       <Sheet.Content
         side="right"
@@ -109,47 +218,71 @@ export default function RaceSummarySheet({
       >
         {race && (
           <>
-            {/* Own header/body wrappers instead of Sheet.Header/Body:
-                their fixed paddings stacked with the panel's flex gap
-                into a ~56px hole between title and image. Title /
-                Description keep the Radix a11y wiring. */}
-            <div className="flex flex-col px-6 pt-6 text-left">
-              {/* Race title is editorial content — display register,
-                  one step up from the Sheet's default 18px. */}
-              <Sheet.Title className="text-balance text-display-24">
+            {/* Everything above the footer scrolls — with the lede
+                aboard, tall content shouldn't push the CTA away. */}
+            <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pb-4 pt-6 [scrollbar-width:thin]">
+              {race.imageUrl && (
+                <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden rounded-xs">
+                  <Image
+                    src={race.imageUrl}
+                    alt={race.title}
+                    fill
+                    sizes="512px"
+                    placeholder={race.blurDataURL ? "blur" : undefined}
+                    blurDataURL={race.blurDataURL ?? undefined}
+                    className="object-cover"
+                  />
+                </div>
+              )}
+              {/* Hero-card order: title under the image, then
+                  location, pills, lede. Title keeps the Radix a11y
+                  wiring; editorial display register. */}
+              <Sheet.Title
+                className={`text-balance text-display-24 ${race.imageUrl ? "mt-4" : ""}`}
+              >
                 {race.title}
               </Sheet.Title>
-              {location && <Sheet.Description>{location}</Sheet.Description>}
-            </div>
-            <div className="px-6 pb-4">
-              <div className="flex flex-col gap-5">
-                {race.imageUrl && (
-                  <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xs">
-                    <Image
-                      src={race.imageUrl}
-                      alt={race.title}
-                      fill
-                      sizes="420px"
-                      placeholder={race.blurDataURL ? "blur" : undefined}
-                      blurDataURL={race.blurDataURL ?? undefined}
-                      className="object-cover"
-                    />
-                  </div>
-                )}
-                {rows.length > 0 && (
-                  <>
-                    {/* Same Imperial/Metric + currency controls as
-                        the /races index — they govern the rows below
-                        through the shared UnitsContext. */}
+              {location && (
+                <div className="mt-1">
+                  <Sheet.Description>{location}</Sheet.Description>
+                </div>
+              )}
+              {pills.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {pills.map((p) => (
+                    <MetaPill
+                      key={p.key}
+                      variant={p.variant ?? "subtle"}
+                      href={p.href}
+                    >
+                      {p.value}
+                    </MetaPill>
+                  ))}
+                </div>
+              )}
+              {race.introduction && race.introduction.length > 0 && (
+                <div className="mt-4">
+                  <PortableText
+                    value={race.introduction}
+                    components={INTRO_PT_COMPONENTS}
+                  />
+                </div>
+              )}
+              {rows.length > 0 && (
+                <>
+                  {/* Same Imperial/Metric + currency controls as the
+                      /races index — they govern the rows below
+                      through the shared UnitsContext. */}
+                  <div className="mt-5">
                     <RaceUnitControls />
-                    <div className="divide-y divide-borderSubtle">
-                      {rows.map((row) => (
-                        <SummaryRow key={row.label} {...row} />
-                      ))}
-                    </div>
-                  </>
-                )}
-              </div>
+                  </div>
+                  <div className="mt-4 divide-y divide-borderSubtle">
+                    {rows.map((row) => (
+                      <SummaryRow key={row.label} {...row} />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
             <Sheet.Footer>
               <Sheet.Close>
