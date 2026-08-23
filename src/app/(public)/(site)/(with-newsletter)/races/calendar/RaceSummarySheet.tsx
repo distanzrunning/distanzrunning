@@ -80,7 +80,14 @@ export default function RaceSummarySheet({
 
   return (
     <Sheet open={race !== null} onOpenChange={(open) => !open && onClose()}>
-      <Sheet.Content side="right" size="420px">
+      {/* The DS docs' default Sheet recipe — floating above the page:
+          12px inset margin, 16px radius, height clear of the inset,
+          p-0 (Header/Body/Footer carry their own padding). Width goes
+          responsive where the docs' fixed 512px would overflow phones. */}
+      <Sheet.Content
+        side="right"
+        className="m-3 flex h-[calc(100%-1.5rem)] w-[calc(100vw-1.5rem)] flex-col rounded-[1rem] p-0 sm:w-[512px]"
+      >
         {race && (
           <>
             <Sheet.Header>
