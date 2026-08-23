@@ -109,15 +109,19 @@ export default function RaceSummarySheet({
       >
         {race && (
           <>
-            <Sheet.Header>
+            {/* Own header/body wrappers instead of Sheet.Header/Body:
+                their fixed paddings stacked with the panel's flex gap
+                into a ~56px hole between title and image. Title /
+                Description keep the Radix a11y wiring. */}
+            <div className="flex flex-col px-6 pt-6 text-left">
               {/* Race title is editorial content — display register,
                   one step up from the Sheet's default 18px. */}
               <Sheet.Title className="text-balance text-display-24">
                 {race.title}
               </Sheet.Title>
               {location && <Sheet.Description>{location}</Sheet.Description>}
-            </Sheet.Header>
-            <Sheet.Body>
+            </div>
+            <div className="px-6 pb-4">
               <div className="flex flex-col gap-5">
                 {race.imageUrl && (
                   <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xs">
@@ -146,7 +150,7 @@ export default function RaceSummarySheet({
                   </>
                 )}
               </div>
-            </Sheet.Body>
+            </div>
             <Sheet.Footer>
               <Sheet.Close>
                 <Button variant="secondary" size="small">
