@@ -22,6 +22,13 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+// Server actions inherit this segment's function config. Vercel's
+// default 10 s killed every scan once the Firecrawl renders landed
+// ("Task timed out after 10 seconds" in runtime logs) — the scan's
+// own watchdog is 50 s, so give the function the Hobby-plan
+// ceiling above it.
+export const maxDuration = 60;
+
 export default function RaceEnrichmentPage() {
   return (
     <div className="px-6 py-8">

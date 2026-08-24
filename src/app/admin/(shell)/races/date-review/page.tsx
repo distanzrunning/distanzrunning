@@ -21,6 +21,13 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+// Server actions inherit this segment's function config. Vercel's
+// default 10 s has been intermittently killing long scans since
+// June ("Task timed out after 10 seconds" — the source of the
+// "may still complete in the background" toasts); the scan's own
+// watchdog is 50 s, so give the function the Hobby-plan ceiling.
+export const maxDuration = 60;
+
 export default function RaceDateReviewPage() {
   return (
     <div className="px-6 py-8">
