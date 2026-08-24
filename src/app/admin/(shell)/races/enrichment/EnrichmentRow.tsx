@@ -71,7 +71,7 @@ export default function EnrichmentRow({ race }: { race: EnrichmentRowData }) {
     const scanningToastId = showToast({
       message: `Scanning "${race.title}"…`,
       description:
-        "Searching Wikipedia editions and extracting records. Usually 5–15 s.",
+        "Reading Wikipedia (records, field size) and the official site (start time, price, expo). Usually 10–30 s.",
       preserve: true,
     });
     startScan(async () => {
@@ -94,7 +94,7 @@ export default function EnrichmentRow({ race }: { race: EnrichmentRowData }) {
             no_changes:
               "The article was read but every extracted value already matches the guide.",
             page_not_found:
-              "No Wikipedia article matched this race. Pin the right page via the wikipediaUrl field in Studio and re-scan.",
+              "Neither a Wikipedia article nor the official site could be read. Pin the right page via the wikipediaUrl field in Studio, or check officialWebsite, and re-scan.",
             fetch_error: "Wikipedia couldn't be reached (or the scan timed out).",
             extract_error: "The model errored — try again in a moment.",
           };

@@ -20,6 +20,8 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "next-sanity";
 
+import { CURRENCY_CODES } from "@/lib/currencies";
+import { firecrawlScrape } from "@/lib/firecrawlScrape";
 import { IOC_COUNTRY_CODES } from "@/lib/iocCountries";
 
 const FETCH_TIMEOUT_MS = 8_000;
@@ -112,9 +114,15 @@ export const ENRICHABLE_FIELD_LABELS: Record<string, string> = {
     ]),
   ),
   fieldSize: "Field size",
+  // Official-website source (Firecrawl-rendered).
+  startTime: "Start time (race-local)",
+  price: "Entry price",
+  currency: "Entry price currency",
+  expoVenueName: "Expo venue name",
+  expoAddress: "Expo address",
 };
 
-export const NUMERIC_ENRICHABLE_FIELDS = new Set(["fieldSize"]);
+export const NUMERIC_ENRICHABLE_FIELDS = new Set(["fieldSize", "price"]);
 
 // ---------------------------------------------------------------------------
 // Types
@@ -126,6 +134,9 @@ export interface EnrichableRace {
   city?: string;
   country?: string;
   wikipediaUrl?: string;
+  /** Enables the official-website source (start time, entry price,
+   *  expo) — scraped through Firecrawl's renderer. */
+  officialWebsite?: string;
   enrichmentSuggestions?: EnrichmentSuggestion[];
   /** Current values of every enrichable field, for diffing. */
   current: Record<string, string | number | undefined>;
@@ -185,10 +196,17 @@ export interface EnrichmentScanLog {
   candidates: { title: string; lang: string; score: number }[];
   pagesTried: {
     url: string;
-    verdict: "accepted" | "vetoed" | "fetch_error" | "companion";
+    verdict:
+      | "accepted"
+      | "vetoed"
+      | "fetch_error"
+      | "companion"
+      | "official_site";
   }[];
   pageUrl?: string;
   companionUrl?: string;
+  websiteChars?: number;
+  websiteReasoning?: string;
   wikitextChars?: number;
   truncated?: boolean;
   extractionReasoning?: string;
@@ -730,6 +748,176 @@ ${pages
 }
 
 // ---------------------------------------------------------------------------
+// Official-website extraction (Firecrawl-rendered)
+// ---------------------------------------------------------------------------
+
+// Rendered race-site markdown budget for the Haiku pass — reg/info
+// pages put fees and schedules well within this. Split across the
+// homepage and (when found) one followed info sub-page.
+const MAX_SITE_HOME_CHARS = 22_000;
+const MAX_SITE_SUBPAGE_CHARS = 20_000;
+
+/** Score a same-origin link for "this is where entry fees / race-day
+ *  schedule / expo info live" — the data rarely sits on the
+ *  homepage itself (Tokyo's is a news feed; the start time is on
+ *  /en/about/outline/). Multilingual keyword set, URL-only. */
+function scoreInfoLink(url: string): number {
+  const u = url.toLowerCase();
+  let score = 0;
+  for (const [re, w] of [
+    [/entry|entries|register|registration|anmeld|inscri|iscrizi|aanmeld/, 5],
+    [/fee|price|tarif|preis|precio|cost/, 5],
+    [/outline|overview|概要|要項|event-?info|race-?info|infos?\b/, 4],
+    [/schedule|program|race-?day|zeitplan|horario/, 3],
+    [/expo|abholung|pickup|pick-?up|messe/, 3],
+    [/about|course|strecke|parcours/, 1],
+    [/news|blog|article|press|20\d\d\/\d|photo|gallery|result/, -6],
+    // Sibling-audience pages that outrank the standard entry page
+    // on keyword hits alone (Berlin's /registration/charity and
+    // /registration/tour-operators).
+    [/charity|spende|volunteer|kids|children|bambini|relay|staffel|team|school/, -5],
+    [/tour-?operator|travel|hotel|package|hospitality|vip/, -5],
+  ] as [RegExp, number][]) {
+    if (re.test(u)) score += w;
+  }
+  return score;
+}
+
+interface WebsiteExtractionResult {
+  start_time: {
+    value: string | null;
+    source_quote: string | null;
+    confidence: "high" | "medium" | "low";
+  } | null;
+  entry_price: {
+    amount: number | null;
+    currency: string | null;
+    source_quote: string | null;
+    confidence: "high" | "medium" | "low";
+  } | null;
+  expo: {
+    venue_name: string | null;
+    address: string | null;
+    source_quote: string | null;
+    confidence: "high" | "medium" | "low";
+  } | null;
+  reasoning: string;
+}
+
+/** Ask Haiku to pick the up-to-2 sub-pages most likely to state the
+ *  main race's entry fee / start schedule / expo details. URL-token
+ *  scoring alone proved brittle (BMW Berlin's homepage links a farm
+ *  of sibling-event registration pages — /registration/charity,
+ *  /tour-operators, /inlineskating, /generali-5k — that outscore or
+ *  tie the real one); the model reads the URL semantics. Falls back
+ *  to [] on any failure — the caller then uses the score heuristic. */
+async function pickInfoLinks(
+  race: EnrichableRace,
+  urls: string[],
+): Promise<string[]> {
+  if (urls.length === 0) return [];
+  const prompt = `From this list of URLs on the official website of the race "${race.title}" (the MAIN event), pick up to 2 URLs most likely to state:
+- the standard individual entry fee for the main race, and/or
+- the race-day start time / schedule, and/or
+- the expo / bib pick-up venue.
+
+Avoid sibling events (5K, kids, relay, inline skating), charity/tour-operator/travel pages, news, results, and galleries. If nothing looks promising, return an empty list.
+
+Output STRICT JSON only: {"urls": ["…"]}
+
+URLS:
+${urls.join("\n")}`;
+  try {
+    const response = await anthropic.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 300,
+      messages: [{ role: "user", content: prompt }],
+    });
+    const block = response.content[0];
+    if (block.type !== "text") return [];
+    const parsed = JSON.parse(
+      block.text.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, ""),
+    ) as { urls?: string[] };
+    // Only accept URLs that were actually in the list.
+    const allowed = new Set(urls);
+    return (parsed.urls ?? []).filter((u) => allowed.has(u)).slice(0, 2);
+  } catch {
+    return [];
+  }
+}
+
+async function extractFromWebsite(
+  race: EnrichableRace,
+  markdown: string,
+): Promise<WebsiteExtractionResult> {
+  const prompt = `You are extracting structured data about a running race from its OFFICIAL website (rendered to markdown).
+
+Race: ${race.title}
+Location: ${[race.city, race.country].filter(Boolean).join(", ") || "unknown"}
+
+The text may include the homepage plus a sub-page (marked "=== SUB-PAGE: … ==="). Extract ONLY facts the material states for THIS race's main distance (${race.title} — not sibling events like a 10K/kids run held by the same organiser):
+
+1. "start_time" — the race-local start time of the MAIN race, as printed ("09:10", "8:00 AM"). Wave starts: use the first/elite wave. Not registration opening times, not expo hours.
+2. "entry_price" — the CURRENT standard individual entry fee for the main distance, with its ISO currency code (EUR, USD, JPY …). Tiered pricing: use the currently-advertised standard tier (not early-bird-expired, not charity/VIP packages, not tour packages with hotels). If only a range is given, use the lower bound. Convert nothing — report the currency the fee is stated in.
+3. "expo" — the race expo / bib pick-up venue name ("Javits Center") and its street address if stated.
+
+Rules:
+- ONLY values stated in the text. NEVER estimate or fill from general knowledge. A section not stated → null.
+- "source_quote": short verbatim snippet the value came from.
+- confidence: "high" = explicit and unambiguous for the main race; "medium" = stated but requires interpretation (e.g. price table needed reading); "low" = uncertain — prefer null over low.
+
+Output STRICT JSON only — no markdown fences:
+
+{
+  "start_time": { "value": "09:10", "source_quote": "…", "confidence": "high" | "medium" | "low" } or null,
+  "entry_price": { "amount": 165, "currency": "EUR", "source_quote": "…", "confidence": "high" | "medium" | "low" } or null,
+  "expo": { "venue_name": "…", "address": "…" or null, "source_quote": "…", "confidence": "high" | "medium" | "low" } or null,
+  "reasoning": "one short sentence"
+}
+
+WEBSITE MARKDOWN:
+${markdown}`;
+
+  const response = await anthropic.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 800,
+    messages: [{ role: "user", content: prompt }],
+  });
+  const block = response.content[0];
+  if (block.type !== "text") {
+    throw new Error("Unexpected response block type");
+  }
+  const jsonText = block.text
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "");
+  return JSON.parse(jsonText) as WebsiteExtractionResult;
+}
+
+/** Validate a race-local start-time string the way the schema and
+ *  the calendar's parser expect it ("09:10", "8:00 AM"). Returns
+ *  the normalized value or null. */
+export function normalizeStartTime(raw: string): string | null {
+  // Accepts "09:10", "8:00 AM", "9:10 a.m." — meridiem dots and
+  // case are normalized away.
+  const m = raw
+    .trim()
+    .match(/^(\d{1,2}):(\d{2})\s*([APap])\.?[Mm]\.?$/) ??
+    raw.trim().match(/^(\d{1,2}):(\d{2})$/);
+  if (!m) return null;
+  const hours = Number(m[1]);
+  const minutes = Number(m[2]);
+  const meridiem = m[3] ? `${m[3].toUpperCase()}M` : undefined;
+  if (minutes > 59) return null;
+  if (meridiem) {
+    if (hours < 1 || hours > 12) return null;
+    return `${hours}:${String(minutes).padStart(2, "0")} ${meridiem}`;
+  }
+  if (hours > 23) return null;
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+}
+
+// ---------------------------------------------------------------------------
 // Validation + normalization
 // ---------------------------------------------------------------------------
 
@@ -880,16 +1068,9 @@ async function processRaceEnrichmentInner(
       .sort((a, b) => b.score - a.score);
     log.candidates = scored.slice(0, 10);
     candidates = scored.slice(0, MAX_PAGE_ATTEMPTS);
-    if (candidates.length === 0) {
-      return finalize({
-        _id: race._id,
-        title: race.title,
-        status: "page_not_found",
-        message: "No Wikipedia search results matched the race title",
-        suggestedFields: [],
-        unchangedFields: [],
-      });
-    }
+    // No candidates isn't fatal any more — the official-website
+    // source below can still contribute; the final status reflects
+    // whether ANY source produced something.
   }
 
   // ── Fetch + extract, vetoing wrong pages ──────────────────────
@@ -964,21 +1145,19 @@ async function processRaceEnrichmentInner(
     break;
   }
 
-  if (!extraction) {
-    return finalize({
-      _id: race._id,
-      title: race.title,
-      status: "page_not_found",
-      message:
-        log.pagesTried.length > 0
-          ? "Candidate pages were fetched but none matched this race"
-          : "Could not fetch any candidate page",
-      suggestedFields: [],
-      unchangedFields: [],
-    });
+  // Wikipedia yielding nothing is recorded but non-fatal — the
+  // official-website source may still contribute below.
+  const wikiMessage = extraction
+    ? undefined
+    : candidates.length === 0
+      ? "No Wikipedia search results matched the race title"
+      : log.pagesTried.length > 0
+        ? "Wikipedia candidates were fetched but none matched this race"
+        : "Could not fetch any Wikipedia candidate page";
+  if (extraction) {
+    log.pageUrl = pageUrl;
+    log.companionUrl = companionUrl;
   }
-  log.pageUrl = pageUrl;
-  log.companionUrl = companionUrl;
 
   // ── Explode extraction into per-field candidate values ────────
   // Each value carries the URL of the page it actually came from
@@ -1005,46 +1184,169 @@ async function processRaceEnrichmentInner(
     womensWheelchair: "womens_wheelchair",
   };
 
-  for (const group of RECORD_GROUPS) {
-    const rec = extraction.records?.[groupKeyMap[group.key]];
-    if (!rec) continue;
-    const sourceUrl = urlForSource(rec.source_page);
-    if (rec.time) {
-      candidatesByField.push({
-        field: group.timeField,
-        value: rec.time,
-        sourceUrl,
-        sourceQuote: rec.source_quote ?? undefined,
-        confidence: rec.confidence,
-      });
+  if (extraction) {
+    for (const group of RECORD_GROUPS) {
+      const rec = extraction.records?.[groupKeyMap[group.key]];
+      if (!rec) continue;
+      const sourceUrl = urlForSource(rec.source_page);
+      if (rec.time) {
+        candidatesByField.push({
+          field: group.timeField,
+          value: rec.time,
+          sourceUrl,
+          sourceQuote: rec.source_quote ?? undefined,
+          confidence: rec.confidence,
+        });
+      }
+      if (rec.athlete) {
+        candidatesByField.push({
+          field: group.athleteField,
+          value: rec.athlete,
+          sourceUrl,
+          sourceQuote: rec.source_quote ?? undefined,
+          confidence: rec.confidence,
+        });
+      }
+      if (rec.country) {
+        candidatesByField.push({
+          field: group.countryField,
+          value: rec.country.toUpperCase(),
+          sourceUrl,
+          sourceQuote: rec.source_quote ?? undefined,
+          confidence: rec.confidence,
+        });
+      }
     }
-    if (rec.athlete) {
+    if (extraction.field_size?.value) {
       candidatesByField.push({
-        field: group.athleteField,
-        value: rec.athlete,
-        sourceUrl,
-        sourceQuote: rec.source_quote ?? undefined,
-        confidence: rec.confidence,
-      });
-    }
-    if (rec.country) {
-      candidatesByField.push({
-        field: group.countryField,
-        value: rec.country.toUpperCase(),
-        sourceUrl,
-        sourceQuote: rec.source_quote ?? undefined,
-        confidence: rec.confidence,
+        field: "fieldSize",
+        value: String(extraction.field_size.value),
+        sourceUrl: urlForSource(extraction.field_size.source_page),
+        sourceQuote: extraction.field_size.source_quote ?? undefined,
+        confidence: extraction.field_size.confidence,
       });
     }
   }
-  if (extraction.field_size?.value) {
-    candidatesByField.push({
-      field: "fieldSize",
-      value: String(extraction.field_size.value),
-      sourceUrl: urlForSource(extraction.field_size.source_page),
-      sourceQuote: extraction.field_size.source_quote ?? undefined,
-      confidence: extraction.field_size.confidence,
-    });
+
+  // ── Official website (Firecrawl-rendered) ─────────────────────
+  // Second source: the race's own site, for the fields Wikipedia
+  // doesn't carry — race-local start time, entry price + currency,
+  // expo venue/address. Rendered through Firecrawl so JS-shell
+  // sites (marathon.tokyo) read fine.
+  if (race.officialWebsite) {
+    const rendered = await firecrawlScrape(race.officialWebsite);
+    if (!rendered) {
+      log.pagesTried.push({
+        url: race.officialWebsite,
+        verdict: "fetch_error",
+      });
+    } else {
+      log.pagesTried.push({
+        url: race.officialWebsite,
+        verdict: "official_site",
+      });
+      log.websiteChars = rendered.markdown.length;
+      // Follow up to TWO info sub-pages (entry / fees / outline /
+      // schedule) — that's where start time and price actually
+      // live on most race sites; the homepage is often a news
+      // feed. Haiku picks them from the same-origin link list
+      // (URL-token scoring alone kept choosing Berlin's sibling-
+      // event registration pages); the score heuristic remains the
+      // fallback. Two extra render credits, fetched in parallel.
+      let siteText = rendered.markdown.slice(0, MAX_SITE_HOME_CHARS);
+      try {
+        const base = new URL(race.officialWebsite);
+        const sameOrigin = [
+          ...new Set(
+            rendered.links
+              .map((l) => {
+                try {
+                  const u = new URL(l, base);
+                  if (u.origin !== base.origin) return null;
+                  u.hash = ""; // "#page-content" ≠ a new page
+                  // Skip the homepage itself in any dress.
+                  if (u.pathname.replace(/\/$/, "") === base.pathname.replace(/\/$/, "")) return null;
+                  return u.toString();
+                } catch {
+                  return null;
+                }
+              })
+              .filter((l): l is string => Boolean(l)),
+          ),
+        ].slice(0, 80);
+        let followed = await pickInfoLinks(race, sameOrigin);
+        if (followed.length === 0) {
+          followed = sameOrigin
+            .map((l) => ({ url: l, score: scoreInfoLink(l) }))
+            .filter((l) => l.score >= 4)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 2)
+            .map((l) => l.url);
+        }
+        const subs = await Promise.all(followed.map((u) => firecrawlScrape(u)));
+        subs.forEach((sub, i) => {
+          if (!sub) return;
+          log.pagesTried.push({ url: followed[i], verdict: "official_site" });
+          siteText += `\n\n=== SUB-PAGE: ${followed[i]} ===\n${sub.markdown.slice(0, MAX_SITE_SUBPAGE_CHARS)}`;
+        });
+      } catch {
+        // sub-page follow is best-effort
+      }
+      try {
+        const site = await extractFromWebsite(race, siteText);
+        log.websiteReasoning = site.reasoning;
+        const siteUrl = race.officialWebsite;
+        if (site.start_time?.value) {
+          candidatesByField.push({
+            field: "startTime",
+            value: site.start_time.value,
+            sourceUrl: siteUrl,
+            sourceQuote: site.start_time.source_quote ?? undefined,
+            confidence: site.start_time.confidence,
+          });
+        }
+        if (site.entry_price?.amount && site.entry_price.currency) {
+          candidatesByField.push({
+            field: "price",
+            value: String(site.entry_price.amount),
+            sourceUrl: siteUrl,
+            sourceQuote: site.entry_price.source_quote ?? undefined,
+            confidence: site.entry_price.confidence,
+          });
+          candidatesByField.push({
+            field: "currency",
+            value: site.entry_price.currency.toUpperCase(),
+            sourceUrl: siteUrl,
+            sourceQuote: site.entry_price.source_quote ?? undefined,
+            confidence: site.entry_price.confidence,
+          });
+        }
+        if (site.expo?.venue_name) {
+          candidatesByField.push({
+            field: "expoVenueName",
+            value: site.expo.venue_name,
+            sourceUrl: siteUrl,
+            sourceQuote: site.expo.source_quote ?? undefined,
+            confidence: site.expo.confidence,
+          });
+          if (site.expo.address) {
+            candidatesByField.push({
+              field: "expoAddress",
+              value: site.expo.address,
+              sourceUrl: siteUrl,
+              sourceQuote: site.expo.source_quote ?? undefined,
+              confidence: site.expo.confidence,
+            });
+          }
+        }
+      } catch (err) {
+        // Website extraction failing shouldn't sink the Wikipedia
+        // half of the scan — log and continue with what we have.
+        console.log(
+          `[enrichment] website extraction failed for ${race.title}: ${(err as Error).message}`,
+        );
+      }
+    }
   }
 
   // ── Validate, normalize, diff ─────────────────────────────────
@@ -1102,6 +1404,52 @@ async function processRaceEnrichmentInner(
         continue;
       }
     }
+    if (cand.field === "startTime") {
+      const normalized = normalizeStartTime(value);
+      if (!normalized) {
+        log.fields.push({
+          field: cand.field,
+          outcome: "invalid",
+          value,
+          message: "start time failed H:MM / H:MM AM validation",
+        });
+        continue;
+      }
+      value = normalized;
+    }
+    if (cand.field === "price") {
+      const n = Number(value);
+      if (!Number.isFinite(n) || n <= 0 || n > 1_000_000) {
+        log.fields.push({
+          field: cand.field,
+          outcome: "invalid",
+          value,
+          message: "implausible entry price",
+        });
+        continue;
+      }
+    }
+    if (cand.field === "currency" && !CURRENCY_CODES.has(value)) {
+      log.fields.push({
+        field: cand.field,
+        outcome: "invalid",
+        value,
+        message: "not a supported currency code",
+      });
+      continue;
+    }
+    if (
+      (cand.field === "expoVenueName" || cand.field === "expoAddress") &&
+      (value.trim().length < 3 || value.length > 200)
+    ) {
+      log.fields.push({
+        field: cand.field,
+        outcome: "invalid",
+        value,
+        message: "implausible expo text",
+      });
+      continue;
+    }
 
     const current = race.current[cand.field];
     const currentStr =
@@ -1145,7 +1493,19 @@ async function processRaceEnrichmentInner(
     suggestedFields.push(cand.field);
   }
 
-  const status = suggestedFields.length > 0 ? "suggested" : "no_changes";
+  // Final status across BOTH sources: anything suggested wins;
+  // any source read (values unchanged or dropped) → no_changes;
+  // neither source reachable → page_not_found with the Wikipedia
+  // detail (the site fetch failure is in pagesTried).
+  const anySourceRead =
+    extraction !== null ||
+    log.pagesTried.some((p) => p.verdict === "official_site");
+  const status =
+    suggestedFields.length > 0
+      ? "suggested"
+      : anySourceRead
+        ? "no_changes"
+        : "page_not_found";
   return finalize(
     {
       _id: race._id,
@@ -1153,14 +1513,23 @@ async function processRaceEnrichmentInner(
       status,
       message:
         status === "no_changes"
-          ? `Page read OK — ${unchangedFields.length} field(s) already match, nothing new to suggest`
-          : undefined,
+          ? [
+              `${unchangedFields.length} field(s) already match, nothing new to suggest.`,
+              wikiMessage,
+            ]
+              .filter(Boolean)
+              .join(" ")
+          : status === "page_not_found"
+            ? [wikiMessage, race.officialWebsite ? "Official site couldn't be read either." : "No officialWebsite set to fall back to."]
+                .filter(Boolean)
+                .join(" ")
+            : undefined,
       suggestedFields,
       unchangedFields,
-      pageUrl,
+      pageUrl: pageUrl || undefined,
     },
     fresh,
-    pageUrl,
+    pageUrl || undefined,
   );
 }
 
@@ -1181,17 +1550,24 @@ function mergeSuggestions(
 // Batch
 // ---------------------------------------------------------------------------
 
-// Wikipedia + one Haiku call is far quicker than the date scraper's
-// multi-wave site crawl (~5–10 s per race), so the batch can be
-// bigger while staying inside the 60 s function ceiling.
-export const ENRICHMENT_BATCH_LIMIT = 8;
+// A scan is now Wikipedia (+companion) + a Firecrawl render of the
+// official site + two Haiku calls — up to ~30 s per race. One
+// concurrent wave only, so the batch stays inside the 60 s
+// function ceiling.
+export const ENRICHMENT_BATCH_LIMIT = 4;
 export const ENRICHMENT_CONCURRENCY = 4;
 
 /** Projection of every enrichable field, shared by the batch query
  *  and the per-race admin action. */
 export const ENRICHABLE_RACE_PROJECTION = `{
-  _id, title, city, country, wikipediaUrl, enrichmentSuggestions,
+  _id, title, city, country, wikipediaUrl, officialWebsite,
+  enrichmentSuggestions,
   "current": {
+    "startTime": startTime,
+    "price": price,
+    "currency": currency,
+    "expoVenueName": expoVenueName,
+    "expoAddress": expoAddress,
     "mensCourseRecord": mensCourseRecord,
     "mensCourseRecordAthlete": mensCourseRecordAthlete,
     "mensCourseRecordCountry": mensCourseRecordCountry,

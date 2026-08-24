@@ -84,7 +84,8 @@ export async function RaceEnrichmentContent() {
       <p className="mb-6 mt-2 text-copy-14 text-textSubtler">
         {races.length} race{races.length === 1 ? "" : "s"}. Scans read the
         race&rsquo;s Wikipedia article (any language edition) for course
-        records and field size.{" "}
+        records and field size, and the official site for start time, entry
+        price, and expo details.{" "}
         {pendingTotal > 0
           ? `${pendingTotal} field suggestion${
               pendingTotal === 1 ? "" : "s"

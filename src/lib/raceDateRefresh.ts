@@ -20,6 +20,8 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "next-sanity";
 
+import { firecrawlScrape } from "@/lib/firecrawlScrape";
+
 export const FETCH_TIMEOUT_MS = 8_000;
 // Hard ceiling on the total scan time. Pass 1 + sitemap probe +
 // wave 1 + wave 2 + externals + 2 Haiku calls is normally ~30 s,
@@ -132,6 +134,90 @@ export interface PageLogEntry {
   status: "ok" | "fetch_error" | "sanity_check_failed";
   chars?: number;
   message?: string;
+  /** Set when the page came through Firecrawl's renderer rather
+   *  than a plain fetch (JS-required sites, Cloudflare fronts). */
+  renderer?: "firecrawl";
+}
+
+// ── Firecrawl fallback ──────────────────────────────────────────
+// Plain fetch stays the default (free, fast). When a page's static
+// text betrays a JS-rendered shell, we re-fetch it through
+// Firecrawl's renderer — marathon.tokyo hands fetch a "please turn
+// on JavaScript" shell but Firecrawl 224 KB of rendered markdown.
+// Budgeted per scan: each render is ~1 credit and 5–15 s.
+const FIRECRAWL_BUDGET_PER_SCAN = 3;
+
+interface RenderBudget {
+  remaining: number;
+}
+
+/** Static text that signals "the real page needs JavaScript" —
+ *  either an explicit marker or nearly nothing rendered. */
+function needsRender(text: string): boolean {
+  if (text.length < 800) return true;
+  return /enable javascript|turn on javascript|javascript is (?:required|disabled)|requires javascript/i.test(
+    text,
+  );
+}
+
+/** Firecrawl's links array filtered the way extractLinks filters:
+ *  same-origin, fragmentless, no obvious binary assets. Anchor text
+ *  isn't available — scoreLink works URL-only for these. */
+function filterRenderedLinks(
+  links: string[],
+  baseUrl: string,
+): { url: string; text: string }[] {
+  const base = new URL(baseUrl);
+  const seen = new Set<string>();
+  const out: { url: string; text: string }[] = [];
+  for (const raw of links) {
+    let abs: URL;
+    try {
+      abs = new URL(raw, base);
+    } catch {
+      continue;
+    }
+    if (abs.origin !== base.origin) continue;
+    abs.hash = "";
+    const normalized = abs.toString();
+    if (seen.has(normalized)) continue;
+    if (/\.(pdf|jpe?g|png|gif|svg|webp|mp4|webm|zip|csv)(\?.*)?$/i.test(normalized)) {
+      continue;
+    }
+    seen.add(normalized);
+    out.push({ url: normalized, text: "" });
+  }
+  return out;
+}
+
+/** Fetch a page's text + outgoing links, upgrading to Firecrawl
+ *  when the static HTML is a JS shell and budget remains. Throws
+ *  only when the PLAIN fetch fails outright (callers' existing
+ *  error handling applies); a failed render falls back to the
+ *  static text. */
+async function smartFetchPage(
+  url: string,
+  budget: RenderBudget,
+): Promise<{
+  text: string;
+  links: { url: string; text: string }[];
+  renderer?: "firecrawl";
+}> {
+  const html = await fetchHtml(url);
+  const text = htmlToText(html);
+  if (!needsRender(text) || budget.remaining <= 0) {
+    return { text, links: extractLinks(html, url) };
+  }
+  budget.remaining -= 1;
+  const rendered = await firecrawlScrape(url);
+  if (!rendered) {
+    return { text, links: extractLinks(html, url) };
+  }
+  return {
+    text: rendered.markdown,
+    links: filterRenderedLinks(rendered.links, url),
+    renderer: "firecrawl",
+  };
 }
 
 interface PassLogEntry {
@@ -502,6 +588,10 @@ ${pageText}`;
 interface ExternalSource {
   name: string;
   buildUrl: (slug: string) => string;
+  /** Fetch through Firecrawl's renderer instead of plain fetch —
+   *  for hosts whose Cloudflare 403s cloud IPs outright. Doesn't
+   *  count against the per-scan render budget (one fixed call). */
+  forceRender?: boolean;
 }
 
 const EXTERNAL_SOURCES: ExternalSource[] = [
@@ -509,12 +599,15 @@ const EXTERNAL_SOURCES: ExternalSource[] = [
     name: "finishers.com",
     buildUrl: (slug) => `https://www.finishers.com/en/event/${slug}`,
   },
-  // marathontours.com was here too, but Cloudflare on its end
-  // 403s requests from Vercel IPs while leaving residential IPs
-  // alone — pure block, no UA workaround helped. Without
-  // headless-browser support (deferred), it just contributes 0
-  // text every probe, so dropped entirely. Re-add when we have
-  // a way to serve from a non-cloud IP.
+  {
+    // Cloudflare 403s plain fetches from cloud IPs (why this source
+    // was dropped in July) — Firecrawl's renderer gets through.
+    // Event pages carry "Race Date: … · Race Time: …" for the big
+    // city races. Restored 2026-08-24 with the Firecrawl fetch layer.
+    name: "marathontours.com",
+    buildUrl: (slug) => `https://marathontours.com/en-us/events/${slug}/`,
+    forceRender: true,
+  },
 ];
 
 function slugifyRaceTitle(title: string): string {
@@ -553,13 +646,32 @@ async function fetchExternalSourceText(
   source: ExternalSource,
   raceTitle: string,
   distinctive: string[],
-): Promise<{ url: string; text: string; sourceName: string } | null> {
+): Promise<{
+  url: string;
+  text: string;
+  sourceName: string;
+  renderer?: "firecrawl";
+} | null> {
   const slug = slugifyRaceTitle(raceTitle);
   if (!slug) {
     console.log(`[date-refresh] ${source.name} skipped: empty slug for "${raceTitle}"`);
     return null;
   }
   const url = source.buildUrl(slug);
+  if (source.forceRender) {
+    const rendered = await firecrawlScrape(url);
+    if (!rendered) {
+      console.log(`[date-refresh] ${source.name} render failed for "${raceTitle}" at ${url}`);
+      return null;
+    }
+    const text = rendered.markdown.slice(0, EXTERNAL_SOURCE_CHARS);
+    const lowerText = text.toLowerCase();
+    if (!distinctive.some((w) => lowerText.includes(w))) {
+      console.log(`[date-refresh] ${source.name} sanity-check failed for "${raceTitle}" at ${url}`);
+      return null;
+    }
+    return { url, text, sourceName: source.name, renderer: "firecrawl" };
+  }
   try {
     const html = await fetchHtml(url);
     const text = htmlToText(html).slice(0, EXTERNAL_SOURCE_CHARS);
@@ -629,10 +741,18 @@ function parseSitemapLocs(xml: string): string[] {
 
 // Fetch a sub-page, strip to text, truncate. Returns null on
 // any failure — Pass 2 should still try the other candidates.
-async function fetchSubPageText(url: string): Promise<string | null> {
+// Upgrades to Firecrawl (budget permitting) when the static HTML
+// is a JS shell.
+async function fetchSubPageText(
+  url: string,
+  budget: RenderBudget,
+): Promise<{ text: string; renderer?: "firecrawl" } | null> {
   try {
-    const html = await fetchHtml(url);
-    return htmlToText(html).slice(0, PASS_2_PER_PAGE_CHARS);
+    const page = await smartFetchPage(url, budget);
+    return {
+      text: page.text.slice(0, PASS_2_PER_PAGE_CHARS),
+      renderer: page.renderer,
+    };
   } catch {
     return null;
   }
@@ -643,12 +763,18 @@ async function fetchSubPageText(url: string): Promise<string | null> {
 // Returns null on failure.
 async function fetchPageWithLinks(
   url: string,
-): Promise<{ text: string; links: { url: string; text: string }[] } | null> {
+  budget: RenderBudget,
+): Promise<{
+  text: string;
+  links: { url: string; text: string }[];
+  renderer?: "firecrawl";
+} | null> {
   try {
-    const html = await fetchHtml(url);
+    const page = await smartFetchPage(url, budget);
     return {
-      text: htmlToText(html).slice(0, PASS_2_PER_PAGE_CHARS),
-      links: extractLinks(html, url),
+      text: page.text.slice(0, PASS_2_PER_PAGE_CHARS),
+      links: page.links,
+      renderer: page.renderer,
     };
   } catch {
     return null;
@@ -726,9 +852,13 @@ async function processRaceInner(
     return result;
   };
 
-  let homeHtml: string;
+  // Shared render budget for this scan — homepage + wave pages
+  // upgrade to Firecrawl only while it lasts.
+  const renderBudget: RenderBudget = { remaining: FIRECRAWL_BUDGET_PER_SCAN };
+
+  let home: Awaited<ReturnType<typeof smartFetchPage>>;
   try {
-    homeHtml = await fetchHtml(race.officialWebsite);
+    home = await smartFetchPage(race.officialWebsite, renderBudget);
   } catch (err) {
     pages.push({
       url: race.officialWebsite,
@@ -744,12 +874,13 @@ async function processRaceInner(
     });
   }
 
-  const homeText = htmlToText(homeHtml).slice(0, MAX_PAGE_TEXT_CHARS);
+  const homeText = home.text.slice(0, MAX_PAGE_TEXT_CHARS);
   pages.push({
     url: race.officialWebsite,
     source: "homepage",
     status: "ok",
     chars: homeText.length,
+    renderer: home.renderer,
   });
 
   // Pass 1 — homepage text only. Catches the easy cases (London,
@@ -787,7 +918,7 @@ async function processRaceInner(
     ];
 
     // ── Wave 1 ─────────────────────────────────────────────
-    const homepageLinks = extractLinks(homeHtml, race.officialWebsite);
+    const homepageLinks = home.links;
     const sitemapUrls = await fetchSitemapUrls(race.officialWebsite);
     // Sitemap entries have no anchor text, but the URL itself
     // usually carries enough signal (news/2026/article-slug) for
@@ -798,7 +929,7 @@ async function processRaceInner(
     wave1.forEach((c) => visited.add(c.url));
 
     const wave1Pages = await Promise.all(
-      wave1.map((c) => fetchPageWithLinks(c.url)),
+      wave1.map((c) => fetchPageWithLinks(c.url, renderBudget)),
     );
 
     wave1.forEach((c, i) => {
@@ -810,6 +941,7 @@ async function processRaceInner(
           source: "wave1",
           status: "ok",
           chars: page.text.length,
+          renderer: page.renderer,
         });
       } else {
         pages.push({
@@ -840,7 +972,7 @@ async function processRaceInner(
     // on the critical path).
     const distinctive = distinctiveTitleWords(race.title);
     const [wave2Texts, externalResults] = await Promise.all([
-      Promise.all(wave2.map((c) => fetchSubPageText(c.url))),
+      Promise.all(wave2.map((c) => fetchSubPageText(c.url, renderBudget))),
       Promise.all(
         EXTERNAL_SOURCES.map((s) =>
           fetchExternalSourceText(s, race.title, distinctive),
@@ -849,14 +981,15 @@ async function processRaceInner(
     ]);
 
     wave2.forEach((c, i) => {
-      const text = wave2Texts[i];
-      if (text) {
-        sections.push(`=== PAGE: ${c.url} ===\n${text}`);
+      const page = wave2Texts[i];
+      if (page) {
+        sections.push(`=== PAGE: ${c.url} ===\n${page.text}`);
         pages.push({
           url: c.url,
           source: "wave2",
           status: "ok",
-          chars: text.length,
+          chars: page.text.length,
+          renderer: page.renderer,
         });
       } else {
         pages.push({
@@ -879,6 +1012,7 @@ async function processRaceInner(
           source: sourceTag,
           status: "ok",
           chars: result.text.length,
+          renderer: result.renderer,
         });
       } else {
         // We don't have the URL here when the result is null

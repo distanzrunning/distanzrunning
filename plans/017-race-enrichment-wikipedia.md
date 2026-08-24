@@ -58,10 +58,28 @@ field. Slice 1 covers the highest-value, zero-cost source: Wikipedia.
    (numbers cast) and removes the entry; Reject keeps it as
    `status:"rejected"` so the same value never comes back (Reset clears).
 
-## Later slices (not this one)
+## Slice 2 — Firecrawl official-site source (SHIPPED 2026-08-24)
 
-- Official-site scraping upgrade via Firecrawl (JS-rendered sites), for
-  price / start time / expo fields.
+- `src/lib/firecrawlScrape.ts` — shared /v2/scrape REST wrapper
+  (markdown + links, 25 s timeout, null-on-failure).
+- Date refresh: plain fetch stays default; pages whose static text is
+  a JS shell ("turn on JavaScript" / <800 chars) re-fetch through
+  Firecrawl (3 renders/scan budget, logged as `renderer:"firecrawl"`).
+  marathontours.com aggregator restored (`/en-us/events/{slug}/`,
+  forced render — its Cloudflare 403s plain cloud fetches).
+- Enrichment second source: official site rendered via Firecrawl;
+  Haiku picks up to 2 info sub-pages from the same-origin link list
+  (URL scoring alone kept choosing Berlin's sibling-event
+  registration pages), extracts startTime / price+currency /
+  expoVenueName / expoAddress into the same review queue. Wikipedia
+  miss no longer aborts the scan. Currency list extracted to
+  src/lib/currencies.ts (schema + validator share it).
+- Verified: Tokyo (JS shell) start time 09:10 / price ¥19,800 / expo
+  venue all confirm unchanged, expo address newly suggested; Berlin +
+  Copenhagen return honest nulls where sites don't state data.
+- NOTE: FIRECRAWL_API_KEY must be added to Vercel envs for prod scans.
+
+## Later slices (not this one)
 - Parallel.ai Task API (or Anthropic web search) for open-web discovery
   where no URL is known, and for the "create a new race guide from a
   name" flow (writes Sanity **drafts**, never publishes).

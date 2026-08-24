@@ -3,6 +3,7 @@
 import { defineType, defineField } from "sanity";
 import { PinIcon } from "@sanity/icons";
 
+import { CURRENCY_OPTIONS } from "@/lib/currencies";
 import { IOC_COUNTRY_OPTIONS } from "@/lib/iocCountries";
 
 import LocationSearchInput from "../components/LocationSearchInput";
@@ -210,31 +211,10 @@ export const raceGuideType = defineType({
       title: "Currency",
       type: "string",
       description: "Currency of the entry price",
+      // List lives in src/lib/currencies.ts so the enrichment
+      // pipeline validates against the same codes.
       options: {
-        list: [
-          { title: "USD - US Dollar", value: "USD" },
-          { title: "EUR - Euro", value: "EUR" },
-          { title: "GBP - British Pound", value: "GBP" },
-          { title: "JPY - Japanese Yen", value: "JPY" },
-          { title: "AUD - Australian Dollar", value: "AUD" },
-          { title: "CAD - Canadian Dollar", value: "CAD" },
-          { title: "CHF - Swiss Franc", value: "CHF" },
-          { title: "CNY - Chinese Yuan", value: "CNY" },
-          { title: "SEK - Swedish Krona", value: "SEK" },
-          { title: "DKK - Danish Krone", value: "DKK" },
-          { title: "NZD - New Zealand Dollar", value: "NZD" },
-          { title: "MXN - Mexican Peso", value: "MXN" },
-          { title: "SGD - Singapore Dollar", value: "SGD" },
-          { title: "HKD - Hong Kong Dollar", value: "HKD" },
-          { title: "NOK - Norwegian Krone", value: "NOK" },
-          { title: "KRW - South Korean Won", value: "KRW" },
-          { title: "TRY - Turkish Lira", value: "TRY" },
-          { title: "INR - Indian Rupee", value: "INR" },
-          { title: "BRL - Brazilian Real", value: "BRL" },
-          { title: "ZAR - South African Rand", value: "ZAR" },
-          { title: "THB - Thai Baht", value: "THB" },
-          { title: "QAR - Qatari Riyal", value: "QAR" },
-        ],
+        list: [...CURRENCY_OPTIONS],
       },
       initialValue: "USD",
     }),
