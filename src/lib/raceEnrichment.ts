@@ -1113,9 +1113,8 @@ async function processRaceEnrichmentInner(
   };
 
   // Single finalize path — persists the scan log on every attempt
-  // and, when there are fresh suggestions, merges them into the
-  // suggestions array (see mergeSuggestions for the replace/keep
-  // rules).
+  // and merges fresh suggestions into the suggestions array (see
+  // mergeSuggestions for the replace/keep/clear rules).
   const finalize = async (
     result: EnrichmentResult,
     freshSuggestions: EnrichmentSuggestion[] = [],
@@ -1129,10 +1128,17 @@ async function processRaceEnrichmentInner(
         enrichmentLastScanAt: startedAtIso,
         enrichmentLastScanLog: JSON.stringify(log),
       };
-      if (freshSuggestions.length > 0) {
+      const existingSuggestions = race.enrichmentSuggestions ?? [];
+      if (freshSuggestions.length > 0 || existingSuggestions.length > 0) {
         patch.enrichmentSuggestions = mergeSuggestions(
-          race.enrichmentSuggestions ?? [],
+          existingSuggestions,
           freshSuggestions,
+          // Fields this scan CONFIRMED as already-correct: any
+          // pending suggestion for them came from an earlier,
+          // worse-informed scan and is now known stale — clear it
+          // (the Copenhagen 1:05:11 bug: a pre-cross-check scan's
+          // suggestion survived a re-scan that verified 1:04:44).
+          new Set(result.unchangedFields),
         );
       }
       // Pin the discovered page so future scans (and the editor)
@@ -1663,16 +1669,28 @@ async function processRaceEnrichmentInner(
 }
 
 /** Merge fresh suggestions into the existing array. One entry per
- *  field (_key = field name): a fresh suggestion replaces any prior
- *  entry for its field (pending OR rejected-with-a-different-value —
- *  the rejected-same-value case never reaches here); untouched
- *  entries survive. */
+ *  field (_key = field name):
+ *  - a fresh suggestion replaces any prior entry for its field
+ *    (pending OR rejected-with-a-different-value — the rejected-
+ *    same-value case never reaches here);
+ *  - a PENDING entry for a field this scan confirmed as unchanged
+ *    is cleared — it came from an earlier, worse-informed scan
+ *    (rejected entries stay: they're the editor's veto memory);
+ *  - everything else survives. */
 function mergeSuggestions(
   existing: EnrichmentSuggestion[],
   fresh: EnrichmentSuggestion[],
+  confirmedUnchanged: ReadonlySet<string> = new Set(),
 ): EnrichmentSuggestion[] {
   const freshFields = new Set(fresh.map((s) => s.field));
-  return [...existing.filter((s) => !freshFields.has(s.field)), ...fresh];
+  return [
+    ...existing.filter(
+      (s) =>
+        !freshFields.has(s.field) &&
+        !(s.status === "pending" && confirmedUnchanged.has(s.field)),
+    ),
+    ...fresh,
+  ];
 }
 
 // ---------------------------------------------------------------------------
