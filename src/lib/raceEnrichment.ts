@@ -201,6 +201,7 @@ export interface EnrichmentScanLog {
       | "vetoed"
       | "fetch_error"
       | "companion"
+      | "edition"
       | "official_site";
   }[];
   pageUrl?: string;
@@ -638,7 +639,9 @@ interface ExtractedRecord {
   athlete: string | null;
   country: string | null;
   source_quote: string | null;
-  source_page: "main" | "winners_list";
+  /** Page id from the provided inventory ("main", "winners_list",
+   *  "edition:de", …). */
+  source_page: string;
   confidence: "high" | "medium" | "low";
 }
 
@@ -653,53 +656,60 @@ interface ExtractionResult {
   field_size: {
     value: number | null;
     source_quote: string | null;
-    source_page?: "main" | "winners_list";
+    source_page?: string;
     confidence: "high" | "medium" | "low";
   } | null;
   reasoning: string;
 }
 
 interface ExtractionPage {
-  role: "main" | "winners_list";
+  /** Stable id echoed back in source_page: "main", "winners_list",
+   *  "edition:<lang>". */
+  id: string;
+  /** Human label used in the prompt's page inventory. */
+  label: string;
   title: string;
   url: string;
   text: string;
 }
 
-const RECORD_JSON_SHAPE = `{
+function recordJsonShape(pageIds: string[]): string {
+  const ids = pageIds.map((id) => `"${id}"`).join(" | ");
+  return `{
   "time": "H:MM:SS",
   "athlete": "Full Name",
   "country": "IOC 3-letter code",
   "source_quote": "verbatim wikitext phrase the record came from",
-  "source_page": "main" | "winners_list",
+  "source_page": ${ids},
   "confidence": "high" | "medium" | "low"
 } or null if this record is not stated`;
+}
 
 async function extractFromWikitext(
   race: EnrichableRace,
   pages: ExtractionPage[],
 ): Promise<ExtractionResult> {
-  const main = pages.find((p) => p.role === "main")!;
-  const winners = pages.find((p) => p.role === "winners_list");
+  const shape = recordJsonShape(pages.map((p) => p.id));
+  const inventory = pages
+    .map((p) => `- [${p.id}] ${p.label}: "${p.title}" (${p.url})`)
+    .join("\n");
   const prompt = `You are extracting structured race data from Wikipedia raw wikitext.
 
 Race we are researching:
 - Name: ${race.title}
 - Location: ${[race.city, race.country].filter(Boolean).join(", ") || "unknown"}
 
-You are given ${pages.length === 1 ? "one page" : "two pages"}:
-- MAIN ARTICLE: "${main.title}" (${main.url})${
-    winners
-      ? `\n- WINNERS LIST: "${winners.title}" (${winners.url}) — a companion page with the race's full winners tables (year, athlete, nationality flag, time), and often an explicit course-records statement in its lead`
-      : ""
-  }
+You are given ${pages.length} page(s):
+${inventory}
 
-TASK 1 — page identity check. Set "page_is_this_race" to true only if the MAIN ARTICLE is about THIS race event (any language). Sponsor-name differences are fine ("Sparkasse 3-Länder-Marathon" IS "3-Länder-Marathon"). An article about a different race, a city, an athlete, or a disambiguation page → false, and return null for everything else.
+Different language editions of the same article update at different speeds — one edition's winners table or records section may be a year fresher than another's. Cross-check ALL provided pages.
 
-TASK 2 — course records. Extract the CURRENT course record for each division stated in the material: men's, women's, men's wheelchair, women's wheelchair. Records commonly live in an infobox param (course record / Streckenrekord / record), a statistics/records section, or the winners list's lead/tables.
+TASK 1 — page identity check. Set "page_is_this_race" to true only if the [main] page is about THIS race event (any language). Sponsor-name differences are fine ("Sparkasse 3-Länder-Marathon" IS "3-Länder-Marathon"). An article about a different race, a city, an athlete, or a disambiguation page → false, and return null for everything else.
+
+TASK 2 — course records. Extract the CURRENT course record for each division stated in the material: men's, women's, men's wheelchair, women's wheelchair. Records commonly live in an infobox param (course record / Streckenrekord / record), a statistics/records section, or winners lists/tables.
 - The course record is the FASTEST time ever run for that division at THIS race — NOT the most recent winner's time. In a winners table, that means the minimum time in the column (winners lists usually bold or footnote it); prefer an explicit "course record" statement over your own table scan when one exists.
-- When both pages state a record, cross-check them; if they disagree, use the explicit records statement and note the conflict in "reasoning".
-- "source_page": which page the record came from ("main" or "winners_list").
+- When pages disagree, records only ever get FASTER over time: a faster time backed by a newer year supersedes an older edition's slower "record" (that edition is simply stale). Use the freshest, and note the disagreement in "reasoning".
+- "source_page": the id of the page the chosen value actually came from.
 - "time": normalize to H:MM:SS or HH:MM:SS (e.g. "2:09:15", "58:42" becomes "0:58:42").
 - "athlete": the record holder's full name in Latin script if given.
 - "country": the athlete's nationality as an IOC 3-letter code (KEN, ETH, GBR, USA, SUI, GER, JPN …) — ONLY when the given material states the nationality (a flag/country template like {{KEN|…}} or {{flagathlete|…}} next to the athlete — winners-table flag templates count, including on the row of the record run — or explicit prose). Wikipedia country templates vary by language edition ({{SWI|…}} = Switzerland = SUI) — always output the IOC code, converting if needed. If the material does not state the record holder's nationality, return null for country — NEVER fill it from your own knowledge of the athlete, even when you are confident.
@@ -714,20 +724,17 @@ Output STRICT JSON only — no markdown fences, no prose:
 {
   "page_is_this_race": true | false,
   "records": {
-    "mens": ${RECORD_JSON_SHAPE},
-    "womens": ${RECORD_JSON_SHAPE},
-    "mens_wheelchair": ${RECORD_JSON_SHAPE},
-    "womens_wheelchair": ${RECORD_JSON_SHAPE}
+    "mens": ${shape},
+    "womens": ${shape},
+    "mens_wheelchair": ${shape},
+    "womens_wheelchair": ${shape}
   },
-  "field_size": { "value": 12345, "source_quote": "…", "source_page": "main" | "winners_list", "confidence": "high" | "medium" | "low" } or null,
+  "field_size": { "value": 12345, "source_quote": "…", "source_page": "<page id>", "confidence": "high" | "medium" | "low" } or null,
   "reasoning": "one or two short sentences"
 }
 
 ${pages
-  .map(
-    (p) =>
-      `=== ${p.role === "main" ? "MAIN ARTICLE" : "WINNERS LIST"}: ${p.title} ===\n${p.text}`,
-  )
+  .map((p) => `=== [${p.id}] ${p.label}: ${p.title} ===\n${p.text}`)
   .join("\n\n")}`;
 
   const response = await anthropic.messages.create({
@@ -745,6 +752,106 @@ ${pages
     .replace(/^```(?:json)?\s*/i, "")
     .replace(/\s*```$/i, "");
   return JSON.parse(jsonText) as ExtractionResult;
+}
+
+// ---------------------------------------------------------------------------
+// Sister-language editions (cross-checking)
+// ---------------------------------------------------------------------------
+
+// Different language editions update at different speeds — the de
+// edition of Copenhagen Half Marathon carries a fresher winners
+// table than en/da (user example 2026-08-24). Once a page is
+// accepted, its langlinks give every sister edition
+// deterministically (no search); we pull the meatiest few and let
+// the extraction cross-check all of them.
+const MAX_EXTRA_EDITIONS = 2;
+const MAX_EDITION_CHARS = 25_000;
+// Skip stubs — a 3 KB edition won't carry a winners table.
+const MIN_EDITION_BYTES = 4_000;
+
+/** Sister-language editions of a page, via its langlinks. */
+async function fetchLangLinks(
+  lang: string,
+  title: string,
+): Promise<{ lang: string; title: string }[]> {
+  const url =
+    `https://${lang}.wikipedia.org/w/api.php?action=query&prop=langlinks` +
+    `&titles=${encodeURIComponent(title)}&lllimit=50&redirects=1&format=json&formatversion=2`;
+  try {
+    const data = (await fetchJson(url)) as {
+      query?: { pages?: { langlinks?: { lang: string; title: string }[] }[] };
+    };
+    return (data.query?.pages?.[0]?.langlinks ?? []).map((l) => ({
+      lang: l.lang,
+      title: l.title,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+/** Article byte length — proxy for how detailed an edition is. */
+async function fetchPageLength(
+  lang: string,
+  title: string,
+): Promise<number> {
+  const url =
+    `https://${lang}.wikipedia.org/w/api.php?action=query&prop=info` +
+    `&titles=${encodeURIComponent(title)}&redirects=1&format=json&formatversion=2`;
+  try {
+    const data = (await fetchJson(url)) as {
+      query?: { pages?: { length?: number }[] };
+    };
+    return data.query?.pages?.[0]?.length ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** Pick and fetch the up-to-MAX_EXTRA_EDITIONS most substantial
+ *  sister editions of the accepted page (skipping stubs), budgeted
+ *  through the same keyword-window truncation as the main page. */
+async function fetchSisterEditions(
+  lang: string,
+  canonicalTitle: string,
+): Promise<{ lang: string; title: string; url: string; text: string }[]> {
+  const links = await fetchLangLinks(lang, canonicalTitle);
+  if (links.length === 0) return [];
+  const withLength = await Promise.all(
+    links.map(async (l) => ({
+      ...l,
+      length: await fetchPageLength(l.lang, l.title),
+    })),
+  );
+  const picked = withLength
+    .filter((l) => l.length >= MIN_EDITION_BYTES)
+    .sort((a, b) => b.length - a.length)
+    .slice(0, MAX_EXTRA_EDITIONS);
+  const fetched = await Promise.all(
+    picked.map(async (l) => {
+      try {
+        const { wikitext, canonicalTitle: resolved } = await fetchWikitext(
+          l.lang,
+          l.title,
+        );
+        const text =
+          wikitext.length <= MAX_EDITION_CHARS
+            ? wikitext
+            : `${wikitext.slice(0, MAX_EDITION_CHARS / 2)}\n\n[… truncated …]\n\n${wikitext.slice(-MAX_EDITION_CHARS / 2)}`;
+        return {
+          lang: l.lang,
+          title: resolved,
+          url: pageUrlFor(l.lang, resolved),
+          text,
+        };
+      } catch {
+        return null;
+      }
+    }),
+  );
+  return fetched.filter(
+    (e): e is NonNullable<typeof e> => e !== null,
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -1077,6 +1184,7 @@ async function processRaceEnrichmentInner(
   let extraction: ExtractionResult | null = null;
   let pageUrl = "";
   let companionUrl: string | undefined;
+  const pageUrlById = new Map<string, string>();
   for (const candidate of candidates) {
     const url = pageUrlFor(candidate.lang, candidate.title);
     let wikitext: string;
@@ -1094,26 +1202,43 @@ async function processRaceEnrichmentInner(
     log.wikitextChars = wikitext.length;
     log.truncated = truncated;
 
-    // Companion winners-list page ("List of winners of the Berlin
-    // Marathon") — fetched optimistically before the identity check
-    // (a wasted Wikipedia fetch on a vetoed candidate is cheap; a
-    // second Haiku pass wouldn't be). Null for most races. Passes
-    // the full (unbudgeted) wikitext so link-mining sees hatnotes
-    // deep in the article.
-    const companion = await fetchCompanionPage(
-      candidate.lang,
-      canonicalTitle,
-      wikitext,
-    );
+    // Companion winners-list page + sister-language editions —
+    // fetched optimistically (in parallel) before the identity
+    // check: wasted Wikipedia fetches on a vetoed candidate are
+    // cheap; a second Haiku pass wouldn't be. Editions cross-check
+    // staleness (de's Copenhagen winners table is fresher than
+    // en/da's); the companion passes the full unbudgeted wikitext
+    // so link-mining sees hatnotes deep in the article.
+    const [companion, editions] = await Promise.all([
+      fetchCompanionPage(candidate.lang, canonicalTitle, wikitext),
+      fetchSisterEditions(candidate.lang, canonicalTitle),
+    ]);
     const pages: ExtractionPage[] = [
-      { role: "main", title: canonicalTitle, url, text },
+      {
+        id: "main",
+        label: "MAIN ARTICLE",
+        title: canonicalTitle,
+        url,
+        text,
+      },
     ];
     if (companion) {
       pages.push({
-        role: "winners_list",
+        id: "winners_list",
+        label:
+          "WINNERS LIST (companion page: full winners tables with year, athlete, nationality flag, time; often an explicit course-records statement)",
         title: companion.title,
         url: companion.url,
         text: companion.text,
+      });
+    }
+    for (const e of editions) {
+      pages.push({
+        id: `edition:${e.lang}`,
+        label: `SISTER EDITION (${e.lang}.wikipedia — same article in another language; may be fresher or staler than the main article)`,
+        title: e.title,
+        url: e.url,
+        text: e.text,
       });
     }
 
@@ -1139,6 +1264,10 @@ async function processRaceEnrichmentInner(
       log.pagesTried.push({ url: companion.url, verdict: "companion" });
       companionUrl = companion.url;
     }
+    for (const e of editions) {
+      log.pagesTried.push({ url: e.url, verdict: "edition" });
+    }
+    for (const p of pages) pageUrlById.set(p.id, p.url);
     log.extractionReasoning = attempt.reasoning;
     extraction = attempt;
     pageUrl = url;
@@ -1161,10 +1290,10 @@ async function processRaceEnrichmentInner(
 
   // ── Explode extraction into per-field candidate values ────────
   // Each value carries the URL of the page it actually came from
-  // (main article vs companion winners list) so the review row's
-  // source link lands on the right page.
-  const urlForSource = (source?: "main" | "winners_list") =>
-    source === "winners_list" && companionUrl ? companionUrl : pageUrl;
+  // (main article, companion winners list, or a sister edition) so
+  // the review row's source link lands on the right page.
+  const urlForSource = (source?: string) =>
+    (source && pageUrlById.get(source)) || pageUrl;
 
   const candidatesByField: {
     field: string;
