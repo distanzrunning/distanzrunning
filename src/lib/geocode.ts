@@ -55,6 +55,39 @@ export async function geocodeAddress(
   }
 }
 
+/** Forward-geocode a query to Mapbox's formatted place name
+ *  ("Tokyo Big Sight, 3 Chome-11-1 Ariake, Koto City, Tokyo …").
+ *  Used by the enrichment pipeline to resolve an expo ADDRESS from
+ *  a venue name when the race site names the venue but doesn't
+ *  print its address. Same token + caching model as
+ *  geocodeAddress. */
+export async function geocodePlaceName(
+  query: string | null | undefined,
+): Promise<string | null> {
+  if (!query) return null;
+  const token =
+    process.env.MAPBOX_GEOCODING_TOKEN ||
+    process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+  if (!token) return null;
+  const trimmed = query.trim();
+  if (!trimmed) return null;
+  try {
+    const url =
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(trimmed)}.json` +
+      `?access_token=${token}&limit=1`;
+    const res = await fetch(url, {
+      next: { revalidate: MAPBOX_GEOCODE_REVALIDATE_SECONDS },
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as {
+      features?: Array<{ place_name?: string }>;
+    };
+    return data.features?.[0]?.place_name ?? null;
+  } catch {
+    return null;
+  }
+}
+
 /** Forward-geocode a country NAME to its bounding box (types=country),
  *  for the /races map's fit-the-whole-country camera. Same token +
  *  24h caching model as geocodeAddress. Returns null when the bbox is

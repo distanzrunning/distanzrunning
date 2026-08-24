@@ -22,6 +22,7 @@ import { createClient } from "next-sanity";
 
 import { CURRENCY_CODES } from "@/lib/currencies";
 import { firecrawlScrape } from "@/lib/firecrawlScrape";
+import { geocodePlaceName } from "@/lib/geocode";
 import { IOC_COUNTRY_CODES } from "@/lib/iocCountries";
 
 const FETCH_TIMEOUT_MS = 8_000;
@@ -1304,7 +1305,7 @@ async function processRaceEnrichmentInner(
   const candidatesByField: {
     field: string;
     value: string;
-    sourceUrl: string;
+    sourceUrl?: string;
     sourceQuote?: string;
     confidence: "high" | "medium" | "low";
   }[] = [];
@@ -1481,6 +1482,39 @@ async function processRaceEnrichmentInner(
           `[enrichment] website extraction failed for ${race.title}: ${(err as Error).message}`,
         );
       }
+    }
+  }
+
+  // ── Expo address rides along with any venue ───────────────────
+  // A venue name without an address leaves the map marker
+  // ungeocodable (user call 2026-08-24: "any expo venue name needs
+  // to also fill the Expo Address"). When a venue is known — from
+  // this scan or already on the doc — and no address is stated
+  // anywhere, resolve one by geocoding the venue in the race's
+  // city/country.
+  const hasAddressCandidate = candidatesByField.some(
+    (c) => c.field === "expoAddress",
+  );
+  const venueCandidate = candidatesByField.find(
+    (c) => c.field === "expoVenueName",
+  );
+  const knownVenue =
+    venueCandidate?.value ??
+    (race.current.expoVenueName ? String(race.current.expoVenueName) : undefined);
+  if (knownVenue && !hasAddressCandidate && !race.current.expoAddress) {
+    const place = await geocodePlaceName(
+      [knownVenue, race.city, race.country].filter(Boolean).join(", "),
+    );
+    if (place) {
+      // Flows through the normal validation/diff loop below, which
+      // also writes its log entry.
+      candidatesByField.push({
+        field: "expoAddress",
+        value: place,
+        sourceUrl: venueCandidate?.sourceUrl ?? race.officialWebsite,
+        sourceQuote: `Geocoded from expo venue "${knownVenue}" (Mapbox)`,
+        confidence: "medium",
+      });
     }
   }
 
