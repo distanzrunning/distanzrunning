@@ -97,6 +97,7 @@ export const FEEDBACK_NAV: { id: string; label: string; href: string }[] = [
 ];
 
 export const RACES_NAV: { id: string; label: string; href: string }[] = [
+  { id: "new", label: "Add race", href: "/admin/races/new" },
   { id: "date-review", label: "Date review", href: "/admin/races/date-review" },
   { id: "enrichment", label: "Enrichment", href: "/admin/races/enrichment" },
 ];

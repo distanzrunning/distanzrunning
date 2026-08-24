@@ -79,11 +79,50 @@ field. Slice 1 covers the highest-value, zero-cost source: Wikipedia.
   Copenhagen return honest nulls where sites don't state data.
 - NOTE: FIRECRAWL_API_KEY must be added to Vercel envs for prod scans.
 
+## Slice 3 — "Add race" tool + Open-Meteo climate (SHIPPED 2026-08-25)
+
+- Refactor first: generic Wikipedia plumbing (search/score/fetch/budget/
+  langlinks) extracted from `raceEnrichment.ts` into `src/lib/wikipedia.ts`
+  so both pipelines share one implementation; `extractFromWikitext` +
+  its result types exported for reuse. `slugifyTitle` extracted to
+  `src/lib/slugify.ts` — and corrected to match Sanity Studio's own
+  slugify (ä→ae, not bare diacritic-strip: verified against the
+  published "3-laender-marathon" slug).
+- `src/lib/climate.ts` — keyless Open-Meteo: `fetchElevation` (single
+  point) and `fetchClimateNormals` (month or ±7-day window, averaged
+  across the last 5 COMPLETE calendar years, parallel per-year fetches).
+  No env var gate — always available.
+- `src/lib/raceDiscovery.ts` — new pipeline for `/admin/races/new`:
+  duplicate check first (never spends API calls on an existing race) →
+  Wikipedia search (or a pasted article URL, skipping search) → identity
+  gate + course records/field size via the REUSED `extractFromWikitext`
+  → a focused facts prompt (city/country/distance/official site/event
+  month/tags — tags constrained to the dataset's existing vocabulary,
+  plus a free "World Marathon Majors" category check → Abbott tag) →
+  race-category matched by parsing each category's km from its title →
+  geocode + elevation + climate (best-effort, degrades to a warning).
+  Deliberately does NOT read the official website itself — that stays
+  the Enrichment Scan's job once this tool prefills officialWebsite.
+- Admin UI `/admin/races/new`: search → fully editable review form
+  (nothing written until "Create draft") → `createRaceDraft` writes an
+  UNPUBLISHED `drafts.<uuid>` doc (never auto-publishes).
+- Enrichment queue relaxed to include "orphan" drafts (no published
+  counterpart) — a race created here is immediately scannable for
+  start time/price/expo, no logic duplicated between the two tools.
+- Verified live end-to-end (real Wikipedia + Haiku + Sanity write, test
+  draft deleted after): Rotterdam Marathon and Vienna City Marathon —
+  correct title/city/country/distance/category/tags/website/records/
+  field size/climate; duplicate check correctly blocked re-adding
+  Berlin; the created draft appeared in the Enrichment queue ready to
+  scan. Geocode gracefully degrades to a warning without
+  MAPBOX_GEOCODING_TOKEN (climate/elevation skip too, since they need
+  the resolved point).
+
 ## Later slices (not this one)
 - Parallel.ai Task API (or Anthropic web search) for open-web discovery
-  where no URL is known, and for the "create a new race guide from a
-  name" flow (writes Sanity **drafts**, never publishes).
-- Open-Meteo climate lookups for averageTemperature / humidity / altitude
-  from the stored geopoint + event date (deterministic, no scraping).
+  when no Wikipedia article exists at all.
 - Wikidata sitelinks as a discovery assist; infobox `Teilnehmer`/
   participants for field size history.
+- Surface / surfaceBreakdown / profile / elevationGain / elevationLoss —
+  need course-description reading beyond infobox facts; not attempted
+  yet by either tool.

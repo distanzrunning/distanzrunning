@@ -55,20 +55,43 @@ const TABLE_HEADER = (
 );
 
 export async function RaceEnrichmentContent() {
-  const races: EnrichmentRowData[] = await sanityClient.fetch(
-    `*[
-      _type == "raceGuide"
-      && !(_id in path("drafts.**"))
-    ]{
-      _id,
-      title,
-      country,
-      wikipediaUrl,
-      enrichmentSuggestions,
-      enrichmentLastScanAt,
-      "_pendingCount": count(enrichmentSuggestions[status == "pending"])
-    } | order(_pendingCount desc, coalesce(enrichmentLastScanAt, "1970-01-01") asc, title asc)`,
+  // Published docs always show. A DRAFT only shows when it has no
+  // published counterpart — i.e. a race created via /admin/races/new
+  // and never published (the common case this unlocks: a freshly
+  // created draft is immediately scannable here for records/site
+  // data). A draft that's mid-EDIT of an already-published race is
+  // excluded — its published twin already has a row, and showing
+  // both would duplicate the race and split its scan history.
+  const allRaces: (EnrichmentRowData & { _pendingCount: number })[] =
+    await sanityClient.fetch(
+      `*[_type == "raceGuide"]{
+        _id,
+        title,
+        country,
+        wikipediaUrl,
+        enrichmentSuggestions,
+        enrichmentLastScanAt,
+        "_pendingCount": count(enrichmentSuggestions[status == "pending"])
+      }`,
+    );
+  const publishedIds = new Set(
+    allRaces.filter((r) => !r._id.startsWith("drafts.")).map((r) => r._id),
   );
+  const races = allRaces
+    .filter(
+      (r) =>
+        !r._id.startsWith("drafts.") ||
+        !publishedIds.has(r._id.slice("drafts.".length)),
+    )
+    .sort((a, b) => {
+      const pendingDiff = b._pendingCount - a._pendingCount;
+      if (pendingDiff !== 0) return pendingDiff;
+      const scanDiff = (a.enrichmentLastScanAt ?? "1970-01-01").localeCompare(
+        b.enrichmentLastScanAt ?? "1970-01-01",
+      );
+      if (scanDiff !== 0) return scanDiff;
+      return a.title.localeCompare(b.title);
+    });
 
   const pendingTotal = races.reduce(
     (sum, r) =>

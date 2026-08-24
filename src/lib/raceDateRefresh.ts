@@ -21,6 +21,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "next-sanity";
 
 import { firecrawlScrape } from "@/lib/firecrawlScrape";
+import { slugifyTitle } from "@/lib/slugify";
 
 export const FETCH_TIMEOUT_MS = 8_000;
 // Hard ceiling on the total scan time. Pass 1 + sitemap probe +
@@ -610,16 +611,6 @@ const EXTERNAL_SOURCES: ExternalSource[] = [
   },
 ];
 
-function slugifyRaceTitle(title: string): string {
-  return title
-    .toLowerCase()
-    .normalize("NFD")
-    // strip diacritics (è → e) so titles with accents still match
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
 // Distinctive title words used to verify a fetched aggregator
 // page is actually about the right race. 4+ chars to skip
 // "the"/"of"/etc.; matched case-insensitively against page text.
@@ -652,7 +643,7 @@ async function fetchExternalSourceText(
   sourceName: string;
   renderer?: "firecrawl";
 } | null> {
-  const slug = slugifyRaceTitle(raceTitle);
+  const slug = slugifyTitle(raceTitle);
   if (!slug) {
     console.log(`[date-refresh] ${source.name} skipped: empty slug for "${raceTitle}"`);
     return null;
@@ -1019,7 +1010,7 @@ async function processRaceInner(
         // (fetch_error or sanity_check_failed) — reconstruct it
         // from the source config so the log still shows what we
         // attempted.
-        const slug = slugifyRaceTitle(race.title);
+        const slug = slugifyTitle(race.title);
         pages.push({
           url: slug ? EXTERNAL_SOURCES[i].buildUrl(slug) : "",
           source: sourceTag,

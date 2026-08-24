@@ -24,16 +24,21 @@ import { CURRENCY_CODES } from "@/lib/currencies";
 import { firecrawlScrape } from "@/lib/firecrawlScrape";
 import { geocodeVenue } from "@/lib/geocode";
 import { IOC_COUNTRY_CODES } from "@/lib/iocCountries";
+import {
+  budgetWikitext,
+  fetchLangLinks,
+  fetchPageLength,
+  fetchWikitext,
+  languagesFor,
+  normalizeForMatch,
+  parseWikipediaUrl,
+  searchWikiLanguage,
+  wikiPageUrl,
+  wikiSearch,
+  type WikiPageCandidate,
+} from "@/lib/wikipedia";
 
-const FETCH_TIMEOUT_MS = 8_000;
 const SCAN_OVERALL_TIMEOUT_MS = 50_000;
-// Full-wikitext budget. Most race articles are 15–40 K chars; pages
-// over budget (Boston: 97 K, records at char 23 K) fall back to
-// lead + keyword windows so the record tables still make it in.
-const MAX_WIKITEXT_CHARS = 60_000;
-const LEAD_CHARS = 20_000;
-const KEYWORD_WINDOW_CHARS = 6_000;
-const KEYWORD_WINDOW_LIMIT = 8;
 // How many discovery candidates Haiku may veto before we give up.
 const MAX_PAGE_ATTEMPTS = 2;
 // Companion winners-list page ("List of winners of the Berlin
@@ -221,313 +226,6 @@ export interface EnrichmentScanLog {
 }
 
 // ---------------------------------------------------------------------------
-// Wikipedia API
-// ---------------------------------------------------------------------------
-
-const WIKI_HEADERS = {
-  "User-Agent":
-    "DistanzRunningEnrichment/1.0 (https://distanzrunning.com; info@distanzrunning.com)",
-};
-
-async function fetchJson(url: string): Promise<unknown> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-  try {
-    const res = await fetch(url, {
-      signal: controller.signal,
-      headers: WIKI_HEADERS,
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
-    return await res.json();
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-/** Language editions worth searching for a race in this country,
- *  beyond en. Multi-entry for multilingual countries. Missing
- *  countries just search en — the big-race common case. */
-const COUNTRY_LANGS: Record<string, string[]> = {
-  Germany: ["de"],
-  Austria: ["de"],
-  Switzerland: ["de", "fr"],
-  France: ["fr"],
-  Belgium: ["fr", "nl"],
-  Netherlands: ["nl"],
-  Spain: ["es"],
-  Mexico: ["es"],
-  Argentina: ["es"],
-  Chile: ["es"],
-  Colombia: ["es"],
-  Portugal: ["pt"],
-  Brazil: ["pt"],
-  Italy: ["it"],
-  Denmark: ["da"],
-  Norway: ["no"],
-  Sweden: ["sv"],
-  Finland: ["fi"],
-  Poland: ["pl"],
-  "Czech Republic": ["cs"],
-  Czechia: ["cs"],
-  Hungary: ["hu"],
-  Turkey: ["tr"],
-  Greece: ["el"],
-  Russia: ["ru"],
-  Ukraine: ["uk"],
-  Japan: ["ja"],
-  China: ["zh"],
-  Taiwan: ["zh"],
-  "Hong Kong": ["zh"],
-  "South Korea": ["ko"],
-  Thailand: ["th"],
-  Vietnam: ["vi"],
-  Indonesia: ["id"],
-  Israel: ["he"],
-  Qatar: ["ar"],
-  "United Arab Emirates": ["ar"],
-  "Saudi Arabia": ["ar"],
-  Egypt: ["ar"],
-  Morocco: ["ar", "fr"],
-};
-
-function languagesFor(country: string | undefined): string[] {
-  const extra = country ? (COUNTRY_LANGS[country] ?? []) : [];
-  return [...new Set(["en", ...extra])];
-}
-
-interface PageCandidate {
-  title: string;
-  lang: string;
-  score: number;
-}
-
-function normalizeForMatch(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    // Split digit/letter boundaries so "20km" tokenizes like
-    // "20 km" — Wikipedia titles space the unit ("20 km of
-    // Brussels") while race titles often don't ("20km of
-    // Brussels"), and without this the tokens never overlap.
-    .replace(/(\d)([a-z])/g, "$1 $2")
-    .replace(/([a-z])(\d)/g, "$1 $2")
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
-}
-
-/** Human-readable digit-split variant of a title ("20km of
- *  Brussels" → "20 km of Brussels") for a second search pass —
- *  Wikipedia's search engine itself misses the unspaced form on
- *  some editions. */
-function digitSplitTitle(s: string): string {
-  return s
-    .replace(/(\d)([A-Za-z])/g, "$1 $2")
-    .replace(/([A-Za-z])(\d)/g, "$1 $2");
-}
-
-/** Token-overlap score between the race title and a page title.
- *  Sponsor prefixes ("Sparkasse …") and suffixes shift tokens but
- *  overlap still ranks the right page first; a small penalty for
- *  unmatched page-title tokens demotes near-miss sibling articles
- *  ("List of winners of the Berlin Marathon"). cityForms carries
- *  the race city in every known spelling (English + localized —
- *  "geneva"/"geneve") so a local-language title gets city credit
- *  its raw tokens can't ("20 km de Genève" over "20 km de
- *  Lausanne"). */
-function scoreCandidate(
-  raceTitle: string,
-  pageTitle: string,
-  cityForms: string[] = [],
-): number {
-  const raceTokens = new Set(normalizeForMatch(raceTitle).split(" "));
-  const pageTokens = new Set(normalizeForMatch(pageTitle).split(" "));
-  const cityTokens = new Set(
-    cityForms.flatMap((c) => normalizeForMatch(c).split(" ")),
-  );
-  let hits = 0;
-  let nonCityHits = 0;
-  for (const t of raceTokens) {
-    if (!pageTokens.has(t)) continue;
-    hits += 1;
-    if (!cityTokens.has(t)) nonCityHits += 1;
-  }
-  const misses = pageTokens.size - hits;
-  let score = hits * 4 - misses;
-  // City credit (any known spelling — "geneva"/"geneve") ONLY when
-  // the page also matches a non-city race token; without that gate
-  // the bare city article ("Geneva", "Lake Geneva") outscores the
-  // race page and eats the candidate slots.
-  if (
-    nonCityHits > 0 &&
-    [...cityTokens].some((tok) => pageTokens.has(tok))
-  ) {
-    score += 4;
-  }
-  return score;
-}
-
-/** The race city's name on another language edition, via the en
- *  city article's langlinks ("Geneva" → fr "Genève", de "Genf").
- *  Null when unknown — search then just runs the English forms. */
-async function localizedCityName(
-  city: string,
-  lang: string,
-): Promise<string | null> {
-  if (lang === "en") return null;
-  const url =
-    `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(city)}` +
-    `&prop=langlinks&lllang=${lang}&redirects=1&format=json&formatversion=2`;
-  try {
-    const data = (await fetchJson(url)) as {
-      query?: { pages?: { langlinks?: { title: string }[] }[] };
-    };
-    const title = data.query?.pages?.[0]?.langlinks?.[0]?.title ?? null;
-    // Strip parenthetical disambiguators ("Genf (Stadt)" → "Genf").
-    return title ? title.replace(/\s*\(.*\)$/, "") : null;
-  } catch {
-    return null;
-  }
-}
-
-/** Raw search: page titles for a query on one language edition. */
-async function rawSearch(lang: string, query: string): Promise<string[]> {
-  const url =
-    `https://${lang}.wikipedia.org/w/api.php?action=query&list=search` +
-    `&srsearch=${encodeURIComponent(query)}&srlimit=5&format=json&formatversion=2`;
-  try {
-    const data = (await fetchJson(url)) as {
-      query?: { search?: { title: string }[] };
-    };
-    return (data.query?.search ?? []).map((s) => s.title);
-  } catch {
-    return [];
-  }
-}
-
-async function searchLanguage(
-  lang: string,
-  raceTitle: string,
-  city: string | undefined,
-): Promise<PageCandidate[]> {
-  // Query both the raw title and its digit-split variant when they
-  // differ — en.wikipedia's search misses "20km of Brussels" but
-  // finds "20 km of Brussels".
-  const queries = new Set([raceTitle, digitSplitTitle(raceTitle)]);
-  const cityForms: string[] = city ? [city] : [];
-
-  // Non-English editions title races with the LOCAL city name —
-  // fr.wikipedia knows "20 km de Genève", and searching it with
-  // the English "Geneva" surfaces only the city article. Resolve
-  // the local name via the en city page's langlinks and query
-  // with it substituted (or appended when the title doesn't
-  // contain the English city).
-  if (city) {
-    const localized = await localizedCityName(city, lang);
-    if (localized && localized.toLowerCase() !== city.toLowerCase()) {
-      cityForms.push(localized);
-      // Bare-token query: title tokens minus the city and minus
-      // connector words, plus the LOCAL city name. fr search finds
-      // "20 km de Genève" for "20 km Genève" but not for
-      // "20 km of Genève" — English connectors poison the query.
-      const cityTokens = new Set(normalizeForMatch(city).split(" "));
-      const connectors = new Set([
-        "of", "the", "de", "der", "des", "du", "la", "le", "van", "di",
-      ]);
-      const bare = normalizeForMatch(raceTitle)
-        .split(" ")
-        .filter((t) => !cityTokens.has(t) && !connectors.has(t));
-      queries.add(`${bare.join(" ")} ${localized}`.trim());
-    }
-  }
-
-  const perQuery = await Promise.all(
-    [...queries].map((q) => rawSearch(lang, q)),
-  );
-  const seen = new Set<string>();
-  const merged: PageCandidate[] = [];
-  for (const title of perQuery.flat()) {
-    if (seen.has(title)) continue;
-    seen.add(title);
-    merged.push({
-      title,
-      lang,
-      score: scoreCandidate(raceTitle, title, cityForms),
-    });
-  }
-  return merged;
-}
-
-function pageUrlFor(lang: string, title: string): string {
-  return `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(
-    title.replace(/ /g, "_"),
-  )}`;
-}
-
-/** Parse a pinned wikipediaUrl back into {lang, title}. */
-function parseWikipediaUrl(
-  url: string,
-): { lang: string; title: string } | null {
-  const m = url.match(
-    /^https?:\/\/([a-z-]+)\.(?:m\.)?wikipedia\.org\/wiki\/([^#?]+)/i,
-  );
-  if (!m) return null;
-  return {
-    lang: m[1].replace(/\.m$/, ""),
-    title: decodeURIComponent(m[2]).replace(/_/g, " "),
-  };
-}
-
-async function fetchWikitext(
-  lang: string,
-  title: string,
-): Promise<{ wikitext: string; canonicalTitle: string }> {
-  const url =
-    `https://${lang}.wikipedia.org/w/api.php?action=parse` +
-    `&page=${encodeURIComponent(title)}&prop=wikitext&redirects=1&format=json&formatversion=2`;
-  const data = (await fetchJson(url)) as {
-    parse?: { title: string; wikitext: string };
-    error?: { info?: string };
-  };
-  if (!data.parse) {
-    throw new Error(data.error?.info ?? `No parse result for ${title}`);
-  }
-  return { wikitext: data.parse.wikitext, canonicalTitle: data.parse.title };
-}
-
-/** Fit the wikitext into budget. Small pages pass whole; big pages
- *  keep the lead (infobox included) + windows around record/winner
- *  keyword hits so deep record tables survive the cut. */
-function budgetWikitext(wikitext: string): {
-  text: string;
-  truncated: boolean;
-} {
-  if (wikitext.length <= MAX_WIKITEXT_CHARS) {
-    return { text: wikitext, truncated: false };
-  }
-  const pieces: string[] = [wikitext.slice(0, LEAD_CHARS)];
-  const re =
-    /record|rekord|course|strecken|sieger|winner|champion|statisti|wheelchair|rollstuhl|teilnehmer|participant|finisher/gi;
-  const windows: [number, number][] = [];
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(wikitext)) !== null && windows.length < 200) {
-    const start = Math.max(LEAD_CHARS, m.index - KEYWORD_WINDOW_CHARS / 2);
-    const end = Math.min(wikitext.length, m.index + KEYWORD_WINDOW_CHARS / 2);
-    if (end <= LEAD_CHARS) continue;
-    const last = windows[windows.length - 1];
-    if (last && start <= last[1]) {
-      last[1] = end; // merge overlapping windows
-    } else {
-      windows.push([start, end]);
-    }
-  }
-  for (const [start, end] of windows.slice(0, KEYWORD_WINDOW_LIMIT)) {
-    pieces.push(`\n\n[… truncated …]\n\n${wikitext.slice(start, end)}`);
-  }
-  return { text: pieces.join(""), truncated: true };
-}
-
-// ---------------------------------------------------------------------------
 // Companion winners-list pages
 // ---------------------------------------------------------------------------
 
@@ -605,7 +303,7 @@ async function fetchCompanionPage(
   const searched =
     mined.length > 0
       ? []
-      : (await rawSearch(lang, `list of winners ${canonicalTitle}`)).filter(
+      : (await wikiSearch(lang, `list of winners ${canonicalTitle}`)).filter(
           (t) => isCompanionTitle(t, canonicalTitle),
         );
   const candidates = [...new Set([...mined, ...probes, ...searched])].slice(
@@ -626,7 +324,7 @@ async function fetchCompanionPage(
         wikitext.length <= MAX_COMPANION_CHARS
           ? wikitext
           : `${wikitext.slice(0, MAX_COMPANION_CHARS / 2)}\n\n[… truncated …]\n\n${wikitext.slice(-MAX_COMPANION_CHARS / 2)}`;
-      return { title: resolved, url: pageUrlFor(lang, resolved), text };
+      return { title: resolved, url: wikiPageUrl(lang, resolved), text };
     } catch {
       continue;
     }
@@ -638,7 +336,7 @@ async function fetchCompanionPage(
 // Extraction
 // ---------------------------------------------------------------------------
 
-interface ExtractedRecord {
+export interface ExtractedRecord {
   time: string | null;
   athlete: string | null;
   country: string | null;
@@ -649,7 +347,11 @@ interface ExtractedRecord {
   confidence: "high" | "medium" | "low";
 }
 
-interface ExtractionResult {
+// Exported: raceDiscovery.ts's new-race flow reuses this record/
+// field-size extraction verbatim (same trusted prompt + shape) on
+// the single main article it finds, rather than re-deriving a
+// second course-record prompt.
+export interface ExtractionResult {
   page_is_this_race: boolean;
   records: {
     mens: ExtractedRecord | null;
@@ -666,7 +368,7 @@ interface ExtractionResult {
   reasoning: string;
 }
 
-interface ExtractionPage {
+export interface ExtractionPage {
   /** Stable id echoed back in source_page: "main", "winners_list",
    *  "edition:<lang>". */
   id: string;
@@ -689,7 +391,7 @@ function recordJsonShape(pageIds: string[]): string {
 } or null if this record is not stated`;
 }
 
-async function extractFromWikitext(
+export async function extractFromWikitext(
   race: EnrichableRace,
   pages: ExtractionPage[],
 ): Promise<ExtractionResult> {
@@ -773,45 +475,6 @@ const MAX_EDITION_CHARS = 25_000;
 // Skip stubs — a 3 KB edition won't carry a winners table.
 const MIN_EDITION_BYTES = 4_000;
 
-/** Sister-language editions of a page, via its langlinks. */
-async function fetchLangLinks(
-  lang: string,
-  title: string,
-): Promise<{ lang: string; title: string }[]> {
-  const url =
-    `https://${lang}.wikipedia.org/w/api.php?action=query&prop=langlinks` +
-    `&titles=${encodeURIComponent(title)}&lllimit=50&redirects=1&format=json&formatversion=2`;
-  try {
-    const data = (await fetchJson(url)) as {
-      query?: { pages?: { langlinks?: { lang: string; title: string }[] }[] };
-    };
-    return (data.query?.pages?.[0]?.langlinks ?? []).map((l) => ({
-      lang: l.lang,
-      title: l.title,
-    }));
-  } catch {
-    return [];
-  }
-}
-
-/** Article byte length — proxy for how detailed an edition is. */
-async function fetchPageLength(
-  lang: string,
-  title: string,
-): Promise<number> {
-  const url =
-    `https://${lang}.wikipedia.org/w/api.php?action=query&prop=info` +
-    `&titles=${encodeURIComponent(title)}&redirects=1&format=json&formatversion=2`;
-  try {
-    const data = (await fetchJson(url)) as {
-      query?: { pages?: { length?: number }[] };
-    };
-    return data.query?.pages?.[0]?.length ?? 0;
-  } catch {
-    return 0;
-  }
-}
-
 /** Pick and fetch the up-to-MAX_EXTRA_EDITIONS most substantial
  *  sister editions of the accepted page (skipping stubs), budgeted
  *  through the same keyword-window truncation as the main page. */
@@ -845,7 +508,7 @@ async function fetchSisterEditions(
         return {
           lang: l.lang,
           title: resolved,
-          url: pageUrlFor(l.lang, resolved),
+          url: wikiPageUrl(l.lang, resolved),
           text,
         };
       } catch {
@@ -1172,7 +835,7 @@ async function processRaceEnrichmentInner(
     const langs = languagesFor(race.country);
     log.languagesSearched = langs;
     const perLang = await Promise.all(
-      langs.map((lang) => searchLanguage(lang, race.title, race.city)),
+      langs.map((lang) => searchWikiLanguage(lang, race.title, race.city)),
     );
     // Minimum score 5 ≈ "at least one strong title-token hit with
     // little unmatched noise". Real matches score ≥ 6 even across
@@ -1196,7 +859,7 @@ async function processRaceEnrichmentInner(
   let companionUrl: string | undefined;
   const pageUrlById = new Map<string, string>();
   for (const candidate of candidates) {
-    const url = pageUrlFor(candidate.lang, candidate.title);
+    const url = wikiPageUrl(candidate.lang, candidate.title);
     let wikitext: string;
     let canonicalTitle: string;
     try {
