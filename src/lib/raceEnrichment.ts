@@ -22,7 +22,7 @@ import { createClient } from "next-sanity";
 
 import { CURRENCY_CODES } from "@/lib/currencies";
 import { firecrawlScrape } from "@/lib/firecrawlScrape";
-import { geocodePlaceName } from "@/lib/geocode";
+import { geocodeVenue } from "@/lib/geocode";
 import { IOC_COUNTRY_CODES } from "@/lib/iocCountries";
 
 const FETCH_TIMEOUT_MS = 8_000;
@@ -138,6 +138,9 @@ export interface EnrichableRace {
   /** Enables the official-website source (start time, entry price,
    *  expo) — scraped through Firecrawl's renderer. */
   officialWebsite?: string;
+  /** Race geopoint — proximity anchor + verification radius for the
+   *  expo-venue address lookup. */
+  location?: { lat?: number; lng?: number };
   enrichmentSuggestions?: EnrichmentSuggestion[];
   /** Current values of every enrichable field, for diffing. */
   current: Record<string, string | number | undefined>;
@@ -967,7 +970,7 @@ The text may include the homepage plus a sub-page (marked "=== SUB-PAGE: … ===
 
 1. "start_time" — the race-local start time of the MAIN race, as printed ("09:10", "8:00 AM"). Wave starts: use the first/elite wave. Not registration opening times, not expo hours.
 2. "entry_price" — the CURRENT standard individual entry fee for the main distance, with its ISO currency code (EUR, USD, JPY …). Tiered pricing: use the currently-advertised standard tier (not early-bird-expired, not charity/VIP packages, not tour packages with hotels). If only a range is given, use the lower bound. Convert nothing — report the currency the fee is stated in.
-3. "expo" — the race expo / bib pick-up venue name ("Javits Center") and its street address if stated.
+3. "expo" — the race expo / bib pick-up venue and its street address if stated. "venue_name" is the venue's proper name as commonly written ("RAI Amsterdam", "Javits Center") — normalize the site's casing and shorthand ("the rai" → "RAI Amsterdam"), but never name a venue the material doesn't reference; keep hall/level/room details in venue_name ("McCormick Place, North Building, Hall B1"). "address" is a POSTAL STREET address only (street + number, city/postcode if given) — hall or level details are NOT an address; if no street address is stated, return null for address.
 
 Rules:
 - ONLY values stated in the text. NEVER estimate or fill from general knowledge. A section not stated → null.
@@ -1501,20 +1504,79 @@ async function processRaceEnrichmentInner(
   const knownVenue =
     venueCandidate?.value ??
     (race.current.expoVenueName ? String(race.current.expoVenueName) : undefined);
-  if (knownVenue && !hasAddressCandidate && !race.current.expoAddress) {
-    const place = await geocodePlaceName(
-      [knownVenue, race.city, race.country].filter(Boolean).join(", "),
-    );
-    if (place) {
+  const raceLng = race.location?.lng;
+  const raceLat = race.location?.lat;
+  if (
+    knownVenue &&
+    !hasAddressCandidate &&
+    !race.current.expoAddress &&
+    typeof raceLng === "number" &&
+    typeof raceLat === "number"
+  ) {
+    // Query with the venue's core name — hall/level suffixes
+    // ("McCormick Place, North Building, Level 3") don't match a
+    // POI record. The race geopoint anchors the search; without
+    // one we don't look at all (an unbiased global POI search
+    // returns dangerously plausible wrong venues).
+    const coreVenue = knownVenue.split(",")[0].trim();
+    // Two query shapes, merged — Search Box ranks differently per
+    // shape: the bare name ranks McCormick Place's own record
+    // first, while "venue + city" is what surfaces RAI Amsterdam
+    // Convention Centre (the bare "RAI" hits a thin record).
+    const prox = { lng: raceLng, lat: raceLat };
+    const [bareHits, cityHits] = await Promise.all([
+      geocodeVenue(coreVenue, prox),
+      race.city
+        ? geocodeVenue(`${coreVenue} ${race.city}`, prox)
+        : Promise.resolve([]),
+    ]);
+    // Accept only candidates that (a) share their name PREFIX with
+    // the queried venue in either direction ("RAI" ↔ "RAI Amsterdam
+    // Convention Centre" ✓, "Hilton Garden Inn … McCormick Place"
+    // ✗) and (b) sit within ~40 km of the race — wrong addresses
+    // are worse than none. Among passers, prefer the most complete
+    // address (street-bearing "Europaplein 24, 1078 GZ Amsterdam,
+    // Netherlands" over a bare "1083 AD Amsterdam, Netherlands").
+    const norm = (s: string) => normalizeForMatch(s);
+    const venue = [...bareHits, ...cityHits]
+      .filter((v) => {
+        const a = norm(v.name);
+        const b = norm(coreVenue);
+        const nameOk = a.startsWith(b) || b.startsWith(a);
+        const kmPerDegLat = 111;
+        const dLat = (v.lat - raceLat) * kmPerDegLat;
+        const dLng =
+          (v.lng - raceLng) *
+          kmPerDegLat *
+          Math.cos((raceLat * Math.PI) / 180);
+        return nameOk && Math.hypot(dLat, dLng) <= 40;
+      })
+      .sort(
+        (x, y) =>
+          y.fullAddress.split(",").length - x.fullAddress.split(",").length,
+      )[0];
+    if (venue) {
       // Flows through the normal validation/diff loop below, which
       // also writes its log entry.
       candidatesByField.push({
         field: "expoAddress",
-        value: place,
+        value: venue.fullAddress,
         sourceUrl: venueCandidate?.sourceUrl ?? race.officialWebsite,
-        sourceQuote: `Geocoded from expo venue "${knownVenue}" (Mapbox)`,
+        sourceQuote: `Resolved from expo venue "${knownVenue}" (Mapbox: ${venue.name})`,
         confidence: "medium",
       });
+      // Race sites often name the venue in shorthand ("the RAI");
+      // when Mapbox's canonical POI name extends the extracted
+      // one ("RAI" ⊂ "RAI Amsterdam Convention Centre"), upgrade
+      // the venue suggestion to the proper name.
+      if (
+        venueCandidate &&
+        venue.name.toLowerCase().includes(venueCandidate.value.toLowerCase()) &&
+        venue.name.length > venueCandidate.value.length
+      ) {
+        venueCandidate.sourceQuote = `${venueCandidate.sourceQuote ?? ""} (normalized via Mapbox from "${venueCandidate.value}")`.trim();
+        venueCandidate.value = venue.name;
+      }
     }
   }
 
@@ -1742,7 +1804,7 @@ export const ENRICHMENT_CONCURRENCY = 4;
  *  and the per-race admin action. */
 export const ENRICHABLE_RACE_PROJECTION = `{
   _id, title, city, country, wikipediaUrl, officialWebsite,
-  enrichmentSuggestions,
+  location, enrichmentSuggestions,
   "current": {
     "startTime": startTime,
     "price": price,

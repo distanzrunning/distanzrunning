@@ -55,36 +55,72 @@ export async function geocodeAddress(
   }
 }
 
-/** Forward-geocode a query to Mapbox's formatted place name
- *  ("Tokyo Big Sight, 3 Chome-11-1 Ariake, Koto City, Tokyo …").
- *  Used by the enrichment pipeline to resolve an expo ADDRESS from
- *  a venue name when the race site names the venue but doesn't
- *  print its address. Same token + caching model as
- *  geocodeAddress. */
-export async function geocodePlaceName(
+export interface VenueLookup {
+  /** Canonical POI name ("RAI Amsterdam Convention Centre"). */
+  name: string;
+  /** Full street address ("Europaplein 24, 1078 GZ Amsterdam,
+   *  Netherlands"). */
+  fullAddress: string;
+  lng: number;
+  lat: number;
+}
+
+/** Resolve a venue NAME to POI candidates (canonical name + street
+ *  address + coords) via Mapbox's Search Box API — the classic v5
+ *  geocoder has no POI coverage for venues ("RAI Amsterdam" there
+ *  returns a locality with no street address; Search Box returns
+ *  the convention centre with its full address). Used by the
+ *  enrichment pipeline so an expo venue never travels without an
+ *  address.
+ *
+ *  proximity is REQUIRED by design: an unbiased global POI search
+ *  is dangerously wrong (querying "Tokyo Big Sight" returned
+ *  restaurants in Indiana; "McCormick Place" a nearby hotel), while
+ *  the same queries proximity-biased rank the true venue first.
+ *  Callers verify the returned candidates (name similarity,
+ *  distance) — only features carrying a full_address are
+ *  returned. */
+export async function geocodeVenue(
   query: string | null | undefined,
-): Promise<string | null> {
-  if (!query) return null;
+  proximity: GeocodeResult,
+): Promise<VenueLookup[]> {
+  if (!query) return [];
   const token =
     process.env.MAPBOX_GEOCODING_TOKEN ||
     process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-  if (!token) return null;
+  if (!token) return [];
   const trimmed = query.trim();
-  if (!trimmed) return null;
+  if (!trimmed) return [];
   try {
     const url =
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(trimmed)}.json` +
-      `?access_token=${token}&limit=1`;
+      `https://api.mapbox.com/search/searchbox/v1/forward?q=${encodeURIComponent(trimmed)}` +
+      `&access_token=${token}&limit=5&language=en&types=poi` +
+      `&proximity=${proximity.lng},${proximity.lat}`;
     const res = await fetch(url, {
       next: { revalidate: MAPBOX_GEOCODE_REVALIDATE_SECONDS },
     });
-    if (!res.ok) return null;
+    if (!res.ok) return [];
     const data = (await res.json()) as {
-      features?: Array<{ place_name?: string }>;
+      features?: Array<{
+        properties?: { name?: string; full_address?: string };
+        geometry?: { coordinates?: [number, number] };
+      }>;
     };
-    return data.features?.[0]?.place_name ?? null;
+    return (data.features ?? [])
+      .filter(
+        (f) =>
+          f.properties?.name &&
+          f.properties?.full_address &&
+          f.geometry?.coordinates,
+      )
+      .map((f) => ({
+        name: f.properties!.name!,
+        fullAddress: f.properties!.full_address!,
+        lng: f.geometry!.coordinates![0],
+        lat: f.geometry!.coordinates![1],
+      }));
   } catch {
-    return null;
+    return [];
   }
 }
 
