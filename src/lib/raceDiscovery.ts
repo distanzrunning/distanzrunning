@@ -255,6 +255,13 @@ async function matchRaceCategory(
   const categories: { _id: string; title: string }[] = await sanityClient.fetch(
     `*[_type == "raceCategory"]{ _id, title }`,
   );
+  // Ultras have no fixed distance — anything beyond the marathon
+  // (plus the same 2 km tolerance the diff matcher uses) belongs to
+  // the "Ultra Marathon" category, from a 50K to UTMB's 171 km.
+  if (distanceKm > 44.2) {
+    const ultra = categories.find((c) => /ultra/i.test(c.title));
+    if (ultra) return { id: ultra._id, title: ultra.title };
+  }
   let best: { id: string; title: string; diff: number } | undefined;
   for (const c of categories) {
     const km = categoryDistanceKm(c.title);
