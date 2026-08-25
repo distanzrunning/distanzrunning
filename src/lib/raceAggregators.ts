@@ -400,7 +400,7 @@ Extract, for THIS race's MAIN distance (not sibling events on the same weekend):
 4. "surface" — one of Road | Trail | Track | Mountain | Mixed, from the pages' categorization ("Road Running" → Road, "Trail running" → Trail). Null if unstated.
 5. "profile" — one of flat | rolling | hilly | mountainous ONLY if a page characterizes the course ("the race is very flat" → flat). Null if unstated.
 6. "elevation_gain_m" — the course's elevation gain in meters if stated (ahotu's Strava embed shows "Elev Gain"). Integer.
-7. "strava_route_url" — a strava.com/routes/... URL (or strava.app.link) if present.
+7. "strava_route_url" — the route's canonical https://strava.com/routes/<id> URL. It is often URL-encoded inside a strava.app.link's fallback_url query parameter — decode and return the strava.com/routes form. Only fall back to the strava.app.link (INCLUDING its full query string) when no route id is recoverable.
 8. "badges" — labels the pages assert for this race, chosen ONLY from: ${JSON.stringify(KNOWN_RACE_TAGS)}. Map wording: "World Marathon Majors Qualifiers" does NOT mean Abbott World Marathon Major (that's for the six Majors themselves); "Boston Qualifying Races" → "Boston Marathon Qualifier". Empty array if none clearly asserted.
 9. "city" / "country" — where the race is held, if the pages state it (plain English country name, e.g. "United Kingdom").
 10. "distance_km" — the MAIN race's distance in kilometers as a number (convert "26.1 mi" → 42.195, "13.1 mi" → 21.0975; pick the longest listed distance when the event has several).
@@ -459,6 +459,7 @@ export async function gatherAggregatorData(input: {
 
   // ── World Athletics (structured, no LLM) ──────────────────────
   const wa = matchWAEvent(waEvents, input.title, input.city, input.country);
+  const today = new Date().toISOString().slice(0, 10);
   if (wa) {
     findings.matchedSources.push("World Athletics");
     const tag = WA_SUBGROUP_TO_TAG[wa.subgroup];
@@ -466,11 +467,23 @@ export async function gatherAggregatorData(input: {
       findings.labels.push(tag);
       findings.waTier = tag;
     }
-    findings.eventDate = wa.startDate;
-    findings.eventDateStatus = "confirmed";
-    findings.notes.push(
-      `World Athletics label calendar: "${wa.name}" (${wa.venue}) — ${wa.subgroup} label, next edition ${wa.startDate}.`,
-    );
+    // The season calendar lists races that ALREADY RAN this season
+    // (Rotterdam runs in April; in August its entry is the past
+    // edition). A past WA date must never become eventDate — the
+    // label tag stays authoritative, but the next-edition date then
+    // falls to the aggregators (finishers carries confirmed future
+    // dates).
+    if (wa.startDate > today) {
+      findings.eventDate = wa.startDate;
+      findings.eventDateStatus = "confirmed";
+      findings.notes.push(
+        `World Athletics label calendar: "${wa.name}" (${wa.venue}) — ${wa.subgroup} label, next edition ${wa.startDate}.`,
+      );
+    } else {
+      findings.notes.push(
+        `World Athletics label calendar: "${wa.name}" (${wa.venue}) — ${wa.subgroup} label (calendar lists the past ${wa.startDate} edition; next-edition date taken from aggregators when available).`,
+      );
+    }
   } else if (waEvents.length === 0) {
     findings.warnings.push(
       "World Athletics label calendar couldn't be read — label tag unchecked.",
@@ -511,12 +524,13 @@ export async function gatherAggregatorData(input: {
   }
 
   const sourceList = sections.map((s) => s.source).join(" + ");
-  const today = new Date().toISOString().slice(0, 10);
   if (extraction.reasoning) {
     findings.notes.push(`Aggregator read (${sourceList}): ${extraction.reasoning}`);
   }
 
-  // Date — WA wins conflicts (governing body beats aggregator).
+  // Date — a FUTURE WA date wins conflicts (governing body beats
+  // aggregator); a past-edition WA date never got set above, so the
+  // aggregators' confirmed future date lands unopposed.
   const aggDate = extraction.next_event_date;
   if (aggDate?.value && aggDate.confidence !== "low") {
     if (/^\d{4}-\d{2}-\d{2}$/.test(aggDate.value) && aggDate.value > today) {
