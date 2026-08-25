@@ -261,6 +261,18 @@ field. Slice 1 covers the highest-value, zero-cost source: Wikipedia.
 - Wikidata sitelinks as a discovery assist; infobox `Teilnehmer`/
   participants for field size history.
 
+## Slice 3h — altitude from the route start line (SHIPPED 2026-08-25)
+
+- The geocoded point is the CITY CENTRE — fine for Rotterdam (0 m,
+  correct), off by a valley for mountain races. When a trusted
+  route exists (no distance mismatch), altitude re-samples
+  Open-Meteo at the route's FIRST point (the start line) and
+  prefers that; same elevation source, so values stay comparable.
+  Provenance note states both figures when they differ.
+- Bonus: works even when the Mapbox geocode is unavailable —
+  Jungfrau Marathon verified at 569 m (Interlaken, exact) with no
+  geocoded location at all.
+
 ## Slice 3g — surfaceBreakdown (SHIPPED 2026-08-25)
 
 - Aggregator extraction gains `surface_breakdown` — set ONLY when a

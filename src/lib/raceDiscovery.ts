@@ -156,6 +156,9 @@ export interface RaceDiscoveryResult {
     /** Route length is >15% off the race distance (likely a sibling
      *  event's course) — the attach checkbox defaults off. */
     distanceMismatch: boolean;
+    /** [lng, lat] of the course's first point — altitude samples
+     *  here (the start line) in preference to the city centre. */
+    start: [number, number];
   };
   /** Photo candidates from the Wikipedia article (lead image
    *  first) — the editor picks one as a TEMPORARY mainImage
@@ -373,6 +376,7 @@ async function attachRoutePreview(
     elevationLoss: route.elevationLoss,
     pointCount: route.coordinates.length,
     distanceMismatch,
+    start: [route.coordinates[0][0], route.coordinates[0][1]],
   };
   sourceNotes.push(
     `Course route: ${route.coordinates.length} points from the Strava route embed — ${distanceKm} km, ~${route.elevationGain} m gain / ~${route.elevationLoss} m loss.`,
@@ -418,6 +422,31 @@ function defaultSurfaceBreakdown(
   sourceNotes.push(
     `Surface breakdown "${breakdown}" defaulted from the ${result.surface} surface class (no source stated the composition).`,
   );
+}
+
+/** The geocoded point is the CITY CENTRE — fine for flat coastal
+ *  races, off by a valley for mountain ones. When a trusted route
+ *  exists, re-sample Open-Meteo at its first point (the start
+ *  line) and prefer that. Same elevation source as before, so
+ *  values stay comparable across races. */
+async function refineAltitudeFromRouteStart(
+  result: RaceDiscoveryResult,
+  sourceNotes: string[],
+): Promise<void> {
+  const preview = result.routePreview;
+  if (!preview || preview.distanceMismatch) return;
+  const [lng, lat] = preview.start;
+  const elevation = await fetchElevation(lat, lng);
+  if (elevation === null) return;
+  if (result.altitude === undefined || elevation !== result.altitude) {
+    sourceNotes.push(
+      `Altitude ${elevation} m sampled at the route's start line` +
+        (result.altitude !== undefined
+          ? ` (city-centre point said ${result.altitude} m).`
+          : "."),
+    );
+  }
+  result.altitude = elevation;
 }
 
 /** Fallback when no Wikipedia article exists (the long tail —
@@ -487,6 +516,7 @@ async function aggregatorOnlyDiscovery(
     applyGeoClimate(result, warnings),
     attachRoutePreview(result, sourceNotes, warnings),
   ]);
+  await refineAltitudeFromRouteStart(result, sourceNotes);
   return result;
 }
 
@@ -714,6 +744,7 @@ export async function discoverRace(
       applyGeoClimate(result, warnings),
       attachRoutePreview(result, sourceNotes, warnings),
     ]);
+    await refineAltitudeFromRouteStart(result, sourceNotes);
 
     if (!result.officialWebsite) {
       warnings.push(
