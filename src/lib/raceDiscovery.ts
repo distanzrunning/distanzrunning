@@ -93,6 +93,7 @@ export interface RaceDiscoveryResult {
   title?: string;
   wikipediaUrl?: string;
   city?: string;
+  stateRegion?: string;
   country?: string;
   distance?: number;
   officialWebsite?: string;
@@ -131,6 +132,9 @@ export interface RaceDiscoveryResult {
   surface?: "Road" | "Trail" | "Track" | "Mountain" | "Mixed";
   profile?: "flat" | "rolling" | "hilly" | "mountainous";
   elevationGain?: number;
+  /** Always geometry-derived (no source states it) — set alongside
+   *  routePreview. */
+  elevationLoss?: number;
   /** Kept for createRaceDraft: when the editor accepts the route
    *  preview, the server re-reads this URL's embed geometry and
    *  uploads it as the draft's gpxFile (GeoJSON). */
@@ -144,7 +148,11 @@ export interface RaceDiscoveryResult {
     encodedPolyline: string;
     distanceKm: number;
     elevationGain: number;
+    elevationLoss: number;
     pointCount: number;
+    /** Route length is >15% off the race distance (likely a sibling
+     *  event's course) — the attach checkbox defaults off. */
+    distanceMismatch: boolean;
   };
 
   reasoning?: string;
@@ -346,23 +354,33 @@ async function attachRoutePreview(
     return;
   }
   const distanceKm = Math.round(route.distanceKm * 10) / 10;
+  const distanceMismatch = Boolean(
+    result.distance &&
+      Math.abs(route.distanceKm - result.distance) / result.distance > 0.15,
+  );
   result.routePreview = {
     encodedPolyline: encodeRoutePolyline(route.coordinates),
     distanceKm,
     elevationGain: route.elevationGain,
+    elevationLoss: route.elevationLoss,
     pointCount: route.coordinates.length,
+    distanceMismatch,
   };
   sourceNotes.push(
-    `Course route: ${route.coordinates.length} points from the Strava route embed — ${distanceKm} km, ~${route.elevationGain} m gain.`,
+    `Course route: ${route.coordinates.length} points from the Strava route embed — ${distanceKm} km, ~${route.elevationGain} m gain / ~${route.elevationLoss} m loss.`,
   );
-  if (
-    result.distance &&
-    Math.abs(route.distanceKm - result.distance) / result.distance > 0.15
-  ) {
+  if (distanceMismatch) {
+    // A wrong-distance route (ahotu sometimes links a sibling event's
+    // course — Grandma's Marathon page carries the HALF's route) must
+    // not feed elevation fields either.
     warnings.push(
       `The Strava route measures ${distanceKm} km but the race distance is ${result.distance} km — check it's the right course before attaching.`,
     );
+    return;
   }
+  // No source ever states elevation loss — the geometry is the only
+  // provider (still editor-reviewed).
+  result.elevationLoss = route.elevationLoss;
   if (result.elevationGain === undefined) {
     result.elevationGain = route.elevationGain;
     sourceNotes.push(
@@ -558,6 +576,7 @@ export async function discoverRace(
       title: canonicalTitle,
       wikipediaUrl: url,
       city: facts?.city ?? input.city,
+      stateRegion: facts?.state_region ?? undefined,
       country: facts?.country ?? input.country,
       distance: facts?.distance_km ?? undefined,
       officialWebsite: facts?.official_website ?? undefined,

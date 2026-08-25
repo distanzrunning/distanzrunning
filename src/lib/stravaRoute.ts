@@ -15,9 +15,10 @@ export interface StravaRouteGeometry {
   /** [lng, lat, ele] triples, in course order. */
   coordinates: [number, number, number][];
   distanceKm: number;
-  /** Smoothed positive-ascent sum in metres (raw point noise
-   *  overstates gain, so a moving average runs first). */
+  /** Smoothed ascent/descent sums in metres (raw point noise
+   *  overstates both, so a moving average runs first). */
   elevationGain: number;
+  elevationLoss: number;
 }
 
 export function parseStravaRouteId(url: string): string | null {
@@ -44,8 +45,11 @@ function haversineKm(
   return R * 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1 - s));
 }
 
-function smoothedGain(elevations: number[]): number {
-  if (elevations.length < 2) return 0;
+function smoothedGainLoss(elevations: number[]): {
+  gain: number;
+  loss: number;
+} {
+  if (elevations.length < 2) return { gain: 0, loss: 0 };
   const window = 5;
   const smoothed = elevations.map((_, i) => {
     const from = Math.max(0, i - Math.floor(window / 2));
@@ -55,11 +59,13 @@ function smoothedGain(elevations: number[]): number {
     return sum / (to - from);
   });
   let gain = 0;
+  let loss = 0;
   for (let i = 1; i < smoothed.length; i++) {
     const d = smoothed[i] - smoothed[i - 1];
     if (d > 0) gain += d;
+    else loss -= d;
   }
-  return Math.round(gain);
+  return { gain: Math.round(gain), loss: Math.round(loss) };
 }
 
 export async function fetchStravaRoute(
@@ -107,10 +113,12 @@ export async function fetchStravaRoute(
     for (let i = 1; i < coordinates.length; i++) {
       distanceKm += haversineKm(coordinates[i - 1], coordinates[i]);
     }
+    const { gain, loss } = smoothedGainLoss(coordinates.map((c) => c[2]));
     return {
       coordinates,
       distanceKm,
-      elevationGain: smoothedGain(coordinates.map((c) => c[2])),
+      elevationGain: gain,
+      elevationLoss: loss,
     };
   } catch {
     return null;

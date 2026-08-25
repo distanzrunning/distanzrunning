@@ -190,9 +190,24 @@ field. Slice 1 covers the highest-value, zero-cost source: Wikipedia.
   (degrades to a warning toast). Fetch-failure fallback keeps the old
   "export the GPX by hand" pointer.
 
+## Slice 3d — elevationLoss + stateRegion (SHIPPED 2026-08-25)
+
+- `elevationLoss` computed from the route geometry (same smoothed
+  pass as gain, descent sum) — no source ever states it, so the
+  geometry fills it whenever the route is trusted. NOT filled when
+  the route fails the >15% distance check: ahotu links sibling-event
+  courses (Grandma's Marathon page carries the HALF's Strava route),
+  and a wrong-distance route must not feed elevation fields. The
+  same `distanceMismatch` flag now also defaults the attach
+  checkbox to OFF.
+- `stateRegion` was already extracted by the Wikipedia facts prompt
+  but dropped on the floor — now mapped through result → form →
+  draft (verified: Grandma's Marathon → "Minnesota").
+
 ## Later slices (not this one)
 - Parallel.ai Task API (or Anthropic web search) for open-web discovery
   when neither Wikipedia nor the aggregators know the race.
 - Wikidata sitelinks as a discovery assist; infobox `Teilnehmer`/
   participants for field size history.
-- surfaceBreakdown / elevationLoss — still unattempted.
+- surfaceBreakdown — still unattempted (three-value select; could
+  default "100% Paved" from surface=Road if ever wanted).

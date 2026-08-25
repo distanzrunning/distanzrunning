@@ -100,6 +100,7 @@ export interface CreateRaceDraftInput {
   surface?: string;
   profile?: string;
   elevationGain?: number;
+  elevationLoss?: number;
   mensCourseRecord?: { time?: string; athlete?: string; country?: string };
   womensCourseRecord?: { time?: string; athlete?: string; country?: string };
   mensWheelchairCourseRecord?: {
@@ -183,6 +184,9 @@ export async function createRaceDraft(
   if (input.profile) doc.profile = input.profile;
   if (typeof input.elevationGain === "number") {
     doc.elevationGain = input.elevationGain;
+  }
+  if (typeof input.elevationLoss === "number") {
+    doc.elevationLoss = input.elevationLoss;
   }
 
   const RECORD_FIELDS: {

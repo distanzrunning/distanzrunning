@@ -84,6 +84,7 @@ interface DraftFormState {
   surface: string;
   profile: string;
   elevationGain: string;
+  elevationLoss: string;
   mensCourseRecord: RecordFields;
   womensCourseRecord: RecordFields;
   mensWheelchairCourseRecord: RecordFields;
@@ -113,6 +114,7 @@ const EMPTY_FORM: DraftFormState = {
   surface: "",
   profile: "",
   elevationGain: "",
+  elevationLoss: "",
   mensCourseRecord: {},
   womensCourseRecord: {},
   mensWheelchairCourseRecord: {},
@@ -123,7 +125,7 @@ function formFromDiscovery(r: RaceDiscoveryResult): DraftFormState {
   return {
     title: r.title ?? "",
     city: r.city ?? "",
-    stateRegion: "",
+    stateRegion: r.stateRegion ?? "",
     country: r.country ?? "",
     distance: r.distance != null ? String(r.distance) : "",
     officialWebsite: r.officialWebsite ?? "",
@@ -144,6 +146,7 @@ function formFromDiscovery(r: RaceDiscoveryResult): DraftFormState {
     surface: r.surface ?? "",
     profile: r.profile ?? "",
     elevationGain: r.elevationGain != null ? String(r.elevationGain) : "",
+    elevationLoss: r.elevationLoss != null ? String(r.elevationLoss) : "",
     mensCourseRecord: r.mensCourseRecord ?? {},
     womensCourseRecord: r.womensCourseRecord ?? {},
     mensWheelchairCourseRecord: r.mensWheelchairCourseRecord ?? {},
@@ -238,7 +241,10 @@ export default function NewRaceTool({
         setCreated(null);
         if (result.status === "found") {
           setForm(formFromDiscovery(result));
-          setAttachRoute(Boolean(result.routePreview));
+          setAttachRoute(
+            Boolean(result.routePreview) &&
+              !result.routePreview?.distanceMismatch,
+          );
           showToast({
             message: `Found "${result.title}"`,
             description: "Review the prefilled fields below before creating.",
@@ -307,6 +313,9 @@ export default function NewRaceTool({
           profile: form.profile || undefined,
           elevationGain: form.elevationGain
             ? Number(form.elevationGain)
+            : undefined,
+          elevationLoss: form.elevationLoss
+            ? Number(form.elevationLoss)
             : undefined,
           mensCourseRecord: hasAny(form.mensCourseRecord)
             ? form.mensCourseRecord
@@ -617,6 +626,12 @@ export default function NewRaceTool({
                 value={form.elevationGain}
                 onChange={(e) => update("elevationGain", e.target.value)}
               />
+              <Input
+                label="Elevation loss (m)"
+                type="number"
+                value={form.elevationLoss}
+                onChange={(e) => update("elevationLoss", e.target.value)}
+              />
             </div>
             {discovery.routePreview && discovery.stravaRouteUrl ? (
               <div className="flex flex-col gap-2">
@@ -629,7 +644,8 @@ export default function NewRaceTool({
                 />
                 <p className="m-0 text-copy-13 text-textSubtler">
                   {discovery.routePreview.distanceKm} km ·{" "}
-                  ~{discovery.routePreview.elevationGain} m gain ·{" "}
+                  ~{discovery.routePreview.elevationGain} m gain /{" "}
+                  ~{discovery.routePreview.elevationLoss} m loss ·{" "}
                   {discovery.routePreview.pointCount.toLocaleString()} points,
                   read from the{" "}
                   <a
