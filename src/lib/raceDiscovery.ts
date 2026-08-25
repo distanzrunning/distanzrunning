@@ -46,6 +46,7 @@ import {
   type ExtractionPage,
   type RecordGroupKey,
 } from "@/lib/raceEnrichment";
+import { encodeRoutePolyline, fetchStravaRoute } from "@/lib/stravaRoute";
 import {
   budgetWikitext,
   fetchPageCategories,
@@ -130,9 +131,21 @@ export interface RaceDiscoveryResult {
   surface?: "Road" | "Trail" | "Track" | "Mountain" | "Mixed";
   profile?: "flat" | "rolling" | "hilly" | "mountainous";
   elevationGain?: number;
-  /** Not writable as a field (gpxFile is an upload) — surfaced so
-   *  the editor can pull the GPX from Strava. */
+  /** Kept for createRaceDraft: when the editor accepts the route
+   *  preview, the server re-reads this URL's embed geometry and
+   *  uploads it as the draft's gpxFile (GeoJSON). */
   stravaRouteUrl?: string;
+  /** Course geometry summary from the Strava route embed (no auth
+   *  needed) — enough for a Static Images map preview + stats in
+   *  the review form without shipping thousands of points. */
+  routePreview?: {
+    /** Google-encoded polyline, downsampled for the Mapbox Static
+     *  Images path overlay. */
+    encodedPolyline: string;
+    distanceKm: number;
+    elevationGain: number;
+    pointCount: number;
+  };
 
   reasoning?: string;
   /** Human-readable provenance lines ("Entry price 89 EUR from
@@ -313,6 +326,51 @@ async function applyGeoClimate(
   }
 }
 
+/** When ahotu surfaced a Strava route, read its public embed
+ *  geometry so the review form can show the course on a map and
+ *  offer to attach it as the draft's gpxFile (GeoJSON). Mutates
+ *  `result` — shared by the Wikipedia path and the aggregator-only
+ *  fallback. Best-effort: a failed fetch leaves the plain Strava
+ *  link (the editor can still export the GPX by hand). */
+async function attachRoutePreview(
+  result: RaceDiscoveryResult,
+  sourceNotes: string[],
+  warnings: string[],
+): Promise<void> {
+  if (!result.stravaRouteUrl) return;
+  const route = await fetchStravaRoute(result.stravaRouteUrl);
+  if (!route) {
+    warnings.push(
+      "Couldn't read the Strava route's embed geometry — export the GPX from Strava and upload it in Studio.",
+    );
+    return;
+  }
+  const distanceKm = Math.round(route.distanceKm * 10) / 10;
+  result.routePreview = {
+    encodedPolyline: encodeRoutePolyline(route.coordinates),
+    distanceKm,
+    elevationGain: route.elevationGain,
+    pointCount: route.coordinates.length,
+  };
+  sourceNotes.push(
+    `Course route: ${route.coordinates.length} points from the Strava route embed — ${distanceKm} km, ~${route.elevationGain} m gain.`,
+  );
+  if (
+    result.distance &&
+    Math.abs(route.distanceKm - result.distance) / result.distance > 0.15
+  ) {
+    warnings.push(
+      `The Strava route measures ${distanceKm} km but the race distance is ${result.distance} km — check it's the right course before attaching.`,
+    );
+  }
+  if (result.elevationGain === undefined) {
+    result.elevationGain = route.elevationGain;
+    sourceNotes.push(
+      `Elevation gain ~${route.elevationGain} m computed from the route geometry (no aggregator stated it).`,
+    );
+  }
+}
+
 /** Fallback when no Wikipedia article exists (the long tail —
  *  finishers.com lists manchester-half-marathon; Wikipedia
  *  doesn't). The aggregator matchers verify the race name
@@ -374,7 +432,10 @@ async function aggregatorOnlyDiscovery(
     result.raceCategoryTitle = category.title;
   }
 
-  await applyGeoClimate(result, warnings);
+  await Promise.all([
+    applyGeoClimate(result, warnings),
+    attachRoutePreview(result, sourceNotes, warnings),
+  ]);
   return result;
 }
 
@@ -586,8 +647,11 @@ export async function discoverRace(
     sourceNotes.push(...agg.notes);
     warnings.push(...agg.warnings);
 
-    // ── Geocode + climate (independent of Wikipedia; best-effort) ─
-    await applyGeoClimate(result, warnings);
+    // ── Geocode + climate + route geometry (best-effort) ──────
+    await Promise.all([
+      applyGeoClimate(result, warnings),
+      attachRoutePreview(result, sourceNotes, warnings),
+    ]);
 
     if (!result.officialWebsite) {
       warnings.push(

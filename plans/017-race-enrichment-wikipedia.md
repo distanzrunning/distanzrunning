@@ -162,10 +162,37 @@ field. Slice 1 covers the highest-value, zero-cost source: Wikipedia.
   Cloudflare starts 403ing Vercel IPs like marathontours did, label
   checks degrade to a warning.
 
+## Slice 3c — route extraction + preview + attach (SHIPPED 2026-08-25)
+
+- Strava's GPX export is login-walled, but the public embed page the
+  ahotu source links (strava-embeds.com/route/<id>) server-renders a
+  `__ROUTE_DATA__` JSON blob with the FULLY DECODED route —
+  `coordinates` as [lng, lat, ele] triples (Rotterdam: 2,342 points,
+  42.65 km, sane elevations). No auth, no polyline decoding.
+- `src/lib/stravaRoute.ts` — fetch + parse the embed (id from
+  strava.com/routes/<id> or a strava.app.link fallback_url),
+  haversine distance, smoothed elevation gain (moving-average before
+  positive-sum — raw noise overstates), `routeToGeoJson` (the
+  FeatureCollection/LineString shape the race page's gpxFile
+  pipeline prefers over GPX), `encodeRoutePolyline` (downsampled
+  Google polyline for Mapbox Static Images).
+- Discovery: both paths (Wikipedia + aggregator-only) attach a
+  `routePreview` (encoded polyline + distance/gain/point stats) when
+  a Strava route was found; warns when the route's measured distance
+  is >15% off the race distance; fills elevationGain from geometry
+  when no aggregator stated it.
+- Review form: static Mapbox map of the course (DS accent-blue path)
+  + stats + "Attach the route to the draft as a GeoJSON file"
+  checkbox (default on). On create, the server RE-FETCHES the embed
+  (no thousands of points round-tripping through the client), uploads
+  `<slug>-route.geojson` as a Sanity file asset, and sets `gpxFile` —
+  best-effort, a failed fetch/upload never loses the reviewed draft
+  (degrades to a warning toast). Fetch-failure fallback keeps the old
+  "export the GPX by hand" pointer.
+
 ## Later slices (not this one)
 - Parallel.ai Task API (or Anthropic web search) for open-web discovery
   when neither Wikipedia nor the aggregators know the race.
 - Wikidata sitelinks as a discovery assist; infobox `Teilnehmer`/
   participants for field size history.
-- surfaceBreakdown / elevationLoss — still unattempted; GPX upload
-  automation (Strava export needs auth).
+- surfaceBreakdown / elevationLoss — still unattempted.

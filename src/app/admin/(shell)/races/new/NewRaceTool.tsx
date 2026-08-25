@@ -19,6 +19,7 @@ import { ExternalLink } from "lucide-react";
 
 import { Badge } from "@/components/ui/Badge";
 import { Button, ButtonLink } from "@/components/ui/Button";
+import Checkbox from "@/components/ui/Checkbox";
 import { Input } from "@/components/ui/Input";
 import { MultiSelect, type MultiSelectItem } from "@/components/ui/MultiSelect";
 import Select from "@/components/ui/Select";
@@ -211,6 +212,7 @@ export default function NewRaceTool({
 
   const [discovery, setDiscovery] = useState<RaceDiscoveryResult | null>(null);
   const [form, setForm] = useState<DraftFormState>(EMPTY_FORM);
+  const [attachRoute, setAttachRoute] = useState(true);
   const [created, setCreated] = useState<CreateRaceDraftResult | null>(null);
 
   const update = <K extends keyof DraftFormState>(
@@ -236,6 +238,7 @@ export default function NewRaceTool({
         setCreated(null);
         if (result.status === "found") {
           setForm(formFromDiscovery(result));
+          setAttachRoute(Boolean(result.routePreview));
           showToast({
             message: `Found "${result.title}"`,
             description: "Review the prefilled fields below before creating.",
@@ -319,11 +322,22 @@ export default function NewRaceTool({
           )
             ? form.womensWheelchairCourseRecord
             : undefined,
+          attachRouteFromStravaUrl:
+            attachRoute && discovery?.routePreview && discovery.stravaRouteUrl
+              ? discovery.stravaRouteUrl
+              : undefined,
         };
         const fd = new FormData();
         fd.set("draft", JSON.stringify(draft));
         const result = await createRaceDraft(fd);
         setCreated(result);
+        if (result.routeWarning) {
+          showToast({
+            message: result.routeWarning,
+            variant: "warning",
+            preserve: true,
+          });
+        }
         showToast({
           message: `Draft created: "${draft.title}"`,
           description: draft.officialWebsite
@@ -604,7 +618,37 @@ export default function NewRaceTool({
                 onChange={(e) => update("elevationGain", e.target.value)}
               />
             </div>
-            {discovery.stravaRouteUrl && (
+            {discovery.routePreview && discovery.stravaRouteUrl ? (
+              <div className="flex flex-col gap-2">
+                <span className="text-copy-13 text-textSubtle">
+                  Course route
+                </span>
+                <RoutePreviewMap
+                  encodedPolyline={discovery.routePreview.encodedPolyline}
+                  title={form.title}
+                />
+                <p className="m-0 text-copy-13 text-textSubtler">
+                  {discovery.routePreview.distanceKm} km ·{" "}
+                  ~{discovery.routePreview.elevationGain} m gain ·{" "}
+                  {discovery.routePreview.pointCount.toLocaleString()} points,
+                  read from the{" "}
+                  <a
+                    href={discovery.stravaRouteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-link underline"
+                  >
+                    Strava route
+                  </a>
+                  .
+                </p>
+                <Checkbox
+                  checked={attachRoute}
+                  onChange={(e) => setAttachRoute(e.target.checked)}
+                  label="Attach the route to the draft as a GeoJSON file"
+                />
+              </div>
+            ) : discovery.stravaRouteUrl ? (
               <p className="m-0 text-copy-13 text-textSubtler">
                 Course GPX: the route is on{" "}
                 <a
@@ -618,7 +662,7 @@ export default function NewRaceTool({
                 — export the GPX there and upload it to the draft in
                 Studio.
               </p>
-            )}
+            ) : null}
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -713,6 +757,11 @@ export default function NewRaceTool({
             <Badge variant="green-subtle" size="sm">
               Draft created
             </Badge>
+            {created.routeAttached && (
+              <Badge variant="blue-subtle" size="sm">
+                Route attached
+              </Badge>
+            )}
             <span className="text-copy-14 text-textDefault">
               {form.title}
             </span>
@@ -749,4 +798,45 @@ export default function NewRaceTool({
 
 function hasAny(rec: RecordFields): boolean {
   return Boolean(rec.time || rec.athlete || rec.country);
+}
+
+/** Static Mapbox render of the discovered course — enough for the
+ *  editor to eyeball "is this the right route" without pulling the
+ *  interactive mapbox-gl bundle into the admin. Path colour is the
+ *  DS accent blue (route lines are a sanctioned blue-accent use). */
+function RoutePreviewMap({
+  encodedPolyline,
+  title,
+}: {
+  encodedPolyline: string;
+  title: string;
+}) {
+  const [failed, setFailed] = useState(false);
+  const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+  if (!token || failed) {
+    // The public token is URL-restricted (403s on localhost), so a
+    // failed load degrades to a note rather than a broken image.
+    return (
+      <p className="m-0 text-copy-13 text-textSubtler">
+        Map preview unavailable here — the route stats below still
+        describe the geometry that will be attached.
+      </p>
+    );
+  }
+  const src =
+    `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/` +
+    `path-3+0070f3-0.9(${encodeURIComponent(encodedPolyline)})` +
+    `/auto/640x320@2x?padding=48&access_token=${token}`;
+  return (
+    // External Mapbox Static Images URL; next/image adds nothing here.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={`Course route preview for ${title}`}
+      width={640}
+      height={320}
+      onError={() => setFailed(true)}
+      className="w-full max-w-[640px] rounded-sm border border-borderSubtle"
+    />
+  );
 }

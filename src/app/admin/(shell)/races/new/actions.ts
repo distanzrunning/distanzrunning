@@ -24,6 +24,7 @@ import { createClient } from "next-sanity";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { discoverRace, type RaceDiscoveryResult } from "@/lib/raceDiscovery";
 import { slugifyTitle } from "@/lib/slugify";
+import { fetchStravaRoute, routeToGeoJson } from "@/lib/stravaRoute";
 
 const sanityClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
@@ -111,11 +112,19 @@ export interface CreateRaceDraftInput {
     athlete?: string;
     country?: string;
   };
+  /** When set (editor accepted the route preview), the server
+   *  re-reads this Strava route's embed geometry and uploads it as
+   *  the draft's gpxFile — a GeoJSON FeatureCollection, the format
+   *  the race page prefers. Re-fetched server-side rather than
+   *  round-tripping thousands of points through the client. */
+  attachRouteFromStravaUrl?: string;
 }
 
 export interface CreateRaceDraftResult {
   id: string;
   slug: string;
+  routeAttached?: boolean;
+  routeWarning?: string;
 }
 
 export async function createRaceDraft(
@@ -217,6 +226,36 @@ export async function createRaceDraft(
     if (rec.country) doc[f.country] = rec.country;
   }
 
+  // Route attachment is best-effort: a failed fetch/upload must
+  // never lose the reviewed draft, so it degrades to a warning.
+  let routeAttached = false;
+  let routeWarning: string | undefined;
+  if (input.attachRouteFromStravaUrl) {
+    try {
+      const route = await fetchStravaRoute(input.attachRouteFromStravaUrl);
+      if (!route) {
+        routeWarning =
+          "Couldn't read the Strava route geometry — draft created without the route file.";
+      } else {
+        const asset = await sanityClient.assets.upload(
+          "file",
+          Buffer.from(routeToGeoJson(route, title), "utf8"),
+          {
+            filename: `${slug}-route.geojson`,
+            contentType: "application/geo+json",
+          },
+        );
+        doc.gpxFile = {
+          _type: "file",
+          asset: { _type: "reference", _ref: asset._id },
+        };
+        routeAttached = true;
+      }
+    } catch (err) {
+      routeWarning = `Route upload failed (${(err as Error).message}) — draft created without the route file.`;
+    }
+  }
+
   const created = await sanityClient.create(doc);
-  return { id: created._id, slug };
+  return { id: created._id, slug, routeAttached, routeWarning };
 }
