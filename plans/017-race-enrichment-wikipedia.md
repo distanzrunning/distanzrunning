@@ -229,6 +229,22 @@ field. Slice 1 covers the highest-value, zero-cost source: Wikipedia.
 - Articles without usable photos degrade to no block.
   Wikipedia-path only (aggregator-only races have no article).
 
+## Entry-price sourcing (investigated + fixed 2026-08-25)
+
+- **finishers.com** carries the bib price ONLY for events its
+  marketplace sells, as an FAQ ("What is the price of the bib?")
+  near the page END — which the flat 16K head-slice systematically
+  truncated (Rome: price at char 19.5K of 21K → "no price stated").
+  `budgetFinishersText` now appends the price-FAQ window when it
+  falls beyond the cut. Rome: 89 EUR extracted, with finishers' own
+  "until <date>" expiry surfaced in the provenance note.
+- **ahotu** rarely states a fee; **WA calendar** never does.
+- **The official race website is the canonical price source** — and
+  the Enrichment scan (slice 2) already extracts price+currency
+  from it once the draft exists. Division of labour unchanged: Add
+  Race prefills from aggregators when they know it; the Scan
+  verifies/fills from the official site.
+
 ## Later slices (not this one)
 - Parallel.ai Task API (or Anthropic web search) for open-web discovery
   when neither Wikipedia nor the aggregators know the race.

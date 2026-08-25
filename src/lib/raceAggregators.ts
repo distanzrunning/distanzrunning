@@ -279,6 +279,21 @@ function distinctiveWords(title: string): string[] {
     .filter((w) => w.length >= 4);
 }
 
+/** Head of the page plus — when the page is long enough to cut —
+ *  the bib-price FAQ window. Finishers puts "What is the price of
+ *  the bib?" near the page END (only on events its marketplace
+ *  sells), which a plain head-slice systematically truncated:
+ *  Rome's price sat at char 19.5K of 21K. */
+function budgetFinishersText(full: string): string {
+  if (full.length <= FINISHERS_TEXT_CHARS) return full;
+  const head = full.slice(0, FINISHERS_TEXT_CHARS);
+  const i = full.search(/price of the bib|priced at/i);
+  if (i >= FINISHERS_TEXT_CHARS) {
+    return `${head} … ${full.slice(Math.max(FINISHERS_TEXT_CHARS, i - 200), i + 1_200)}`;
+  }
+  return head;
+}
+
 async function fetchFinishersText(
   title: string,
 ): Promise<{ url: string; text: string } | null> {
@@ -293,7 +308,7 @@ async function fetchFinishersText(
   const probeUrl = `https://www.finishers.com/en/event/${slugifyTitle(title)}`;
   const probeHtml = await fetchStatic(probeUrl);
   if (probeHtml) {
-    const text = stripHtml(probeHtml).slice(0, FINISHERS_TEXT_CHARS);
+    const text = budgetFinishersText(stripHtml(probeHtml));
     if (sane(text)) return { url: probeUrl, text };
   }
 
@@ -308,7 +323,7 @@ async function fetchFinishersText(
     if (!distanceClassCompatible(title, r.title)) continue;
     const html = await fetchStatic(r.url);
     if (!html) continue;
-    const text = stripHtml(html).slice(0, FINISHERS_TEXT_CHARS);
+    const text = budgetFinishersText(stripHtml(html));
     if (sane(text)) return { url: r.url, text };
   }
   return null;
