@@ -776,8 +776,11 @@ function AltitudeVisual({ metres }: { metres: number }) {
   );
 }
 
+// Bucket boundaries shared with altitudeLabel below — "Sea level"
+// means NEAR sea level (coastal-low: Rotterdam 0 m, Tokyo 40 m),
+// not merely flat: Vienna at 166 m is Lowland.
 function altitudeBucketIndex(metres: number): 0 | 1 | 2 | 3 {
-  if (metres < 200) return 0;
+  if (metres < 100) return 0;
   if (metres < 1000) return 1;
   if (metres < 2500) return 2;
   return 3;
@@ -977,7 +980,7 @@ function formatAltitude(m: number, units: UnitSystem): string {
 }
 
 function altitudeLabel(metres: number): string {
-  if (metres < 200) return "Sea level";
+  if (metres < 100) return "Sea level";
   if (metres < 1000) return "Lowland";
   if (metres < 2500) return "Highland";
   return "Mountain";
