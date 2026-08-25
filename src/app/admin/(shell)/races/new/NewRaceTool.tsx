@@ -52,6 +52,7 @@ const KNOWN_TAG_ITEMS: MultiSelectItem[] = [
 ].map((t) => ({ value: t, label: t }));
 
 const SURFACE_OPTIONS = ["Road", "Trail", "Track", "Mountain", "Mixed"];
+const SURFACE_BREAKDOWN_OPTIONS = ["100% Paved", "Unpaved", "Mixed"];
 const PROFILE_OPTIONS = ["flat", "rolling", "hilly", "mountainous"];
 
 const MONTH_NAMES = [
@@ -82,6 +83,7 @@ interface DraftFormState {
   price: string;
   currency: string;
   surface: string;
+  surfaceBreakdown: string;
   profile: string;
   elevationGain: string;
   elevationLoss: string;
@@ -112,6 +114,7 @@ const EMPTY_FORM: DraftFormState = {
   price: "",
   currency: "",
   surface: "",
+  surfaceBreakdown: "",
   profile: "",
   elevationGain: "",
   elevationLoss: "",
@@ -144,6 +147,7 @@ function formFromDiscovery(r: RaceDiscoveryResult): DraftFormState {
     price: r.price != null ? String(r.price) : "",
     currency: r.currency ?? "",
     surface: r.surface ?? "",
+    surfaceBreakdown: r.surfaceBreakdown ?? "",
     profile: r.profile ?? "",
     elevationGain: r.elevationGain != null ? String(r.elevationGain) : "",
     elevationLoss: r.elevationLoss != null ? String(r.elevationLoss) : "",
@@ -316,6 +320,7 @@ export default function NewRaceTool({
           price: form.price ? Number(form.price) : undefined,
           currency: form.currency || undefined,
           surface: form.surface || undefined,
+          surfaceBreakdown: form.surfaceBreakdown || undefined,
           profile: form.profile || undefined,
           elevationGain: form.elevationGain
             ? Number(form.elevationGain)
@@ -626,6 +631,23 @@ export default function NewRaceTool({
                 >
                   <option value="">— choose —</option>
                   {SURFACE_OPTIONS.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-copy-13 text-textSubtle">
+                  Surface breakdown
+                </span>
+                <Select
+                  size="medium"
+                  value={form.surfaceBreakdown}
+                  onChange={(e) => update("surfaceBreakdown", e.target.value)}
+                >
+                  <option value="">— choose —</option>
+                  {SURFACE_BREAKDOWN_OPTIONS.map((s) => (
                     <option key={s} value={s}>
                       {s}
                     </option>

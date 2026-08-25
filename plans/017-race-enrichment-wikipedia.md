@@ -260,5 +260,14 @@ field. Slice 1 covers the highest-value, zero-cost source: Wikipedia.
   when neither Wikipedia nor the aggregators know the race.
 - Wikidata sitelinks as a discovery assist; infobox `Teilnehmer`/
   participants for field size history.
-- surfaceBreakdown — still unattempted (three-value select; could
-  default "100% Paved" from surface=Road if ever wanted).
+
+## Slice 3g — surfaceBreakdown (SHIPPED 2026-08-25)
+
+- Aggregator extraction gains `surface_breakdown` — set ONLY when a
+  page states the actual terrain composition (asphalt → "100%
+  Paved", gravel/dirt → "Unpaved", combination → "Mixed"); the
+  prompt forbids inferring it from the race type. When no source
+  states it, discovery defaults deterministically from the surface
+  class (Road/Track → "100% Paved", Trail/Mountain → "Unpaved",
+  Mixed → "Mixed") with a provenance note. New Select in the Event
+  & course grid; written to the draft like every other field.

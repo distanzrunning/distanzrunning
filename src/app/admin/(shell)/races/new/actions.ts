@@ -100,6 +100,7 @@ export interface CreateRaceDraftInput {
   price?: number;
   currency?: string;
   surface?: string;
+  surfaceBreakdown?: string;
   profile?: string;
   elevationGain?: number;
   elevationLoss?: number;
@@ -202,6 +203,7 @@ export async function createRaceDraft(
   }
   if (input.currency) doc.currency = input.currency;
   if (input.surface) doc.surface = input.surface;
+  if (input.surfaceBreakdown) doc.surfaceBreakdown = input.surfaceBreakdown;
   if (input.profile) doc.profile = input.profile;
   if (typeof input.elevationGain === "number") {
     doc.elevationGain = input.elevationGain;

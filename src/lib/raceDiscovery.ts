@@ -132,6 +132,7 @@ export interface RaceDiscoveryResult {
   price?: number;
   currency?: string;
   surface?: "Road" | "Trail" | "Track" | "Mountain" | "Mixed";
+  surfaceBreakdown?: "100% Paved" | "Unpaved" | "Mixed";
   profile?: "flat" | "rolling" | "hilly" | "mountainous";
   elevationGain?: number;
   /** Always geometry-derived (no source states it) — set alongside
@@ -396,6 +397,29 @@ async function attachRoutePreview(
   }
 }
 
+/** Aggregators only state a breakdown when a page describes the
+ *  actual terrain; otherwise the surface class implies one (a Road
+ *  race is a paved race). Editor-reviewed like everything else. */
+function defaultSurfaceBreakdown(
+  result: RaceDiscoveryResult,
+  sourceNotes: string[],
+): void {
+  if (result.surfaceBreakdown || !result.surface) return;
+  const map: Record<string, "100% Paved" | "Unpaved" | "Mixed"> = {
+    Road: "100% Paved",
+    Track: "100% Paved",
+    Trail: "Unpaved",
+    Mountain: "Unpaved",
+    Mixed: "Mixed",
+  };
+  const breakdown = map[result.surface];
+  if (!breakdown) return;
+  result.surfaceBreakdown = breakdown;
+  sourceNotes.push(
+    `Surface breakdown "${breakdown}" defaulted from the ${result.surface} surface class (no source stated the composition).`,
+  );
+}
+
 /** Fallback when no Wikipedia article exists (the long tail —
  *  finishers.com lists manchester-half-marathon; Wikipedia
  *  doesn't). The aggregator matchers verify the race name
@@ -443,6 +467,7 @@ async function aggregatorOnlyDiscovery(
     price: agg.price,
     currency: agg.currency,
     surface: agg.surface,
+    surfaceBreakdown: agg.surfaceBreakdown,
     profile: agg.profile,
     elevationGain: agg.elevationGain,
     stravaRouteUrl: agg.stravaRouteUrl,
@@ -457,6 +482,7 @@ async function aggregatorOnlyDiscovery(
     result.raceCategoryTitle = category.title;
   }
 
+  defaultSurfaceBreakdown(result, sourceNotes);
   await Promise.all([
     applyGeoClimate(result, warnings),
     attachRoutePreview(result, sourceNotes, warnings),
@@ -670,6 +696,7 @@ export async function discoverRace(
       result.currency = agg.currency;
     }
     if (agg.surface) result.surface = agg.surface;
+    if (agg.surfaceBreakdown) result.surfaceBreakdown = agg.surfaceBreakdown;
     if (agg.profile) result.profile = agg.profile;
     if (agg.elevationGain !== undefined) {
       result.elevationGain = agg.elevationGain;
@@ -679,6 +706,8 @@ export async function discoverRace(
     result.tags = finalizeTags(tags, agg.waTier);
     sourceNotes.push(...agg.notes);
     warnings.push(...agg.warnings);
+
+    defaultSurfaceBreakdown(result, sourceNotes);
 
     // ── Geocode + climate + route geometry (best-effort) ──────
     await Promise.all([

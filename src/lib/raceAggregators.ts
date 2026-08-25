@@ -95,6 +95,7 @@ export interface AggregatorFindings {
   price?: number;
   currency?: string;
   surface?: "Road" | "Trail" | "Track" | "Mountain" | "Mixed";
+  surfaceBreakdown?: "100% Paved" | "Unpaved" | "Mixed";
   profile?: "flat" | "rolling" | "hilly" | "mountainous";
   elevationGain?: number;
   stravaRouteUrl?: string;
@@ -383,6 +384,7 @@ interface AggregatorExtraction {
     confidence: "high" | "medium" | "low";
   } | null;
   surface: "Road" | "Trail" | "Track" | "Mountain" | "Mixed" | null;
+  surface_breakdown: "100% Paved" | "Unpaved" | "Mixed" | null;
   profile: "flat" | "rolling" | "hilly" | "mountainous" | null;
   elevation_gain_m: number | null;
   strava_route_url: string | null;
@@ -413,6 +415,7 @@ Extract, for THIS race's MAIN distance (not sibling events on the same weekend):
 2. "start_time" — the main race's local start time if stated ("10:30").
 3. "price" — the CURRENT individual entry price for the main distance, with ISO currency code. Aggregators often show "From X" or tiered "until <date>" pricing — use the currently-advertised figure and put any qualifier in "note". Beware converted display prices (ahotu shows a chosen display currency); prefer the price stated with the race's own currency (finishers' bib-price prose).
 4. "surface" — one of Road | Trail | Track | Mountain | Mixed, from the pages' categorization ("Road Running" → Road, "Trail running" → Trail). Null if unstated.
+4b. "surface_breakdown" — one of "100% Paved" | "Unpaved" | "Mixed", ONLY when a page states the course's actual surface composition (terrain listed as asphalt/tarmac → "100% Paved"; gravel/dirt/grass only → "Unpaved"; a stated combination → "Mixed"). Null when no page describes the surface itself — do NOT infer it from the race type.
 5. "profile" — one of flat | rolling | hilly | mountainous ONLY if a page characterizes the course ("the race is very flat" → flat). Null if unstated.
 6. "elevation_gain_m" — the course's elevation gain in meters if stated (ahotu's Strava embed shows "Elev Gain"). Integer.
 7. "strava_route_url" — the route's canonical https://strava.com/routes/<id> URL. It is often URL-encoded inside a strava.app.link's fallback_url query parameter — decode and return the strava.com/routes form. Only fall back to the strava.app.link (INCLUDING its full query string) when no route id is recoverable.
@@ -427,6 +430,7 @@ Rules: ONLY stated facts, never estimates. Low confidence → null. Output STRIC
   "start_time": { "value": "…" or null, "source_quote": "…" } or null,
   "price": { "amount": 89, "currency": "EUR", "note": "until July 31, 2025" or null, "source_quote": "…", "confidence": "high" | "medium" | "low" } or null,
   "surface": "Road" | "Trail" | "Track" | "Mountain" | "Mixed" | null,
+  "surface_breakdown": "100% Paved" | "Unpaved" | "Mixed" | null,
   "profile": "flat" | "rolling" | "hilly" | "mountainous" | null,
   "elevation_gain_m": 142 or null,
   "strava_route_url": "…" or null,
@@ -587,6 +591,13 @@ export async function gatherAggregatorData(input: {
   }
 
   if (extraction.surface) findings.surface = extraction.surface;
+  const BREAKDOWNS = ["100% Paved", "Unpaved", "Mixed"] as const;
+  if (
+    extraction.surface_breakdown &&
+    (BREAKDOWNS as readonly string[]).includes(extraction.surface_breakdown)
+  ) {
+    findings.surfaceBreakdown = extraction.surface_breakdown;
+  }
   if (extraction.profile) findings.profile = extraction.profile;
   if (
     typeof extraction.elevation_gain_m === "number" &&
