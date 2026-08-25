@@ -84,3 +84,66 @@ export async function firecrawlScrape(
     clearTimeout(timer);
   }
 }
+
+const FIRECRAWL_SEARCH_ENDPOINT = "https://api.firecrawl.dev/v2/search";
+const FIRECRAWL_SEARCH_TIMEOUT_MS = 15_000;
+
+export interface FirecrawlSearchResult {
+  url: string;
+  title: string;
+  description?: string;
+}
+
+/** Web search through Firecrawl — used by the race pipelines to
+ *  find a race's page on an aggregator whose slug scheme doesn't
+ *  match a title guess (ahotu's "run-rome-the-marathon", finishers'
+ *  "utmb-r"). Scope the query with `site:` yourself. Empty array on
+ *  any failure or when no FIRECRAWL_API_KEY is configured. */
+export async function firecrawlSearch(
+  query: string,
+  limit = 5,
+): Promise<FirecrawlSearchResult[]> {
+  const apiKey = process.env.FIRECRAWL_API_KEY;
+  if (!apiKey) return [];
+
+  const controller = new AbortController();
+  const timer = setTimeout(
+    () => controller.abort(),
+    FIRECRAWL_SEARCH_TIMEOUT_MS,
+  );
+  try {
+    const res = await fetch(FIRECRAWL_SEARCH_ENDPOINT, {
+      method: "POST",
+      signal: controller.signal,
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query, limit }),
+    });
+    if (!res.ok) {
+      console.log(`[firecrawl] search HTTP ${res.status} for "${query}"`);
+      return [];
+    }
+    const data = (await res.json()) as {
+      success?: boolean;
+      data?: {
+        web?: { url?: string; title?: string; description?: string }[];
+      };
+    };
+    return (data.data?.web ?? [])
+      .filter((r) => r.url)
+      .map((r) => ({
+        url: r.url!,
+        title: r.title ?? "",
+        description: r.description,
+      }));
+  } catch (err) {
+    console.log(
+      `[firecrawl] search failed for "${query}": ${(err as Error).message}`,
+    );
+    return [];
+  } finally {
+    clearTimeout(timer);
+  }
+}

@@ -118,11 +118,54 @@ field. Slice 1 covers the highest-value, zero-cost source: Wikipedia.
   MAPBOX_GEOCODING_TOKEN (climate/elevation skip too, since they need
   the resolved point).
 
+## Slice 3b — aggregator sources in "Add race" (SHIPPED 2026-08-25)
+
+- `src/lib/raceAggregators.ts` — three sources filling what Wikipedia
+  doesn't state, run in parallel after identity:
+  - **World Athletics label calendar** — every label race of the season
+    server-rendered as JSON in `__NEXT_DATA__` (name/venue/country/
+    startDate/competitionSubgroup). Pure structured matching (token
+    score + IOC-country filter + city-in-venue bonus, no LLM) →
+    authoritative label-tier tag AND next-edition date. The calendar's
+    CURRENT tier supersedes any WA tag from a stale Wikipedia infobox
+    (Paris: infobox said Elite, calendar says Gold → Gold only).
+  - **finishers.com** — static HTML (slug probe → Firecrawl-search
+    fallback for slugs like "utmb-r"): date + explicit "Date
+    confirmed" status, bib price + currency, surface, badge strip.
+  - **ahotu.com** — Firecrawl search + render: date with start time,
+    Strava route embed (elevation gain; route URL surfaced for the
+    editor to export the GPX — the gpxFile upload stays manual).
+- One combined Haiku pass over the aggregator texts. Two hard-won
+  correctness rules: (1) a distance-class guard on all source matching
+  ("Manchester Half Marathon" must not match ahotu's "City of
+  Manchester Marathon" — a full marathon in New Hampshire); (2) the
+  prompt instructs the model to IGNORE a wrong-race source and extract
+  from the rest — its first instinct was to refuse entirely when
+  sources described different races, discarding the good data too.
+- **No-Wikipedia fallback**: when no article exists (the long tail —
+  finishers lists manchester-half-marathon, Wikipedia doesn't), the
+  aggregators alone establish identity (their match gates verify the
+  name) and prefill date/price/surface/profile/location/category;
+  course records simply stay empty. Verified: Manchester Half gets
+  city/country/distance/category/confirmed-date/surface/profile +
+  climate on the exact race-day window.
+- Aggregator event date upgrades the climate lookup from whole-month
+  to a ±7-day window around race day. Date conflicts: WA wins with a
+  warning (Paris: aggregators showed the 2027 open-registration
+  edition vs WA's 2026-04-12).
+- `src/lib/modelJson.ts` — tolerant model-JSON parsing (fence strip +
+  first-balanced-object) after Haiku appended trailing prose once.
+- Form gains: Event & course section (event date + confirmed/estimated
+  status, start time, price + currency, surface, profile, elevation
+  gain), source-provenance notes, Strava GPX pointer.
+- WA calendar caveat: fetched plain (no Firecrawl fallback) — if its
+  Cloudflare starts 403ing Vercel IPs like marathontours did, label
+  checks degrade to a warning.
+
 ## Later slices (not this one)
 - Parallel.ai Task API (or Anthropic web search) for open-web discovery
-  when no Wikipedia article exists at all.
+  when neither Wikipedia nor the aggregators know the race.
 - Wikidata sitelinks as a discovery assist; infobox `Teilnehmer`/
   participants for field size history.
-- Surface / surfaceBreakdown / profile / elevationGain / elevationLoss —
-  need course-description reading beyond infobox facts; not attempted
-  yet by either tool.
+- surfaceBreakdown / elevationLoss — still unattempted; GPX upload
+  automation (Strava export needs auth).

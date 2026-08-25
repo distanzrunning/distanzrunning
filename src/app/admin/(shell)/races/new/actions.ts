@@ -90,6 +90,15 @@ export interface CreateRaceDraftInput {
   averageTemperature?: number;
   humidity?: number;
   fieldSize?: number;
+  /** YYYY-MM-DD — written as noon-UTC datetime, matching the date-
+   *  refresh pipeline's convention. */
+  eventDate?: string;
+  startTime?: string;
+  price?: number;
+  currency?: string;
+  surface?: string;
+  profile?: string;
+  elevationGain?: number;
   mensCourseRecord?: { time?: string; athlete?: string; country?: string };
   womensCourseRecord?: { time?: string; athlete?: string; country?: string };
   mensWheelchairCourseRecord?: {
@@ -153,6 +162,19 @@ export async function createRaceDraft(
   }
   if (typeof input.humidity === "number") doc.humidity = input.humidity;
   if (typeof input.fieldSize === "number") doc.fieldSize = input.fieldSize;
+  if (input.eventDate && /^\d{4}-\d{2}-\d{2}$/.test(input.eventDate)) {
+    doc.eventDate = `${input.eventDate}T12:00:00Z`;
+  }
+  if (input.startTime) doc.startTime = input.startTime;
+  if (typeof input.price === "number" && input.price > 0) {
+    doc.price = input.price;
+  }
+  if (input.currency) doc.currency = input.currency;
+  if (input.surface) doc.surface = input.surface;
+  if (input.profile) doc.profile = input.profile;
+  if (typeof input.elevationGain === "number") {
+    doc.elevationGain = input.elevationGain;
+  }
 
   const RECORD_FIELDS: {
     key: keyof CreateRaceDraftInput;

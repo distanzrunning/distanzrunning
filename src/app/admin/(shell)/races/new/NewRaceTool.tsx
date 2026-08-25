@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/Input";
 import { MultiSelect, type MultiSelectItem } from "@/components/ui/MultiSelect";
 import Select from "@/components/ui/Select";
 import { useToast } from "@/components/ui/Toast";
+import { CURRENCY_OPTIONS } from "@/lib/currencies";
 import type { RaceDiscoveryResult } from "@/lib/raceDiscovery";
 
 import {
@@ -32,10 +33,14 @@ import {
   type CreateRaceDraftResult,
 } from "./actions";
 
+// Mirror of KNOWN_RACE_TAGS in src/lib/raceAggregators.ts —
+// duplicated (not imported) because that module instantiates the
+// server-side Anthropic client at import time.
 const KNOWN_TAG_ITEMS: MultiSelectItem[] = [
   "World Athletics Platinum Label",
   "World Athletics Gold Label",
   "World Athletics Elite Label",
+  "World Athletics Label",
   "AIMS Member Race",
   "SuperHalfs",
   "Boston Marathon Qualifier",
@@ -44,6 +49,9 @@ const KNOWN_TAG_ITEMS: MultiSelectItem[] = [
   "AbbottWMM MTT Age Group Qualifiers",
   "Womans Only",
 ].map((t) => ({ value: t, label: t }));
+
+const SURFACE_OPTIONS = ["Road", "Trail", "Track", "Mountain", "Mixed"];
+const PROFILE_OPTIONS = ["flat", "rolling", "hilly", "mountainous"];
 
 const MONTH_NAMES = [
   "", "January", "February", "March", "April", "May", "June",
@@ -68,6 +76,13 @@ interface DraftFormState {
   averageTemperature: string;
   humidity: string;
   fieldSize: string;
+  eventDate: string;
+  startTime: string;
+  price: string;
+  currency: string;
+  surface: string;
+  profile: string;
+  elevationGain: string;
   mensCourseRecord: RecordFields;
   womensCourseRecord: RecordFields;
   mensWheelchairCourseRecord: RecordFields;
@@ -90,6 +105,13 @@ const EMPTY_FORM: DraftFormState = {
   averageTemperature: "",
   humidity: "",
   fieldSize: "",
+  eventDate: "",
+  startTime: "",
+  price: "",
+  currency: "",
+  surface: "",
+  profile: "",
+  elevationGain: "",
   mensCourseRecord: {},
   womensCourseRecord: {},
   mensWheelchairCourseRecord: {},
@@ -114,6 +136,13 @@ function formFromDiscovery(r: RaceDiscoveryResult): DraftFormState {
       r.averageTemperature != null ? String(r.averageTemperature) : "",
     humidity: r.humidity != null ? String(r.humidity) : "",
     fieldSize: r.fieldSize != null ? String(r.fieldSize) : "",
+    eventDate: r.eventDate ?? "",
+    startTime: r.startTime ?? "",
+    price: r.price != null ? String(r.price) : "",
+    currency: r.currency ?? "",
+    surface: r.surface ?? "",
+    profile: r.profile ?? "",
+    elevationGain: r.elevationGain != null ? String(r.elevationGain) : "",
     mensCourseRecord: r.mensCourseRecord ?? {},
     womensCourseRecord: r.womensCourseRecord ?? {},
     mensWheelchairCourseRecord: r.mensWheelchairCourseRecord ?? {},
@@ -267,6 +296,15 @@ export default function NewRaceTool({
             : undefined,
           humidity: form.humidity ? Number(form.humidity) : undefined,
           fieldSize: form.fieldSize ? Number(form.fieldSize) : undefined,
+          eventDate: form.eventDate || undefined,
+          startTime: form.startTime.trim() || undefined,
+          price: form.price ? Number(form.price) : undefined,
+          currency: form.currency || undefined,
+          surface: form.surface || undefined,
+          profile: form.profile || undefined,
+          elevationGain: form.elevationGain
+            ? Number(form.elevationGain)
+            : undefined,
           mensCourseRecord: hasAny(form.mensCourseRecord)
             ? form.mensCourseRecord
             : undefined,
@@ -409,6 +447,14 @@ export default function NewRaceTool({
             </ul>
           )}
 
+          {discovery.sourceNotes.length > 0 && (
+            <ul className="m-0 flex list-disc flex-col gap-1 pl-5 text-copy-13 text-textSubtler">
+              {discovery.sourceNotes.map((n, i) => (
+                <li key={i}>{n}</li>
+              ))}
+            </ul>
+          )}
+
           {/* Identity */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <Input
@@ -461,16 +507,117 @@ export default function NewRaceTool({
               onChange={(e) => update("officialWebsite", e.target.value)}
               className="sm:col-span-2"
             />
-            {discovery.eventMonth && (
+            {!form.eventDate && discovery.eventMonth && (
               <div className="flex flex-col justify-end gap-1.5 pb-2">
                 <span className="text-copy-13 text-textSubtler">
                   Typically held in{" "}
                   <span className="text-textDefault">
                     {MONTH_NAMES[discovery.eventMonth]}
                   </span>{" "}
-                  — set the exact event date in Studio.
+                  — set the exact event date below or in Studio.
                 </span>
               </div>
+            )}
+          </div>
+
+          {/* Event & course */}
+          <div className="flex flex-col gap-2">
+            <span className="text-heading-14 text-textDefault">
+              Event &amp; course
+            </span>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div className="flex flex-col gap-1.5">
+                <span className="text-copy-13 text-textSubtle">
+                  Event date
+                  {discovery.eventDateStatus
+                    ? ` (${discovery.eventDateStatus})`
+                    : ""}
+                </span>
+                <Input
+                  type="date"
+                  value={form.eventDate}
+                  onChange={(e) => update("eventDate", e.target.value)}
+                />
+              </div>
+              <Input
+                label="Start time (local)"
+                placeholder="09:00"
+                value={form.startTime}
+                onChange={(e) => update("startTime", e.target.value)}
+              />
+              <Input
+                label="Entry price"
+                type="number"
+                step="0.01"
+                value={form.price}
+                onChange={(e) => update("price", e.target.value)}
+              />
+              <div className="flex flex-col gap-1.5">
+                <span className="text-copy-13 text-textSubtle">Currency</span>
+                <Select
+                  size="medium"
+                  value={form.currency}
+                  onChange={(e) => update("currency", e.target.value)}
+                >
+                  <option value="">— choose —</option>
+                  {CURRENCY_OPTIONS.map((c) => (
+                    <option key={c.value} value={c.value}>
+                      {c.value}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-copy-13 text-textSubtle">Surface</span>
+                <Select
+                  size="medium"
+                  value={form.surface}
+                  onChange={(e) => update("surface", e.target.value)}
+                >
+                  <option value="">— choose —</option>
+                  {SURFACE_OPTIONS.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-copy-13 text-textSubtle">Profile</span>
+                <Select
+                  size="medium"
+                  value={form.profile}
+                  onChange={(e) => update("profile", e.target.value)}
+                >
+                  <option value="">— choose —</option>
+                  {PROFILE_OPTIONS.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+              <Input
+                label="Elevation gain (m)"
+                type="number"
+                value={form.elevationGain}
+                onChange={(e) => update("elevationGain", e.target.value)}
+              />
+            </div>
+            {discovery.stravaRouteUrl && (
+              <p className="m-0 text-copy-13 text-textSubtler">
+                Course GPX: the route is on{" "}
+                <a
+                  href={discovery.stravaRouteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-link underline"
+                >
+                  Strava
+                </a>{" "}
+                — export the GPX there and upload it to the draft in
+                Studio.
+              </p>
             )}
           </div>
 

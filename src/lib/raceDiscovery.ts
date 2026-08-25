@@ -9,14 +9,18 @@
 // before createRaceDraft() (in the admin actions.ts) writes it as
 // an unpublished DRAFT.
 //
-// Deliberately narrow scope: this tool establishes IDENTITY and the
-// facts Wikipedia states outright (title, location, distance,
-// category, tags, course records, field size, official site,
-// climate). It does NOT read the official website (start time,
-// entry price, expo) — that's the existing /admin/races/enrichment
-// Scan button's job, which runs on drafts too once this tool
-// prefills officialWebsite. Two focused tools, no duplicated
-// Firecrawl-reading logic.
+// Scope: this tool establishes IDENTITY via Wikipedia (title,
+// location, distance, category, tags, course records, field size,
+// official site) and then fills the scheduling/commercial facts
+// from aggregator sources (src/lib/raceAggregators.ts — the World
+// Athletics label calendar, finishers.com, ahotu.com: next event
+// date, label tier, price, surface, profile, elevation gain,
+// Strava route) plus deterministic geo/climate. It does NOT read
+// the race's own official website (start time verification, expo)
+// — that's the existing /admin/races/enrichment Scan button's job,
+// which runs on drafts too once this tool prefills
+// officialWebsite. Two focused tools, no duplicated site-reading
+// logic.
 //
 // Records/field-size reuse raceEnrichment's extractFromWikitext
 // verbatim (same trusted prompt, same page_is_this_race gate now
@@ -29,6 +33,11 @@ import { createClient } from "next-sanity";
 import { fetchClimateNormals, fetchElevation } from "@/lib/climate";
 import { geocodeAddress } from "@/lib/geocode";
 import { IOC_COUNTRY_CODES } from "@/lib/iocCountries";
+import { parseModelJson } from "@/lib/modelJson";
+import {
+  gatherAggregatorData,
+  KNOWN_RACE_TAGS,
+} from "@/lib/raceAggregators";
 import {
   extractFromWikitext,
   normalizeRecordTime,
@@ -111,7 +120,24 @@ export interface RaceDiscoveryResult {
   averageTemperature?: number;
   humidity?: number;
 
+  // Aggregator facts (World Athletics label calendar, finishers.com,
+  // ahotu.com — see src/lib/raceAggregators.ts)
+  eventDate?: string; // YYYY-MM-DD, next edition
+  eventDateStatus?: "confirmed" | "estimated";
+  startTime?: string;
+  price?: number;
+  currency?: string;
+  surface?: "Road" | "Trail" | "Track" | "Mountain" | "Mixed";
+  profile?: "flat" | "rolling" | "hilly" | "mountainous";
+  elevationGain?: number;
+  /** Not writable as a field (gpxFile is an upload) — surfaced so
+   *  the editor can pull the GPX from Strava. */
+  stravaRouteUrl?: string;
+
   reasoning?: string;
+  /** Human-readable provenance lines ("Entry price 89 EUR from
+   *  finishers.com"). */
+  sourceNotes: string[];
   warnings: string[];
   candidatesConsidered: WikiPageCandidate[];
 }
@@ -119,19 +145,6 @@ export interface RaceDiscoveryResult {
 // ---------------------------------------------------------------------------
 // Identity + facts extraction (city/country/distance/site/tags/month)
 // ---------------------------------------------------------------------------
-
-const KNOWN_TAGS = [
-  "World Athletics Platinum Label",
-  "World Athletics Gold Label",
-  "World Athletics Elite Label",
-  "AIMS Member Race",
-  "SuperHalfs",
-  "Boston Marathon Qualifier",
-  "Abbott World Marathon Major",
-  "AbbottWMM Candidate",
-  "AbbottWMM MTT Age Group Qualifiers",
-  "Womans Only",
-];
 
 interface FactsExtraction {
   city: string | null;
@@ -161,7 +174,7 @@ Extract:
 - "distance_km": the race's exact distance in kilometers as a number (e.g. 42.195 for a marathon, 21.0975 for a half marathon). Use the precise figure if stated; if the article only names the race TYPE (marathon/half marathon/10K) without an exact figure, use the standard distance for that type.
 - "official_website": the race's own official site URL, if the infobox states one (not a Wikipedia link, not a sponsor/ticket site).
 - "event_month": the month the race is typically held, as a number 1–12 (e.g. article says "held annually in April" → 4). Null if not stated or the race has no fixed month.
-- "tags": zero or more labels that apply, chosen ONLY from this list — do not invent new ones: ${JSON.stringify(KNOWN_TAGS)}. Base this on what the article states (e.g. "World Athletics Gold Label road race", "AIMS member"). Leave empty if none are clearly stated.
+- "tags": zero or more labels that apply, chosen ONLY from this list — do not invent new ones: ${JSON.stringify(KNOWN_RACE_TAGS)}. Base this on what the article states (e.g. "World Athletics Gold Label road race", "AIMS member"). Leave empty if none are clearly stated.
 
 Output STRICT JSON only — no markdown fences, no prose:
 
@@ -186,11 +199,7 @@ ${wikitext}`;
   });
   const block = response.content[0];
   if (block.type !== "text") throw new Error("Unexpected response block type");
-  const jsonText = block.text
-    .trim()
-    .replace(/^```(?:json)?\s*/i, "")
-    .replace(/\s*```$/i, "");
-  return JSON.parse(jsonText) as FactsExtraction;
+  return parseModelJson<FactsExtraction>(block.text);
 }
 
 // ---------------------------------------------------------------------------
@@ -239,10 +248,141 @@ export interface DiscoverRaceInput {
   country?: string;
 }
 
+/** WA-tier tag hygiene:
+ *  - the WA label calendar's CURRENT tier (when matched) supersedes
+ *    every other WA tag — a stale Wikipedia infobox saying "Elite"
+ *    must not coexist with the calendar's "Gold";
+ *  - otherwise, a specific tier supersedes the base "World
+ *    Athletics Label" tag — never carry both. */
+function finalizeTags(tags: Set<string>, waTier?: string): string[] {
+  if (waTier) {
+    for (const t of [...tags]) {
+      if (/^World Athletics( Platinum| Gold| Elite)? Label$/.test(t)) {
+        tags.delete(t);
+      }
+    }
+    tags.add(waTier);
+  } else if (
+    [...tags].some((t) =>
+      /^World Athletics (Platinum|Gold|Elite) Label$/.test(t),
+    )
+  ) {
+    tags.delete("World Athletics Label");
+  }
+  return [...tags];
+}
+
+/** Geocode the race's city/country, then fill altitude + climate
+ *  normals (±7-day window when an exact event date is known, else
+ *  the typical month). Mutates `result` + `warnings` — shared by
+ *  the Wikipedia path and the aggregator-only fallback. */
+async function applyGeoClimate(
+  result: RaceDiscoveryResult,
+  warnings: string[],
+): Promise<void> {
+  if (!result.city && !result.country) return;
+  const place = [result.city, result.country].filter(Boolean).join(", ");
+  const geo = await geocodeAddress(place);
+  if (!geo) {
+    warnings.push(`Could not geocode "${place}" — location left unset.`);
+    return;
+  }
+  result.location = { lat: geo.lat, lng: geo.lng };
+  const eventDay = result.eventDate
+    ? {
+        month: Number(result.eventDate.slice(5, 7)),
+        day: Number(result.eventDate.slice(8, 10)),
+      }
+    : result.eventMonth
+      ? { month: result.eventMonth, day: undefined }
+      : null;
+  const [elevation, climate] = await Promise.all([
+    fetchElevation(geo.lat, geo.lng),
+    eventDay
+      ? fetchClimateNormals(geo.lat, geo.lng, eventDay.month, eventDay.day)
+      : Promise.resolve(null),
+  ]);
+  if (elevation !== null) result.altitude = elevation;
+  if (climate) {
+    result.averageTemperature = climate.averageTemperature;
+    result.humidity = climate.humidity;
+  } else if (!eventDay) {
+    warnings.push(
+      "No event date or month found — skipped average temperature/humidity lookup.",
+    );
+  }
+}
+
+/** Fallback when no Wikipedia article exists (the long tail —
+ *  finishers.com lists manchester-half-marathon; Wikipedia
+ *  doesn't). The aggregator matchers verify the race name
+ *  themselves, so a match still establishes identity; course
+ *  records and field size just stay empty. */
+async function aggregatorOnlyDiscovery(
+  queryTitle: string,
+  input: DiscoverRaceInput,
+  sourceNotes: string[],
+  warnings: string[],
+  candidatesConsidered: WikiPageCandidate[],
+): Promise<RaceDiscoveryResult> {
+  const agg = await gatherAggregatorData({
+    title: queryTitle,
+    city: input.city,
+    country: input.country,
+  });
+  if (agg.matchedSources.length === 0) {
+    return {
+      status: "not_found",
+      message:
+        "No Wikipedia article or aggregator page (finishers.com, ahotu.com, World Athletics) matched this search.",
+      sourceNotes,
+      warnings,
+      candidatesConsidered,
+    };
+  }
+
+  warnings.push(
+    `No Wikipedia article found — prefilled from ${agg.matchedSources.join(" + ")} only; course records and field size are not available from these sources.`,
+  );
+  sourceNotes.push(...agg.notes);
+  warnings.push(...agg.warnings);
+
+  const result: RaceDiscoveryResult = {
+    status: "found",
+    title: queryTitle,
+    city: agg.city ?? input.city,
+    country: agg.country ?? input.country,
+    distance: agg.distanceKm,
+    tags: finalizeTags(new Set(agg.labels), agg.waTier),
+    eventDate: agg.eventDate,
+    eventDateStatus: agg.eventDateStatus,
+    startTime: agg.startTime,
+    price: agg.price,
+    currency: agg.currency,
+    surface: agg.surface,
+    profile: agg.profile,
+    elevationGain: agg.elevationGain,
+    stravaRouteUrl: agg.stravaRouteUrl,
+    sourceNotes,
+    warnings,
+    candidatesConsidered,
+  };
+
+  const category = await matchRaceCategory(result.distance);
+  if (category) {
+    result.raceCategoryId = category.id;
+    result.raceCategoryTitle = category.title;
+  }
+
+  await applyGeoClimate(result, warnings);
+  return result;
+}
+
 export async function discoverRace(
   input: DiscoverRaceInput,
 ): Promise<RaceDiscoveryResult> {
   const warnings: string[] = [];
+  const sourceNotes: string[] = [];
   const queryTitle = input.query.trim();
 
   // ── Duplicate check first — never spend API calls on a race that
@@ -261,6 +401,7 @@ export async function discoverRace(
         title: existing.title,
         slug: existing.slug,
       },
+      sourceNotes,
       warnings,
       candidatesConsidered: [],
     };
@@ -286,12 +427,14 @@ export async function discoverRace(
   }
 
   if (candidates.length === 0) {
-    return {
-      status: "not_found",
-      message: "No Wikipedia article matched this search.",
+    // No Wikipedia article — the aggregators may still know it.
+    return aggregatorOnlyDiscovery(
+      queryTitle,
+      input,
+      sourceNotes,
       warnings,
       candidatesConsidered,
-    };
+    );
   }
 
   // ── Fetch + identity-gate + extract, trying each candidate ────
@@ -363,9 +506,20 @@ export async function discoverRace(
       reasoning: [recordExtraction.reasoning, facts?.reasoning]
         .filter(Boolean)
         .join(" "),
+      sourceNotes,
       warnings,
       candidatesConsidered,
     };
+
+    // ── Aggregators (WA label calendar, finishers, ahotu) ─────
+    // Kicked off NOW — identity + city/country are settled — and
+    // awaited before climate so an exact event date can tighten
+    // the climate window from whole-month to ±7 days.
+    const aggregatorsPromise = gatherAggregatorData({
+      title: result.title!,
+      city: result.city,
+      country: result.country,
+    });
 
     // Course records — same validation raceEnrichment applies
     // (normalize time, verify IOC code) so a bad extraction can't
@@ -410,45 +564,47 @@ export async function discoverRace(
       );
     }
 
-    // ── Geocode + climate (independent of Wikipedia; best-effort) ─
-    if (result.city || result.country) {
-      const place = [result.city, result.country].filter(Boolean).join(", ");
-      const geo = await geocodeAddress(place);
-      if (geo) {
-        result.location = { lat: geo.lat, lng: geo.lng };
-        const [elevation, climate] = await Promise.all([
-          fetchElevation(geo.lat, geo.lng),
-          result.eventMonth
-            ? fetchClimateNormals(geo.lat, geo.lng, result.eventMonth)
-            : Promise.resolve(null),
-        ]);
-        if (elevation !== null) result.altitude = elevation;
-        if (climate) {
-          result.averageTemperature = climate.averageTemperature;
-          result.humidity = climate.humidity;
-        } else if (!result.eventMonth) {
-          warnings.push(
-            "No event month found — skipped average temperature/humidity lookup.",
-          );
-        }
-      } else {
-        warnings.push(`Could not geocode "${place}" — location left unset.`);
-      }
+    // ── Merge aggregator findings ─────────────────────────────
+    const agg = await aggregatorsPromise;
+    if (agg.eventDate) {
+      result.eventDate = agg.eventDate;
+      result.eventDateStatus = agg.eventDateStatus;
     }
+    if (agg.startTime) result.startTime = agg.startTime;
+    if (agg.price && agg.currency) {
+      result.price = agg.price;
+      result.currency = agg.currency;
+    }
+    if (agg.surface) result.surface = agg.surface;
+    if (agg.profile) result.profile = agg.profile;
+    if (agg.elevationGain !== undefined) {
+      result.elevationGain = agg.elevationGain;
+    }
+    if (agg.stravaRouteUrl) result.stravaRouteUrl = agg.stravaRouteUrl;
+    for (const label of agg.labels) tags.add(label);
+    result.tags = finalizeTags(tags, agg.waTier);
+    sourceNotes.push(...agg.notes);
+    warnings.push(...agg.warnings);
+
+    // ── Geocode + climate (independent of Wikipedia; best-effort) ─
+    await applyGeoClimate(result, warnings);
 
     if (!result.officialWebsite) {
       warnings.push(
-        "No official website found — course records/field size came from Wikipedia only; add a website to unlock the Enrichment scan for start time/price/expo.",
+        "No official website found — add one to unlock the Enrichment scan for expo details.",
       );
     }
 
     return result;
   }
 
-  return {
-    status: "not_found",
-    message: "Candidate pages were fetched but none matched this search.",
+  // Wikipedia candidates existed but none passed the identity gate
+  // — same fallback as having none at all.
+  return aggregatorOnlyDiscovery(
+    queryTitle,
+    input,
+    sourceNotes,
     warnings,
     candidatesConsidered,
-  };
+  );
 }
