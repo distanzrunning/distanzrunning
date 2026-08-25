@@ -402,11 +402,14 @@ export async function fetchPageCategories(
   }
 }
 
-/** The article's lead image ("page image") + its Commons licence
- *  metadata — used by Add Race to offer a temporary mainImage
- *  placeholder. thumbUrl is a ≤1600px render (never the original —
- *  Commons originals can be enormous scans). */
+/** Photo candidates from a Wikipedia article — offered by Add Race
+ *  as TEMPORARY mainImage placeholders. JPEG-only ≥500×350 filters
+ *  out the flags/logos/icons/diagrams every article carries; the
+ *  lead ("page") image sorts first, the rest by resolution.
+ *  thumbUrl is a ≤640px render for the picker grid — the upload
+ *  step asks for its own ≤1600px render via fetchImageRenderUrl. */
 export interface WikiPageImage {
+  lang: string;
   thumbUrl: string;
   fileName: string;
   filePageUrl: string;
@@ -416,61 +419,102 @@ export interface WikiPageImage {
   artist?: string;
 }
 
-export async function fetchPageImage(
+const stripHtmlTags = (s: string) =>
+  s.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+
+export async function fetchPageImages(
   lang: string,
   title: string,
-): Promise<WikiPageImage | null> {
-  const url =
-    `https://${lang}.wikipedia.org/w/api.php?action=query&prop=pageimages` +
-    `&piprop=thumbnail%7Cname&pithumbsize=1600` +
-    `&titles=${encodeURIComponent(title)}&redirects=1&format=json&formatversion=2`;
+): Promise<WikiPageImage[]> {
   try {
-    const data = (await fetchWikiJson(url)) as {
-      query?: {
-        pages?: {
-          thumbnail?: { source: string; width: number; height: number };
-          pageimage?: string;
-        }[];
-      };
-    };
-    const page = data.query?.pages?.[0];
-    if (!page?.thumbnail?.source || !page.pageimage) return null;
-    const image: WikiPageImage = {
-      thumbUrl: page.thumbnail.source,
-      fileName: page.pageimage,
-      filePageUrl: `https://${lang}.wikipedia.org/wiki/File:${encodeURIComponent(page.pageimage)}`,
-      width: page.thumbnail.width,
-      height: page.thumbnail.height,
-    };
-    // Licence metadata is best-effort decoration — never blocks the
-    // image itself.
-    try {
-      const infoUrl =
-        `https://${lang}.wikipedia.org/w/api.php?action=query` +
-        `&titles=${encodeURIComponent(`File:${page.pageimage}`)}` +
-        `&prop=imageinfo&iiprop=extmetadata&format=json&formatversion=2`;
-      const info = (await fetchWikiJson(infoUrl)) as {
+    const [leadData, listData] = await Promise.all([
+      fetchWikiJson(
+        `https://${lang}.wikipedia.org/w/api.php?action=query&prop=pageimages` +
+          `&piprop=name&titles=${encodeURIComponent(title)}&redirects=1&format=json&formatversion=2`,
+      ) as Promise<{
+        query?: { pages?: { pageimage?: string }[] };
+      }>,
+      fetchWikiJson(
+        `https://${lang}.wikipedia.org/w/api.php?action=query&generator=images` +
+          `&titles=${encodeURIComponent(title)}&gimlimit=50` +
+          `&prop=imageinfo&iiprop=url%7Csize%7Cmime%7Cextmetadata&iiurlwidth=640` +
+          `&redirects=1&format=json&formatversion=2`,
+      ) as Promise<{
         query?: {
           pages?: {
+            title?: string;
             imageinfo?: {
+              mime?: string;
+              width?: number;
+              height?: number;
+              thumburl?: string;
+              thumbwidth?: number;
+              thumbheight?: number;
               extmetadata?: Record<string, { value?: string }>;
             }[];
           }[];
         };
-      };
-      const md = info.query?.pages?.[0]?.imageinfo?.[0]?.extmetadata;
-      const stripTags = (s: string) =>
-        s.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
-      if (md?.LicenseShortName?.value) {
-        image.license = stripTags(md.LicenseShortName.value);
-      }
-      if (md?.Artist?.value) {
-        image.artist = stripTags(md.Artist.value).slice(0, 120);
-      }
-    } catch {
-      // keep the image without licence decoration
+      }>,
+    ]);
+    const leadFile = leadData.query?.pages?.[0]?.pageimage;
+    const images: (WikiPageImage & { area: number })[] = [];
+    for (const page of listData.query?.pages ?? []) {
+      const ii = page.imageinfo?.[0];
+      if (!ii?.thumburl || !page.title) continue;
+      // Photos are JPEG (occasionally WebP); SVG/PNG are flags,
+      // logos, pictograms, and map diagrams.
+      if (ii.mime !== "image/jpeg" && ii.mime !== "image/webp") continue;
+      if ((ii.width ?? 0) < 500 || (ii.height ?? 0) < 350) continue;
+      const fileName = page.title.replace(/^[^:]+:/, "");
+      const md = ii.extmetadata;
+      images.push({
+        lang,
+        thumbUrl: ii.thumburl,
+        fileName,
+        filePageUrl: `https://${lang}.wikipedia.org/wiki/File:${encodeURIComponent(fileName)}`,
+        width: ii.thumbwidth ?? ii.width ?? 0,
+        height: ii.thumbheight ?? ii.height ?? 0,
+        license: md?.LicenseShortName?.value
+          ? stripHtmlTags(md.LicenseShortName.value)
+          : undefined,
+        // Unexpanded wikitext templates ("{{{1}}}") sometimes leak
+        // into Artist — drop those rather than show them.
+        artist:
+          md?.Artist?.value && !md.Artist.value.includes("{{")
+            ? stripHtmlTags(md.Artist.value).slice(0, 120)
+            : undefined,
+        area: (ii.width ?? 0) * (ii.height ?? 0),
+      });
     }
-    return image;
+    images.sort((a, b) => {
+      const aLead = a.fileName === leadFile ? 1 : 0;
+      const bLead = b.fileName === leadFile ? 1 : 0;
+      if (aLead !== bLead) return bLead - aLead;
+      return b.area - a.area;
+    });
+    return images.slice(0, 12).map(({ area: _area, ...img }) => img);
+  } catch {
+    return [];
+  }
+}
+
+/** Render URL for one file at the given width — MediaWiki returns
+ *  the unscaled original when the file is smaller than asked. */
+export async function fetchImageRenderUrl(
+  lang: string,
+  fileName: string,
+  width = 1600,
+): Promise<string | null> {
+  try {
+    const data = (await fetchWikiJson(
+      `https://${lang}.wikipedia.org/w/api.php?action=query` +
+        `&titles=${encodeURIComponent(`File:${fileName}`)}` +
+        `&prop=imageinfo&iiprop=url&iiurlwidth=${width}&format=json&formatversion=2`,
+    )) as {
+      query?: { pages?: { imageinfo?: { thumburl?: string; url?: string }[] }[] };
+    };
+    const ii = data.query?.pages?.[0]?.imageinfo?.[0];
+    return ii?.thumburl ?? ii?.url ?? null;
   } catch {
     return null;
   }

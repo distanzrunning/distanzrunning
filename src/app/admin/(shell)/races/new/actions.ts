@@ -25,6 +25,7 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { discoverRace, type RaceDiscoveryResult } from "@/lib/raceDiscovery";
 import { slugifyTitle } from "@/lib/slugify";
 import { fetchStravaRoute, routeToGeoJson } from "@/lib/stravaRoute";
+import { fetchImageRenderUrl } from "@/lib/wikipedia";
 
 const sanityClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
@@ -119,12 +120,12 @@ export interface CreateRaceDraftInput {
    *  the race page prefers. Re-fetched server-side rather than
    *  round-tripping thousands of points through the client. */
   attachRouteFromStravaUrl?: string;
-  /** When set (editor accepted the Wikipedia lead image), the
-   *  server downloads this render and uploads it as mainImage — a
-   *  TEMPORARY placeholder; the asset keeps source + creditLine so
-   *  provenance survives into Studio. */
+  /** When set (editor picked one of the article's photos), the
+   *  server asks MediaWiki for a ≤1600px render of the file and
+   *  uploads it as mainImage — a TEMPORARY placeholder; the asset
+   *  keeps source + creditLine so provenance survives into Studio. */
   attachImageFromWikipedia?: {
-    thumbUrl: string;
+    lang: string;
     fileName: string;
     filePageUrl: string;
     license?: string;
@@ -278,9 +279,11 @@ export async function createRaceDraft(
   if (input.attachImageFromWikipedia) {
     const img = input.attachImageFromWikipedia;
     try {
+      const renderUrl = await fetchImageRenderUrl(img.lang, img.fileName);
+      if (!renderUrl) throw new Error("no render URL from MediaWiki");
       // Wikimedia asks for an identifying UA; anonymous fetches can
       // be rejected.
-      const res = await fetch(img.thumbUrl, {
+      const res = await fetch(renderUrl, {
         headers: {
           "User-Agent":
             "DistanzRunning/1.0 (https://distanzrunning.com; info@distanzrunning.com)",

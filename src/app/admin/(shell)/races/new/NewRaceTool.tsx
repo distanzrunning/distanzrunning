@@ -217,6 +217,7 @@ export default function NewRaceTool({
   const [form, setForm] = useState<DraftFormState>(EMPTY_FORM);
   const [attachRoute, setAttachRoute] = useState(true);
   const [attachImage, setAttachImage] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(0);
   const [created, setCreated] = useState<CreateRaceDraftResult | null>(null);
 
   const update = <K extends keyof DraftFormState>(
@@ -246,7 +247,8 @@ export default function NewRaceTool({
             Boolean(result.routePreview) &&
               !result.routePreview?.distanceMismatch,
           );
-          setAttachImage(Boolean(result.imagePreview));
+          setAttachImage(Boolean(result.imageOptions?.length));
+          setSelectedImage(0);
           showToast({
             message: `Found "${result.title}"`,
             description: "Review the prefilled fields below before creating.",
@@ -338,13 +340,14 @@ export default function NewRaceTool({
               ? discovery.stravaRouteUrl
               : undefined,
           attachImageFromWikipedia:
-            attachImage && discovery?.imagePreview
+            attachImage && discovery?.imageOptions?.[selectedImage]
               ? {
-                  thumbUrl: discovery.imagePreview.thumbUrl,
-                  fileName: discovery.imagePreview.fileName,
-                  filePageUrl: discovery.imagePreview.filePageUrl,
-                  license: discovery.imagePreview.license,
-                  artist: discovery.imagePreview.artist,
+                  lang: discovery.imageOptions[selectedImage].lang,
+                  fileName: discovery.imageOptions[selectedImage].fileName,
+                  filePageUrl:
+                    discovery.imageOptions[selectedImage].filePageUrl,
+                  license: discovery.imageOptions[selectedImage].license,
+                  artist: discovery.imageOptions[selectedImage].artist,
                 }
               : undefined,
         };
@@ -700,41 +703,64 @@ export default function NewRaceTool({
             ) : null}
           </div>
 
-          {discovery.imagePreview && (
+          {discovery.imageOptions && discovery.imageOptions.length > 0 && (
             <div className="flex flex-col gap-2">
-              <span className="text-copy-13 text-textSubtle">Main image</span>
-              {/* External Wikimedia render, admin-only preview. */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={discovery.imagePreview.thumbUrl}
-                alt={`Wikipedia lead image for ${form.title}`}
-                width={discovery.imagePreview.width}
-                height={discovery.imagePreview.height}
-                className="w-full max-w-[420px] rounded-sm border border-borderSubtle"
-              />
-              <p className="m-0 text-copy-13 text-textSubtler">
-                Lead image from the{" "}
-                <a
-                  href={discovery.imagePreview.filePageUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-link underline"
-                >
-                  Wikipedia article
-                </a>
-                {" — "}
-                {[
-                  discovery.imagePreview.license,
-                  discovery.imagePreview.artist,
-                ]
-                  .filter(Boolean)
-                  .join(", ") || "licence unstated"}
-                . Temporary placeholder — replace before publish.
-              </p>
+              <span className="text-copy-13 text-textSubtle">
+                Main image — pick one from the Wikipedia article
+              </span>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {discovery.imageOptions.map((img, i) => (
+                  <button
+                    key={img.fileName}
+                    type="button"
+                    onClick={() => {
+                      setSelectedImage(i);
+                      setAttachImage(true);
+                    }}
+                    aria-pressed={i === selectedImage}
+                    className={`relative overflow-hidden rounded-sm border transition-opacity ${
+                      i === selectedImage
+                        ? "border-transparent ring-2 ring-[color:var(--ds-blue-700)]"
+                        : "border-borderSubtle opacity-80 hover:opacity-100"
+                    }`}
+                  >
+                    {/* External Wikimedia render, admin-only preview. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={img.thumbUrl}
+                      alt={img.fileName}
+                      width={img.width}
+                      height={img.height}
+                      loading="lazy"
+                      className="aspect-[3/2] w-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+              {discovery.imageOptions[selectedImage] && (
+                <p className="m-0 text-copy-13 text-textSubtler">
+                  {[
+                    discovery.imageOptions[selectedImage].license,
+                    discovery.imageOptions[selectedImage].artist,
+                  ]
+                    .filter(Boolean)
+                    .join(", ") || "Licence unstated"}{" "}
+                  —{" "}
+                  <a
+                    href={discovery.imageOptions[selectedImage].filePageUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-link underline"
+                  >
+                    file page
+                  </a>
+                  . Temporary placeholder — replace before publish.
+                </p>
+              )}
               <Checkbox
                 checked={attachImage}
                 onChange={(e) => setAttachImage(e.target.checked)}
-                label="Use as the main image (temporary placeholder)"
+                label="Use the selected image as the main image (temporary placeholder)"
               />
             </div>
           )}

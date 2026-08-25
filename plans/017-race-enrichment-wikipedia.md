@@ -206,22 +206,28 @@ field. Slice 1 covers the highest-value, zero-cost source: Wikipedia.
 
 ## Slice 3e — temporary main image from Wikipedia (SHIPPED 2026-08-25)
 
-- `fetchPageImage` (wikipedia.ts): the article's lead image via
-  `prop=pageimages` at a ≤1600px render (never the Commons original
-  — can be an enormous scan), plus best-effort licence metadata
-  (`imageinfo` extmetadata → LicenseShortName + Artist).
-- Review form: image preview with the licence/artist line and a
-  link to the Commons file page, plus a "Use as the main image
-  (temporary placeholder)" checkbox (default on when an image
-  exists). Copy states it's a placeholder to replace before publish.
-- On create: server downloads the render (Wikimedia-polite UA) and
-  uploads it as a Sanity image asset with `creditLine`
-  ("Anefo — CC0") and `source` ({name: "wikipedia", url: file page})
-  so provenance survives into Studio; sets `mainImage`. Best-effort
-  like the route — failure warns, never loses the draft.
-- Articles without a lead image (de 3-Länder-Marathon) degrade to
-  no block. Wikipedia-path only (aggregator-only races have no
-  article to take an image from).
+- `fetchPageImages` (wikipedia.ts): ALL the article's photos via
+  `generator=images` (640px renders + extmetadata licence in one
+  call), filtered to JPEG/WebP ≥500×350 — which cleanly drops the
+  flags/logos/pictograms/diagram PNGs every article carries
+  (Rotterdam: 11 files → 2 photos; Berlin: 7). Lead ("page") image
+  sorts first, rest by resolution; cap 12. Unexpanded "{{{1}}}"
+  Artist templates dropped.
+- Review form: a picker grid (aspect-3/2 tiles, selected = blue
+  ring — the DS selection accent), attribution line for the
+  SELECTED photo + Commons file-page link, and a "use selected
+  image (temporary placeholder)" checkbox (default on; clicking a
+  tile re-checks it). Copy says replace before publish.
+- On create: server asks MediaWiki for a ≤1600px render of the
+  chosen file (`fetchImageRenderUrl` — MediaWiki returns the
+  unscaled original when the file is smaller), downloads it
+  (Wikimedia-polite UA) and uploads a Sanity image asset with
+  `creditLine` ("Erik van Leeuwen — GFDL") and `source`
+  ({name: "wikipedia", url: file page}) so provenance survives into
+  Studio; sets `mainImage`. Best-effort — failure warns, never
+  loses the draft.
+- Articles without usable photos degrade to no block.
+  Wikipedia-path only (aggregator-only races have no article).
 
 ## Later slices (not this one)
 - Parallel.ai Task API (or Anthropic web search) for open-web discovery

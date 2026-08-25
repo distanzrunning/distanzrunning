@@ -50,7 +50,7 @@ import { encodeRoutePolyline, fetchStravaRoute } from "@/lib/stravaRoute";
 import {
   budgetWikitext,
   fetchPageCategories,
-  fetchPageImage,
+  fetchPageImages,
   fetchWikitext,
   languagesFor,
   parseWikipediaUrl,
@@ -156,10 +156,11 @@ export interface RaceDiscoveryResult {
      *  event's course) — the attach checkbox defaults off. */
     distanceMismatch: boolean;
   };
-  /** The Wikipedia article's lead image — offered as a TEMPORARY
-   *  mainImage placeholder (licence shown for the editor's call;
-   *  replace before publish). */
-  imagePreview?: WikiPageImage;
+  /** Photo candidates from the Wikipedia article (lead image
+   *  first) — the editor picks one as a TEMPORARY mainImage
+   *  placeholder (licence shown for their call; replace before
+   *  publish). */
+  imageOptions?: WikiPageImage[];
 
   reasoning?: string;
   /** Human-readable provenance lines ("Entry price 89 EUR from
@@ -564,13 +565,13 @@ export async function discoverRace(
     // Identity confirmed — pull the rest in parallel: basic facts
     // + Wikipedia's own category labels (the reliable "World
     // Marathon Majors" signal, more trustworthy than free-text).
-    const [facts, categories, pageImage] = await Promise.all([
+    const [facts, categories, pageImages] = await Promise.all([
       extractFacts(queryTitle, canonicalTitle, text).catch((err) => {
         warnings.push(`Facts extraction failed: ${(err as Error).message}`);
         return null;
       }),
       fetchPageCategories(candidate.lang, canonicalTitle),
-      fetchPageImage(candidate.lang, canonicalTitle),
+      fetchPageImages(candidate.lang, canonicalTitle),
     ]);
 
     const tags = new Set(facts?.tags ?? []);
@@ -597,15 +598,10 @@ export async function discoverRace(
       warnings,
       candidatesConsidered,
     };
-    if (pageImage) {
-      result.imagePreview = pageImage;
+    if (pageImages.length > 0) {
+      result.imageOptions = pageImages;
       sourceNotes.push(
-        `Lead image from the Wikipedia article (${[
-          pageImage.license,
-          pageImage.artist,
-        ]
-          .filter(Boolean)
-          .join(", ") || "licence unstated"}) — offered as a temporary main image.`,
+        `${pageImages.length} photo${pageImages.length === 1 ? "" : "s"} on the Wikipedia article — offered as temporary main-image candidates.`,
       );
     }
 
