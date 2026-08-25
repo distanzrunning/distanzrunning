@@ -229,6 +229,16 @@ field. Slice 1 covers the highest-value, zero-cost source: Wikipedia.
 - Articles without usable photos degrade to no block.
   Wikipedia-path only (aggregator-only races have no article).
 
+## Slice 3f — "Create & publish" (SHIPPED 2026-08-25)
+
+- Second button next to "Create draft": writes the doc WITHOUT the
+  `drafts.` prefix, live immediately. This amends the draft-only
+  rule deliberately (user call 2026-08-25): the review form IS the
+  human gate, so an explicit editor click may publish — nothing
+  automated ever does. Success panel: solid-green "Published" badge
+  + "View on site" link. Verified E2E: published Rotterdam rendered
+  the full public race page (hero, tags, date) before deletion.
+
 ## Entry-price sourcing (investigated + fixed 2026-08-25)
 
 - **finishers.com** carries the bib price ONLY for events its

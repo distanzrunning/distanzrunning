@@ -7,14 +7,15 @@
 // runDiscovery      → search + extract from Wikipedia + geocode +
 //                     climate (src/lib/raceDiscovery.ts). No writes.
 // createRaceDraft   → writes the (editor-reviewed, possibly edited)
-//                     result as an UNPUBLISHED Sanity draft. Never
-//                     publishes — same principle as every other
-//                     piece of this pipeline: a human confirms
-//                     before anything goes live. Slug auto-
-//                     generated + de-duplicated; officialWebsite
-//                     (when present) makes the new draft immediately
-//                     eligible for the Enrichment page's Scan
-//                     button (start time / price / expo).
+//                     result as an UNPUBLISHED Sanity draft — or,
+//                     when the editor explicitly clicks "Create &
+//                     publish", as a live published doc. Publishing
+//                     stays a human act (the review form IS the
+//                     gate); nothing automated ever publishes.
+//                     Slug auto-generated + de-duplicated;
+//                     officialWebsite (when present) makes the new
+//                     doc immediately eligible for the Enrichment
+//                     page's Scan button (start time/price/expo).
 
 import { randomUUID } from "node:crypto";
 
@@ -136,6 +137,9 @@ export interface CreateRaceDraftInput {
 export interface CreateRaceDraftResult {
   id: string;
   slug: string;
+  /** True when the editor chose "Create & publish" — the doc was
+   *  written WITHOUT the drafts. prefix and is live immediately. */
+  published: boolean;
   routeAttached?: boolean;
   routeWarning?: string;
   imageAttached?: boolean;
@@ -148,6 +152,9 @@ export async function createRaceDraft(
   await requireAdmin();
   const raw = String(formData.get("draft") ?? "");
   if (!raw) throw new Error("Missing draft payload");
+  // Publishing is still a human act — the editor reviewed the form
+  // and clicked "Create & publish". Nothing automated ever sets it.
+  const publish = formData.get("publish") === "1";
   const input = JSON.parse(raw) as CreateRaceDraftInput;
   const title = input.title?.trim();
   if (!title) throw new Error("Title is required");
@@ -155,7 +162,7 @@ export async function createRaceDraft(
   const slug = await uniqueSlug(title);
 
   const doc: { _id: string; _type: "raceGuide" } & Record<string, unknown> = {
-    _id: `drafts.${randomUUID()}`,
+    _id: publish ? randomUUID() : `drafts.${randomUUID()}`,
     _type: "raceGuide",
     title,
     slug: { _type: "slug", current: slug },
@@ -314,6 +321,7 @@ export async function createRaceDraft(
   return {
     id: created._id,
     slug,
+    published: publish,
     routeAttached,
     routeWarning,
     imageAttached,

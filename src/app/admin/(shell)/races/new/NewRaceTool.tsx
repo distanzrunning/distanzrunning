@@ -219,6 +219,7 @@ export default function NewRaceTool({
   const [attachImage, setAttachImage] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [created, setCreated] = useState<CreateRaceDraftResult | null>(null);
+  const [pendingPublish, setPendingPublish] = useState(false);
 
   const update = <K extends keyof DraftFormState>(
     key: K,
@@ -282,11 +283,12 @@ export default function NewRaceTool({
     });
   };
 
-  const handleCreate = () => {
+  const handleCreate = (publish: boolean) => {
     if (!form.title.trim()) {
       showToast({ message: "Title is required", variant: "error" });
       return;
     }
+    setPendingPublish(publish);
     startCreate(async () => {
       try {
         const draft: CreateRaceDraftInput = {
@@ -353,6 +355,7 @@ export default function NewRaceTool({
         };
         const fd = new FormData();
         fd.set("draft", JSON.stringify(draft));
+        fd.set("publish", publish ? "1" : "0");
         const result = await createRaceDraft(fd);
         setCreated(result);
         if (result.routeWarning) {
@@ -370,7 +373,9 @@ export default function NewRaceTool({
           });
         }
         showToast({
-          message: `Draft created: "${draft.title}"`,
+          message: publish
+            ? `Published: "${draft.title}"`
+            : `Draft created: "${draft.title}"`,
           description: draft.officialWebsite
             ? "Continue to Enrichment to scan the official site for start time, price, and expo details."
             : "No official website set — add one in Studio to unlock the Enrichment scan.",
@@ -840,11 +845,23 @@ export default function NewRaceTool({
           )}
 
           <div className="flex items-center gap-2">
-            <Button loading={creating} onClick={handleCreate}>
+            <Button
+              loading={creating && !pendingPublish}
+              disabled={creating}
+              onClick={() => handleCreate(false)}
+            >
               Create draft
             </Button>
+            <Button
+              variant="secondary"
+              loading={creating && pendingPublish}
+              disabled={creating}
+              onClick={() => handleCreate(true)}
+            >
+              Create & publish
+            </Button>
             <span className="text-copy-13 text-textSubtler">
-              Saved as an unpublished draft — nothing goes live yet.
+              Draft stays unpublished; publish goes live immediately.
             </span>
           </div>
         </section>
@@ -854,8 +871,8 @@ export default function NewRaceTool({
       {created && (
         <section className="material-base flex flex-col gap-4 p-5">
           <div className="flex items-center gap-2">
-            <Badge variant="green-subtle" size="sm">
-              Draft created
+            <Badge variant={created.published ? "green" : "green-subtle"} size="sm">
+              {created.published ? "Published" : "Draft created"}
             </Badge>
             {created.routeAttached && (
               <Badge variant="blue-subtle" size="sm">
@@ -872,6 +889,15 @@ export default function NewRaceTool({
             </span>
           </div>
           <div className="flex flex-wrap gap-2">
+            {created.published && (
+              <ButtonLink
+                href={`/races/${created.slug}`}
+                variant="secondary"
+                size="small"
+              >
+                View on site
+              </ButtonLink>
+            )}
             <ButtonLink
               href={`/admin/studio/structure/raceGuide;${created.id}`}
               variant="secondary"
