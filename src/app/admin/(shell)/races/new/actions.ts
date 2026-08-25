@@ -119,6 +119,17 @@ export interface CreateRaceDraftInput {
    *  the race page prefers. Re-fetched server-side rather than
    *  round-tripping thousands of points through the client. */
   attachRouteFromStravaUrl?: string;
+  /** When set (editor accepted the Wikipedia lead image), the
+   *  server downloads this render and uploads it as mainImage — a
+   *  TEMPORARY placeholder; the asset keeps source + creditLine so
+   *  provenance survives into Studio. */
+  attachImageFromWikipedia?: {
+    thumbUrl: string;
+    fileName: string;
+    filePageUrl: string;
+    license?: string;
+    artist?: string;
+  };
 }
 
 export interface CreateRaceDraftResult {
@@ -126,6 +137,8 @@ export interface CreateRaceDraftResult {
   slug: string;
   routeAttached?: boolean;
   routeWarning?: string;
+  imageAttached?: boolean;
+  imageWarning?: string;
 }
 
 export async function createRaceDraft(
@@ -260,6 +273,47 @@ export async function createRaceDraft(
     }
   }
 
+  let imageAttached = false;
+  let imageWarning: string | undefined;
+  if (input.attachImageFromWikipedia) {
+    const img = input.attachImageFromWikipedia;
+    try {
+      // Wikimedia asks for an identifying UA; anonymous fetches can
+      // be rejected.
+      const res = await fetch(img.thumbUrl, {
+        headers: {
+          "User-Agent":
+            "DistanzRunning/1.0 (https://distanzrunning.com; info@distanzrunning.com)",
+        },
+      });
+      if (!res.ok) throw new Error(`image fetch ${res.status}`);
+      const buf = Buffer.from(await res.arrayBuffer());
+      const asset = await sanityClient.assets.upload("image", buf, {
+        filename: img.fileName,
+        contentType: res.headers.get("content-type") ?? undefined,
+        source: { name: "wikipedia", url: img.filePageUrl, id: img.fileName },
+        creditLine:
+          [img.artist, img.license].filter(Boolean).join(" — ") ||
+          "Wikimedia Commons",
+        description: `Temporary placeholder from Wikipedia — replace before publish. ${img.filePageUrl}`,
+      });
+      doc.mainImage = {
+        _type: "image",
+        asset: { _type: "reference", _ref: asset._id },
+      };
+      imageAttached = true;
+    } catch (err) {
+      imageWarning = `Image upload failed (${(err as Error).message}) — draft created without a main image.`;
+    }
+  }
+
   const created = await sanityClient.create(doc);
-  return { id: created._id, slug, routeAttached, routeWarning };
+  return {
+    id: created._id,
+    slug,
+    routeAttached,
+    routeWarning,
+    imageAttached,
+    imageWarning,
+  };
 }

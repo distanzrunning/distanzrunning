@@ -216,6 +216,7 @@ export default function NewRaceTool({
   const [discovery, setDiscovery] = useState<RaceDiscoveryResult | null>(null);
   const [form, setForm] = useState<DraftFormState>(EMPTY_FORM);
   const [attachRoute, setAttachRoute] = useState(true);
+  const [attachImage, setAttachImage] = useState(true);
   const [created, setCreated] = useState<CreateRaceDraftResult | null>(null);
 
   const update = <K extends keyof DraftFormState>(
@@ -245,6 +246,7 @@ export default function NewRaceTool({
             Boolean(result.routePreview) &&
               !result.routePreview?.distanceMismatch,
           );
+          setAttachImage(Boolean(result.imagePreview));
           showToast({
             message: `Found "${result.title}"`,
             description: "Review the prefilled fields below before creating.",
@@ -335,6 +337,16 @@ export default function NewRaceTool({
             attachRoute && discovery?.routePreview && discovery.stravaRouteUrl
               ? discovery.stravaRouteUrl
               : undefined,
+          attachImageFromWikipedia:
+            attachImage && discovery?.imagePreview
+              ? {
+                  thumbUrl: discovery.imagePreview.thumbUrl,
+                  fileName: discovery.imagePreview.fileName,
+                  filePageUrl: discovery.imagePreview.filePageUrl,
+                  license: discovery.imagePreview.license,
+                  artist: discovery.imagePreview.artist,
+                }
+              : undefined,
         };
         const fd = new FormData();
         fd.set("draft", JSON.stringify(draft));
@@ -343,6 +355,13 @@ export default function NewRaceTool({
         if (result.routeWarning) {
           showToast({
             message: result.routeWarning,
+            variant: "warning",
+            preserve: true,
+          });
+        }
+        if (result.imageWarning) {
+          showToast({
+            message: result.imageWarning,
             variant: "warning",
             preserve: true,
           });
@@ -681,6 +700,45 @@ export default function NewRaceTool({
             ) : null}
           </div>
 
+          {discovery.imagePreview && (
+            <div className="flex flex-col gap-2">
+              <span className="text-copy-13 text-textSubtle">Main image</span>
+              {/* External Wikimedia render, admin-only preview. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={discovery.imagePreview.thumbUrl}
+                alt={`Wikipedia lead image for ${form.title}`}
+                width={discovery.imagePreview.width}
+                height={discovery.imagePreview.height}
+                className="w-full max-w-[420px] rounded-sm border border-borderSubtle"
+              />
+              <p className="m-0 text-copy-13 text-textSubtler">
+                Lead image from the{" "}
+                <a
+                  href={discovery.imagePreview.filePageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-link underline"
+                >
+                  Wikipedia article
+                </a>
+                {" — "}
+                {[
+                  discovery.imagePreview.license,
+                  discovery.imagePreview.artist,
+                ]
+                  .filter(Boolean)
+                  .join(", ") || "licence unstated"}
+                . Temporary placeholder — replace before publish.
+              </p>
+              <Checkbox
+                checked={attachImage}
+                onChange={(e) => setAttachImage(e.target.checked)}
+                label="Use as the main image (temporary placeholder)"
+              />
+            </div>
+          )}
+
           <div className="flex flex-col gap-1.5">
             <span className="text-copy-13 text-textSubtle">Tags</span>
             <MultiSelect
@@ -776,6 +834,11 @@ export default function NewRaceTool({
             {created.routeAttached && (
               <Badge variant="blue-subtle" size="sm">
                 Route attached
+              </Badge>
+            )}
+            {created.imageAttached && (
+              <Badge variant="blue-subtle" size="sm">
+                Image attached
               </Badge>
             )}
             <span className="text-copy-14 text-textDefault">

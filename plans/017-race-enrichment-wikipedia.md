@@ -204,6 +204,25 @@ field. Slice 1 covers the highest-value, zero-cost source: Wikipedia.
   but dropped on the floor — now mapped through result → form →
   draft (verified: Grandma's Marathon → "Minnesota").
 
+## Slice 3e — temporary main image from Wikipedia (SHIPPED 2026-08-25)
+
+- `fetchPageImage` (wikipedia.ts): the article's lead image via
+  `prop=pageimages` at a ≤1600px render (never the Commons original
+  — can be an enormous scan), plus best-effort licence metadata
+  (`imageinfo` extmetadata → LicenseShortName + Artist).
+- Review form: image preview with the licence/artist line and a
+  link to the Commons file page, plus a "Use as the main image
+  (temporary placeholder)" checkbox (default on when an image
+  exists). Copy states it's a placeholder to replace before publish.
+- On create: server downloads the render (Wikimedia-polite UA) and
+  uploads it as a Sanity image asset with `creditLine`
+  ("Anefo — CC0") and `source` ({name: "wikipedia", url: file page})
+  so provenance survives into Studio; sets `mainImage`. Best-effort
+  like the route — failure warns, never loses the draft.
+- Articles without a lead image (de 3-Länder-Marathon) degrade to
+  no block. Wikipedia-path only (aggregator-only races have no
+  article to take an image from).
+
 ## Later slices (not this one)
 - Parallel.ai Task API (or Anthropic web search) for open-web discovery
   when neither Wikipedia nor the aggregators know the race.

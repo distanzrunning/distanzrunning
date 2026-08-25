@@ -50,12 +50,14 @@ import { encodeRoutePolyline, fetchStravaRoute } from "@/lib/stravaRoute";
 import {
   budgetWikitext,
   fetchPageCategories,
+  fetchPageImage,
   fetchWikitext,
   languagesFor,
   parseWikipediaUrl,
   searchWikiLanguage,
   wikiPageUrl,
   type WikiPageCandidate,
+  type WikiPageImage,
 } from "@/lib/wikipedia";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -154,6 +156,10 @@ export interface RaceDiscoveryResult {
      *  event's course) — the attach checkbox defaults off. */
     distanceMismatch: boolean;
   };
+  /** The Wikipedia article's lead image — offered as a TEMPORARY
+   *  mainImage placeholder (licence shown for the editor's call;
+   *  replace before publish). */
+  imagePreview?: WikiPageImage;
 
   reasoning?: string;
   /** Human-readable provenance lines ("Entry price 89 EUR from
@@ -558,12 +564,13 @@ export async function discoverRace(
     // Identity confirmed — pull the rest in parallel: basic facts
     // + Wikipedia's own category labels (the reliable "World
     // Marathon Majors" signal, more trustworthy than free-text).
-    const [facts, categories] = await Promise.all([
+    const [facts, categories, pageImage] = await Promise.all([
       extractFacts(queryTitle, canonicalTitle, text).catch((err) => {
         warnings.push(`Facts extraction failed: ${(err as Error).message}`);
         return null;
       }),
       fetchPageCategories(candidate.lang, canonicalTitle),
+      fetchPageImage(candidate.lang, canonicalTitle),
     ]);
 
     const tags = new Set(facts?.tags ?? []);
@@ -590,6 +597,17 @@ export async function discoverRace(
       warnings,
       candidatesConsidered,
     };
+    if (pageImage) {
+      result.imagePreview = pageImage;
+      sourceNotes.push(
+        `Lead image from the Wikipedia article (${[
+          pageImage.license,
+          pageImage.artist,
+        ]
+          .filter(Boolean)
+          .join(", ") || "licence unstated"}) — offered as a temporary main image.`,
+      );
+    }
 
     // ── Aggregators (WA label calendar, finishers, ahotu) ─────
     // Kicked off NOW — identity + city/country are settled — and

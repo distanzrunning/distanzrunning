@@ -401,3 +401,77 @@ export async function fetchPageCategories(
     return [];
   }
 }
+
+/** The article's lead image ("page image") + its Commons licence
+ *  metadata — used by Add Race to offer a temporary mainImage
+ *  placeholder. thumbUrl is a ≤1600px render (never the original —
+ *  Commons originals can be enormous scans). */
+export interface WikiPageImage {
+  thumbUrl: string;
+  fileName: string;
+  filePageUrl: string;
+  width: number;
+  height: number;
+  license?: string;
+  artist?: string;
+}
+
+export async function fetchPageImage(
+  lang: string,
+  title: string,
+): Promise<WikiPageImage | null> {
+  const url =
+    `https://${lang}.wikipedia.org/w/api.php?action=query&prop=pageimages` +
+    `&piprop=thumbnail%7Cname&pithumbsize=1600` +
+    `&titles=${encodeURIComponent(title)}&redirects=1&format=json&formatversion=2`;
+  try {
+    const data = (await fetchWikiJson(url)) as {
+      query?: {
+        pages?: {
+          thumbnail?: { source: string; width: number; height: number };
+          pageimage?: string;
+        }[];
+      };
+    };
+    const page = data.query?.pages?.[0];
+    if (!page?.thumbnail?.source || !page.pageimage) return null;
+    const image: WikiPageImage = {
+      thumbUrl: page.thumbnail.source,
+      fileName: page.pageimage,
+      filePageUrl: `https://${lang}.wikipedia.org/wiki/File:${encodeURIComponent(page.pageimage)}`,
+      width: page.thumbnail.width,
+      height: page.thumbnail.height,
+    };
+    // Licence metadata is best-effort decoration — never blocks the
+    // image itself.
+    try {
+      const infoUrl =
+        `https://${lang}.wikipedia.org/w/api.php?action=query` +
+        `&titles=${encodeURIComponent(`File:${page.pageimage}`)}` +
+        `&prop=imageinfo&iiprop=extmetadata&format=json&formatversion=2`;
+      const info = (await fetchWikiJson(infoUrl)) as {
+        query?: {
+          pages?: {
+            imageinfo?: {
+              extmetadata?: Record<string, { value?: string }>;
+            }[];
+          }[];
+        };
+      };
+      const md = info.query?.pages?.[0]?.imageinfo?.[0]?.extmetadata;
+      const stripTags = (s: string) =>
+        s.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+      if (md?.LicenseShortName?.value) {
+        image.license = stripTags(md.LicenseShortName.value);
+      }
+      if (md?.Artist?.value) {
+        image.artist = stripTags(md.Artist.value).slice(0, 120);
+      }
+    } catch {
+      // keep the image without licence decoration
+    }
+    return image;
+  } catch {
+    return null;
+  }
+}
