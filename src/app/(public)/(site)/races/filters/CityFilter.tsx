@@ -35,7 +35,7 @@ interface CityFilterProps {
   value?: string;
   /** Currently selected country filter — narrows the visible city
    *  list when set. */
-  countryScope?: string;
+  countryScope?: string[];
   /** Currently selected state filter — further narrows the visible
    *  list to cities in that state when set (US races only carry
    *  state in our data, so this is effectively US-scoped). */
@@ -57,7 +57,7 @@ export default function CityFilter({
 
   const scoped = useMemo(() => {
     return options.filter((o) => {
-      if (countryScope && o.country !== countryScope) return false;
+      if (countryScope?.length && !countryScope.includes(o.country)) return false;
       if (stateScope && o.state !== stateScope) return false;
       return true;
     });

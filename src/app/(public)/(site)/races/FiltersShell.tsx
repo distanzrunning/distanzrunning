@@ -154,7 +154,7 @@ export default function FiltersShell({
   );
   const isDistanceActive =
     initialFilters.distanceMin != null || initialFilters.distanceMax != null;
-  const isCountryActive = Boolean(initialFilters.country);
+  const isCountryActive = Boolean(initialFilters.countries?.length);
   const isCityActive = Boolean(initialFilters.city);
   const isStateActive = Boolean(initialFilters.state);
   const isSurfaceActive = Boolean(initialFilters.surface);
@@ -245,32 +245,35 @@ export default function FiltersShell({
           isCountryActive,
           <CountryFilter
             options={countries}
-            value={initialFilters.country}
-            onChange={(country) => {
-              // When the country changes, clear any stale city /
-              // state that no longer fits inside the new country
-              // scope — e.g. user had Tokyo + Japan, switches to
-              // Belgium. Picking "any country" (country = undefined)
-              // doesn't clear anything.
-              const patch: Partial<RaceFilters> = { country };
+            value={initialFilters.countries}
+            onChange={(nextCountries) => {
+              // When the country set changes, clear any stale city /
+              // state that no longer fits inside the new scope —
+              // e.g. user had Tokyo + Japan, switches to Belgium.
+              // Clearing the selection entirely doesn't clear
+              // anything.
+              const patch: Partial<RaceFilters> = {
+                countries: nextCountries,
+              };
               if (
-                country &&
+                nextCountries?.length &&
                 initialFilters.city &&
                 !cities.some(
                   (c) =>
-                    c.city === initialFilters.city && c.country === country,
+                    c.city === initialFilters.city &&
+                    nextCountries.includes(c.country),
                 )
               ) {
                 patch.city = undefined;
               }
               if (
-                country &&
-                country !== US_COUNTRY_NAME &&
+                nextCountries?.length &&
+                !nextCountries.includes(US_COUNTRY_NAME) &&
                 initialFilters.state &&
                 US_STATES.includes(initialFilters.state)
               ) {
-                // Switching country to anything other than USA
-                // invalidates the State pick (states are US-only).
+                // A selection without USA invalidates the State pick
+                // (states are US-only).
                 patch.state = undefined;
               }
               setFilter(patch);
@@ -285,7 +288,7 @@ export default function FiltersShell({
             <CityFilter
               options={cities}
               value={initialFilters.city}
-              countryScope={initialFilters.country}
+              countryScope={initialFilters.countries}
               stateScope={initialFilters.state}
               onChange={(picked) => {
                 if (!picked) {
@@ -299,7 +302,7 @@ export default function FiltersShell({
                 // picking NYC sets state="New York" too.
                 setFilter({
                   city: picked.city,
-                  country: picked.country,
+                  countries: [picked.country],
                   state: picked.state,
                 });
               }}
@@ -313,8 +316,8 @@ export default function FiltersShell({
               the auto-filled state value still applies in the
               URL silently). */}
         {!isMap &&
-          (!initialFilters.country ||
-            initialFilters.country === US_COUNTRY_NAME) &&
+          (!initialFilters.countries?.length ||
+            initialFilters.countries.includes(US_COUNTRY_NAME)) &&
           !initialFilters.city &&
           slot(
             isStateActive,
@@ -329,7 +332,7 @@ export default function FiltersShell({
                 // conceptually US-only. Doesn't clear city: state
                 // and city can coexist (e.g. New York state +
                 // New York City).
-                setFilter({ state, country: US_COUNTRY_NAME });
+                setFilter({ state, countries: [US_COUNTRY_NAME] });
               }}
             />,
           )}

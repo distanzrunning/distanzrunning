@@ -33,8 +33,11 @@ export interface RaceFilters {
   distanceMin?: number;
   /** Upper bound on race distance, in km. */
   distanceMax?: number;
-  /** Country name — exact match against the race's country field. */
-  country?: string;
+  /** Country names — the race's country must be one of them.
+   *  URL-encoded comma-separated under the `country` key (names
+   *  never contain commas), so legacy single-country URLs parse as
+   *  a one-element list. */
+  countries?: string[];
   /** City name — exact match against the race's city field. */
   city?: string;
   /** State / region — exact match against the race's stateRegion field. */
@@ -117,7 +120,12 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   // The Search filter (q) below stays trimmed since it's
   // user-typed and we want to handle accidental whitespace.
   const country = getParam(sp, "country");
-  if (country) filters.country = country;
+  if (country) {
+    // Same byte-for-byte rule as above applies to each name — split
+    // only, never trim.
+    const list = country.split(",").filter(Boolean);
+    if (list.length > 0) filters.countries = list;
+  }
   const city = getParam(sp, "city");
   if (city) filters.city = city;
   const state = getParam(sp, "state");
@@ -161,7 +169,8 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
     params.set("distanceMin", String(filters.distanceMin));
   if (filters.distanceMax != null)
     params.set("distanceMax", String(filters.distanceMax));
-  if (filters.country) params.set("country", filters.country);
+  if (filters.countries?.length)
+    params.set("country", filters.countries.join(","));
   if (filters.city) params.set("city", filters.city);
   if (filters.state) params.set("state", filters.state);
   if (filters.surface) params.set("surface", filters.surface);
@@ -200,7 +209,7 @@ export function hasActiveFilters(filters: RaceFilters): boolean {
       filters.dateTo ||
       filters.distanceMin != null ||
       filters.distanceMax != null ||
-      filters.country ||
+      filters.countries?.length ||
       filters.city ||
       filters.state ||
       filters.surface ||
@@ -220,7 +229,7 @@ export interface RaceQueryParams {
   dateTo: string | null;
   distanceMin: number | null;
   distanceMax: number | null;
-  country: string | null;
+  countries: string[] | null;
   city: string | null;
   state: string | null;
   surface: string | null;
@@ -269,7 +278,7 @@ export function buildQueryParams(filters: RaceFilters): RaceQueryParams {
     dateTo: filters.dateTo ? `${filters.dateTo}T23:59:59.999Z` : null,
     distanceMin: filters.distanceMin ?? null,
     distanceMax: filters.distanceMax ?? null,
-    country: filters.country ?? null,
+    countries: filters.countries?.length ? filters.countries : null,
     city: filters.city ?? null,
     state: filters.state ?? null,
     surface: filters.surface ?? null,

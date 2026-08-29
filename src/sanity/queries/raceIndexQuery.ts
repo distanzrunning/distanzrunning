@@ -78,7 +78,7 @@ const RACE_FILTER_PREDICATES = `
       && (!defined($dateTo) || eventDate <= $dateTo)
       && (!defined($distanceMin) || distance >= $distanceMin - 0.05)
       && (!defined($distanceMax) || distance <= $distanceMax + 0.05)
-      && (!defined($country) || country == $country)
+      && (!defined($countries) || country in $countries)
       && (!defined($city) || city == $city)
       && (!defined($state) || stateRegion == $state)
       && (!defined($surface) || surface == $surface)

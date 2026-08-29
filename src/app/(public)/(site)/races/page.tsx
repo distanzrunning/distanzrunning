@@ -162,7 +162,12 @@ export default async function RacesPage({
     // country, antimeridian-wrapping bbox) falls back to pin-fit.
     const [mapRaces, countryBounds] = await Promise.all([
       geocodeRaces(races),
-      filters.country ? geocodeCountryBounds(filters.country) : null,
+      // Fly-to-country only reads a SINGLE selection — with several
+      // countries picked the pin-cluster fit frames them better than
+      // any one country's bbox.
+      filters.countries?.length === 1
+        ? geocodeCountryBounds(filters.countries[0])
+        : null,
     ]);
 
     // Floating chrome — header + subheader + controls on one material
