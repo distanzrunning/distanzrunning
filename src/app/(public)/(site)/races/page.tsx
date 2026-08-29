@@ -120,8 +120,8 @@ export default async function RacesPage({
   const filterQs = buildFilterParams(filters).toString();
   const mapFilterQs = buildFilterParams({
     ...filters,
-    city: undefined,
-    state: undefined,
+    cities: undefined,
+    states: undefined,
     sort: undefined,
     page: undefined,
   }).toString();

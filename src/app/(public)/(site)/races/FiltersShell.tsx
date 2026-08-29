@@ -114,8 +114,8 @@ export default function FiltersShell({
     // Map view has no City / State / Sort — strip any values carried
     // in via the URL so they don't apply invisibly.
     if (isMap) {
-      delete next.city;
-      delete next.state;
+      delete next.cities;
+      delete next.states;
       delete next.sort;
     }
     // Strip empty strings / undefined so they don't pollute the URL.
@@ -155,8 +155,8 @@ export default function FiltersShell({
   const isDistanceActive =
     initialFilters.distanceMin != null || initialFilters.distanceMax != null;
   const isCountryActive = Boolean(initialFilters.countries?.length);
-  const isCityActive = Boolean(initialFilters.city);
-  const isStateActive = Boolean(initialFilters.state);
+  const isCityActive = Boolean(initialFilters.cities?.length);
+  const isStateActive = Boolean(initialFilters.states?.length);
   const isSurfaceActive = Boolean(initialFilters.surface);
   const isPriceActive =
     initialFilters.priceMin != null || initialFilters.priceMax != null;
@@ -165,7 +165,7 @@ export default function FiltersShell({
   const isTemperatureActive =
     initialFilters.temperatureMin != null ||
     initialFilters.temperatureMax != null;
-  const isTagActive = Boolean(initialFilters.tag);
+  const isTagActive = Boolean(initialFilters.tags?.length);
 
   // Helper: wrap a chip in an order-aware div. Active chips get
   // order:-1 so flex pulls them to the start of the row; default
@@ -255,26 +255,25 @@ export default function FiltersShell({
               const patch: Partial<RaceFilters> = {
                 countries: nextCountries,
               };
-              if (
-                nextCountries?.length &&
-                initialFilters.city &&
-                !cities.some(
-                  (c) =>
-                    c.city === initialFilters.city &&
-                    nextCountries.includes(c.country),
-                )
-              ) {
-                patch.city = undefined;
+              if (nextCountries?.length && initialFilters.cities?.length) {
+                // Keep only the cities that still fit the new scope.
+                const fitting = initialFilters.cities.filter((cityName) =>
+                  cities.some(
+                    (c) =>
+                      c.city === cityName &&
+                      nextCountries.includes(c.country),
+                  ),
+                );
+                patch.cities = fitting.length > 0 ? fitting : undefined;
               }
               if (
                 nextCountries?.length &&
                 !nextCountries.includes(US_COUNTRY_NAME) &&
-                initialFilters.state &&
-                US_STATES.includes(initialFilters.state)
+                initialFilters.states?.some((st) => US_STATES.includes(st))
               ) {
-                // A selection without USA invalidates the State pick
+                // A selection without USA invalidates the State picks
                 // (states are US-only).
-                patch.state = undefined;
+                patch.states = undefined;
               }
               setFilter(patch);
             }}
@@ -287,23 +286,33 @@ export default function FiltersShell({
             isCityActive,
             <CityFilter
               options={cities}
-              value={initialFilters.city}
+              value={initialFilters.cities}
               countryScope={initialFilters.countries}
-              stateScope={initialFilters.state}
-              onChange={(picked) => {
-                if (!picked) {
-                  setFilter({ city: undefined });
+              stateScope={initialFilters.states}
+              onChange={(nextCities) => {
+                if (!nextCities?.length) {
+                  setFilter({ cities: undefined });
                   return;
                 }
-                // Auto-sync country to the picked city's country so
-                // filters stay coherent. Also auto-fill state when
-                // the picked city carries one (US cities only) so
-                // the State chip reflects the implied region —
-                // picking NYC sets state="New York" too.
+                // Auto-sync countries to the union of the picked
+                // cities' countries so filters stay coherent. The
+                // old single-select silently auto-filled state too —
+                // with multiple cities that would EXCLUDE non-US
+                // picks (Rome has no stateRegion), so a city Apply
+                // clears the state filter instead (the State chip is
+                // hidden while a city filter exists anyway).
+                const pickedCountries = [
+                  ...new Set(
+                    cities
+                      .filter((c) => nextCities.includes(c.city))
+                      .map((c) => c.country),
+                  ),
+                ];
                 setFilter({
-                  city: picked.city,
-                  countries: [picked.country],
-                  state: picked.state,
+                  cities: nextCities,
+                  countries:
+                    pickedCountries.length > 0 ? pickedCountries : undefined,
+                  states: undefined,
                 });
               }}
             />,
@@ -318,21 +327,24 @@ export default function FiltersShell({
         {!isMap &&
           (!initialFilters.countries?.length ||
             initialFilters.countries.includes(US_COUNTRY_NAME)) &&
-          !initialFilters.city &&
+          !initialFilters.cities?.length &&
           slot(
             isStateActive,
             <StateFilter
-              value={initialFilters.state}
-              onChange={(state) => {
-                if (!state) {
-                  setFilter({ state: undefined });
+              value={initialFilters.states}
+              onChange={(nextStates) => {
+                if (!nextStates?.length) {
+                  setFilter({ states: undefined });
                   return;
                 }
                 // Auto-sync country to USA — states are
-                // conceptually US-only. Doesn't clear city: state
+                // conceptually US-only. Doesn't clear cities: state
                 // and city can coexist (e.g. New York state +
                 // New York City).
-                setFilter({ state, countries: [US_COUNTRY_NAME] });
+                setFilter({
+                  states: nextStates,
+                  countries: [US_COUNTRY_NAME],
+                });
               }}
             />,
           )}
@@ -392,8 +404,8 @@ export default function FiltersShell({
           isTagActive,
           <TagFilter
             options={tags}
-            value={initialFilters.tag}
-            onChange={(tag) => setFilter({ tag })}
+            value={initialFilters.tags}
+            onChange={(nextTags) => setFilter({ tags: nextTags })}
           />,
         )}
         {anyActive && (

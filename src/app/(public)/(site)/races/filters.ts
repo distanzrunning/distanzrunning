@@ -38,10 +38,12 @@ export interface RaceFilters {
    *  never contain commas), so legacy single-country URLs parse as
    *  a one-element list. */
   countries?: string[];
-  /** City name — exact match against the race's city field. */
-  city?: string;
-  /** State / region — exact match against the race's stateRegion field. */
-  state?: string;
+  /** City names — the race's city must be one of them. Same
+   *  comma-separated URL encoding as countries, under `city`. */
+  cities?: string[];
+  /** State / region names — the race's stateRegion must be one of
+   *  them. Comma-separated under `state`. */
+  states?: string[];
   /** Surface — one of Road / Trail / Track / Mountain / Mixed. */
   surface?: string;
   /** Lower bound on race price, expressed in USD. The race's
@@ -59,8 +61,9 @@ export interface RaceFilters {
   temperatureMin?: number;
   /** Upper bound on average race-day temperature, in Celsius. */
   temperatureMax?: number;
-  /** Single tag the race must include in its `tags` array. */
-  tag?: string;
+  /** Tags — the race's `tags` array must include AT LEAST ONE of
+   *  them. Comma-separated under `tag`. */
+  tags?: string[];
   /** Sort key — drives the GROQ order clause in raceIndexQuery.
    *  Always defined when read via parseFiltersWithSort; absent
    *  from URL when at default. */
@@ -127,9 +130,15 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
     if (list.length > 0) filters.countries = list;
   }
   const city = getParam(sp, "city");
-  if (city) filters.city = city;
+  if (city) {
+    const list = city.split(",").filter(Boolean);
+    if (list.length > 0) filters.cities = list;
+  }
   const state = getParam(sp, "state");
-  if (state) filters.state = state;
+  if (state) {
+    const list = state.split(",").filter(Boolean);
+    if (list.length > 0) filters.states = list;
+  }
   const surface = getParam(sp, "surface");
   if (surface) filters.surface = surface;
   const priceMin = getNumberParam(sp, "priceMin");
@@ -145,7 +154,10 @@ export function parseFilters(sp: SearchParamsLike): RaceFilters {
   const temperatureMax = getNumberParam(sp, "temperatureMax");
   if (temperatureMax != null) filters.temperatureMax = temperatureMax;
   const tag = getParam(sp, "tag");
-  if (tag) filters.tag = tag;
+  if (tag) {
+    const list = tag.split(",").filter(Boolean);
+    if (list.length > 0) filters.tags = list;
+  }
   const sort = getParam(sp, "sort")?.trim();
   if (sort && (SORT_KEYS as readonly string[]).includes(sort)) {
     filters.sort = sort as RaceSortKey;
@@ -171,8 +183,8 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
     params.set("distanceMax", String(filters.distanceMax));
   if (filters.countries?.length)
     params.set("country", filters.countries.join(","));
-  if (filters.city) params.set("city", filters.city);
-  if (filters.state) params.set("state", filters.state);
+  if (filters.cities?.length) params.set("city", filters.cities.join(","));
+  if (filters.states?.length) params.set("state", filters.states.join(","));
   if (filters.surface) params.set("surface", filters.surface);
   if (filters.priceMin != null)
     params.set("priceMin", String(filters.priceMin));
@@ -186,7 +198,7 @@ export function buildFilterParams(filters: RaceFilters): URLSearchParams {
     params.set("temperatureMin", String(filters.temperatureMin));
   if (filters.temperatureMax != null)
     params.set("temperatureMax", String(filters.temperatureMax));
-  if (filters.tag) params.set("tag", filters.tag);
+  if (filters.tags?.length) params.set("tag", filters.tags.join(","));
   // Only emit sort when it differs from the default — keeps URLs
   // clean for the most common case.
   if (filters.sort && filters.sort !== DEFAULT_SORT)
@@ -210,8 +222,8 @@ export function hasActiveFilters(filters: RaceFilters): boolean {
       filters.distanceMin != null ||
       filters.distanceMax != null ||
       filters.countries?.length ||
-      filters.city ||
-      filters.state ||
+      filters.cities?.length ||
+      filters.states?.length ||
       filters.surface ||
       filters.priceMin != null ||
       filters.priceMax != null ||
@@ -219,7 +231,7 @@ export function hasActiveFilters(filters: RaceFilters): boolean {
       filters.elevationMax != null ||
       filters.temperatureMin != null ||
       filters.temperatureMax != null ||
-      filters.tag,
+      filters.tags?.length,
   );
 }
 
@@ -230,8 +242,8 @@ export interface RaceQueryParams {
   distanceMin: number | null;
   distanceMax: number | null;
   countries: string[] | null;
-  city: string | null;
-  state: string | null;
+  cities: string[] | null;
+  states: string[] | null;
   surface: string | null;
   priceMin: number | null;
   priceMax: number | null;
@@ -239,10 +251,11 @@ export interface RaceQueryParams {
   elevationMax: number | null;
   temperatureMin: number | null;
   temperatureMax: number | null;
-  // Named `raceTag` rather than `tag` — Sanity's QueryParams type
-  // reserves `tag` as a `never`-typed deprecated guard against
-  // accidentally passing the fetch-tag option as a GROQ param.
-  raceTag: string | null;
+  // Named `raceTags` rather than `tags` to stay clear of Sanity's
+  // QueryParams reserving `tag` as a `never`-typed deprecated guard
+  // against accidentally passing the fetch-tag option as a GROQ
+  // param.
+  raceTags: string[] | null;
   /** Set to today's date (UTC start-of-day) when the user has
    *  NOT opted into showing past races. The GROQ predicate
    *  drops anything with eventDate < this value. Null means no
@@ -279,8 +292,8 @@ export function buildQueryParams(filters: RaceFilters): RaceQueryParams {
     distanceMin: filters.distanceMin ?? null,
     distanceMax: filters.distanceMax ?? null,
     countries: filters.countries?.length ? filters.countries : null,
-    city: filters.city ?? null,
-    state: filters.state ?? null,
+    cities: filters.cities?.length ? filters.cities : null,
+    states: filters.states?.length ? filters.states : null,
     surface: filters.surface ?? null,
     priceMin: filters.priceMin ?? null,
     priceMax: filters.priceMax ?? null,
@@ -288,7 +301,7 @@ export function buildQueryParams(filters: RaceFilters): RaceQueryParams {
     elevationMax: filters.elevationMax ?? null,
     temperatureMin: filters.temperatureMin ?? null,
     temperatureMax: filters.temperatureMax ?? null,
-    raceTag: filters.tag ?? null,
+    raceTags: filters.tags?.length ? filters.tags : null,
     // Default behaviour: hide past races. We pass UTC start-of-
     // today so the predicate matches races held later today (and
     // every future date) regardless of the storing race's UTC

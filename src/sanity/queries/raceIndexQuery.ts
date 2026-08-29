@@ -79,8 +79,8 @@ const RACE_FILTER_PREDICATES = `
       && (!defined($distanceMin) || distance >= $distanceMin - 0.05)
       && (!defined($distanceMax) || distance <= $distanceMax + 0.05)
       && (!defined($countries) || country in $countries)
-      && (!defined($city) || city == $city)
-      && (!defined($state) || stateRegion == $state)
+      && (!defined($cities) || city in $cities)
+      && (!defined($states) || stateRegion in $states)
       && (!defined($surface) || surface == $surface)
       && (!defined($priceMin) || (defined(price) && ${PRICE_TO_USD} >= $priceMin))
       && (!defined($priceMax) || (defined(price) && ${PRICE_TO_USD} <= $priceMax))
@@ -88,7 +88,7 @@ const RACE_FILTER_PREDICATES = `
       && (!defined($elevationMax) || (defined(elevationGain) && elevationGain <= $elevationMax))
       && (!defined($temperatureMin) || (defined(averageTemperature) && averageTemperature >= $temperatureMin))
       && (!defined($temperatureMax) || (defined(averageTemperature) && averageTemperature <= $temperatureMax))
-      && (!defined($raceTag) || $raceTag in tags)
+      && (!defined($raceTags) || count(tags[@ in $raceTags]) > 0)
       && (!defined($hidePastBefore) || eventDate >= $hidePastBefore)
 `;
 
