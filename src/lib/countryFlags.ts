@@ -12,72 +12,53 @@ import type { ComponentType, SVGProps } from "react";
 
 type FlagComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
-/** Country name (as stored in Sanity) → ISO 3166-1 alpha-2 code.
- *  Sub-national codes like "GB-SCT" are normalised to their parent
- *  country in getCountryFlag — we don't carry sub-national flag
- *  assets in the icon set. */
+/** The full country-name → code table is GENERATED from
+ *  Intl.DisplayNames over every code the icon set ships, so any
+ *  country Sanity stores under its standard English name (Nigeria,
+ *  Tanzania, Ecuador, …) resolves without maintenance. */
+const INTL_NAME_TO_CODE: Record<string, string> = (() => {
+  const map: Record<string, string> = {};
+  try {
+    const dn = new Intl.DisplayNames(["en"], { type: "region" });
+    for (const code of Object.keys(flags)) {
+      if (!/^[A-Z]{2}$/.test(code)) continue;
+      const name = dn.of(code);
+      if (name && name !== code) map[name] = code;
+    }
+  } catch {
+    // No Intl.DisplayNames → the alias table below still covers the
+    // common names.
+  }
+  return map;
+})();
+
+/** Hand-kept ALIASES only — names Sanity/editors use that differ
+ *  from Intl's English name (USA, UK, "Czech Republic" vs Czechia),
+ *  plus sub-national entries ("GB-SCT") normalised to their parent
+ *  in getCountryFlag — we don't carry sub-national flag assets. */
 const COUNTRY_TO_CODE: Record<string, string> = {
-  "United States": "US",
   USA: "US",
-  "United Kingdom": "GB",
   UK: "GB",
-  Germany: "DE",
-  France: "FR",
-  Spain: "ES",
-  Italy: "IT",
-  Netherlands: "NL",
-  Belgium: "BE",
-  Switzerland: "CH",
-  Austria: "AT",
-  Portugal: "PT",
-  Greece: "GR",
-  Japan: "JP",
-  China: "CN",
-  Australia: "AU",
-  "New Zealand": "NZ",
-  Canada: "CA",
-  Mexico: "MX",
-  Brazil: "BR",
-  Argentina: "AR",
-  "South Africa": "ZA",
-  Kenya: "KE",
-  Ethiopia: "ET",
-  Morocco: "MA",
-  Ireland: "IE",
+  UAE: "AE",
+  // Intl says "Hong Kong SAR China" / "Macao SAR China" / "Türkiye";
+  // race data stores the plain editorial names.
+  "Hong Kong": "HK",
+  Macau: "MO",
+  Turkey: "TR",
+  "Czech Republic": "CZ",
+  Macedonia: "MK",
+  "Ivory Coast": "CI",
+  "Cape Verde": "CV",
+  Swaziland: "SZ",
+  Burma: "MM",
+  "East Timor": "TL",
+  Palestine: "PS",
+  "DR Congo": "CD",
+  "Republic of the Congo": "CG",
   Scotland: "GB-SCT",
   Wales: "GB-WLS",
-  Sweden: "SE",
-  Norway: "NO",
-  Denmark: "DK",
-  Finland: "FI",
-  Poland: "PL",
-  "Czech Republic": "CZ",
-  Hungary: "HU",
-  Turkey: "TR",
-  India: "IN",
-  Singapore: "SG",
-  "Hong Kong": "HK",
-  "South Korea": "KR",
-  Thailand: "TH",
-  Vietnam: "VN",
-  Malaysia: "MY",
-  Indonesia: "ID",
-  Philippines: "PH",
-  Taiwan: "TW",
-  Russia: "RU",
-  Ukraine: "UA",
-  Israel: "IL",
-  "United Arab Emirates": "AE",
-  UAE: "AE",
-  Qatar: "QA",
-  "Saudi Arabia": "SA",
-  Egypt: "EG",
-  Chile: "CL",
-  Colombia: "CO",
-  Peru: "PE",
-  Iceland: "IS",
-  Luxembourg: "LU",
-  Monaco: "MC",
+  "Northern Ireland": "GB-NIR",
+  England: "GB-ENG",
 };
 
 /**
@@ -94,7 +75,9 @@ const COUNTRY_TO_CODE: Record<string, string> = {
 export function getCountryFlag(input: string): FlagComponent | null {
   if (!input) return null;
   const looksLikeIso = /^[A-Za-z]{2}$/.test(input);
-  const code = looksLikeIso ? input.toUpperCase() : COUNTRY_TO_CODE[input];
+  const code = looksLikeIso
+    ? input.toUpperCase()
+    : (COUNTRY_TO_CODE[input] ?? INTL_NAME_TO_CODE[input]);
   if (!code) return null;
   const flagCode = code.includes("-") ? code.split("-")[0] : code;
   const Flag = (flags as Record<string, FlagComponent>)[flagCode];
