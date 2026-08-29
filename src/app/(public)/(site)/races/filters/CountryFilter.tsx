@@ -4,10 +4,13 @@
 //
 // Multi-select country filter. The chip surface is the standard
 // FilterChip; inside the popover we render a search Input + a
-// scrollable checkbox list of countries. Search filters the list as
-// you type. Toggling a checkbox commits immediately but keeps the
-// popover open (multi-select needs consecutive picks); the X on the
-// chip clears the whole selection.
+// scrollable checkbox list of countries + an Apply footer. Search
+// filters the list as you type. Toggles stage into a local draft —
+// nothing commits until Apply, because an immediate commit reflows
+// the results AND pulls the now-active chip to the front of the
+// strip, yanking the popover anchor mid-interaction. Closing
+// without Apply discards the draft; the X on the chip clears the
+// whole selection.
 //
 // Country list comes from a separate Sanity query
 // (raceCountriesQuery) so we always show every country we have
@@ -16,6 +19,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "lucide-react";
 
+import { Button } from "@/components/ui/Button";
 import Checkbox from "@/components/ui/Checkbox";
 import FilterChip from "@/components/ui/FilterChip";
 import { Input } from "@/components/ui/Input";
@@ -38,6 +42,8 @@ export default function CountryFilter({
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const selected = useMemo(() => value ?? [], [value]);
+  // Staged selection — edited in the popover, committed on Apply.
+  const [draft, setDraft] = useState<string[]>(selected);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -63,11 +69,14 @@ export default function CountryFilter({
   ) : undefined;
 
   const toggle = (country: string) => {
-    const next = selected.includes(country)
-      ? selected.filter((c) => c !== country)
-      : [...selected, country];
-    onChange(next.length > 0 ? next : undefined);
+    setDraft((d) =>
+      d.includes(country) ? d.filter((c) => c !== country) : [...d, country],
+    );
   };
+
+  const isDirty =
+    draft.length !== selected.length ||
+    draft.some((c) => !selected.includes(c));
 
   return (
     <FilterChip
@@ -79,6 +88,9 @@ export default function CountryFilter({
         // a re-open starts on the full alphabetised list.
         if (!open) setQuery("");
         else {
+          // Re-seed the draft from the committed value on every
+          // open — a previous close-without-Apply must not leak.
+          setDraft(selected);
           // Focus the input on the next tick; Radix mounts the
           // content after onOpenChange fires.
           requestAnimationFrame(() => inputRef.current?.focus());
@@ -86,7 +98,7 @@ export default function CountryFilter({
       }}
       panelWidth={280}
     >
-      {() => (
+      {({ close }) => (
         <div className="flex flex-col gap-3">
           <Input
             ref={inputRef}
@@ -101,9 +113,30 @@ export default function CountryFilter({
 
           <CountryList
             countries={filtered}
-            selected={selected}
+            selected={draft}
             onToggle={toggle}
           />
+
+          <div className="flex items-center justify-between gap-2 border-t border-borderSubtle pt-3">
+            <Button
+              variant="tertiary"
+              size="tiny"
+              disabled={draft.length === 0}
+              onClick={() => setDraft([])}
+            >
+              Clear
+            </Button>
+            <Button
+              size="tiny"
+              disabled={!isDirty}
+              onClick={() => {
+                onChange(draft.length > 0 ? draft : undefined);
+                close();
+              }}
+            >
+              Apply{draft.length > 0 ? ` (${draft.length})` : ""}
+            </Button>
+          </div>
         </div>
       )}
     </FilterChip>
