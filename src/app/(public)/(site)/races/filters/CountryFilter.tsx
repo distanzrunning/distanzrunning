@@ -74,10 +74,6 @@ export default function CountryFilter({
     );
   };
 
-  const isDirty =
-    draft.length !== selected.length ||
-    draft.some((c) => !selected.includes(c));
-
   return (
     <FilterChip
       label="Country"
@@ -117,24 +113,26 @@ export default function CountryFilter({
             onToggle={toggle}
           />
 
-          <div className="flex items-center justify-between gap-2 border-t border-borderSubtle pt-3">
+          {/* Footer — same shape as the range filters' (Distance /
+              Price / Elevation / Temperature): right-aligned Reset +
+              Apply, small, gray-300 hairline. */}
+          <div className="flex items-center justify-end gap-2 border-t border-[color:var(--ds-gray-300)] pt-3">
             <Button
               variant="tertiary"
-              size="tiny"
-              disabled={draft.length === 0}
+              size="small"
               onClick={() => setDraft([])}
+              disabled={draft.length === 0}
             >
-              Clear
+              Reset
             </Button>
             <Button
-              size="tiny"
-              disabled={!isDirty}
+              size="small"
               onClick={() => {
                 onChange(draft.length > 0 ? draft : undefined);
                 close();
               }}
             >
-              Apply{draft.length > 0 ? ` (${draft.length})` : ""}
+              Apply
             </Button>
           </div>
         </div>
